@@ -23,6 +23,11 @@ const GlobalStyle = createGlobalStyle`
     --footer-mobile-padding-x: 20px;
     --footer-mobile-padding-y: 18px;
     --footer-mobile-margin-bottom: 60px;
+
+    --custom-inverse-color-black: ${({ theme }) => (theme.name === ThemeName.light ? '#000' : '#fff')} ;
+    --custom-inverse-color-white: ${({ theme }) => (theme.name === ThemeName.dark ? '#000' : '#fff')} ;
+    
+    --custom-border: ${({ theme }) => (theme.name === ThemeName.dark ? '#fff' : '#0000000A')} ;
     
     --custom-background-secondary: ${({ theme }) => (theme.name === ThemeName.light ? '#F6F8FA' : '#2D2D35')} ;
   }

@@ -1,4 +1,4 @@
-import { Container } from '@lidofinance/lido-ui';
+import { Text, Container } from '@lidofinance/lido-ui';
 import styled, { keyframes } from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
@@ -8,6 +8,10 @@ export const HeaderStyle = styled((props) => <Container {...props} />)`
   padding-bottom: var(--header-padding-y);
   display: flex;
   align-items: center;
+`;
+
+export const HeaderBorderWrapper = styled.div`
+  border-bottom: 1px solid var(--custom-border);
 `;
 
 export const HeaderActionsStyle = styled.div`
@@ -41,6 +45,16 @@ export const DotStyle = styled.p`
   margin-left: ${({ theme }) => theme.spaceMap.sm}px;
 `;
 
+export const LogoTextStyle = styled(Text).attrs({
+  strong: true,
+})`
+  color: var(--custom-inverse-color-black);
+  text-transform: uppercase;
+  margin-left: ${({ theme }) => theme.spaceMap.xl}px;
+  padding-left: ${({ theme }) => theme.spaceMap.xl}px;
+  border-left: 1px solid var(--custom-inverse-color-black);
+`;
+
 export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
   position: absolute;
   right: 0;
@@ -50,5 +64,15 @@ export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
 
   @media ${devicesHeaderMedia.mobile} {
     display: none;
+  }
+`;
+
+export const ThemeTogglerWrapper = styled.div`
+  button {
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--custom-border);
+    width: 46px;
+    height: 46px;
   }
 `;

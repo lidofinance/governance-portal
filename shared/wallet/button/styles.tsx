@@ -10,20 +10,13 @@ export const WalledButtonStyle = styled((props) => <Button {...props} />)`
 `;
 
 export const WalledButtonWrapperStyle = styled.span`
+  border: 1px solid var(--custom-border);
+  padding: 6px;
+  border-radius: 100px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: -10px -18px;
-`;
-
-export const WalledButtonBalanceStyle = styled.span`
-  margin-right: 12px;
-  margin-left: 4px;
-  font-size: ${({ theme }) => theme.fontSizesMap.xs}px;
-
-  ${({ theme }) => theme.mediaQueries.md} {
-    display: none;
-  }
+  cursor: pointer;
 `;
 
 export const WalledButtonLoaderStyle = styled((props) => (

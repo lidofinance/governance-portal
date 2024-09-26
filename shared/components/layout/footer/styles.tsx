@@ -25,6 +25,10 @@ export const FooterStyle = styled(Container)`
   }
 `;
 
+export const FooterBorderWrapper = styled.div`
+  border-top: 1px solid var(--custom-border);
+`;
+
 type FooterLinkProps = {
   $marginRight?: string;
 };
@@ -70,20 +74,6 @@ export const LinkDivider = styled.div`
 
 export const LogoLidoStyle = styled(LogoLido)`
   margin-right: ${({ theme }) => theme.spaceMap.xxl}px;
-`;
-
-export const FooterDivider = styled.div`
-  position: absolute;
-  top: 0;
-  left: var(--footer-desktop-padding-x);
-  width: calc(100% - var(--footer-desktop-padding-x) * 2);
-  height: 1px;
-  background: var(--lido-color-popupMenuItemBgActiveHover);
-  opacity: 0.12;
-
-  @media ${devicesHeaderMedia.mobile} {
-    display: none;
-  }
 `;
 
 export const Version = styled(FooterLink)`

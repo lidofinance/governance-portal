@@ -8,6 +8,11 @@ export const LogoLidoStyle = styled.div`
   flex-shrink: 0;
   cursor: pointer;
 
+  svg {
+    path {
+      fill: var(--custom-inverse-color-black);
+    }
+  }
   ${({ theme }) => theme.mediaQueries.md} {
     width: 14px;
     justify-content: flex-start;
