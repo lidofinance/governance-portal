@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from 'react';
 import { CookieThemeProvider } from '@lidofinance/lido-ui';
+import { GlobalStyleOverwrite } from 'styles';
 
-import { GlobalStyle } from 'styles';
 import { ConfigProvider } from 'config';
 
 import { AppFlagProvider } from './app-flag';
@@ -24,7 +24,7 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
     <AppFlagProvider>
       <DualGovernanceStateProvider>
         <CookieThemeProvider>
-          <GlobalStyle />
+          <GlobalStyleOverwrite />
           <Web3Provider>
             <LidoSDKProvider>
               <IPFSInfoBoxStatusesProvider>

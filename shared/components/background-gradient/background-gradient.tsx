@@ -4,6 +4,7 @@ import {
   BackgroundGradientStopStyle,
 } from './styles';
 import { Component } from 'types';
+import { useDualGovernanceState } from '../../../providers/dual-governance-state';
 
 export type BackgroundGradientComponent = Component<
   'svg',
@@ -15,16 +16,27 @@ export type BackgroundGradientComponent = Component<
 export const BackgroundGradient: BackgroundGradientComponent = (props) => {
   const { width, height, ...rest } = props;
 
+  const { currentGovernanceState } = useDualGovernanceState();
+
+  if (!currentGovernanceState) return null;
+
   return (
-    <BackgroundGradientSvgStyle width={width} height={height} {...rest}>
-      <radialGradient id="background-gradient" cx="50%" y="50%">
-        <BackgroundGradientStartStyle offset="0%" />
-        <BackgroundGradientStopStyle offset="100%" />
+    <BackgroundGradientSvgStyle>
+      <radialGradient id="background-gradient" cx="50%" y="10%">
+        <BackgroundGradientStartStyle
+          offset="0%"
+          $variant={currentGovernanceState}
+        />
+        <BackgroundGradientStopStyle
+          offset="100%"
+          $variant={currentGovernanceState}
+        />
       </radialGradient>
       <rect
         width={width}
         height={height}
-        opacity=".1"
+        transform="rotate(-28.8448 1189.71 1017.02)"
+        opacity=".5"
         fill="url(#background-gradient)"
       />
     </BackgroundGradientSvgStyle>

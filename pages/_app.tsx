@@ -53,13 +53,7 @@ const AppWrapper = (
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      {/*<BackgroundGradient*/}
-      {/*  width={1560}*/}
-      {/*  height={784}*/}
-      {/*  style={{*/}
-      {/*    opacity: 'var(--lido-color-darkThemeOpacity)',*/}
-      {/*  }}*/}
-      {/*/>*/}
+      <BackgroundGradient width={1700} height={800} />
       <ToastContainer />
       <MemoApp {...props} />
 

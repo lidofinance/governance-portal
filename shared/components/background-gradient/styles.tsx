@@ -1,23 +1,43 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { GovernanceStateIndicator } from 'types/dual-governance';
 
-export const BackgroundGradientSvgStyle = styled.svg<{
-  width: number;
-  height: number;
-}>`
+export const BackgroundGradientSvgStyle = styled.svg`
   position: fixed;
   z-index: -1;
-  top: 50%;
-  left: 50%;
-  margin: ${({ height }) => -height / 2}px 0 0 ${({ width }) => -width / 2}px;
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
+  width: 100vw;
+  height: calc(100vh + 40%);
   pointer-events: none;
+  top: -40%;
+  left: -15%;
 `;
 
-export const BackgroundGradientStartStyle = styled.stop`
-  stop-color: var(--lido-color-primary);
+type GradientProps = {
+  $variant: GovernanceStateIndicator;
+};
+
+const GradientVariants = {
+  start: {
+    normal: css`
+      stop-color: var(--layout-gradient-start-normal);
+    `,
+    blocked: css`
+      stop-color: var(--layout-gradient-start-blocked);
+    `,
+  },
+  stop: {
+    normal: css`
+      stop-color: var(--layout-gradient-stop-normal);
+    `,
+    blocked: css`
+      stop-color: var(--layout-gradient-stop-blocked);
+    `,
+  },
+};
+
+export const BackgroundGradientStartStyle = styled.stop<GradientProps>`
+  ${({ $variant }) => GradientVariants.start[$variant]};
 `;
 
-export const BackgroundGradientStopStyle = styled.stop`
-  stop-color: var(--lido-color-background);
+export const BackgroundGradientStopStyle = styled.stop<GradientProps>`
+  ${({ $variant }) => GradientVariants.stop[$variant]};
 `;
