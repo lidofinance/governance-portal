@@ -10,14 +10,17 @@ export const DualGovernanceForm = () => {
     <FormWrapper>
       <FormTitle>Dual Governance</FormTitle>
       <FormDescription>
-        By depositing your stETH in this vault, you align with the stETH
-        community’s stance opposing LDO holders.
+        By adding your stETH, <b>you support the governance lock</b> until the
+        current proposals are canceled or other consensus reached or your stETH
+        is withdrawn from the protocol.
       </FormDescription>
       <FormDescription>
-        If more than 1% of stETH is deposited, governance will be temporarily
-        halted, preventing the execution of active proposals. Should the
-        deposits reach 10%, an automatic withdrawal process will commence,
-        ensuring stETH is withdrawn before any pending proposals are executed.
+        <b>If over 1%</b> of the total token supply is locked in dual
+        governance, veto-signaling will activate, halting non-treasury proposal
+        execution.
+        <br />
+        <b>If stETH deposits exceed 10%,</b> automatic stETH withdrawal from the
+        protocol will start, it calls RageQuit.
       </FormDescription>
       <ConnectButton>Connect wallet</ConnectButton>
     </FormWrapper>

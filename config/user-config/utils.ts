@@ -3,10 +3,10 @@
 //    import { config } from 'config';
 // '''
 // otherwise you will get something like a cyclic error!
+import { CHAINS } from '../../consts/chains';
+
 import { config } from '../get-config';
 import { UserConfigDefaultType } from './types';
-
-import { CHAINS } from 'consts/chains';
 
 export const getUserConfigDefault = (): UserConfigDefaultType => {
   return {
@@ -18,5 +18,6 @@ export const getUserConfigDefault = (): UserConfigDefaultType => {
       [CHAINS.Sepolia]: config.prefillUnsafeElRpcUrls11155111,
     },
     walletconnectProjectId: config.walletconnectProjectId,
+    etherscanApiKey: config.etherscanApiKey,
   };
 };

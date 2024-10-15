@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { Button, Text } from '@lidofinance/lido-ui';
 
 export const FormWrapper = styled.section`
-  padding: 0 40px;
+  padding: 20px 0 40px 20px;
+  width: 100%;
 `;
 
 export const FormTitle = styled.h1`
@@ -27,4 +28,12 @@ export const ConnectButton = styled(Button)`
   &:not(:disabled):hover {
     background-color: var(--lido-color-primary);
   }
+`;
+
+export const FormHeader = styled.section`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
 `;

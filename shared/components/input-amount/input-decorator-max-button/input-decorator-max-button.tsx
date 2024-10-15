@@ -18,7 +18,7 @@ export const InputDecoratorMaxButton = ({
       disabled={disabled}
       data-testid="maxBtn"
     >
-      MAX
+      Max
     </MaxButton>
   );
 };

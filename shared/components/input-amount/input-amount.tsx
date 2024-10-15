@@ -153,7 +153,6 @@ export const InputAmount = forwardRef<HTMLInputElement, InputAmountProps>(
             onMaxClick?.(event, maxValue);
           }
         : undefined;
-
     return (
       <InputStyle
         {...props}

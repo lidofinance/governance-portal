@@ -32,12 +32,14 @@ export const useExternalConfigContext = (
   const swr = useSWR<ManifestEntry>(
     ['swr:external-config', defaultChain],
     async () => {
-      const result = await standardFetcher<Record<string, any>>(
-        IPFS_MANIFEST_URL,
-        {
-          headers: { Accept: 'application/json' },
-        },
-      );
+      // const result = await standardFetcher<Record<string, any>>(
+      //   IPFS_MANIFEST_URL,
+      //   {
+      //     headers: { Accept: 'application/json' },
+      //   },
+      // );
+
+      const result = {};
       const entry = result[defaultChain.toString()];
       if (isManifestEntryValid(entry)) return entry;
       throw new Error(

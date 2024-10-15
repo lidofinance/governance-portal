@@ -37,6 +37,7 @@ declare module 'next/config' {
       rateLimitTimeFrame: string;
 
       ethAPIBasePath: string;
+      etherscanApiKey: string;
     };
     publicRuntimeConfig: {
       basePath: string | undefined;

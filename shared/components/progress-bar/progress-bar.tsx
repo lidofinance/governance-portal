@@ -1,4 +1,4 @@
-import { ProgressBarContainer, ProgressBarFiller } from './styles.tsx';
+import { ProgressBarContainer, ProgressBarFiller } from './styles';
 
 interface Props {
   variant: 'danger' | 'success';

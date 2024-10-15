@@ -1,0 +1,30 @@
+import { useCallback, useState } from 'react';
+import { ToggleButton } from 'shared/components/toggle-button';
+import { SupportForm } from './support-form/support-form';
+import { RevokeForm } from './revoke-form/revoke-form';
+
+import { FormTitle, FormWrapper, FormHeader } from '../styles';
+
+type ActiveTab = 'support' | 'revoke';
+
+export const DualGovernanceForm = () => {
+  const [activeTab, setActiveTab] = useState('support')<ActiveTab>;
+
+  const handleToggleChange = useCallback((val) => {
+    setActiveTab(val);
+  });
+
+  return (
+    <FormWrapper>
+      <FormHeader>
+        <FormTitle>Dual Governance</FormTitle>
+        <ToggleButton
+          onChange={handleToggleChange}
+          values={['support', 'revoke']}
+        />
+      </FormHeader>
+      {activeTab === 'support' && <SupportForm />}
+      {activeTab === 'revoke' && <RevokeForm />}
+    </FormWrapper>
+  );
+};

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="37" height="36" viewBox="0 0 37 36" fill="none">
+  <rect x="0.667969" width="36" height="36" rx="18" fill="white" fill-opacity="0.8"/>
+  <rect x="1.16797" y="0.5" width="35" height="35" rx="17.5" stroke="black" stroke-opacity="0.1"/>
+  <g clip-path="url(#clip0_797_32007)">
+    <rect x="1.66797" y="1" width="34" height="34" rx="17" fill="#131217" fill-opacity="0.5"/>
+    <path opacity="0.6" d="M24.9464 16.2773L25.1177 16.5401C27.0497 19.5038 26.6182 23.3852 24.0803 25.8719C22.5873 27.3348 20.6305 28.0663 18.6737 28.0665C18.6737 28.0665 18.6737 28.0665 24.9464 16.2773Z" fill="white"/>
+    <path opacity="0.2" d="M18.6726 19.8604L24.9453 16.2773C18.6726 28.0665 18.6726 28.0665 18.6726 28.0665C18.6726 25.4989 18.6726 22.5568 18.6726 19.8604Z" fill="white"/>
+    <path d="M12.3935 16.2773L12.2222 16.5401C10.2902 19.5038 10.7216 23.3852 13.2595 25.8719C14.7526 27.3348 16.7093 28.0663 18.6662 28.0665C18.6662 28.0665 18.6662 28.0665 12.3935 16.2773Z" fill="white"/>
+    <path opacity="0.6" d="M18.6634 19.8604L12.3906 16.2773C18.6634 28.0665 18.6634 28.0665 18.6634 28.0665C18.6634 25.4989 18.6634 22.5568 18.6634 19.8604Z" fill="white"/>
+    <path opacity="0.2" d="M18.6758 11.8555V18.0352L24.079 14.9473L18.6758 11.8555Z" fill="white"/>
+    <path opacity="0.6" d="M18.6728 11.8555L13.2656 14.9473L18.6728 18.0352V11.8555Z" fill="white"/>
+    <path d="M18.6728 6.65625L13.2656 14.9472L18.6728 11.8467V6.65625Z" fill="white"/>
+    <path opacity="0.6" d="M18.6758 11.8468L24.0832 14.9474L18.6758 6.65234V11.8468Z" fill="white"/>
+    <g opacity="0.7" filter="url(#filter0_f_797_32007)">
+      <path opacity="0.6" d="M28.1192 20.2266L28.2997 20.5033C30.3347 23.6251 29.8802 27.7134 27.207 30.3327C25.6343 31.8736 23.5732 32.6442 21.512 32.6444C21.512 32.6444 21.512 32.6444 28.1192 20.2266Z" fill="white"/>
+      <path opacity="0.2" d="M21.51 24.0006L28.1172 20.2266C21.51 32.6444 21.51 32.6444 21.51 32.6444C21.51 29.9399 21.51 26.8408 21.51 24.0006Z" fill="white"/>
+      <path d="M14.8964 20.2266L14.716 20.5033C12.681 23.6251 13.1355 27.7134 15.8087 30.3327C17.3813 31.8736 19.4424 32.6442 21.5036 32.6444C21.5036 32.6444 21.5036 32.6444 14.8964 20.2266Z" fill="white"/>
+      <path opacity="0.6" d="M21.5017 24.0006L14.8945 20.2266C21.5017 32.6444 21.5017 32.6444 21.5017 32.6444C21.5017 29.9399 21.5017 26.8408 21.5017 24.0006Z" fill="white"/>
+      <path opacity="0.2" d="M21.5117 15.5703V22.0796L27.2031 18.827L21.5117 15.5703Z" fill="white"/>
+      <path opacity="0.6" d="M21.5119 15.5703L15.8164 18.827L21.5119 22.0796V15.5703Z" fill="white"/>
+      <path d="M21.5119 10.0938L15.8164 18.8268L21.5119 15.561V10.0938Z" fill="white"/>
+      <path opacity="0.6" d="M21.5117 15.5613L27.2074 18.8272L21.5117 10.0898V15.5613Z" fill="white"/>
+    </g>
+  </g>
+  <defs>
+    <filter id="filter0_f_797_32007" x="-20.5508" y="-23.9102" width="84.1172" height="90.5547" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="17" result="effect1_foregroundBlur_797_32007"/>
+    </filter>
+    <clipPath id="clip0_797_32007">
+      <rect x="1.66797" y="1" width="34" height="34" rx="17" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>

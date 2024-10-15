@@ -9,4 +9,5 @@ export type UserConfigDefaultType = {
     [CHAINS.Sepolia]: string[];
   };
   walletconnectProjectId: string | undefined;
+  etherscanApiKey: string | undefined;
 };
