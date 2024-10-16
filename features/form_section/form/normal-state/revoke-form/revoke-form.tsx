@@ -16,6 +16,29 @@ type NftMenuStyles = {
   marginTop: string;
 };
 
+const mockNftData = [
+  {
+    id: 10423,
+    amount: 103.740782,
+  },
+  {
+    id: 10456,
+    amount: 6574.1856746,
+  },
+  {
+    id: 10435,
+    amount: 105432.008721,
+  },
+  {
+    id: 10463,
+    amount: 543.543120598,
+  },
+  {
+    id: 15545,
+    amount: 124.72345,
+  },
+];
+
 export const RevokeForm = () => {
   const [isRevokeTokenMenuOpen, setIsRevokeTokenMenuOpen] = useState(false);
   const [isRevokeNftMenuOpen, setIsRevokeNftMenuOpen] = useState(false);
@@ -33,9 +56,9 @@ export const RevokeForm = () => {
       for (const entry of entries) {
         const element = entry.target;
         setNftMenuStyles({
-          width: `${element.getBoundingClientRect().width}px`,
+          width: `${element.getBoundingClientRect().width + 4}px`,
           marginTop: `${entry.contentRect.height}px`,
-          marginLeft: `${entry.contentRect.left + 1}px`, // hardcode, resolve later
+          marginLeft: `${entry.contentRect.left + 2}px`, // hardcode, resolve later
         });
       }
     });
@@ -59,7 +82,11 @@ export const RevokeForm = () => {
   return (
     <>
       <PopupMenu
-        style={{ ...nftMenuStyles, borderRadius: '24px' }}
+        style={{
+          ...nftMenuStyles,
+          borderRadius: '24px',
+          border: '1px solid #0000001a',
+        }}
         anchorRef={revokeNftButtonRef}
         onClose={() => setIsRevokeNftMenuOpen(false)}
         themeOverride="light"
@@ -67,7 +94,9 @@ export const RevokeForm = () => {
         open={isRevokeNftMenuOpen}
         placement="bottomRight"
       >
-        <RevokeClaimNft />
+        <RevokeClaimNft items={mockNftData}>
+          <ActionButton>Claim</ActionButton>
+        </RevokeClaimNft>
       </PopupMenu>
       <PopupMenu
         anchorRef={revokeStEtfButtonRef}
@@ -127,7 +156,7 @@ export const RevokeForm = () => {
             2.3153 unstETH
           </Text>
           <Text color="secondary" size="lg" strong>
-            3 NFT
+            {mockNftData.length} NFT
           </Text>
           <RevokeAction
             ref={revokeNftButtonRef}

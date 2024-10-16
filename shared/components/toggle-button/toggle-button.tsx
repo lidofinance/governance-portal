@@ -1,34 +1,41 @@
 import { useCallback, useState } from 'react';
 import { ToggleWrapper, StyledButton } from './style';
 
+type ToggleItem = {
+  label: string;
+  value: string;
+};
+
 type Props = {
-  values: string[];
+  items: ToggleItem[];
   onChange?: () => string;
 };
 
-export const ToggleButton = ({ values, onChange }: Props) => {
-  const [activeValue, setActiveValue] = useState<string>(values[0]);
+export const ToggleButton = ({ items, onChange }: Props) => {
+  const [activeItem, setActiveItem] = useState<string | null>(
+    items[0].value || null,
+  );
 
   const handleClick = useCallback(
     (value) => {
-      setActiveValue(value);
+      setActiveItem(value);
       if (typeof onChange === 'function') {
         onChange(value);
       }
     },
-    [setActiveValue, onChange],
+    [setActiveItem, onChange],
   );
 
-  if (!values || values.length === 0) return null;
+  if (!items || items.length === 0) return null;
   return (
     <ToggleWrapper>
-      {values.map((value) => (
+      {items.map((item) => (
         <StyledButton
-          key={value}
-          onClick={() => handleClick(value)}
-          $isActive={activeValue === value}
+          key={item.value}
+          onClick={() => handleClick(item.value)}
+          $isActive={activeItem === item.value}
         >
-          {value}
+          {item.label}
         </StyledButton>
       ))}
     </ToggleWrapper>
