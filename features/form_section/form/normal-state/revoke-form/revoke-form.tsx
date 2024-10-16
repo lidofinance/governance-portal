@@ -1,103 +1,79 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Link, Text, PopupMenu } from '@lidofinance/lido-ui';
 import { ReactComponent as StethIcon } from 'assets/icons/tokens/steth.svg';
 import { ReactComponent as WstethIcon } from 'assets/icons/tokens/wsteth.svg';
 import { ReactComponent as UnstethIcon } from 'assets/icons/tokens/unsteth.svg';
 import { ReactComponent as RevokeIcon } from 'assets/icons/circle-arrow-down.svg';
 import { Tokens } from 'types/tokens';
-import { RevokeClaimNft } from './nft/revoke-claim-nft';
+import { useRevokeNftModal } from '../modals/modal-manager';
 
 import { RevokeItemsWrapper, RevokeItem, RevokeAction } from './style';
 import { ActionButton, ActionsWrapper } from '../support-form/style';
 
 type RevokableTokens = Exclude<Tokens, Tokens.UNSTETH>;
-type NftMenuStyles = {
-  width: string;
-  marginTop: string;
-};
 
 const mockNftData = [
   {
     id: 10423,
     amount: 103.740782,
+    finalized: true,
   },
   {
     id: 10456,
     amount: 6574.1856746,
+    finalized: true,
   },
   {
     id: 10435,
     amount: 105432.008721,
+    finalized: false,
   },
   {
     id: 10463,
     amount: 543.543120598,
+    finalized: false,
   },
   {
     id: 15545,
     amount: 124.72345,
+    finalized: true,
   },
 ];
 
 export const RevokeForm = () => {
+  /**
+   *  State
+   */
+
   const [isRevokeTokenMenuOpen, setIsRevokeTokenMenuOpen] = useState(false);
-  const [isRevokeNftMenuOpen, setIsRevokeNftMenuOpen] = useState(false);
-  const [nftMenuStyles, setNftMenuStyles] = useState<NftMenuStyles | null>(
-    null,
-  );
+
+  /**
+   *  Refs
+   */
 
   const revokeStEtfButtonRef = useRef(null);
-  const revokeNftButtonRef = useRef(null);
   const revokeNftItemRef = useRef(null);
 
-  useEffect(() => {
-    // TODO: add throttle
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const element = entry.target;
-        setNftMenuStyles({
-          width: `${element.getBoundingClientRect().width + 4}px`,
-          marginTop: `${entry.contentRect.height}px`,
-          marginLeft: `${entry.contentRect.left + 2}px`, // hardcode, resolve later
-        });
-      }
-    });
+  /**
+   *  Hooks data
+   */
 
-    if (revokeNftItemRef.current) {
-      resizeObserver.observe(revokeNftItemRef.current);
-    }
+  const { openModal: openRevokeNftModal } = useRevokeNftModal();
 
-    return () => {
-      if (revokeNftItemRef.current) {
-        resizeObserver.unobserve(revokeNftItemRef.current);
-      }
-    };
-  }, []);
-
+  /**
+   *  Handlers
+   */
   const handleRevokeStETH = useCallback((token: RevokableTokens) => {
     // Token to revoke stETH in - steth | wsteth,
     console.log(token);
-  });
+  }, []);
+
+  const handleNftRevoke = useCallback(() => {
+    openRevokeNftModal({ items: mockNftData });
+  }, [openRevokeNftModal]);
 
   return (
     <>
-      <PopupMenu
-        style={{
-          ...nftMenuStyles,
-          borderRadius: '24px',
-          border: '1px solid #0000001a',
-        }}
-        anchorRef={revokeNftButtonRef}
-        onClose={() => setIsRevokeNftMenuOpen(false)}
-        themeOverride="light"
-        variant="default"
-        open={isRevokeNftMenuOpen}
-        placement="bottomRight"
-      >
-        <RevokeClaimNft items={mockNftData}>
-          <ActionButton>Claim</ActionButton>
-        </RevokeClaimNft>
-      </PopupMenu>
       <PopupMenu
         anchorRef={revokeStEtfButtonRef}
         onClose={() => setIsRevokeTokenMenuOpen(false)}
@@ -158,10 +134,7 @@ export const RevokeForm = () => {
           <Text color="secondary" size="lg" strong>
             {mockNftData.length} NFT
           </Text>
-          <RevokeAction
-            ref={revokeNftButtonRef}
-            onClick={() => setIsRevokeNftMenuOpen(true)}
-          >
+          <RevokeAction onClick={handleNftRevoke}>
             <Text>Revoke</Text>
             <RevokeIcon />
           </RevokeAction>
@@ -181,7 +154,9 @@ export const RevokeForm = () => {
         </RevokeItem>
       </RevokeItemsWrapper>
       <ActionsWrapper>
-        <ActionButton>Revoke all available</ActionButton>
+        <ActionButton>
+          <Text>Revoke all available</Text>
+        </ActionButton>
       </ActionsWrapper>
     </>
   );

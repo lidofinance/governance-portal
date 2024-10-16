@@ -5,11 +5,11 @@ type ButtonProps = {
 };
 
 export const StyledButton = styled.button<ButtonProps>`
-  padding: 10px 24px;
+  padding: 14px 24px;
   border-radius: 32px;
   font-size: 18px;
   cursor: pointer;
-  background-color: ${({ $isActive }) => ($isActive ? '#000' : 'transparent')};
+  background-color: ${({ $isActive }) => ($isActive ? '#000' : '#fff')};
   color: ${({ $isActive }) => ($isActive ? '#fff' : '#000')};
 `;
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import { EVMScriptDecoded } from '@lidofinance/evm-script-decoder/lib/types';
 import { getContractName } from 'utils/getContractName';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -46,7 +47,7 @@ export const ProposalScriptParsed = ({ binary, decoded, parentId }: Props) => {
     <>
       {callsMap.map(({ id, address, abi, contractNameListed }) => {
         return (
-          <>
+          <React.Fragment key={`call-${id}`}>
             <CallWrapper>
               <Text size="sm" color="secondary">
                 Call{' '}
@@ -60,7 +61,7 @@ export const ProposalScriptParsed = ({ binary, decoded, parentId }: Props) => {
                 )}
               </Text>
             </CallWrapper>
-          </>
+          </React.Fragment>
         );
       })}
     </>

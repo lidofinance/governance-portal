@@ -9,11 +9,13 @@ import {
   Amount,
   StyledCheckbox,
   ActionsWrapper,
+  StatusBadge,
 } from './style';
 
 type NftData = {
   id: string | number;
   amount: number;
+  finalized: boolean;
 };
 
 type Props = {
@@ -44,9 +46,6 @@ export const RevokeClaimNft: React.FC = ({
 
   return (
     <Wrapper>
-      <Text size="md" strong>
-        Select NFTs to claim
-      </Text>
       <ItemsList>
         {items.map((item) => {
           return (
@@ -60,6 +59,9 @@ export const RevokeClaimNft: React.FC = ({
               <UnstethIcon />
               <Text strong>#{item.id}</Text>
               <Amount>{item.amount}</Amount>
+              <StatusBadge $variant={item.finalized ? 'success' : 'default'}>
+                {item.finalized ? 'Finalized' : 'Not finalized'}
+              </StatusBadge>
             </Item>
           );
         })}

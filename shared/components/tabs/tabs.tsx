@@ -4,7 +4,7 @@ import { StyledTab, TabsWrapper } from './style';
 export const Tabs = ({ children }) => {
   return (
     <TabsWrapper>
-      {children.map((child, index) => cloneElement(child))}
+      {children.map((child, index) => cloneElement(child, { key: index }))}
     </TabsWrapper>
   );
 };

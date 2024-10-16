@@ -61,6 +61,9 @@ export const ActionButton = styled.button`
   padding: 20px 30px;
   border-radius: 30px;
   cursor: pointer;
+  p {
+    color: white;
+  }
 `;
 
 export const ActionsWrapper = styled.div`
