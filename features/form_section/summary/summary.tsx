@@ -12,9 +12,11 @@ export const Summary = () => {
 
   return (
     <SummaryWrapper>
-      <SummaryItem label="State">
-        <StateInfo state={currentGovernanceState} />
-      </SummaryItem>
+      {currentGovernanceState ? (
+        <SummaryItem label="State">
+          <StateInfo state={currentGovernanceState} />
+        </SummaryItem>
+      ) : null}
       <SummaryItem label="stETH veto support">
         <SupportInfo />
       </SummaryItem>

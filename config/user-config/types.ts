@@ -1,13 +1,9 @@
-import { CHAINS } from 'consts/chains';
+import { CHAINS } from '@lido-sdk/constants';
 
 export type UserConfigDefaultType = {
   defaultChain: number;
   supportedChainIds: number[];
-  prefillUnsafeElRpcUrls: {
-    [CHAINS.Mainnet]: string[];
-    [CHAINS.Holesky]: string[];
-    [CHAINS.Sepolia]: string[];
-  };
+  prefillUnsafeElRpcUrls: Partial<Record<CHAINS, string[]>>;
   walletconnectProjectId: string | undefined;
   etherscanApiKey: string | undefined;
 };

@@ -3,7 +3,7 @@ import { useConnect } from 'reef-knot/core-react';
 import { ButtonProps } from '@lidofinance/lido-ui';
 import { wrapWithEventTrack } from '@lidofinance/analytics-matomo';
 
-import { MATOMO_CLICK_EVENTS } from 'consts/matomo-click-events';
+import { MATOMO_CLICK_EVENTS } from 'constants/matomo-click-events';
 import { useUserConfig } from 'config/user-config';
 import { ConnectButton } from './styles';
 

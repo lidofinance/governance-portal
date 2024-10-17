@@ -3,7 +3,12 @@ import { StyledModal, ButtonsWrapper } from './style';
 import { RevokeClaimNft } from '../../nft/revoke-claim-nft';
 import { ActionButton } from 'shared/components/action-button';
 
-export const RevokeNftModal = ({ items, ...modalProps }: ModalProps) => {
+// TODO: link items type with NFTData type
+type Props = {
+  items: any;
+} & Omit<ModalProps, 'as'>;
+
+export const RevokeNftModal = ({ items, ...modalProps }: Props) => {
   const Title = () => (
     <Text size="lg" strong>
       Select NFTs to revoke

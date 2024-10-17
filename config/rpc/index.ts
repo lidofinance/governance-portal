@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
 import { useSDK } from '@lido-sdk/react';
-
-import { CHAINS } from 'consts/chains';
+import { CHAINS } from '@lido-sdk/constants';
 
 // Don't use absolute import here!
 // code'''

@@ -14,11 +14,11 @@ import {
 import { getStaticRpcBatchProvider } from '@lido-sdk/providers';
 
 import * as abis from 'generated';
-import * as ADDR from 'consts/contractAddresses';
-import { standardFetcher } from 'utils/standardFetcher';
-import { useLidoSDK } from 'providers/lido-sdk';
+import * as ADDR from 'constants/contractAddresses';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useUserConfig } from 'config/user-config';
+import { useSDK } from '@lido-sdk/react';
+import { ABIProviderEtherscan } from '@lidofinance/evm-script-decoder/lib/ABIProviderEtherscan';
 
 type ContractName = keyof typeof ADDR;
 
@@ -44,63 +44,54 @@ type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
 type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
 
 export const useEVMScriptDecoder = (): EVMScriptDecoder => {
-  const {
-    core: { chainId },
-  } = useLidoSDK();
+  const { chainId } = useSDK();
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
   const userConfig = useUserConfig();
   const rpcUrl = getRpcUrlByChainId(chainId);
   const { etherscanApiKey } = userConfig;
 
-  return useGlobalMemo(
-    () => {
-      // Map of contract addresses to their ABIs on the current chain
-      // needed to initialize the localDecoder
-      const abiMap = Object.keys(ADDR).reduce(
-        (result, contractName: ContractName) => {
-          const address = ADDR[contractName][chainId];
-          if (!address) {
-            return result;
+  return useGlobalMemo(() => {
+    // Map of contract addresses to their ABIs on the current chain
+    // needed to initialize the localDecoder
+    const abiMap = Object.keys(ADDR).reduce(
+      (result, contractName: string) => {
+        const address = ADDR[contractName as ContractName][chainId];
+        if (!address) {
+          return result;
+        }
+        let abi: ABIElement[] | undefined;
+        if (contractName in ABI_EXCEPTIONS) {
+          abi = ABI_EXCEPTIONS[contractName as ExceptionContractName];
+        } else {
+          // This line will show a compiler-level error if there is a declared contract in ADDR
+          // that is not present neither in ABI_EXCEPTIONS nor in generated abis
+          try {
+            abi =
+              abis[`${contractName as GeneralContractName}Abi__factory`].abi;
+          } catch (e) {
+            throw new Error(`contractName: ${contractName}, error: ${e}`);
           }
-          let abi: ABIElement[] | undefined;
-          if (contractName in ABI_EXCEPTIONS) {
-            abi = ABI_EXCEPTIONS[contractName as ExceptionContractName];
-          } else {
-            // This line will show a compiler-level error if there is a declared contract in ADDR
-            // that is not present neither in ABI_EXCEPTIONS nor in generated abis
-            try {
-              abi =
-                abis[`${contractName as GeneralContractName}Abi__factory`].abi;
-            } catch (e) {
-              throw new Error(`contractName: ${contractName}, error: ${e}`);
-            }
-          }
+        }
 
-          return {
-            ...result,
-            [address]: abi,
-          };
-        },
-        {} as Record<string, ABIElement[]>,
-      );
+        return {
+          ...result,
+          [address]: abi,
+        };
+      },
+      {} as Record<string, ABIElement[]>,
+    );
 
-      const localDecoder = new abiProviders.Local(
-        abiMap as Record<string, ABIElementImported[]>,
-      );
+    const localDecoder = new abiProviders.Local(
+      abiMap as Record<string, ABIElementImported[]>,
+    );
 
-      const etherscanDecoder = new abiProviders.Base({
-        fetcher: async (address) => {
-          const res = await standardFetcher<string>(
-            'https://api.etherscan.io/api',
-            {
-              address,
-              module: 'contract',
-              action: 'getabi',
-              apiKey: etherscanApiKey,
-            },
-          );
-          return JSON.parse(res);
-        },
+    let etherscanDecoder: ABIProviderEtherscan | undefined;
+    if (etherscanApiKey) {
+      etherscanDecoder = new abiProviders.Etherscan({
+        // TODO: add network label
+        // network: chainName,
+        apiKey: etherscanApiKey,
+        fetch,
         middlewares: [
           abiProviders.middlewares.ProxyABIMiddleware({
             implMethodNames: [
@@ -120,12 +111,10 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
           }),
         ],
       });
+    }
 
-      return new EVMScriptDecoder(
-        ...([localDecoder, etherscanDecoder].filter(Boolean) as ABIProvider[]),
-      );
-    },
-    // TODO: here should be useBundleAbi bool from the config
-    `evm-script-decoder-${chainId}-${rpcUrl}-${false ? 'with-local' : 'no-local'}-${etherscanApiKey}`,
-  );
+    return new EVMScriptDecoder(
+      ...([localDecoder, etherscanDecoder].filter(Boolean) as ABIProvider[]),
+    );
+  }, `evm-script-decoder-${chainId}-${rpcUrl}-${etherscanApiKey}`);
 };

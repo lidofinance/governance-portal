@@ -8,7 +8,7 @@ type ToggleItem = {
 
 type Props = {
   items: ToggleItem[];
-  onChange?: () => string;
+  onChange?: (value: string) => void;
 };
 
 export const ToggleButton = ({ items, onChange }: Props) => {
@@ -17,7 +17,7 @@ export const ToggleButton = ({ items, onChange }: Props) => {
   );
 
   const handleClick = useCallback(
-    (value) => {
+    (value: string) => {
       setActiveItem(value);
       if (typeof onChange === 'function') {
         onChange(value);

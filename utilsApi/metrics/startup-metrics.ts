@@ -6,7 +6,7 @@ import { openKeys } from 'scripts/log-environment-variables.mjs';
 import { getRPCChecks } from 'scripts/startup-checks/rpc.mjs';
 
 import { config } from 'config';
-import { METRICS_PREFIX } from 'consts/metrics';
+import { METRICS_PREFIX } from 'constants/metrics';
 
 import { StartupChecksRPCMetrics } from './startup-checks';
 

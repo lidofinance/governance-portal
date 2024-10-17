@@ -21,7 +21,7 @@ import { NftMultiselect } from '../../nft/nft-multiselect';
 export const SupportForm = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const handleInputChange = useCallback((e) => {
+  const handleInputChange = useCallback((e: any) => {
     console.log(e);
   }, []);
 

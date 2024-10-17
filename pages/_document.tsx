@@ -56,15 +56,14 @@ export default class MyDocument extends Document {
 
   // TODO: add meta description
   get metaDescription(): string {
-    return (
-      ''
-    );
+    return '';
   }
 
   get metaPreviewImgUrl(): string {
     const origin = config.ipfsMode
       ? 'https://stake.lido.fi'
-      : config.selfOrigin;
+      : // TODO: fix type
+        (config as any).selfOrigin;
     return `${origin}/lido-preview.png`;
   }
 

@@ -15,11 +15,12 @@ import {
 import { useDecodedScript } from 'shared/hooks/useDecodedScript';
 
 type Props = {
-  script: 'string';
+  script?: string;
+  children?: React.ReactNode;
 };
 
 export const ProposalListItem = ({ script }: Props) => {
-  const { initialLoading, binary, decoded } = useDecodedScript(script);
+  const { binary, decoded } = useDecodedScript(script ?? '');
 
   return (
     <ProposalListItemWrapper>

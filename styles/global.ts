@@ -1,6 +1,6 @@
 import { createGlobalStyle, css } from 'styled-components';
 
-import { GovernanceState } from '../types/dual-governance';
+import { GovernanceStateIndicator } from '../types/dual-governance';
 
 import { NAV_MOBILE_HEIGHT, NAV_MOBILE_MAX_WIDTH } from './constants';
 import { ThemeName } from '@lidofinance/lido-ui';
@@ -10,7 +10,7 @@ export const devicesHeaderMedia = {
 };
 
 type GlobalLayoutProps = {
-  $layoutVariant: GovernanceState | 'default';
+  $layoutVariant: GovernanceStateIndicator | 'default';
 };
 
 const LayoutVariants = {
@@ -44,18 +44,18 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
 
     --layout-background-normal: #EAF6F1;
     --layout-background-blocked: #FFF1F1;
-    
+
     --layout-gradient-start-normal: #29c38c;
     --layout-gradient-stop-normal: #29c38c00;
-    
+
     --layout-gradient-start-blocked: #D74758;
     --layout-gradient-stop-blocked: #D7475800;
 
     --custom-inverse-color-black: ${({ theme }) => (theme.name === ThemeName.light ? '#000' : '#fff')} ;
     --custom-inverse-color-white: ${({ theme }) => (theme.name === ThemeName.dark ? '#000' : '#fff')} ;
-    
+
     --custom-border: ${({ theme }) => (theme.name === ThemeName.dark ? '#fff' : '#0000000A')} ;
-    
+
     --custom-background-secondary: ${({ theme }) => (theme.name === ThemeName.light ? '#F6F8FA' : '#2D2D35')} ;
   }
   * {
@@ -100,7 +100,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
       color: var(--lido-color-primaryHover);
     }
 
-   
+
   }
 `;
 

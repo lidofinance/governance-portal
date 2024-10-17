@@ -1,7 +1,8 @@
 import { cloneElement } from 'react';
 import { StyledTab, TabsWrapper } from './style';
 
-export const Tabs = ({ children }) => {
+// TODO: fix type
+export const Tabs = ({ children }: { children: any[] }) => {
   return (
     <TabsWrapper>
       {children.map((child, index) => cloneElement(child, { key: index }))}
@@ -9,7 +10,8 @@ export const Tabs = ({ children }) => {
   );
 };
 
-export const Tab = ({ children, isActive, onClick }) => {
+// TODO: fix types
+export const Tab = ({ children, isActive, onClick }: any) => {
   return (
     <StyledTab $isActive={isActive} onClick={onClick}>
       {children}

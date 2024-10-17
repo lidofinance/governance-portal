@@ -3,7 +3,7 @@ import { getStaticRpcBatchProvider } from '@lido-sdk/providers';
 import { StaticJsonRpcBatchProvider } from '@lidofinance/eth-providers';
 
 import { useGetRpcUrlByChainId } from 'config/rpc';
-import { CHAINS } from 'consts/chains';
+import { CHAINS } from '@lido-sdk/constants';
 import { config } from 'config';
 
 export const useMainnetStaticRpcProvider = (): StaticJsonRpcBatchProvider => {

@@ -1,5 +1,5 @@
 import { collectDefaultMetrics, Registry } from 'prom-client';
-import { METRICS_PREFIX } from 'consts/metrics';
+import { METRICS_PREFIX } from 'constants/metrics';
 
 import { collectStartupMetrics } from './startup-metrics';
 import { RequestMetrics } from './request';

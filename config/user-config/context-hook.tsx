@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback } from 'react';
 
 import { useLocalStorage } from '@lido-sdk/react';
 
-import { CHAINS } from 'consts/chains';
+import { CHAINS } from '@lido-sdk/constants';
 
 import { getUserConfigDefault } from './utils';
 import { UserConfigDefaultType } from './types';

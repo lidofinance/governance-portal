@@ -3,7 +3,6 @@ import { EVMScriptDecoded } from '@lidofinance/evm-script-decoder/lib/types';
 import { getContractName } from 'utils/getContractName';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Text } from '@lidofinance/lido-ui';
-import { formatCallString } from './utils';
 import { CallTitle, CallWrapper } from './styles';
 
 type Props = {
@@ -12,7 +11,7 @@ type Props = {
   parentId?: string | number;
 };
 
-export const ProposalScriptParsed = ({ binary, decoded, parentId }: Props) => {
+export const ProposalScriptParsed = ({ decoded }: Props) => {
   const {
     core: { chainId },
   } = useLidoSDK();
@@ -21,13 +20,13 @@ export const ProposalScriptParsed = ({ binary, decoded, parentId }: Props) => {
 
   const callsMap = decoded.calls.map((call, i) => {
     const id = i + 1;
-    const { address, abi, encodedCallData, decodedCallData, methodId } = call;
+    const { address, abi, methodId } = call;
 
     // const callString = formatCallString(id, abi, decodedCallData);
     // console.log(abi, 'abi');
     const nestedScriptsIdxs = abi?.inputs?.reduce(
       (r, c, j) => (c.name === '_evmScript' ? [...r, j] : r),
-      [],
+      [] as number[],
     );
     const showNestedScripts = nestedScriptsIdxs && nestedScriptsIdxs.length > 0;
     const contractNameListed = getContractName(chainId, address);
@@ -45,7 +44,7 @@ export const ProposalScriptParsed = ({ binary, decoded, parentId }: Props) => {
 
   return (
     <>
-      {callsMap.map(({ id, address, abi, contractNameListed }) => {
+      {callsMap.map(({ id, abi, contractNameListed }) => {
         return (
           <React.Fragment key={`call-${id}`}>
             <CallWrapper>

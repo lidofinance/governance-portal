@@ -3,9 +3,9 @@ import { WalletsModalForEth } from 'reef-knot/connect-wallet-modal';
 import { WalletIdsEthereum } from 'reef-knot/wallets';
 
 import { config } from 'config';
-import { walletsMetrics } from 'consts/matomo-wallets-events';
+import { walletsMetrics } from 'constants/matomo-wallets-events';
 import { trackEvent } from '@lidofinance/analytics-matomo';
-import { MATOMO_CLICK_EVENTS } from 'consts/matomo-click-events';
+import { MATOMO_CLICK_EVENTS } from 'constants/matomo-click-events';
 
 const WALLETS_PINNED: WalletIdsEthereum[] = [
   'binanceWallet',

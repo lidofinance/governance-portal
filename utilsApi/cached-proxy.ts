@@ -4,7 +4,7 @@ import { responseTimeExternalMetricWrapper } from './fetchApiWrapper';
 import { standardFetcher } from 'utils/standardFetcher';
 import { config } from 'config';
 import { FetcherError } from 'utils/fetcherError';
-import { ETH_API_ROUTES, getEthApiPath } from 'consts/api';
+import { ETH_API_ROUTES, getEthApiPath } from 'constants/api';
 
 type ProxyOptions = {
   proxyUrl: string;

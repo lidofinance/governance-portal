@@ -1,6 +1,4 @@
-import { useDecodedScript } from 'shared/hooks/useDecodedScript';
 import { ProposalListItem } from './proposals-list-item';
-import { ProposalScriptParsed } from '../proposal-script';
 import { ProposalsListWrapper } from './styles';
 
 export const ProposalsList = () => {

@@ -11,8 +11,8 @@ import invariant from 'tiny-invariant';
 
 import { config } from 'config';
 import { useRpcUrl } from 'config/rpc';
-import { SETTINGS_PATH } from 'consts/urls';
-import { STRATEGY_LAZY } from 'consts/swr-strategies';
+import { SETTINGS_PATH } from 'constants/urls';
+import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { useCSPViolation } from 'features/ipfs/csp-violation-box/use-csp-violation';
 import { useRouterPath } from 'shared/hooks/use-router-path';
 import { checkRpcUrl } from 'utils/check-rpc-url';

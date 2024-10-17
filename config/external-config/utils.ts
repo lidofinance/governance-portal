@@ -68,7 +68,6 @@ export const getBackwardCompatibleConfig = (
   config: ManifestEntry['config'],
 ): ManifestEntry['config'] => {
   return {
-    enabledWithdrawalDexes: [],
     multiChainBanner: config.multiChainBanner ?? [],
   };
 };

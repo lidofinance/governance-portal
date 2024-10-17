@@ -5,7 +5,7 @@ import { useLidoSWR } from '@lido-sdk/react';
 import buildInfo from 'build-info.json';
 import { config } from 'config';
 import { useUserConfig } from 'config/user-config';
-import { STRATEGY_IMMUTABLE } from 'consts/swr-strategies';
+import { STRATEGY_IMMUTABLE } from 'constants/swr-strategies';
 import { useDappStatus } from 'shared/hooks/use-dapp-status';
 import { overrideWithQAMockBoolean } from 'utils/qa';
 
