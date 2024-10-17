@@ -1,6 +1,6 @@
 import { useDualGovernanceState } from 'providers/dual-governance-state';
 import { Summary } from './summary';
-import { FormSectionStyled } from './styles';
+import { FormSectionStyled } from './style';
 import { DualGovernanceForm as BlockedStateForm } from './form/dual-governance-form';
 import { DualGovernanceForm as NormalStateForm } from './form/normal-state/dual-governance-form';
 import { GovernanceStateIndicator } from '../../types/dual-governance';

@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Checkbox, Text } from '@lidofinance/lido-ui';
 
 type StatusBadgeProps = {
@@ -7,7 +7,7 @@ type StatusBadgeProps = {
 
 export const Wrapper = styled.div`
   width: 100%;
-  border-radius: 24px;
+  background: white;
 `;
 
 export const ItemsList = styled.div`

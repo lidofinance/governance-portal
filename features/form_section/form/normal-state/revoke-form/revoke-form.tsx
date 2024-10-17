@@ -10,7 +10,7 @@ import { useRevokeNftModal } from '../modals/modal-manager';
 import { RevokeItemsWrapper, RevokeItem, RevokeAction } from './style';
 import { ActionButton, ActionsWrapper } from '../support-form/style';
 
-type RevokableTokens = Exclude<Tokens, Tokens.UNSTETH>;
+type RevocableTokens = Exclude<Tokens, Tokens.UNSTETH>;
 
 const mockNftData = [
   {
@@ -63,7 +63,7 @@ export const RevokeForm = () => {
   /**
    *  Handlers
    */
-  const handleRevokeStETH = useCallback((token: RevokableTokens) => {
+  const handleRevokeStETH = useCallback((token: RevocableTokens) => {
     // Token to revoke stETH in - steth | wsteth,
     console.log(token);
   }, []);
@@ -77,7 +77,6 @@ export const RevokeForm = () => {
       <PopupMenu
         anchorRef={revokeStEtfButtonRef}
         onClose={() => setIsRevokeTokenMenuOpen(false)}
-        themeOverride="light"
         variant="default"
         open={isRevokeTokenMenuOpen}
         placement="bottomRight"

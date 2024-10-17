@@ -21,33 +21,6 @@ export const TokenWrapper = styled.div`
   margin-right: auto;
 `;
 
-export const StyledInput = styled(InputAmount)`
-  margin-top: -1px;
-  margin-bottom: 20px;
-  span {
-    padding: 18px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-
-    input {
-      font-size: 18px;
-    }
-
-    button {
-      background-color: #0085ff1a;
-      color: #0085ff;
-      opacity: 1;
-      padding: 12px 2px;
-      font-size: 18px;
-      border-radius: 30px;
-      font-weight: normal;
-      min-width: 0;
-    }
-  }
-`;
-
 export const SummaryRow = styled.div`
   margin-top: 8px;
   display: flex;

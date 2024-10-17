@@ -1,7 +1,7 @@
-import { PropsWithChildren, useCallback } from 'react';
+import { PropsWithChildren, useCallback, useEffect } from 'react';
 import { Text } from '@lidofinance/lido-ui';
 import { ReactComponent as UnstethIcon } from 'assets/icons/tokens/unsteth.svg';
-import { useSimpleReducer } from '/shared/hooks/useSimpleReducer';
+import { useSimpleReducer } from 'shared/hooks/useSimpleReducer';
 import {
   Wrapper,
   ItemsList,
@@ -21,16 +21,22 @@ type NftData = {
 type Props = {
   items: NftData[];
   selectable?: boolean;
+  callback?: (selected: string[]) => void;
 };
 
-export const RevokeClaimNft: React.FC = ({
+export const RevokeClaimNft = ({
   items,
+  selectable,
+  callback,
   children,
 }: PropsWithChildren<Props>) => {
-  const initialCheckedItems = items.reduce((acc, item) => {
-    acc[item.id] = false;
-    return acc;
-  }, {});
+  const initialCheckedItems = items.reduce<Record<string | number, boolean>>(
+    (acc, item) => {
+      acc[item.id] = false;
+      return acc;
+    },
+    {},
+  );
 
   const [checkedItems, dispatch] =
     useSimpleReducer<Record<NftData['id'], boolean>>(initialCheckedItems);
@@ -44,18 +50,30 @@ export const RevokeClaimNft: React.FC = ({
     [dispatch],
   );
 
+  useEffect(() => {
+    if (callback) {
+      const selectedIds = Object.entries(checkedItems)
+        .filter(([_, checked]) => checked)
+        .map(([id]) => String(id));
+
+      callback(selectedIds);
+    }
+  }, [checkedItems, callback]);
+
   return (
     <Wrapper>
       <ItemsList>
         {items.map((item) => {
           return (
             <Item key={item.id}>
-              <StyledCheckbox
-                checked={checkedItems[item.id]}
-                onChange={(e) =>
-                  handleCheckboxChange(item.id, e.target.checked)
-                }
-              />
+              {selectable && (
+                <StyledCheckbox
+                  checked={checkedItems[item.id]}
+                  onChange={(e) =>
+                    handleCheckboxChange(item.id, e.target.checked)
+                  }
+                />
+              )}
               <UnstethIcon />
               <Text strong>#{item.id}</Text>
               <Amount>{item.amount}</Amount>

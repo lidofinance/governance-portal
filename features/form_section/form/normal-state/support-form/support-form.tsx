@@ -10,11 +10,13 @@ import {
   TabContentWrapper,
   FormWrapper,
   TokenWrapper,
-  StyledInput,
   SummaryRow,
   ActionButton,
   ActionsWrapper,
 } from './style';
+
+import { StyledInput } from '../../style';
+import { NftMultiselect } from '../../nft/nft-multiselect';
 
 export const SupportForm = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -105,6 +107,11 @@ export const SupportForm = () => {
             disabled={false}
             placeholder="Enter your amount of wstETH"
           />
+        </>
+      )}
+      {activeTab === 2 && (
+        <>
+          <NftMultiselect></NftMultiselect>
         </>
       )}
       <ActionsWrapper>

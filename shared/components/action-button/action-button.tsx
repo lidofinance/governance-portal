@@ -5,9 +5,6 @@ type Props = {
   type: 'primary' | 'secondary';
 };
 
-export const ActionButton: React.FC = ({
-  children,
-  type,
-}: PropsWithChildren<Props>) => {
+export const ActionButton = ({ children, type }: PropsWithChildren<Props>) => {
   return <StyledButton $type={type}>{children}</StyledButton>;
 };

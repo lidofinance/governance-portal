@@ -1,6 +1,6 @@
 import { ModalProps, Text } from '@lidofinance/lido-ui';
 import { StyledModal, ButtonsWrapper } from './style';
-import { RevokeClaimNft } from '../revoke-form/nft/revoke-claim-nft';
+import { RevokeClaimNft } from '../../nft/revoke-claim-nft';
 import { ActionButton } from 'shared/components/action-button';
 
 export const RevokeNftModal = ({ items, ...modalProps }: ModalProps) => {

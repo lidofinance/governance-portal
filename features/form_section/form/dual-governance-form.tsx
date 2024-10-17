@@ -3,7 +3,7 @@ import {
   FormTitle,
   FormWrapper,
   ConnectButton,
-} from './styles';
+} from './style';
 
 export const DualGovernanceForm = () => {
   return (

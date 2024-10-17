@@ -7,8 +7,8 @@ export const RevokeItemsWrapper = styled.div`
 `;
 
 type RevokeItemProps = {
-  $plain: boolean;
-  $interactive: boolean;
+  $plain?: boolean;
+  $interactive?: boolean;
 };
 
 export const RevokeItem = styled.div<RevokeItemProps>`
