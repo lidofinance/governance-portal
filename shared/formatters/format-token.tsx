@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Tooltip } from '@lidofinance/lido-ui';
 
-import { DATA_UNAVAILABLE } from 'consts/text';
+import { DATA_UNAVAILABLE } from 'constants/text';
 import { Component } from 'types';
 import { FormatBalanceArgs, useFormattedBalance } from 'utils';
 

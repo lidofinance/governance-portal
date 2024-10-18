@@ -3,8 +3,8 @@
 //    import { config } from 'config';
 // '''
 // otherwise you will get something like a cyclic error!
-import { CHAINS } from '../../consts/chains';
 
+import { CHAINS } from '@lido-sdk/constants';
 import { config } from '../get-config';
 import { UserConfigDefaultType } from './types';
 

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
 import { config } from 'config';
-import { HOME_PATH } from 'consts/urls';
+import { HOME_PATH } from 'constants/urls';
 
 export const useRouterPath = () => {
   const router = useRouter();

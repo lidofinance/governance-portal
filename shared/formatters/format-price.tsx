@@ -1,5 +1,5 @@
 import { Tooltip } from '@lidofinance/lido-ui';
-import { DATA_UNAVAILABLE } from 'consts/text';
+import { DATA_UNAVAILABLE } from 'constants/text';
 
 import { config } from 'config';
 import { Component } from 'types';

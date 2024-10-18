@@ -6,7 +6,7 @@ import {
   POST_REQUESTS,
   PostRequest,
   GetRequest,
-} from './consts.js';
+} from './constants.js';
 import { CONFIG } from './config.js';
 
 const validator = new Validator();

@@ -3,7 +3,6 @@ export * from './useMaxGasPrice';
 export * from './useWstethBySteth';
 export * from './useStethByWsteth';
 export * from './txCost';
-export * from './useLidoSwr';
 export * from './useMatomoEventHandle';
 export * from './useERC20PermitSignature';
 export * from './useDebouncedValue';

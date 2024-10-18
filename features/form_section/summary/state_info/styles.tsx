@@ -9,7 +9,8 @@ type IndicatorProps = {
 const indicatorColors = {
   [GovernanceStateIndicator.Normal]: '#29C38C',
   [GovernanceStateIndicator.Blocked]: '#D74758',
-  [GovernanceStateIndicator.Yellow]: '#FF9900',
+  // TODO: bring back once type resolved
+  // [GovernanceStateIndicator.Yellow]: '#FF9900',
 };
 
 export const CurrentStateWrapper = styled.div`

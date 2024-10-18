@@ -1,15 +1,9 @@
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
-import { STRATEGY_LAZY } from 'consts/swr-strategies';
+import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { getConfig } from '../get-config';
-import { standardFetcher } from 'utils/standardFetcher';
-import { IPFS_MANIFEST_URL } from 'consts/external-links';
-import {
-  getBackwardCompatibleConfig,
-  isManifestEntryValid,
-  useFallbackManifestEntry,
-} from './utils';
+import { isManifestEntryValid, useFallbackManifestEntry } from './utils';
 
 import type { ExternalConfig, ManifestEntry } from './types';
 
@@ -39,7 +33,8 @@ export const useExternalConfigContext = (
       //   },
       // );
 
-      const result = {};
+      // TODO: figure out...something
+      const result: any = {};
       const entry = result[defaultChain.toString()];
       if (isManifestEntryValid(entry)) return entry;
       throw new Error(

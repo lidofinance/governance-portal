@@ -1,4 +1,3 @@
-import type { DexWithdrawalApi } from 'features/withdrawals/request/withdrawal-rates';
 import { SWRResponse } from 'swr';
 
 export type Manifest = Record<string, ManifestEntry>;
@@ -11,7 +10,6 @@ export type ManifestEntry = {
 };
 
 export type ManifestConfig = {
-  enabledWithdrawalDexes: DexWithdrawalApi[];
   multiChainBanner: number[];
 };
 

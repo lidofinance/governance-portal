@@ -5,7 +5,7 @@ import {
   getPathWithoutFirstSlash,
   HOME_PATH,
   SETTINGS_PATH,
-} from 'consts/urls';
+} from 'constants/urls';
 import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
 import { usePrefixedReplace } from 'shared/hooks/use-prefixed-history';
 

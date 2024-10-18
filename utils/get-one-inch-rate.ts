@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { TOKENS } from '@lido-sdk/constants';
 import { standardFetcher } from './standardFetcher';
-import { ETH_API_ROUTES, getEthApiPath } from 'consts/api';
+import { ETH_API_ROUTES, getEthApiPath } from 'constants/api';
 
 type GetOneInchRateParams = {
   token: TOKENS.STETH | TOKENS.WSTETH | 'ETH';

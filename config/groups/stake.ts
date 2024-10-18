@@ -1,8 +1,6 @@
 import { BigNumber } from 'ethers';
 import { parseEther } from '@ethersproject/units';
 
-import { StakeSwapDiscountIntegrationKey } from 'features/stake/swap-discount-banner';
-
 import { IPFS_REFERRAL_ADDRESS } from './ipfs';
 
 // Don't use here:
@@ -30,6 +28,3 @@ export const LIDO_ADDRESS = '0x11D00000000000000000000000000000000011D0';
 export const STAKE_FALLBACK_REFERRAL_ADDRESS = preConfig.ipfsMode
   ? IPFS_REFERRAL_ADDRESS
   : LIDO_ADDRESS;
-
-export const STAKE_SWAP_INTEGRATION: StakeSwapDiscountIntegrationKey =
-  'one-inch';

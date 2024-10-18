@@ -1,6 +1,6 @@
 import { useLidoSWR } from '@lido-sdk/react';
 import { useConfig } from 'config';
-import { STRATEGY_LAZY } from 'consts/swr-strategies';
+import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { useMainnetStaticRpcProvider } from 'shared/hooks/use-mainnet-static-rpc-provider';
 
 type EnsHashCheckReturn = {

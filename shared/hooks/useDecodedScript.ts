@@ -1,23 +1,15 @@
-import { CHAINS } from '@lido-sdk/constants';
 import { EVMScriptDecoder } from '@lidofinance/evm-script-decoder';
-import { useLidoSWR } from '@lido-sdk/react';
 import { useEVMScriptDecoder } from './useEvmScriptDecoder';
-import { useLidoSDK } from '../../providers/lido-sdk';
+import { useLidoSWR, useSDK } from '@lido-sdk/react';
 
-export function useDecodedScript(script: string) {
-  const {
-    core: { chainId },
-  } = useLidoSDK();
+export const useDecodedScript = (script: string) => {
+  const { chainId } = useSDK();
   const decoder = useEVMScriptDecoder();
 
   const { data, initialLoading } = useLidoSWR(
     ['swr:decode-script', chainId, decoder, script],
-    (
-      _key: string,
-      _chainId: CHAINS,
-      _decoder: EVMScriptDecoder,
-      _script: string,
-    ) => _decoder.decodeEVMScript(_script),
+    (_, __, _decoder, _script) =>
+      (_decoder as EVMScriptDecoder).decodeEVMScript(_script as string),
   );
 
   return {
@@ -25,4 +17,4 @@ export function useDecodedScript(script: string) {
     binary: script,
     decoded: data,
   };
-}
+};

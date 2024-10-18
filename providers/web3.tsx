@@ -12,7 +12,7 @@ import { WalletsListEthereum } from 'reef-knot/wallets';
 import { config } from 'config';
 import { useUserConfig } from 'config/user-config';
 import { useGetRpcUrlByChainId } from 'config/rpc';
-import { CHAINS } from 'consts/chains';
+import { CHAINS } from '@lido-sdk/constants';
 import { ConnectWalletModal } from 'shared/wallet/connect-wallet-modal';
 
 import { SDKLegacyProvider } from './sdk-legacy';

@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 
-import { LIDO_MULTICHAIN_CHAINS } from 'consts/chains';
-
 import { useIsSupportedChain } from './use-is-supported-chain';
 import { useConfig } from 'config';
 
@@ -14,7 +12,7 @@ export const useDappStatus = () => {
   const isLidoMultichainChain = useMemo(
     () =>
       !!chainId &&
-      !!LIDO_MULTICHAIN_CHAINS[chainId] &&
+      // !!LIDO_MULTICHAIN_CHAINS[chainId] &&
       multiChainBanner.includes(chainId),
     [chainId, multiChainBanner],
   );
