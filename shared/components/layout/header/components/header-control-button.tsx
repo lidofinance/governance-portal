@@ -9,6 +9,7 @@ export const HeaderControlButton = styled(Button).attrs({
   size: 'xs',
 })<HeaderControlButtonProps>`
   border-radius: 50%;
+  flex-shrink: 0;
   min-width: 0;
   margin-left: ${({ theme }) => theme.spaceMap.sm}px;
   padding-left: 10px;

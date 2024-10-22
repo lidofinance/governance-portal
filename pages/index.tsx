@@ -1,5 +1,5 @@
 import { config } from 'config';
-import { DualGovernancePage } from 'features/dual_governance';
+import { DualGovernancePage } from 'features/dual-governance';
 import { HomePageIpfs } from 'features/ipfs';
 
 import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';

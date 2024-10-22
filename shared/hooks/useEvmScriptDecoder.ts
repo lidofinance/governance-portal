@@ -63,20 +63,19 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
         if (contractName in ABI_EXCEPTIONS) {
           abi = ABI_EXCEPTIONS[contractName as ExceptionContractName];
         } else {
-          // This line will show a compiler-level error if there is a declared contract in ADDR
-          // that is not present neither in ABI_EXCEPTIONS nor in generated abis
           try {
-            abi =
-              abis[`${contractName as GeneralContractName}Abi__factory`].abi;
+            const abiFactoryKey =
+              `${contractName as GeneralContractName}Abi__factory` as keyof typeof abis;
+            abi = abis[abiFactoryKey]?.abi;
           } catch (e) {
             throw new Error(`contractName: ${contractName}, error: ${e}`);
           }
         }
 
-        return {
-          ...result,
-          [address]: abi,
-        };
+        if (abi) {
+          result[address] = abi;
+        }
+        return result;
       },
       {} as Record<string, ABIElement[]>,
     );

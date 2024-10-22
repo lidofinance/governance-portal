@@ -10,6 +10,9 @@ export const AddressBadgeStyle = styled((props) => (
 
   margin: 0;
 
+  color: #131217b8;
+  background: transparent;
+
   & > * {
     flex-shrink: 0;
   }

@@ -1,11 +1,10 @@
 import { FC, useCallback } from 'react';
 import { useConnect } from 'reef-knot/core-react';
-import { ButtonProps } from '@lidofinance/lido-ui';
 import { wrapWithEventTrack } from '@lidofinance/analytics-matomo';
 
 import { MATOMO_CLICK_EVENTS } from 'constants/matomo-click-events';
 import { useUserConfig } from 'config/user-config';
-import { ConnectButton } from './styles';
+import { ActionButton, ButtonProps } from 'shared/components/action-button';
 
 export const Connect: FC<ButtonProps> = (props) => {
   const { isWalletConnectionAllowed } = useUserConfig();
@@ -21,13 +20,14 @@ export const Connect: FC<ButtonProps> = (props) => {
   );
 
   return (
-    <ConnectButton
-      disabled={!isWalletConnectionAllowed}
+    <ActionButton
+      size="sm"
       onClick={handleClick}
-      data-testid="connectBtn"
       {...rest}
+      disabled={!isWalletConnectionAllowed}
+      data-testid="connectBtn"
     >
       Connect
-    </ConnectButton>
+    </ActionButton>
   );
 };

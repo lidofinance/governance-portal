@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import invariant from 'tiny-invariant';
-import { GovernanceStateIndicator } from 'types/dual-governance';
+import { GovernanceStateIndicator } from 'features/dual-governance/types';
 
 type DualGovernanceStateContextValue = {
   currentGovernanceState: GovernanceStateIndicator | null;
@@ -19,9 +19,11 @@ export const useDualGovernanceState = () => {
   return value;
 };
 
-export const DualGovernanceStateProvider = ({
-  children,
-}: React.PropsWithChildren) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const DualGovernanceStateProvider = ({ children }: Props) => {
   const [currentGovernanceState, setCurrentGovernanceState] =
     useState<GovernanceStateIndicator | null>(null);
 

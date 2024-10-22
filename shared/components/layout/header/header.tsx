@@ -6,8 +6,8 @@ import {
   HeaderStyle,
   HeaderActionsStyle,
   LogoTextStyle,
-} from './styles';
-import HeaderWallet from './components/header-wallet';
+} from './style';
+import HeaderActions from './components/header-actions';
 
 export const Header: FC = () => (
   <HeaderBorderWrapper>
@@ -15,7 +15,7 @@ export const Header: FC = () => (
       <LogoLido />
       <LogoTextStyle>Dual governance</LogoTextStyle>
       <HeaderActionsStyle>
-        <HeaderWallet />
+        <HeaderActions />
       </HeaderActionsStyle>
     </HeaderStyle>
   </HeaderBorderWrapper>

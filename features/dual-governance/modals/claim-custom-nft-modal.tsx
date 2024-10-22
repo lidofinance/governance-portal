@@ -1,0 +1,47 @@
+import { ChangeEvent, useCallback } from 'react';
+import { ModalProps, Text } from '@lidofinance/lido-ui';
+import { ActionButton } from 'shared/components/action-button';
+import { StyledModal, StyledInput } from './style';
+
+import { NftItem } from '../nft/nft-item';
+import { NftData } from '../nft/types';
+import { ActionsWrapper } from '../nft/style';
+
+const mockNft: NftData = {
+  id: 10423,
+  amount: 103.740782,
+  finalized: true,
+};
+
+type Props = {
+  closeModal: () => void;
+} & Omit<ModalProps, 'as'>;
+
+export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
+  const handleInputSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const nftId: NftData['id'] = e.target.value;
+    console.log(nftId);
+    // Todo: check if nft exists on escrow contract using WQ, get NFT from WQ, check if it's finalized using WQ
+  }, []);
+
+  const Title = () => (
+    <Text size="lg" strong>
+      Claim custom NFTs
+    </Text>
+  );
+
+  // Todo: check if we need a number input or if we should start search with #
+
+  return (
+    <StyledModal title={<Title />} {...modalProps}>
+      <StyledInput onChange={handleInputSearch} fullwidth></StyledInput>
+      <NftItem nft={mockNft}></NftItem>
+      <ActionsWrapper>
+        <ActionButton type="primary">{` Claim ${mockNft.amount} ETH`}</ActionButton>
+        <ActionButton type="secondary" onClick={closeModal}>
+          Close
+        </ActionButton>
+      </ActionsWrapper>
+    </StyledModal>
+  );
+};

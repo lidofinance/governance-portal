@@ -1,13 +1,5 @@
 import styled from 'styled-components';
-import { Button, InlineLoader } from '@lidofinance/lido-ui';
-
-export const WalledButtonStyle = styled((props) => <Button {...props} />)`
-  flex-shrink: 1;
-  min-width: unset;
-  overflow: hidden;
-
-  ${({ $isAddPaddingLeft }) => ($isAddPaddingLeft ? `padding-left: 9px` : '')};
-`;
+import { InlineLoader } from '@lidofinance/lido-ui';
 
 export const WalledButtonWrapperStyle = styled.span`
   border: 1px solid var(--custom-border);

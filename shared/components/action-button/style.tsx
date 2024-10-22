@@ -2,24 +2,43 @@ import styled, { css } from 'styled-components';
 
 type ButtonProps = {
   $type: 'primary' | 'secondary';
+  $size: 'sm' | 'md' | 'lg';
 };
 
-const buttonStyles = {
+const buttonTypeStyles = {
   primary: css`
-    background-color: #000;
-    color: #fff;
+    background-color: var(--primary-color-black);
+    color: var(--primary-color-white);
   `,
   secondary: css`
-    background-color: #fff;
-    color: #000;
+    background-color: var(--primary-color-white);
+    color: var(--primary-color-black);
+  `,
+};
+
+const buttonSizeStyles = {
+  sm: css`
+    padding: 10px 24px;
+    height: 46px;
+  `,
+  md: css`
+    padding: 17px 30px;
+    height: 60px;
+  `,
+  lg: css`
+    padding: 22px 36px;
+    height: 70px;
   `,
 };
 
 export const StyledButton = styled.button<ButtonProps>`
   width: 100%;
-  padding: 14px 24px;
+  line-height: 1.5;
+  font-weight: 500;
   border-radius: 32px;
-  font-size: 18px;
+  border: none;
+  font-size: 17px;
   cursor: pointer;
-  ${({ $type }) => buttonStyles[$type]}
+  ${({ $type }) => buttonTypeStyles[$type]}
+  ${({ $size }) => buttonSizeStyles[$size]}
 `;

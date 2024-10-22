@@ -13,7 +13,7 @@ import {
   LayoutTitleStyle,
   LayoutSubTitleStyle,
   IPFSInfoBoxOnlyMobileAndPortableWrapper,
-} from './styles';
+} from './style';
 
 type Props = {
   title?: ReactNode;

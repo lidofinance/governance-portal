@@ -2,9 +2,9 @@ import {
   BackgroundGradientSvgStyle,
   BackgroundGradientStartStyle,
   BackgroundGradientStopStyle,
-} from './styles';
+} from './style';
 import { Component } from 'types';
-import { useDualGovernanceState } from '../../../providers/dual-governance-state';
+import { useDualGovernanceState } from 'providers/dual-governance-state';
 
 export type BackgroundGradientComponent = Component<
   'svg',
