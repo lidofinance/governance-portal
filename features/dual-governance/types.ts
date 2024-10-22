@@ -11,3 +11,9 @@ export enum GovernanceStateIndicator {
   Blocked = 'blocked',
   Attention = 'attention',
 }
+
+export enum TransactionState {
+  SUCCESS,
+  ERROR,
+  PENDING,
+}

@@ -1,9 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Link, Text } from '@lidofinance/lido-ui';
 import { BigNumber } from 'ethers';
-import { ReactComponent as StethIcon } from 'assets/icons/tokens/steth.svg';
-import { ReactComponent as WstethIcon } from 'assets/icons/tokens/wsteth.svg';
-import { ReactComponent as UnstethIcon } from 'assets/icons/tokens/unsteth.svg';
+import { StethIcon, WstethIcon, UnstethIcon } from 'shared/components/icons';
 import { ActionButton } from 'shared/components/action-button';
 import { Tabs, Tab } from 'shared/components/tabs';
 
@@ -18,9 +16,15 @@ import {
 } from './style';
 
 import { StyledInput } from '../../style';
+import { useDepositingModal } from 'features/dual-governance/modals/modal-manager';
+
+import { TransactionState } from 'features/dual-governance/types';
 
 export const SupportForm = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
+
+  // TODO: Remove - for testing purposes only
+  const { openModal: openDepositingModal } = useDepositingModal();
 
   const handleInputChange = useCallback((e: any) => {
     console.log(e);
@@ -116,7 +120,17 @@ export const SupportForm = () => {
         </>
       )}
       <ActionsWrapper>
-        <ActionButton size="lg">Support Veto</ActionButton>
+        <ActionButton
+          size="lg"
+          onClick={() =>
+            openDepositingModal({
+              amount: '1123.1231',
+              state: TransactionState.ERROR,
+            })
+          }
+        >
+          Support Veto
+        </ActionButton>
       </ActionsWrapper>
     </FormWrapper>
   );

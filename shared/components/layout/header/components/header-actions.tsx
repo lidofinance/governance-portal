@@ -4,8 +4,7 @@ import { config } from 'config';
 
 import { Button, Connect } from 'shared/wallet';
 
-import { ReactComponent as VaultIcon } from 'assets/icons/vault-icon.svg';
-import { ReactComponent as RevokeIcon } from 'assets/icons/circle-arrow-down.svg';
+import { VaultIcon, RevokeIcon } from 'shared/components/icons';
 
 import { Text } from '@lidofinance/lido-ui';
 import { IPFSInfoBox } from 'features/ipfs/ipfs-info-box';

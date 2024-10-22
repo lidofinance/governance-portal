@@ -1,5 +1,5 @@
 import { Text } from '@lidofinance/lido-ui';
-import { ReactComponent as UnstethIcon } from 'assets/icons/tokens/unsteth.svg';
+import { UnstethIcon } from 'shared/components/icons';
 import {
   Amount,
   StatusBadge,

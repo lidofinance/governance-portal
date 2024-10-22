@@ -1,4 +1,4 @@
-import { ReactComponent as ProposalsLogo } from 'assets/proposals-logo.svg';
+import { ProposalsIcon, WarningIcon } from 'shared/components/icons';
 import { ProposalScriptParsed } from '../proposal-script';
 
 import {
@@ -11,23 +11,57 @@ import {
   ProposalDescription,
   DescriptionText,
   ScriptSection,
+  ProposalListItemToEnact,
+  WarningIconWrapper,
 } from '../style';
 import { useDecodedScript } from 'shared/hooks/useDecodedScript';
+import {
+  DualGovernanceStateProvider,
+  useDualGovernanceState,
+} from 'providers/dual-governance-state';
+import { GovernanceStateIndicator } from 'features/dual-governance/types';
 
 type Props = {
   script?: string;
+  isReadyToEnact?: boolean;
   children?: React.ReactNode;
 };
 
-export const ProposalListItem = ({ script }: Props) => {
+export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
   const { binary, decoded } = useDecodedScript(script ?? '');
+
+  const { currentGovernanceState } = useDualGovernanceState();
+
+  if (
+    isReadyToEnact &&
+    currentGovernanceState === GovernanceStateIndicator.Blocked
+  ) {
+    return (
+      <ProposalListItemToEnact>
+        <SummarySection>
+          <TitleWrapper>
+            <WarningIconWrapper>
+              <WarningIcon />
+            </WarningIconWrapper>
+            <Title $warning>Kill</Title>
+          </TitleWrapper>
+          <ProposalStatus>Ready to enact</ProposalStatus>
+        </SummarySection>
+        <ProposalDescription $slim>
+          <DescriptionText>
+            Kill all active governance proposals
+          </DescriptionText>
+        </ProposalDescription>
+      </ProposalListItemToEnact>
+    );
+  }
 
   return (
     <ProposalListItemWrapper>
       <SummarySection>
         <TitleWrapper>
           <LogoWrapper>
-            <ProposalsLogo />
+            <ProposalsIcon />
           </LogoWrapper>
           <Title>Vote #176 part 1</Title>
         </TitleWrapper>

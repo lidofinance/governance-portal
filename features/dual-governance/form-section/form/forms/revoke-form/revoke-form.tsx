@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { Text } from '@lidofinance/lido-ui';
-import { ReactComponent as RevokeIcon } from 'assets/icons/circle-arrow-down.svg';
+import { RevokeIcon } from 'shared/components/icons';
 import { Tokens } from 'types/tokens';
 
 import { RevokeTokenItem } from './revoke-token-item';
@@ -8,6 +8,7 @@ import { RevokeTokenItem } from './revoke-token-item';
 import {
   useRevokeNftModal,
   useClaimCustomNftModal,
+  useVerifyDepositModal,
 } from 'features/dual-governance/modals/modal-manager';
 
 import {
@@ -19,7 +20,7 @@ import {
 import { ActionsWrapper } from '../support-form/style';
 import { ActionButton } from 'shared/components/action-button';
 import { FlexWrapper } from 'shared/styled-components';
-import { tokensSymbolDict } from '../../../../helpers';
+import { tokensSymbolDict } from 'features/dual-governance/helpers';
 
 type RevocableTokens = Exclude<Tokens, Tokens.UNSTETH>;
 
@@ -74,6 +75,13 @@ export const RevokeForm = () => {
     openModal: openClaimCustomNftModal,
     closeModal: closeClaimCustomNftModal,
   } = useClaimCustomNftModal();
+
+  // TODO: Remove - for testing purposes only
+
+  const {
+    openModal: openVerifyDepositModal,
+    closeModal: closeVerifyDepositModal,
+  } = useVerifyDepositModal();
 
   /**
    *  Handlers
@@ -170,7 +178,14 @@ export const RevokeForm = () => {
         />
       </RevokeTokenItemsWrapper>
       <ActionsWrapper>
-        <ActionButton size="lg">Revoke all available</ActionButton>
+        <ActionButton
+          size="lg"
+          onClick={() =>
+            openVerifyDepositModal({ closeModal: closeVerifyDepositModal })
+          }
+        >
+          Revoke all available
+        </ActionButton>
       </ActionsWrapper>
     </>
   );

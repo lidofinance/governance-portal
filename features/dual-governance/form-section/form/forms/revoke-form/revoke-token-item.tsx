@@ -1,9 +1,9 @@
 import { Tokens } from 'types/tokens';
 import { RevokeAction, StyledRevokeTokenItem } from './style';
-import { ReactComponent as RevokeIcon } from 'assets/icons/circle-arrow-down.svg';
+import { RevokeIcon } from 'shared/components/icons';
 import { Text } from '@lidofinance/lido-ui';
 import { ForwardedRef, forwardRef } from 'react';
-import { iconsDict, tokensSymbolDict } from '../../../../helpers';
+import { iconsDict, tokensSymbolDict } from 'features/dual-governance/helpers';
 
 type Props = {
   token: Tokens;

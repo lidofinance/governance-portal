@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Input, Modal, ModalProps } from '@lidofinance/lido-ui';
-import { RevokeClaimNft } from '../nft/revoke-claim-nft';
 
 // Overwrite default modal container width which is hardcoded 432px
 export const StyledModal = styled(Modal)<ModalProps>`
@@ -25,10 +24,5 @@ export const StyledInput = styled(Input)`
     &:focus-within {
       border-color: #0085ff99;
     }
-  }
-`;
-
-export const StyledNftList = styled(RevokeClaimNft)`
-  section {
   }
 `;

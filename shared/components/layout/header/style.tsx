@@ -69,6 +69,8 @@ export const VaultInfoMenuTitle = styled.p`
   font-weight: 500;
   color: #000000;
   margin-bottom: 20px;
+  height: 46px;
+  line-height: 1.5;
 `;
 
 // TODO: uncomment or remove when we decide if we have dark theme

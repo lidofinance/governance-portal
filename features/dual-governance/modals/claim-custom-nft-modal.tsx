@@ -15,7 +15,7 @@ const mockNft: NftData = {
 
 type Props = {
   closeModal: () => void;
-} & Omit<ModalProps, 'as'>;
+} & ModalProps;
 
 export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
   const handleInputSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {

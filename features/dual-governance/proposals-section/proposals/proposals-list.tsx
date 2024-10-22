@@ -7,8 +7,8 @@ export const ProposalsList = () => {
 
   return (
     <ProposalsListWrapper>
-      <ProposalListItem script={script}></ProposalListItem>
-      <ProposalListItem>
+      <ProposalListItem isReadyToEnact></ProposalListItem>
+      <ProposalListItem script={script}>
         <h1>Vote #177</h1>
       </ProposalListItem>
       <ProposalListItem>

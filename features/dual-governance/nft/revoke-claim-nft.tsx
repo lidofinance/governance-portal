@@ -6,7 +6,6 @@ import {
   useRef,
 } from 'react';
 import { Text } from '@lidofinance/lido-ui';
-import { ReactComponent as UnstethIcon } from 'assets/icons/tokens/unsteth.svg';
 import { useSimpleReducer } from 'shared/hooks/useSimpleReducer';
 import { NftData } from './types';
 import { NftItem } from './nft-item';
@@ -14,11 +13,7 @@ import { NftItem } from './nft-item';
 import {
   Wrapper,
   NftItemsList,
-  // RevokeTokenItem,
-  Amount,
-  StyledCheckbox,
   ActionsWrapper,
-  StatusBadge,
   SelectAllWrapper,
   SelectAllButton,
 } from './style';
@@ -138,22 +133,6 @@ export const RevokeClaimNft = ({
               onChange={handleCheckboxChange}
               key={item.id}
             />
-            // <RevokeTokenItem $checked={checkedItems[item.id]} key={item.id}>
-            //   {selectable && (
-            //     <StyledCheckbox
-            //       checked={checkedItems[item.id]}
-            //       onChange={(e) =>
-            //         handleCheckboxChange(item.id, e.target.checked)
-            //       }
-            //     />
-            //   )}
-            //   <UnstethIcon />
-            //   <Text strong>#{item.id}</Text>
-            //   <Amount>{item.amount}</Amount>
-            //   <StatusBadge $variant={item.finalized ? 'success' : 'default'}>
-            //     {item.finalized ? 'Finalized' : 'Not finalized'}
-            //   </StatusBadge>
-            // </RevokeTokenItem>
           );
         })}
       </NftItemsList>

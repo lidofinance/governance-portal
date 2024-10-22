@@ -13,6 +13,7 @@ const buttonTypeStyles = {
   secondary: css`
     background-color: var(--primary-color-white);
     color: var(--primary-color-black);
+    border: 1px solid var(--border-color-fog);
   `,
 };
 

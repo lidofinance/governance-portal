@@ -3,7 +3,8 @@ import { Container, Link } from '@lidofinance/lido-ui';
 
 import { LogoLido } from 'shared/components/logos/logos';
 
-import { ReactComponent as ExternalLinkIcon } from 'assets/icons/external-link-icon.svg';
+import { ExternalLinkIcon } from 'shared/components/icons';
+
 import { devicesHeaderMedia } from 'styles/global';
 
 export const FooterStyle = styled(Container)`

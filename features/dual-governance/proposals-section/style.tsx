@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { Block, Text } from '@lidofinance/lido-ui';
+import { boolean } from '@metamask/superstruct';
 
 type ProposalDescriptionProps = {
-  $slim: boolean;
+  $slim?: boolean;
 };
 
 export const ProposalsWrapper = styled.section`
@@ -19,9 +20,15 @@ export const ProposalsTitle = styled.h1`
 `;
 
 export const ProposalListItemWrapper = styled(Block)`
-  min-height: 378px; // remove
+  min-height: 378px; // TODO: remove
   font-size: 26px;
-  border: 1px solid #0000001a;
+  border: 1px solid var(--border-color-fog);
+  display: flex;
+`;
+
+export const ProposalListItemToEnact = styled(Block)`
+  border: 1px solid var(--border-color-fog);
+  background-color: #d7475833;
   display: flex;
 `;
 
@@ -39,16 +46,31 @@ export const LogoWrapper = styled.div`
   }
 `;
 
+export const WarningIconWrapper = styled.div`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 1px solid #0000001a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    margin-top: -4px;
+  }
+`;
+
 export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
 `;
 
-export const Title = styled.span`
+export const Title = styled.span<{ $warning?: boolean }>`
   font-size: 22px;
   font-weight: 600;
-  color: #000;
+  color: ${({ $warning }) =>
+    $warning ? 'var(--accent-color-berry)' : 'var(--primary-color-black)'};
 `;
 
 export const ProposalStatus = styled(Text).attrs({
