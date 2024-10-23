@@ -9,7 +9,7 @@ import {
 import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
 import { usePrefixedReplace } from 'shared/hooks/use-prefixed-history';
 
-import SettingsPage from 'pages/settings';
+import SettingsPage from 'pages/_settings';
 
 /**
  * We are using single index.html endpoint

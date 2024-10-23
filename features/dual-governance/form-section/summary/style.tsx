@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { ThemeName } from '@lidofinance/lido-ui';
+import styled, { css } from 'styled-components';
 
 type ItemWrapProps = {
   $stickBottom: boolean | undefined;
+  $withBorder: boolean | undefined;
 };
 
 export const SummaryWrapper = styled.div`
@@ -22,8 +22,11 @@ export const SummaryItemWrap = styled.div<ItemWrapProps>`
   &:not(:last-child) {
     padding: 18px 0;
   }
-  border-bottom: 1px solid
-    ${({ theme }) => (theme.name === ThemeName.light ? '#0000001A' : '#fff')};
+  ${({ $withBorder }) =>
+    $withBorder &&
+    css`
+      border-bottom: 1px solid var(--border-color-fog);
+    `}
 
   &:last-child {
     border: none;

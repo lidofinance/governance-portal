@@ -13,7 +13,7 @@ export const Summary = () => {
   return (
     <SummaryWrapper>
       {currentGovernanceState ? (
-        <SummaryItem label="State">
+        <SummaryItem withBorder label="State">
           <StateInfo state={currentGovernanceState} />
         </SummaryItem>
       ) : null}
