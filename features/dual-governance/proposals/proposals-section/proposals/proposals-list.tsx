@@ -1,5 +1,5 @@
-import { ProposalListItem } from './proposals-list-item';
-import { ProposalsListWrapper } from './style';
+import { ProposalListItem } from 'features/dual-governance/proposals/proposals-section/proposals/proposals-list-item';
+import { ProposalsListWrapper } from 'features/dual-governance/proposals/proposals-section/proposals/style';
 
 export const ProposalsList = () => {
   const script =

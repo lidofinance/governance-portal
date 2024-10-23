@@ -3,7 +3,10 @@ import { EVMScriptDecoded } from '@lidofinance/evm-script-decoder/lib/types';
 import { getContractName } from 'utils/getContractName';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Text } from '@lidofinance/lido-ui';
-import { CallTitle, CallWrapper } from './styles';
+import {
+  CallTitle,
+  CallWrapper,
+} from 'features/dual-governance/proposals/proposals-section/proposal-script/styles';
 
 type Props = {
   binary: string;

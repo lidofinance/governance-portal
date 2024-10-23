@@ -15,13 +15,13 @@ export const DualGovernanceForm = () => {
         <ToggleButton
           onChange={setActiveTab}
           items={[
-            { label: 'Support', value: 'support' },
-            { label: 'My tokens in DG', value: 'revoke' },
+            { label: 'Support Veto', value: 'support' },
+            { label: 'Manage Tokens', value: 'manage' },
           ]}
         />
       </FormHeader>
       {activeTab === 'support' && <SupportForm />}
-      {activeTab === 'revoke' && <RevokeForm />}
+      {activeTab === 'manage' && <RevokeForm />}
     </FormWrapper>
   );
 };

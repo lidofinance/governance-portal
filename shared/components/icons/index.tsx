@@ -7,6 +7,7 @@ import { ReactComponent as GearIcon } from 'assets/icons/gear.svg';
 import { ReactComponent as ExternalLinkIcon } from 'assets/icons/external-link-icon.svg';
 import { ReactComponent as VaultIcon } from 'assets/icons/vault-icon.svg';
 import { ReactComponent as WarningIcon } from 'assets/icons/warning-icon.svg';
+import { ReactComponent as SearchIcon } from 'assets/icons/search-icon.svg';
 
 export {
   RevokeIcon,
@@ -18,4 +19,5 @@ export {
   ExternalLinkIcon,
   VaultIcon,
   WarningIcon,
+  SearchIcon,
 };

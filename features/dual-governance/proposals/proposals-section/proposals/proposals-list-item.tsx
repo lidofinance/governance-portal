@@ -1,25 +1,21 @@
-import { ProposalsIcon, WarningIcon } from 'shared/components/icons';
-import { ProposalScriptParsed } from '../proposal-script';
+import { ProposalScriptParsed } from 'features/dual-governance/proposals/proposals-section/proposal-script';
+import {
+  ProposalStatusBadge,
+  ProposalStatus,
+} from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
 
 import {
-  LogoWrapper,
   ProposalListItemWrapper,
-  ProposalStatus,
-  TitleWrapper,
-  Title,
   SummarySection,
   ProposalDescription,
   DescriptionText,
   ScriptSection,
   ProposalListItemToEnact,
-  WarningIconWrapper,
-} from '../style';
+} from 'features/dual-governance/proposals/proposals-section/style';
 import { useDecodedScript } from 'shared/hooks/useDecodedScript';
-import {
-  DualGovernanceStateProvider,
-  useDualGovernanceState,
-} from 'providers/dual-governance-state';
+import { useDualGovernanceState } from 'providers/dual-governance-state';
 import { GovernanceStateIndicator } from 'features/dual-governance/types';
+import { ProposalPartName } from 'features/dual-governance/proposals/shared-components/proposal-part-name/proposal-part-name';
 
 type Props = {
   script?: string;
@@ -39,13 +35,8 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
     return (
       <ProposalListItemToEnact>
         <SummarySection>
-          <TitleWrapper>
-            <WarningIconWrapper>
-              <WarningIcon />
-            </WarningIconWrapper>
-            <Title $warning>Kill</Title>
-          </TitleWrapper>
-          <ProposalStatus>Ready to enact</ProposalStatus>
+          <ProposalPartName warning partName="Vote #176 part 1" />
+          <ProposalStatusBadge status={ProposalStatus.READY_TO_EXECUTE} />
         </SummarySection>
         <ProposalDescription $slim>
           <DescriptionText>
@@ -59,13 +50,8 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
   return (
     <ProposalListItemWrapper>
       <SummarySection>
-        <TitleWrapper>
-          <LogoWrapper>
-            <ProposalsIcon />
-          </LogoWrapper>
-          <Title>Vote #176 part 1</Title>
-        </TitleWrapper>
-        <ProposalStatus>Pending in Dual Governance</ProposalStatus>
+        <ProposalPartName partName="Vote #176 part 1" />
+        <ProposalStatusBadge status={ProposalStatus.PENDING} />
       </SummarySection>
       <ProposalDescription $slim>
         <DescriptionText>

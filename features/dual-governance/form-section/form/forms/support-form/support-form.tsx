@@ -125,7 +125,7 @@ export const SupportForm = () => {
           onClick={() =>
             openDepositingModal({
               amount: '1123.1231',
-              state: TransactionState.ERROR,
+              state: TransactionState.PENDING,
             })
           }
         >

@@ -1,21 +1,21 @@
 import { FC } from 'react';
 
-import { config } from 'config';
+// import { config } from 'config';
 import { Layout } from 'shared/components';
 import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
 
-const Settings: FC = () => {
+const settings: FC = () => {
   return (
-    <Layout title="Settings">
-      <h1>Settings</h1>
+    <Layout>
+      <h1>settings</h1>
     </Layout>
   );
 };
 
 export const getStaticProps = getDefaultStaticProps(async () => {
-  if (!config.ipfsMode) return { notFound: true };
+  // if (!config.ipfsMode) return { notFound: true };
 
   return { props: {} };
 });
 
-export default Settings;
+export default settings;
