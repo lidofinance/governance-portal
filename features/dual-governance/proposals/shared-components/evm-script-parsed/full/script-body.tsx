@@ -4,13 +4,13 @@ import {
   CallWrapper,
   ScriptBox,
   NestedPadding,
-} from 'features/dual-governance/proposals/proposal-page/parsed-script/style';
+} from 'features/dual-governance/proposals/shared-components/evm-script-parsed/full/style';
 
 import { EVMScriptDecoded } from '@lidofinance/evm-script-decoder/lib/types';
 import { getEtherscanAddressLink } from '@lido-sdk/helpers';
 import { getContractName } from 'utils/getContractName';
-import { formatCallString } from './utils';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { formatCallString } from '../utils';
 
 type Props = {
   binary: string;

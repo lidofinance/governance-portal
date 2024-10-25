@@ -7,8 +7,8 @@ import {
   Tab,
   VoteScriptBodyWrap,
   ScriptLoaderWrap,
-} from 'features/dual-governance/proposals/proposal-page/parsed-script/style';
-import { ScriptBody } from 'features/dual-governance/proposals/proposal-page/parsed-script/script-body';
+} from 'features/dual-governance/proposals/shared-components/evm-script-parsed/full/style';
+import { ScriptBody } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/full/script-body';
 
 type Props = {
   script: string;

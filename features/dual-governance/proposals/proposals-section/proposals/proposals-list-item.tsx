@@ -1,4 +1,4 @@
-import { ProposalScriptParsed } from 'features/dual-governance/proposals/proposals-section/proposal-script';
+import { Script } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/compact';
 import {
   ProposalStatusBadge,
   ProposalStatus,
@@ -12,7 +12,6 @@ import {
   ScriptSection,
   ProposalListItemToEnact,
 } from 'features/dual-governance/proposals/proposals-section/style';
-import { useDecodedScript } from 'shared/hooks/useDecodedScript';
 import { useDualGovernanceState } from 'providers/dual-governance-state';
 import { GovernanceStateIndicator } from 'features/dual-governance/types';
 import { ProposalPartName } from 'features/dual-governance/proposals/shared-components/proposal-part-name/proposal-part-name';
@@ -24,8 +23,6 @@ type Props = {
 };
 
 export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
-  const { binary, decoded } = useDecodedScript(script ?? '');
-
   const { currentGovernanceState } = useDualGovernanceState();
 
   if (
@@ -58,9 +55,11 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
           Replace Rated Labs with MatrixedLink in Lido on Ethereum Oracle set
         </DescriptionText>
       </ProposalDescription>
-      <ScriptSection>
-        <ProposalScriptParsed binary={binary} decoded={decoded} />
-      </ScriptSection>
+      {script && (
+        <ScriptSection>
+          <Script script={script} />
+        </ScriptSection>
+      )}
     </ProposalListItemWrapper>
   );
 };
