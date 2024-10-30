@@ -7,7 +7,7 @@ import {
   SETTINGS_PATH,
 } from 'constants/urls';
 import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
-import { usePrefixedReplace } from 'shared/hooks/use-prefixed-history';
+import { usePrefixedReplace } from 'shared/hooks';
 
 import SettingsPage from 'pages/settings';
 

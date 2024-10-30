@@ -6,7 +6,7 @@ import { AddressBadge } from '../components/address-badge/address-badge';
 import { useWalletModal } from '../wallet-modal/use-wallet-modal';
 
 import { WalledButtonWrapperStyle, WalledButtonLoaderStyle } from './styles';
-import { useEthereumBalance } from 'shared/hooks/use-balance';
+import { useEthereumBalance } from 'shared/hooks';
 
 export const Button: FC<ButtonProps> = (props) => {
   const { onClick, ...rest } = props;

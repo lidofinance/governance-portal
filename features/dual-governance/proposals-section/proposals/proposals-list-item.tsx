@@ -14,11 +14,8 @@ import {
   ProposalListItemToEnact,
   WarningIconWrapper,
 } from '../style';
-import { useDecodedScript } from 'shared/hooks/useDecodedScript';
-import {
-  DualGovernanceStateProvider,
-  useDualGovernanceState,
-} from 'providers/dual-governance-state';
+import { useDecodedScript } from 'shared/hooks';
+import { useDualGovernanceState } from 'providers/dual-governance-state';
 import { GovernanceStateIndicator } from 'features/dual-governance/types';
 
 type Props = {

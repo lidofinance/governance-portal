@@ -4,7 +4,7 @@ import { Check, Close } from '@lidofinance/lido-ui';
 import { config } from 'config';
 import { SETTINGS_PATH } from 'constants/urls';
 import { useIPFSInfoBoxStatuses } from 'providers/ipfs-info-box-statuses';
-import { usePrefixedPush } from 'shared/hooks/use-prefixed-history';
+import { usePrefixedPush } from 'shared/hooks';
 import { LinkArrow } from 'shared/components/link-arrow/link-arrow';
 
 import { Wrap, RpcStatusBox, Button, Text } from './styles';

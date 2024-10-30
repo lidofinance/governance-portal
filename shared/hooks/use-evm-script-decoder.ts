@@ -1,4 +1,4 @@
-import { useGlobalMemo } from 'shared/hooks/useGlobalMemo';
+import { useGlobalMemo } from 'shared/hooks';
 
 import { Contract } from 'ethers';
 import {

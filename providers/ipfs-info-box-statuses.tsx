@@ -14,7 +14,7 @@ import { useRpcUrl } from 'config/rpc';
 import { SETTINGS_PATH } from 'constants/urls';
 import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { useCSPViolation } from 'features/ipfs/csp-violation-box/use-csp-violation';
-import { useRouterPath } from 'shared/hooks/use-router-path';
+import { useRouterPath } from 'shared/hooks';
 import { checkRpcUrl } from 'utils/check-rpc-url';
 
 type IPFSInfoBoxStatusesContextValue = {

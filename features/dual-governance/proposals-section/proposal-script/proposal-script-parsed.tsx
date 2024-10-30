@@ -12,9 +12,7 @@ type Props = {
 };
 
 export const ProposalScriptParsed = ({ decoded }: Props) => {
-  const {
-    core: { chainId },
-  } = useLidoSDK();
+  const { chainId } = useLidoSDK();
 
   if (!decoded) return null;
 

@@ -6,7 +6,7 @@ import {
   useRef,
 } from 'react';
 import { Text } from '@lidofinance/lido-ui';
-import { useSimpleReducer } from 'shared/hooks/useSimpleReducer';
+import { useSimpleReducer } from 'shared/hooks';
 import { NftData } from './types';
 import { NftItem } from './nft-item';
 

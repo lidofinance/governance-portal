@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 
 import { GearIcon } from 'shared/components/icons';
 import { SETTINGS_PATH } from 'constants/urls';
-import { useRouterPath } from 'shared/hooks/use-router-path';
-import { usePrefixedPush } from 'shared/hooks/use-prefixed-history';
+import { useRouterPath } from 'shared/hooks';
+import { usePrefixedPush } from 'shared/hooks';
 
 import { HeaderControlButton } from './header-control-button';
 

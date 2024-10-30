@@ -1,5 +1,5 @@
 import { EVMScriptDecoder } from '@lidofinance/evm-script-decoder';
-import { useEVMScriptDecoder } from './useEvmScriptDecoder';
+import { useEVMScriptDecoder } from './use-evm-script-decoder';
 import { useLidoSWR, useSDK } from '@lido-sdk/react';
 
 export const useDecodedScript = (script: string) => {
