@@ -1,13 +1,13 @@
-import { Tokens } from 'types/tokens';
 import { RevokeAction, StyledRevokeTokenItem } from './style';
 import { RevokeIcon } from 'shared/components/icons';
 import { Text } from '@lidofinance/lido-ui';
 import { ForwardedRef, forwardRef } from 'react';
-import { iconsDict, tokensSymbolDict } from 'features/dual-governance/helpers';
+import { Token } from 'shared/blockchain/types';
+import { formatEth, getTokenIcon } from 'shared/blockchain/utils';
 
 type Props = {
-  token: Tokens;
-  amount?: string; // redefine with real type
+  token: Token;
+  amount: bigint | undefined; // redefine with real type
   plain?: boolean;
   interactive?: boolean;
   onClick?: () => void;
@@ -17,8 +17,8 @@ type Props = {
 };
 
 export const RevokeTokenItem = forwardRef(
-  (
-    {
+  (props: Props, ref: ForwardedRef<HTMLDivElement>) => {
+    const {
       token,
       amount,
       plain,
@@ -26,9 +26,12 @@ export const RevokeTokenItem = forwardRef(
       onClick,
       children,
       isRevocable = true,
-    }: Props,
-    ref: ForwardedRef<HTMLDivElement>,
-  ) => {
+    } = props;
+
+    if (amount === undefined) {
+      return null;
+    }
+
     return (
       <StyledRevokeTokenItem
         $plain={plain}
@@ -37,12 +40,12 @@ export const RevokeTokenItem = forwardRef(
         onClick={(onClick || null) as () => void}
       >
         <>
-          {iconsDict[token]}
+          {getTokenIcon(token)}
           {children}
           {!children && (
             <>
               <Text size="lg" strong>
-                {amount} {tokensSymbolDict[token]}
+                {formatEth(amount)} {token}
               </Text>
               {isRevocable && (
                 <RevokeAction onClick={onClick}>

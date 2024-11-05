@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useConnect } from 'reef-knot/core-react';
 import { wrapWithEventTrack } from '@lidofinance/analytics-matomo';
 
@@ -6,7 +6,7 @@ import { MATOMO_CLICK_EVENTS } from 'constants/matomo-click-events';
 import { useUserConfig } from 'config/user-config';
 import { ActionButton, ButtonProps } from 'shared/components/action-button';
 
-export const Connect: FC<ButtonProps> = (props) => {
+export const ConnectWalletButton = (props: ButtonProps) => {
   const { isWalletConnectionAllowed } = useUserConfig();
   const { onClick, ...rest } = props;
   const { connect } = useConnect();

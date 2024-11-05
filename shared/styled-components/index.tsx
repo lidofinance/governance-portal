@@ -25,4 +25,5 @@ export const FlexWrapper = styled.div<FlexWrapperProps>`
 export const StyledPopupMenu = styled(PopupMenu)<PopupMenuProps>`
   padding: 24px;
   border-radius: 32px;
+  min-width: 480px;
 `;

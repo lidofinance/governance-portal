@@ -14,7 +14,7 @@ import {
 import { getStaticRpcBatchProvider } from '@lido-sdk/providers';
 
 import * as abis from 'generated';
-import * as ADDR from 'constants/contractAddresses';
+import * as ADDR from 'shared/blockchain/contract-addresses';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useUserConfig } from 'config/user-config';
 import { useSDK } from '@lido-sdk/react';

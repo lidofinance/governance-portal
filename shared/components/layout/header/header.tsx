@@ -1,22 +1,11 @@
-import { FC } from 'react';
 import { LogoLido } from 'shared/components/logos/logos';
+import { HeaderContainer, LogoTextStyle } from './style';
+import { HeaderActions } from './header-actions';
 
-import {
-  HeaderBorderWrapper,
-  HeaderStyle,
-  HeaderActionsStyle,
-  LogoTextStyle,
-} from './style';
-import HeaderActions from './components/header-actions';
-
-export const Header: FC = () => (
-  <HeaderBorderWrapper>
-    <HeaderStyle size="full" forwardedAs="header">
-      <LogoLido />
-      <LogoTextStyle>Dual governance</LogoTextStyle>
-      <HeaderActionsStyle>
-        <HeaderActions />
-      </HeaderActionsStyle>
-    </HeaderStyle>
-  </HeaderBorderWrapper>
+export const Header = () => (
+  <HeaderContainer size="full" forwardedAs="header">
+    <LogoLido />
+    <LogoTextStyle>DG</LogoTextStyle>
+    <HeaderActions />
+  </HeaderContainer>
 );

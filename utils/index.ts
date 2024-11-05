@@ -1,5 +1,4 @@
 export * from './appCookies';
-export * from './formatBalance';
 export * from './formatBalanceString';
 export * from './logger';
 export * from './weiToEth';

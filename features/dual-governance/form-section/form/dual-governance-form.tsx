@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ToggleButton } from 'shared/components/toggle-button';
-import { SupportForm } from './forms/support-form/support-form';
-import { RevokeForm } from './forms/revoke-form/revoke-form';
+import { SupportForm } from './forms/support-form';
+import { RevokeForm } from './forms/revoke-form';
 
 import { FormTitle, FormWrapper, FormHeader } from './style';
 

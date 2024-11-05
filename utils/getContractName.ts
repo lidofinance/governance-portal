@@ -1,5 +1,5 @@
 import { CHAINS } from '@lido-sdk/constants';
-import * as addressMaps from 'constants/contractAddresses';
+import * as addressMaps from 'shared/blockchain/contract-addresses';
 
 export const getContractName = (chainId: CHAINS, address: string) => {
   return (Object.keys(addressMaps) as (keyof typeof addressMaps)[]).find(

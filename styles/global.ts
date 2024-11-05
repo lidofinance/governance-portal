@@ -34,7 +34,6 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --nav-mobile-max-width: ${NAV_MOBILE_MAX_WIDTH}px;
     --nav-desktop-gutter-x: 46px;
 
-    --header-padding-y: 18px;
     --dot-size: 6px;
 
     --footer-max-width: 1424px;
@@ -44,7 +43,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --footer-mobile-padding-x: 20px;
     --footer-mobile-padding-y: 18px;
     --footer-mobile-margin-bottom: 60px;
-    
+
     // ----- Layout gradient & background colors
 
     --layout-background-normal: #EAF6F1;
@@ -53,15 +52,15 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
 
     --layout-gradient-start-normal: #29c38c;
     --layout-gradient-stop-normal: #29c38c00;
-    
+
     --layout-gradient-start-attention: #FFE176;
     --layout-gradient-stop-attention: #FFE17600;
 
     --layout-gradient-start-blocked: #D74758;
     --layout-gradient-stop-blocked: #D7475800;
-    
+
     // ----- Primary: For ext & icons
-    
+
     --primary-color-black: #000000;
     --primary-color-white: #FFFFFF;
     --primary-color-black-72: #131217B8;
@@ -69,21 +68,21 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --primary-color-black-32: #13121752;
     --primary-color-black-20: #13121733;
     --primary-color-black-8: #13121714;
-    
+
     // ----- Accent: For links and icons
-    
+
     --accent-color-ocean: #0085FF;
     --accent-color-sky: #00A3FF;
     --accent-color-coral: #FF8E76;
     --accent-color-berry: #D74758;
     --accent-color-leaf: #29C38C;
-    
+
     // ----- Borders: For strokes
-    
+
     --border-color-fog: #0000001A;
     --border-color-mist: #3C425447;
     --border-color-water: #0085FF99;
-    
+
 
     --custom-inverse-color-black: ${({ theme }) => (theme.name === ThemeName.light ? '#000' : '#fff')} ;
     --custom-inverse-color-white: ${({ theme }) => (theme.name === ThemeName.dark ? '#000' : '#fff')} ;

@@ -1,21 +1,19 @@
-import { useCallback } from 'react';
-
 import { GearIcon } from 'shared/components/icons';
 import { SETTINGS_PATH } from 'constants/urls';
 import { useRouterPath } from 'shared/hooks';
 import { usePrefixedPush } from 'shared/hooks';
 
-import { HeaderControlButton } from './header-control-button';
+import { HeaderControlButton } from './style';
 
 export const HeaderSettingsButton = () => {
   const push = usePrefixedPush();
   const route = useRouterPath();
-  const handleClick = useCallback(() => push(SETTINGS_PATH), [push]);
 
   return (
     <HeaderControlButton
+      disabled
       isActive={route === SETTINGS_PATH}
-      onClick={handleClick}
+      onClick={() => push(SETTINGS_PATH)}
     >
       <GearIcon />
     </HeaderControlButton>
