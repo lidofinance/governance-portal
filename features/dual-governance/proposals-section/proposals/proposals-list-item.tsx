@@ -15,8 +15,6 @@ import {
   WarningIconWrapper,
 } from '../style';
 import { useDecodedScript } from 'shared/hooks';
-import { useDualGovernanceState } from 'providers/dual-governance-state';
-import { GovernanceStateIndicator } from 'features/dual-governance/types';
 
 type Props = {
   script?: string;
@@ -27,11 +25,9 @@ type Props = {
 export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
   const { binary, decoded } = useDecodedScript(script ?? '');
 
-  const { currentGovernanceState } = useDualGovernanceState();
-
   if (
-    isReadyToEnact &&
-    currentGovernanceState === GovernanceStateIndicator.Blocked
+    isReadyToEnact
+    //  && currentGovernanceState === VisibleGovernanceState.BlockedDeactivation
   ) {
     return (
       <ProposalListItemToEnact>

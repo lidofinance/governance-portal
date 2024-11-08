@@ -113,6 +113,7 @@ export const RevokeForm = () => {
           interactive
           onClick={() => handleRevokeStETH(Token.stETH)}
           token={Token.stETH}
+          amount={0n}
         >
           <Text size="lg" strong>
             Revoke in stETH
@@ -126,6 +127,7 @@ export const RevokeForm = () => {
           interactive
           token={Token.wstETH}
           onClick={() => handleRevokeStETH(Token.wstETH)}
+          amount={0n}
         >
           <Text size="lg" strong>
             Revoke in wstETH
@@ -148,9 +150,13 @@ export const RevokeForm = () => {
           ref={revokeStEtfButtonRef}
           onClick={() => setIsRevokeTokenMenuOpen(true)}
           token={Token.stETH}
-          amount="480,000.0317"
+          amount={0n}
         />
-        <RevokeTokenItem token={Token.unstETH} ref={revokeNftItemRef}>
+        <RevokeTokenItem
+          token={Token.unstETH}
+          ref={revokeNftItemRef}
+          amount={0n}
+        >
           <Text size="lg" strong>
             {`${2.3153} ${Token.unstETH}`}
           </Text>
@@ -170,11 +176,7 @@ export const RevokeForm = () => {
         Your Tokens in RageQuit <ContractLink>contract</ContractLink>
       </Text>
       <RevokeTokenItemsWrapper>
-        <RevokeTokenItem
-          token={Token.stETH}
-          amount="480,000.0317"
-          isRevocable={false}
-        />
+        <RevokeTokenItem token={Token.stETH} amount={0n} isRevocable={false} />
       </RevokeTokenItemsWrapper>
       <ActionsWrapper>
         <ActionButton

@@ -32,3 +32,11 @@ export const DualGovernance: ContractObject<typeof abi.dualGovernanceAbi> = {
   abi: abi.dualGovernanceAbi,
   chainAddressMap: addr.DualGovernance,
 };
+
+export const EmergencyProtectedTimelock: ContractObject<
+  typeof abi.emergencyProtectedTimelockAbi
+> = {
+  name: 'EmergencyProtectedTimelock',
+  abi: abi.emergencyProtectedTimelockAbi,
+  chainAddressMap: addr.EmergencyProtectedTimelock,
+};

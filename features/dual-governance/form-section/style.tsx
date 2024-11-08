@@ -3,7 +3,9 @@ import { Block } from '@lidofinance/lido-ui';
 
 export const FormSectionStyled = styled(Block)`
   border: 1px solid var(--custom-border);
-  padding: 40px;
+  background: none;
+  padding: 0;
   border-radius: 60px;
   display: flex;
+  min-height: 500px;
 `;

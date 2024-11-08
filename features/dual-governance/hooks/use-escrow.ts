@@ -1,11 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { zeroAddress } from 'viem';
-import { escrowAbi } from 'abi/ts/Escrow';
+import { escrowAbi } from 'abi/ts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { getContractInstance } from 'shared/blockchain/get-contract-instance';
 import { useContractInstance } from 'shared/blockchain/hooks/use-contract-instance';
 import { ContractInstance } from 'shared/blockchain/types';
+
+export type EscrowContract = ReturnType<
+  typeof getContractInstance<typeof escrowAbi>
+>;
 
 export const useEscrow = () => {
   const { chainId, core } = useLidoSDK();

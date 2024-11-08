@@ -37,7 +37,7 @@ export const LogoTextStyle = styled(Text).attrs({
     height: 40px;
     background-color: var(--primary-color-black-72);
     left: 0;
-    top: -50%;
+    top: -25%;
   }
 `;
 

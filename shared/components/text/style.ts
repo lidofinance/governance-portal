@@ -31,5 +31,6 @@ const getTextColor = ({
 
 export const TextStyled = styled(Text)<TextStyledProps>`
   font-size: ${({ size }) => size ?? 14}px;
+  line-height: 1.4;
   color: ${getTextColor};
 `;

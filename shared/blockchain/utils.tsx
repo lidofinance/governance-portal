@@ -1,4 +1,4 @@
-import { formatEther } from 'viem';
+import { formatEther, formatUnits, parseUnits } from 'viem';
 import { StethIcon, WstethIcon, UnstethIcon } from '../components/icons';
 import { Token } from './types';
 
@@ -66,4 +66,17 @@ export const formatEthCompact = (amount: bigint) => {
     maxFractionDigits: 2,
     notation: 'compact',
   });
+};
+
+const parsePercent16 = (value: bigint) => {
+  return formatUnits(value, 16);
+};
+
+export const formatPercent16 = (value: bigint) => {
+  const numValue = formatNumber({
+    value: parsePercent16(value),
+    maxFractionDigits: 2,
+  });
+
+  return `${numValue}%`;
 };

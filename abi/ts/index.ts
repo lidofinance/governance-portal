@@ -3,3 +3,6 @@ export * from './WstETH.abi';
 export * from './WithdrawalQueue.abi';
 export * from './Voting.abi';
 export * from './DualGovernance.abi';
+export * from './Escrow.abi';
+export * from './DGConfigProvider.abi';
+export * from './EmergencyProtectedTimelock.abi';

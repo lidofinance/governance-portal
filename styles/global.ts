@@ -1,27 +1,35 @@
 import { createGlobalStyle, css } from 'styled-components';
 
-import { GovernanceStateIndicator } from 'features/dual-governance/types';
-
 import { NAV_MOBILE_HEIGHT, NAV_MOBILE_MAX_WIDTH } from './constants';
 import { ThemeName } from '@lidofinance/lido-ui';
+import { VisibleGovernanceState } from 'features/dual-governance/types';
 
 export const devicesHeaderMedia = {
   mobile: `screen and (max-width: ${NAV_MOBILE_MAX_WIDTH}px)`,
 };
 
 type GlobalLayoutProps = {
-  $layoutVariant: GovernanceStateIndicator | 'default';
+  $layoutVariant: VisibleGovernanceState | 'default';
 };
 
 const LayoutVariants = {
-  normal: css`
+  [VisibleGovernanceState.Normal]: css`
     background-color: var(--layout-background-normal);
   `,
-  attention: css`
+  [VisibleGovernanceState.NormalWarning]: css`
     background-color: var(--layout-background-attention);
   `,
-  blocked: css`
+  [VisibleGovernanceState.BlockedDeactivation]: css`
     background-color: var(--layout-background-blocked);
+  `,
+  [VisibleGovernanceState.BlockedRageQuit]: css`
+    background-color: var(--layout-background-blocked);
+  `,
+  [VisibleGovernanceState.BlockedVetoSignalling]: css`
+    background-color: var(--layout-background-blocked);
+  `,
+  [VisibleGovernanceState.Cooldown]: css`
+    background-color: var(--lido-color-background);
   `,
   default: css`
     background-color: var(--lido-color-background);
@@ -71,11 +79,12 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
 
     // ----- Accent: For links and icons
 
-    --accent-color-ocean: #0085FF;
+    --accent-color-ocean: #4854FF;
     --accent-color-sky: #00A3FF;
-    --accent-color-coral: #FF8E76;
+    --accent-color-coral: #FF9900;
     --accent-color-berry: #D74758;
     --accent-color-leaf: #29C38C;
+    --accent-color-orange: #FF633C;
 
     // ----- Borders: For strokes
 
