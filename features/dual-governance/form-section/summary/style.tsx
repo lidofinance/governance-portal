@@ -9,8 +9,7 @@ export const SummaryWrapper = styled.div`
   flex-shrink: 0;
   background-color: #ffffffb2;
 
-  border-right: 1px solid #0000001a;
+  border-right: 1px solid var(--border-color-fog);
   border-top-left-radius: inherit;
   border-bottom-left-radius: inherit;
-  color: #13121780;
 `;

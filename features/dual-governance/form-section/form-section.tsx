@@ -1,17 +1,15 @@
 import { Summary } from './summary';
 import { FormSectionStyled } from './style';
+import { DualGovernanceFormWrapper } from './form/form-wrapper';
+import { ConsentProvider } from 'providers/dg-consent';
 
 export const FormSection = () => {
   return (
     <FormSectionStyled>
       <Summary />
-      {/* {currentGovernanceState === VisibleGovernanceState.Blocked && (
-        <BlockedStateForm />
-      )}
-      {(currentGovernanceState === VisibleGovernanceState.Normal ||
-        currentGovernanceState === VisibleGovernanceState.Attention) && (
-        <NormalStateForm />
-      )} */}
+      <ConsentProvider>
+        <DualGovernanceFormWrapper />
+      </ConsentProvider>
     </FormSectionStyled>
   );
 };

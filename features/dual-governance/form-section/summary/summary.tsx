@@ -10,12 +10,12 @@ export const Summary = () => {
 
   // TODO: add view state
   if (isLoading) {
-    return null;
+    return <SummaryWrapper />;
   }
 
   // TODO: add view state
   if (!dualGovernanceState) {
-    return null;
+    return <SummaryWrapper />;
   }
 
   return (

@@ -1,13 +1,28 @@
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
-import { Button, Text, Select, SelectProps } from '@lidofinance/lido-ui';
+import { Text, Select, SelectProps } from '@lidofinance/lido-ui';
 import { InputAmount } from 'shared/components/input-amount';
 
-export const FormWrapper = styled.section`
-  padding: 20px 0 40px 20px;
-  width: 100%;
+export const DualGovernanceFormWrapperStyled = styled.div<{
+  $withGaps?: boolean;
+}>`
+  padding: 40px;
+  width: 60%;
+  background: #fff;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+  display: flex;
+  flex-direction: column;
 `;
 
+export const WrapperTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 26px;
+`;
+
+// TODO: remove
 export const FormTitle = styled.h1`
   font-size: 34px;
   color: #000;
@@ -19,17 +34,6 @@ export const FormDescription = styled(Text)`
   color: #131217b8;
   //margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   margin-top: 70px;
-`;
-
-export const ConnectButton = styled(Button)`
-  margin-top: 74px;
-  padding: 18px 36px;
-  border-radius: 60px;
-  background: var(--custom-inverse-color-black);
-  color: var(--custom-inverse-color-white);
-  &:not(:disabled):hover {
-    background-color: var(--lido-color-primary);
-  }
 `;
 
 export const FormHeader = styled.section`
@@ -85,3 +89,29 @@ export const StyledSelect = styled(Select).attrs<StyledSelectProps>(
   width: 50%;
   ${customInputStyles}
 ` as FC<StyledSelectProps>;
+
+export const DualGovernanceExplainerStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  flex: 1;
+
+  p {
+    line-height: 40px !important;
+  }
+
+  b {
+    font-size: 22px;
+  }
+`;
+
+export const ExplainerButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+
+  button {
+    width: auto;
+  }
+`;
