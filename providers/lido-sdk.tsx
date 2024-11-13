@@ -7,12 +7,14 @@ import {
 import invariant from 'tiny-invariant';
 import { useChainId, useClient, useConnectorClient } from 'wagmi';
 import { useGetRpcUrlByChainId } from 'config/rpc';
+import { useTokenTransferSubscription } from 'shared/blockchain/hooks/use-token-transfer-subscription';
 
 type LidoSDKContextValue = {
   core: LidoSDKCore;
   steth: LidoSDKstETH;
   wsteth: LidoSDKwstETH;
   chainId: CHAINS;
+  subscribeToTokenUpdates: ReturnType<typeof useTokenTransferSubscription>;
 };
 
 const LidoSDKContext = createContext<LidoSDKContextValue | null>(null);
@@ -26,6 +28,7 @@ export const useLidoSDK = () => {
 
 export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
   const publicClient = useClient();
+  const subscribe = useTokenTransferSubscription();
   const chainId = useChainId();
   const getRpcUrl = useGetRpcUrlByChainId();
   const fallbackRpcUrl = !publicClient ? getRpcUrl(chainId) : undefined;
@@ -49,8 +52,9 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
       steth,
       wsteth,
       chainId: core.chainId,
+      subscribeToTokenUpdates: subscribe,
     };
-  }, [chainId, fallbackRpcUrl, publicClient, walletClient]);
+  }, [chainId, fallbackRpcUrl, publicClient, walletClient, subscribe]);
   return (
     <LidoSDKContext.Provider value={sdk}>{children}</LidoSDKContext.Provider>
   );

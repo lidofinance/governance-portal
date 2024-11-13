@@ -1,8 +1,8 @@
 import { ModalProps, Text } from '@lidofinance/lido-ui';
 import { StyledModal, ButtonsWrapper } from './style';
 import { RevokeClaimNft } from '../nft/revoke-claim-nft';
-import { ActionButton } from 'shared/components/action-button';
 import { NftData } from 'features/dual-governance/nft/types';
+import { Button } from 'shared/components/button';
 
 type Props = {
   items: NftData[];
@@ -19,8 +19,8 @@ export const RevokeNftModal = ({ items, ...modalProps }: Props) => {
     <StyledModal title={<Title />} {...modalProps}>
       <RevokeClaimNft items={items} selectable>
         <ButtonsWrapper>
-          <ActionButton type="primary">Revoke</ActionButton>
-          <ActionButton type="secondary">Close</ActionButton>
+          <Button>Revoke</Button>
+          <Button>Close</Button>
         </ButtonsWrapper>
       </RevokeClaimNft>
     </StyledModal>

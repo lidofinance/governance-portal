@@ -10,7 +10,7 @@ export const getContractInstance = <T extends Abi>(
     abi,
     address,
     client: {
-      wallet: core.web3Provider as WalletClient | undefined,
+      wallet: core.web3Provider as WalletClient,
       public: core.rpcProvider as PublicClient,
     },
   });

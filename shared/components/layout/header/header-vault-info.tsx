@@ -12,7 +12,7 @@ import {
 import { Token } from 'shared/blockchain/types';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { formatEth } from 'shared/blockchain/utils';
-import { TokenBalanceWithIcon } from 'shared/components/token-balance-with-icon';
+import { TokenBalance } from 'shared/components/token-balance';
 import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
 
@@ -63,11 +63,11 @@ export const HeaderVaultInfo = () => {
                 Tokens in VetoSignaling contract
               </VaultInfoSubtitle>
               <TokensList>
-                <TokenBalanceWithIcon
+                <TokenBalance
                   token={Token.stETH}
                   balance={data.vetoSignalBalance.stETHLockedShares}
                 />
-                <TokenBalanceWithIcon
+                <TokenBalance
                   token={Token.unstETH}
                   balance={data.vetoSignalBalance.unstETHLockedShares}
                 />
@@ -78,11 +78,11 @@ export const HeaderVaultInfo = () => {
             <>
               <VaultInfoSubtitle>Tokens in RageQuit contract</VaultInfoSubtitle>
               <TokensList>
-                <TokenBalanceWithIcon
+                <TokenBalance
                   token={Token.stETH}
                   balance={data.rageQuitBalance.stETHLockedShares}
                 />
-                <TokenBalanceWithIcon
+                <TokenBalance
                   token={Token.unstETH}
                   balance={data.rageQuitBalance.unstETHLockedShares}
                 />

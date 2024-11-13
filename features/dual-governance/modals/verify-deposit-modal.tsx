@@ -1,6 +1,6 @@
 import { Modal, ModalProps, Text } from '@lidofinance/lido-ui';
+import { Button } from 'shared/components/button';
 import { FlexWrapper } from 'shared/styled-components';
-import { ActionButton } from 'shared/components/action-button';
 
 type Props = {
   closeModal: () => void;
@@ -22,12 +22,8 @@ export const VerifyDepositModal = ({ closeModal, ...modalProps }: Props) => {
     >
       <br />
       <FlexWrapper $flexDirection="column" $gap="10px">
-        <ActionButton type="primary" size="md">
-          Proceed
-        </ActionButton>
-        <ActionButton type="secondary" onClick={closeModal}>
-          Close
-        </ActionButton>
+        <Button size="md">Proceed</Button>
+        <Button onClick={closeModal}>Close</Button>
       </FlexWrapper>
     </Modal>
   );

@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
 import { Text, Select, SelectProps } from '@lidofinance/lido-ui';
-import { InputAmount } from 'shared/components/input-amount';
 
 export const DualGovernanceFormWrapperStyled = styled.div<{
   $withGaps?: boolean;
@@ -15,18 +14,17 @@ export const DualGovernanceFormWrapperStyled = styled.div<{
   flex-direction: column;
 `;
 
-export const WrapperTitle = styled.div`
+export const FormWrapperHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
   margin-bottom: 26px;
-`;
 
-// TODO: remove
-export const FormTitle = styled.h1`
-  font-size: 34px;
-  color: #000;
-  font-weight: 500;
+  & > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 `;
 
 export const FormDescription = styled(Text)`
@@ -34,14 +32,6 @@ export const FormDescription = styled(Text)`
   color: #131217b8;
   //margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   margin-top: 70px;
-`;
-
-export const FormHeader = styled.section`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
 `;
 
 const customInputStyles = css`
@@ -70,10 +60,6 @@ const customInputStyles = css`
       min-width: 0;
     }
   }
-`;
-
-export const StyledInput = styled(InputAmount)`
-  ${customInputStyles}
 `;
 
 type StyledSelectProps = Omit<SelectProps, 'value' | 'onChange'> & {

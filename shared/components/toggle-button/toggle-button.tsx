@@ -26,7 +26,10 @@ export const ToggleButton = ({ items, onChange }: Props) => {
     [setActiveItem, onChange],
   );
 
-  if (!items || items.length === 0) return null;
+  if (!items || items.length === 0) {
+    return null;
+  }
+
   return (
     <ToggleWrapper>
       {items.map((item) => (

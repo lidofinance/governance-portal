@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEscrow } from './use-escrow';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
+import { escrowAbi } from 'abi/ts';
+import { zeroAddress } from 'viem';
+import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
+import { useEscrowAddresses } from './use-escrow-addresses';
 
 type EscrowBalance = {
   stETHLockedShares: bigint;
@@ -18,21 +21,30 @@ const MOCK = {
 };
 
 export const useEscrowBalances = () => {
-  const { vetoSignallingEscrow, rageQuitEscrow, isLoading } = useEscrow();
-  const account = useAccount();
+  const { address } = useAccount();
   const { chainId } = useLidoSDK();
+
+  const { vetoSignallingAddress, rageQuitAddress, isLoading } =
+    useEscrowAddresses();
+
+  const readEscrowContract = useReadContractGetter({
+    abi: escrowAbi,
+  });
+
+  const isEnabled = !!vetoSignallingAddress && !!rageQuitAddress && !!address;
 
   const result = useQuery({
     queryKey: ['escrow-balances', chainId],
     staleTime: Infinity,
-    enabled: !!vetoSignallingEscrow && !!account.address,
+    enabled: isEnabled,
     queryFn: async () => {
-      if (!vetoSignallingEscrow || !account.address) return null;
+      if (!isEnabled) {
+        return null;
+      }
 
-      const vetoSignalingBalance =
-        await vetoSignallingEscrow.read.getVetoerState([account.address]);
-
-      console.log('balances', vetoSignalingBalance);
+      const vetoSignalingBalance = await readEscrowContract(
+        vetoSignallingAddress,
+      )('getVetoerState', [address]);
 
       const vetoSignalingSum =
         vetoSignalingBalance.stETHLockedShares +
@@ -41,12 +53,11 @@ export const useEscrowBalances = () => {
       let rageQuitBalance: EscrowBalance | null = null;
       let rageQuitSum = 0n;
 
-      if (rageQuitEscrow) {
-        rageQuitBalance = await rageQuitEscrow.read.getVetoerState([
-          account.address,
-        ]);
-
-        console.log('rageQuitBalances', rageQuitBalance);
+      if (rageQuitAddress !== zeroAddress) {
+        rageQuitBalance = await readEscrowContract(rageQuitAddress)(
+          'getVetoerState',
+          [address],
+        );
 
         rageQuitSum =
           rageQuitBalance.stETHLockedShares +

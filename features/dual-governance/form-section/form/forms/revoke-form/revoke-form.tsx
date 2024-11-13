@@ -14,10 +14,10 @@ import {
   ContractLink,
 } from './style';
 import { ActionsWrapper } from '../support-form/style';
-import { ActionButton } from 'shared/components/action-button';
 import { FlexWrapper } from 'shared/styled-components';
 import { RevokeTokenItem } from 'features/dual-governance/revoke-token-item';
 import { Token } from 'shared/blockchain/types';
+import { Button } from 'shared/components/button';
 
 type RevocableToken = Exclude<Token, typeof Token.unstETH>;
 
@@ -179,14 +179,14 @@ export const RevokeForm = () => {
         <RevokeTokenItem token={Token.stETH} amount={0n} isRevocable={false} />
       </RevokeTokenItemsWrapper>
       <ActionsWrapper>
-        <ActionButton
+        <Button
           size="lg"
           onClick={() =>
             openVerifyDepositModal({ closeModal: closeVerifyDepositModal })
           }
         >
           Revoke all available
-        </ActionButton>
+        </Button>
       </ActionsWrapper>
     </>
   );

@@ -1,26 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
-import { useContractInstance } from 'shared/blockchain/hooks/use-contract-instance';
-import { EscrowContract, useEscrow } from './use-escrow';
-import { getContractInstance } from 'shared/blockchain/get-contract-instance';
+import { useEscrowAddresses } from './use-escrow-addresses';
 
-import { dgConfigProviderAbi, dualGovernanceAbi, stEthAbi } from 'abi/ts';
+import { dgConfigProviderAbi, escrowAbi } from 'abi/ts';
 import { formatEth, formatPercent16 } from 'shared/blockchain/utils';
-import { LidoSDKCore } from '@lidofinance/lido-ethereum-sdk';
 import {
   DualGovernanceState,
   GovernanceState,
   VisibleGovernanceState,
 } from '../types';
+import {
+  useReadContract,
+  useReadContractGetter,
+} from 'shared/blockchain/hooks/use-read-contract';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
-
-// TODO: move to blockchain module
-type StETHContract = ReturnType<typeof getContractInstance<typeof stEthAbi>>;
-type DualGovernanceContract = ReturnType<
-  typeof getContractInstance<typeof dualGovernanceAbi>
->;
 
 // Normal: DG.Normal && < 30%
 // NormalWarning: DG.Normal && >= 30%
@@ -30,32 +25,50 @@ type DualGovernanceContract = ReturnType<
 // Cooldown: DG.Cooldown
 // Deadlock: DG.RageQuit && Reseal something something TBA
 export const useDualGovernanceState = () => {
-  const { chainId, core } = useLidoSDK();
-  const dualGovernance = useContractInstance(DualGovernance);
-  const stEth = useContractInstance(StETH);
-  const { vetoSignallingEscrow, isLoading: isEscrowLoading } = useEscrow();
+  const { chainId } = useLidoSDK();
+  const { vetoSignallingAddress, isLoading: isEscrowLoading } =
+    useEscrowAddresses();
+
+  const dualGovernance = useReadContract(DualGovernance);
+  const stEth = useReadContract(StETH);
+  const readEscrowGetter = useReadContractGetter({
+    abi: escrowAbi,
+  });
+
+  const dgConfigGetter = useReadContractGetter({ abi: dgConfigProviderAbi });
 
   const { data, isLoading } = useQuery<DualGovernanceState | null>({
     queryKey: ['dg-current-state', chainId],
     staleTime: Infinity,
-    enabled: !!vetoSignallingEscrow,
+    enabled: !!vetoSignallingAddress,
+
     queryFn: async () => {
-      if (!vetoSignallingEscrow) {
+      if (!vetoSignallingAddress) {
         return null;
       }
 
-      const vetoSupportPercent =
-        await vetoSignallingEscrow.read.getRageQuitSupport();
+      const readVetoSignalling = readEscrowGetter(vetoSignallingAddress);
+      const vetoSupportPercent = await readVetoSignalling('getRageQuitSupport');
 
-      const totalStEthInEscrow = await getTotalStEthAmountInDg(
-        vetoSignallingEscrow,
-        stEth,
+      const lockedAssets = await readVetoSignalling('getLockedAssetsTotals');
+
+      const unfinalizedShares =
+        lockedAssets.stETHLockedShares + lockedAssets.unstETHUnfinalizedShares;
+
+      const pooledEthByShares = await stEth.readContract(
+        'getPooledEthByShares',
+        [unfinalizedShares],
       );
 
-      const { firstSealRageQuitSupport } = await getDgConfig(
-        dualGovernance,
-        core,
-      );
+      const totalStEthInEscrow =
+        pooledEthByShares + lockedAssets.unstETHFinalizedETH;
+
+      const dgConfigAddress =
+        await dualGovernance.readContract('getConfigProvider');
+
+      const { firstSealRageQuitSupport } = await dgConfigGetter(
+        dgConfigAddress,
+      )('getDualGovernanceConfig');
 
       const amountTillNextPhase = firstSealRageQuitSupport - vetoSupportPercent;
 
@@ -63,7 +76,8 @@ export const useDualGovernanceState = () => {
         (firstSealRageQuitSupport * NORMAL_WARNING_STATE_THRESHOLD_PERCENT) /
         100n;
 
-      const contractState = await dualGovernance.read.getPersistedState();
+      const contractState =
+        await dualGovernance.readContract('getPersistedState');
 
       let visibleState: VisibleGovernanceState = VisibleGovernanceState.Normal;
 
@@ -100,35 +114,4 @@ export const useDualGovernanceState = () => {
     data,
     isLoading: isLoading || isEscrowLoading,
   };
-};
-
-const getTotalStEthAmountInDg = async (
-  escrow: EscrowContract,
-  stEth: StETHContract,
-) => {
-  const lockedAssets = await escrow.read.getLockedAssetsTotals();
-
-  const unfinalizedShares =
-    lockedAssets.stETHLockedShares + lockedAssets.unstETHUnfinalizedShares;
-
-  const pooledEthByShares = await stEth.read.getPooledEthByShares([
-    unfinalizedShares,
-  ]);
-
-  return pooledEthByShares + lockedAssets.unstETHFinalizedETH;
-};
-
-const getDgConfig = async (
-  dualGovernance: DualGovernanceContract,
-  core: LidoSDKCore,
-) => {
-  const dgConfigAddress = await dualGovernance.read.getConfigProvider();
-
-  const dgConfigContract = getContractInstance(
-    dgConfigAddress,
-    dgConfigProviderAbi,
-    core,
-  );
-
-  return dgConfigContract.read.getDualGovernanceConfig();
 };

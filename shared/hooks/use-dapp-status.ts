@@ -10,10 +10,7 @@ export const useDappStatus = () => {
   const isSupportedChain = useIsSupportedChain();
 
   const isLidoMultichainChain = useMemo(
-    () =>
-      !!chainId &&
-      // !!LIDO_MULTICHAIN_CHAINS[chainId] &&
-      multiChainBanner.includes(chainId),
+    () => !!chainId && multiChainBanner.includes(chainId),
     [chainId, multiChainBanner],
   );
 

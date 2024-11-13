@@ -6,7 +6,7 @@ import {
   useContext,
   useMemo,
 } from 'react';
-import { useLidoSWR, useLocalStorage, useSDK } from '@lido-sdk/react';
+import { useLidoSWR, useLocalStorage } from '@lido-sdk/react';
 import invariant from 'tiny-invariant';
 
 import { config } from 'config';
@@ -16,6 +16,7 @@ import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { useCSPViolation } from 'features/ipfs/csp-violation-box/use-csp-violation';
 import { useRouterPath } from 'shared/hooks';
 import { checkRpcUrl } from 'utils/check-rpc-url';
+import { useLidoSDK } from './lido-sdk';
 
 type IPFSInfoBoxStatusesContextValue = {
   isCSPViolated: boolean;
@@ -38,7 +39,7 @@ export const useIPFSInfoBoxStatuses = () => {
 export const IPFSInfoBoxStatusesProvider: FC<PropsWithChildren> = ({
   children,
 }) => {
-  const { chainId } = useSDK();
+  const { chainId } = useLidoSDK();
 
   // CSP violation box
   const { isCSPViolated } = useCSPViolation();

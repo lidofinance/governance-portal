@@ -21,7 +21,6 @@ export const ProposalScriptParsed = ({ decoded }: Props) => {
     const { address, abi, methodId } = call;
 
     // const callString = formatCallString(id, abi, decodedCallData);
-    // console.log(abi, 'abi');
     const nestedScriptsIdxs = abi?.inputs?.reduce(
       (r, c, j) => (c.name === '_evmScript' ? [...r, j] : r),
       [] as number[],
