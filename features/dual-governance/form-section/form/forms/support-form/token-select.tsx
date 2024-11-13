@@ -35,6 +35,7 @@ export const TokenSelect = () => {
         </Tab>
         <Tab
           isActive={activeToken === Token.unstETH}
+          disabled
           onClick={() => setActiveToken(Token.unstETH)}
         >
           <TokenBalance

@@ -31,11 +31,9 @@ export const useDualGovernanceState = () => {
 
   const dualGovernance = useReadContract(DualGovernance);
   const stEth = useReadContract(StETH);
-  const readEscrowGetter = useReadContractGetter({
-    abi: escrowAbi,
-  });
+  const readEscrowGetter = useReadContractGetter(escrowAbi);
 
-  const dgConfigGetter = useReadContractGetter({ abi: dgConfigProviderAbi });
+  const dgConfigGetter = useReadContractGetter(dgConfigProviderAbi);
 
   const { data, isLoading } = useQuery<DualGovernanceState | null>({
     queryKey: ['dg-current-state', chainId],

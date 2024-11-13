@@ -1,4 +1,4 @@
-import { formatEther, formatUnits, parseUnits } from 'viem';
+import { formatEther, formatUnits } from 'viem';
 import { StethIcon, WstethIcon, UnstethIcon } from '../components/icons';
 import { Token } from './types';
 
@@ -21,7 +21,7 @@ type FormatNumberArgs = {
   notation?: 'standard' | 'scientific' | 'engineering' | 'compact';
 };
 
-const formatNumber = (args: FormatNumberArgs) => {
+export const formatNumber = (args: FormatNumberArgs) => {
   const { value, maxFractionDigits = 2, notation = 'standard' } = args;
 
   if (value === null || value === undefined) return 'N/A';

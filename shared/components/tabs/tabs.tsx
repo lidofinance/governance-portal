@@ -13,12 +13,17 @@ export const Tabs = ({ children }: { children: any[] }) => {
 type Props = {
   isActive: boolean;
   children?: React.ReactNode;
+  disabled?: boolean;
   onClick: () => void;
 };
 
-export const Tab = ({ children, isActive, onClick }: Props) => {
+export const Tab = ({ children, isActive, disabled, onClick }: Props) => {
   return (
-    <StyledTab $isActive={isActive} onClick={onClick}>
+    <StyledTab
+      $isActive={isActive}
+      $disabled={disabled}
+      onClick={!disabled ? onClick : undefined}
+    >
       {children}
     </StyledTab>
   );

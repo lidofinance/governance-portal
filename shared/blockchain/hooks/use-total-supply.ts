@@ -3,9 +3,12 @@ import { useChainId, useReadContract } from 'wagmi';
 import { getTokenAddress } from '../get-contract-address';
 import { Token } from '../types';
 
-type SelectFn = (data: bigint) => unknown;
+type SelectFn<T> = (data: bigint) => T;
 
-export const useTokenTotalSupply = (token: Token, selectFn?: SelectFn) => {
+export const useTokenTotalSupply = <T>(
+  token: Token,
+  selectFn?: SelectFn<T>,
+) => {
   const chainId = useChainId();
 
   return useReadContract({

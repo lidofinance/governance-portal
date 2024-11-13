@@ -47,9 +47,9 @@ export const useApprove = (
   owner?: string,
 ): UseApproveResponse => {
   const { address } = useAccount();
-  const { core, chainId } = useLidoSDK();
+  const { rpcProvider, chainId } = useLidoSDK();
   const waitForTx = useTxConfirmation();
-  const writeTokenContract = useWriteContractGetter({ abi: Erc20ApproveAbi });
+  const writeTokenContract = useWriteContractGetter(Erc20ApproveAbi);
   const mergedOwner = (owner ?? address) as Address;
 
   invariant(token != null, 'Token is required');
@@ -67,13 +67,12 @@ export const useApprove = (
 
   const approve = useCallback<UseApproveResponse['approve']>(
     async ({ onTxStart, onTxSent, onTxAwaited } = {}) => {
-      invariant(core.web3Provider != null, 'Web3 provider is required');
       invariant(address, 'address is required');
       await onTxStart?.();
 
       const tokenAddress = getTokenAddress(token, chainId);
 
-      const isMultisig = await isContract(address, core);
+      const isMultisig = await isContract(address, rpcProvider);
 
       const approveTxHash = await writeTokenContract(tokenAddress)('approve', [
         spender,
@@ -91,7 +90,7 @@ export const useApprove = (
       return approveTxHash;
     },
     [
-      core,
+      rpcProvider,
       address,
       token,
       chainId,

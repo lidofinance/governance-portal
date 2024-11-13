@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 
 export const useIsMultisig = () => {
   const { address } = useAccount();
-  const { chainId, core } = useLidoSDK();
+  const { chainId, rpcProvider } = useLidoSDK();
 
   return useQuery({
     queryKey: ['is-multisig', chainId],
@@ -14,7 +14,7 @@ export const useIsMultisig = () => {
     queryFn: async () => {
       if (!address) return false;
 
-      return isContract(address, core);
+      return isContract(address, rpcProvider);
     },
   });
 };

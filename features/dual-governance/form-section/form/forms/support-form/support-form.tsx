@@ -11,6 +11,7 @@ import { SupportFormProvider } from './support-form-context';
 import { TokenSelect } from './token-select';
 import { SupportAmountInput } from './support-amount-input';
 import { Text } from 'shared/components/text';
+import { SupportFormAdditionalInfo } from './support-form-additional-info';
 
 export const SupportForm = () => {
   // TODO: Remove - for testing purposes only
@@ -25,22 +26,7 @@ export const SupportForm = () => {
       <FormController>
         <TokenSelect />
         <SupportAmountInput />
-        <SummaryRow>
-          <Text size={14} color="secondary">
-            Percent of total stETH supply
-          </Text>
-          <Text size={14} color="secondary">
-            0.31%
-          </Text>
-        </SummaryRow>
-        <SummaryRow>
-          <Text size={14} color="secondary">
-            Max transaction cost
-          </Text>
-          <Text size={14} color="secondary">
-            0.000212 ETH ($10.62)
-          </Text>
-        </SummaryRow>
+        <SupportFormAdditionalInfo />
         {/* {activeTab === 1 && (
           <>
             <StyledInput

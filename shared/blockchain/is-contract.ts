@@ -1,10 +1,10 @@
-import { LidoSDKCore } from '@lidofinance/lido-ethereum-sdk';
-import { Address } from 'viem';
+import { Address, PublicClient } from 'viem';
+import { getCode } from 'viem/actions';
 
 export const isContract = async (
   address: Address,
-  core: LidoSDKCore,
+  client: PublicClient,
 ): Promise<boolean> => {
-  const code = await core.rpcProvider.getCode({ address });
+  const code = await getCode(client, { address });
   return code != '0x';
 };

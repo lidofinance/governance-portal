@@ -1,30 +1,26 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useCallback, useMemo } from 'react';
-import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
-import { ContractObject } from '../types';
+import { Abi, Address } from 'viem';
+import { ContractObject, WriteFunctionArgs, WriteFunctionName } from '../types';
 import { getContractAddress } from '../get-contract-address';
 import invariant from 'tiny-invariant';
 import { useAccount } from 'wagmi';
+import { simulateContract, writeContract } from 'viem/actions';
 
-export const useWriteContractGetter = <T extends Abi>({ abi }: { abi: T }) => {
+export const useWriteContractGetter = <T extends Abi>(abi: T) => {
   const account = useAccount();
-  const {
-    core: { web3Provider, rpcProvider },
-  } = useLidoSDK();
+  const { web3Provider, rpcProvider } = useLidoSDK();
 
   return useCallback(
     (address: Address) =>
-      async <
-        F extends ContractFunctionName<T, 'nonpayable' | 'payable'>,
-        A extends ContractFunctionArgs<T, 'nonpayable' | 'payable', F>,
-      >(
+      async <F extends WriteFunctionName<T>, A extends WriteFunctionArgs<T, F>>(
         functionName: F,
         args: A,
       ) => {
         invariant(web3Provider != null, 'Web3 provider is required');
         invariant(account.status === 'connected', 'Account is required');
 
-        const { request } = await rpcProvider.simulateContract({
+        const { request } = await simulateContract(rpcProvider, {
           address,
           abi,
           functionName,
@@ -33,7 +29,7 @@ export const useWriteContractGetter = <T extends Abi>({ abi }: { abi: T }) => {
           account: account.address,
         });
 
-        return web3Provider.writeContract(request as any);
+        return writeContract(web3Provider, request as any);
       },
     [abi, account.address, account.status, rpcProvider, web3Provider],
   );
@@ -49,9 +45,7 @@ export const useWriteContract = <T extends Abi>(
     [chainId, contract],
   );
 
-  const writeContractGetter = useWriteContractGetter({
-    abi: contract.abi,
-  });
+  const writeContractGetter = useWriteContractGetter(contract.abi);
 
   return {
     address: contractAddress,

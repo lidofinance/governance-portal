@@ -8,6 +8,7 @@ export const FormWrapper = styled.div`
 
 type TabProps = {
   $isActive: boolean;
+  $disabled?: boolean;
 };
 
 export const StyledTab = styled.div<TabProps>`
@@ -28,6 +29,12 @@ export const StyledTab = styled.div<TabProps>`
   &:last-child {
     border-top-right-radius: 30px;
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+    `}
 `;
 
 export const TabsWrapper = styled.section`

@@ -14,9 +14,7 @@ type Props = {
 };
 
 export const ScriptBody = ({ decoded }: Props) => {
-  const {
-    core: { chainId },
-  } = useLidoSDK();
+  const { chainId } = useLidoSDK();
 
   if (!decoded) return null;
 

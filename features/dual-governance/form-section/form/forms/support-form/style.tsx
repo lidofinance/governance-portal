@@ -1,3 +1,4 @@
+import { InlineLoader } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 
 export const SummaryRow = styled.div`
@@ -19,4 +20,13 @@ export const TokenSelectStyled = styled.div`
 export const SupportFormAdditionalInfoStyled = styled.div`
   margin-top: 20px;
   margin-bottom: 30px;
+
+  & > div {
+    height: 24px;
+  }
+`;
+
+export const AdditionalInfoLoader = styled(InlineLoader)`
+  height: 16px;
+  max-width: 100px;
 `;

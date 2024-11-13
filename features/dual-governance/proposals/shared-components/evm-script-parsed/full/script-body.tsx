@@ -19,9 +19,7 @@ type Props = {
 };
 
 export const ScriptBody = ({ binary, decoded, parentId }: Props) => {
-  const {
-    core: { chainId },
-  } = useLidoSDK();
+  const { chainId } = useLidoSDK();
   if (!decoded?.calls.length) {
     return (
       <CallWrapper>

@@ -1,21 +1,30 @@
 import { Text } from 'shared/components/text';
-import { SummaryRow, SupportFormAdditionalInfoStyled } from './style';
+import {
+  AdditionalInfoLoader,
+  SummaryRow,
+  SupportFormAdditionalInfoStyled,
+} from './style';
 import { useSupportFormDataContext } from './support-form-context';
 import { useTokenTotalSupply } from 'shared/blockchain/hooks/use-total-supply';
 import { useFormContext } from 'react-hook-form';
+import { formatNumber } from 'shared/blockchain/utils';
+import { InlineLoader } from '@lidofinance/lido-ui';
 
-const calculateSupplyPercentage = (amount: string) => (totalSupply: bigint) => {
-  const amountBN = BigInt(amount);
-  return (amountBN * 100n) / totalSupply;
-};
+const calculateSupplyPercentage =
+  (amount: bigint | null) => (totalSupply: bigint) => {
+    if (!amount || !totalSupply) return '0';
+    const value = Number((amount * 10000n) / totalSupply) / 100;
+    return formatNumber({ value, maxFractionDigits: 2 });
+  };
 
 export const SupportFormAdditionalInfo = () => {
   const { activeToken } = useSupportFormDataContext();
 
-  const kek = useFormContext();
-  console.log('kek', kek);
+  const { watch } = useFormContext();
+  const amount = watch('amount');
 
-  const { data } = useTokenTotalSupply(activeToken);
+  const { data: supplyPercent, isLoading: isTotalSupplyLoading } =
+    useTokenTotalSupply(activeToken, calculateSupplyPercentage(amount));
 
   return (
     <SupportFormAdditionalInfoStyled>
@@ -23,9 +32,13 @@ export const SupportFormAdditionalInfo = () => {
         <Text size={14} color="secondary">
           Percent of total {activeToken} supply
         </Text>
-        <Text size={14} color="secondary">
-          0.31%
-        </Text>
+        {isTotalSupplyLoading ? (
+          <AdditionalInfoLoader />
+        ) : (
+          <Text size={14} color="secondary">
+            {supplyPercent}%
+          </Text>
+        )}
       </SummaryRow>
       <SummaryRow>
         <Text size={14} color="secondary">

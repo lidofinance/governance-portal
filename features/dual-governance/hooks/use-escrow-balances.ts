@@ -27,9 +27,7 @@ export const useEscrowBalances = () => {
   const { vetoSignallingAddress, rageQuitAddress, isLoading } =
     useEscrowAddresses();
 
-  const readEscrowContract = useReadContractGetter({
-    abi: escrowAbi,
-  });
+  const readEscrowContract = useReadContractGetter(escrowAbi);
 
   const isEnabled = !!vetoSignallingAddress && !!rageQuitAddress && !!address;
 
