@@ -11,10 +11,9 @@ import {
   DescriptionText,
   ScriptSection,
   ProposalListItemToEnact,
-} from 'features/dual-governance/proposals/proposals-section/style';
-import { useDualGovernanceState } from 'providers/dual-governance-state';
-import { GovernanceStateIndicator } from 'features/dual-governance/types';
-import { ProposalPartName } from 'features/dual-governance/proposals/shared-components/proposal-part-name/proposal-part-name';
+} from '../style';
+import { useDecodedScript } from 'shared/hooks';
+import { ProposalPartName } from '../../shared-components/proposal-part-name/proposal-part-name';
 
 type Props = {
   script?: string;
@@ -23,11 +22,11 @@ type Props = {
 };
 
 export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
-  const { currentGovernanceState } = useDualGovernanceState();
+  const { binary, decoded } = useDecodedScript(script ?? '');
 
   if (
-    isReadyToEnact &&
-    currentGovernanceState === GovernanceStateIndicator.Blocked
+    isReadyToEnact
+    //  && currentGovernanceState === VisibleGovernanceState.BlockedDeactivation
   ) {
     return (
       <ProposalListItemToEnact>

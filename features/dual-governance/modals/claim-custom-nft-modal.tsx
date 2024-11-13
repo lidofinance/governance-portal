@@ -1,11 +1,11 @@
 import { ChangeEvent, useCallback } from 'react';
 import { ModalProps, Text } from '@lidofinance/lido-ui';
-import { ActionButton } from 'shared/components/action-button';
 import { StyledModal, StyledInput } from './style';
 
 import { NftItem } from '../nft/nft-item';
 import { NftData } from '../nft/types';
 import { ActionsWrapper } from '../nft/style';
+import { Button } from 'shared/components/button';
 
 const mockNft: NftData = {
   id: 10423,
@@ -37,10 +37,8 @@ export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
       <StyledInput onChange={handleInputSearch} fullwidth></StyledInput>
       <NftItem nft={mockNft}></NftItem>
       <ActionsWrapper>
-        <ActionButton type="primary">{` Claim ${mockNft.amount} ETH`}</ActionButton>
-        <ActionButton type="secondary" onClick={closeModal}>
-          Close
-        </ActionButton>
+        <Button>{`Claim ${mockNft.amount} ETH`}</Button>
+        <Button onClick={closeModal}>Close</Button>
       </ActionsWrapper>
     </StyledModal>
   );

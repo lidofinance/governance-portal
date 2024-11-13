@@ -1,8 +1,7 @@
 import GlobalStyle from './global';
-import { useDualGovernanceState } from '../providers/dual-governance-state';
 
 export const GlobalStyleOverwrite = () => {
-  const { currentGovernanceState } = useDualGovernanceState();
+  const currentGovernanceState = 'Normal' as any;
 
   return <GlobalStyle $layoutVariant={currentGovernanceState || 'default'} />;
 };

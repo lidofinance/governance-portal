@@ -14,7 +14,7 @@ import {
   ProposalStatus,
   ProposalStatusBadge,
 } from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
-import { ActionButton } from 'shared/components/action-button';
+import { Button } from 'shared/components/button';
 
 type Props = {
   id: string;
@@ -46,7 +46,7 @@ export const Proposal = ({ id }: Props) => {
       <Script script={script} />
 
       <ActionsWrapper>
-        <ActionButton size="md">Enact</ActionButton>
+        <Button size="md">Enact</Button>
       </ActionsWrapper>
     </ProposalContainer>
   );

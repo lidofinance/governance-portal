@@ -5,6 +5,5 @@ export const ProposalsListWrapper = styled.section`
   flex-direction: column;
   gap: 20px;
   margin-top: ${({ theme }) => theme.spaceMap.xl}px;
-  margin-bottom: 200px;
   width: 100%;
 `;

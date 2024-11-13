@@ -1,10 +1,8 @@
-import { CHAINS } from '@lido-sdk/constants';
 import { wrapRequest as wrapNextRequest } from '@lidofinance/next-api-wrapper';
 import { trackedFetchRpcFactory } from '@lidofinance/api-rpc';
 
 import { config, secretConfig } from 'config';
 import { API_ROUTES } from 'constants/api';
-import { METRICS_PREFIX } from 'constants/metrics';
 import {
   rateLimit,
   responseTimeMetric,
@@ -16,19 +14,21 @@ import {
 import Metrics from 'utilsApi/metrics';
 import { rpcFactory } from 'utilsApi/rpcFactory';
 import {
-  METRIC_CONTRACT_ADDRESSES,
+  // METRIC_CONTRACT_ADDRESSES,
   METRIC_CONTRACT_EVENT_ADDRESSES,
 } from 'utilsApi/contractAddressesMetricsMap';
+import { METRICS_PREFIX } from 'constants/metrics';
+import { CHAINS } from '@lido-sdk/constants';
 
-const allowedCallAddresses: Record<string, string[]> = Object.entries(
-  METRIC_CONTRACT_ADDRESSES,
-).reduce(
-  (acc, [chainId, addresses]) => {
-    acc[chainId] = Object.keys(addresses);
-    return acc;
-  },
-  {} as Record<string, string[]>,
-);
+// const allowedCallAddresses: Record<string, string[]> = Object.entries(
+//   METRIC_CONTRACT_ADDRESSES,
+// ).reduce(
+//   (acc, [chainId, addresses]) => {
+//     acc[chainId] = Object.keys(addresses);
+//     return acc;
+//   },
+//   {} as Record<string, string[]>,
+// );
 
 const allowedLogsAddresses: Record<string, string[]> = Object.entries(
   METRIC_CONTRACT_EVENT_ADDRESSES,
@@ -53,7 +53,6 @@ const rpc = rpcFactory({
   providers: {
     [CHAINS.Mainnet]: secretConfig.rpcUrls_1,
     [CHAINS.Holesky]: secretConfig.rpcUrls_17000,
-    [CHAINS.Sepolia]: secretConfig.rpcUrls_11155111,
   },
   allowedRPCMethods: [
     'test',
@@ -73,7 +72,7 @@ const rpc = rpcFactory({
     'eth_chainId',
     'net_version',
   ],
-  allowedCallAddresses,
+  // allowedCallAddresses,
   allowedLogsAddresses,
   maxBatchCount: config.PROVIDER_MAX_BATCH,
   disallowEmptyAddressGetLogs: true,

@@ -1,5 +1,5 @@
+import { VisibleGovernanceState } from 'features/dual-governance/types';
 import styled, { css } from 'styled-components';
-import { GovernanceStateIndicator } from 'features/dual-governance/types';
 
 export const BackgroundGradientSvgStyle = styled.svg`
   position: fixed;
@@ -12,29 +12,47 @@ export const BackgroundGradientSvgStyle = styled.svg`
 `;
 
 type GradientProps = {
-  $variant: GovernanceStateIndicator;
+  $variant: VisibleGovernanceState;
 };
 
 const GradientVariants = {
   start: {
-    normal: css`
+    [VisibleGovernanceState.Normal]: css`
       stop-color: var(--layout-gradient-start-normal);
     `,
-    attention: css`
+    [VisibleGovernanceState.NormalWarning]: css`
       stop-color: var(--layout-gradient-start-attention);
     `,
-    blocked: css`
+    [VisibleGovernanceState.BlockedRageQuit]: css`
+      stop-color: var(--layout-gradient-start-blocked);
+    `,
+    [VisibleGovernanceState.BlockedDeactivation]: css`
+      stop-color: var(--layout-gradient-start-blocked);
+    `,
+    [VisibleGovernanceState.BlockedVetoSignalling]: css`
+      stop-color: var(--layout-gradient-start-blocked);
+    `,
+    [VisibleGovernanceState.Cooldown]: css`
       stop-color: var(--layout-gradient-start-blocked);
     `,
   },
   stop: {
-    normal: css`
+    [VisibleGovernanceState.Normal]: css`
       stop-color: var(--layout-gradient-stop-normal);
     `,
-    attention: css`
+    [VisibleGovernanceState.NormalWarning]: css`
       stop-color: var(--layout-gradient-stop-attention);
     `,
-    blocked: css`
+    [VisibleGovernanceState.BlockedRageQuit]: css`
+      stop-color: var(--layout-gradient-stop-blocked);
+    `,
+    [VisibleGovernanceState.BlockedDeactivation]: css`
+      stop-color: var(--layout-gradient-stop-blocked);
+    `,
+    [VisibleGovernanceState.BlockedVetoSignalling]: css`
+      stop-color: var(--layout-gradient-stop-blocked);
+    `,
+    [VisibleGovernanceState.Cooldown]: css`
       stop-color: var(--layout-gradient-stop-blocked);
     `,
   },

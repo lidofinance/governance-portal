@@ -10,8 +10,13 @@ export const Tabs = ({ children }: { children: any[] }) => {
   );
 };
 
-// TODO: fix types
-export const Tab = ({ children, isActive, onClick }: any) => {
+type Props = {
+  isActive: boolean;
+  children?: React.ReactNode;
+  onClick: () => void;
+};
+
+export const Tab = ({ children, isActive, onClick }: Props) => {
   return (
     <StyledTab $isActive={isActive} onClick={onClick}>
       {children}

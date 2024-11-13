@@ -1,6 +1,6 @@
 import { Component } from 'types';
 import { useWalletModal } from '../wallet-modal/use-wallet-modal';
-import { AddressBadge } from '../components/address-badge/address-badge';
+import { AddressBadge } from '../address-badge/address-badge';
 import {
   WalletCardStyle,
   WalletCardRowStyle,

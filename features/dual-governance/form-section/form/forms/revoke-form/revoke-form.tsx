@@ -1,9 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { Text } from '@lidofinance/lido-ui';
 import { RevokeIcon } from 'shared/components/icons';
-import { Tokens } from 'types/tokens';
-
-import { RevokeTokenItem } from './revoke-token-item';
 
 import {
   useRevokeNftModal,
@@ -15,14 +12,14 @@ import {
   RevokeTokenItemsWrapper,
   StyledRevokePopup,
   ContractLink,
-  RevokeAction,
 } from './style';
 import { ActionsWrapper } from '../support-form/style';
-import { ActionButton } from 'shared/components/action-button';
 import { FlexWrapper } from 'shared/styled-components';
-import { tokensSymbolDict } from 'features/dual-governance/helpers';
+import { RevokeTokenItem } from 'features/dual-governance/revoke-token-item';
+import { Token } from 'shared/blockchain/types';
+import { Button } from 'shared/components/button';
 
-type RevocableTokens = Exclude<Tokens, Tokens.UNSTETH>;
+type RevocableToken = Exclude<Token, typeof Token.unstETH>;
 
 const mockNftData = [
   {
@@ -86,8 +83,9 @@ export const RevokeForm = () => {
   /**
    *  Handlers
    */
-  const handleRevokeStETH = useCallback((token: RevocableTokens) => {
+  const handleRevokeStETH = useCallback((token: RevocableToken) => {
     // Token to revoke stETH in - steth | wsteth,
+    // eslint-disable-next-line no-console
     console.log(token);
   }, []);
 
@@ -113,8 +111,9 @@ export const RevokeForm = () => {
         <RevokeTokenItem
           plain
           interactive
-          onClick={() => handleRevokeStETH(Tokens.STETH)}
-          token={Tokens.STETH}
+          onClick={() => handleRevokeStETH(Token.stETH)}
+          token={Token.stETH}
+          amount={0n}
         >
           <Text size="lg" strong>
             Revoke in stETH
@@ -126,8 +125,9 @@ export const RevokeForm = () => {
         <RevokeTokenItem
           plain
           interactive
-          token={Tokens.WSTETH}
-          onClick={() => handleRevokeStETH(Tokens.WSTETH)}
+          token={Token.wstETH}
+          onClick={() => handleRevokeStETH(Token.wstETH)}
+          amount={0n}
         >
           <Text size="lg" strong>
             Revoke in wstETH
@@ -149,20 +149,25 @@ export const RevokeForm = () => {
         <RevokeTokenItem
           ref={revokeStEtfButtonRef}
           onClick={() => setIsRevokeTokenMenuOpen(true)}
-          token={Tokens.STETH}
-          amount="480,000.0317"
+          token={Token.stETH}
+          amount={0n}
         />
-        <RevokeTokenItem token={Tokens.UNSTETH} ref={revokeNftItemRef}>
+        <RevokeTokenItem
+          token={Token.unstETH}
+          ref={revokeNftItemRef}
+          amount={0n}
+        >
           <Text size="lg" strong>
-            {`${2.3153} ${tokensSymbolDict[Tokens.UNSTETH]}`}
+            {`${2.3153} ${Token.unstETH}`}
           </Text>
           <Text color="secondary" size="lg" strong>
             {mockNftData.length} NFT
           </Text>
-          <RevokeAction onClick={handleNftRevoke}>
+          {/* TODO: ??? */}
+          <button onClick={handleNftRevoke}>
             <Text>Revoke</Text>
             <RevokeIcon />
-          </RevokeAction>
+          </button>
         </RevokeTokenItem>
       </RevokeTokenItemsWrapper>
       <Text
@@ -171,21 +176,17 @@ export const RevokeForm = () => {
         Your Tokens in RageQuit <ContractLink>contract</ContractLink>
       </Text>
       <RevokeTokenItemsWrapper>
-        <RevokeTokenItem
-          token={Tokens.STETH}
-          amount="480,000.0317"
-          isRevocable={false}
-        />
+        <RevokeTokenItem token={Token.stETH} amount={0n} isRevocable={false} />
       </RevokeTokenItemsWrapper>
       <ActionsWrapper>
-        <ActionButton
+        <Button
           size="lg"
           onClick={() =>
             openVerifyDepositModal({ closeModal: closeVerifyDepositModal })
           }
         >
           Revoke all available
-        </ActionButton>
+        </Button>
       </ActionsWrapper>
     </>
   );

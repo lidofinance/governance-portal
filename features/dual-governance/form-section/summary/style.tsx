@@ -1,40 +1,15 @@
-import styled, { css } from 'styled-components';
-
-type ItemWrapProps = {
-  $stickBottom: boolean | undefined;
-  $withBorder: boolean | undefined;
-};
+import styled from 'styled-components';
 
 export const SummaryWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding-right: 40px;
+  gap: 40px;
+  padding: 40px;
   width: 40%;
   flex-shrink: 0;
-  border-right: 1px solid #0000001a;
-  color: #13121780;
-`;
+  background-color: #ffffffb2;
 
-export const SummaryItemWrap = styled.div<ItemWrapProps>`
-  &:not(:first-child) {
-    margin-top: ${({ $stickBottom }) => ($stickBottom ? 'auto' : '18px')};
-  }
-  &:not(:last-child) {
-    padding: 18px 0;
-  }
-  ${({ $withBorder }) =>
-    $withBorder &&
-    css`
-      border-bottom: 1px solid var(--border-color-fog);
-    `}
-
-  &:last-child {
-    border: none;
-  }
+  border-right: 1px solid var(--border-color-fog);
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
 `;
-export const SummaryItemLabel = styled.div`
-  font-size: 22px;
-  color: #13121780;
-  margin-bottom: 8px;
-`;
-export const SummaryItemContent = styled.div``;

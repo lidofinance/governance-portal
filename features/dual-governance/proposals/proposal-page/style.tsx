@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Block, Text } from '@lidofinance/lido-ui';
 import Link from 'next/link';
-import { ActionButton } from 'shared/components/action-button';
 
 export const ProposalContainer = styled(Block)`
   color: var(--primary-color-black);

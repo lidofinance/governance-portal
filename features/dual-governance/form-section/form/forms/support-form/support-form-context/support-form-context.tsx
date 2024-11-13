@@ -1,0 +1,151 @@
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
+import { useEthereumBalance } from 'shared/blockchain/hooks/use-ethereum-balance';
+import { useTokenBalance } from 'shared/blockchain/hooks/use-token-balance';
+import { Token } from 'shared/blockchain/types';
+import invariant from 'tiny-invariant';
+import { FormProvider, useForm } from 'react-hook-form';
+import { FormControllerContext } from 'shared/hook-form/form-controller-context';
+import { useFormControllerRetry } from 'shared/hook-form/use-form-controller-retry';
+import { SupportFormValidationResolver } from './support-form-validators';
+import { useSupportFormValidationContext } from '../use-support-form-validation-context';
+import { SupportFormNetworkData } from './types';
+
+const TOKENS = [Token.stETH, Token.wstETH, Token.unstETH] as const;
+
+type TokenLocal = (typeof TOKENS)[number];
+
+export type SupportFormInputType = {
+  amount: null | bigint;
+  token: TokenLocal;
+};
+
+type SupportFormContextValue = {
+  activeToken: TokenLocal;
+  setActiveToken: (token: TokenLocal) => void;
+  networkData: SupportFormNetworkData;
+  maxAmount: bigint;
+};
+
+const SupportFormContext = createContext<SupportFormContextValue | null>(null);
+
+export const useSupportFormDataContext = () => {
+  const value = useContext(SupportFormContext);
+  invariant(
+    value,
+    'useSupportFormDataContext was used outside the SupportFormContext provider',
+  );
+  return value;
+};
+
+const useSupportFormNetworkData = (): SupportFormNetworkData => {
+  const {
+    data: stEthBalance,
+    refetch: updateStEthBalance,
+    isLoading: isStEthBalanceLoading,
+  } = useTokenBalance(Token.stETH);
+
+  const {
+    data: wstEthBalance,
+    refetch: updateWstEthBalance,
+    isLoading: isWstEthBalanceLoading,
+  } = useTokenBalance(Token.wstETH);
+
+  const {
+    data: etherBalance,
+    refetch: updateEtherBalance,
+    isLoading: isEtherBalanceLoading,
+  } = useEthereumBalance();
+
+  const refetch = useCallback(async () => {
+    await Promise.allSettled([
+      updateStEthBalance(),
+      updateWstEthBalance(),
+      updateEtherBalance(),
+    ]);
+  }, [updateEtherBalance, updateStEthBalance, updateWstEthBalance]);
+
+  return {
+    etherBalance: etherBalance?.value,
+    stEthBalance,
+    wstEthBalance,
+    isLoading:
+      isStEthBalanceLoading || isWstEthBalanceLoading || isEtherBalanceLoading,
+    refetch,
+  };
+};
+
+export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
+  const networkData = useSupportFormNetworkData();
+  const [activeToken, setActiveToken] = useState<TokenLocal>(TOKENS[0]);
+  const validationContextPromise = useSupportFormValidationContext({
+    networkData,
+  });
+  const { retryEvent } = useFormControllerRetry();
+
+  const formObject = useForm<SupportFormInputType>({
+    defaultValues: {
+      amount: null,
+      token: TOKENS[0],
+    },
+    context: validationContextPromise,
+    criteriaMode: 'firstError',
+    mode: 'onChange',
+    resolver: SupportFormValidationResolver,
+  });
+
+  const formControllerValue = useMemo(
+    () => ({
+      onSubmit: () => {
+        console.log('submit');
+        return Promise.resolve(true);
+      },
+      // onReset: ({ token }: WrapFormInputType) => {
+      //   reset({
+      //     ...defaultValues,
+      //     token,
+      //   });
+      // },
+      retryEvent,
+    }),
+    [retryEvent],
+  );
+
+  const maxAmount = useMemo(() => {
+    if (activeToken === Token.stETH) {
+      return networkData.stEthBalance ?? 0n;
+    }
+    if (activeToken === Token.wstETH) {
+      return networkData.wstEthBalance ?? 0n;
+    }
+    return 0n;
+  }, [activeToken, networkData.stEthBalance, networkData.wstEthBalance]);
+
+  const amount = formObject.watch('amount');
+
+  const percentOfTotalSupply = useMemo(() => {}, []);
+
+  return (
+    <FormProvider {...formObject}>
+      <SupportFormContext.Provider
+        value={{
+          activeToken,
+          setActiveToken,
+          networkData,
+          maxAmount,
+        }}
+      >
+        <FormControllerContext.Provider value={formControllerValue}>
+          {children}
+        </FormControllerContext.Provider>
+      </SupportFormContext.Provider>
+    </FormProvider>
+  );
+};

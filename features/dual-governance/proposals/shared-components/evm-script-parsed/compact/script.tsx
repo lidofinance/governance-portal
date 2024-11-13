@@ -1,4 +1,4 @@
-import { useDecodedScript } from 'shared/hooks/useDecodedScript';
+import { useDecodedScript } from 'shared/hooks';
 import { ScriptBody } from './script-body';
 
 type Props = {

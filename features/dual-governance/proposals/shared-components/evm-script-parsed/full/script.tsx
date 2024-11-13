@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { useDecodedScript } from 'shared/hooks/useDecodedScript';
 
 import { Loader } from '@lidofinance/lido-ui';
 import {
@@ -9,6 +8,7 @@ import {
   ScriptLoaderWrap,
 } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/full/style';
 import { ScriptBody } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/full/script-body';
+import { useDecodedScript } from 'shared/hooks';
 
 type Props = {
   script: string;

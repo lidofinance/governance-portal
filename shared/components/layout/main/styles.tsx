@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 export const MainStyle = styled(Container)<ContainerProps>`
   position: relative;
-  margin-top: 60px;
-  padding-top: ${({ theme }) => theme.spaceMap.sm}px;
-  padding-bottom: ${({ theme }) => theme.spaceMap.sm}px;
+  margin: 60px auto 190px auto;
+  padding: 0;
+
+  max-width: 1280px;
 `;

@@ -10,7 +10,6 @@ import { InpageNavigationProvider } from './inpage-navigation';
 import { ModalProvider } from './modal-provider';
 import Web3Provider from './web3';
 import { LidoSDKProvider } from './lido-sdk';
-import { DualGovernanceStateProvider } from './dual-governance-state';
 
 type ProvidersProps = {
   prefetchedManifest?: unknown;
@@ -22,20 +21,18 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
 }) => (
   <ConfigProvider prefetchedManifest={prefetchedManifest}>
     <AppFlagProvider>
-      <DualGovernanceStateProvider>
-        <CookieThemeProvider>
-          <GlobalStyleOverwrite />
-          <Web3Provider>
-            <LidoSDKProvider>
-              <IPFSInfoBoxStatusesProvider>
-                <InpageNavigationProvider>
-                  <ModalProvider>{children}</ModalProvider>
-                </InpageNavigationProvider>
-              </IPFSInfoBoxStatusesProvider>
-            </LidoSDKProvider>
-          </Web3Provider>
-        </CookieThemeProvider>
-      </DualGovernanceStateProvider>
+      <CookieThemeProvider>
+        <GlobalStyleOverwrite />
+        <Web3Provider>
+          <LidoSDKProvider>
+            <IPFSInfoBoxStatusesProvider>
+              <InpageNavigationProvider>
+                <ModalProvider>{children}</ModalProvider>
+              </InpageNavigationProvider>
+            </IPFSInfoBoxStatusesProvider>
+          </LidoSDKProvider>
+        </Web3Provider>
+      </CookieThemeProvider>
     </AppFlagProvider>
   </ConfigProvider>
 );

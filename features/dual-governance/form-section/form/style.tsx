@@ -1,17 +1,30 @@
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
-import { Button, Text, Select, SelectProps } from '@lidofinance/lido-ui';
-import { InputAmount } from 'shared/components/input-amount';
+import { Text, Select, SelectProps } from '@lidofinance/lido-ui';
 
-export const FormWrapper = styled.section`
-  padding: 20px 0 40px 20px;
-  width: 100%;
+export const DualGovernanceFormWrapperStyled = styled.div<{
+  $withGaps?: boolean;
+}>`
+  padding: 40px;
+  width: 60%;
+  background: #fff;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+  display: flex;
+  flex-direction: column;
 `;
 
-export const FormTitle = styled.h1`
-  font-size: 34px;
-  color: #000;
-  font-weight: 500;
+export const FormWrapperHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+
+  & > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 `;
 
 export const FormDescription = styled(Text)`
@@ -19,25 +32,6 @@ export const FormDescription = styled(Text)`
   color: #131217b8;
   //margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   margin-top: 70px;
-`;
-
-export const ConnectButton = styled(Button)`
-  margin-top: 74px;
-  padding: 18px 36px;
-  border-radius: 60px;
-  background: var(--custom-inverse-color-black);
-  color: var(--custom-inverse-color-white);
-  &:not(:disabled):hover {
-    background-color: var(--lido-color-primary);
-  }
-`;
-
-export const FormHeader = styled.section`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
 `;
 
 const customInputStyles = css`
@@ -68,10 +62,6 @@ const customInputStyles = css`
   }
 `;
 
-export const StyledInput = styled(InputAmount)`
-  ${customInputStyles}
-`;
-
 type StyledSelectProps = Omit<SelectProps, 'value' | 'onChange'> & {
   $value: string;
   $onChange: (val: string) => void;
@@ -85,3 +75,29 @@ export const StyledSelect = styled(Select).attrs<StyledSelectProps>(
   width: 50%;
   ${customInputStyles}
 ` as FC<StyledSelectProps>;
+
+export const DualGovernanceExplainerStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  flex: 1;
+
+  p {
+    line-height: 40px !important;
+  }
+
+  b {
+    font-size: 22px;
+  }
+`;
+
+export const ExplainerButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+
+  button {
+    width: auto;
+  }
+`;

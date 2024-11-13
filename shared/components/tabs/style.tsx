@@ -10,17 +10,11 @@ type TabProps = {
   $isActive: boolean;
 };
 
-export const TabsWrapper = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const StyledTab = styled.div<TabProps>`
   z-index: 1;
-  width: 100%;
   border: 1px solid #0000001a;
   cursor: pointer;
+  padding: 20px;
   ${({ $isActive }) =>
     $isActive &&
     css`
@@ -33,5 +27,15 @@ export const StyledTab = styled.div<TabProps>`
   }
   &:last-child {
     border-top-right-radius: 30px;
+  }
+`;
+
+export const TabsWrapper = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > ${StyledTab} {
+    flex: 1;
   }
 `;

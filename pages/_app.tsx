@@ -15,7 +15,6 @@ import { config } from 'config';
 import { withCsp } from 'config/csp';
 import { SecurityStatusBanner } from 'features/ipfs';
 import { Providers } from 'providers';
-import { BackgroundGradient } from 'shared/components/background-gradient/background-gradient';
 import { ErrorBoundaryFallback } from 'shared/components/error-boundary';
 import NoSsrWrapper from 'shared/components/no-ssr-wrapper';
 import { nprogress, COOKIES_ALLOWED_FULL_KEY } from 'utils';
@@ -53,7 +52,6 @@ const AppWrapper = (
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <BackgroundGradient width={1700} height={800} />
       <ToastContainer />
       <MemoApp {...props} />
 
