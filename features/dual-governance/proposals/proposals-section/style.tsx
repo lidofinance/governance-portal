@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Block, Text } from '@lidofinance/lido-ui';
-import { boolean } from '@metamask/superstruct';
 
 type ProposalDescriptionProps = {
   $slim?: boolean;
@@ -14,9 +13,27 @@ export const ProposalsWrapper = styled.section`
 
 export const ProposalsTitle = styled.h1`
   font-size: 34px;
-  color: #000;
+  color: var(--primary-color--black);
   font-weight: 500;
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 30px;
+`;
+
+export const SeeAll = styled.span`
+  padding: 10px 24px;
+  font-size: 17px;
+  border: 1px solid var(--border-color-fog);
+  border-radius: 24px;
+  cursor: pointer;
+  line-height: 24px;
+
+  &:hover {
+    color: var(--accent-color-ocean);
+    border: 1px solid var(--border-color-water);
+  }
 `;
 
 export const ProposalListItemWrapper = styled(Block)`
@@ -30,57 +47,6 @@ export const ProposalListItemToEnact = styled(Block)`
   border: 1px solid var(--border-color-fog);
   background-color: #d7475833;
   display: flex;
-`;
-
-export const LogoWrapper = styled.div`
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 1px solid #0000001a;
-  display: flex;
-  padding: 14px;
-  align-items: center;
-  justify-content: center;
-  svg {
-    margin-left: -8px;
-  }
-`;
-
-export const WarningIconWrapper = styled.div`
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 1px solid #0000001a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  svg {
-    margin-top: -4px;
-  }
-`;
-
-export const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-export const Title = styled.span<{ $warning?: boolean }>`
-  font-size: 22px;
-  font-weight: 600;
-  color: ${({ $warning }) =>
-    $warning ? 'var(--accent-color-berry)' : 'var(--primary-color-black)'};
-`;
-
-export const ProposalStatus = styled(Text).attrs({
-  color: 'secondary',
-  size: 'sm',
-})`
-  margin-top: 8px;
-  background-color: #1312170f;
-  border-radius: 18px;
-  padding: 6px 12px;
 `;
 
 export const SummarySection = styled.section`

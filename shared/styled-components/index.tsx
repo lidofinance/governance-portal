@@ -3,7 +3,7 @@ import { PopupMenu, PopupMenuProps } from '@lidofinance/lido-ui';
 
 type FlexWrapperProps = {
   $flexDirection?: 'column' | 'row';
-  $alignItems?: 'flex-start' | 'flex-end' | 'center';
+  $alignItems?: 'flex-start' | 'flex-end' | 'center' | 'baseline';
   $justifyContent?:
     | 'flex-start'
     | 'flex-end'

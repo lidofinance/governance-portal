@@ -1,20 +1,19 @@
-import { ProposalsIcon, WarningIcon } from 'shared/components/icons';
-import { ProposalScriptParsed } from '../proposal-script';
+import { Script } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/compact';
+import {
+  ProposalStatusBadge,
+  ProposalStatus,
+} from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
 
 import {
-  LogoWrapper,
   ProposalListItemWrapper,
-  ProposalStatus,
-  TitleWrapper,
-  Title,
   SummarySection,
   ProposalDescription,
   DescriptionText,
   ScriptSection,
   ProposalListItemToEnact,
-  WarningIconWrapper,
 } from '../style';
 import { useDecodedScript } from 'shared/hooks';
+import { ProposalPartName } from '../../shared-components/proposal-part-name/proposal-part-name';
 
 type Props = {
   script?: string;
@@ -32,13 +31,8 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
     return (
       <ProposalListItemToEnact>
         <SummarySection>
-          <TitleWrapper>
-            <WarningIconWrapper>
-              <WarningIcon />
-            </WarningIconWrapper>
-            <Title $warning>Kill</Title>
-          </TitleWrapper>
-          <ProposalStatus>Ready to enact</ProposalStatus>
+          <ProposalPartName warning partName="Vote #176 part 1" />
+          <ProposalStatusBadge status={ProposalStatus.READY_TO_EXECUTE} />
         </SummarySection>
         <ProposalDescription $slim>
           <DescriptionText>
@@ -52,22 +46,19 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
   return (
     <ProposalListItemWrapper>
       <SummarySection>
-        <TitleWrapper>
-          <LogoWrapper>
-            <ProposalsIcon />
-          </LogoWrapper>
-          <Title>Vote #176 part 1</Title>
-        </TitleWrapper>
-        <ProposalStatus>Pending in Dual Governance</ProposalStatus>
+        <ProposalPartName partName="Vote #176 part 1" />
+        <ProposalStatusBadge status={ProposalStatus.PENDING} />
       </SummarySection>
       <ProposalDescription $slim>
         <DescriptionText>
           Replace Rated Labs with MatrixedLink in Lido on Ethereum Oracle set
         </DescriptionText>
       </ProposalDescription>
-      <ScriptSection>
-        <ProposalScriptParsed binary={binary} decoded={decoded} />
-      </ScriptSection>
+      {script && (
+        <ScriptSection>
+          <Script script={script} />
+        </ScriptSection>
+      )}
     </ProposalListItemWrapper>
   );
 };
