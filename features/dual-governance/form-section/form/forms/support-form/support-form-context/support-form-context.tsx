@@ -17,6 +17,11 @@ import { useFormControllerRetry } from 'shared/hook-form/use-form-controller-ret
 import { SupportFormValidationResolver } from './support-form-validators';
 import { useSupportFormValidationContext } from '../use-support-form-validation-context';
 import { SupportFormNetworkData } from './types';
+import {
+  UseApproveResponse,
+  useApprove,
+} from 'shared/blockchain/hooks/use-approve';
+import { useEscrowAddresses } from 'features/dual-governance/hooks/use-escrow-addresses';
 
 const TOKENS = [Token.stETH, Token.wstETH, Token.unstETH] as const;
 
@@ -32,6 +37,7 @@ type SupportFormContextValue = {
   setActiveToken: (token: TokenLocal) => void;
   networkData: SupportFormNetworkData;
   maxAmount: bigint;
+  approveData: UseApproveResponse;
 };
 
 const SupportFormContext = createContext<SupportFormContextValue | null>(null);
@@ -64,6 +70,9 @@ const useSupportFormNetworkData = (): SupportFormNetworkData => {
     isLoading: isEtherBalanceLoading,
   } = useEthereumBalance();
 
+  const { vetoSignallingAddress, isLoading: isEscrowAddressLoading } =
+    useEscrowAddresses();
+
   const refetch = useCallback(async () => {
     await Promise.allSettled([
       updateStEthBalance(),
@@ -76,8 +85,12 @@ const useSupportFormNetworkData = (): SupportFormNetworkData => {
     etherBalance: etherBalance?.value,
     stEthBalance,
     wstEthBalance,
+    vetoSignallingAddress,
     isLoading:
-      isStEthBalanceLoading || isWstEthBalanceLoading || isEtherBalanceLoading,
+      isStEthBalanceLoading ||
+      isWstEthBalanceLoading ||
+      isEtherBalanceLoading ||
+      isEscrowAddressLoading,
     refetch,
   };
 };
@@ -130,7 +143,11 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const amount = formObject.watch('amount');
 
-  const percentOfTotalSupply = useMemo(() => {}, []);
+  const approveData = useApprove(
+    amount,
+    activeToken,
+    networkData.vetoSignallingAddress,
+  );
 
   return (
     <FormProvider {...formObject}>
@@ -140,6 +157,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
           setActiveToken,
           networkData,
           maxAmount,
+          approveData,
         }}
       >
         <FormControllerContext.Provider value={formControllerValue}>

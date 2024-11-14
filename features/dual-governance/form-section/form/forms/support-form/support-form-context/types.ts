@@ -1,4 +1,5 @@
 import { Token } from 'shared/blockchain/types';
+import { Address } from 'viem';
 
 export type SupportFormDataContextValue = SupportFormNetworkData;
 
@@ -11,6 +12,7 @@ export type SupportFormNetworkData = {
   etherBalance: bigint | undefined;
   stEthBalance: bigint | undefined;
   wstEthBalance: bigint | undefined;
+  vetoSignallingAddress: Address | undefined;
   isLoading: boolean;
   refetch: () => Promise<void>;
 };

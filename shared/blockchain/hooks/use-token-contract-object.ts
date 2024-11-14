@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { StETH, WstETH } from '../contracts';
-import { Token } from '../types';
+import { ContractObject, Token } from '../types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getContractAddress } from '../get-contract-address';
+import { Address } from 'viem';
 
 const TOKEN_CONTRACT_MAP = {
   [Token.stETH]: StETH,
@@ -10,7 +11,11 @@ const TOKEN_CONTRACT_MAP = {
   [Token.unstETH]: WstETH,
 };
 
-export const useTokenContractObject = (token: Token) => {
+type TokenContractObject = {
+  address: Address;
+} & ContractObject<(typeof TOKEN_CONTRACT_MAP)[Token]['abi']>;
+
+export const useTokenContractObject = (token: Token): TokenContractObject => {
   const { chainId } = useLidoSDK();
 
   return useMemo(() => {

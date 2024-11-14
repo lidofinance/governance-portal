@@ -1,7 +1,7 @@
-import { stEthAbi } from 'abi/ts';
 import { useChainId, useReadContract } from 'wagmi';
 import { getTokenAddress } from '../get-contract-address';
 import { Token } from '../types';
+import { StETH } from '../contracts';
 
 type SelectFn<T> = (data: bigint) => T;
 
@@ -12,7 +12,7 @@ export const useTokenTotalSupply = <T>(
   const chainId = useChainId();
 
   return useReadContract({
-    abi: stEthAbi,
+    abi: StETH.abi,
     address: getTokenAddress(token, chainId),
     functionName: 'totalSupply',
     query: {

@@ -41,9 +41,9 @@ export type UseApproveResponse = {
 } & ReturnType<typeof useAllowance>;
 
 export const useApprove = (
-  amount: bigint,
+  amount: bigint | null,
   token: Token,
-  spender: Address,
+  spender: Address | undefined,
   owner?: string,
 ): UseApproveResponse => {
   const { address } = useAccount();
@@ -52,22 +52,23 @@ export const useApprove = (
   const writeTokenContract = useWriteContractGetter(Erc20ApproveAbi);
   const mergedOwner = (owner ?? address) as Address;
 
-  invariant(token != null, 'Token is required');
-  invariant(spender != null, 'Spender is required');
-
   const allowanceQuery = useAllowance({
     token,
     account: mergedOwner,
-    spender: spender,
+    spender,
   });
 
   const needsApprove = Boolean(
-    allowanceQuery.data && amount !== 0n && amount > allowanceQuery.data,
+    allowanceQuery.data != null &&
+      amount != null &&
+      amount > allowanceQuery.data,
   );
 
   const approve = useCallback<UseApproveResponse['approve']>(
     async ({ onTxStart, onTxSent, onTxAwaited } = {}) => {
       invariant(address, 'address is required');
+      invariant(amount, 'amount is required');
+      invariant(spender, 'spender is required');
       await onTxStart?.();
 
       const tokenAddress = getTokenAddress(token, chainId);

@@ -7,8 +7,9 @@ import {
 import { useSupportFormDataContext } from './support-form-context';
 import { useTokenTotalSupply } from 'shared/blockchain/hooks/use-total-supply';
 import { useFormContext } from 'react-hook-form';
-import { formatNumber } from 'shared/blockchain/utils';
-import { InlineLoader } from '@lidofinance/lido-ui';
+import { formatEthFull, formatNumber } from 'shared/blockchain/utils';
+import { useLockTxGas } from './use-lock-tx-gas';
+import { useTxCostUsd } from 'shared/blockchain/hooks/use-tx-cost-usd';
 
 const calculateSupplyPercentage =
   (amount: bigint | null) => (totalSupply: bigint) => {
@@ -25,6 +26,16 @@ export const SupportFormAdditionalInfo = () => {
 
   const { data: supplyPercent, isLoading: isTotalSupplyLoading } =
     useTokenTotalSupply(activeToken, calculateSupplyPercentage(amount));
+
+  const { estimatedGas, isLoading: isEstimatedGasLoading } = useLockTxGas();
+
+  const {
+    ethAmount,
+    usdAmount,
+    isLoading: isTxCostLoading,
+  } = useTxCostUsd(estimatedGas);
+
+  const isTxDataLoading = isEstimatedGasLoading || isTxCostLoading;
 
   return (
     <SupportFormAdditionalInfoStyled>
@@ -44,9 +55,14 @@ export const SupportFormAdditionalInfo = () => {
         <Text size={14} color="secondary">
           Max transaction cost
         </Text>
-        <Text size={14} color="secondary">
-          0.000212 ETH ($10.62)
-        </Text>
+        {isTxDataLoading ? (
+          <AdditionalInfoLoader />
+        ) : (
+          <Text size={14} color="secondary">
+            {formatEthFull(ethAmount)} ETH ($
+            {formatNumber({ value: usdAmount })})
+          </Text>
+        )}
       </SummaryRow>
     </SupportFormAdditionalInfoStyled>
   );

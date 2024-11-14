@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
-import { Address } from 'viem';
+import { Address, zeroAddress } from 'viem';
 import { useReadContract, useWatchContractEvent } from 'wagmi';
 import { Token } from '../types';
 import { useTokenContractObject } from './use-token-contract-object';
@@ -8,7 +8,7 @@ import { useTokenContractObject } from './use-token-contract-object';
 type Args = {
   token: Token;
   account: Address;
-  spender: Address;
+  spender: Address | undefined;
 };
 
 const onError = (error: unknown) =>
@@ -24,7 +24,7 @@ export const useAllowance = ({ token, account, spender }: Args) => {
     abi: contract.abi,
     address: contract.address,
     functionName: 'allowance',
-    args: [account, spender],
+    args: [account, spender ?? zeroAddress],
     query: { enabled },
   });
 
