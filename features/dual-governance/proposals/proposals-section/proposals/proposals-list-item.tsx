@@ -19,9 +19,16 @@ type Props = {
   script?: string;
   isReadyToEnact?: boolean;
   children?: React.ReactNode;
+  title: string;
+  description: string;
 };
 
-export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
+export const ProposalListItem = ({
+  script,
+  isReadyToEnact = false,
+  title,
+  description,
+}: Props) => {
   const { binary, decoded } = useDecodedScript(script ?? '');
 
   if (
@@ -31,7 +38,7 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
     return (
       <ProposalListItemToEnact>
         <SummarySection>
-          <ProposalPartName warning partName="Vote #176 part 1" />
+          <ProposalPartName warning partName={title} />
           <ProposalStatusBadge status={ProposalStatus.READY_TO_EXECUTE} />
         </SummarySection>
         <ProposalDescription $slim>
@@ -46,13 +53,11 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
   return (
     <ProposalListItemWrapper>
       <SummarySection>
-        <ProposalPartName partName="Vote #176 part 1" />
+        <ProposalPartName partName={title} />
         <ProposalStatusBadge status={ProposalStatus.PENDING} />
       </SummarySection>
       <ProposalDescription $slim>
-        <DescriptionText>
-          Replace Rated Labs with MatrixedLink in Lido on Ethereum Oracle set
-        </DescriptionText>
+        <DescriptionText>{description}</DescriptionText>
       </ProposalDescription>
       {script && (
         <ScriptSection>

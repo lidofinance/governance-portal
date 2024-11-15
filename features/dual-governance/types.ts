@@ -30,3 +30,11 @@ export type DualGovernanceState = {
   amountTillNextPhasePercent: string;
   visibleState: VisibleGovernanceState;
 };
+
+export enum ProposalStatus {
+  NotExist,
+  Submitted,
+  Scheduled,
+  Executed,
+  Cancelled,
+}

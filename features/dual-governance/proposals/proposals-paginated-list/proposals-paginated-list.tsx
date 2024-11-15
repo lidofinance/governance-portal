@@ -1,8 +1,7 @@
-import { ProposalStatusBadge } from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
 import { SearchIcon } from 'shared/components/icons';
 import { ProposalPartName } from 'features/dual-governance/proposals/shared-components/proposal-part-name/proposal-part-name';
 
-import { useProposals } from 'features/dual-governance/hooks/useProposals';
+import { useProposals } from 'features/dual-governance/hooks/use-proposals';
 
 import {
   ProposalsListContainer,
@@ -19,7 +18,7 @@ import {
 
 // TODO: create and use the countdown component
 export const ProposalsPaginatedList = () => {
-  const { proposals } = useProposals();
+  const { data } = useProposals({});
 
   return (
     <ProposalsListContainer>
@@ -31,15 +30,17 @@ export const ProposalsPaginatedList = () => {
         />
       </ProposalsListHeader>
       <ProposalsListGrid>
-        {proposals.map((proposal, index) => (
+        {data?.proposals?.map((proposal, index) => (
           <ProposalsListItem key={index}>
-            <ProposalPartName partName={proposal.name} />
-            <ProposalStatusBadge status={proposal.status} />
+            <ProposalPartName partName={proposal.event.args.metadata} />
+            {/*<ProposalStatusBadge status={proposal.status} />*/}
             <ProposalTimeLockCountdownWrapper>
               Timelock ends in{' '}
               <ProposalTimeLockCountdown>14:34:54</ProposalTimeLockCountdown>
             </ProposalTimeLockCountdownWrapper>
-            <ProposalDescription>{proposal.description}</ProposalDescription>
+            <ProposalDescription>
+              {proposal.event.args.metadata}
+            </ProposalDescription>
           </ProposalsListItem>
         ))}
       </ProposalsListGrid>

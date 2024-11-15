@@ -34,7 +34,10 @@ const allowedLogsAddresses: Record<string, string[]> = Object.entries(
   METRIC_CONTRACT_EVENT_ADDRESSES,
 ).reduce(
   (acc, [chainId, addresses]) => {
-    acc[chainId] = Object.keys(addresses);
+    acc[chainId] = [
+      ...Object.keys(addresses),
+      '0x4c9819921723E986a065a28aca6424e7818958A4', //TODO: move EPT contract addressrp to a proper list
+    ];
     return acc;
   },
   {} as Record<string, string[]>,
