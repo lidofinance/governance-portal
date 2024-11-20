@@ -82,8 +82,10 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --accent-color-ocean: #4854FF;
     --accent-color-sky: #00A3FF;
     --accent-color-coral: #FF9900;
+    --accent-color-coral-light: #FF8E7633;
     --accent-color-berry: #D74758;
     --accent-color-leaf: #29C38C;
+    --accent-color-leaf-light: #29C38C33;
     --accent-color-orange: #FF633C;
 
     // ----- Borders: For strokes

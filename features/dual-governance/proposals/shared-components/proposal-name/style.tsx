@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const TitleWrapper = styled.div`
   display: flex;
@@ -14,7 +14,7 @@ export const Title = styled.span<{ $warning?: boolean }>`
     $warning ? 'var(--accent-color-berry)' : 'var(--primary-color-black)'};
 `;
 
-export const LogoWrapper = styled.div`
+export const LogoWrapper = styled.div<{ $hasOffset: boolean }>`
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -23,9 +23,14 @@ export const LogoWrapper = styled.div`
   padding: 14px;
   align-items: center;
   justify-content: center;
-  svg {
-    margin-left: -8px;
-  }
+    ${({ $hasOffset }) =>
+      $hasOffset &&
+      css`
+        svg {
+          margin-left: -8px;
+        }
+      `}}
+  
 `;
 
 export const WarningIconWrapper = styled.div`
@@ -40,4 +45,14 @@ export const WarningIconWrapper = styled.div`
   svg {
     margin-top: -4px;
   }
+`;
+
+export const UnknownContract = styled.span`
+  font-size: 15px;
+  padding: 8px;
+  border-radius: 8px;
+  line-height: 1;
+  background-color: #d7475814;
+  color: var(--accent-color-berry);
+  align-self: flex-start;
 `;

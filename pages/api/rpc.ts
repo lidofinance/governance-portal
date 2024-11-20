@@ -37,6 +37,7 @@ const allowedLogsAddresses: Record<string, string[]> = Object.entries(
     acc[chainId] = [
       ...Object.keys(addresses),
       '0x4c9819921723E986a065a28aca6424e7818958A4', //TODO: move EPT contract addressrp to a proper list
+      '0xdA7d2573Df555002503F29aA4003e398d28cc00f',
     ];
     return acc;
   },

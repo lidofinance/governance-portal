@@ -12,6 +12,7 @@ export interface ProposalEventArgs {
   id: bigint;
   proposer: Address;
   timestamp: bigint;
+  calls: any[];
 }
 
 export type ProposalLog = Log & {
@@ -29,7 +30,8 @@ interface FindEventsBaseConfig {
 export interface ProposalCombinedData {
   id: string;
   event: ProposalLog;
-  proposalInfo: unknown;
+  proposalInfo: any;
+  voteId: number;
 }
 
 interface FindEventsConfig extends FindEventsBaseConfig {
@@ -105,6 +107,7 @@ const findAllProposalsEvents = async (
             id: id.toString(),
             event: log,
             proposalInfo,
+            voteId: Number(log.args.id), // TODO Get real voteId from metadata when it's done on the onchain side
           };
 
           if (onProposalFound !== undefined) {

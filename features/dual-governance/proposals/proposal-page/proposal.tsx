@@ -10,10 +10,6 @@ import {
   SubmitDate,
   TimeLockCountdown,
 } from 'features/dual-governance/proposals/proposal-page/style';
-import {
-  ProposalStatus,
-  ProposalStatusBadge,
-} from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
 import { Button } from 'shared/components/button';
 
 type Props = {
@@ -31,7 +27,7 @@ export const Proposal = ({ id }: Props) => {
   return (
     <ProposalContainer>
       <ProposalHeader>
-        <ProposalStatusBadge status={ProposalStatus.PENDING} />
+        {/*<StatusBadge status={ProposalStatus.PENDING} />*/}
         <TimeLockCountdown>Timelock ends in 13:43:12</TimeLockCountdown>
       </ProposalHeader>
       <ProposalName>Proposal #{id}</ProposalName>
