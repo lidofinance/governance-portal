@@ -1,5 +1,5 @@
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
-import { BadgeVariant } from 'features/dual-governance/proposals/shared-components/proposal-status-badge/types';
+import { BadgeVariant } from 'features/dual-governance/proposals/shared-components/status-badge/types';
 
 const variantStyles: Record<BadgeVariant, FlattenSimpleInterpolation> = {
   warning: css`
@@ -20,11 +20,13 @@ type Props = {
   $variant: BadgeVariant;
 };
 
-export const ProposalStatusBadgeWrapper = styled.div<Props>`
+export const StatusBadgeWrapper = styled.div<Props>`
+  align-self: flex-start;
   ${({ $variant }) => variantStyles[$variant]}
   padding: 6px 20px;
   border-radius: 40px;
   flex-grow: 0;
   font-size: 15px;
   line-height: 1.8;
+  margin-top: 20px;
 `;

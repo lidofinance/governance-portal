@@ -1,9 +1,9 @@
-import { Script } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/compact';
-import {
-  ProposalStatusBadge,
-  ProposalStatus,
-} from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
+import { useState } from 'react';
+import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
+import { VoteStatus } from 'shared/votes/types';
+import { ProposalStatus } from 'features/dual-governance/types';
 
+import { Script } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/compact';
 import {
   ProposalListItemWrapper,
   SummarySection,
@@ -11,19 +11,40 @@ import {
   DescriptionText,
   ScriptSection,
   ProposalListItemToEnact,
+  LinkWrapper,
 } from '../style';
-import { useDecodedScript } from 'shared/hooks';
-import { ProposalPartName } from '../../shared-components/proposal-part-name/proposal-part-name';
+import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
+import { AragonScript } from 'features/dual-governance/proposals/shared-components/evm-script-parsed/compact/aragon-script';
+import { ArrowRight } from 'shared/components/icons';
 
 type Props = {
   script?: string;
+  calls?: any[];
   isReadyToEnact?: boolean;
   children?: React.ReactNode;
+  voteId: number;
+  description: string;
+  isAragon?: boolean;
+  voteState?: {
+    isQuorumReached: boolean;
+    status: VoteStatus;
+  };
+  proposalStatus?: ProposalStatus;
+  onItemClick: (id: number) => Promise<boolean>;
 };
 
-export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
-  const { binary, decoded } = useDecodedScript(script ?? '');
-
+export const ProposalListItem = ({
+  isReadyToEnact = false,
+  voteId,
+  description,
+  calls = [],
+  script,
+  isAragon,
+  voteState,
+  proposalStatus,
+  onItemClick,
+}: Props) => {
+  const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
   if (
     isReadyToEnact
     //  && currentGovernanceState === VisibleGovernanceState.BlockedDeactivation
@@ -31,8 +52,8 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
     return (
       <ProposalListItemToEnact>
         <SummarySection>
-          <ProposalPartName warning partName="Vote #176 part 1" />
-          <ProposalStatusBadge status={ProposalStatus.READY_TO_EXECUTE} />
+          <ProposalName warning voteId={voteId} />
+          <StatusBadge isAragon={isAragon} voteState={voteState} />
         </SummarySection>
         <ProposalDescription $slim>
           <DescriptionText>
@@ -43,22 +64,44 @@ export const ProposalListItem = ({ script, isReadyToEnact = false }: Props) => {
     );
   }
 
+  const descriptionLines = description.split('\n');
+
   return (
     <ProposalListItemWrapper>
       <SummarySection>
-        <ProposalPartName partName="Vote #176 part 1" />
-        <ProposalStatusBadge status={ProposalStatus.PENDING} />
+        <ProposalName
+          isAragon={isAragon}
+          voteId={voteId}
+          isUnknownContractCalled={isUnknownContractCalled}
+        />
+        <StatusBadge
+          isAragon={isAragon}
+          voteState={voteState}
+          proposalStatus={proposalStatus}
+        />
       </SummarySection>
       <ProposalDescription $slim>
-        <DescriptionText>
-          Replace Rated Labs with MatrixedLink in Lido on Ethereum Oracle set
-        </DescriptionText>
+        {descriptionLines.map((line, index) => (
+          <DescriptionText key={index}>{line}</DescriptionText>
+        ))}
       </ProposalDescription>
-      {script && (
+
+      {!isAragon && calls?.length && (
         <ScriptSection>
-          <Script script={script} />
+          <Script calls={calls} />
         </ScriptSection>
       )}
+      {isAragon && script && (
+        <ScriptSection>
+          <AragonScript
+            onUnknownContractCalled={setIsUnknownContractCalled}
+            script={script}
+          />
+        </ScriptSection>
+      )}
+      <LinkWrapper onClick={() => onItemClick(voteId)}>
+        <ArrowRight />
+      </LinkWrapper>
     </ProposalListItemWrapper>
   );
 };

@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import {
   ProposalsTitle,
   ProposalsWrapper,
@@ -12,7 +10,7 @@ import { PROPOSALS_PATH } from 'constants/urls';
 export const ProposalsSection = () => {
   const push = usePrefixedPush();
 
-  const handleClick = useCallback(() => push(PROPOSALS_PATH), [push]);
+  const handleClick = () => push(PROPOSALS_PATH);
 
   return (
     <ProposalsWrapper>

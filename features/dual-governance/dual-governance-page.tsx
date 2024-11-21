@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { FormSection } from './form-section';
 import { Layout } from 'shared/components';
-// import { ProposalsSection } from './proposals-section';
+import { ProposalsSection } from './proposals/proposals-section';
 
 export const DualGovernancePage = () => {
   return (
@@ -10,7 +10,7 @@ export const DualGovernancePage = () => {
         <title>Dual Governance | Lido</title>
       </Head>
       <FormSection />
-      {/* <ProposalsSection /> */}
+      <ProposalsSection />
     </Layout>
   );
 };

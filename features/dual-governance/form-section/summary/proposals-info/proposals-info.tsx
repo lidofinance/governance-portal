@@ -6,11 +6,7 @@ export const ProposalsInfo = () => {
   const { data, isLoading } = useProposalsInfo();
 
   // TODO: add view state
-  if (isLoading) {
-    return null;
-  }
-
-  if (!data) {
+  if (isLoading || !data) {
     return null;
   }
 

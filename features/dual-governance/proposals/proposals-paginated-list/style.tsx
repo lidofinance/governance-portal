@@ -55,6 +55,14 @@ export const ProposalDescription = styled.p`
   border-top: 1px solid var(--border-color-fog);
   font-size: 15px;
   color: var(--primary-color-black-72);
+  max-width: 300px;
+  width: 300px;
+  max-height: 310px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const StyledPagination = styled(Pagination)`

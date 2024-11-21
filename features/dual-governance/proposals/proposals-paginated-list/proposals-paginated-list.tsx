@@ -1,8 +1,5 @@
-import { ProposalStatusBadge } from 'features/dual-governance/proposals/shared-components/proposal-status-badge';
 import { SearchIcon } from 'shared/components/icons';
-import { ProposalPartName } from 'features/dual-governance/proposals/shared-components/proposal-part-name/proposal-part-name';
-
-import { useProposals } from 'features/dual-governance/hooks/useProposals';
+import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
 
 import {
   ProposalsListContainer,
@@ -16,11 +13,16 @@ import {
   ProposalDescription,
   StyledPagination,
 } from 'features/dual-governance/proposals/proposals-paginated-list/style';
+import { useMergedProposalsAndVotes } from 'features/dual-governance/hooks/use-merged-proposals-and-votes';
+import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
 
 // TODO: create and use the countdown component
 export const ProposalsPaginatedList = () => {
-  const { proposals } = useProposals();
+  const { mergedList, isLoading } = useMergedProposalsAndVotes();
 
+  if (isLoading) {
+    return <div>Skeleton loading...</div>;
+  }
   return (
     <ProposalsListContainer>
       <ProposalsListHeader>
@@ -31,15 +33,23 @@ export const ProposalsPaginatedList = () => {
         />
       </ProposalsListHeader>
       <ProposalsListGrid>
-        {proposals.map((proposal, index) => (
+        {mergedList.map((item, index) => (
           <ProposalsListItem key={index}>
-            <ProposalPartName partName={proposal.name} />
-            <ProposalStatusBadge status={proposal.status} />
+            <ProposalName voteId={item.voteId} isAragon={item.isVote} />
+            <StatusBadge
+              isAragon={item.isVote}
+              voteState={item.isVote ? item.state : undefined}
+              proposalStatus={
+                !item.isVote ? item.proposalInfo[0].status : undefined
+              }
+            />
             <ProposalTimeLockCountdownWrapper>
               Timelock ends in{' '}
               <ProposalTimeLockCountdown>14:34:54</ProposalTimeLockCountdown>
             </ProposalTimeLockCountdownWrapper>
-            <ProposalDescription>{proposal.description}</ProposalDescription>
+            <ProposalDescription>
+              {item.isVote ? item.event.metadata : item.event.args.metadata}
+            </ProposalDescription>
           </ProposalsListItem>
         ))}
       </ProposalsListGrid>

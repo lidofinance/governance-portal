@@ -55,21 +55,37 @@ export const SummarySection = styled.section`
   padding-right: 20px;
   border-right: 1px solid #0000001a;
   padding-top: 12px;
-  flex-shrink: 0;
+  width: 300px;
 `;
 
 export const ProposalDescription = styled.div<ProposalDescriptionProps>`
   padding: 6px 20px 0;
   border-right: 1px solid #0000001a;
   max-width: ${({ $slim }) => ($slim ? '300px' : 'auto')};
+  word-wrap: break-word;
+  width: 300px;
 `;
 
 export const DescriptionText = styled(Text).attrs({
   size: 'sm',
 })`
   color: #131217b8;
+  margin-bottom: 12px;
 `;
 
 export const ScriptSection = styled.section`
   padding-left: 20px;
+`;
+
+export const LinkWrapper = styled.div`
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 52px;
+  width: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color-mist);
+  cursor: pointer;
+  flex-shrink: 0;
 `;
