@@ -11,7 +11,7 @@ export const TokenSelect = () => {
 
   return (
     <TokenSelectStyled>
-      <Text>Select a token to add to the VetoSignaling contract</Text>
+      <Text>Select a token to add to the VetoSignalling contract</Text>
       <Tabs>
         <Tab
           isActive={activeToken === Token.stETH}

@@ -1,19 +1,8 @@
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
+import { erc20Abi } from 'abi/ts';
 import { useCallback, useMemo, useState } from 'react';
 import { Address, WatchContractEventOnLogsFn } from 'viem';
 import { useAccount, useWatchContractEvent } from 'wagmi';
-
-const Erc20EventsAbi = [
-  {
-    type: 'event',
-    name: 'Transfer',
-    inputs: [
-      { indexed: true, name: 'from', type: 'address' },
-      { indexed: true, name: 'to', type: 'address' },
-      { indexed: false, name: 'value', type: 'uint256' },
-    ],
-  },
-] as const;
 
 const onError = (error: unknown) =>
   console.warn(
@@ -29,11 +18,7 @@ type TokenSubscriptionState = Record<
   }
 >;
 
-type OnLogsFn = WatchContractEventOnLogsFn<
-  typeof Erc20EventsAbi,
-  'Transfer',
-  true
->;
+type OnLogsFn = WatchContractEventOnLogsFn<typeof erc20Abi, 'Transfer', true>;
 
 type SubscribeArgs = {
   tokenAddress: Address;
@@ -74,7 +59,7 @@ export const useTokenTransferSubscription = () => {
   const shouldWatch = !!(address && tokens.length > 0);
 
   useWatchContractEvent({
-    abi: Erc20EventsAbi,
+    abi: erc20Abi,
     eventName: 'Transfer',
     batch: true,
     poll: true,
@@ -91,7 +76,7 @@ export const useTokenTransferSubscription = () => {
   });
 
   useWatchContractEvent({
-    abi: Erc20EventsAbi,
+    abi: erc20Abi,
     eventName: 'Transfer',
     batch: true,
     poll: true,

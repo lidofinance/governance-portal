@@ -57,24 +57,28 @@ export const HeaderVaultInfo = () => {
             </Text>
             <Button>Manage</Button>
           </VaultInfoPopupTitle>
-          {data?.vetoSignalingSum && data.vetoSignalingSum > 0 ? (
+          {data?.vetoSignallingSum && data.vetoSignallingSum > 0 ? (
             <>
               <VaultInfoSubtitle>
-                Tokens in VetoSignaling contract
+                Tokens in VetoSignalling contract
               </VaultInfoSubtitle>
               <TokensList>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={data.vetoSignalBalance.stETHLockedShares}
-                />
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={data.vetoSignalBalance.unstETHLockedShares}
-                />
+                {data.vetoSignallingBalance.stETHLockedShares > 0n ? (
+                  <TokenBalance
+                    token={Token.stETH}
+                    balance={data.vetoSignallingBalance.stETHLockedShares}
+                  />
+                ) : null}
+                {data.vetoSignallingBalance.unstETHLockedShares > 0n ? (
+                  <TokenBalance
+                    token={Token.unstETH}
+                    balance={data.vetoSignallingBalance.unstETHLockedShares}
+                  />
+                ) : null}
               </TokensList>
             </>
           ) : null}
-          {data?.rageQuitSum && data.rageQuitSum > 0 ? (
+          {data.rageQuitBalance && data?.rageQuitSum && data.rageQuitSum > 0 ? (
             <>
               <VaultInfoSubtitle>Tokens in RageQuit contract</VaultInfoSubtitle>
               <TokensList>

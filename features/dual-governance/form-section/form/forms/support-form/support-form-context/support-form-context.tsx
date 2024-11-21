@@ -12,7 +12,10 @@ import { useTokenBalance } from 'shared/blockchain/hooks/use-token-balance';
 import { Token } from 'shared/blockchain/types';
 import invariant from 'tiny-invariant';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FormControllerContext } from 'shared/hook-form/form-controller-context';
+import {
+  FormControllerContext,
+  FormControllerContextValueType,
+} from 'shared/hook-form/form-controller-context';
 import { useFormControllerRetry } from 'shared/hook-form/use-form-controller-retry';
 import { SupportFormValidationResolver } from './support-form-validators';
 import { useSupportFormValidationContext } from '../use-support-form-validation-context';
@@ -22,6 +25,7 @@ import {
   useApprove,
 } from 'shared/blockchain/hooks/use-approve';
 import { useEscrowAddresses } from 'features/dual-governance/hooks/use-escrow-addresses';
+import { useSupportFormProcessor } from './use-support-form-processor';
 
 const TOKENS = [Token.stETH, Token.wstETH, Token.unstETH] as const;
 
@@ -101,7 +105,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
   const validationContextPromise = useSupportFormValidationContext({
     networkData,
   });
-  const { retryEvent } = useFormControllerRetry();
+  const { retryEvent, retryFire } = useFormControllerRetry();
 
   const formObject = useForm<SupportFormInputType>({
     defaultValues: {
@@ -114,22 +118,30 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
     resolver: SupportFormValidationResolver,
   });
 
-  const formControllerValue = useMemo(
-    () => ({
-      onSubmit: () => {
-        console.log('submit');
-        return Promise.resolve(true);
-      },
-      // onReset: ({ token }: WrapFormInputType) => {
-      //   reset({
-      //     ...defaultValues,
-      //     token,
-      //   });
-      // },
-      retryEvent,
-    }),
-    [retryEvent],
+  const {
+    watch,
+    reset,
+    formState: { defaultValues },
+  } = formObject;
+
+  const amount = watch('amount');
+
+  const approveData = useApprove(
+    amount,
+    activeToken,
+    networkData.vetoSignallingAddress,
   );
+
+  const onConfirm = useCallback(async () => {
+    await Promise.allSettled([networkData.refetch(), approveData.refetch()]);
+  }, [networkData, approveData]);
+
+  const processWrapFormFlow = useSupportFormProcessor({
+    approveData,
+    escrowAddress: networkData.vetoSignallingAddress,
+    onConfirm,
+    onRetry: retryFire,
+  });
 
   const maxAmount = useMemo(() => {
     if (activeToken === Token.stETH) {
@@ -141,25 +153,34 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
     return 0n;
   }, [activeToken, networkData.stEthBalance, networkData.wstEthBalance]);
 
-  const amount = formObject.watch('amount');
+  const value = useMemo(
+    () => ({
+      activeToken,
+      setActiveToken,
+      networkData,
+      maxAmount,
+      approveData,
+    }),
+    [activeToken, approveData, maxAmount, networkData],
+  );
 
-  const approveData = useApprove(
-    amount,
-    activeToken,
-    networkData.vetoSignallingAddress,
+  const formControllerValue = useMemo(
+    (): FormControllerContextValueType<SupportFormInputType> => ({
+      onSubmit: processWrapFormFlow,
+      onReset: ({ token }: SupportFormInputType) => {
+        reset({
+          ...defaultValues,
+          token,
+        });
+      },
+      retryEvent,
+    }),
+    [processWrapFormFlow, retryEvent, reset, defaultValues],
   );
 
   return (
     <FormProvider {...formObject}>
-      <SupportFormContext.Provider
-        value={{
-          activeToken,
-          setActiveToken,
-          networkData,
-          maxAmount,
-          approveData,
-        }}
-      >
+      <SupportFormContext.Provider value={value}>
         <FormControllerContext.Provider value={formControllerValue}>
           {children}
         </FormControllerContext.Provider>

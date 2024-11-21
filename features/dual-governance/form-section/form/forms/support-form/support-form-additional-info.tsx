@@ -1,7 +1,7 @@
 import { Text } from 'shared/components/text';
 import {
-  AdditionalInfoLoader,
   SummaryRow,
+  AdditionalInfoLoader,
   SupportFormAdditionalInfoStyled,
 } from './style';
 import { useSupportFormDataContext } from './support-form-context';

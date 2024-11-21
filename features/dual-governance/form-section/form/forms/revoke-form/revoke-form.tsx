@@ -13,7 +13,6 @@ import {
   StyledRevokePopup,
   ContractLink,
 } from './style';
-import { ActionsWrapper } from '../support-form/style';
 import { FlexWrapper } from 'shared/styled-components';
 import { RevokeTokenItem } from 'features/dual-governance/revoke-token-item';
 import { Token } from 'shared/blockchain/types';
@@ -139,7 +138,7 @@ export const RevokeForm = () => {
       </StyledRevokePopup>
       <FlexWrapper $justifyContent="space-between">
         <Text>
-          Your Tokens in VetoSignaling <ContractLink>contract</ContractLink>
+          Your Tokens in VetoSignalling <ContractLink>contract</ContractLink>
         </Text>
         <ContractLink onClick={handleClaimCustomNft}>
           Claim custom NFT
@@ -178,7 +177,7 @@ export const RevokeForm = () => {
       <RevokeTokenItemsWrapper>
         <RevokeTokenItem token={Token.stETH} amount={0n} isRevocable={false} />
       </RevokeTokenItemsWrapper>
-      <ActionsWrapper>
+      {/* <ActionsWrapper>
         <Button
           size="lg"
           onClick={() =>
@@ -187,7 +186,7 @@ export const RevokeForm = () => {
         >
           Revoke all available
         </Button>
-      </ActionsWrapper>
+      </ActionsWrapper> */}
     </>
   );
 };

@@ -1,6 +1,5 @@
 import invariant from 'tiny-invariant';
 import { useCallback } from 'react';
-import { isContract } from 'shared/blockchain/is-contract';
 
 import type { Address, TransactionReceipt } from 'viem';
 import { useAllowance } from './use-allowance';
@@ -8,23 +7,10 @@ import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { Token } from '../types';
-import { useWriteContractGetter } from './use-write-contract';
+import { useWriteContract } from './use-write-contract';
 import { getTokenAddress } from '../get-contract-address';
-
-const Erc20ApproveAbi = [
-  {
-    constant: false,
-    inputs: [
-      { name: '_spender', type: 'address' },
-      { name: '_amount', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [{ name: '', type: 'bool' }],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-] as const;
+import { erc20Abi } from 'abi/ts';
+import { useIsContract } from './use-is-contract';
 
 type ApproveOptions =
   | {
@@ -44,17 +30,16 @@ export const useApprove = (
   amount: bigint | null,
   token: Token,
   spender: Address | undefined,
-  owner?: string,
 ): UseApproveResponse => {
-  const { address } = useAccount();
-  const { rpcProvider, chainId } = useLidoSDK();
+  const account = useAccount();
+  const { chainId } = useLidoSDK();
   const waitForTx = useTxConfirmation();
-  const writeTokenContract = useWriteContractGetter(Erc20ApproveAbi);
-  const mergedOwner = (owner ?? address) as Address;
+  const { data: isMultisig } = useIsContract();
+  const writeTokenContract = useWriteContract(erc20Abi);
 
   const allowanceQuery = useAllowance({
     token,
-    account: mergedOwner,
+    owner: account.address,
     spender,
   });
 
@@ -66,19 +51,17 @@ export const useApprove = (
 
   const approve = useCallback<UseApproveResponse['approve']>(
     async ({ onTxStart, onTxSent, onTxAwaited } = {}) => {
-      invariant(address, 'address is required');
       invariant(amount, 'amount is required');
       invariant(spender, 'spender is required');
       await onTxStart?.();
 
       const tokenAddress = getTokenAddress(token, chainId);
 
-      const isMultisig = await isContract(address, rpcProvider);
-
-      const approveTxHash = await writeTokenContract(tokenAddress)('approve', [
-        spender,
-        amount,
-      ]);
+      const approveTxHash = await writeTokenContract({
+        address: tokenAddress,
+        functionName: 'approve',
+        args: [spender, amount],
+      });
       await onTxSent?.(approveTxHash);
 
       if (!isMultisig) {
@@ -91,15 +74,14 @@ export const useApprove = (
       return approveTxHash;
     },
     [
-      rpcProvider,
-      address,
+      amount,
+      spender,
       token,
       chainId,
-      writeTokenContract,
-      spender,
-      amount,
+      isMultisig,
       allowanceQuery,
       waitForTx,
+      writeTokenContract,
     ],
   );
 

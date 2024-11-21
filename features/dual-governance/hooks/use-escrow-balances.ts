@@ -13,13 +13,6 @@ type EscrowBalance = {
   lastAssetsLockTimestamp: bigint;
 };
 
-const MOCK = {
-  stETHLockedShares: BigInt(10040012340000000000000),
-  unstETHLockedShares: BigInt(200),
-  unstETHIdsCount: BigInt(5),
-  lastAssetsLockTimestamp: BigInt(100500),
-};
-
 export const useEscrowBalances = () => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
@@ -40,13 +33,13 @@ export const useEscrowBalances = () => {
         return null;
       }
 
-      const vetoSignalingBalance = await readEscrowContract(
+      const vetoSignallingBalance = await readEscrowContract(
         vetoSignallingAddress,
       )('getVetoerState', [address]);
 
-      const vetoSignalingSum =
-        vetoSignalingBalance.stETHLockedShares +
-        vetoSignalingBalance.unstETHLockedShares;
+      const vetoSignallingSum =
+        vetoSignallingBalance.stETHLockedShares +
+        vetoSignallingBalance.unstETHLockedShares;
 
       let rageQuitBalance: EscrowBalance | null = null;
       let rageQuitSum = 0n;
@@ -63,12 +56,11 @@ export const useEscrowBalances = () => {
       }
 
       return {
-        vetoSignalBalance: MOCK,
-        rageQuitBalance: MOCK,
-        vetoSignalingSum: MOCK.stETHLockedShares + MOCK.unstETHLockedShares,
-        rageQuitSum: MOCK.stETHLockedShares + MOCK.unstETHLockedShares,
-        totalSum: MOCK.stETHLockedShares + MOCK.unstETHLockedShares,
-        // totalSum: vetoSignalingSum + rageQuitSum,
+        vetoSignallingBalance,
+        rageQuitBalance,
+        vetoSignallingSum,
+        rageQuitSum,
+        totalSum: vetoSignallingSum + rageQuitSum,
       };
     },
   });

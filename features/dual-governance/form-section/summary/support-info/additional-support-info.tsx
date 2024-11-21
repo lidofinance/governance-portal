@@ -16,7 +16,7 @@ export const AdditionalSupportInfo = (props: Props) => {
   ) {
     return (
       <Text color="secondary">
-        Veto Signaling starts if{' '}
+        Veto Signalling starts if{' '}
         <Text as="b" color="primary">
           {amountTillNextPhasePercent}
         </Text>{' '}

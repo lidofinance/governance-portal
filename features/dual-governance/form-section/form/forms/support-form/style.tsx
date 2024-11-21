@@ -7,10 +7,6 @@ export const SummaryRow = styled.div`
   justify-content: space-between;
 `;
 
-export const ActionsWrapper = styled.div`
-  margin-top: 30px;
-`;
-
 export const TokenSelectStyled = styled.div`
   display: flex;
   flex-direction: column;

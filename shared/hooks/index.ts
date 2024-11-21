@@ -6,4 +6,3 @@ export * from './use-mainnet-static-rpc-provider';
 export * from './use-dapp-status';
 export * from './use-router-path';
 export * from './use-global-memo';
-export * from './use-balance';

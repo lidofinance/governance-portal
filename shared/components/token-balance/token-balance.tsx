@@ -27,14 +27,9 @@ export const TokenBalance = (props: Props) => {
       <TokenBalanceStyled>
         {getTokenIcon(token)}
         <TokenLabel $compact>{token}</TokenLabel>
-        <Tooltip
-          placement="topLeft"
-          title={<span>{formatEthFull(balance)}</span>}
-        >
-          <Text size={14} color="secondary">
-            {formatEth(balance)}
-          </Text>
-        </Tooltip>
+        <Text size={14} color="secondary">
+          {formatEth(balance)}
+        </Text>
       </TokenBalanceStyled>
     );
   }
