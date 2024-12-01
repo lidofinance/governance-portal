@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ProposalsPaginatedList } from 'features/dual-governance/proposals/proposals-paginated-list/proposals-paginated-list';
+import { ProposalsGridList } from 'features/dual-governance/proposals/proposals-grid-list/proposals-grid-list';
 
 import { Layout } from 'shared/components';
 import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
@@ -7,7 +7,7 @@ import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
 const Index: FC = () => {
   return (
     <Layout containerSize="full">
-      <ProposalsPaginatedList />
+      <ProposalsGridList />
     </Layout>
   );
 };

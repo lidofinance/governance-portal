@@ -1,1 +1,1 @@
-export { DualGovernancePage } from './dual-governance-page'
+export { DualGovernancePage } from 'features/dual-governance/pages/dual-governance-page';

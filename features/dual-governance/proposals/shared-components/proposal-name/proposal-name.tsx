@@ -16,14 +16,14 @@ import { FlexWrapper } from 'shared/styled-components';
 
 type Props = {
   warning?: boolean;
-  voteId: number;
+  id: number;
   isAragon?: boolean;
   isUnknownContractCalled?: boolean;
 };
 
-// TODO: Add support for other parties except Aragon
+// TODO: Add support for other parties besides Aragon
 export const ProposalName = ({
-  voteId,
+  id,
   warning,
   isAragon,
   isUnknownContractCalled,
@@ -42,8 +42,8 @@ export const ProposalName = ({
         )}
 
         <FlexWrapper $flexDirection="column" $alignItems="flex-start">
-          <Title>Vote #{voteId}</Title>
-          {isAragon && <Text size="xxs">Aragon vote</Text>}
+          <Title>{isAragon ? `Vote #${id}` : `Proposal #${id}`}</Title>
+          {isAragon && <Text size="xxs">Ongoing Aragon vote</Text>}
         </FlexWrapper>
       </TitleWrapper>
       {isUnknownContractCalled && (

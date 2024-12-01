@@ -6,21 +6,28 @@ import { getVoteStatus } from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { usePublicClient } from 'wagmi';
 import { VoteStatus } from 'shared/votes/types';
-
-const PAGE_SIZE = 1;
+import { Address } from 'viem';
 
 type Props = {
-  currentPage: number;
-  showActive?: boolean;
+  limit: number;
+  getActive?: boolean;
 };
 
-export type VoteResult = {
+export type VoteData = {
   voteId: number;
+  id: number;
   vote: any;
-  canExecute: any;
-  event: any;
-  state: any;
-} | null;
+  canExecute: boolean;
+  event?: {
+    creator: Address;
+    metadata: string;
+    voteId: bigint;
+  };
+  state: {
+    status: VoteStatus;
+    isQuorumReached: boolean;
+  };
+};
 
 const mapPayload = (
   functionAbi: any,
@@ -47,89 +54,101 @@ const mapPayload = (
   );
 };
 
-export const useActiveVotes = ({ currentPage, showActive = false }: Props) => {
+export const useActiveVotes = ({ limit, getActive = false }: Props) => {
   const AragonVoting = useReadContract(Voting);
-
   const client = usePublicClient();
 
   return useQuery({
-    queryKey: ['activeVotes', `${currentPage}`],
+    queryKey: ['activeVotes', limit],
     queryFn: async () => {
-      const votesTotalBn = await AragonVoting.readContract('votesLength');
-      const votesTotal = Number(votesTotalBn);
-      if (!votesTotal) {
-        return null;
-      }
+      try {
+        const votesTotalBn = await AragonVoting.readContract('votesLength');
+        const votesTotal = Number(votesTotalBn);
+        if (!votesTotal) {
+          return { votes: [] };
+        }
 
-      const startId = votesTotal - 1 - (currentPage - 1) * PAGE_SIZE;
-      const endId = Math.max(startId - PAGE_SIZE, 0);
-      const ids = range(startId, endId, -1);
+        const startId = votesTotal - 1;
+        const endId = Math.max(startId - limit + 1, 0);
+        const ids = range(startId, endId - 1, -1);
 
-      const votesPromises: Promise<VoteResult>[] = ids.map((voteId) => {
-        const fetch = async () => {
-          try {
-            const [rawVote, canExecute] = await Promise.all([
-              AragonVoting.readContract('getVote', [BigInt(voteId)]),
-              AragonVoting.readContract('canExecute', [BigInt(voteId)]),
-            ]);
-            const getVoteAbi = Voting.abi.find(
-              (item) => item.type === 'function' && item.name === 'getVote',
-            );
-            if (!getVoteAbi) {
-              console.error('ABI entry for getVote not found.');
+        const votesPromises = ids.map(
+          async (voteId): Promise<VoteData | null> => {
+            try {
+              const [rawVote, canExecute] = await Promise.all([
+                AragonVoting.readContract('getVote', [BigInt(voteId)]),
+                AragonVoting.readContract('canExecute', [BigInt(voteId)]),
+              ]);
+
+              const getVoteAbi = Voting.abi.find(
+                (item) => item.type === 'function' && item.name === 'getVote',
+              );
+              if (!getVoteAbi) {
+                console.error('ABI entry for getVote not found.');
+                return null;
+              }
+
+              const vote = mapPayload(getVoteAbi, 'getVote', rawVote);
+              const startVoteEventAbi = Voting.abi.find(
+                (item) => item.type === 'event' && item.name === 'StartVote',
+              );
+
+              let startEvent;
+
+              if (client && vote.snapshotBlock) {
+                const voteStartEvent = await getEventStartVote({
+                  address: AragonVoting.address,
+                  client,
+                  voteId: BigInt(voteId),
+                  block: vote.snapshotBlock,
+                  eventAbi: startVoteEventAbi,
+                });
+                if (voteStartEvent) {
+                  startEvent = { ...voteStartEvent };
+                }
+              }
+
+              const state = getVoteStatus(vote, canExecute);
+              if (!state) {
+                return null;
+              }
+
+              return {
+                voteId,
+                id: voteId,
+                vote,
+                canExecute,
+                event: startEvent,
+                state,
+              };
+            } catch (e) {
+              console.error('Error fetching vote:', e);
               return null;
             }
-            const vote = mapPayload(getVoteAbi, 'getVote', rawVote);
+          },
+        );
 
-            const startVoteEventAbi = Voting.abi.find(
-              (item) => item.type === 'event' && item.name === 'StartVote',
-            );
+        const votes = (await Promise.all(votesPromises)).filter(
+          (v): v is VoteData => v !== null,
+        );
 
-            let startEvent = {};
+        if (votes.length === 0) {
+          return { votes: [] };
+        }
 
-            if (client && vote.snapshotBlock) {
-              const voteStartEvent = await getEventStartVote({
-                address: AragonVoting.address,
-                client,
-                voteId: BigInt(voteId),
-                block: vote.snapshotBlock,
-                eventAbi: startVoteEventAbi,
-              });
-              startEvent = { ...voteStartEvent };
-            }
-
-            return {
-              voteId,
-              vote,
-              canExecute,
-              event: startEvent,
-              state: getVoteStatus(vote, canExecute),
-            };
-          } catch (e) {
-            console.error(e);
-            return null;
-          }
+        return {
+          votes: getActive
+            ? votes.filter(
+                (vote) =>
+                  vote.state.status === VoteStatus.ActiveMain ||
+                  vote.state.status === VoteStatus.ActiveObjection,
+              )
+            : votes,
         };
-        return fetch();
-      });
-
-      const votes = (await Promise.all(votesPromises)).filter(
-        (v): v is NonNullable<VoteResult> => v !== null,
-      );
-
-      if (votes.length === 0) {
+      } catch (e) {
+        console.error('Error in useActiveVotes:', e);
         return { votes: [] };
       }
-
-      return {
-        votes: showActive
-          ? votes.filter(
-              (vote) =>
-                vote.state?.status === VoteStatus.ActiveMain ||
-                vote.state?.status === VoteStatus.ActiveObjection,
-            )
-          : votes,
-      };
     },
     staleTime: Infinity,
   });

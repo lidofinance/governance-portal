@@ -1,23 +1,19 @@
 import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { PublicClient, Address, Log, Abi, AbiEvent } from 'viem';
+import { PublicClient, Address, Abi, AbiEvent } from 'viem';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { CHAINS } from '@lido-sdk/constants';
+import { isAragonProposal } from 'utils/proposals/isAragonProposal';
+import {
+  ProposalCombinedData,
+  ProposalDetails,
+  ProposalLog,
+  SubmitProposalCall,
+} from 'features/dual-governance/proposals/types';
 
 const BATCH_SIZE = 10000n;
-
-export interface ProposalEventArgs {
-  metadata: string;
-  id: bigint;
-  proposer: Address;
-  timestamp: bigint;
-  calls: any[];
-}
-
-export type ProposalLog = Log & {
-  args: ProposalEventArgs;
-};
 
 interface FindEventsBaseConfig {
   address: Address;
@@ -27,12 +23,10 @@ interface FindEventsBaseConfig {
   proposalsCount: bigint;
 }
 
-export interface ProposalCombinedData {
-  id: string;
-  event: ProposalLog;
-  proposalInfo: any;
-  voteId: number;
-}
+type GetProposalResult = readonly [
+  ProposalDetails,
+  readonly SubmitProposalCall[],
+];
 
 interface FindEventsConfig extends FindEventsBaseConfig {
   onProposalFound?: (result: ProposalCombinedData) => void;
@@ -41,6 +35,8 @@ interface FindEventsConfig extends FindEventsBaseConfig {
 
 interface UseProposalsConfig {
   onProposalFound?: (result: ProposalCombinedData) => void;
+  currentPage: number;
+  itemsPerPage: number;
 }
 
 interface ProposalsQueryResult {
@@ -51,6 +47,9 @@ interface ProposalsQueryResult {
 const findAllProposalsEvents = async (
   client: PublicClient,
   config: FindEventsConfig,
+  chainId: CHAINS,
+  currentPage: number,
+  itemsPerPage: number,
 ): Promise<ProposalCombinedData[]> => {
   const {
     proposalsCount,
@@ -62,11 +61,15 @@ const findAllProposalsEvents = async (
     contract,
   } = config;
 
+  const startId = proposalsCount - BigInt((currentPage - 1) * itemsPerPage);
+  const endId =
+    startId > BigInt(itemsPerPage) ? startId - BigInt(itemsPerPage - 1) : 1n;
+
   let latestBlock = await client.getBlockNumber();
   const foundEvents: Record<string, boolean> = {};
   const proposals: ProposalCombinedData[] = [];
 
-  for (let id = 1n; id <= proposalsCount; id++) {
+  for (let id = startId; id >= endId; id--) {
     foundEvents[id.toString()] = false;
   }
 
@@ -95,19 +98,25 @@ const findAllProposalsEvents = async (
 
     for (const log of batchLogs) {
       const id = log.args.id;
-      if (id && id <= proposalsCount && !foundEvents[id.toString()]) {
+      if (id && id >= endId && id <= startId && !foundEvents[id.toString()]) {
         foundEvents[id.toString()] = true;
 
+        const voteId = await isAragonProposal({
+          client,
+          proposalLog: log,
+          chainId,
+        });
+
         try {
-          const proposalInfo = await contract.readContract('getProposal', [
-            id.toString(),
-          ]);
+          const proposalInfo = (await contract.readContract('getProposal', [
+            id,
+          ])) as GetProposalResult;
 
           const result: ProposalCombinedData = {
-            id: id.toString(),
+            id: Number(id),
             event: log,
             proposalInfo,
-            voteId: Number(log.args.id), // TODO Get real voteId from metadata when it's done on the onchain side
+            voteId: Number(voteId),
           };
 
           if (onProposalFound !== undefined) {
@@ -127,11 +136,13 @@ const findAllProposalsEvents = async (
     latestBlock = fromBlock - 1n;
   }
 
-  return proposals;
+  return proposals.sort((a, b) => b.id - a.id);
 };
 
 export const useProposals = ({
   onProposalFound,
+  currentPage,
+  itemsPerPage,
 }: UseProposalsConfig): UseQueryResult<ProposalsQueryResult> => {
   const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
@@ -160,6 +171,8 @@ export const useProposals = ({
           'getProposals',
           emergencyProtectedTimelock.address,
           proposalsCount.toString(),
+          currentPage,
+          itemsPerPage,
         ]
       : ['getProposals', emergencyProtectedTimelock.address],
     queryFn: async (): Promise<ProposalsQueryResult> => {
@@ -168,15 +181,21 @@ export const useProposals = ({
       }
 
       try {
-        const proposals = await findAllProposalsEvents(publicClient, {
-          address: emergencyProtectedTimelock.address,
-          abi: EmergencyProtectedTimelock.abi,
-          eventName: 'ProposalSubmitted',
-          proposalsCount,
-          batchSize: BATCH_SIZE,
-          onProposalFound,
-          contract: emergencyProtectedTimelock,
-        });
+        const proposals = await findAllProposalsEvents(
+          publicClient,
+          {
+            address: emergencyProtectedTimelock.address,
+            abi: EmergencyProtectedTimelock.abi,
+            eventName: 'ProposalSubmitted',
+            proposalsCount,
+            batchSize: BATCH_SIZE,
+            onProposalFound,
+            contract: emergencyProtectedTimelock,
+          },
+          chainId,
+          currentPage,
+          itemsPerPage,
+        );
 
         return { proposalsCount, proposals };
       } catch (error) {

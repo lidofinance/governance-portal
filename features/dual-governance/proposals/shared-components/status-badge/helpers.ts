@@ -1,6 +1,6 @@
 import { BadgeVariant } from 'features/dual-governance/proposals/shared-components/status-badge/types';
 import { VoteStatus } from 'shared/votes/types';
-import { ProposalStatus } from 'features/dual-governance/types';
+import { ProposalStatus } from 'features/dual-governance/proposals/types';
 
 // TODO: Waiting for design to cover these statuses
 
