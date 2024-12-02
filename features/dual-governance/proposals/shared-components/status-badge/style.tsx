@@ -28,5 +28,4 @@ export const StatusBadgeWrapper = styled.div<Props>`
   flex-grow: 0;
   font-size: 15px;
   line-height: 1.8;
-  margin-top: 20px;
 `;

@@ -11,7 +11,7 @@ type Props = {
 
 type VoteEventArgs = {
   voteId: bigint;
-  creator: string;
+  creator: Address;
   metadata: string;
 };
 

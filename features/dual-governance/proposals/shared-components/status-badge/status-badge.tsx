@@ -4,7 +4,7 @@ import {
   statusBadgeContent,
   votePhaseContent,
 } from 'features/dual-governance/proposals/shared-components/status-badge/helpers';
-import { ProposalStatus } from 'features/dual-governance/types';
+import { ProposalStatus } from 'features/dual-governance/proposals/types';
 
 type Props = {
   isAragon?: boolean;

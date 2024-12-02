@@ -23,7 +23,8 @@ export const rootOrigin = process.env.ROOT_ORIGIN || 'https://#';
 // Fix in the build time (build time don't have env vars)
 
 /** @type string */
-export const researchOrigin = process.env.RESEARCH_ORIGIN || 'https://research.lido.fi';
+// export const researchOrigin = process.env.RESEARCH_ORIGIN || 'https://research.lido.fi';
+export const voteOrigin = process.env.VOTE_ORIGIN || 'https://vote.lido.fi';
 // Fix in the build time (build time don't have env vars)
 
 // Keep fallback as in 'config/get-secret-config.ts'
