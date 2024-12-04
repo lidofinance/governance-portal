@@ -15,12 +15,9 @@ import { ProposalName } from 'features/dual-governance/proposals/shared-componen
 import { ArrowRight } from 'shared/components/icons';
 import Link from 'next/link';
 import { PROPOSALS_PATH } from 'constants/urls';
-import {
-  ProposalCombinedData,
-  ProposalStatus,
-} from 'features/dual-governance/proposals/types';
-import { useDualGovernanceState } from 'features/dual-governance/hooks/use-dual-governance-state';
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { ProposalTimelock } from 'features/dual-governance/proposals/shared-components/proposal-timelock';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
 type Props = {
   id: number;
@@ -40,14 +37,13 @@ export const ProposalItem = ({
   // TODO: TBD
   // const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
 
-  const { data } = useDualGovernanceState();
-
+  const { visibleState } = useDualGovernanceContext();
   console.log(proposalInfo, 'proposalInfo');
 
   const { status, scheduledAt, submittedAt } = proposalInfo[0];
   if (
     isReadyToEnact &&
-    data?.visibleState === VisibleGovernanceState.BlockedDeactivation
+    visibleState === VisibleGovernanceState.BlockedDeactivation
   ) {
     return (
       <ProposalListItemToEnact>
