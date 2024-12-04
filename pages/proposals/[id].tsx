@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Layout } from 'shared/components';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Proposal } from 'features/dual-governance/proposals/proposal-page';
+import { ProposalPage as ProposalPageComponent } from 'features/dual-governance/pages/proposal-page';
 
 interface Props {
   id: string;
@@ -10,7 +10,7 @@ interface Props {
 const ProposalPage: FC<Props> = ({ id }) => {
   return (
     <Layout containerSize="full">
-      <Proposal id={id} />
+      <ProposalPageComponent id={Number(id)} />
     </Layout>
   );
 };
@@ -23,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const id = params?.id as string;
+  const id = params?.id;
   if (!id) {
     return {
       notFound: true,
