@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { ToggleWrapper, StyledButton } from './style';
+import { ToggleWrapper, ButtonWrapper } from './style';
+import { Button } from '../button';
 
 type ToggleItem = {
   label: string;
@@ -17,7 +18,7 @@ export const ToggleButton = ({ items, onChange }: Props) => {
   );
 
   const handleClick = useCallback(
-    (value: string) => {
+    (value: string) => () => {
       setActiveItem(value);
       if (typeof onChange === 'function') {
         onChange(value);
@@ -33,13 +34,15 @@ export const ToggleButton = ({ items, onChange }: Props) => {
   return (
     <ToggleWrapper>
       {items.map((item) => (
-        <StyledButton
-          key={item.value}
-          onClick={() => handleClick(item.value)}
-          $isActive={activeItem === item.value}
-        >
-          {item.label}
-        </StyledButton>
+        <ButtonWrapper key={item.value} $isActive={activeItem === item.value}>
+          <Button
+            size="sm"
+            variant={activeItem === item.value ? 'filled' : 'outlined'}
+            onClick={handleClick(item.value)}
+          >
+            {item.label}
+          </Button>
+        </ButtonWrapper>
       ))}
     </ToggleWrapper>
   );

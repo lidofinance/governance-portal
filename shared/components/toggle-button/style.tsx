@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 
-type ButtonProps = {
+type Props = {
   $isActive: boolean;
 };
 
-export const StyledButton = styled.button<ButtonProps>`
-  padding: 14px 24px;
-  border-radius: 32px;
-  font-size: 18px;
-  cursor: pointer;
-  background-color: ${({ $isActive }) => ($isActive ? '#000' : '#fff')};
-  color: ${({ $isActive }) => ($isActive ? '#fff' : '#000')};
+export const ButtonWrapper = styled.div<Props>`
+  display: flex;
+  padding: 3px;
+  border-radius: 70px;
+  border: 3px solid
+    ${({ $isActive }) => ($isActive ? '#0085FF' : 'transparent')};
 `;
 
 export const ToggleWrapper = styled.div`

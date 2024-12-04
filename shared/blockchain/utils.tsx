@@ -60,10 +60,10 @@ export const formatEthFull = (amount: bigint) => {
   });
 };
 
-export const formatEthCompact = (amount: bigint) => {
+export const formatEthCompact = (amount: bigint, maxFractionDigits = 2) => {
   return formatNumber({
     value: formatEther(amount),
-    maxFractionDigits: 2,
+    maxFractionDigits,
     notation: 'compact',
   });
 };

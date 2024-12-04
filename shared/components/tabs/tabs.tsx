@@ -14,7 +14,7 @@ type Props = {
   isActive: boolean;
   children?: React.ReactNode;
   disabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export const Tab = ({ children, isActive, disabled, onClick }: Props) => {

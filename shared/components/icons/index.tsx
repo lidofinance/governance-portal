@@ -9,6 +9,7 @@ import { ReactComponent as VaultIcon } from 'assets/icons/vault-icon.svg';
 import { ReactComponent as WarningIcon } from 'assets/icons/warning-icon.svg';
 import { ReactComponent as SearchIcon } from 'assets/icons/search-icon.svg';
 import { ReactComponent as TurnArrow } from 'assets/icons/turn-arrow-icon.svg';
+import { ReactComponent as LockIcon } from 'assets/lock-icon.svg';
 
 export {
   RevokeIcon,
@@ -22,4 +23,5 @@ export {
   WarningIcon,
   SearchIcon,
   TurnArrow,
+  LockIcon,
 };

@@ -17,10 +17,13 @@ type GradientProps = {
 
 const GradientVariants = {
   start: {
+    [VisibleGovernanceState.Loading]: css`
+      stop-color: #fff9f9;
+    `,
     [VisibleGovernanceState.Normal]: css`
       stop-color: var(--layout-gradient-start-normal);
     `,
-    [VisibleGovernanceState.NormalWarning]: css`
+    [VisibleGovernanceState.Warning]: css`
       stop-color: var(--layout-gradient-start-attention);
     `,
     [VisibleGovernanceState.BlockedRageQuit]: css`
@@ -37,10 +40,13 @@ const GradientVariants = {
     `,
   },
   stop: {
+    [VisibleGovernanceState.Loading]: css`
+      stop-color: #fff9f9;
+    `,
     [VisibleGovernanceState.Normal]: css`
       stop-color: var(--layout-gradient-stop-normal);
     `,
-    [VisibleGovernanceState.NormalWarning]: css`
+    [VisibleGovernanceState.Warning]: css`
       stop-color: var(--layout-gradient-stop-attention);
     `,
     [VisibleGovernanceState.BlockedRageQuit]: css`

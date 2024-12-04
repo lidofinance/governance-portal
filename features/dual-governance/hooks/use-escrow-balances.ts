@@ -4,28 +4,26 @@ import { useAccount } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
 import { zeroAddress } from 'viem';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { useEscrowAddresses } from './use-escrow-addresses';
-
-type EscrowBalance = {
-  stETHLockedShares: bigint;
-  unstETHLockedShares: bigint;
-  unstETHIdsCount: bigint;
-  lastAssetsLockTimestamp: bigint;
-};
+import { EscrowBalance } from '../types';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
 export const useEscrowBalances = () => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
-
-  const { vetoSignallingAddress, rageQuitAddress, isLoading } =
-    useEscrowAddresses();
+  const { vetoSignallingAddress, rageQuitAddress } = useDualGovernanceContext();
+  // const wstEth = useReadContract(WstETH);
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
 
   const isEnabled = !!vetoSignallingAddress && !!rageQuitAddress && !!address;
-
-  const result = useQuery({
-    queryKey: ['escrow-balances', chainId],
+  return useQuery({
+    queryKey: [
+      'escrow-balances',
+      chainId,
+      vetoSignallingAddress,
+      rageQuitAddress,
+      address,
+    ],
     staleTime: Infinity,
     enabled: isEnabled,
     queryFn: async () => {
@@ -55,18 +53,24 @@ export const useEscrowBalances = () => {
           rageQuitBalance.unstETHLockedShares;
       }
 
+      // TODO: change mock value to a real one once we get into testing with real wsteth
+      const vetoSharesInWstEth = vetoSignallingBalance.stETHLockedShares;
+      // const vetoSharesInWstEth = await wstEth.readContract('getWstETHByStETH', [
+      //   vetoSignallingBalance.stETHLockedShares,
+      // ]);
+
       return {
-        vetoSignallingBalance,
-        rageQuitBalance,
-        vetoSignallingSum,
-        rageQuitSum,
-        totalSum: vetoSignallingSum + rageQuitSum,
+        vetoSignallingBalance: {
+          totalLockedShares: vetoSignallingSum,
+          ...vetoSignallingBalance,
+        },
+        rageQuitBalance: {
+          totalLockedShares: rageQuitSum,
+          ...rageQuitBalance,
+        },
+        lockedSharesInEscrow: vetoSignallingSum + rageQuitSum,
+        vetoSharesInWstEth,
       };
     },
   });
-
-  return {
-    data: result.data,
-    isLoading: isLoading || result.isLoading,
-  };
 };

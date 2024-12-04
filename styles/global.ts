@@ -9,14 +9,14 @@ export const devicesHeaderMedia = {
 };
 
 type GlobalLayoutProps = {
-  $layoutVariant: VisibleGovernanceState | 'default';
+  $layoutVariant: VisibleGovernanceState;
 };
 
 const LayoutVariants = {
   [VisibleGovernanceState.Normal]: css`
     background-color: var(--layout-background-normal);
   `,
-  [VisibleGovernanceState.NormalWarning]: css`
+  [VisibleGovernanceState.Warning]: css`
     background-color: var(--layout-background-attention);
   `,
   [VisibleGovernanceState.BlockedDeactivation]: css`
@@ -29,10 +29,10 @@ const LayoutVariants = {
     background-color: var(--layout-background-blocked);
   `,
   [VisibleGovernanceState.Cooldown]: css`
-    background-color: var(--lido-color-background);
+    background-color: var(--layout-color-background);
   `,
-  default: css`
-    background-color: var(--lido-color-background);
+  [VisibleGovernanceState.Loading]: css`
+    background-color: var(--layout-color-background);
   `,
 };
 
@@ -66,6 +66,8 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
 
     --layout-gradient-start-blocked: #D74758;
     --layout-gradient-stop-blocked: #D7475800;
+
+    --layout-color-background: #FFF9F9;
 
     // ----- Primary: For ext & icons
 

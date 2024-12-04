@@ -1,0 +1,1 @@
+export { DualGovernanceSummary } from './summary';

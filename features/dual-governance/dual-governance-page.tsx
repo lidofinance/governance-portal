@@ -1,7 +1,19 @@
 import Head from 'next/head';
-import { FormSection } from './form-section';
 import { Layout } from 'shared/components';
+import { DualGovernanceSummary } from './summary';
+import { DualGovernanceControlPanel } from './control-panel';
+import styled from 'styled-components';
+import { Block } from '@lidofinance/lido-ui';
 // import { ProposalsSection } from './proposals-section';
+
+const DashboardWrapper = styled(Block)`
+  border: 1px solid var(--custom-border);
+  background: none;
+  padding: 0;
+  border-radius: 60px;
+  display: flex;
+  min-height: 530px;
+`;
 
 export const DualGovernancePage = () => {
   return (
@@ -9,7 +21,10 @@ export const DualGovernancePage = () => {
       <Head>
         <title>Dual Governance | Lido</title>
       </Head>
-      <FormSection />
+      <DashboardWrapper>
+        <DualGovernanceSummary />
+        <DualGovernanceControlPanel />
+      </DashboardWrapper>
       {/* <ProposalsSection /> */}
     </Layout>
   );
