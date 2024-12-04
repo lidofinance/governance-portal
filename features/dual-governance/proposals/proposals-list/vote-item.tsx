@@ -7,12 +7,10 @@ import {
   SummarySection,
   ProposalDescription,
   DescriptionText,
-  ScriptSection,
   LinkWrapper,
   VoteStatusWrapper,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import { AragonScript } from 'features/dual-governance/evm-script-parsed/compact/aragon-script';
 import { ArrowRight } from 'shared/components/icons';
 import { config } from 'config';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
@@ -32,7 +30,6 @@ type Props = {
 export const VoteItem = ({
   id,
   description,
-  script,
   isAragon,
   voteState,
   proposalStatus,
@@ -64,23 +61,6 @@ export const VoteItem = ({
           ))}
         </ProposalDescription>
       )}
-      {script && (
-        <ScriptSection>
-          <AragonScript
-            onUnknownContractCalled={setIsUnknownContractCalled}
-            script={script}
-          />
-        </ScriptSection>
-      )}
-      <LinkWrapper>
-        <a
-          href={`${config.voteOrigin}/vote/${id}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <ArrowRight />
-        </a>
-      </LinkWrapper>
     </ProposalListItemWrapper>
   );
 };

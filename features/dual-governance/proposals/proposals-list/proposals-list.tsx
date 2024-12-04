@@ -1,6 +1,6 @@
-import { ProposalItem } from 'features/dual-governance/proposals/proposals-column-list/proposal-item';
-import { VoteItem } from 'features/dual-governance/proposals/proposals-column-list/vote-item';
-import { ProposalsListWrapper } from 'features/dual-governance/proposals/proposals-column-list/style';
+import { ProposalItem } from 'features/dual-governance/proposals/proposals-list/proposal-item';
+import { VoteItem } from 'features/dual-governance/proposals/proposals-list/vote-item';
+import { ProposalsListWrapper } from 'features/dual-governance/proposals/proposals-list/style';
 
 import { useProposalsAndVotes } from 'features/dual-governance/hooks/use-proposals-and-votes';
 import { VoteData } from 'shared/votes/hooks/use-active-votes';
@@ -14,7 +14,7 @@ const isVoteItem = (
   return 'vote' in item;
 };
 
-export const ProposalsColumnList = () => {
+export const ProposalsList = () => {
   const { data, isLoading } = useProposalsAndVotes({
     currentPage: 1,
     itemsPerPage: 5,
