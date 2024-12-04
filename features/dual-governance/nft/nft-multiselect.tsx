@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { StyledSelect } from '../form-section/form/style';
+import { StyledSelect } from '../control-panel/style';
 import { RevokeClaimNft } from './revoke-claim-nft';
 
 const mockNftData = [

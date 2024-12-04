@@ -1,6 +1,5 @@
 import { CHAINS } from '@lido-sdk/constants';
-import { Abi, Address } from 'viem';
-import { getContractInstance } from './get-contract-instance';
+import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
 
 export const Token = {
   stETH: 'stETH',
@@ -19,6 +18,10 @@ export type ContractObject<T = Abi> = {
   chainAddressMap: ChainAddressMap;
 };
 
-export type ContractInstance<T extends Abi> = ReturnType<
-  typeof getContractInstance<T>
->;
+export type WriteFunctionName<T extends Abi | readonly unknown[]> =
+  ContractFunctionName<T, 'nonpayable' | 'payable'>;
+
+export type WriteFunctionArgs<
+  T extends Abi | readonly unknown[],
+  F extends WriteFunctionName<T>,
+> = ContractFunctionArgs<T, 'nonpayable' | 'payable', F>;

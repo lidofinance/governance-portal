@@ -1,6 +1,5 @@
 export * from './appCookies';
 export * from './formatBalanceString';
-export * from './weiToEth';
 export * from './nprogress';
 export * from './getErrorMessage';
 export * from './extractErrorMessage';

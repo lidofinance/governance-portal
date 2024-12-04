@@ -5,7 +5,7 @@ import { HeaderActions } from './header-actions';
 export const Header = () => (
   <HeaderContainer size="full" forwardedAs="header">
     <LogoLido />
-    <LogoTextStyle>DG</LogoTextStyle>
+    <LogoTextStyle>Dual Governance</LogoTextStyle>
     <HeaderActions />
   </HeaderContainer>
 );

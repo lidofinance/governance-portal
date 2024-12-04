@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
-import { useEscrowAddresses } from './use-escrow-addresses';
 
 import { dgConfigProviderAbi, escrowAbi } from 'abi/ts';
 import { formatEth, formatPercent16 } from 'shared/blockchain/utils';
@@ -14,30 +13,31 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
+import { Address } from 'viem';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
 
+type Args = {
+  vetoSignallingAddress: Address | undefined;
+};
+
 // Normal: DG.Normal && < 30%
-// NormalWarning: DG.Normal && >= 30%
+// Warning: DG.Normal && >= 30%
 // BlockedVetoSignalling: DG.VetoSignalling
 // BlockedRageQuit: DG.RageQuit
 // BlockedDeactivation: DG.VetoSignallingDeactivation
 // Cooldown: DG.Cooldown
 // Deadlock: DG.RageQuit && Reseal something something TBA
-export const useDualGovernanceState = () => {
+export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
   const { chainId } = useLidoSDK();
-  const { vetoSignallingAddress, isLoading: isEscrowLoading } =
-    useEscrowAddresses();
 
   const dualGovernance = useReadContract(DualGovernance);
   const stEth = useReadContract(StETH);
-  const readEscrowGetter = useReadContractGetter({
-    abi: escrowAbi,
-  });
+  const readEscrowGetter = useReadContractGetter(escrowAbi);
 
-  const dgConfigGetter = useReadContractGetter({ abi: dgConfigProviderAbi });
+  const dgConfigGetter = useReadContractGetter(dgConfigProviderAbi);
 
-  const { data, isLoading } = useQuery<DualGovernanceState | null>({
+  return useQuery<DualGovernanceState | null>({
     queryKey: ['dg-current-state', chainId],
     staleTime: Infinity,
     enabled: !!vetoSignallingAddress,
@@ -72,19 +72,21 @@ export const useDualGovernanceState = () => {
 
       const amountTillNextPhase = firstSealRageQuitSupport - vetoSupportPercent;
 
-      const normalWarningStateThreshold =
+      const warningStateThreshold =
         (firstSealRageQuitSupport * NORMAL_WARNING_STATE_THRESHOLD_PERCENT) /
         100n;
 
       const contractState =
         await dualGovernance.readContract('getPersistedState');
 
-      let visibleState: VisibleGovernanceState = VisibleGovernanceState.Normal;
+      let visibleState: VisibleGovernanceState = VisibleGovernanceState.Loading;
 
       switch (contractState) {
         case GovernanceState.Normal:
-          if (vetoSupportPercent >= normalWarningStateThreshold) {
-            visibleState = VisibleGovernanceState.NormalWarning;
+          if (vetoSupportPercent >= warningStateThreshold) {
+            visibleState = VisibleGovernanceState.Warning;
+          } else {
+            visibleState = VisibleGovernanceState.Normal;
           }
           break;
         case GovernanceState.VetoSignalling:
@@ -101,17 +103,19 @@ export const useDualGovernanceState = () => {
           break;
       }
 
+      const stEthTotalSupply = await stEth.readContract('totalSupply');
+
+      const detailedState =
+        await dualGovernance.readContract('getStateDetails');
+
       return {
+        visibleState,
         vetoSupportPercent: formatPercent16(vetoSupportPercent),
         totalStEthInEscrow: formatEth(totalStEthInEscrow),
         amountTillNextPhasePercent: formatPercent16(amountTillNextPhase),
-        visibleState,
+        stEthTotalSupply: stEthTotalSupply + lockedAssets.unstETHFinalizedETH,
+        detailedState,
       };
     },
   });
-
-  return {
-    data,
-    isLoading: isLoading || isEscrowLoading,
-  };
 };

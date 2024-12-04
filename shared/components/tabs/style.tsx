@@ -8,18 +8,16 @@ export const FormWrapper = styled.div`
 
 type TabProps = {
   $isActive: boolean;
+  $disabled?: boolean;
 };
 
 export const StyledTab = styled.div<TabProps>`
   z-index: 1;
   border: 1px solid #0000001a;
   cursor: pointer;
-  padding: 20px;
-  ${({ $isActive }) =>
-    $isActive &&
-    css`
-      border-bottom: 2px solid #0085ff;
-    `}
+
+  border-bottom: ${({ $isActive }) =>
+    `2px solid ${$isActive ? '#0085FF' : '#0000001a'}`};
   background-color: ${({ $isActive }) =>
     $isActive ? 'transparent' : '#1312170A'};
   &:first-child {
@@ -28,6 +26,12 @@ export const StyledTab = styled.div<TabProps>`
   &:last-child {
     border-top-right-radius: 30px;
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+    `}
 `;
 
 export const TabsWrapper = styled.section`

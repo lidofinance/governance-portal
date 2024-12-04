@@ -2,7 +2,7 @@ import { Button } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 
 export const WalletModalContentStyle = styled.div`
-  background-color: var(--lido-color-background);
+  background-color: var(--layout-color-background);
   border-radius: ${({ theme }) => theme.borderRadiusesMap.lg}px;
   padding: ${({ theme }) => theme.spaceMap.lg}px;
 `;

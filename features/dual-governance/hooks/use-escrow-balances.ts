@@ -4,37 +4,26 @@ import { useAccount } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
 import { zeroAddress } from 'viem';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { useEscrowAddresses } from './use-escrow-addresses';
-
-type EscrowBalance = {
-  stETHLockedShares: bigint;
-  unstETHLockedShares: bigint;
-  unstETHIdsCount: bigint;
-  lastAssetsLockTimestamp: bigint;
-};
-
-const MOCK = {
-  stETHLockedShares: BigInt(10040012340000000000000),
-  unstETHLockedShares: BigInt(200),
-  unstETHIdsCount: BigInt(5),
-  lastAssetsLockTimestamp: BigInt(100500),
-};
+import { EscrowBalance } from '../types';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
 export const useEscrowBalances = () => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
+  const { vetoSignallingAddress, rageQuitAddress } = useDualGovernanceContext();
+  // const wstEth = useReadContract(WstETH);
 
-  const { vetoSignallingAddress, rageQuitAddress, isLoading } =
-    useEscrowAddresses();
-
-  const readEscrowContract = useReadContractGetter({
-    abi: escrowAbi,
-  });
+  const readEscrowContract = useReadContractGetter(escrowAbi);
 
   const isEnabled = !!vetoSignallingAddress && !!rageQuitAddress && !!address;
-
-  const result = useQuery({
-    queryKey: ['escrow-balances', chainId],
+  return useQuery({
+    queryKey: [
+      'escrow-balances',
+      chainId,
+      vetoSignallingAddress,
+      rageQuitAddress,
+      address,
+    ],
     staleTime: Infinity,
     enabled: isEnabled,
     queryFn: async () => {
@@ -42,13 +31,13 @@ export const useEscrowBalances = () => {
         return null;
       }
 
-      const vetoSignalingBalance = await readEscrowContract(
+      const vetoSignallingBalance = await readEscrowContract(
         vetoSignallingAddress,
       )('getVetoerState', [address]);
 
-      const vetoSignalingSum =
-        vetoSignalingBalance.stETHLockedShares +
-        vetoSignalingBalance.unstETHLockedShares;
+      const vetoSignallingSum =
+        vetoSignallingBalance.stETHLockedShares +
+        vetoSignallingBalance.unstETHLockedShares;
 
       let rageQuitBalance: EscrowBalance | null = null;
       let rageQuitSum = 0n;
@@ -64,19 +53,24 @@ export const useEscrowBalances = () => {
           rageQuitBalance.unstETHLockedShares;
       }
 
+      // TODO: change mock value to a real one once we get into testing with real wsteth
+      const vetoSharesInWstEth = vetoSignallingBalance.stETHLockedShares;
+      // const vetoSharesInWstEth = await wstEth.readContract('getWstETHByStETH', [
+      //   vetoSignallingBalance.stETHLockedShares,
+      // ]);
+
       return {
-        vetoSignalBalance: MOCK,
-        rageQuitBalance: MOCK,
-        vetoSignalingSum: MOCK.stETHLockedShares + MOCK.unstETHLockedShares,
-        rageQuitSum: MOCK.stETHLockedShares + MOCK.unstETHLockedShares,
-        totalSum: MOCK.stETHLockedShares + MOCK.unstETHLockedShares,
-        // totalSum: vetoSignalingSum + rageQuitSum,
+        vetoSignallingBalance: {
+          totalLockedShares: vetoSignallingSum,
+          ...vetoSignallingBalance,
+        },
+        rageQuitBalance: {
+          totalLockedShares: rageQuitSum,
+          ...rageQuitBalance,
+        },
+        lockedSharesInEscrow: vetoSignallingSum + rageQuitSum,
+        vetoSharesInWstEth,
       };
     },
   });
-
-  return {
-    data: result.data,
-    isLoading: isLoading || result.isLoading,
-  };
 };

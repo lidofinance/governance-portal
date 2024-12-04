@@ -9,7 +9,7 @@ export function validateEtherAmount(
   amount: bigint | null,
   token: Token,
 ): asserts amount is bigint {
-  if (!amount) throw new ValidationError(field, '');
+  if (amount === null) throw new ValidationError(field, '');
 
   if (amount <= 0n)
     throw new ValidationError(field, `Enter ${token} ${field} greater than 0`);

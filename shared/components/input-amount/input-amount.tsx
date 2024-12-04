@@ -16,9 +16,15 @@ import { InputDecoratorMaxButton } from './input-decorator-max-button';
 import { InputDecoratorLocked } from './input-decorator-locked';
 import { InputStyled } from './styles';
 
+const MIN_VALUE_STRING_LENGTH = 20; // '0' + '.' + 18 decimals
+
 const parseEtherSafe = (value: string) => {
   try {
-    return parseEther(value);
+    const parsed = parseEther(value);
+    if (parsed === 0n && value.length > MIN_VALUE_STRING_LENGTH) {
+      return null;
+    }
+    return parsed;
   } catch {
     return null;
   }
@@ -83,7 +89,7 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
         } else {
           const value = parseEtherSafe(currentValue);
           // invalid value, so we rollback to last valid value
-          if (!value) {
+          if (value === null) {
             const rollbackCaretPosition =
               caretPosition -
               Math.min(
@@ -126,13 +132,13 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
     useEffect(() => {
       const input = inputRef.current;
       if (!input) return;
-      if (!value) {
+      if (value === null || value === undefined) {
         input.value = '';
       } else {
         const parsedValue = parseEtherSafe(input.value);
         // only change string state if casted values differ
         // this allows user to enter 0.100 without immediate change to 0.1
-        if (!parsedValue || parsedValue !== value) {
+        if (parsedValue === null || parsedValue !== value) {
           input.value = formatEther(value);
           // prevents rollback to incorrect value in onChange
           lastInputValue.current = input.value;

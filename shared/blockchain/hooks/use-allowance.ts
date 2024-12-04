@@ -1,30 +1,30 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
-import { Address } from 'viem';
+import { Address, zeroAddress } from 'viem';
 import { useReadContract, useWatchContractEvent } from 'wagmi';
 import { Token } from '../types';
 import { useTokenContractObject } from './use-token-contract-object';
 
 type Args = {
   token: Token;
-  account: Address;
-  spender: Address;
+  owner: Address | undefined;
+  spender: Address | undefined;
 };
 
 const onError = (error: unknown) =>
   console.warn('[useAllowance] error while watching events', error);
 
-export const useAllowance = ({ token, account, spender }: Args) => {
+export const useAllowance = ({ token, owner, spender }: Args) => {
   const queryClient = useQueryClient();
   const contract = useTokenContractObject(token);
 
-  const enabled = !!(token && account && spender);
+  const enabled = !!(token && owner && spender);
 
   const allowanceQuery = useReadContract({
     abi: contract.abi,
     address: contract.address,
     functionName: 'allowance',
-    args: [account, spender],
+    args: [owner ?? zeroAddress, spender ?? zeroAddress],
     query: { enabled },
   });
 
@@ -39,7 +39,7 @@ export const useAllowance = ({ token, account, spender }: Args) => {
     },
     // queryKey is unstable
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account, spender, token],
+    [owner, spender, token],
   );
 
   useWatchContractEvent({
@@ -48,10 +48,10 @@ export const useAllowance = ({ token, account, spender }: Args) => {
     poll: true,
     args: useMemo(
       () => ({
-        owner: account,
+        owner,
         spender,
       }),
-      [account, spender],
+      [owner, spender],
     ),
     address: contract.address,
     enabled,
@@ -65,9 +65,9 @@ export const useAllowance = ({ token, account, spender }: Args) => {
     poll: true,
     args: useMemo(
       () => ({
-        from: account,
+        from: owner,
       }),
-      [account],
+      [owner],
     ),
     address: contract.address,
     enabled,

@@ -6,3 +6,4 @@ export * from './DualGovernance.abi';
 export * from './Escrow.abi';
 export * from './DGConfigProvider.abi';
 export * from './EmergencyProtectedTimelock.abi';
+export * from './ERC20.abi';

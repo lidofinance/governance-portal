@@ -2,11 +2,13 @@ import { Token } from 'shared/blockchain/types';
 import { TokenLabel, TokenBalanceStyled } from './style';
 import {
   formatEth,
+  formatEthCompact,
   formatEthFull,
   getTokenIcon,
 } from 'shared/blockchain/utils';
-import { Tooltip } from '@lidofinance/lido-ui';
+import { InlineLoader, Tooltip } from '@lidofinance/lido-ui';
 import { Text } from '../text';
+import { isBigInt } from 'shared/blockchain/isBigInt';
 
 type Props = {
   token: Token;
@@ -18,7 +20,7 @@ type Props = {
 export const TokenBalance = (props: Props) => {
   const { token, balance, variant, showZeroBalance = true } = props;
 
-  if (balance === undefined || (!showZeroBalance && balance === 0n)) {
+  if (!showZeroBalance && balance === 0n) {
     return null;
   }
 
@@ -27,14 +29,18 @@ export const TokenBalance = (props: Props) => {
       <TokenBalanceStyled>
         {getTokenIcon(token)}
         <TokenLabel $compact>{token}</TokenLabel>
-        <Tooltip
-          placement="topLeft"
-          title={<span>{formatEthFull(balance)}</span>}
-        >
-          <Text size={14} color="secondary">
-            {formatEth(balance)}
-          </Text>
-        </Tooltip>
+        {isBigInt(balance) ? (
+          <Tooltip
+            placement="topRight"
+            title={<span>{formatEthFull(balance)}</span>}
+          >
+            <Text size={14} color="secondary">
+              {formatEthCompact(balance, 4)}
+            </Text>
+          </Tooltip>
+        ) : (
+          <InlineLoader />
+        )}
       </TokenBalanceStyled>
     );
   }
@@ -42,14 +48,18 @@ export const TokenBalance = (props: Props) => {
   return (
     <TokenBalanceStyled>
       {getTokenIcon(token)}
-      <Tooltip
-        placement="topLeft"
-        title={<span>{formatEthFull(balance)}</span>}
-      >
-        <TokenLabel>
-          {formatEth(balance)} {token}
-        </TokenLabel>
-      </Tooltip>
+      {isBigInt(balance) ? (
+        <Tooltip
+          placement="topLeft"
+          title={<span>{formatEthFull(balance)}</span>}
+        >
+          <TokenLabel>
+            {formatEth(balance)} {token}
+          </TokenLabel>
+        </Tooltip>
+      ) : (
+        <InlineLoader />
+      )}
     </TokenBalanceStyled>
   );
 };

@@ -1,13 +1,12 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useGlobalMemo } from 'shared/hooks';
 import { ContractObject } from '../types';
-import { Abi } from 'viem';
-import { getContractInstance } from '../get-contract-instance';
+import { Abi, getContract } from 'viem';
 
 export const useContractInstance = <T extends Abi>(
   contract: ContractObject<T>,
 ) => {
-  const { core, chainId } = useLidoSDK();
+  const { rpcProvider, web3Provider, chainId } = useLidoSDK();
 
   return useGlobalMemo(() => {
     const address = contract.chainAddressMap[chainId];
@@ -18,6 +17,13 @@ export const useContractInstance = <T extends Abi>(
       );
     }
 
-    return getContractInstance(address, contract.abi, core);
+    return getContract({
+      abi: contract.abi,
+      address,
+      client: {
+        public: rpcProvider,
+        wallet: web3Provider,
+      },
+    });
   }, `${chainId}-contract-${contract.name}-instance`);
 };

@@ -33,15 +33,13 @@ export const HeaderVaultInfo = () => {
       <VaultInfoButton
         ref={vaultInfoRef}
         onClick={() => setVaultInfoMenuOpen(true)}
-        disabled={!data?.totalSum}
+        disabled={!data?.lockedSharesInEscrow}
       >
         <VaultIcon />
-        {isLoading ? (
+        {isLoading || !data ? (
           <VaultInfoLoader />
-        ) : data ? (
-          `${formatEth(data.totalSum)} stETH`
         ) : (
-          'ERROR'
+          `${formatEth(data.lockedSharesInEscrow)} stETH`
         )}
       </VaultInfoButton>
       {data ? (
@@ -55,36 +53,40 @@ export const HeaderVaultInfo = () => {
             <Text size={28} weight={500}>
               Your tokens in DG
             </Text>
-            <Button>Manage</Button>
+            <Button size="sm">Manage</Button>
           </VaultInfoPopupTitle>
-          {data?.vetoSignalingSum && data.vetoSignalingSum > 0 ? (
+          {data?.vetoSignallingBalance.totalLockedShares ? (
             <>
               <VaultInfoSubtitle>
-                Tokens in VetoSignaling contract
+                Tokens in VetoSignalling contract
               </VaultInfoSubtitle>
               <TokensList>
                 <TokenBalance
                   token={Token.stETH}
-                  balance={data.vetoSignalBalance.stETHLockedShares}
+                  balance={data.vetoSignallingBalance.stETHLockedShares}
+                  showZeroBalance={false}
                 />
                 <TokenBalance
                   token={Token.unstETH}
-                  balance={data.vetoSignalBalance.unstETHLockedShares}
+                  balance={data.vetoSignallingBalance.unstETHLockedShares}
+                  showZeroBalance={false}
                 />
               </TokensList>
             </>
           ) : null}
-          {data?.rageQuitSum && data.rageQuitSum > 0 ? (
+          {data.rageQuitBalance.totalLockedShares ? (
             <>
               <VaultInfoSubtitle>Tokens in RageQuit contract</VaultInfoSubtitle>
               <TokensList>
                 <TokenBalance
                   token={Token.stETH}
                   balance={data.rageQuitBalance.stETHLockedShares}
+                  showZeroBalance={false}
                 />
                 <TokenBalance
                   token={Token.unstETH}
                   balance={data.rageQuitBalance.unstETHLockedShares}
+                  showZeroBalance={false}
                 />
               </TokensList>
             </>

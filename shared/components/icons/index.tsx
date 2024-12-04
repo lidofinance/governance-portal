@@ -9,6 +9,7 @@ import { ReactComponent as VaultIcon } from 'assets/icons/vault-icon.svg';
 import { ReactComponent as WarningIcon } from 'assets/icons/warning-icon.svg';
 import { ReactComponent as SearchIcon } from 'assets/icons/search-icon.svg';
 import { ReactComponent as TurnArrow } from 'assets/icons/turn-arrow-icon.svg';
+import { ReactComponent as LockIcon } from 'assets/lock-icon.svg';
 import { ReactComponent as AragonLogo } from 'assets/icons/aragon-logo.svg';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrow-right.svg';
 
@@ -24,6 +25,7 @@ export {
   WarningIcon,
   SearchIcon,
   TurnArrow,
+  LockIcon,
   AragonLogo,
   ArrowRight,
 };

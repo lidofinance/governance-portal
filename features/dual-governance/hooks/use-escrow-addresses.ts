@@ -1,32 +1,38 @@
-import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useMemo } from 'react';
 import { DualGovernance } from 'shared/blockchain/contracts';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { useReadContracts } from 'wagmi';
 
 export const useEscrowAddresses = () => {
   const { chainId } = useLidoSDK();
-  const { readContract } = useReadContract(DualGovernance);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['dg-escrow-addresses', chainId],
-    staleTime: Infinity,
-    queryFn: async () => {
-      const vetoSignallingAddress = await readContract(
-        'getVetoSignallingEscrow',
-      );
+  const dgContract = useMemo(
+    () => ({
+      address: getContractAddress(DualGovernance, chainId),
+      abi: DualGovernance.abi,
+    }),
+    [chainId],
+  );
 
-      const rageQuitAddress = await readContract('getRageQuitEscrow');
-
-      return {
-        vetoSignallingAddress,
-        rageQuitAddress,
-      };
-    },
+  const { data, isLoading, error, refetch } = useReadContracts({
+    contracts: [
+      {
+        ...dgContract,
+        functionName: 'getVetoSignallingEscrow',
+      },
+      {
+        ...dgContract,
+        functionName: 'getRageQuitEscrow',
+      },
+    ],
   });
 
   return {
-    vetoSignallingAddress: data?.vetoSignallingAddress,
-    rageQuitAddress: data?.rageQuitAddress,
+    vetoSignallingAddress: data?.[0].result,
+    rageQuitAddress: data?.[1].result,
     isLoading,
+    error,
+    refetch,
   };
 };

@@ -1,18 +1,14 @@
 import { createContext, useContext, useMemo } from 'react';
 import { CHAINS, LidoSDKCore } from '@lidofinance/lido-ethereum-sdk/core';
-import {
-  LidoSDKstETH,
-  LidoSDKwstETH,
-} from '@lidofinance/lido-ethereum-sdk/erc20';
 import invariant from 'tiny-invariant';
 import { useChainId, useClient, useConnectorClient } from 'wagmi';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useTokenTransferSubscription } from 'shared/blockchain/hooks/use-token-transfer-subscription';
+import { PublicClient, WalletClient } from 'viem';
 
 type LidoSDKContextValue = {
-  core: LidoSDKCore;
-  steth: LidoSDKstETH;
-  wsteth: LidoSDKwstETH;
+  rpcProvider: PublicClient;
+  web3Provider: WalletClient;
   chainId: CHAINS;
   subscribeToTokenUpdates: ReturnType<typeof useTokenTransferSubscription>;
 };
@@ -44,13 +40,9 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
       rpcUrls: !publicClient && fallbackRpcUrl ? [fallbackRpcUrl] : undefined,
     });
 
-    const steth = new LidoSDKstETH({ core });
-    const wsteth = new LidoSDKwstETH({ core });
-
     return {
-      core,
-      steth,
-      wsteth,
+      rpcProvider: core.rpcProvider as PublicClient,
+      web3Provider: core.web3Provider as WalletClient,
       chainId: core.chainId,
       subscribeToTokenUpdates: subscribe,
     };
