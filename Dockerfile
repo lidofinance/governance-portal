@@ -1,5 +1,5 @@
 # build env
-FROM node:20-alpine as build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN NODE_NO_BUILD_DYNAMICS=true yarn typechain && yarn build
 RUN rm -rf /app/public/runtime && mkdir /app/public/runtime && chown node /app/public/runtime
 
 # final image
-FROM node:20-alpine as base
+FROM node:20-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache curl=~8 
     
@@ -21,6 +21,7 @@ COPY --from=build /app /app
 RUN chown -R node:node /app
 
 USER node
+EXPOSE 3000
 
 HEALTHCHECK --interval=10s --timeout=3s \
   CMD curl -f http://localhost:3000/api/health || exit 1

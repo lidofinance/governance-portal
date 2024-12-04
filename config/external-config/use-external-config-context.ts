@@ -3,7 +3,7 @@ import useSWR from 'swr';
 
 import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { getConfig } from '../get-config';
-import { isManifestEntryValid, useFallbackManifestEntry } from './utils';
+import { getBackwardCompatibleConfig, isManifestEntryValid, useFallbackManifestEntry } from './utils';
 
 import type { ExternalConfig, ManifestEntry } from './types';
 
@@ -50,7 +50,7 @@ export const useExternalConfigContext = (
 
   return useMemo(() => {
     const { config, ...rest } = swr.data ?? fallbackData;
-    // const cleanConfig = getBackwardCompatibleConfig(config);
-    return { ...config, ...rest, fetchMeta: swr };
+    const cleanConfig = getBackwardCompatibleConfig(config);
+    return { ...cleanConfig, ...rest, fetchMeta: swr };
   }, [swr, fallbackData]);
 };
