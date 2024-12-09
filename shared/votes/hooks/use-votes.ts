@@ -54,7 +54,7 @@ const mapPayload = (
   );
 };
 
-export const useActiveVotes = ({ limit, getActive = false }: Props) => {
+export const useVotes = ({ limit, getActive = false }: Props) => {
   const AragonVoting = useReadContract(Voting);
   const client = usePublicClient();
 
@@ -146,7 +146,7 @@ export const useActiveVotes = ({ limit, getActive = false }: Props) => {
             : votes,
         };
       } catch (e) {
-        console.error('Error in useActiveVotes:', e);
+        console.error('Error in useVotes:', e);
         return { votes: [] };
       }
     },

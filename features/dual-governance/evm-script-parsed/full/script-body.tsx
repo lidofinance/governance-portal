@@ -19,9 +19,7 @@ type Props = {
 // TODO: add nesting when the nested calls will be available from the contract
 
 export const ScriptBody = ({ calls, binary, parentId }: Props) => {
-  const {
-    core: { chainId },
-  } = useLidoSDK();
+  const { chainId } = useLidoSDK();
   if (!calls || calls.length === 0) {
     if (binary) {
       return (

@@ -11,12 +11,14 @@ import {
   ProposalLog,
 } from 'features/dual-governance/proposals/types';
 
-interface UseProposalConfig {
-  id: bigint | number;
-}
+type UseProposalConfig = {
+  id: bigint | number | null | undefined;
+  enabled?: boolean;
+};
 
 export const useProposal = ({
   id,
+  enabled,
 }: UseProposalConfig): UseQueryResult<ProposalCombinedData> => {
   const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
@@ -80,6 +82,7 @@ export const useProposal = ({
       }
     },
     staleTime: Infinity,
-    enabled: !!publicClient && !!id,
+    enabled: !!publicClient && !!id && enabled,
+    retry: false,
   });
 };

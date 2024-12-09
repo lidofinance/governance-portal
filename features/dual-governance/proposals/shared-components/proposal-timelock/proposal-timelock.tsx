@@ -87,7 +87,7 @@ export const ProposalTimelock = ({
   }
 
   const timelockInfo = getTimelockInfo({
-    status: ProposalStatus.Submitted,
+    status,
     timeFormatted,
     isCountdownFinished,
   });

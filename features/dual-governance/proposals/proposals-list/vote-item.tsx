@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
 import { VoteStatus } from 'shared/votes/types';
 
@@ -7,12 +7,9 @@ import {
   SummarySection,
   ProposalDescription,
   DescriptionText,
-  LinkWrapper,
   VoteStatusWrapper,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import { ArrowRight } from 'shared/components/icons';
-import { config } from 'config';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 
 type Props = {
@@ -20,11 +17,13 @@ type Props = {
   script: string;
   description?: string;
   isAragon?: boolean;
+  slim?: boolean;
   voteState?: {
     isQuorumReached: boolean;
     status: VoteStatus;
   };
   proposalStatus?: ProposalStatus;
+  onProposalClick: MouseEventHandler<HTMLDivElement>;
 };
 
 export const VoteItem = ({
@@ -33,13 +32,15 @@ export const VoteItem = ({
   isAragon,
   voteState,
   proposalStatus,
+  slim,
+  onProposalClick,
 }: Props) => {
   const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
 
   const descriptionLines = description ? description.split('\n') : [];
 
   return (
-    <ProposalListItemWrapper>
+    <ProposalListItemWrapper onClick={onProposalClick}>
       <SummarySection>
         <ProposalName
           isAragon
@@ -55,7 +56,7 @@ export const VoteItem = ({
         </VoteStatusWrapper>
       </SummarySection>
       {descriptionLines.length > 0 && (
-        <ProposalDescription $slim>
+        <ProposalDescription $slim={slim}>
           {descriptionLines.map((line, index) => (
             <DescriptionText key={index}>{line}</DescriptionText>
           ))}

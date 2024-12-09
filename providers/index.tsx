@@ -11,6 +11,7 @@ import { ModalProvider } from './modal-provider';
 import Web3Provider from './web3';
 import { LidoSDKProvider } from './lido-sdk';
 import { DualGovernanceStateProvider } from './dual-governance';
+import { DualGovernanceProposalsProvider } from './dual-governance-proposals';
 
 type ProvidersProps = {
   prefetchedManifest?: unknown;
@@ -28,8 +29,10 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
             <IPFSInfoBoxStatusesProvider>
               <InpageNavigationProvider>
                 <DualGovernanceStateProvider>
-                  <GlobalStyleOverwrite />
-                  <ModalProvider>{children}</ModalProvider>
+                  <DualGovernanceProposalsProvider>
+                    <GlobalStyleOverwrite />
+                    <ModalProvider>{children}</ModalProvider>
+                  </DualGovernanceProposalsProvider>
                 </DualGovernanceStateProvider>
               </InpageNavigationProvider>
             </IPFSInfoBoxStatusesProvider>

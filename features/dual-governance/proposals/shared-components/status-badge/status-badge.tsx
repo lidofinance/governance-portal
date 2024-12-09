@@ -2,6 +2,7 @@ import { StatusBadgeWrapper } from 'features/dual-governance/proposals/shared-co
 import { VoteStatus } from 'shared/votes/types';
 import {
   statusBadgeContent,
+  statusBadgeVariant,
   votePhaseContent,
 } from 'features/dual-governance/proposals/shared-components/status-badge/helpers';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
@@ -27,7 +28,9 @@ export const StatusBadge = ({ isAragon, voteState, proposalStatus }: Props) => {
 
   if (!voteState && proposalStatus) {
     return (
-      <StatusBadgeWrapper $variant="success">
+      <StatusBadgeWrapper
+        $variant={statusBadgeVariant[proposalStatus] || 'default'}
+      >
         {statusBadgeContent[proposalStatus]}
       </StatusBadgeWrapper>
     );

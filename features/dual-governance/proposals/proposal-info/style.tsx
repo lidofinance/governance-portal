@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, Text } from '@lidofinance/lido-ui';
+import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
 import Link from 'next/link';
 
 export const ProposalContainer = styled(Block)`
@@ -11,10 +11,6 @@ export const ProposalHeader = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 30px;
-`;
-
-export const TimeLockCountdown = styled(Text)`
-  font-size: 17px;
 `;
 
 export const ProposalName = styled.div`
@@ -45,4 +41,11 @@ export const ActionsWrapper = styled.div`
   button {
     width: auto;
   }
+`;
+
+export const InlineLoaderStyled = styled(InlineLoader)`
+  margin-top: 24px;
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
 `;

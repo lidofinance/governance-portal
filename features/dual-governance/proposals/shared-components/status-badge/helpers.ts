@@ -2,11 +2,9 @@ import { BadgeVariant } from 'features/dual-governance/proposals/shared-componen
 import { VoteStatus } from 'shared/votes/types';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 
-// TODO: Waiting for design to cover these statuses
-
 export const statusBadgeContent: Partial<Record<ProposalStatus, string>> = {
-  [ProposalStatus.Submitted]: 'Pending',
-  [ProposalStatus.Scheduled]: 'Pending',
+  [ProposalStatus.Submitted]: 'Pending in Dual Governance',
+  [ProposalStatus.Scheduled]: 'Pending in Dual Governance',
   [ProposalStatus.Executed]: 'Executed',
 };
 
