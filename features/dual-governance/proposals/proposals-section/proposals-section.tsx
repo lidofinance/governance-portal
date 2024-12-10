@@ -1,24 +1,35 @@
-import Link from 'next/link';
-import { PROPOSALS_PATH } from 'constants/urls';
-
-import { ProposalsColumnList } from 'features/dual-governance/proposals/proposals-column-list';
-
+import { ProposalsList } from 'features/dual-governance/proposals/proposals-list';
+import { FlexWrapper } from 'shared/styled-components';
 import {
+  ProposalsDisclaimer,
   ProposalsTitle,
   ProposalsWrapper,
-  SeeAll,
 } from 'features/dual-governance/proposals/proposals-section/style';
+import { SearchInput } from './search-input';
+import { useRouter } from 'next/router';
+import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals-list/proposal-search-item';
 
 export const ProposalsSection = () => {
+  const router = useRouter();
+
+  const proposalId = Array.isArray(router.query.proposalId)
+    ? router.query.proposalId[0]
+    : router.query.proposalId;
+
   return (
     <ProposalsWrapper>
-      <ProposalsTitle>
-        Active proposals{' '}
-        <SeeAll>
-          <Link href={PROPOSALS_PATH}>View all Proposals</Link>
-        </SeeAll>
-      </ProposalsTitle>
-      <ProposalsColumnList />
+      <FlexWrapper $alignItems="center" $justifyContent="space-between">
+        <FlexWrapper $flexDirection="column" $alignItems="flex-start">
+          <ProposalsTitle>Proposals</ProposalsTitle>
+          <ProposalsDisclaimer>
+            <b>Disclaimer:</b> Description provided by the Aragon proposal
+            author; <br />
+            may include items not under Dual Governance
+          </ProposalsDisclaimer>
+        </FlexWrapper>
+        <SearchInput />
+      </FlexWrapper>
+      {proposalId ? <ProposalSearchItem id={proposalId} /> : <ProposalsList />}
     </ProposalsWrapper>
   );
 };

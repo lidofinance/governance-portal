@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { PopupMenu, PopupMenuProps } from '@lidofinance/lido-ui';
 
 type FlexWrapperProps = {
+  $width?: string;
   $flexDirection?: 'column' | 'row';
   $alignItems?: 'flex-start' | 'flex-end' | 'center' | 'baseline';
   $justifyContent?:
@@ -15,6 +16,7 @@ type FlexWrapperProps = {
 };
 
 export const FlexWrapper = styled.div<FlexWrapperProps>`
+  width: ${({ $width }) => $width || '100%'};
   display: flex;
   align-items: ${({ $alignItems }) => $alignItems || 'center'};
   flex-direction: ${({ $flexDirection }) => $flexDirection || 'row'};

@@ -1,20 +1,15 @@
+import { MouseEventHandler } from 'react';
 import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 
-import { Script } from 'features/dual-governance/evm-script-parsed/compact';
 import {
   ProposalListItemWrapper,
   SummarySection,
   ProposalDescription,
   DescriptionText,
-  ScriptSection,
   ProposalListItemToEnact,
-  LinkWrapper,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import { ArrowRight } from 'shared/components/icons';
-import Link from 'next/link';
-import { PROPOSALS_PATH } from 'constants/urls';
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { ProposalTimelock } from 'features/dual-governance/proposals/shared-components/proposal-timelock';
 import { useDualGovernanceContext } from 'providers/dual-governance';
@@ -25,28 +20,32 @@ type Props = {
   calls: any[];
   isReadyToEnact?: boolean;
   proposalInfo: ProposalCombinedData['proposalInfo'];
+  slim?: boolean;
+  onProposalClick: MouseEventHandler<HTMLDivElement>;
 };
 
-export const ProposalItem = ({
+export const ProposalsListItem = ({
   isReadyToEnact = false,
   id,
   description,
-  calls = [],
+  // calls = [],
   proposalInfo,
+  slim,
+  onProposalClick,
 }: Props) => {
   // TODO: TBD
   // const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
 
   const { visibleState } = useDualGovernanceContext();
-  console.log(proposalInfo, 'proposalInfo');
 
   const { status, scheduledAt, submittedAt } = proposalInfo[0];
+
   if (
     isReadyToEnact &&
     visibleState === VisibleGovernanceState.BlockedDeactivation
   ) {
     return (
-      <ProposalListItemToEnact>
+      <ProposalListItemToEnact onClick={onProposalClick}>
         <SummarySection>
           <ProposalName warning id={id} />
           <StatusBadge proposalStatus={status} />
@@ -63,7 +62,7 @@ export const ProposalItem = ({
   const descriptionLines = description.split('\n');
 
   return (
-    <ProposalListItemWrapper>
+    <ProposalListItemWrapper onClick={onProposalClick}>
       <SummarySection>
         <ProposalName
           id={id}
@@ -76,22 +75,11 @@ export const ProposalItem = ({
           submittedAt={submittedAt}
         />
       </SummarySection>
-      <ProposalDescription $slim>
+      <ProposalDescription $slim={slim}>
         {descriptionLines.map((line, index) => (
           <DescriptionText key={index}>{line}</DescriptionText>
         ))}
       </ProposalDescription>
-
-      {calls.length > 0 && (
-        <ScriptSection>
-          <Script calls={calls} />
-        </ScriptSection>
-      )}
-      <LinkWrapper>
-        <Link href={`${PROPOSALS_PATH}/${id}`}>
-          <ArrowRight />
-        </Link>
-      </LinkWrapper>
     </ProposalListItemWrapper>
   );
 };

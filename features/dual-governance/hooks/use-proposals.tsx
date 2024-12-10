@@ -15,13 +15,13 @@ import {
 
 const BATCH_SIZE = 10000n;
 
-interface FindEventsBaseConfig {
+type FindEventsBaseConfig = {
   address: Address;
   abi: Abi;
   eventName: string;
   batchSize: bigint;
   proposalsCount: bigint;
-}
+};
 
 type GetProposalResult = readonly [
   ProposalDetails,
@@ -33,23 +33,23 @@ interface FindEventsConfig extends FindEventsBaseConfig {
   contract: ReturnType<typeof useReadContract>;
 }
 
-interface UseProposalsConfig {
+type UseProposalsConfig = {
   onProposalFound?: (result: ProposalCombinedData) => void;
   currentPage: number;
-  itemsPerPage: number;
-}
+  limit: number;
+};
 
-interface ProposalsQueryResult {
+export type ProposalsQueryResult = {
   proposalsCount: bigint;
   proposals: ProposalCombinedData[];
-}
+};
 
 const findAllProposalsEvents = async (
   client: PublicClient,
   config: FindEventsConfig,
   chainId: CHAINS,
   currentPage: number,
-  itemsPerPage: number,
+  limit: number,
 ): Promise<ProposalCombinedData[]> => {
   const {
     proposalsCount,
@@ -61,9 +61,8 @@ const findAllProposalsEvents = async (
     contract,
   } = config;
 
-  const startId = proposalsCount - BigInt((currentPage - 1) * itemsPerPage);
-  const endId =
-    startId > BigInt(itemsPerPage) ? startId - BigInt(itemsPerPage - 1) : 1n;
+  const startId = proposalsCount - BigInt((currentPage - 1) * limit);
+  const endId = startId > BigInt(limit) ? startId - BigInt(limit - 1) : 1n;
 
   let latestBlock = await client.getBlockNumber();
   const foundEvents: Record<string, boolean> = {};
@@ -142,7 +141,7 @@ const findAllProposalsEvents = async (
 export const useProposals = ({
   onProposalFound,
   currentPage,
-  itemsPerPage,
+  limit,
 }: UseProposalsConfig): UseQueryResult<ProposalsQueryResult> => {
   const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
@@ -172,7 +171,7 @@ export const useProposals = ({
           emergencyProtectedTimelock.address,
           proposalsCount.toString(),
           currentPage,
-          itemsPerPage,
+          limit,
         ]
       : ['getProposals', emergencyProtectedTimelock.address],
     queryFn: async (): Promise<ProposalsQueryResult> => {
@@ -194,7 +193,7 @@ export const useProposals = ({
           },
           chainId,
           currentPage,
-          itemsPerPage,
+          limit,
         );
 
         return { proposalsCount, proposals };
