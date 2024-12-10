@@ -2,9 +2,7 @@ import { FC } from 'react';
 import styled, { css } from 'styled-components';
 import { Select, SelectProps } from '@lidofinance/lido-ui';
 
-export const ControlPanelWrapper = styled.div<{
-  $withGaps?: boolean;
-}>`
+export const ControlPanelWrapper = styled.div`
   padding: 40px;
   width: 60%;
   background: rgba(255, 255, 255, 0.9);
@@ -68,3 +66,21 @@ export const StyledSelect = styled(Select).attrs<StyledSelectProps>(
   width: 50%;
   ${customInputStyles}
 ` as FC<StyledSelectProps>;
+
+export const PreviewProposalList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+`;
+
+export const PreviewControls = styled.div`
+  margin-top: auto;
+`;
