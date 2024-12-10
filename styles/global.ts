@@ -20,7 +20,7 @@ const LayoutVariants = {
     background-color: var(--layout-background-attention);
   `,
   [VisibleGovernanceState.BlockedDeactivation]: css`
-    background-color: var(--layout-background-blocked);
+    background-color: var(--layout-background-deactivation);
   `,
   [VisibleGovernanceState.BlockedRageQuit]: css`
     background-color: var(--layout-background-blocked);
@@ -29,10 +29,10 @@ const LayoutVariants = {
     background-color: var(--layout-background-blocked);
   `,
   [VisibleGovernanceState.Cooldown]: css`
-    background-color: var(--layout-color-background);
+    background-color: var(--layout-background-cooldown);
   `,
   [VisibleGovernanceState.Loading]: css`
-    background-color: var(--layout-color-background);
+    background-color: var(--layout-background-default);
   `,
 };
 
@@ -54,9 +54,13 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
 
     // ----- Layout gradient & background colors
 
+    --layout-background-default: #FFF9F9;
     --layout-background-normal: #EAF6F1;
     --layout-background-attention: #FBF4EF;
     --layout-background-blocked: #FFF1F1;
+    --layout-background-deactivation: #FFEDE7;
+    --layout-background-cooldown: #F1FBFF;
+
 
     --layout-gradient-start-normal: #29c38c;
     --layout-gradient-stop-normal: #29c38c00;
@@ -67,7 +71,13 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --layout-gradient-start-blocked: #D74758;
     --layout-gradient-stop-blocked: #D7475800;
 
-    --layout-color-background: #FFF9F9;
+    --layout-gradient-start-deactivation: #FF633C;
+    --layout-gradient-stop-deactivation: #FF633C00;
+
+    --layout-gradient-start-cooldown: #4450FF;
+    --layout-gradient-stop-cooldown: #4450FF00;
+
+
 
     // ----- Primary: For ext & icons
 

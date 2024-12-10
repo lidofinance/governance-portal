@@ -13,6 +13,7 @@ export type SupportFormNetworkData = {
   stEthBalance: bigint | undefined;
   wstEthBalance: bigint | undefined;
   vetoSignallingAddress?: Address | undefined;
+  isAssetManagementLocked: boolean | undefined;
   isLoading: boolean;
   refetch: () => Promise<void>;
 };

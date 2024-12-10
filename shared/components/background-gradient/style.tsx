@@ -30,13 +30,13 @@ const GradientVariants = {
       stop-color: var(--layout-gradient-start-blocked);
     `,
     [VisibleGovernanceState.BlockedDeactivation]: css`
-      stop-color: var(--layout-gradient-start-blocked);
+      stop-color: var(--layout-gradient-start-deactivation);
     `,
     [VisibleGovernanceState.BlockedVetoSignalling]: css`
       stop-color: var(--layout-gradient-start-blocked);
     `,
     [VisibleGovernanceState.Cooldown]: css`
-      stop-color: var(--layout-gradient-start-blocked);
+      stop-color: var(--layout-gradient-start-cooldown);
     `,
   },
   stop: {
@@ -53,13 +53,13 @@ const GradientVariants = {
       stop-color: var(--layout-gradient-stop-blocked);
     `,
     [VisibleGovernanceState.BlockedDeactivation]: css`
-      stop-color: var(--layout-gradient-stop-blocked);
+      stop-color: var(--layout-gradient-stop-deactivation);
     `,
     [VisibleGovernanceState.BlockedVetoSignalling]: css`
       stop-color: var(--layout-gradient-stop-blocked);
     `,
     [VisibleGovernanceState.Cooldown]: css`
-      stop-color: var(--layout-gradient-stop-blocked);
+      stop-color: var(--layout-gradient-stop-cooldown);
     `,
   },
 };

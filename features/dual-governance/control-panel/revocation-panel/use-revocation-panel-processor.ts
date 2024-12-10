@@ -12,7 +12,6 @@ import { useRevokeTxSend } from './use-revoke-tx-send';
 import { erc20Abi } from 'abi/ts';
 import { Token } from 'shared/blockchain/types';
 import { useDualGovernanceContext } from 'providers/dual-governance';
-import { GovernanceState } from 'features/dual-governance/types';
 
 type Args = {
   onConfirm: () => Promise<void>;
@@ -24,7 +23,8 @@ export const useRevocationPanelProcessor = ({ onConfirm, onRetry }: Args) => {
   const { address } = useAccount();
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalRevoke();
-  const { vetoSignallingAddress, detailedState } = useDualGovernanceContext();
+  const { vetoSignallingAddress, detailedState, isAssetManagementLocked } =
+    useDualGovernanceContext();
   const processWrapTx = useRevokeTxSend(vetoSignallingAddress);
   const waitForTx = useTxConfirmation();
   const readTokenGetter = useReadContractGetter(erc20Abi);
@@ -35,10 +35,7 @@ export const useRevocationPanelProcessor = ({ onConfirm, onRetry }: Args) => {
         invariant(address, 'address must be presented');
         invariant(detailedState, 'state must be loaded');
 
-        if (
-          detailedState.persistedState !== GovernanceState.RageQuit &&
-          detailedState.effectiveState === GovernanceState.RageQuit
-        ) {
+        if (isAssetManagementLocked) {
           throw new Error('Cannot revoke tokens in RageQuit state');
         }
 
@@ -74,6 +71,7 @@ export const useRevocationPanelProcessor = ({ onConfirm, onRetry }: Args) => {
       address,
       detailedState,
       txModalStages,
+      isAssetManagementLocked,
       processWrapTx,
       isMultisig,
       waitForTx,

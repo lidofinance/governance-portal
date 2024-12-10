@@ -53,8 +53,11 @@ export const useSupportFormDataContext = () => {
 };
 
 const useSupportFormNetworkData = (): SupportFormNetworkData => {
-  const { vetoSignallingAddress, refetch: refetchDualGovernanceState } =
-    useDualGovernanceContext();
+  const {
+    vetoSignallingAddress,
+    isAssetManagementLocked,
+    refetch: refetchDualGovernanceState,
+  } = useDualGovernanceContext();
 
   const { refetch: refetchEscrowBalances } = useEscrowBalances();
 
@@ -97,6 +100,7 @@ const useSupportFormNetworkData = (): SupportFormNetworkData => {
     stEthBalance,
     wstEthBalance,
     vetoSignallingAddress,
+    isAssetManagementLocked,
     isLoading:
       isStEthBalanceLoading || isWstEthBalanceLoading || isEtherBalanceLoading,
     refetch,

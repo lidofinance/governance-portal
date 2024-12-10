@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
 
-import { dgConfigProviderAbi, escrowAbi } from 'abi/ts';
-import { formatEth, formatPercent16 } from 'shared/blockchain/utils';
+import { escrowAbi } from 'abi/ts';
+import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import {
   DualGovernanceState,
   GovernanceState,
@@ -14,6 +14,7 @@ import {
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
 import { Address } from 'viem';
+import { useDualGovernanceConfig } from './use-dual-governance-config';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
 
@@ -30,25 +31,26 @@ type Args = {
 // Deadlock: DG.RageQuit && Reseal something something TBA
 export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
   const { chainId } = useLidoSDK();
+  const { data: dualGovernanceConfig } = useDualGovernanceConfig();
 
   const dualGovernance = useReadContract(DualGovernance);
   const stEth = useReadContract(StETH);
   const readEscrowGetter = useReadContractGetter(escrowAbi);
 
-  const dgConfigGetter = useReadContractGetter(dgConfigProviderAbi);
+  const isEnabled = !!dualGovernanceConfig && !!vetoSignallingAddress;
 
   return useQuery<DualGovernanceState | null>({
     queryKey: ['dg-current-state', chainId],
     staleTime: Infinity,
-    enabled: !!vetoSignallingAddress,
+    enabled: isEnabled,
 
     queryFn: async () => {
-      if (!vetoSignallingAddress) {
+      if (!isEnabled) {
         return null;
       }
 
       const readVetoSignalling = readEscrowGetter(vetoSignallingAddress);
-      const vetoSupportPercent = await readVetoSignalling('getRageQuitSupport');
+      const rageQuitSupport = await readVetoSignalling('getRageQuitSupport');
 
       const lockedAssets = await readVetoSignalling('getLockedAssetsTotals');
 
@@ -63,27 +65,31 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
       const totalStEthInEscrow =
         pooledEthByShares + lockedAssets.unstETHFinalizedETH;
 
-      const dgConfigAddress =
-        await dualGovernance.readContract('getConfigProvider');
+      const detailedState =
+        await dualGovernance.readContract('getStateDetails');
 
-      const { firstSealRageQuitSupport } = await dgConfigGetter(
-        dgConfigAddress,
-      )('getDualGovernanceConfig');
+      const { firstSealRageQuitSupport, secondSealRageQuitSupport } =
+        dualGovernanceConfig;
 
-      const amountTillNextPhase = firstSealRageQuitSupport - vetoSupportPercent;
+      const contractState = detailedState.persistedState;
+
+      const nextPhaseThreshold =
+        contractState === GovernanceState.VetoSignalling ||
+        contractState === GovernanceState.VetoSignallingDeactivation
+          ? secondSealRageQuitSupport
+          : firstSealRageQuitSupport;
+
+      const amountTillNextPhase = nextPhaseThreshold - rageQuitSupport;
 
       const warningStateThreshold =
         (firstSealRageQuitSupport * NORMAL_WARNING_STATE_THRESHOLD_PERCENT) /
         100n;
 
-      const contractState =
-        await dualGovernance.readContract('getPersistedState');
-
       let visibleState: VisibleGovernanceState = VisibleGovernanceState.Loading;
 
-      switch (contractState) {
+      switch (detailedState.persistedState) {
         case GovernanceState.Normal:
-          if (vetoSupportPercent >= warningStateThreshold) {
+          if (rageQuitSupport >= warningStateThreshold) {
             visibleState = VisibleGovernanceState.Warning;
           } else {
             visibleState = VisibleGovernanceState.Normal;
@@ -105,16 +111,19 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
 
       const stEthTotalSupply = await stEth.readContract('totalSupply');
 
-      const detailedState =
-        await dualGovernance.readContract('getStateDetails');
+      const isAssetManagementLocked =
+        detailedState.persistedState !== GovernanceState.RageQuit &&
+        detailedState.effectiveState === GovernanceState.RageQuit;
 
       return {
         visibleState,
-        vetoSupportPercent: formatPercent16(vetoSupportPercent),
+        rageQuitSupport,
         totalStEthInEscrow: formatEth(totalStEthInEscrow),
-        amountTillNextPhasePercent: formatPercent16(amountTillNextPhase),
+        amountTillNextPhasePercent: parsePercent16(amountTillNextPhase),
+        nextPhaseSupportThresholdPercent: parsePercent16(nextPhaseThreshold),
         stEthTotalSupply: stEthTotalSupply + lockedAssets.unstETHFinalizedETH,
         detailedState,
+        isAssetManagementLocked,
       };
     },
   });

@@ -1,10 +1,7 @@
 import { StateInfo } from './state-info';
 import { SupportInfo } from './support-info';
 import { ProposalsInfo } from './proposals-info';
-import { BackgroundGradient } from 'shared/components';
 import styled from 'styled-components';
-import { useDualGovernanceContext } from 'providers/dual-governance';
-import { VisibleGovernanceState } from '../types';
 
 const DualGovernanceSummaryWrapper = styled.div`
   display: flex;
@@ -21,14 +18,9 @@ const DualGovernanceSummaryWrapper = styled.div`
 `;
 
 export const DualGovernanceSummary = () => {
-  const { visibleState } = useDualGovernanceContext();
-
   return (
     <DualGovernanceSummaryWrapper>
-      {visibleState !== VisibleGovernanceState.Loading && (
-        <BackgroundGradient state={visibleState} width={1700} height={800} />
-      )}
-      <StateInfo state={visibleState} />
+      <StateInfo />
       <SupportInfo />
       <ProposalsInfo />
     </DualGovernanceSummaryWrapper>

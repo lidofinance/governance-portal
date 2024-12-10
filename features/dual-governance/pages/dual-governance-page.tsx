@@ -1,10 +1,12 @@
 import Head from 'next/head';
-import { Layout } from 'shared/components';
+import { BackgroundGradient, Layout } from 'shared/components';
 import styled from 'styled-components';
 import { Block } from '@lidofinance/lido-ui';
 import { DualGovernanceSummary } from '../summary';
 import { DualGovernanceControlPanel } from '../control-panel';
 import { ProposalsSection } from '../proposals/proposals-section';
+import { useDualGovernanceContext } from 'providers/dual-governance';
+import { VisibleGovernanceState } from '../types';
 
 const DashboardWrapper = styled(Block)`
   border: 1px solid var(--custom-border);
@@ -16,11 +18,16 @@ const DashboardWrapper = styled(Block)`
 `;
 
 export const DualGovernancePage = () => {
+  const { visibleState } = useDualGovernanceContext();
+
   return (
     <Layout containerSize="full">
       <Head>
         <title>Dual Governance | Lido</title>
       </Head>
+      {visibleState !== VisibleGovernanceState.Loading && (
+        <BackgroundGradient state={visibleState} width={1700} height={800} />
+      )}
       <DashboardWrapper>
         <DualGovernanceSummary />
         <DualGovernanceControlPanel />
