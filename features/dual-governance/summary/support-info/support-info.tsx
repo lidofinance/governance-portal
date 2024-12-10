@@ -4,6 +4,9 @@ import { useDualGovernanceContext } from 'providers/dual-governance';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { InlineLoader } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
+import { ProgressBar } from 'shared/components/progress-bar';
+import { parsePercent16 } from 'shared/blockchain/utils';
+import { RageQuitProgress } from './rage-quit-progress';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;
@@ -13,11 +16,17 @@ const InlineLoaderStyled = styled(InlineLoader)`
 
 export const SupportInfo = () => {
   const {
-    vetoSupportPercent,
+    rageQuitSupport,
     totalStEthInEscrow,
     visibleState,
-    amountTillNextPhasePercent,
+    nextPhaseSupportThresholdPercent,
   } = useDualGovernanceContext();
+
+  const nextStateTitle =
+    visibleState === VisibleGovernanceState.BlockedDeactivation ||
+    visibleState === VisibleGovernanceState.BlockedVetoSignalling
+      ? 'RageQuit'
+      : 'VetoSignalling';
 
   return (
     <div>
@@ -28,16 +37,21 @@ export const SupportInfo = () => {
         <InlineLoaderStyled />
       ) : (
         <>
-          <Text size={34} weight={500}>
-            {vetoSupportPercent}
+          <Text size={22} weight={600}>
+            {totalStEthInEscrow} stETH
           </Text>
-          <Text weight={600}>{totalStEthInEscrow} stETH</Text>
+          <ProgressBar
+            variant="danger"
+            progressPercent={parsePercent16(rageQuitSupport)}
+            totalPercent={nextPhaseSupportThresholdPercent}
+            totalTitle={`${nextStateTitle} Threshold`}
+          />
         </>
       )}
-      <AdditionalSupportInfo
-        state={visibleState}
-        amountTillNextPhasePercent={amountTillNextPhasePercent}
-      />
+      <AdditionalSupportInfo />
+      {visibleState === VisibleGovernanceState.BlockedRageQuit && (
+        <RageQuitProgress />
+      )}
     </div>
   );
 };

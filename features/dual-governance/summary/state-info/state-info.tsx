@@ -6,6 +6,7 @@ import {
   StateStatus,
 } from './style';
 import { Text } from 'shared/components/text';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
 const getStateLabel = (state: VisibleGovernanceState) => {
   switch (state) {
@@ -36,24 +37,21 @@ const getStateSubtitle = (state: VisibleGovernanceState) => {
   }
 };
 
-type Props = {
-  state: VisibleGovernanceState;
-};
-
-export const StateInfo = ({ state }: Props) => {
-  const subtitle = getStateSubtitle(state);
+export const StateInfo = () => {
+  const { visibleState } = useDualGovernanceContext();
+  const subtitle = getStateSubtitle(visibleState);
 
   return (
     <StateInfoStyled>
       <Text size={22} weight={300} color="secondary">
         State
       </Text>
-      {state === VisibleGovernanceState.Loading ? (
+      {visibleState === VisibleGovernanceState.Loading ? (
         <StateLoader />
       ) : (
         <StateStatus>
-          <Text size={34}>{getStateLabel(state)}</Text>
-          <StateIndicator $state={state} />
+          <Text size={34}>{getStateLabel(visibleState)}</Text>
+          <StateIndicator $state={visibleState} />
         </StateStatus>
       )}
       {subtitle ? <Text>{subtitle}</Text> : null}

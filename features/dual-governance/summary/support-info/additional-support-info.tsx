@@ -1,28 +1,34 @@
 import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
+import { DeactivationAdditionalSupportInfo } from './deactivation-additional-support-info';
+import { VetoSignallingAdditionalSupportInfo } from './veto-signalling-additional-support-info';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
-type Props = {
-  state: VisibleGovernanceState | undefined;
-  amountTillNextPhasePercent: string | undefined;
-};
+export const AdditionalSupportInfo = () => {
+  const { visibleState, amountTillNextPhasePercent } =
+    useDualGovernanceContext();
 
-export const AdditionalSupportInfo = (props: Props) => {
-  const { state, amountTillNextPhasePercent } = props;
-
-  if (
-    state === VisibleGovernanceState.Normal ||
-    state === VisibleGovernanceState.Warning ||
-    state === VisibleGovernanceState.Cooldown
-  ) {
-    return (
-      <Text color="secondary">
-        Veto Signalling starts if{' '}
-        <Text as="b" color="primary">
-          {amountTillNextPhasePercent}
-        </Text>{' '}
-        more stETH is added
-      </Text>
-    );
+  if (visibleState === VisibleGovernanceState.Loading) {
+    return null;
   }
-  return null;
+
+  if (visibleState === VisibleGovernanceState.BlockedVetoSignalling) {
+    return <VetoSignallingAdditionalSupportInfo />;
+  }
+
+  if (visibleState === VisibleGovernanceState.BlockedDeactivation) {
+    return <DeactivationAdditionalSupportInfo />;
+  }
+
+  // VisibleGovernanceState.Normal
+  // VisibleGovernanceState.Warning
+  // VisibleGovernanceState.Cooldown
+  // VisibleGovernanceState.BlockedRageQuit
+  return (
+    <Text color="secondary">
+      VetoSignalling starts if <Text as="b">{amountTillNextPhasePercent}%</Text>{' '}
+      more {Token.stETH} is added
+    </Text>
+  );
 };

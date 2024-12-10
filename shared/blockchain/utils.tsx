@@ -68,15 +68,13 @@ export const formatEthCompact = (amount: bigint, maxFractionDigits = 2) => {
   });
 };
 
-const parsePercent16 = (value: bigint) => {
-  return formatUnits(value, 16);
-};
+export const parsePercent16 = (value: bigint | null | undefined) => {
+  if (!value) return 0;
 
-export const formatPercent16 = (value: bigint) => {
-  const numValue = formatNumber({
-    value: parsePercent16(value),
+  const formattedString = formatNumber({
+    value: formatUnits(value, 16),
     maxFractionDigits: 2,
   });
 
-  return `${numValue}%`;
+  return parseFloat(formattedString);
 };
