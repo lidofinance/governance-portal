@@ -39,23 +39,24 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
 
   const isEnabled = !!dualGovernanceConfig && !!vetoSignallingAddress;
 
-  return useQuery<DualGovernanceState | null>({
+  return useQuery<DualGovernanceState | undefined>({
     queryKey: ['dg-current-state', chainId],
     staleTime: Infinity,
     enabled: isEnabled,
 
     queryFn: async () => {
-      if (!isEnabled) {
-        return null;
-      }
+      if (!isEnabled) return;
 
       const readVetoSignalling = readEscrowGetter(vetoSignallingAddress);
       const rageQuitSupport = await readVetoSignalling('getRageQuitSupport');
 
-      const lockedAssets = await readVetoSignalling('getLockedAssetsTotals');
+      const lockedAssets = await readVetoSignalling(
+        'getSignallingEscrowDetails',
+      );
 
       const unfinalizedShares =
-        lockedAssets.stETHLockedShares + lockedAssets.unstETHUnfinalizedShares;
+        lockedAssets.totalStETHLockedShares +
+        lockedAssets.totalUnstETHUnfinalizedShares;
 
       const pooledEthByShares = await stEth.readContract(
         'getPooledEthByShares',
@@ -63,7 +64,7 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
       );
 
       const totalStEthInEscrow =
-        pooledEthByShares + lockedAssets.unstETHFinalizedETH;
+        pooledEthByShares + lockedAssets.totalUnstETHFinalizedETH;
 
       const detailedState =
         await dualGovernance.readContract('getStateDetails');
@@ -121,7 +122,8 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
         totalStEthInEscrow: formatEth(totalStEthInEscrow),
         amountTillNextPhasePercent: parsePercent16(amountTillNextPhase),
         nextPhaseSupportThresholdPercent: parsePercent16(nextPhaseThreshold),
-        stEthTotalSupply: stEthTotalSupply + lockedAssets.unstETHFinalizedETH,
+        stEthTotalSupply:
+          stEthTotalSupply + lockedAssets.totalUnstETHFinalizedETH,
         detailedState,
         isAssetManagementLocked,
       };

@@ -55,13 +55,6 @@ export type DualGovernanceState = {
   isAssetManagementLocked: boolean;
 };
 
-export type EscrowBalance = {
-  stETHLockedShares: bigint;
-  unstETHLockedShares: bigint;
-  unstETHIdsCount: bigint;
-  lastAssetsLockTimestamp: bigint;
-};
-
 export const VetoSupportedTokens = [
   Token.stETH,
   Token.wstETH,

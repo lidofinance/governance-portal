@@ -4,8 +4,14 @@ import { useAccount } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
 import { zeroAddress } from 'viem';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { EscrowBalance } from '../types';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+
+type EscrowBalance = {
+  unstETHIdsCount: bigint;
+  stETHLockedShares: bigint;
+  unstETHLockedShares: bigint;
+  lastAssetsLockTimestamp: number;
+};
 
 export const useEscrowBalances = () => {
   const { address } = useAccount();
@@ -33,7 +39,7 @@ export const useEscrowBalances = () => {
 
       const vetoSignallingBalance = await readEscrowContract(
         vetoSignallingAddress,
-      )('getVetoerState', [address]);
+      )('getVetoerDetails', [address]);
 
       const vetoSignallingSum =
         vetoSignallingBalance.stETHLockedShares +
@@ -44,7 +50,7 @@ export const useEscrowBalances = () => {
 
       if (rageQuitAddress !== zeroAddress) {
         rageQuitBalance = await readEscrowContract(rageQuitAddress)(
-          'getVetoerState',
+          'getVetoerDetails',
           [address],
         );
 
