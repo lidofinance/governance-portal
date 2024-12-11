@@ -95,6 +95,8 @@ const findAllProposalsEvents = async (
       toBlock,
     })) as unknown as ProposalLog[];
 
+    console.log(batchLogs, 'batchLogs');
+
     for (const log of batchLogs) {
       const id = log.args.id;
       if (id && id >= endId && id <= startId && !foundEvents[id.toString()]) {
@@ -110,6 +112,8 @@ const findAllProposalsEvents = async (
           const proposalInfo = (await contract.readContract('getProposal', [
             id,
           ])) as GetProposalResult;
+
+          console.log(proposalInfo, 'proposalInfo');
 
           const result: ProposalCombinedData = {
             id: Number(id),
@@ -195,6 +199,8 @@ export const useProposals = ({
           currentPage,
           limit,
         );
+
+        console.log(proposals, proposalsCount, 'proposals, proposalsCount');
 
         return { proposalsCount, proposals };
       } catch (error) {
