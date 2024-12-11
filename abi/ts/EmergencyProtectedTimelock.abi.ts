@@ -1,697 +1,1150 @@
 export const emergencyProtectedTimelockAbi = [
   {
-    type: 'constructor',
     inputs: [
       {
-        name: 'sanityCheckParams',
-        type: 'tuple',
-        internalType: 'struct EmergencyProtectedTimelock.SanityCheckParams',
         components: [
           {
-            name: 'maxAfterSubmitDelay',
-            type: 'uint32',
-            internalType: 'Duration',
+            internalType: "Duration",
+            name: "minExecutionDelay",
+            type: "uint32"
           },
           {
-            name: 'maxAfterScheduleDelay',
-            type: 'uint32',
-            internalType: 'Duration',
+            internalType: "Duration",
+            name: "maxAfterSubmitDelay",
+            type: "uint32"
           },
           {
-            name: 'maxEmergencyModeDuration',
-            type: 'uint32',
-            internalType: 'Duration',
+            internalType: "Duration",
+            name: "maxAfterScheduleDelay",
+            type: "uint32"
           },
           {
-            name: 'maxEmergencyProtectionDuration',
-            type: 'uint32',
-            internalType: 'Duration',
-          },
-        ],
-      },
-      { name: 'adminExecutor', type: 'address', internalType: 'address' },
-    ],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'MAX_AFTER_SCHEDULE_DELAY',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint32', internalType: 'Duration' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'MAX_AFTER_SUBMIT_DELAY',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint32', internalType: 'Duration' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'MAX_EMERGENCY_MODE_DURATION',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint32', internalType: 'Duration' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'MAX_EMERGENCY_PROTECTION_DURATION',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint32', internalType: 'Duration' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'activateEmergencyMode',
-    inputs: [],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'canExecute',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'canSchedule',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'cancelAllNonExecutedProposals',
-    inputs: [],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'deactivateEmergencyMode',
-    inputs: [],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'emergencyExecute',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'emergencyReset',
-    inputs: [],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'execute',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'getAdminExecutor',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getAfterScheduleDelay',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint32', internalType: 'Duration' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getAfterSubmitDelay',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint32', internalType: 'Duration' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getEmergencyActivationCommittee',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getEmergencyExecutionCommittee',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getEmergencyGovernance',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getEmergencyProtectionDetails',
-    inputs: [],
-    outputs: [
-      {
-        name: 'details',
-        type: 'tuple',
-        internalType:
-          'struct IEmergencyProtectedTimelock.EmergencyProtectionDetails',
-        components: [
-          {
-            name: 'emergencyModeDuration',
-            type: 'uint32',
-            internalType: 'Duration',
+            internalType: "Duration",
+            name: "maxEmergencyModeDuration",
+            type: "uint32"
           },
           {
-            name: 'emergencyModeEndsAfter',
-            type: 'uint40',
-            internalType: 'Timestamp',
-          },
-          {
-            name: 'emergencyProtectionEndsAfter',
-            type: 'uint40',
-            internalType: 'Timestamp',
-          },
+            internalType: "Duration",
+            name: "maxEmergencyProtectionDuration",
+            type: "uint32"
+          }
         ],
+        internalType: "struct EmergencyProtectedTimelock.SanityCheckParams",
+        name: "sanityCheckParams",
+        type: "tuple"
       },
+      {
+        internalType: "address",
+        name: "adminExecutor",
+        type: "address"
+      },
+      {
+        internalType: "Duration",
+        name: "afterSubmitDelay",
+        type: "uint32"
+      },
+      {
+        internalType: "Duration",
+        name: "afterScheduleDelay",
+        type: "uint32"
+      }
     ],
-    stateMutability: 'view',
+    stateMutability: "nonpayable",
+    type: "constructor"
   },
   {
-    type: 'function',
-    name: 'getGovernance',
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "AfterScheduleDelayNotPassed",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "AfterSubmitDelayNotPassed",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "caller",
+        type: "address"
+      }
+    ],
+    name: "CallerIsNotAdminExecutor",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "caller",
+        type: "address"
+      }
+    ],
+    name: "CallerIsNotEmergencyActivationCommittee",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "caller",
+        type: "address"
+      }
+    ],
+    name: "CallerIsNotEmergencyExecutionCommittee",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "caller",
+        type: "address"
+      }
+    ],
+    name: "CallerIsNotGovernance",
+    type: "error"
+  },
+  {
     inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
-    stateMutability: 'view',
+    name: "DurationOverflow",
+    type: "error"
   },
   {
-    type: 'function',
-    name: 'getProposal',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [
+    inputs: [
       {
-        name: 'proposalDetails',
-        type: 'tuple',
-        internalType: 'struct ITimelock.ProposalDetails',
-        components: [
-          { name: 'id', type: 'uint256', internalType: 'uint256' },
-          { name: 'executor', type: 'address', internalType: 'address' },
-          { name: 'submittedAt', type: 'uint40', internalType: 'Timestamp' },
-          { name: 'scheduledAt', type: 'uint40', internalType: 'Timestamp' },
-          { name: 'status', type: 'uint8', internalType: 'enum Status' },
-        ],
-      },
-      {
-        name: 'calls',
-        type: 'tuple[]',
-        internalType: 'struct ExternalCall[]',
-        components: [
-          { name: 'target', type: 'address', internalType: 'address' },
-          { name: 'value', type: 'uint96', internalType: 'uint96' },
-          { name: 'payload', type: 'bytes', internalType: 'bytes' },
-        ],
-      },
+        internalType: "Timestamp",
+        name: "protectedTill",
+        type: "uint40"
+      }
     ],
-    stateMutability: 'view',
+    name: "EmergencyProtectionExpired",
+    type: "error"
   },
   {
-    type: 'function',
-    name: 'getProposalCalls',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [
-      {
-        name: 'calls',
-        type: 'tuple[]',
-        internalType: 'struct ExternalCall[]',
-        components: [
-          { name: 'target', type: 'address', internalType: 'address' },
-          { name: 'value', type: 'uint96', internalType: 'uint96' },
-          { name: 'payload', type: 'bytes', internalType: 'bytes' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getProposalDetails',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [
-      {
-        name: 'proposalDetails',
-        type: 'tuple',
-        internalType: 'struct ITimelock.ProposalDetails',
-        components: [
-          { name: 'id', type: 'uint256', internalType: 'uint256' },
-          { name: 'executor', type: 'address', internalType: 'address' },
-          { name: 'submittedAt', type: 'uint40', internalType: 'Timestamp' },
-          { name: 'scheduledAt', type: 'uint40', internalType: 'Timestamp' },
-          { name: 'status', type: 'uint8', internalType: 'enum Status' },
-        ],
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getProposalsCount',
     inputs: [],
-    outputs: [{ name: 'count', type: 'uint256', internalType: 'uint256' }],
-    stateMutability: 'view',
+    name: "EmptyCalls",
+    type: "error"
   },
   {
-    type: 'function',
-    name: 'isEmergencyModeActive',
+    inputs: [
+      {
+        internalType: "address",
+        name: "adminExecutor",
+        type: "address"
+      }
+    ],
+    name: "InvalidAdminExecutor",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "afterScheduleDelay",
+        type: "uint32"
+      }
+    ],
+    name: "InvalidAfterScheduleDelay",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "afterSubmitDelay",
+        type: "uint32"
+      }
+    ],
+    name: "InvalidAfterSubmitDelay",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "committee",
+        type: "address"
+      }
+    ],
+    name: "InvalidEmergencyActivationCommittee",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "committee",
+        type: "address"
+      }
+    ],
+    name: "InvalidEmergencyExecutionCommittee",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "governance",
+        type: "address"
+      }
+    ],
+    name: "InvalidEmergencyGovernance",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "value",
+        type: "uint32"
+      }
+    ],
+    name: "InvalidEmergencyModeDuration",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Timestamp",
+        name: "value",
+        type: "uint40"
+      }
+    ],
+    name: "InvalidEmergencyProtectionEndDate",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "executionDelay",
+        type: "uint32"
+      }
+    ],
+    name: "InvalidExecutionDelay",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "governance",
+        type: "address"
+      }
+    ],
+    name: "InvalidGovernance",
+    type: "error"
+  },
+  {
     inputs: [],
-    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
-    stateMutability: 'view',
+    name: "TimestampOverflow",
+    type: "error"
   },
   {
-    type: 'function',
-    name: 'isEmergencyProtectionEnabled',
+    inputs: [
+      {
+        internalType: "bool",
+        name: "state",
+        type: "bool"
+      }
+    ],
+    name: "UnexpectedEmergencyModeState",
+    type: "error"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      },
+      {
+        internalType: "enum Status",
+        name: "status",
+        type: "uint8"
+      }
+    ],
+    name: "UnexpectedProposalStatus",
+    type: "error"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newAdminExecutor",
+        type: "address"
+      }
+    ],
+    name: "AdminExecutorSet",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "Duration",
+        name: "newAfterScheduleDelay",
+        type: "uint32"
+      }
+    ],
+    name: "AfterScheduleDelaySet",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "Duration",
+        name: "newAfterSubmitDelay",
+        type: "uint32"
+      }
+    ],
+    name: "AfterSubmitDelaySet",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newActivationCommittee",
+        type: "address"
+      }
+    ],
+    name: "EmergencyActivationCommitteeSet",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newExecutionCommittee",
+        type: "address"
+      }
+    ],
+    name: "EmergencyExecutionCommitteeSet",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newEmergencyGovernance",
+        type: "address"
+      }
+    ],
+    name: "EmergencyGovernanceSet",
+    type: "event"
+  },
+  {
+    anonymous: false,
     inputs: [],
-    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
-    stateMutability: 'view',
+    name: "EmergencyModeActivated",
+    type: "event"
   },
   {
-    type: 'function',
-    name: 'schedule',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setEmergencyGovernance',
-    inputs: [
-      {
-        name: 'emergencyGovernance',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setEmergencyModeDuration',
-    inputs: [
-      {
-        name: 'emergencyModeDuration',
-        type: 'uint32',
-        internalType: 'Duration',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setEmergencyProtectionActivationCommittee',
-    inputs: [
-      {
-        name: 'emergencyActivationCommittee',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setEmergencyProtectionEndDate',
-    inputs: [
-      {
-        name: 'emergencyProtectionEndDate',
-        type: 'uint40',
-        internalType: 'Timestamp',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setEmergencyProtectionExecutionCommittee',
-    inputs: [
-      {
-        name: 'emergencyExecutionCommittee',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setGovernance',
-    inputs: [
-      { name: 'newGovernance', type: 'address', internalType: 'address' },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setupDelays',
-    inputs: [
-      { name: 'afterSubmitDelay', type: 'uint32', internalType: 'Duration' },
-      {
-        name: 'afterScheduleDelay',
-        type: 'uint32',
-        internalType: 'Duration',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'submit',
-    inputs: [
-      { name: 'executor', type: 'address', internalType: 'address' },
-      {
-        name: 'calls',
-        type: 'tuple[]',
-        internalType: 'struct ExternalCall[]',
-        components: [
-          { name: 'target', type: 'address', internalType: 'address' },
-          { name: 'value', type: 'uint96', internalType: 'uint96' },
-          { name: 'payload', type: 'bytes', internalType: 'bytes' },
-        ],
-      },
-      { name: 'metadata', type: 'string', internalType: 'string' },
-    ],
-    outputs: [
-      { name: 'newProposalId', type: 'uint256', internalType: 'uint256' },
-    ],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'transferExecutorOwnership',
-    inputs: [
-      { name: 'executor', type: 'address', internalType: 'address' },
-      { name: 'owner', type: 'address', internalType: 'address' },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'event',
-    name: 'AfterScheduleDelaySet',
-    inputs: [
-      {
-        name: 'newAfterScheduleDelay',
-        type: 'uint32',
-        indexed: false,
-        internalType: 'Duration',
-      },
-    ],
     anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'AfterSubmitDelaySet',
-    inputs: [
-      {
-        name: 'newAfterSubmitDelay',
-        type: 'uint32',
-        indexed: false,
-        internalType: 'Duration',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'EmergencyActivationCommitteeSet',
-    inputs: [
-      {
-        name: 'newActivationCommittee',
-        type: 'address',
-        indexed: false,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'EmergencyExecutionCommitteeSet',
-    inputs: [
-      {
-        name: 'newActivationCommittee',
-        type: 'address',
-        indexed: false,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'EmergencyGovernanceSet',
-    inputs: [
-      {
-        name: 'newEmergencyGovernance',
-        type: 'address',
-        indexed: false,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'EmergencyModeActivated',
     inputs: [],
-    anonymous: false,
+    name: "EmergencyModeDeactivated",
+    type: "event"
   },
   {
-    type: 'event',
-    name: 'EmergencyModeDeactivated',
-    inputs: [],
     anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'EmergencyModeDurationSet',
     inputs: [
       {
-        name: 'newEmergencyModeDuration',
-        type: 'uint32',
         indexed: false,
-        internalType: 'Duration',
-      },
+        internalType: "Duration",
+        name: "newEmergencyModeDuration",
+        type: "uint32"
+      }
     ],
-    anonymous: false,
+    name: "EmergencyModeDurationSet",
+    type: "event"
   },
   {
-    type: 'event',
-    name: 'EmergencyProtectionEndDateSet',
+    anonymous: false,
     inputs: [
       {
-        name: 'newEmergencyProtectionEndDate',
-        type: 'uint40',
         indexed: false,
-        internalType: 'Timestamp',
-      },
+        internalType: "Timestamp",
+        name: "newEmergencyProtectionEndDate",
+        type: "uint40"
+      }
     ],
-    anonymous: false,
+    name: "EmergencyProtectionEndDateSet",
+    type: "event"
   },
   {
-    type: 'event',
-    name: 'GovernanceSet',
+    anonymous: false,
     inputs: [
       {
-        name: 'newGovernance',
-        type: 'address',
         indexed: false,
-        internalType: 'address',
-      },
+        internalType: "address",
+        name: "newGovernance",
+        type: "address"
+      }
     ],
-    anonymous: false,
+    name: "GovernanceSet",
+    type: "event"
   },
   {
-    type: 'event',
-    name: 'ProposalExecuted',
+    anonymous: false,
     inputs: [
-      { name: 'id', type: 'uint256', indexed: true, internalType: 'uint256' },
       {
-        name: 'callResults',
-        type: 'bytes[]',
-        indexed: false,
-        internalType: 'bytes[]',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'ProposalScheduled',
-    inputs: [
-      { name: 'id', type: 'uint256', indexed: true, internalType: 'uint256' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'ProposalSubmitted',
-    inputs: [
-      { name: 'id', type: 'uint256', indexed: true, internalType: 'uint256' },
-      {
-        name: 'executor',
-        type: 'address',
         indexed: true,
-        internalType: 'address',
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
+      }
+    ],
+    name: "ProposalExecuted",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
+      }
+    ],
+    name: "ProposalScheduled",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "id",
+        type: "uint256"
       },
       {
-        name: 'calls',
-        type: 'tuple[]',
-        indexed: false,
-        internalType: 'struct ExternalCall[]',
+        indexed: true,
+        internalType: "address",
+        name: "executor",
+        type: "address"
+      },
+      {
         components: [
-          { name: 'target', type: 'address', internalType: 'address' },
-          { name: 'value', type: 'uint96', internalType: 'uint96' },
-          { name: 'payload', type: 'bytes', internalType: 'bytes' },
+          {
+            internalType: "address",
+            name: "target",
+            type: "address"
+          },
+          {
+            internalType: "uint96",
+            name: "value",
+            type: "uint96"
+          },
+          {
+            internalType: "bytes",
+            name: "payload",
+            type: "bytes"
+          }
         ],
-      },
-      {
-        name: 'metadata',
-        type: 'string',
         indexed: false,
-        internalType: 'string',
-      },
+        internalType: "struct ExternalCall[]",
+        name: "calls",
+        type: "tuple[]"
+      }
     ],
-    anonymous: false,
+    name: "ProposalSubmitted",
+    type: "event"
   },
   {
-    type: 'event',
-    name: 'ProposalsCancelledTill',
+    anonymous: false,
     inputs: [
       {
-        name: 'proposalId',
-        type: 'uint256',
         indexed: false,
-        internalType: 'uint256',
-      },
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
     ],
-    anonymous: false,
+    name: "ProposalsCancelledTill",
+    type: "event"
   },
   {
-    type: 'error',
-    name: 'AfterScheduleDelayNotPassed',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
+    inputs: [],
+    name: "MAX_AFTER_SCHEDULE_DELAY",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'AfterSubmitDelayNotPassed',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
+    inputs: [],
+    name: "MAX_AFTER_SUBMIT_DELAY",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'CallerIsNotAdminExecutor',
-    inputs: [{ name: 'value', type: 'address', internalType: 'address' }],
+    inputs: [],
+    name: "MAX_EMERGENCY_MODE_DURATION",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'CallerIsNotEmergencyActivationCommittee',
-    inputs: [{ name: 'caller', type: 'address', internalType: 'address' }],
+    inputs: [],
+    name: "MAX_EMERGENCY_PROTECTION_DURATION",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'CallerIsNotEmergencyExecutionCommittee',
-    inputs: [{ name: 'caller', type: 'address', internalType: 'address' }],
+    inputs: [],
+    name: "MIN_EXECUTION_DELAY",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'CallerIsNotGovernance',
-    inputs: [{ name: 'caller', type: 'address', internalType: 'address' }],
+    inputs: [],
+    name: "activateEmergencyMode",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'EmergencyProtectionExpired',
     inputs: [
-      { name: 'protectedTill', type: 'uint40', internalType: 'Timestamp' },
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
     ],
-  },
-  { type: 'error', name: 'EmptyCalls', inputs: [] },
-  {
-    type: 'error',
-    name: 'InvalidAfterScheduleDelay',
-    inputs: [{ name: 'value', type: 'uint32', internalType: 'Duration' }],
-  },
-  {
-    type: 'error',
-    name: 'InvalidAfterSubmitDelay',
-    inputs: [{ name: 'value', type: 'uint32', internalType: 'Duration' }],
-  },
-  {
-    type: 'error',
-    name: 'InvalidEmergencyActivationCommittee',
-    inputs: [{ name: 'committee', type: 'address', internalType: 'address' }],
+    name: "canExecute",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'InvalidEmergencyExecutionCommittee',
-    inputs: [{ name: 'committee', type: 'address', internalType: 'address' }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "canSchedule",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'InvalidEmergencyGovernance',
-    inputs: [{ name: 'governance', type: 'address', internalType: 'address' }],
+    inputs: [],
+    name: "cancelAllNonExecutedProposals",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'InvalidEmergencyModeDuration',
-    inputs: [{ name: 'value', type: 'uint32', internalType: 'Duration' }],
+    inputs: [],
+    name: "deactivateEmergencyMode",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'InvalidEmergencyProtectionEndDate',
-    inputs: [{ name: 'value', type: 'uint40', internalType: 'Timestamp' }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "emergencyExecute",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'InvalidGovernance',
-    inputs: [{ name: 'value', type: 'address', internalType: 'address' }],
+    inputs: [],
+    name: "emergencyReset",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'ProposalNotFound',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "execute",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'ProposalNotScheduled',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
+    inputs: [],
+    name: "getAdminExecutor",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
   {
-    type: 'error',
-    name: 'ProposalNotSubmitted',
-    inputs: [{ name: 'proposalId', type: 'uint256', internalType: 'uint256' }],
+    inputs: [],
+    name: "getAfterScheduleDelay",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
-  { type: 'error', name: 'TimestampOverflow', inputs: [] },
   {
-    type: 'error',
-    name: 'UnexpectedEmergencyModeState',
-    inputs: [{ name: 'value', type: 'bool', internalType: 'bool' }],
+    inputs: [],
+    name: "getAfterSubmitDelay",
+    outputs: [
+      {
+        internalType: "Duration",
+        name: "",
+        type: "uint32"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
   },
+  {
+    inputs: [],
+    name: "getEmergencyActivationCommittee",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "getEmergencyExecutionCommittee",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "getEmergencyGovernance",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "getEmergencyProtectionDetails",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "Duration",
+            name: "emergencyModeDuration",
+            type: "uint32"
+          },
+          {
+            internalType: "Timestamp",
+            name: "emergencyModeEndsAfter",
+            type: "uint40"
+          },
+          {
+            internalType: "Timestamp",
+            name: "emergencyProtectionEndsAfter",
+            type: "uint40"
+          }
+        ],
+        internalType: "struct IEmergencyProtectedTimelock.EmergencyProtectionDetails",
+        name: "details",
+        type: "tuple"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "getGovernance",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "getProposal",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256"
+          },
+          {
+            internalType: "address",
+            name: "executor",
+            type: "address"
+          },
+          {
+            internalType: "Timestamp",
+            name: "submittedAt",
+            type: "uint40"
+          },
+          {
+            internalType: "Timestamp",
+            name: "scheduledAt",
+            type: "uint40"
+          },
+          {
+            internalType: "enum Status",
+            name: "status",
+            type: "uint8"
+          }
+        ],
+        internalType: "struct ITimelock.ProposalDetails",
+        name: "proposalDetails",
+        type: "tuple"
+      },
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "target",
+            type: "address"
+          },
+          {
+            internalType: "uint96",
+            name: "value",
+            type: "uint96"
+          },
+          {
+            internalType: "bytes",
+            name: "payload",
+            type: "bytes"
+          }
+        ],
+        internalType: "struct ExternalCall[]",
+        name: "calls",
+        type: "tuple[]"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "getProposalCalls",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "target",
+            type: "address"
+          },
+          {
+            internalType: "uint96",
+            name: "value",
+            type: "uint96"
+          },
+          {
+            internalType: "bytes",
+            name: "payload",
+            type: "bytes"
+          }
+        ],
+        internalType: "struct ExternalCall[]",
+        name: "calls",
+        type: "tuple[]"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "getProposalDetails",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256"
+          },
+          {
+            internalType: "address",
+            name: "executor",
+            type: "address"
+          },
+          {
+            internalType: "Timestamp",
+            name: "submittedAt",
+            type: "uint40"
+          },
+          {
+            internalType: "Timestamp",
+            name: "scheduledAt",
+            type: "uint40"
+          },
+          {
+            internalType: "enum Status",
+            name: "status",
+            type: "uint8"
+          }
+        ],
+        internalType: "struct ITimelock.ProposalDetails",
+        name: "proposalDetails",
+        type: "tuple"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "getProposalsCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "count",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "isEmergencyModeActive",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "isEmergencyProtectionEnabled",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256"
+      }
+    ],
+    name: "schedule",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newAdminExecutor",
+        type: "address"
+      }
+    ],
+    name: "setAdminExecutor",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "newAfterScheduleDelay",
+        type: "uint32"
+      }
+    ],
+    name: "setAfterScheduleDelay",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "newAfterSubmitDelay",
+        type: "uint32"
+      }
+    ],
+    name: "setAfterSubmitDelay",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newEmergencyGovernance",
+        type: "address"
+      }
+    ],
+    name: "setEmergencyGovernance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Duration",
+        name: "newEmergencyModeDuration",
+        type: "uint32"
+      }
+    ],
+    name: "setEmergencyModeDuration",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newEmergencyActivationCommittee",
+        type: "address"
+      }
+    ],
+    name: "setEmergencyProtectionActivationCommittee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "Timestamp",
+        name: "newEmergencyProtectionEndDate",
+        type: "uint40"
+      }
+    ],
+    name: "setEmergencyProtectionEndDate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newEmergencyExecutionCommittee",
+        type: "address"
+      }
+    ],
+    name: "setEmergencyProtectionExecutionCommittee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newGovernance",
+        type: "address"
+      }
+    ],
+    name: "setGovernance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "executor",
+        type: "address"
+      },
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "target",
+            type: "address"
+          },
+          {
+            internalType: "uint96",
+            name: "value",
+            type: "uint96"
+          },
+          {
+            internalType: "bytes",
+            name: "payload",
+            type: "bytes"
+          }
+        ],
+        internalType: "struct ExternalCall[]",
+        name: "calls",
+        type: "tuple[]"
+      }
+    ],
+    name: "submit",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "newProposalId",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "executor",
+        type: "address"
+      },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address"
+      }
+    ],
+    name: "transferExecutorOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  }
 ] as const;

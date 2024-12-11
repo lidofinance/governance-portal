@@ -1,7 +1,7 @@
 import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
+import { DualGovernance, EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 import { isAragonProposal } from 'utils/proposals/isAragonProposal';
@@ -26,6 +26,10 @@ export const useProposal = ({
     EmergencyProtectedTimelock,
   );
 
+  const dualGovernance = useReadContract(
+    DualGovernance
+  )
+
   return useQuery<ProposalCombinedData, Error>({
     queryKey: ['getProposal', id],
     queryFn: async (): Promise<ProposalCombinedData> => {
@@ -36,7 +40,7 @@ export const useProposal = ({
       const proposalId = BigInt(id);
 
       try {
-        const eventAbi = EmergencyProtectedTimelock.abi.find(
+        const eventAbi = DualGovernance.abi.find(
           (x) => x.type === 'event' && x.name === 'ProposalSubmitted',
         ) as AbiEvent | undefined;
 
@@ -45,14 +49,14 @@ export const useProposal = ({
         }
 
         const logs = (await publicClient.getLogs({
-          address: emergencyProtectedTimelock.address,
+          address: dualGovernance.address,
           event: eventAbi,
           fromBlock: 0n,
           toBlock: 'latest',
         })) as unknown as ProposalLog[];
 
         const proposalLog = logs.find(
-          (log: any) => BigInt(log.args.id) === proposalId,
+          (log: any) => BigInt(log.args.proposalId) === proposalId,
         );
 
         if (!proposalLog) {
