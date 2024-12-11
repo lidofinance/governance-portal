@@ -62,7 +62,7 @@ export const ProposalsList = () => {
                 <ProposalsListItem
                   key={proposal.id}
                   id={proposal.id}
-                  description={proposal.event.args.metadata}
+                  description={proposal.event.args.metadata || ''}
                   calls={proposal.event.args.calls}
                   proposalInfo={proposal.proposalInfo}
                   slim

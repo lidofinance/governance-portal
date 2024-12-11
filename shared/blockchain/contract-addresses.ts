@@ -62,7 +62,7 @@ export const NodeOperatorsRegistryRepo: ChainAddressMap = {
 
 export const Steth: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
-  [CHAINS.Holesky]: '0x3F1c547b21f65e10480dE3ad8E19fAAC46C95034 ',
+  [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494 ',
 };
 
 export const OracleRepo: ChainAddressMap = {
@@ -227,12 +227,12 @@ export const StETH: ChainAddressMap = {
 
 export const WstETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
-  [CHAINS.Holesky]: '0x4ecAC76fEd32DADd892aB0697f47622FdcB0F955', // mock
+  [CHAINS.Holesky]: '0x67b3c1e122ff0b778c9dedc1de2fb0f451aa12c8',
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1',
-  [CHAINS.Holesky]: '0xD3B035A5590aD0FEc95cdce9C54b50BFd108AEa5', // UnsafeWithdrawalQueue - mock
+  [CHAINS.Holesky]: '0x58994e58e2a475caba6dc27586f33196ff81fde0',
 };
 
 export const Voting: ChainAddressMap = {
@@ -241,7 +241,7 @@ export const Voting: ChainAddressMap = {
 };
 
 export const DualGovernance: ChainAddressMap = {
-  [CHAINS.Holesky]: '0x1Fa5e3b563C1D62c16919a8eD79A6A999D64b043',
+  [CHAINS.Holesky]: '0x6B1D08aAe48615ae42C1e8546c7A30483c221a13',
 };
 
 export const AdminExecutor: ChainAddressMap = {
@@ -249,7 +249,7 @@ export const AdminExecutor: ChainAddressMap = {
 };
 
 export const EmergencyProtectedTimelock: ChainAddressMap = {
-  [CHAINS.Holesky]: '0x4c9819921723E986a065a28aca6424e7818958A4',
+  [CHAINS.Holesky]: '0x933e198841cc763dc87CCBc4Bf53b34745D8E062',
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
