@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
-import { Select, SelectProps } from '@lidofinance/lido-ui';
+import { InlineLoader, Select, SelectProps } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
 
 export const ControlPanelWrapper = styled.div`
   padding: 40px;
@@ -73,14 +74,41 @@ export const PreviewProposalList = styled.div`
   gap: 12px;
   margin-top: 20px;
   margin-bottom: 40px;
-
-  & > div {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
 `;
 
 export const PreviewControls = styled.div`
   margin-top: auto;
+`;
+
+export const Description = styled(Text)`
+  font-size: 22px;
+  font-weight: 200;
+  line-height: 1.8;
+  margin: 24px 0;
+`;
+
+export const ProposalWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  svg {
+    margin-left: -8px;
+    transform: scale(0.8);
+  }
+`;
+
+export const VoteWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  svg {
+    transform: scale(0.8);
+  }
+`;
+
+export const InlineLoaderStyled = styled(InlineLoader)`
+  width: 100%;
+  height: 50px;
+  margin-top: 20px;
+  border-radius: 20px;
 `;

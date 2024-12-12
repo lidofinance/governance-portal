@@ -9,8 +9,10 @@ import {
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { Button } from 'shared/components/button';
 import { isVoteItem } from 'features/dual-governance/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
+
+const PAGE_LIMIT_STEP = 4;
 
 export const ProposalsList = () => {
   const [initialLoading, setInitialLoading] = useState(true);
@@ -21,10 +23,26 @@ export const ProposalsList = () => {
     setCurrentPage,
     isFetching,
     openProposalPage,
+    activeProposals,
+    votes,
   } = useDualGovernanceProposalsContext();
+
+  const initialLimit = useMemo(() => {
+    const itemsLength = activeProposals.length + votes.length;
+
+    return PAGE_LIMIT_STEP > itemsLength ? PAGE_LIMIT_STEP : itemsLength;
+  }, []);
+
+  const [pageLimit, setPageLimit] = useState(initialLimit);
 
   const handleLoadMore = () => {
     setCurrentPage(currentPage + 1);
+    setPageLimit((prevState) => {
+      if (prevState !== 0) {
+        return prevState + PAGE_LIMIT_STEP;
+      }
+      return 0;
+    });
   };
 
   useEffect(() => {
@@ -41,48 +59,53 @@ export const ProposalsList = () => {
           <InlineLoaderStyled />
         </FlexWrapper>
       )}
+
       {!initialLoading && (
         <>
           <ProposalsListWrapper>
-            {combinedData.map((proposal) => {
-              return isVoteItem(proposal) ? (
+            {combinedData.slice(0, pageLimit).map((dataItem) => {
+              return isVoteItem(dataItem) ? (
                 <VoteItem
-                  key={proposal.voteId}
-                  id={proposal.id}
-                  description={proposal.event?.metadata}
-                  script={proposal.vote.script}
-                  voteState={proposal.state}
-                  isAragon
-                  slim
-                  onProposalClick={() =>
-                    openProposalPage({ id: proposal.id, isVote: true })
+                  key={dataItem.voteId}
+                  id={dataItem.id}
+                  description={dataItem.event?.metadata}
+                  script={dataItem.vote.script}
+                  state={dataItem.state}
+                  voteTime={dataItem.voteTime}
+                  objectionPhaseTime={dataItem.objectionPhaseTime}
+                  startDate={dataItem.vote.startDate}
+                  yea={dataItem.vote.yea}
+                  nay={dataItem.vote.nay}
+                  onVoteClick={() =>
+                    openProposalPage({ id: dataItem.id, isVote: true })
                   }
                 />
               ) : (
                 <ProposalsListItem
-                  key={proposal.id}
-                  id={proposal.id}
-                  description={proposal.event.args.metadata || ''}
-                  calls={proposal.event.args.calls}
-                  proposalInfo={proposal.proposalInfo}
-                  slim
+                  key={dataItem.id}
+                  id={dataItem.id}
+                  description={dataItem.event.args.metadata || ''}
+                  calls={dataItem.event.args.calls}
+                  proposalDetails={dataItem.proposalDetails}
                   onProposalClick={() =>
-                    openProposalPage({ id: proposal.id, isVote: false })
+                    openProposalPage({ id: dataItem.id, isVote: false })
                   }
                 />
               );
             })}
           </ProposalsListWrapper>
-          <ShowMoreWrapper>
-            <Button
-              loading={isFetching}
-              variant="outlined"
-              onClick={handleLoadMore}
-              disabled={isFetching}
-            >
-              Show more
-            </Button>
-          </ShowMoreWrapper>
+          {pageLimit < combinedData.length && pageLimit !== 0 && (
+            <ShowMoreWrapper>
+              <Button
+                loading={isFetching}
+                variant="outlined"
+                onClick={handleLoadMore}
+                disabled={isFetching}
+              >
+                Show more
+              </Button>
+            </ShowMoreWrapper>
+          )}
         </>
       )}
     </>

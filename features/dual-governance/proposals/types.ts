@@ -28,12 +28,12 @@ export type ProposalLog = Log & {
   args: SubmitProposalEventArgs;
 };
 
-export interface ProposalCombinedData {
+export type ProposalCombinedData = {
   id: number;
   event: ProposalLog;
-  proposalInfo: readonly [ProposalDetails, readonly SubmitProposalCall[]];
+  proposalDetails: ProposalDetails & { calls: SubmitProposalCall[] };
   voteId?: number;
-}
+};
 
 export enum ProposalStatus {
   NotExist,

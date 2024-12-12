@@ -222,7 +222,7 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 
 export const StETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
-  [CHAINS.Holesky]: '0x9F1DF370Bb52bb154a02803a26E26C62CE86FbE2', // mock
+  [CHAINS.Holesky]: '0x7a955618fF2AD00D58e5C38205bc1F0b33bac5494',
 };
 
 export const WstETH: ChainAddressMap = {

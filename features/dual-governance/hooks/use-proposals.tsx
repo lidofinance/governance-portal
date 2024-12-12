@@ -13,7 +13,7 @@ import {
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 
-const BATCH_SIZE = 10000n;
+const BATCH_SIZE = 20000n;
 
 type FindEventsBaseConfig = {
   address: Address;
@@ -95,8 +95,6 @@ const findAllProposalsEvents = async (
       toBlock,
     })) as unknown as ProposalLog[];
 
-    console.log(batchLogs, 'batchLogs');
-
     for (const log of batchLogs) {
       const id = log.args.id;
       if (id && id >= endId && id <= startId && !foundEvents[id.toString()]) {
@@ -113,12 +111,13 @@ const findAllProposalsEvents = async (
             id,
           ])) as GetProposalResult;
 
-          console.log(proposalInfo, 'proposalInfo');
-
           const result: ProposalCombinedData = {
             id: Number(id),
             event: log,
-            proposalInfo,
+            proposalDetails: {
+              ...proposalInfo[0],
+              calls: proposalInfo[1] as SubmitProposalCall[],
+            },
             voteId: Number(voteId),
           };
 
@@ -199,8 +198,6 @@ export const useProposals = ({
           currentPage,
           limit,
         );
-
-        console.log(proposals, proposalsCount, 'proposals, proposalsCount');
 
         return { proposalsCount, proposals };
       } catch (error) {

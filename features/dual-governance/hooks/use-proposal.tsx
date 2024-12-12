@@ -1,7 +1,10 @@
 import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { DualGovernance, EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
+import {
+  DualGovernance,
+  EmergencyProtectedTimelock,
+} from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 import { isAragonProposal } from 'utils/proposals/isAragonProposal';
@@ -9,6 +12,7 @@ import { AbiEvent } from 'viem';
 import {
   ProposalCombinedData,
   ProposalLog,
+  SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 
 type UseProposalConfig = {
@@ -26,9 +30,7 @@ export const useProposal = ({
     EmergencyProtectedTimelock,
   );
 
-  const dualGovernance = useReadContract(
-    DualGovernance
-  )
+  const dualGovernance = useReadContract(DualGovernance);
 
   return useQuery<ProposalCombinedData, Error>({
     queryKey: ['getProposal', id],
@@ -77,7 +79,10 @@ export const useProposal = ({
         return {
           id: Number(proposalId),
           event: proposalLog,
-          proposalInfo,
+          proposalDetails: {
+            ...proposalInfo[0],
+            calls: proposalInfo[1] as SubmitProposalCall[],
+          },
           voteId: voteId ? Number(voteId) : undefined,
         };
       } catch (error) {

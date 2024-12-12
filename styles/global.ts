@@ -96,6 +96,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --accent-color-coral: #FF9900;
     --accent-color-coral-light: #FF8E7633;
     --accent-color-berry: #D74758;
+    --accent-color-berry-light: #D7475833;
     --accent-color-leaf: #29C38C;
     --accent-color-leaf-light: #29C38C33;
     --accent-color-orange: #FF633C;

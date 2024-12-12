@@ -19,8 +19,7 @@ type Props = {
   description: string;
   calls: any[];
   isReadyToEnact?: boolean;
-  proposalInfo: ProposalCombinedData['proposalInfo'];
-  slim?: boolean;
+  proposalDetails: ProposalCombinedData['proposalDetails'];
   onProposalClick: MouseEventHandler<HTMLDivElement>;
 };
 
@@ -29,8 +28,7 @@ export const ProposalsListItem = ({
   id,
   description,
   // calls = [],
-  proposalInfo,
-  slim,
+  proposalDetails,
   onProposalClick,
 }: Props) => {
   // TODO: TBD
@@ -38,7 +36,7 @@ export const ProposalsListItem = ({
 
   const { visibleState } = useDualGovernanceContext();
 
-  const { status, scheduledAt, submittedAt } = proposalInfo[0];
+  const { status, scheduledAt, submittedAt } = proposalDetails;
 
   if (
     isReadyToEnact &&
@@ -50,7 +48,7 @@ export const ProposalsListItem = ({
           <ProposalName warning id={id} />
           <StatusBadge proposalStatus={status} />
         </SummarySection>
-        <ProposalDescription $slim>
+        <ProposalDescription>
           <DescriptionText>
             Kill all active governance proposals
           </DescriptionText>
@@ -70,12 +68,12 @@ export const ProposalsListItem = ({
         />
         <StatusBadge proposalStatus={status} />
         <ProposalTimelock
-          status={status}
-          scheduledAt={scheduledAt}
+          proposalStatus={status}
           submittedAt={submittedAt}
+          scheduledAt={scheduledAt}
         />
       </SummarySection>
-      <ProposalDescription $slim={slim}>
+      <ProposalDescription>
         {descriptionLines.map((line, index) => (
           <DescriptionText key={index}>{line}</DescriptionText>
         ))}

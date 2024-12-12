@@ -1,32 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
-import { range } from 'lodash';
+import { range, toNumber } from 'lodash';
 import { getVoteStatus } from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { usePublicClient } from 'wagmi';
-import { VoteStatus } from 'shared/votes/types';
+import { VoteData, VoteStatus } from 'shared/votes/types';
 import { Address } from 'viem';
 
 type Props = {
   limit: number;
   getActive?: boolean;
-};
-
-export type VoteData = {
-  voteId: number;
-  id: number;
-  vote: any;
-  canExecute: boolean;
-  event?: {
-    creator: Address;
-    metadata: string;
-    voteId: bigint;
-  };
-  state: {
-    status: VoteStatus;
-    isQuorumReached: boolean;
-  };
 };
 
 const mapPayload = (
@@ -75,10 +59,13 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
         const votesPromises = ids.map(
           async (voteId): Promise<VoteData | null> => {
             try {
-              const [rawVote, canExecute] = await Promise.all([
-                AragonVoting.readContract('getVote', [BigInt(voteId)]),
-                AragonVoting.readContract('canExecute', [BigInt(voteId)]),
-              ]);
+              const [rawVote, canExecute, voteTime, objectionPhaseTime] =
+                await Promise.all([
+                  AragonVoting.readContract('getVote', [BigInt(voteId)]),
+                  AragonVoting.readContract('canExecute', [BigInt(voteId)]),
+                  AragonVoting.readContract('voteTime'),
+                  AragonVoting.readContract('objectionPhaseTime'),
+                ]);
 
               const getVoteAbi = Voting.abi.find(
                 (item) => item.type === 'function' && item.name === 'getVote',
@@ -120,6 +107,8 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
                 canExecute,
                 event: startEvent,
                 state,
+                voteTime: Number(voteTime),
+                objectionPhaseTime: Number(objectionPhaseTime),
               };
             } catch (e) {
               console.error('Error fetching vote:', e);
@@ -150,6 +139,5 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
         return { votes: [] };
       }
     },
-    staleTime: Infinity,
   });
 };
