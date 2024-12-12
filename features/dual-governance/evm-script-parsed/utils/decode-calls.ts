@@ -16,7 +16,7 @@ export type DecodedCall = {
   decoded: {
     functionName: string;
     args: readonly unknown[] | undefined;
-  };
+  } | null;
   id: number;
 };
 
@@ -57,10 +57,12 @@ export const decodeCalls = <TCall extends BaseCall>({
       }
     }
 
-    const decoded = decodeFunctionData({
-      abi: abi,
-      data: call.payload,
-    });
+    const decoded = abi
+      ? decodeFunctionData({
+          abi: abi,
+          data: call.payload,
+        })
+      : null;
 
     return { contractAddress, contractName, decoded, id: localId };
   });

@@ -36,9 +36,9 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
       <ProposalSearchItemWrapper>
         <ProposalsListItem
           id={proposal.id}
-          description={proposal.event.args.metadata}
+          description={proposal.event.args.metadata || ''}
           calls={proposal.event.args.calls}
-          proposalInfo={proposal.proposalInfo}
+          proposalDetails={proposal.proposalDetails}
           onProposalClick={() =>
             openProposalPage({ id: proposal.id, isVote: false })
           }

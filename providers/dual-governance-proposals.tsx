@@ -3,27 +3,33 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { useProposals } from 'features/dual-governance/hooks/use-proposals';
 import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 import invariant from 'tiny-invariant';
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
-import { useVotes, VoteData } from '../shared/votes/hooks/use-votes';
-import { isVoteItem } from '../features/dual-governance/types';
+import {
+  ProposalCombinedData,
+  ProposalStatus,
+} from 'features/dual-governance/proposals/types';
+import { useVotes } from 'shared/votes/hooks/use-votes';
+import { isVoteItem } from 'features/dual-governance/types';
 import { useRouter } from 'next/router';
 import { PROPOSALS_PATH } from '../constants/urls';
 import { config } from 'config';
+import { VoteData } from 'shared/votes/types';
 
-const PROPOSALS_LIMIT = 1;
-const VOTES_LIMIT = 1; // TODO: TBD
+const PROPOSALS_LIMIT = 5;
+const VOTES_LIMIT = 5;
 
 type ProposalsContextType = {
   proposalId: bigint | number | null;
   setProposalId: (id: bigint | number) => void;
   proposal: ProposalCombinedData | null;
   proposals: ProposalCombinedData[];
+  activeProposals: ProposalCombinedData[];
   currentPage: number;
   setCurrentPage: (page: number) => void;
   isFetching: boolean;
@@ -108,10 +114,18 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
     isLoading: isVotesLoading,
   } = useVotes({
     limit: VOTES_LIMIT,
-    getActive: false,
+    getActive: true,
   });
 
-  useMemo(() => {
+  const activeProposals = useMemo(() => {
+    return proposals.filter((proposal) =>
+      [ProposalStatus.Submitted, ProposalStatus.Scheduled].includes(
+        proposal.proposalDetails.status,
+      ),
+    );
+  }, [proposals]);
+
+  useEffect(() => {
     if (proposalsData.data?.proposals) {
       setProposals((prevProposals) => [
         ...prevProposals,
@@ -129,6 +143,7 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       setProposalId,
       proposal,
       proposals: proposals,
+      activeProposals,
       votes: votesData?.votes || [],
       combinedData: getCombinedData(proposals, votesData?.votes || []),
       currentPage,
@@ -146,6 +161,7 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       proposalId,
       proposal,
       proposals,
+      activeProposals,
       votesData?.votes,
       currentPage,
       proposalData?.isFetching,

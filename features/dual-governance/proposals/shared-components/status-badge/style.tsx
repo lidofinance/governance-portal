@@ -14,18 +14,27 @@ const variantStyles: Record<BadgeVariant, FlattenSimpleInterpolation> = {
     background-color: var(--accent-color-leaf-light);
     color: var(--accent-color-leaf);
   `,
+  danger: css`
+    background-color: var(--accent-color-berry-light);
+    color: var(--accent-color-berry);
+  `,
 };
 
 type Props = {
   $variant: BadgeVariant;
 };
 
-export const StatusBadgeWrapper = styled.div<Props>`
-  align-self: flex-start;
+export const Badge = styled.div<Props>`
+  justify-self: flex-start;
   ${({ $variant }) => variantStyles[$variant]}
-  padding: 6px 20px;
+  padding: 4px 14px;
   border-radius: 40px;
   flex-grow: 0;
   font-size: 15px;
   line-height: 1.8;
+  flex-shrink: 0;
+`;
+
+export const VotePhaseWrapper = styled.div`
+  margin-top: 12px;
 `;

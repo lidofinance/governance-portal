@@ -1,12 +1,12 @@
-import { useProposalsInfo } from 'features/dual-governance/hooks/use-proposals-info';
 import { Text } from 'shared/components/text';
 import { ProposalsInfoStyled } from './style';
+import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 
 export const ProposalsInfo = () => {
-  const { data, isLoading } = useProposalsInfo();
+  const { activeProposals, isLoading } = useDualGovernanceProposalsContext();
 
   // TODO: add view state
-  if (isLoading || !data) {
+  if (isLoading || !activeProposals) {
     return null;
   }
 
@@ -14,7 +14,7 @@ export const ProposalsInfo = () => {
     <ProposalsInfoStyled>
       <div>
         <Text color="secondary">Active Proposals</Text>
-        <Text>{data.proposalsCount}</Text>
+        <Text>{activeProposals.length}</Text>
       </div>
       <div>
         <Text color="secondary">Executable on</Text>

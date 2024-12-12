@@ -1,15 +1,12 @@
 import styled from 'styled-components';
 import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
 
-type ProposalDescriptionProps = {
-  $slim?: boolean;
-};
-
 export const ProposalListItemWrapper = styled(Block)`
   font-size: 26px;
   border: 1px solid var(--border-color-fog);
   display: flex;
   cursor: pointer;
+  padding: 30px;
 `;
 
 export const ProposalListItemToEnact = styled(Block)`
@@ -28,11 +25,10 @@ export const SummarySection = styled.section`
   padding-top: 12px;
 `;
 
-export const ProposalDescription = styled.div<ProposalDescriptionProps>`
-  padding: 6px 20px 0;
-  max-width: ${({ $slim }) => ($slim ? '300px' : '100%')};
+export const ProposalDescription = styled.div`
+  padding-left: 20px;
   word-wrap: break-word;
-  width: ${({ $slim }) => ($slim ? '300px' : 'auto')};
+  width: 50%;
 `;
 
 export const DescriptionText = styled(Text).attrs({

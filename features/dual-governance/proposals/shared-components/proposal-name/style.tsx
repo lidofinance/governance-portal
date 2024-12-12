@@ -17,6 +17,7 @@ export const Title = styled.span<{ $warning?: boolean }>`
 export const LogoWrapper = styled.div<{ $hasOffset: boolean }>`
   width: 70px;
   height: 70px;
+  flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid #0000001a;
   display: flex;

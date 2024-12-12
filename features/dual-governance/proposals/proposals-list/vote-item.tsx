@@ -1,6 +1,5 @@
 import { MouseEventHandler, useState } from 'react';
-import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
-import { VoteStatus } from 'shared/votes/types';
+import { VoteStatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
 
 import {
   ProposalListItemWrapper,
@@ -10,37 +9,35 @@ import {
   VoteStatusWrapper,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { VoteData } from 'shared/votes/types';
 
 type Props = {
-  id: number;
   script: string;
   description?: string;
-  isAragon?: boolean;
-  slim?: boolean;
-  voteState?: {
-    isQuorumReached: boolean;
-    status: VoteStatus;
-  };
-  proposalStatus?: ProposalStatus;
-  onProposalClick: MouseEventHandler<HTMLDivElement>;
-};
+  state: VoteData['state'];
+  onVoteClick: MouseEventHandler<HTMLDivElement>;
+  startDate: bigint;
+  yea: bigint;
+  nay: bigint;
+} & Pick<VoteData, 'id' | 'voteTime' | 'objectionPhaseTime'>;
 
 export const VoteItem = ({
   id,
   description,
-  isAragon,
-  voteState,
-  proposalStatus,
-  slim,
-  onProposalClick,
+  state,
+  onVoteClick,
+  voteTime,
+  objectionPhaseTime,
+  startDate,
+  yea,
+  nay,
 }: Props) => {
   const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
 
   const descriptionLines = description ? description.split('\n') : [];
 
   return (
-    <ProposalListItemWrapper onClick={onProposalClick}>
+    <ProposalListItemWrapper onClick={onVoteClick}>
       <SummarySection>
         <ProposalName
           isAragon
@@ -48,15 +45,18 @@ export const VoteItem = ({
           isUnknownContractCalled={isUnknownContractCalled}
         />
         <VoteStatusWrapper>
-          <StatusBadge
-            isAragon={isAragon}
-            voteState={voteState}
-            proposalStatus={proposalStatus}
+          <VoteStatusBadge
+            state={state}
+            voteTime={voteTime}
+            objectionPhaseTime={objectionPhaseTime}
+            startDate={startDate}
+            yea={yea}
+            nay={nay}
           />
         </VoteStatusWrapper>
       </SummarySection>
       {descriptionLines.length > 0 && (
-        <ProposalDescription $slim={slim}>
+        <ProposalDescription>
           {descriptionLines.map((line, index) => (
             <DescriptionText key={index}>{line}</DescriptionText>
           ))}
