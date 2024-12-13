@@ -55,7 +55,7 @@ export const DualGovernanceStateProvider: React.FC<PropsWithChildren> = ({
     error: dualGovernanceStateError,
     refetch: refetchDualGovernanceState,
   } = useDualGovernanceState({ vetoSignallingAddress });
-
+  console.log(addressDataError || dualGovernanceStateError);
   const value: DualGovernanceContextValue = useMemo(
     () => ({
       ...dualGovernanceState,

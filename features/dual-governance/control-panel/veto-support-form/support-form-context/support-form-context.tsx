@@ -28,10 +28,13 @@ import { useSupportFormProcessor } from './use-support-form-processor';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { VetoSupportedTokens } from 'features/dual-governance/types';
+import { useUnstEthBalance } from 'shared/blockchain/hooks/use-unsteth-balance';
+import { NftMultiselectValuesMap } from 'features/dual-governance/nft-multiselect';
 
 export type SupportFormInputType = {
-  amount: null | bigint;
+  amount: bigint | null;
   token: VetoSupportedTokens;
+  selectedNftIds: NftMultiselectValuesMap;
 };
 
 type SupportFormContextValue = {
@@ -79,6 +82,12 @@ const useSupportFormNetworkData = (): SupportFormNetworkData => {
     isLoading: isEtherBalanceLoading,
   } = useEthereumBalance();
 
+  const {
+    data: unSthEthData,
+    refetch: updateUnStEthBalance,
+    isLoading: isUnStEthBalanceLoading,
+  } = useUnstEthBalance();
+
   const refetch = useCallback(async () => {
     await Promise.allSettled([
       updateStEthBalance(),
@@ -86,6 +95,7 @@ const useSupportFormNetworkData = (): SupportFormNetworkData => {
       updateEtherBalance(),
       refetchDualGovernanceState(),
       refetchEscrowBalances(),
+      updateUnStEthBalance(),
     ]);
   }, [
     refetchDualGovernanceState,
@@ -93,16 +103,22 @@ const useSupportFormNetworkData = (): SupportFormNetworkData => {
     updateEtherBalance,
     updateStEthBalance,
     updateWstEthBalance,
+    updateUnStEthBalance,
   ]);
 
   return {
     etherBalance: etherBalance?.value,
     stEthBalance,
     wstEthBalance,
+    unstEthBalance: unSthEthData?.requestsTotalStEthAmount,
+    withdrawalRequests: unSthEthData?.withdrawalRequests,
     vetoSignallingAddress,
     isAssetManagementLocked,
     isLoading:
-      isStEthBalanceLoading || isWstEthBalanceLoading || isEtherBalanceLoading,
+      isStEthBalanceLoading ||
+      isWstEthBalanceLoading ||
+      isEtherBalanceLoading ||
+      isUnStEthBalanceLoading,
     refetch,
   };
 };
@@ -118,6 +134,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
     defaultValues: {
       amount: null,
       token: Token.stETH,
+      selectedNftIds: {},
     },
     context: validationContextPromise,
     criteriaMode: 'firstError',
@@ -142,10 +159,12 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch]);
 
-  const { amount, token: selectedToken } = watch();
+  const { amount, token: selectedToken, selectedNftIds } = watch();
+
+  const nftIdsLength = BigInt(Object.keys(selectedNftIds).length);
 
   const approveData = useApprove(
-    amount,
+    selectedToken === Token.unstETH ? nftIdsLength : amount,
     selectedToken,
     networkData.vetoSignallingAddress,
   );
@@ -178,7 +197,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
       maxAmount,
       approveData,
     }),
-    [selectedToken, approveData, maxAmount, networkData],
+    [selectedToken, networkData, maxAmount, approveData],
   );
 
   const formControllerValue = useMemo(

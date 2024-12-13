@@ -14,11 +14,12 @@ type Props = {
   token: Token;
   balance: bigint | undefined;
   variant?: 'default' | 'compact';
+  addOnText?: string;
   showZeroBalance?: boolean;
 };
 
 export const TokenBalance = (props: Props) => {
-  const { token, balance, variant, showZeroBalance = true } = props;
+  const { token, balance, variant, addOnText, showZeroBalance = true } = props;
 
   if (!showZeroBalance && balance === 0n) {
     return null;
@@ -53,8 +54,13 @@ export const TokenBalance = (props: Props) => {
           placement="topLeft"
           title={<span>{formatEthFull(balance)}</span>}
         >
-          <TokenLabel>
+          <TokenLabel size={22}>
             {formatEth(balance)} {token}
+            {addOnText ? (
+              <Text weight={600} size={22} color="secondary">
+                {addOnText}
+              </Text>
+            ) : null}
           </TokenLabel>
         </Tooltip>
       ) : (

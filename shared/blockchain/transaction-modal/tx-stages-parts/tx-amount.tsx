@@ -1,14 +1,15 @@
+import { Token } from 'shared/blockchain/types';
 import { formatEthFull } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
 
 type Props = {
   amount: bigint;
-  symbol: string;
+  token: Token;
 };
 
-// TODO: add on the component
-export const TxAmount = ({ amount, symbol }: Props) => (
+export const TxAmount = ({ amount, token }: Props) => (
   <Text>
-    {formatEthFull(amount)} {symbol}
+    {token === Token.unstETH ? amount.toString() : formatEthFull(amount)}{' '}
+    {token}
   </Text>
 );

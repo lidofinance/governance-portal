@@ -1,15 +1,9 @@
 import { useMemo } from 'react';
-import { StETH, WstETH } from '../contracts';
 import { ContractObject, Token } from '../types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getContractAddress } from '../get-contract-address';
 import { Address } from 'viem';
-
-const TOKEN_CONTRACT_MAP = {
-  [Token.stETH]: StETH,
-  [Token.wstETH]: WstETH,
-  [Token.unstETH]: WstETH,
-};
+import { TOKEN_CONTRACT_MAP } from '../constants';
 
 type TokenContractObject = {
   address: Address;

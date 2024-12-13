@@ -141,6 +141,7 @@ export const RevocationPanel = () => {
                   balance={
                     escrowBalances.vetoSignallingBalance.unstETHLockedShares
                   }
+                  addOnText={`${escrowBalances.vetoSignallingBalance.unstETHIdsCount} NFT`}
                 />
                 <RevokePopupButton onClick={() => setIsPopupOpen(true)}>
                   <Text size={14} color="secondary">

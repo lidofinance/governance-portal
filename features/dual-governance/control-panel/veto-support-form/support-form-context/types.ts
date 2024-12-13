@@ -1,3 +1,4 @@
+import { WithdrawalsMap } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { Address } from 'viem';
 
@@ -12,6 +13,8 @@ export type SupportFormNetworkData = {
   etherBalance: bigint | undefined;
   stEthBalance: bigint | undefined;
   wstEthBalance: bigint | undefined;
+  unstEthBalance: bigint | undefined;
+  withdrawalRequests: WithdrawalsMap | undefined;
   vetoSignallingAddress?: Address | undefined;
   isAssetManagementLocked: boolean | undefined;
   isLoading: boolean;

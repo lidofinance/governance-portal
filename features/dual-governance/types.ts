@@ -62,3 +62,5 @@ export const VetoSupportedTokens = [
 ] as const;
 
 export type VetoSupportedTokens = (typeof VetoSupportedTokens)[number];
+
+export type WithdrawalsMap = Record<string, bigint>; // id, stEthAmount

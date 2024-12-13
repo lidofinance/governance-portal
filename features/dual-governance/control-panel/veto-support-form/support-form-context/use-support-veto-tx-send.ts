@@ -10,9 +10,24 @@ export const useSupportVetoTxSend = (escrowAddress: Address | undefined) => {
   const writeEscrowContract = useWriteContract(escrowAbi);
 
   return useCallback(
-    async ({ amount, token }: SupportFormInputType) => {
-      invariant(amount, 'amount must be presented');
+    async ({ amount, token, selectedNftIds }: SupportFormInputType) => {
       invariant(escrowAddress, 'escrowAddress must be presented');
+
+      if (token === Token.unstETH) {
+        invariant(selectedNftIds, 'selectedNftIds must be presented');
+
+        const ids = Object.keys(selectedNftIds)
+          .filter((key) => selectedNftIds[Number(key)])
+          .map(BigInt);
+
+        return writeEscrowContract({
+          address: escrowAddress,
+          functionName: 'lockUnstETH',
+          args: [ids],
+        });
+      }
+
+      invariant(amount, 'amount must be presented');
 
       const functionName = token === Token.stETH ? 'lockStETH' : 'lockWstETH';
 

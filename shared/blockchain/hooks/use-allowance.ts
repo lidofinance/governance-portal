@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
-import { Address, zeroAddress } from 'viem';
+import { Address, maxUint256, zeroAddress } from 'viem';
 import { useReadContract, useWatchContractEvent } from 'wagmi';
 import { Token } from '../types';
 import { useTokenContractObject } from './use-token-contract-object';
@@ -23,9 +23,21 @@ export const useAllowance = ({ token, owner, spender }: Args) => {
   const allowanceQuery = useReadContract({
     abi: contract.abi,
     address: contract.address,
-    functionName: 'allowance',
+    // There is no way to approve transfer of multiple unstETH ids at once
+    // That is why we use isApprovedForAll for unstETH for convinience during the testnet
+    // In future we should decide whether we want to approve unstETH ids one by one or not
+    // TODO: remove this condition when we decide to approve unstETH ids one by one
+    functionName: token === Token.unstETH ? 'isApprovedForAll' : 'allowance',
     args: [owner ?? zeroAddress, spender ?? zeroAddress],
-    query: { enabled },
+    query: {
+      enabled,
+      select: (data) => {
+        if (typeof data === 'boolean') {
+          return data ? maxUint256 : BigInt(0);
+        }
+        return data;
+      },
+    },
   });
 
   const onLogs = useCallback(
