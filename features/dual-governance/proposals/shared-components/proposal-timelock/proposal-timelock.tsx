@@ -1,20 +1,17 @@
-import { useMemo } from 'react';
 import { Text } from '@lidofinance/lido-ui';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
-import { useProposalTimelocks } from 'features/dual-governance/hooks/use-proposal-timelock';
+import { useProposalTimelock } from 'features/dual-governance/hooks/use-proposal-timelock';
 import { useCountdown } from 'shared/hooks/use-countdown';
 import { TimeLockWrapper } from 'features/dual-governance/proposals/shared-components/proposal-timelock/style';
 
-type Timestamp = number;
-
 type Props = {
-  status: ProposalStatus;
-  scheduledAt: Timestamp; // in seconds
-  submittedAt: Timestamp; // in seconds
+  proposalStatus: ProposalStatus;
+  submittedAt: number;
+  scheduledAt: number;
 };
 
 type TimelockInfoProps = {
-  status: ProposalStatus;
+  proposalStatus: ProposalStatus;
   timeFormatted: string;
   isCountdownFinished: boolean;
 };
@@ -27,11 +24,11 @@ const emergencyCommitteeLinkText = (
 );
 
 const getTimelockInfo = ({
-  status,
+  proposalStatus,
   timeFormatted,
   isCountdownFinished,
 }: TimelockInfoProps) => {
-  switch (status) {
+  switch (proposalStatus) {
     case ProposalStatus.Submitted:
       if (isCountdownFinished) {
         return null;
@@ -56,38 +53,26 @@ const getTimelockInfo = ({
 };
 
 export const ProposalTimelock = ({
-  status,
+  proposalStatus,
   submittedAt,
   scheduledAt,
 }: Props) => {
-  const { isLoading, afterSubmitDelay, afterScheduleDelay } =
-    useProposalTimelocks();
-
-  const targetTime = useMemo(() => {
-    if (isLoading || !afterSubmitDelay || !afterScheduleDelay) return null;
-
-    return status === ProposalStatus.Submitted
-      ? submittedAt + afterSubmitDelay
-      : scheduledAt + afterScheduleDelay;
-  }, [
-    status,
+  const proposalTimelock = useProposalTimelock({
+    proposalStatus,
     submittedAt,
     scheduledAt,
-    afterSubmitDelay,
-    afterScheduleDelay,
-    isLoading,
-  ]);
+  });
 
   const { timeFormatted, isFinished: isCountdownFinished } = useCountdown(
-    targetTime ?? 0,
+    proposalTimelock?.targetTime ?? 0,
   );
 
-  if (isLoading || !targetTime) {
+  if (!proposalStatus) {
     return null;
   }
 
   const timelockInfo = getTimelockInfo({
-    status,
+    proposalStatus,
     timeFormatted,
     isCountdownFinished,
   });

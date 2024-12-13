@@ -16,60 +16,18 @@ import { StatusBadge } from 'features/dual-governance/proposals/shared-component
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 import { ProposalTimelock } from 'features/dual-governance//proposals/shared-components/proposal-timelock';
-import { useProposalTimelocks } from 'features/dual-governance/hooks/use-proposal-timelock';
+import { useProposalTimelock } from 'features/dual-governance/hooks/use-proposal-timelock';
 import { useCountdown } from 'shared/hooks/use-countdown';
+import { useEffect, useState } from 'react';
 
 type Props = {
   id: number;
 };
 
-const useTargetTime = (
-  proposal: ReturnType<typeof useProposal>['data'],
-  afterSubmitDelay: number | undefined,
-  afterScheduleDelay: number | undefined,
-  isDelayDataLoading: boolean,
-): number | null => {
-  if (
-    !proposal ||
-    !afterSubmitDelay ||
-    !afterScheduleDelay ||
-    isDelayDataLoading
-  )
-    return null;
-
-  const { status, submittedAt, scheduledAt } = proposal.proposalInfo[0];
-
-  if (status === ProposalStatus.Submitted) {
-    return submittedAt + afterSubmitDelay;
-  }
-  if (status === ProposalStatus.Scheduled) {
-    return scheduledAt + afterScheduleDelay;
-  }
-
-  return null;
-};
-
 export const ProposalInfo = ({ id }: Props) => {
-  const { data: proposal } = useProposal({ id });
+  const { data: proposal, isLoading } = useProposal({ id });
 
-  const {
-    isLoading: isDelayDataLoading,
-    afterSubmitDelay,
-    afterScheduleDelay,
-  } = useProposalTimelocks();
-
-  const targetTime = useTargetTime(
-    proposal,
-    afterSubmitDelay,
-    afterScheduleDelay,
-    isDelayDataLoading,
-  );
-
-  const { isFinished: isCountdownFinished } = useCountdown(targetTime ?? 0);
-
-  const calls = proposal?.event.args.calls;
-
-  if (!proposal) {
+  if (!proposal || isLoading) {
     return (
       <>
         <ProposalContainer>
@@ -80,24 +38,22 @@ export const ProposalInfo = ({ id }: Props) => {
     );
   }
 
-  const { status, scheduledAt, submittedAt } = proposal.proposalInfo[0];
+  const { calls, status, submittedAt, scheduledAt } = proposal.proposalDetails;
 
   return (
     <ProposalContainer>
       <ProposalHeader>
-        {status && (
-          <StatusBadge proposalStatus={proposal?.proposalInfo[0].status} />
-        )}
+        {status && <StatusBadge proposalStatus={status} />}
         <ProposalTimelock
-          status={status}
-          scheduledAt={scheduledAt}
+          proposalStatus={status}
           submittedAt={submittedAt}
+          scheduledAt={scheduledAt}
         />
       </ProposalHeader>
       <ProposalName>Proposal #{id}</ProposalName>
-      {proposal?.proposalInfo[0].submittedAt && (
+      {proposal.proposalDetails.submittedAt && (
         <SubmitDate>
-          {`Submitted ${getDateFromTimestamp(proposal.proposalInfo[0].submittedAt)}`}
+          {`Submitted ${getDateFromTimestamp({ timestamp: proposal.proposalDetails.submittedAt, showYear: true }).date}`}
         </SubmitDate>
       )}
       <ProposalDescription>
@@ -115,11 +71,11 @@ export const ProposalInfo = ({ id }: Props) => {
 
       {calls && calls.length > 0 && <Script rawCalls={calls} />}
 
-      {status === ProposalStatus.Scheduled && isCountdownFinished && (
-        <ActionsWrapper>
-          <Button size="md">Enact</Button>
-        </ActionsWrapper>
-      )}
+      {/*{status === ProposalStatus.Scheduled && isCountdownFinished && (*/}
+      {/*  <ActionsWrapper>*/}
+      {/*    <Button size="md">Enact</Button>*/}
+      {/*  </ActionsWrapper>*/}
+      {/*)}*/}
     </ProposalContainer>
   );
 };

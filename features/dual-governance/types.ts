@@ -1,6 +1,6 @@
 import { Token } from 'shared/blockchain/types';
 import { ProposalCombinedData } from './proposals/types';
-import { VoteData } from 'shared/votes/hooks/use-votes';
+import { VoteData } from 'shared/votes/types';
 
 export const isVoteItem = (
   item: ProposalCombinedData | VoteData,

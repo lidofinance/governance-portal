@@ -13,7 +13,7 @@ import {
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 
-const BATCH_SIZE = 10000n;
+const BATCH_SIZE = 20000n;
 
 type FindEventsBaseConfig = {
   address: Address;
@@ -114,7 +114,10 @@ const findAllProposalsEvents = async (
           const result: ProposalCombinedData = {
             id: Number(id),
             event: log,
-            proposalInfo,
+            proposalDetails: {
+              ...proposalInfo[0],
+              calls: proposalInfo[1] as SubmitProposalCall[],
+            },
             voteId: Number(voteId),
           };
 
