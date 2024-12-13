@@ -60,11 +60,6 @@ export const NodeOperatorsRegistryRepo: ChainAddressMap = {
   [CHAINS.Holesky]: '0x4E8970d148CB38460bE9b6ddaab20aE2A74879AF',
 };
 
-export const Steth: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
-  [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494 ',
-};
-
 export const OracleRepo: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xF9339DE629973c60c4d2b76749c81E6F40960E3A',
   [CHAINS.Holesky]: '0xB3d74c319C0C792522705fFD3097f873eEc71764',
@@ -221,8 +216,8 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 };
 
 export const StETH: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
-  [CHAINS.Holesky]: '0x7a955618fF2AD00D58e5C38205bc1F0b33bac5494',
+  [CHAINS.Mainnet]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494', // MOCK
+  [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
 };
 
 export const WstETH: ChainAddressMap = {

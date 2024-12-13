@@ -17,8 +17,8 @@ export const ScriptBody = ({ calls }: Props) => {
         <CallWrapper key={`call-${id}`}>
           <Text size="sm" color="secondary">
             Call{' '}
-            <CallTitle $warning={!decoded.functionName}>
-              {decoded.functionName || 'Unknown method'}
+            <CallTitle $warning={!decoded?.functionName}>
+              {decoded?.functionName || 'Unknown method'}
             </CallTitle>
             <span>{' on '}</span>
             <CallTitle $warning={!contractName}>

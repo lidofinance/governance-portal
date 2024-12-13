@@ -41,7 +41,8 @@ export const decodeCalls = <TCall extends BaseCall>({
     const contractAddress = call.target;
     const contractName = Object.keys(ADDR).find(
       (contractName: string) =>
-        ADDR[contractName as ContractName][chainId] === contractAddress,
+        ADDR[contractName as ContractName][chainId]?.toLowerCase() ===
+        contractAddress.toLowerCase(),
     );
     let abi;
 
