@@ -21,10 +21,14 @@ export const TokenSelect = () => {
         case Token.wstETH:
           return networkData.wstEthBalance;
         case Token.unstETH:
-          return networkData.wstEthBalance;
+          return networkData.unstEthBalance;
       }
     },
-    [networkData.stEthBalance, networkData.wstEthBalance],
+    [
+      networkData.stEthBalance,
+      networkData.wstEthBalance,
+      networkData.unstEthBalance,
+    ],
   );
 
   return (
@@ -34,12 +38,7 @@ export const TokenSelect = () => {
         {VetoSupportedTokens.map((token) => (
           <Tab key={token} isActive={selectedToken === token}>
             <label>
-              <input
-                type="radio"
-                {...register('token')}
-                value={token}
-                disabled={token === Token.unstETH}
-              />
+              <input type="radio" {...register('token')} value={token} />
               <TokenBalance
                 token={token}
                 variant="compact"

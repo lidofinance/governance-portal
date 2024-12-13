@@ -24,7 +24,6 @@ export const SubmitButtonSupport = () => {
       disabled={isAssetManagementLocked}
       errorField="amount"
       data-testid="supportBtn"
-      title="Zhopa"
     >
       {buttonLabel}
     </SubmitButtonHookForm>

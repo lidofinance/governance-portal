@@ -12,6 +12,7 @@ import { ReactComponent as TurnArrow } from 'assets/icons/turn-arrow-icon.svg';
 import { ReactComponent as LockIcon } from 'assets/lock-icon.svg';
 import { ReactComponent as AragonLogo } from 'assets/icons/aragon-logo.svg';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrow-right.svg';
+import { ReactComponent as ArrowDown } from 'assets/arrow-down-icon.svg';
 
 export {
   RevokeIcon,
@@ -28,4 +29,5 @@ export {
   LockIcon,
   AragonLogo,
   ArrowRight,
+  ArrowDown,
 };

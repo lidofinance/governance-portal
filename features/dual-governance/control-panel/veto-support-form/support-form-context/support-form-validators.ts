@@ -27,14 +27,27 @@ export const SupportFormValidationResolver: Resolver<
     invariant(validationContext, 'validation context must be present');
     const { asyncContext } = validationContext;
 
-    validateEtherAmount('amount', amount, token);
-
     const awaitedContext = await awaitWithTimeout(
       asyncContext,
       VALIDATION_CONTEXT_TIMEOUT,
     );
 
-    if (awaitedContext.isWalletActive) {
+    if (!awaitedContext.isWalletActive) {
+      return {
+        values,
+        errors: { token: 'wallet is not connected' },
+      };
+    }
+
+    if (token === Token.unstETH) {
+      // TODO: improve error handling
+      return {
+        values,
+        errors: {},
+      };
+    } else {
+      validateEtherAmount('amount', amount, token);
+
       const balance =
         token === Token.stETH
           ? awaitedContext.stEthBalance
@@ -45,11 +58,6 @@ export const SupportFormValidationResolver: Resolver<
         balance,
         messageMaxAmount(balance, token),
       );
-    } else {
-      return {
-        values,
-        errors: { token: 'wallet is not connected' },
-      };
     }
 
     return {

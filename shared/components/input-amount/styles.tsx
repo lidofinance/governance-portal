@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Input } from '@lidofinance/lido-ui';
 
 export const InputStyled = styled(Input)`
@@ -25,18 +25,5 @@ export const InputStyled = styled(Input)`
         color: var(--primary-color-black-50);
       }
     }
-  }
-`;
-
-export const InputStyled1 = styled(Input)`
-  & > span {
-    ${({ theme, disabled }) =>
-      theme.name === 'dark'
-        ? css`
-            background: ${disabled && '#27272E8F'};
-          `
-        : css`
-            background: ${disabled && '#EFF2F68F'};
-          `}
   }
 `;

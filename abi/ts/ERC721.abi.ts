@@ -1,0 +1,20 @@
+export const erc721Abi = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_operator',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: '_approved',
+        type: 'bool',
+      },
+    ],
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const;

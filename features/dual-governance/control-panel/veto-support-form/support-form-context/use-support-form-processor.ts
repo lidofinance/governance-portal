@@ -5,7 +5,7 @@ import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { UseApproveResponse } from 'shared/blockchain/hooks/use-approve';
 import { useTxModalSupport } from './use-tx-modal-stages-support';
 import { useSupportVetoTxSend } from './use-support-veto-tx-send';
-import { Address, erc20Abi } from 'viem';
+import { Address } from 'viem';
 import { SupportFormInputType } from './support-form-context';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
@@ -14,6 +14,8 @@ import { getTokenAddress } from 'shared/blockchain/get-contract-address';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { GovernanceState } from 'features/dual-governance/types';
+import { Token } from 'shared/blockchain/types';
+import { erc20Abi } from 'abi/ts';
 
 type UseWrapFormProcessorArgs = {
   approveData: UseApproveResponse;
@@ -39,9 +41,8 @@ export const useSupportFormProcessor = ({
   const { approve, needsApprove } = approveData;
 
   return useCallback(
-    async ({ amount, token }: SupportFormInputType) => {
+    async ({ amount, token, selectedNftIds }: SupportFormInputType) => {
       try {
-        invariant(amount, 'amount must be presented');
         invariant(address, 'address must be presented');
         invariant(detailedState, 'state must be loaded');
 
@@ -52,13 +53,19 @@ export const useSupportFormProcessor = ({
           throw new Error('Cannot support veto signalling in RageQuit state');
         }
 
+        let approvalAmount = amount;
+        if (token === Token.unstETH) {
+          approvalAmount = BigInt(Object.keys(selectedNftIds).length);
+        }
+        invariant(approvalAmount, 'amount must be presented');
+
         if (needsApprove) {
-          txModalStages.signApproval(amount, token);
+          txModalStages.signApproval(approvalAmount, token);
 
           await approve({
             onTxSent: (txHash) => {
               if (!isMultisig) {
-                txModalStages.pendingApproval(amount, token, txHash);
+                txModalStages.pendingApproval(approvalAmount, token, txHash);
               }
             },
           });
@@ -68,16 +75,20 @@ export const useSupportFormProcessor = ({
           }
         }
 
-        txModalStages.sign(amount, token);
+        txModalStages.sign(approvalAmount, token);
 
-        const txHash = await processWrapTx({ amount, token });
+        const txHash = await processWrapTx({
+          amount,
+          token,
+          selectedNftIds,
+        });
 
         if (isMultisig) {
           txModalStages.successMultisig();
           return true;
         }
 
-        txModalStages.pending(amount, token, txHash);
+        txModalStages.pending(approvalAmount, token, txHash);
 
         await waitForTx(txHash);
 

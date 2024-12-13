@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant';
 import { useCallback } from 'react';
 
-import type { Address, TransactionReceipt } from 'viem';
+import { type Address, type TransactionReceipt } from 'viem';
 import { useAllowance } from './use-allowance';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { Token } from '../types';
 import { useWriteContract } from './use-write-contract';
 import { getTokenAddress } from '../get-contract-address';
-import { erc20Abi } from 'abi/ts';
+import { erc20Abi, erc721Abi } from 'abi/ts';
 import { useIsContract } from './use-is-contract';
 
 type ApproveOptions =
@@ -31,11 +31,13 @@ export const useApprove = (
   token: Token,
   spender: Address | undefined,
 ): UseApproveResponse => {
+  const isERC721 = token === Token.unstETH;
+
   const account = useAccount();
   const { chainId } = useLidoSDK();
   const waitForTx = useTxConfirmation();
   const { data: isMultisig } = useIsContract();
-  const writeTokenContract = useWriteContract(erc20Abi);
+  const writeTokenContract = useWriteContract(isERC721 ? erc721Abi : erc20Abi);
 
   const allowanceQuery = useAllowance({
     token,
@@ -59,8 +61,8 @@ export const useApprove = (
 
       const approveTxHash = await writeTokenContract({
         address: tokenAddress,
-        functionName: 'approve',
-        args: [spender, amount],
+        functionName: isERC721 ? 'setApprovalForAll' : 'approve',
+        args: isERC721 ? [spender, true] : [spender, amount],
       });
       await onTxSent?.(approveTxHash);
 
@@ -80,6 +82,7 @@ export const useApprove = (
       chainId,
       isMultisig,
       allowanceQuery,
+      isERC721,
       waitForTx,
       writeTokenContract,
     ],

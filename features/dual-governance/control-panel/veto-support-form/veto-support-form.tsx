@@ -1,7 +1,7 @@
 import { FormController } from 'shared/hook-form/form-controller';
 import { SupportFormProvider } from './support-form-context';
 import { TokenSelect } from './token-select';
-import { SupportAmountInput } from './support-amount-input';
+import { VetoSupportFormControls } from './veto-support-form-controls';
 import { SupportFormAdditionalInfo } from './support-form-additional-info';
 import { SubmitButtonSupport } from './submit-button-support';
 
@@ -10,7 +10,7 @@ export const VetoSupportForm = () => {
     <SupportFormProvider>
       <FormController>
         <TokenSelect />
-        <SupportAmountInput />
+        <VetoSupportFormControls />
         <SupportFormAdditionalInfo />
         {/* {activeTab === 1 && (
           <>

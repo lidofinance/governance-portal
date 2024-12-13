@@ -1,6 +1,5 @@
-import { FC } from 'react';
-import styled, { css } from 'styled-components';
-import { InlineLoader, Select, SelectProps } from '@lidofinance/lido-ui';
+import styled from 'styled-components';
+import { InlineLoader } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
 export const ControlPanelWrapper = styled.div`
@@ -25,48 +24,6 @@ export const ControlPanelHeader = styled.div`
     gap: 10px;
   }
 `;
-
-const customInputStyles = css`
-  margin-top: -1px;
-  margin-bottom: 20px;
-  width: 100%;
-  span {
-    padding: 18px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-
-    input {
-      font-size: 18px;
-    }
-
-    button {
-      background-color: #0085ff1a;
-      color: #0085ff;
-      opacity: 1;
-      padding: 12px 2px;
-      font-size: 18px;
-      border-radius: 30px;
-      font-weight: normal;
-      min-width: 0;
-    }
-  }
-`;
-
-type StyledSelectProps = Omit<SelectProps, 'value' | 'onChange'> & {
-  $value: string;
-  $onChange: (val: string) => void;
-};
-export const StyledSelect = styled(Select).attrs<StyledSelectProps>(
-  (props) => ({
-    value: props.$value,
-    onChange: props.$onChange,
-  }),
-)`
-  width: 50%;
-  ${customInputStyles}
-` as FC<StyledSelectProps>;
 
 export const PreviewProposalList = styled.div`
   display: flex;

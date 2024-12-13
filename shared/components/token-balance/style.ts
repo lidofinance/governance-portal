@@ -3,6 +3,8 @@ import { Text } from '../text';
 
 export const TokenLabel = styled(Text)<{ $compact?: boolean }>`
   font-weight: 600;
+  display: inline-flex;
+  gap: 10px;
 
   ${({ $compact }) =>
     $compact &&

@@ -18,7 +18,7 @@ export const TxStageSignOperationAmount = ({
   isPending,
   txHash,
 }: TxStageSignOperationAmountProps) => {
-  const amountEl = <TxAmount amount={amount} symbol={token} />;
+  const amountEl = <TxAmount amount={amount} token={token} />;
 
   const Component = isPending ? TxStagePending : TxStageSign;
 

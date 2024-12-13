@@ -15,11 +15,10 @@ import { formatEth } from 'shared/blockchain/utils';
 
 export const RageQuitProgress = () => {
   const { chainId } = useLidoSDK();
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { rageQuitAddress } = useDualGovernanceContext();
   const readEscrowContract = useReadContractGetter(escrowAbi);
 
-  const isEnabled =
-    !!vetoSignallingAddress && vetoSignallingAddress !== zeroAddress;
+  const isEnabled = !!rageQuitAddress && rageQuitAddress !== zeroAddress;
 
   const { data: rageQuitData, isLoading } = useQuery({
     queryKey: ['rage-quit-escrow-data', chainId],
@@ -28,19 +27,20 @@ export const RageQuitProgress = () => {
     queryFn: async () => {
       if (!isEnabled) return;
 
-      const lockedAssets = await readEscrowContract(vetoSignallingAddress)(
-        'getLockedAssetsTotals',
+      const lockedAssets = await readEscrowContract(rageQuitAddress)(
+        'getSignallingEscrowDetails',
       );
 
       const {
-        stETHClaimedETH,
-        stETHLockedShares,
-        unstETHFinalizedETH,
-        unstETHUnfinalizedShares,
+        totalStETHLockedShares,
+        totalStETHClaimedETH,
+        totalUnstETHUnfinalizedShares,
+        totalUnstETHFinalizedETH,
       } = lockedAssets;
 
-      const claimedAmount = stETHClaimedETH + unstETHFinalizedETH;
-      const totalAmount = stETHLockedShares + unstETHUnfinalizedShares;
+      const claimedAmount = totalStETHClaimedETH + totalUnstETHFinalizedETH;
+      const totalAmount =
+        totalStETHLockedShares + totalUnstETHUnfinalizedShares;
 
       if (totalAmount === 0n) {
         return {

@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
-import { Checkbox, Text } from '@lidofinance/lido-ui';
+import { Button, Checkbox, Input, PopupMenu } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
 
 type StatusBadgeProps = {
   $variant: 'success' | 'default';
@@ -20,17 +21,23 @@ type ItemProps = {
   $checked?: boolean;
 };
 
-export const NftItem = styled.div<ItemProps>`
+export const NftItemWrapper = styled.div<ItemProps>`
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 16px;
-  margin: 0 -16px;
+  cursor: pointer;
+
   ${({ $checked }) =>
     $checked &&
     css`
       background-color: #0085ff14;
     `}
+
+  &: hover {
+    background-color: rgba(0, 133, 255, 0.1);
+  }
+  transition: background-color 0.2s;
   &:first-child {
     border-top-left-radius: 28px;
     border-top-right-radius: 28px;
@@ -44,12 +51,15 @@ export const NftItem = styled.div<ItemProps>`
   }
 `;
 
-export const Amount = styled(Text)`
+export const Amount = styled(Text).attrs({
+  color: 'secondary',
+  size: 14,
+})`
   margin-left: auto;
   margin-right: 8px;
 `;
 
-export const StyledCheckbox = styled(Checkbox)`
+export const CheckboxStyled = styled(Checkbox)`
   // ignore flex gap
   margin-right: calc(20px - 8px);
 `;
@@ -61,6 +71,7 @@ export const ActionsWrapper = styled.section`
   gap: 10px;
 `;
 
+// TODO: remove if not used
 export const StatusBadge = styled.span<StatusBadgeProps>`
   padding: 10px 30px;
   border-radius: 20px;
@@ -70,14 +81,51 @@ export const StatusBadge = styled.span<StatusBadgeProps>`
     $variant === 'success' ? '#29C38C' : '#131217B8'};
 `;
 
-export const SelectAllWrapper = styled.div`
+export const NftMultiselectInput = styled(Input)`
+  width: 100%;
+  *,
+  & > * {
+    cursor: pointer;
+  }
+  & > span {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 30px 14px 30px 20px;
+
+    & > div {
+      & > input {
+        font-size: 17px;
+      }
+      & > span {
+        font-size: 17px;
+        color: var(--primary-color-black-50);
+      }
+    }
+  }
+`;
+
+export const PopupMenuStyled = styled(PopupMenu)`
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+`;
+
+export const PopupHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 16px;
+  padding: 8px 8px 8px 16px;
 `;
 
-export const SelectAllButton = styled(Text)`
-  cursor: pointer;
-  color: var(--lido-color-primary);
+export const PopupSelectAllButton = styled(Button).attrs({
+  variant: 'text',
+  size: 'xs',
+})`
+  color: #0085ff;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 26px;
+  border-radius: 30px;
 `;
