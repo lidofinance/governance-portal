@@ -53,7 +53,7 @@ export const useProposal = ({
         const logs = (await publicClient.getLogs({
           address: dualGovernance.address,
           event: eventAbi,
-          fromBlock: 0n,
+          fromBlock: 2947664n, // TODO: Use reverse search
           toBlock: 'latest',
         })) as unknown as ProposalLog[];
 
