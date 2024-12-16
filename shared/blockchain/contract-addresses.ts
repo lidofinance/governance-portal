@@ -236,7 +236,7 @@ export const Voting: ChainAddressMap = {
 };
 
 export const DualGovernance: ChainAddressMap = {
-  [CHAINS.Holesky]: '0x6B1D08aAe48615ae42C1e8546c7A30483c221a13',
+  [CHAINS.Holesky]: '0xa5dE3346879DC7f6e3e82E1D9dee8532332290A8',
 };
 
 export const AdminExecutor: ChainAddressMap = {
@@ -244,7 +244,7 @@ export const AdminExecutor: ChainAddressMap = {
 };
 
 export const EmergencyProtectedTimelock: ChainAddressMap = {
-  [CHAINS.Holesky]: '0x933e198841cc763dc87CCBc4Bf53b34745D8E062',
+  [CHAINS.Holesky]: '0x0f43025F4599E0d8D87b1841aC213a52fc27aE44',
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
