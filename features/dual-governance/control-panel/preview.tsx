@@ -60,9 +60,11 @@ const ActiveProposal = ({
 
   const targetTime = timelockData?.targetTime;
   let dateString;
+  let hasPassed = false;
 
   if (targetTime) {
     const dateObj = getDateFromTimestamp({ timestamp: targetTime });
+    hasPassed = dateObj.hasPassed;
 
     dateString = (
       <span>
@@ -79,7 +81,7 @@ const ActiveProposal = ({
           {`Proposal #${proposal.id} `}
         </Link>
         &mdash;
-        {dateString && (
+        {dateString && !hasPassed && (
           <span>
             <span> Veto possible until </span>
             {dateString}
@@ -106,7 +108,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
         <>
-          {votesProposalsList.length && (
+          {!!votesProposalsList.length && (
             <PreviewProposalList>
               {votesProposalsList
                 .map((proposal, index) => (

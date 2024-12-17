@@ -9,6 +9,8 @@ import {
   useEscrowAddresses,
 } from 'features/dual-governance/hooks';
 import { Address } from 'viem';
+import { useActivateNextStateEventWatcher } from '../features/dual-governance/hooks/use-dual-governance-state';
+import { useLidoSDK } from './lido-sdk';
 
 type WithUndefined<T> = {
   [K in keyof T]?: T[K];
@@ -42,6 +44,7 @@ export const useDualGovernanceContext = () => {
 export const DualGovernanceStateProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
+  const { chainId } = useLidoSDK();
   const {
     vetoSignallingAddress,
     rageQuitAddress,
@@ -56,6 +59,12 @@ export const DualGovernanceStateProvider: React.FC<PropsWithChildren> = ({
     refetch: refetchDualGovernanceState,
   } = useDualGovernanceState({ vetoSignallingAddress });
   console.log(addressDataError || dualGovernanceStateError);
+
+  useActivateNextStateEventWatcher({
+    chainId,
+    refetchFn: refetchDualGovernanceState,
+  });
+
   const value: DualGovernanceContextValue = useMemo(
     () => ({
       ...dualGovernanceState,

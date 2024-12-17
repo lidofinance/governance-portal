@@ -17,6 +17,7 @@ export const HeaderActionsWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 1;
+  gap: 20px;
 `;
 
 export const LogoTextStyle = styled(Text).attrs({

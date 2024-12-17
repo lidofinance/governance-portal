@@ -7,6 +7,7 @@ import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
 import { HeaderActionsWrapper, IPFSInfoBoxOnlyDesktopWrapper } from './style';
 import { HeaderVaultInfo } from './header-vault-info';
 import { ConnectWalletButton, WalletButton } from 'shared/wallet';
+import { TestDgState } from '../../test-dg-state/test-dg-state';
 
 export const HeaderActions = () => {
   const { isConnected } = useAccount();
@@ -19,6 +20,7 @@ export const HeaderActions = () => {
     <NoSSRWrapper>
       <HeaderActionsWrapper>
         <HeaderVaultInfo />
+        <TestDgState />
         {isConnected ? <WalletButton /> : <ConnectWalletButton />}
         {/* <HeaderSettingsButton /> */}
         {/*{!queryTheme && (*/}
