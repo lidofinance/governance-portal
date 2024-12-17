@@ -1,4 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
+} from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
 
@@ -14,12 +18,36 @@ import {
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
 import { Address } from 'viem';
+import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
+import { CHAINS } from '@lido-sdk/constants';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
 
 type Args = {
   vetoSignallingAddress: Address | undefined;
+};
+
+type UseActivateNextStateEventWatcherConfig = {
+  chainId: CHAINS;
+  refetchFn: (
+    options?: RefetchOptions | undefined,
+  ) => Promise<QueryObserverResult<DualGovernanceState | undefined, Error>>;
+};
+
+export const useActivateNextStateEventWatcher = ({
+  chainId,
+  refetchFn,
+}: UseActivateNextStateEventWatcherConfig) => {
+  useWatchContractEvent({
+    address: DualGovernance.chainAddressMap[chainId] as Address,
+    abi: DualGovernance.abi,
+    eventName: 'DualGovernanceStateChanged',
+    onLogs(logs) {
+      console.log('Dual governance state changed', logs);
+      refetchFn();
+    },
+  });
 };
 
 // Normal: DG.Normal && < 30%
