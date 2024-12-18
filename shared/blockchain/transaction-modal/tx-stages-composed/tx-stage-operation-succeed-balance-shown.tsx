@@ -37,7 +37,8 @@ export const TxStageOperationSucceedBalanceShown = ({
 }: Props) => {
   const balanceEl = balance !== undefined && (
     <Text>
-      {formatEthFull(balance)} {token}
+      {token === Token.unstETH ? balance.toString() : formatEthFull(balance)}{' '}
+      {token}
     </Text>
   );
 
