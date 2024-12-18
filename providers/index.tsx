@@ -29,10 +29,8 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
             <IPFSInfoBoxStatusesProvider>
               <InpageNavigationProvider>
                 <DualGovernanceStateProvider>
-                  <DualGovernanceProposalsProvider>
-                    <GlobalStyleOverwrite />
-                    <ModalProvider>{children}</ModalProvider>
-                  </DualGovernanceProposalsProvider>
+                  <GlobalStyleOverwrite />
+                  <ModalProvider>{children}</ModalProvider>
                 </DualGovernanceStateProvider>
               </InpageNavigationProvider>
             </IPFSInfoBoxStatusesProvider>

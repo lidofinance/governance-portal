@@ -1,6 +1,7 @@
 import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { findAllEvents } from 'utils';
 import {
   DualGovernance,
   EmergencyProtectedTimelock,
@@ -8,12 +9,12 @@ import {
 import { useLidoSDK } from 'providers/lido-sdk';
 
 import { isAragonProposal } from 'utils/proposals/isAragonProposal';
-import { AbiEvent } from 'viem';
 import {
   ProposalCombinedData,
   ProposalLog,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
+import { findAbiItem } from 'utils/find-abi-item';
 
 type UseProposalConfig = {
   id: bigint | number | null | undefined;
@@ -30,8 +31,6 @@ export const useProposal = ({
     EmergencyProtectedTimelock,
   );
 
-  const dualGovernance = useReadContract(DualGovernance);
-
   return useQuery<ProposalCombinedData, Error>({
     queryKey: ['getProposal', id],
     queryFn: async (): Promise<ProposalCombinedData> => {
@@ -42,24 +41,24 @@ export const useProposal = ({
       const proposalId = BigInt(id);
 
       try {
-        const eventAbi = DualGovernance.abi.find(
-          (x) => x.type === 'event' && x.name === 'ProposalSubmitted',
-        ) as AbiEvent | undefined;
+        const eventAbi = findAbiItem({
+          abi: DualGovernance.abi,
+          name: 'ProposalSubmitted',
+          type: 'event',
+        });
 
         if (!eventAbi) {
           throw new Error('Event ProposalSubmitted not found in ABI');
         }
 
-        const logs = (await publicClient.getLogs({
-          address: dualGovernance.address,
-          event: eventAbi,
-          fromBlock: 2947664n, // TODO: Use reverse search
-          toBlock: 'latest',
-        })) as unknown as ProposalLog[];
+        const proposalEventLogs = await findAllEvents(publicClient, {
+          address: emergencyProtectedTimelock.address,
+          abi: EmergencyProtectedTimelock.abi,
+          eventName: 'ProposalSubmitted',
+          shouldStop: (log: ProposalLog) => Number(log.args.id) === Number(id),
+        });
 
-        const proposalLog = logs.find(
-          (log: any) => BigInt(log.args.proposalId) === proposalId,
-        );
+        const proposalLog = proposalEventLogs[0];
 
         if (!proposalLog) {
           throw new Error(`Proposal with ID ${id} not found`);

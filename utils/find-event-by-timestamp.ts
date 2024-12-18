@@ -1,4 +1,5 @@
-import { PublicClient, Address, Abi, Log, AbiEvent } from 'viem';
+import { PublicClient, Address, Abi, Log } from 'viem';
+import { findAbiItem } from './find-abi-item';
 
 interface EventsConfig {
   address: Address;
@@ -29,9 +30,7 @@ export const findEventByTimestamp = async (
     }
   }
 
-  const eventAbi = abi.find(
-    (x) => x.type === 'event' && x.name === eventName,
-  ) as AbiEvent | undefined;
+  const eventAbi = findAbiItem({ abi, name: eventName, type: 'event' });
 
   if (!eventAbi) {
     throw new Error(`Event ${eventName} not found in ABI`);

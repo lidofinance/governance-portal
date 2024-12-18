@@ -103,6 +103,8 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
 
   const proposal = existingProposal ?? proposalData.data ?? null;
 
+  console.log(proposal, existingProposal, 'proposal', 'existingProposal');
+
   const proposalsData = useProposals({
     currentPage,
     limit: PROPOSALS_LIMIT,

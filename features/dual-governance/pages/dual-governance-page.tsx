@@ -7,6 +7,7 @@ import { DualGovernanceControlPanel } from '../control-panel';
 import { ProposalsSection } from '../proposals/proposals-section';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { VisibleGovernanceState } from '../types';
+import { DualGovernanceProposalsProvider } from '../../../providers/dual-governance-proposals';
 
 const DashboardWrapper = styled(Block)`
   border: 1px solid var(--custom-border);
@@ -22,17 +23,19 @@ export const DualGovernancePage = () => {
 
   return (
     <Layout containerSize="full">
-      <Head>
-        <title>Dual Governance | Lido</title>
-      </Head>
-      {visibleState !== VisibleGovernanceState.Loading && (
-        <BackgroundGradient state={visibleState} width={1700} height={800} />
-      )}
-      <DashboardWrapper>
-        <DualGovernanceSummary />
-        <DualGovernanceControlPanel />
-      </DashboardWrapper>
-      <ProposalsSection />
+      <DualGovernanceProposalsProvider>
+        <Head>
+          <title>Dual Governance | Lido</title>
+        </Head>
+        {visibleState !== VisibleGovernanceState.Loading && (
+          <BackgroundGradient state={visibleState} width={1700} height={800} />
+        )}
+        <DashboardWrapper>
+          <DualGovernanceSummary />
+          <DualGovernanceControlPanel />
+        </DashboardWrapper>
+        <ProposalsSection />
+      </DualGovernanceProposalsProvider>
     </Layout>
   );
 };

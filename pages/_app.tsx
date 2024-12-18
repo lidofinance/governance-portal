@@ -45,7 +45,6 @@ const AppWrapper = (
 ): JSX.Element => {
   return (
     <Providers prefetchedManifest={props.pageProps?.___prefetch_manifest___}>
-      {/* see https://nextjs.org/docs/messages/no-document-viewport-meta */}
       <Head>
         <meta
           name="viewport"
@@ -60,6 +59,7 @@ const AppWrapper = (
       </NoSsrWrapper>
 
       <SecurityStatusBanner />
+      {/* see https://nextjs.org/docs/messages/no-document-viewport-meta */}
     </Providers>
   );
 };

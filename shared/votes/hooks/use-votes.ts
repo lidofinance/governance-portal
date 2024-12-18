@@ -6,7 +6,7 @@ import { getVoteStatus } from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { usePublicClient } from 'wagmi';
 import { VoteData, VoteStatus } from 'shared/votes/types';
-import { Address } from 'viem';
+import { findAbiItem } from 'utils/find-abi-item';
 
 type Props = {
   limit: number;
@@ -76,9 +76,12 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
               }
 
               const vote = mapPayload(getVoteAbi, 'getVote', rawVote);
-              const startVoteEventAbi = Voting.abi.find(
-                (item) => item.type === 'event' && item.name === 'StartVote',
-              );
+
+              const startVoteEventAbi = findAbiItem({
+                abi: Voting.abi,
+                name: 'StartVote',
+                type: 'event',
+              });
 
               let startEvent;
 
