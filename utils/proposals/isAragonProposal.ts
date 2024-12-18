@@ -8,6 +8,7 @@ import {
 import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lido-sdk/constants';
 import { ProposalLog } from 'features/dual-governance/proposals/types';
+import { findAbiItem } from '../find-abi-item';
 
 type Props = {
   client: PublicClient;
@@ -37,9 +38,15 @@ export const isAragonProposal = async ({
     stringToBytes('ExecuteVote(uint256)'),
   );
 
-  const executeVoteEventAbi = Voting.abi.find((x: any) => {
-    return x.type === 'event' && x.name === 'ExecuteVote';
-  }) as AbiEvent;
+  const executeVoteEventAbi = findAbiItem({
+    abi: Voting.abi,
+    name: 'ExecuteVote',
+    type: 'event',
+  });
+
+  if (!executeVoteEventAbi) {
+    return false;
+  }
 
   for (const log of aragonEvents) {
     if (log.topics[0] === executeVoteEventSignature) {

@@ -80,9 +80,9 @@ const ActiveProposal = ({
         <Link href={`${PROPOSALS_PATH}/${proposal.id}`}>
           {`Proposal #${proposal.id} `}
         </Link>
-        &mdash;
         {dateString && !hasPassed && (
           <span>
+            &mdash;
             <span> Veto possible until </span>
             {dateString}
           </span>
