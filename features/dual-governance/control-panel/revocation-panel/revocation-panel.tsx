@@ -20,6 +20,7 @@ import { Text } from 'shared/components/text';
 import { Button } from 'shared/components/button';
 import { useRevocationPanelProcessor } from './use-revocation-panel-processor';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useRevokeUnstEthModal } from 'features/dual-governance/modals/modal-manager';
 
 export const RevocationPanel = () => {
   /**
@@ -27,6 +28,7 @@ export const RevocationPanel = () => {
    */
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const { openModal } = useRevokeUnstEthModal();
 
   /**
    *  Refs
@@ -108,12 +110,12 @@ export const RevocationPanel = () => {
         onRevoke={handleRevokeTokens}
       />
       {Boolean(escrowBalances.vetoSignallingBalance.totalLockedShares) && (
-        <div>
+        <>
           <FlexWrapper $justifyContent="space-between">
             <Text>Tokens in VetoSignalling contract</Text>
-            <ContractLink onClick={() => console.log('claim nft')}>
+            {/* <ContractLink onClick={() => console.log('claim nft')}>
               Claim custom NFT
-            </ContractLink>
+            </ContractLink> */}
           </FlexWrapper>
           <RevocableTokensList>
             {Boolean(
@@ -143,7 +145,9 @@ export const RevocationPanel = () => {
                   }
                   addOnText={`${escrowBalances.vetoSignallingBalance.unstETHIdsCount} NFT`}
                 />
-                <RevokePopupButton onClick={() => setIsPopupOpen(true)}>
+                <RevokePopupButton
+                  onClick={() => openModal({ unstEthIds: [] })}
+                >
                   <Text size={14} color="secondary">
                     Revoke
                   </Text>
@@ -152,11 +156,34 @@ export const RevocationPanel = () => {
               </RevocableTokenItem>
             )}
           </RevocableTokensList>
-          <Button fullwidth>Revoke all</Button>
-        </div>
+          {/* <Button fullwidth>Revoke all</Button> */}
+        </>
       )}
       {Boolean(escrowBalances.rageQuitBalance.totalLockedShares) && (
-        <Text>Tokens in RageQuit contract</Text>
+        <>
+          <FlexWrapper $justifyContent="space-between">
+            <Text>Tokens in RageQuit contract</Text>
+          </FlexWrapper>
+          <RevocableTokensList>
+            {Boolean(escrowBalances.rageQuitBalance.stETHLockedShares) && (
+              <RevocableTokenItem ref={popupAnchorRef}>
+                <TokenBalance
+                  token={Token.stETH}
+                  balance={escrowBalances.rageQuitBalance.stETHLockedShares}
+                />
+              </RevocableTokenItem>
+            )}
+            {Boolean(escrowBalances.rageQuitBalance.unstETHIdsCount) && (
+              <RevocableTokenItem>
+                <TokenBalance
+                  token={Token.unstETH}
+                  balance={escrowBalances.rageQuitBalance.unstETHLockedShares}
+                  addOnText={`${escrowBalances.rageQuitBalance.unstETHIdsCount} NFT`}
+                />
+              </RevocableTokenItem>
+            )}
+          </RevocableTokensList>
+        </>
       )}
     </div>
   );

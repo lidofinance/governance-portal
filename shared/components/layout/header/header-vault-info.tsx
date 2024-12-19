@@ -53,7 +53,6 @@ export const HeaderVaultInfo = () => {
             <Text size={28} weight={500}>
               Your tokens in DG
             </Text>
-            <Button size="sm">Manage</Button>
           </VaultInfoPopupTitle>
           {data?.vetoSignallingBalance.totalLockedShares ? (
             <>

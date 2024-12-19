@@ -108,10 +108,10 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
         <>
-          {!!votesProposalsList.length && (
+          {votesProposalsList.length > 0 && (
             <PreviewProposalList>
               {votesProposalsList
-                .map((proposal, index) => (
+                .map((proposal) => (
                   <ActiveProposal key={proposal.id} proposal={proposal} />
                 ))
                 .slice(0, PROPOSALS_TO_SHOW)}
@@ -120,7 +120,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
               )}
             </PreviewProposalList>
           )}
-          {!votesProposalsList.length && (
+          {votesProposalsList.length === 0 && (
             <>
               <br />
               <Text>No active proposals</Text>
