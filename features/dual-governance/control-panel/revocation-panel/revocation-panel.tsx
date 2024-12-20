@@ -4,7 +4,6 @@ import { Loader } from '@lidofinance/lido-ui';
 import { RevokeIcon } from 'shared/components/icons';
 
 import {
-  ContractLink,
   NoTokensMessage,
   RevocableTokenItem,
   RevocableTokensList,
@@ -17,10 +16,10 @@ import { RevokeStEthPopup } from './revoke-steth-popup';
 import { RevocableToken } from './types';
 import { TokenBalance } from 'shared/components/token-balance';
 import { Text } from 'shared/components/text';
-import { Button } from 'shared/components/button';
 import { useRevocationPanelProcessor } from './use-revocation-panel-processor';
 import { useDualGovernanceContext } from 'providers/dual-governance';
-import { useRevokeUnstEthModal } from 'features/dual-governance/modals/modal-manager';
+import { useRevokeUnstethModal } from 'features/dual-governance/modals/modal-manager';
+import { useRevokeUnstethAction } from 'features/dual-governance/write-actions/revoke-unsteth';
 
 export const RevocationPanel = () => {
   /**
@@ -28,7 +27,7 @@ export const RevocationPanel = () => {
    */
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const { openModal } = useRevokeUnstEthModal();
+  const { openModal } = useRevokeUnstethModal();
 
   /**
    *  Refs
@@ -58,6 +57,10 @@ export const RevocationPanel = () => {
       refetchEscrowBalances(),
     ]);
   }, [refetchDualGovernanceState, refetchEscrowBalances]);
+
+  const revokeUnsteth = useRevokeUnstethAction({
+    onConfirm: updateDualGovernanceState,
+  });
 
   const revokeStEthOrWstEth = useRevocationPanelProcessor({
     onConfirm: updateDualGovernanceState,
@@ -146,7 +149,11 @@ export const RevocationPanel = () => {
                   addOnText={`${escrowBalances.vetoSignallingBalance.unstETHIdsCount} NFT`}
                 />
                 <RevokePopupButton
-                  onClick={() => openModal({ unstEthIds: [] })}
+                  onClick={() =>
+                    openModal({
+                      onRevoke: revokeUnsteth,
+                    })
+                  }
                 >
                   <Text size={14} color="secondary">
                     Revoke
