@@ -39,12 +39,12 @@ export const NftItemWrapper = styled.div<ItemProps>`
   }
   transition: background-color 0.2s;
   &:first-child {
-    border-top-left-radius: 28px;
-    border-top-right-radius: 28px;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
   }
   &:last-child {
-    border-bottom-left-radius: 28px;
-    border-bottom-right-radius: 28px;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
   }
   &:not(:last-child) {
     border-bottom: 1px solid #0000001a;
