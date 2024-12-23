@@ -2,12 +2,12 @@ import { Text } from '@lidofinance/lido-ui';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 import { useProposalTimelock } from 'features/dual-governance/hooks/use-proposal-timelock';
 import { useCountdown } from 'shared/hooks/use-countdown';
-import { TimeLockWrapper } from 'features/dual-governance/proposals/shared-components/proposal-timelock/style';
 
 type Props = {
   proposalStatus: ProposalStatus;
   submittedAt: number;
   scheduledAt: number;
+  hideOnCountdownFinish?: boolean;
 };
 
 type TimelockInfoProps = {
@@ -19,7 +19,7 @@ type TimelockInfoProps = {
 // TODO: add link
 const emergencyCommitteeLinkText = (
   <span>
-    Only <a href="#">Emergency Committee</a> can stop the execution
+    Only <b>Emergency Committee</b> can stop the execution
   </span>
 );
 
@@ -56,6 +56,7 @@ export const ProposalTimelock = ({
   proposalStatus,
   submittedAt,
   scheduledAt,
+  hideOnCountdownFinish,
 }: Props) => {
   const proposalTimelock = useProposalTimelock({
     proposalStatus,
@@ -71,6 +72,10 @@ export const ProposalTimelock = ({
     return null;
   }
 
+  if (hideOnCountdownFinish && isCountdownFinished) {
+    return null;
+  }
+
   const timelockInfo = getTimelockInfo({
     proposalStatus,
     timeFormatted,
@@ -81,7 +86,7 @@ export const ProposalTimelock = ({
 
   return (
     <>
-      <TimeLockWrapper>{timelockInfo}</TimeLockWrapper>
+      <span>{timelockInfo}</span>
     </>
   );
 };

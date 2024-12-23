@@ -1,0 +1,1 @@
+export { useScheduleProposalAction } from './action';

@@ -11,9 +11,11 @@ export const VetoSignallingAdditionalSupportInfo = () => {
   const vetoSignallingEndDate = useMemo(() => {
     if (!detailedState) return;
 
-    const { vetoSignallingDuration } = detailedState;
+    const { vetoSignallingDuration, vetoSignallingActivatedAt } = detailedState;
     const currentTimestamp = Math.floor(Date.now() / 1000);
-    const date = fromUnixTime(currentTimestamp + vetoSignallingDuration);
+    const date = fromUnixTime(
+      vetoSignallingActivatedAt + vetoSignallingDuration,
+    );
 
     return {
       date: format(date, 'MMM d, h:mm a'),

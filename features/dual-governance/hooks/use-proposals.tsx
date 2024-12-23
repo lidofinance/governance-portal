@@ -1,7 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { usePublicClient } from 'wagmi';
+import { usePublicClient, useWatchContractEvent } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
+import {
+  DualGovernance,
+  EmergencyProtectedTimelock,
+} from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { isAragonProposal } from 'utils/proposals/isAragonProposal';
 import { findAllEvents } from 'utils';
@@ -9,9 +12,12 @@ import { findAllEvents } from 'utils';
 import {
   ProposalCombinedData,
   ProposalDetails,
+  ProposalDualGovernanceLog,
   ProposalLog,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
+import { Address } from 'viem';
+import { UseEventWatcherConfig } from 'features/dual-governance/types';
 
 type GetProposalResult = readonly [
   ProposalDetails,
@@ -27,6 +33,42 @@ type UseProposalsConfig = {
 export type ProposalsQueryResult = {
   proposalsCount: bigint;
   proposals: ProposalCombinedData[];
+};
+
+const WATCH_EVENT_POLLING_INTERVAL = 1000;
+
+export const useProposalExecutedEventWatcher = ({
+  chainId,
+  refetchFn,
+}: UseEventWatcherConfig<ProposalsQueryResult>) => {
+  useWatchContractEvent({
+    address: EmergencyProtectedTimelock.chainAddressMap[chainId] as Address,
+    abi: EmergencyProtectedTimelock.abi,
+    eventName: 'ProposalExecuted',
+    poll: true,
+    pollingInterval: WATCH_EVENT_POLLING_INTERVAL,
+    onLogs(logs) {
+      console.log('Proposal executed', logs);
+      refetchFn();
+    },
+  });
+};
+
+export const useProposalScheduledEventWatcher = ({
+  chainId,
+  refetchFn,
+}: UseEventWatcherConfig<ProposalsQueryResult>) => {
+  useWatchContractEvent({
+    address: EmergencyProtectedTimelock.chainAddressMap[chainId] as Address,
+    abi: EmergencyProtectedTimelock.abi,
+    eventName: 'ProposalScheduled',
+    poll: true,
+    pollingInterval: WATCH_EVENT_POLLING_INTERVAL,
+    onLogs(logs) {
+      console.log('Proposal scheduled', logs);
+      refetchFn();
+    },
+  });
 };
 
 export const useProposals = ({
@@ -77,19 +119,25 @@ export const useProposals = ({
           shouldStop: (log: ProposalLog) => Number(log.args?.id) === 1,
         });
 
+        const proposalDualGovernanceEvents = await findAllEvents(publicClient, {
+          address: DualGovernance.chainAddressMap[chainId] as Address,
+          abi: DualGovernance.abi,
+          eventName: 'ProposalSubmitted',
+          shouldStop: (log: ProposalDualGovernanceLog) =>
+            Number(log.args?.proposalId) === 1,
+        });
+
         const mapProposalsData = proposalsEvents.map(
           async (proposalEventLog) => {
             try {
-              const voteId = await isAragonProposal({
-                client: publicClient,
-                proposalLog: proposalEventLog,
-                chainId,
-              });
-
               const proposalInfo =
                 (await emergencyProtectedTimelock.readContract('getProposal', [
                   proposalEventLog.args.id,
                 ])) as GetProposalResult;
+
+              const dualGovernanceEvent = proposalDualGovernanceEvents.find(
+                (log) => log.args.proposalId === proposalEventLog.args.id,
+              );
 
               const result: ProposalCombinedData = {
                 id: Number(proposalEventLog.args.id),
@@ -98,8 +146,22 @@ export const useProposals = ({
                   ...proposalInfo[0],
                   calls: proposalInfo[1] as SubmitProposalCall[],
                 },
-                voteId: Number(voteId),
               };
+
+              const voteId = await isAragonProposal({
+                client: publicClient,
+                proposalLog: proposalEventLog,
+                chainId,
+              });
+
+              if (voteId) {
+                result.voteId = Number(voteId);
+              }
+
+              if (dualGovernanceEvent) {
+                result.proposalDualGovernanceDetails = dualGovernanceEvent.args;
+              }
+
               return result;
             } catch (e) {
               console.error(
@@ -113,13 +175,15 @@ export const useProposals = ({
 
         const proposals = await Promise.all(mapProposalsData);
 
+        const sortProposals = proposals.sort((a, b) => b.id - a.id);
+
         return { proposalsCount, proposals };
       } catch (error) {
         console.error('Failed to fetch proposals:', error);
         throw new Error('Failed to fetch proposals');
       }
     },
-    staleTime: Infinity,
+    refetchOnWindowFocus: true,
     enabled: !!publicClient && proposalsCount !== undefined,
   });
 };

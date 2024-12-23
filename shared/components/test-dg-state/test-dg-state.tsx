@@ -18,7 +18,6 @@ import {
   Wrapper,
 } from './style';
 import { useDualGovernanceState } from 'features/dual-governance/hooks';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Address } from 'viem';

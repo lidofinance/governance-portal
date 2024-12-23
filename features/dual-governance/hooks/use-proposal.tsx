@@ -11,10 +11,12 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { isAragonProposal } from 'utils/proposals/isAragonProposal';
 import {
   ProposalCombinedData,
+  ProposalDualGovernanceLog,
   ProposalLog,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 import { findAbiItem } from 'utils/find-abi-item';
+import { Address } from 'viem';
 
 type UseProposalConfig = {
   id: bigint | number | null | undefined;
@@ -51,6 +53,16 @@ export const useProposal = ({
           throw new Error('Event ProposalSubmitted not found in ABI');
         }
 
+        let proposalInfo;
+        try {
+          proposalInfo = await emergencyProtectedTimelock.readContract(
+            'getProposal',
+            [proposalId],
+          );
+        } catch (error) {
+          throw error;
+        }
+
         const proposalEventLogs = await findAllEvents(publicClient, {
           address: emergencyProtectedTimelock.address,
           abi: EmergencyProtectedTimelock.abi,
@@ -58,11 +70,32 @@ export const useProposal = ({
           shouldStop: (log: ProposalLog) => Number(log.args.id) === Number(id),
         });
 
+        const proposalDualGovernanceEventLogs = await findAllEvents(
+          publicClient,
+          {
+            address: DualGovernance.chainAddressMap[chainId] as Address,
+            abi: DualGovernance.abi,
+            eventName: 'ProposalSubmitted',
+            shouldStop: (log: ProposalDualGovernanceLog) =>
+              Number(log.args.proposalId) === Number(id),
+          },
+        );
+
+        const dualGovernanceEvent = proposalDualGovernanceEventLogs.find(
+          (log: ProposalDualGovernanceLog) =>
+            Number(log.args.proposalId) === Number(id),
+        );
+
         const proposalLog = proposalEventLogs[0];
 
-        if (!proposalLog) {
-          throw new Error(`Proposal with ID ${id} not found`);
-        }
+        const result: ProposalCombinedData = {
+          id: Number(proposalId),
+          event: proposalLog,
+          proposalDetails: {
+            ...proposalInfo[0],
+            calls: proposalInfo[1] as SubmitProposalCall[],
+          },
+        };
 
         const voteId = await isAragonProposal({
           client: publicClient,
@@ -70,20 +103,15 @@ export const useProposal = ({
           chainId,
         });
 
-        const proposalInfo = await emergencyProtectedTimelock.readContract(
-          'getProposal',
-          [proposalId],
-        );
+        if (voteId) {
+          result.voteId = Number(voteId);
+        }
 
-        return {
-          id: Number(proposalId),
-          event: proposalLog,
-          proposalDetails: {
-            ...proposalInfo[0],
-            calls: proposalInfo[1] as SubmitProposalCall[],
-          },
-          voteId: voteId ? Number(voteId) : undefined,
-        };
+        if (dualGovernanceEvent) {
+          result.proposalDualGovernanceDetails = dualGovernanceEvent.args;
+        }
+
+        return result;
       } catch (error) {
         console.error(`Failed to fetch proposal with ID ${id}:`, error);
         throw new Error(`Failed to fetch proposal with ID ${id}`);

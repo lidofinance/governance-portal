@@ -7,13 +7,7 @@ export const ProposalListItemWrapper = styled(Block)`
   display: flex;
   cursor: pointer;
   padding: 30px;
-`;
-
-export const ProposalListItemToEnact = styled(Block)`
-  border: 1px solid var(--border-color-fog);
-  background-color: #d7475833;
-  display: flex;
-  cursor: pointer;
+  height: 100%;
 `;
 
 export const SummarySection = styled.section`
@@ -71,4 +65,8 @@ export const ShowMoreWrapper = styled.div`
       font-weight: 400;
     }
   }
+`;
+
+export const TimelockWrapper = styled.div`
+  margin-top: 12px;
 `;

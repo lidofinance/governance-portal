@@ -49,3 +49,23 @@ export const InlineLoaderStyled = styled(InlineLoader)`
   height: 200px;
   border-radius: 20px;
 `;
+
+export const ArrowIconWrapper = styled.div`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transform: rotate(180deg);
+  border: 1px solid var(--border-color-fog);
+  cursor: pointer;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+export const AuthorDescription = styled.div`
+  margin-top: 12px;
+`;

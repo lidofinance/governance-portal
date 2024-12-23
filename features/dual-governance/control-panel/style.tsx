@@ -46,11 +46,19 @@ export const Description = styled(Text)`
 
 export const ProposalWrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
   svg {
     margin-left: -8px;
+    margin-top: -8px;
     transform: scale(0.8);
+    flex-shrink: 0;
+  }
+  p {
+    flex-shrink: 0;
+  }
+  div {
+    word-wrap: break-word;
   }
 `;
 

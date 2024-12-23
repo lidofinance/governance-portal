@@ -1,6 +1,8 @@
 import { Token } from 'shared/blockchain/types';
 import { ProposalCombinedData } from './proposals/types';
 import { VoteData } from 'shared/votes/types';
+import { CHAINS } from '@lido-sdk/constants';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 
 export const isVoteItem = (
   item: ProposalCombinedData | VoteData,
@@ -64,3 +66,10 @@ export const VetoSupportedTokens = [
 export type VetoSupportedTokens = (typeof VetoSupportedTokens)[number];
 
 export type WithdrawalsMap = Record<string, bigint>; // id, stEthAmount
+
+export type UseEventWatcherConfig<T> = {
+  chainId: CHAINS;
+  refetchFn: (
+    options?: RefetchOptions | undefined,
+  ) => Promise<QueryObserverResult<T | undefined, Error>>;
+};

@@ -8,24 +8,46 @@ import {
 
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { Button } from 'shared/components/button';
-import { isVoteItem } from 'features/dual-governance/types';
+import {
+  isVoteItem,
+  UseEventWatcherConfig,
+} from 'features/dual-governance/types';
 import { useEffect, useMemo, useState } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
+import {
+  ProposalsQueryResult,
+  useProposalExecutedEventWatcher,
+  useProposalScheduledEventWatcher,
+} from 'features/dual-governance/hooks/use-proposals';
+import { useLidoSDK } from 'providers/lido-sdk';
+import Link from 'next/link';
+import { config } from 'config';
+import { PROPOSALS_PATH } from 'constants/urls';
 
 const PAGE_LIMIT_STEP = 4;
 
 export const ProposalsList = () => {
   const [initialLoading, setInitialLoading] = useState(true);
 
+  const { chainId } = useLidoSDK();
+
   const {
     currentPage,
     combinedData,
     setCurrentPage,
     isFetching,
-    openProposalPage,
     activeProposals,
     votes,
+    refetchProposals,
   } = useDualGovernanceProposalsContext();
+
+  const watcherConfig: UseEventWatcherConfig<ProposalsQueryResult> = {
+    chainId,
+    refetchFn: refetchProposals,
+  };
+
+  useProposalExecutedEventWatcher(watcherConfig);
+  useProposalScheduledEventWatcher(watcherConfig);
 
   const initialLimit = useMemo(() => {
     const itemsLength = activeProposals.length + votes.length;
@@ -46,7 +68,7 @@ export const ProposalsList = () => {
   };
 
   useEffect(() => {
-    if (initialLoading && !isFetching) {
+    if (initialLoading && !isFetching && combinedData) {
       setInitialLoading(false);
     }
   }, [combinedData, initialLoading, isFetching]);
@@ -65,32 +87,36 @@ export const ProposalsList = () => {
           <ProposalsListWrapper>
             {combinedData.slice(0, pageLimit).map((dataItem) => {
               return isVoteItem(dataItem) ? (
-                <VoteItem
+                <Link
+                  href={`${config.voteOrigin}/vote/${dataItem.voteId}`}
                   key={dataItem.voteId}
-                  id={dataItem.id}
-                  description={dataItem.event?.metadata}
-                  script={dataItem.vote.script}
-                  state={dataItem.state}
-                  voteTime={dataItem.voteTime}
-                  objectionPhaseTime={dataItem.objectionPhaseTime}
-                  startDate={dataItem.vote.startDate}
-                  yea={dataItem.vote.yea}
-                  nay={dataItem.vote.nay}
-                  onVoteClick={() =>
-                    openProposalPage({ id: dataItem.id, isVote: true })
-                  }
-                />
+                >
+                  <VoteItem
+                    id={dataItem.id}
+                    description={dataItem.event?.metadata}
+                    script={dataItem.vote.script}
+                    state={dataItem.state}
+                    voteTime={dataItem.voteTime}
+                    objectionPhaseTime={dataItem.objectionPhaseTime}
+                    startDate={dataItem.vote.startDate}
+                    yea={dataItem.vote.yea}
+                    nay={dataItem.vote.nay}
+                  />
+                </Link>
               ) : (
-                <ProposalsListItem
+                <Link
+                  href={`${PROPOSALS_PATH}/${dataItem.id}`}
                   key={dataItem.id}
-                  id={dataItem.id}
-                  description={dataItem.event.args.metadata || ''}
-                  calls={dataItem.event.args.calls}
-                  proposalDetails={dataItem.proposalDetails}
-                  onProposalClick={() =>
-                    openProposalPage({ id: dataItem.id, isVote: false })
-                  }
-                />
+                >
+                  <ProposalsListItem
+                    id={dataItem.id}
+                    description={
+                      dataItem.proposalDualGovernanceDetails?.metadata || ''
+                    }
+                    calls={dataItem.event.args.calls}
+                    proposalDetails={dataItem.proposalDetails}
+                  />
+                </Link>
               );
             })}
           </ProposalsListWrapper>

@@ -11,6 +11,7 @@ import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import {
   DualGovernanceState,
   GovernanceState,
+  UseEventWatcherConfig,
   VisibleGovernanceState,
 } from '../types';
 import {
@@ -20,29 +21,24 @@ import {
 import { Address } from 'viem';
 import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
-import { CHAINS } from '@lido-sdk/constants';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
+const WATCH_EVENT_POLLING_INTERVAL = 60000;
 
 type Args = {
   vetoSignallingAddress: Address | undefined;
 };
 
-type UseActivateNextStateEventWatcherConfig = {
-  chainId: CHAINS;
-  refetchFn: (
-    options?: RefetchOptions | undefined,
-  ) => Promise<QueryObserverResult<DualGovernanceState | undefined, Error>>;
-};
-
 export const useActivateNextStateEventWatcher = ({
   chainId,
   refetchFn,
-}: UseActivateNextStateEventWatcherConfig) => {
+}: UseEventWatcherConfig<DualGovernanceState>) => {
   useWatchContractEvent({
     address: DualGovernance.chainAddressMap[chainId] as Address,
     abi: DualGovernance.abi,
     eventName: 'DualGovernanceStateChanged',
+    poll: true,
+    pollingInterval: WATCH_EVENT_POLLING_INTERVAL,
     onLogs(logs) {
       console.log('Dual governance state changed', logs);
       refetchFn();
