@@ -15,7 +15,6 @@ type Props = {
   script: string;
   description?: string;
   state: VoteData['state'];
-  onVoteClick: MouseEventHandler<HTMLDivElement>;
   startDate: bigint;
   yea: bigint;
   nay: bigint;
@@ -25,7 +24,6 @@ export const VoteItem = ({
   id,
   description,
   state,
-  onVoteClick,
   voteTime,
   objectionPhaseTime,
   startDate,
@@ -37,7 +35,7 @@ export const VoteItem = ({
   const descriptionLines = description ? description.split('\n') : [];
 
   return (
-    <ProposalListItemWrapper onClick={onVoteClick}>
+    <ProposalListItemWrapper>
       <SummarySection>
         <ProposalName
           isAragon

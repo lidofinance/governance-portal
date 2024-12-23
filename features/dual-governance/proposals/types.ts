@@ -24,16 +24,33 @@ export type ProposalDetails = {
   submittedAt: TimeStamp;
 };
 
+export type ProposalDualGovernanceDetails = {
+  proposerAccount: Address;
+  proposalId: bigint;
+  metadata: string;
+};
+
 export type ProposalLog = Log & {
   args: SubmitProposalEventArgs;
+};
+
+export type ProposalDualGovernanceLog = Log & {
+  args: ProposalDualGovernanceDetails;
 };
 
 export type ProposalCombinedData = {
   id: number;
   event: ProposalLog;
   proposalDetails: ProposalDetails & { calls: SubmitProposalCall[] };
+  proposalDualGovernanceDetails?: ProposalDualGovernanceDetails;
   voteId?: number;
 };
+
+export enum ProposalExtraStatus {
+  ReadyToSchedule = 'ReadyToSchedule',
+  ReadyToExecute = 'ReadyToExecute',
+  Blocked = 'Blocked',
+}
 
 export enum ProposalStatus {
   NotExist,

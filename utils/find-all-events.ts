@@ -1,5 +1,6 @@
 import { PublicClient, Address, Abi } from 'viem';
 import { findAbiItem } from './find-abi-item';
+import invariant from 'tiny-invariant';
 
 interface EventsConfig<TLog> {
   address: Address;
@@ -25,6 +26,9 @@ export const findAllEvents = async <TLog>(
     const latestBlock = await client.getBlockNumber();
 
     const eventAbi = findAbiItem({ abi, name: eventName, type: 'event' });
+
+    invariant(address, 'address is required');
+
     if (!eventAbi) {
       console.error(`Event "${eventName}" not found in the provided ABI.`);
       return [];
@@ -47,7 +51,7 @@ export const findAllEvents = async <TLog>(
           event: eventAbi,
           fromBlock,
           toBlock,
-          args,
+          ...(args && { args }),
         })) as TLog[];
 
         for (const log of logs) {

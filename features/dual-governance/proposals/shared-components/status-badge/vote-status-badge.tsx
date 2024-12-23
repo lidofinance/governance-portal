@@ -3,6 +3,7 @@ import { Text } from 'shared/components/text';
 import { VoteData, VoteStatus } from 'shared/votes/types';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { FlexWrapper } from 'shared/styled-components';
+import { useCountdown } from '../../../../../shared/hooks/use-countdown';
 
 type Props = {
   startDate: bigint;
@@ -23,12 +24,13 @@ export const VoteStatusBadge = ({
   );
   const objectionPhaseEndTimestamp = Number(startDate + BigInt(voteTime));
 
-  const mainPhaseDateEnd = getDateFromTimestamp({
-    timestamp: mainPhaseEndTimestamp,
-  });
-  const objectionPhaseDateEnd = getDateFromTimestamp({
-    timestamp: objectionPhaseEndTimestamp,
-  });
+  const { timeFormatted: mainPhaseCountdown, isFinished: isMainPhaseFinished } =
+    useCountdown(mainPhaseEndTimestamp);
+
+  const {
+    timeFormatted: objectionPhaseCountdown,
+    isFinished: isObjectionPhaseFinished,
+  } = useCountdown(objectionPhaseEndTimestamp);
 
   const isWinning = yea > nay;
 
@@ -43,26 +45,19 @@ export const VoteStatusBadge = ({
         </Badge>
       </FlexWrapper>
 
-      {state.status === VoteStatus.ActiveMain &&
-        !mainPhaseDateEnd.hasPassed && (
-          <VotePhaseWrapper>
-            <Text>
-              Main phase ends{' '}
-              <b>
-                {mainPhaseDateEnd.date} {mainPhaseDateEnd.tz}
-              </b>
-            </Text>
-          </VotePhaseWrapper>
-        )}
+      {state.status === VoteStatus.ActiveMain && !isMainPhaseFinished && (
+        <VotePhaseWrapper>
+          <Text>
+            Main phase ends in <b>{mainPhaseCountdown}</b>
+          </Text>
+        </VotePhaseWrapper>
+      )}
 
       {state.status === VoteStatus.ActiveObjection &&
-        !objectionPhaseDateEnd.hasPassed && (
+        !isObjectionPhaseFinished && (
           <VotePhaseWrapper>
             <Text>
-              Objection phase ends{' '}
-              <b>
-                {objectionPhaseDateEnd.date} {objectionPhaseDateEnd.tz}
-              </b>
+              Objection phase ends in <b>{objectionPhaseCountdown}</b>
             </Text>
           </VotePhaseWrapper>
         )}

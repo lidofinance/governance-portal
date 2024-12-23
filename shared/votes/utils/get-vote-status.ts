@@ -62,12 +62,12 @@ export const getVoteStatus = (
   if (!executed && phase === 1) {
     return {
       status: VoteStatus.ActiveObjection,
-      isQuorumReached: false,
+      isQuorumReached: isQuorumReached(vote),
     };
   }
 
   return {
     status: VoteStatus.ActiveMain,
-    isQuorumReached: false,
+    isQuorumReached: isQuorumReached(vote),
   };
 };

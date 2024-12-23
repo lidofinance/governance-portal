@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import Link from 'next/link';
 import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
@@ -14,19 +15,43 @@ import {
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
-import { isVoteItem } from '../types';
+import { isVoteItem, VisibleGovernanceState } from '../types';
 import { ProposalsIcon, AragonLogo } from 'shared/components/icons';
-import { ProposalCombinedData } from '../proposals/types';
+import { ProposalCombinedData, ProposalStatus } from '../proposals/types';
 import { useProposalTimelock } from '../hooks/use-proposal-timelock';
 import { VoteData } from 'shared/votes/types';
 import { config } from 'config';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
 const PROPOSALS_TO_SHOW = 3;
 
 type Props = {
   onContinue: () => void;
+};
+
+const ActiveProposalWrapper = ({
+  proposalId,
+  children,
+}: {
+  proposalId: number;
+  children: ReactNode;
+}) => {
+  return (
+    <ProposalWrapper>
+      <ProposalsIcon />
+      <Text size={22}>
+        <Link href={`${PROPOSALS_PATH}/${proposalId}`}>
+          {`Proposal #${proposalId} `}
+        </Link>
+        &mdash;
+      </Text>
+      <Text as="div" size={22}>
+        {children}
+      </Text>
+    </ProposalWrapper>
+  );
 };
 
 const ActiveProposal = ({
@@ -35,6 +60,12 @@ const ActiveProposal = ({
   proposal: ProposalCombinedData | VoteData;
 }) => {
   const isVote = isVoteItem(proposal);
+  const { visibleState } = useDualGovernanceContext();
+
+  // TODO: TBA
+  // const { data: governanceConfig } = useDualGovernanceConfig();
+  // const deactivationDuration =
+  //   governanceConfig?.vetoSignallingDeactivationMaxDuration;
 
   if (isVote) {
     return (
@@ -60,11 +91,11 @@ const ActiveProposal = ({
 
   const targetTime = timelockData?.targetTime;
   let dateString;
-  let hasPassed = false;
+  let timelockHasPassed = false;
 
   if (targetTime) {
     const dateObj = getDateFromTimestamp({ timestamp: targetTime });
-    hasPassed = dateObj.hasPassed;
+    timelockHasPassed = dateObj.hasPassed;
 
     dateString = (
       <span>
@@ -73,23 +104,59 @@ const ActiveProposal = ({
     );
   }
 
-  return (
-    <ProposalWrapper>
-      <ProposalsIcon />
-      <Text size={22}>
-        <Link href={`${PROPOSALS_PATH}/${proposal.id}`}>
-          {`Proposal #${proposal.id} `}
-        </Link>
-        {dateString && !hasPassed && (
-          <span>
-            &mdash;
-            <span> Veto possible until </span>
+  if (
+    visibleState === VisibleGovernanceState.BlockedVetoSignalling ||
+    visibleState === VisibleGovernanceState.BlockedRageQuit
+  ) {
+    return (
+      <ActiveProposalWrapper proposalId={proposal.id}>
+        <span>Blocked</span>
+      </ActiveProposalWrapper>
+    );
+  }
+
+  if (visibleState === VisibleGovernanceState.BlockedDeactivation) {
+    return (
+      <ActiveProposalWrapper proposalId={proposal.id}>
+        <span>Blocked until [ADD DATE HERE]</span>
+      </ActiveProposalWrapper>
+    );
+  }
+
+  switch (status) {
+    case ProposalStatus.Submitted:
+      if (timelockHasPassed) {
+        return (
+          <ActiveProposalWrapper proposalId={proposal.id}>
+            <span>Ready to schedule</span>
+          </ActiveProposalWrapper>
+        );
+      } else {
+        return (
+          <ActiveProposalWrapper proposalId={proposal.id}>
+            <span>{' Veto possible until '}</span>
             {dateString}
-          </span>
-        )}
-      </Text>
-    </ProposalWrapper>
-  );
+          </ActiveProposalWrapper>
+        );
+      }
+    case ProposalStatus.Scheduled:
+      if (timelockHasPassed) {
+        return (
+          <ActiveProposalWrapper proposalId={proposal.id}>
+            <span>Ready to Execute</span>
+          </ActiveProposalWrapper>
+        );
+      } else {
+        return (
+          <ActiveProposalWrapper proposalId={proposal.id}>
+            <div>
+              <span>{' Emergency Committee may stop execution until '}</span>
+              {dateString}
+            </div>
+          </ActiveProposalWrapper>
+        );
+      }
+  }
 };
 
 export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {

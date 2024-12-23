@@ -31,7 +31,7 @@ export const formatNumber = (args: FormatNumberArgs) => {
     return 'N/A';
   }
 
-  const formattedNumber = num.toLocaleString(undefined, {
+  const formattedNumber = num.toLocaleString('en-US', {
     notation,
     minimumFractionDigits: 0,
     maximumFractionDigits: maxFractionDigits,

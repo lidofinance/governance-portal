@@ -1,25 +1,36 @@
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { ProposalsListItem } from './proposals-list-item';
 import { InlineLoaderStyled, ProposalSearchItemWrapper } from './style';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useProposal } from 'features/dual-governance/hooks/use-proposal';
+import { ProposalCombinedData } from '../types';
+import { PROPOSALS_PATH } from 'constants/urls';
+import Link from 'next/link';
 
 export const ProposalSearchItem = ({ id }: { id: string }) => {
+  const [proposal, setProposal] = useState<ProposalCombinedData | null>(null);
+
+  const { getProposalById } = useDualGovernanceProposalsContext();
+  const existingProposal = getProposalById(Number(id));
+
   const {
-    proposalId,
-    setProposalId,
-    proposal,
-    isFetching,
-    isProposalError,
-    openProposalPage,
-  } = useDualGovernanceProposalsContext();
+    data: proposalData,
+    isLoading: isProposalLoading,
+    isError: isProposalError,
+  } = useProposal({
+    id: Number(id),
+    enabled: !existingProposal,
+  });
 
   useEffect(() => {
-    if (Number(id) !== Number(proposalId)) {
-      setProposalId(Number(id));
+    if (existingProposal) {
+      setProposal(existingProposal);
+    } else if (proposalData) {
+      setProposal(proposalData);
     }
-  }, [id, proposalId, setProposalId]);
+  }, [existingProposal, proposalData]);
 
-  if (isFetching) {
+  if (isProposalLoading && !proposal) {
     return <InlineLoaderStyled />;
   }
 
@@ -34,16 +45,17 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
   if (proposal) {
     return (
       <ProposalSearchItemWrapper>
-        <ProposalsListItem
-          id={proposal.id}
-          description={proposal.event.args.metadata || ''}
-          calls={proposal.event.args.calls}
-          proposalDetails={proposal.proposalDetails}
-          onProposalClick={() =>
-            openProposalPage({ id: proposal.id, isVote: false })
-          }
-        />
+        <Link href={`${PROPOSALS_PATH}/${proposal.id}`} key={proposal.id}>
+          <ProposalsListItem
+            id={proposal.id}
+            description={proposal.proposalDualGovernanceDetails?.metadata || ''}
+            calls={proposal.event.args.calls}
+            proposalDetails={proposal.proposalDetails}
+          />
+        </Link>
       </ProposalSearchItemWrapper>
     );
   }
+
+  return null;
 };
