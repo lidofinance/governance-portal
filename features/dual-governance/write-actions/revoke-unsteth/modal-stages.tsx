@@ -32,11 +32,10 @@ const getTxModalStagesRevokeUnsteth = (
       />,
     ),
 
-  success: (balance: bigint, txHash?: string) =>
+  success: (txHash?: string) =>
     transitStage(
       <TxStageOperationSucceedBalanceShown
         txHash={txHash}
-        balance={balance}
         token={Token.unstETH}
         operationText={'Revoking NFTs'}
       />,
