@@ -14,11 +14,7 @@ import {
 } from 'features/dual-governance/types';
 import { useEffect, useMemo, useState } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
-import {
-  ProposalsQueryResult,
-  useProposalExecutedEventWatcher,
-  useProposalScheduledEventWatcher,
-} from 'features/dual-governance/hooks/use-proposals';
+import { ProposalsQueryResult } from 'features/dual-governance/hooks/use-proposals';
 import { useLidoSDK } from 'providers/lido-sdk';
 import Link from 'next/link';
 import { config } from 'config';
@@ -45,9 +41,6 @@ export const ProposalsList = () => {
     chainId,
     refetchFn: refetchProposals,
   };
-
-  useProposalExecutedEventWatcher(watcherConfig);
-  useProposalScheduledEventWatcher(watcherConfig);
 
   const initialLimit = useMemo(() => {
     const itemsLength = activeProposals.length + votes.length;

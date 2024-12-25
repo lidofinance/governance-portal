@@ -1,22 +1,15 @@
 import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { findAllEvents } from 'utils';
-import {
-  DualGovernance,
-  EmergencyProtectedTimelock,
-} from 'shared/blockchain/contracts';
+import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 import { isAragonProposal } from 'utils/proposals/isAragonProposal';
 import {
   ProposalCombinedData,
-  ProposalDualGovernanceLog,
-  ProposalLog,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
-import { findAbiItem } from 'utils/find-abi-item';
-import { Address } from 'viem';
+import { useGetProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
 
 type UseProposalConfig = {
   id: bigint | number | null | undefined;
@@ -43,50 +36,23 @@ export const useProposal = ({
       const proposalId = BigInt(id);
 
       try {
-        const eventAbi = findAbiItem({
-          abi: DualGovernance.abi,
-          name: 'ProposalSubmitted',
-          type: 'event',
-        });
-
-        if (!eventAbi) {
-          throw new Error('Event ProposalSubmitted not found in ABI');
-        }
-
-        let proposalInfo;
-        try {
-          proposalInfo = await emergencyProtectedTimelock.readContract(
-            'getProposal',
-            [proposalId],
-          );
-        } catch (error) {
-          throw error;
-        }
-
-        const proposalEventLogs = await findAllEvents(publicClient, {
-          address: emergencyProtectedTimelock.address,
-          abi: EmergencyProtectedTimelock.abi,
-          eventName: 'ProposalSubmitted',
-          shouldStop: (log: ProposalLog) => Number(log.args.id) === Number(id),
-        });
-
-        const proposalDualGovernanceEventLogs = await findAllEvents(
-          publicClient,
-          {
-            address: DualGovernance.chainAddressMap[chainId] as Address,
-            abi: DualGovernance.abi,
-            eventName: 'ProposalSubmitted',
-            shouldStop: (log: ProposalDualGovernanceLog) =>
-              Number(log.args.proposalId) === Number(id),
-          },
+        const proposalInfo = await emergencyProtectedTimelock.readContract(
+          'getProposal',
+          [proposalId],
         );
 
-        const dualGovernanceEvent = proposalDualGovernanceEventLogs.find(
-          (log: ProposalDualGovernanceLog) =>
-            Number(log.args.proposalId) === Number(id),
+        const { DGEvents, EPTEvents } = await useGetProposalSubmittedEvents({
+          client: publicClient,
+          chainId,
+          EPTContract: emergencyProtectedTimelock,
+          proposalId,
+        });
+
+        const dualGovernanceEvent = DGEvents.find(
+          (log) => Number(log.args.proposalId) === Number(id),
         );
 
-        const proposalLog = proposalEventLogs[0];
+        const proposalLog = EPTEvents[0] || {};
 
         const result: ProposalCombinedData = {
           id: Number(proposalId),

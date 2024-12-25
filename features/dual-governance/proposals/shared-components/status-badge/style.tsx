@@ -25,8 +25,6 @@ type Props = {
 };
 
 export const Badge = styled.div<Props>`
-  justify-self: flex-start;
-  align-self: flex-start;
   ${({ $variant }) => variantStyles[$variant]}
   padding: 4px 14px;
   border-radius: 40px;

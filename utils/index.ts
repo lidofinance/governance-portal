@@ -6,5 +6,4 @@ export * from './extractErrorMessage';
 export * from './swrAbortableMiddleware';
 export * from './getNFTUrl';
 export * from './shortenTokenValue';
-export * from './find-all-events';
 export * from './find-event-by-timestamp';

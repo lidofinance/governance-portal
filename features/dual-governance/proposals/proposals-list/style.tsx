@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
+import { Block, InlineLoader } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
 
 export const ProposalListItemWrapper = styled(Block)`
   font-size: 26px;
@@ -25,11 +26,10 @@ export const ProposalDescription = styled.div`
   width: 50%;
 `;
 
-export const DescriptionText = styled(Text).attrs({
-  size: 'sm',
-})`
-  color: #131217b8;
+export const DescriptionText = styled(Text)`
+  color: var(--primary-color-black-72);
   margin-bottom: 12px;
+  font-size: 15px;
 `;
 
 export const ProposalsListWrapper = styled.section`
@@ -69,4 +69,14 @@ export const ShowMoreWrapper = styled.div`
 
 export const TimelockWrapper = styled.div`
   margin-top: 12px;
+`;
+
+export const TimeLockDescription = styled(Text)`
+  font-size: 17px;
+  color: var(--primary-color-black-72);
+`;
+
+export const StatusBadgeWrapper = styled.div`
+  justify-self: flex-start;
+  align-self: flex-start;
 `;

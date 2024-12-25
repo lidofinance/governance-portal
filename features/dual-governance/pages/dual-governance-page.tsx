@@ -7,7 +7,7 @@ import { DualGovernanceControlPanel } from '../control-panel';
 import { ProposalsSection } from '../proposals/proposals-section';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { VisibleGovernanceState } from '../types';
-import { DualGovernanceProposalsProvider } from '../../../providers/dual-governance-proposals';
+import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 
 const DashboardWrapper = styled(Block)`
   border: 1px solid var(--custom-border);
