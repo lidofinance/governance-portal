@@ -9,7 +9,6 @@ import {
   ProposalDualGovernanceDetails,
   ProposalDualGovernanceLog,
   ProposalLog,
-  SubmitProposalEventArgs,
 } from 'features/dual-governance/proposals/types';
 import { usePublicClient } from 'wagmi';
 import { CHAINS } from '@lido-sdk/constants';
@@ -64,12 +63,12 @@ const getDGEvents = async ({
       toBlock: 'latest',
     });
 
-    return logs.map((log: any) => {
+    return logs.map((log) => {
       const args = log.args as ProposalDualGovernanceDetails;
 
       return {
         ...log,
-        ...(args && { args }),
+        args,
       };
     });
   } catch (error) {
@@ -116,12 +115,12 @@ const getEPTEvents = async ({
       toBlock: 'latest',
     });
 
-    return logs.map((log: any) => {
-      const args = log.args as SubmitProposalEventArgs;
+    return logs.map((log) => {
+      const args = log.args as ProposalLog['args'];
 
       return {
         ...log,
-        ...(args && { args }),
+        args,
       };
     });
   } catch (error) {

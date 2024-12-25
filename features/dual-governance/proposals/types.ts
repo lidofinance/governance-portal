@@ -8,13 +8,13 @@ export type SubmitProposalCall = {
   value: bigint;
 };
 
-export interface SubmitProposalEventArgs {
+export type SubmitProposalEventArgs = {
   metadata: string;
   id: bigint;
   proposer: Address;
   timestamp: TimeStamp;
   calls: any[];
-}
+};
 
 export type ProposalDetails = {
   executor: Address;

@@ -24,6 +24,8 @@ import { config } from 'config';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceConfig } from '../hooks/use-dual-governance-config';
+import { useCountdown } from '../../../shared/hooks/use-countdown';
 
 const PROPOSALS_TO_SHOW = 3;
 
@@ -60,12 +62,23 @@ const ActiveProposal = ({
   proposal: ProposalCombinedData | VoteData;
 }) => {
   const isVote = isVoteItem(proposal);
-  const { visibleState } = useDualGovernanceContext();
 
-  // TODO: TBA
-  // const { data: governanceConfig } = useDualGovernanceConfig();
-  // const deactivationDuration =
-  //   governanceConfig?.vetoSignallingDeactivationMaxDuration;
+  const { data: dgConfig } = useDualGovernanceConfig();
+  const { visibleState, detailedState } = useDualGovernanceContext();
+  const vetoSignallingDeactivationMaxDuration =
+    dgConfig?.vetoSignallingDeactivationMaxDuration;
+
+  const deactivationTargetTimestamp =
+    detailedState?.persistedStateEnteredAt &&
+    vetoSignallingDeactivationMaxDuration
+      ? detailedState.persistedStateEnteredAt +
+        vetoSignallingDeactivationMaxDuration
+      : 0;
+
+  const deactivationDate = getDateFromTimestamp({ 
+    timestamp: deactivationTargetTimestamp,
+    showYear: true 
+  });
 
   if (isVote) {
     return (
@@ -118,7 +131,7 @@ const ActiveProposal = ({
   if (visibleState === VisibleGovernanceState.BlockedDeactivation) {
     return (
       <ActiveProposalWrapper proposalId={proposal.id}>
-        <span>Blocked until [ADD DATE HERE]</span>
+        <span>Blocked until <b>{deactivationDate.date}</b> {deactivationDate.tz}</span>
       </ActiveProposalWrapper>
     );
   }

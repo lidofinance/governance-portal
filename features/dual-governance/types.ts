@@ -3,6 +3,7 @@ import { ProposalCombinedData } from './proposals/types';
 import { VoteData } from 'shared/votes/types';
 import { CHAINS } from '@lido-sdk/constants';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+import { Log } from 'viem';
 
 export const isVoteItem = (
   item: ProposalCombinedData | VoteData,
@@ -55,6 +56,18 @@ export type DualGovernanceState = {
     vetoSignallingDuration: number;
   };
   isAssetManagementLocked: boolean;
+};
+
+type DualGovernanceStateChangeEventArgs = {
+  from: GovernanceState;
+  to: GovernanceState;
+  state: DualGovernanceState & {
+    enteredAt: number;
+  };
+};
+
+export type DualGovernanceStateChangeEventLog = Log & {
+  args?: DualGovernanceStateChangeEventArgs;
 };
 
 export const VetoSupportedTokens = [

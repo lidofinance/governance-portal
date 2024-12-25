@@ -5,13 +5,7 @@ import {
   ProposalsIcon,
   WarningIcon,
 } from 'shared/components/icons';
-import {
-  LogoWrapper,
-  Title,
-  TitleWrapper,
-  UnknownContract,
-  WarningIconWrapper,
-} from './style';
+import { LogoWrapper, Title, TitleWrapper, WarningIconWrapper } from './style';
 import { FlexWrapper } from 'shared/styled-components';
 
 type Props = {
@@ -21,13 +15,7 @@ type Props = {
   isUnknownContractCalled?: boolean;
 };
 
-// TODO: Add support for other parties besides Aragon
-export const ProposalName = ({
-  id,
-  warning,
-  isAragon,
-  isUnknownContractCalled,
-}: Props) => {
+export const ProposalName = ({ id, warning, isAragon }: Props) => {
   return (
     <>
       <TitleWrapper>
@@ -46,9 +34,6 @@ export const ProposalName = ({
           {isAragon && <Text size="xxs">Ongoing Aragon vote</Text>}
         </FlexWrapper>
       </TitleWrapper>
-      {isUnknownContractCalled && (
-        <UnknownContract>Unknown contract called</UnknownContract>
-      )}
     </>
   );
 };

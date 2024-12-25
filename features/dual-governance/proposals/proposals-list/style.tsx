@@ -16,14 +16,16 @@ export const SummarySection = styled.section`
   flex-direction: column;
   justify-content: flex-start;
   padding-right: 20px;
-  border-right: 1px solid #0000001a;
   padding-top: 12px;
 `;
 
 export const ProposalDescription = styled.div`
+  margin-left: auto;
   padding-left: 20px;
   word-wrap: break-word;
   width: 50%;
+  flex-shrink: 0;
+  border-left: 1px solid #0000001a;
 `;
 
 export const DescriptionText = styled(Text)`
@@ -79,4 +81,16 @@ export const TimeLockDescription = styled(Text)`
 export const StatusBadgeWrapper = styled.div`
   justify-self: flex-start;
   align-self: flex-start;
+`;
+
+export const UnknownContract = styled.span`
+  font-size: 15px;
+  margin-top: 12px;
+  border-radius: 8px;
+  line-height: 1;
+  color: var(--accent-color-berry);
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;

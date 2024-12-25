@@ -1,19 +1,25 @@
 import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
-
 import {
-  ProposalListItemWrapper,
-  SummarySection,
-  ProposalDescription,
   DescriptionText,
-  TimelockWrapper,
-  TimeLockDescription,
+  ProposalDescription,
+  ProposalListItemWrapper,
   StatusBadgeWrapper,
+  SummarySection,
+  TimeLockDescription,
+  TimelockWrapper,
+  UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { ProposalTimelock } from 'features/dual-governance/proposals/shared-components/proposal-timelock';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
+import { useCountdown } from 'shared/hooks/use-countdown';
+import * as contractAddresses from 'shared/blockchain/contract-addresses';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { WarningIconTransparent } from 'shared/components/icons';
 
 type Props = {
   id: number;
@@ -28,26 +34,41 @@ export const ProposalsListItem = ({
   proposalDetails,
   calls,
 }: Props) => {
-  const { visibleState } = useDualGovernanceContext();
-  // const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
+  const { chainId } = useLidoSDK();
 
-  // const { detailedState } = useDualGovernanceContext();
-  //
-  // console.log(detailedState, 'detailedState');
-  //
-  // const vetoSignallingReactivationTime =
-  //   detailedState?.vetoSignallingReactivationTime;
+  const { data: dgConfig } = useDualGovernanceConfig();
+  const { visibleState, detailedState } = useDualGovernanceContext();
+  const vetoSignallingDeactivationMaxDuration =
+    dgConfig?.vetoSignallingDeactivationMaxDuration;
+
+  const deactivationTargetTimestamp =
+    detailedState?.persistedStateEnteredAt &&
+    vetoSignallingDeactivationMaxDuration
+      ? detailedState.persistedStateEnteredAt +
+        vetoSignallingDeactivationMaxDuration
+      : 0;
+
+  const { timeFormatted: deactivationTimeFormatted } = useCountdown(
+    deactivationTargetTimestamp,
+  );
 
   const { status, scheduledAt, submittedAt } = proposalDetails;
-
   const descriptionLines = description.split('\n');
+
+  const isUnknownContractCalled = calls.some((call) => {
+    return !Object.values(contractAddresses).some(
+      (contract) =>
+        contract[chainId as CHAINS]?.toLowerCase() ===
+        call.target.toLowerCase(),
+    );
+  });
 
   return (
     <ProposalListItemWrapper>
       <SummarySection>
         <ProposalName
           id={id}
-          // isUnknownContractCalled={isUnknownContractCalled}
+          isUnknownContractCalled={isUnknownContractCalled}
         />
         <StatusBadgeWrapper>
           <StatusBadge
@@ -81,7 +102,7 @@ export const ProposalsListItem = ({
           )}
           {visibleState === VisibleGovernanceState.BlockedDeactivation && (
             <TimeLockDescription>
-              <span>Executable in</span>
+              <span>Executable in {deactivationTimeFormatted}</span>
             </TimeLockDescription>
           )}
         </TimelockWrapper>
@@ -90,6 +111,12 @@ export const ProposalsListItem = ({
         {descriptionLines.map((line, index) => (
           <DescriptionText key={index}>{line}</DescriptionText>
         ))}
+        {isUnknownContractCalled && (
+          <UnknownContract>
+            <WarningIconTransparent />
+            <span>Unknown Сontract Сalled</span>
+          </UnknownContract>
+        )}
       </ProposalDescription>
     </ProposalListItemWrapper>
   );
