@@ -52,7 +52,6 @@ export const VoteScriptBodyWrap = styled.div`
 export const CallWrapper = styled.div`
   padding: ${({ theme }) => theme.spaceMap.lg}px;
   word-break: break-all;
-
   &:not(:last-child) {
     border-bottom: 1px solid var(--lido-color-border);
   }

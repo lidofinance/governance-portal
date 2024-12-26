@@ -92,6 +92,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     // ----- Accent: For links and icons
 
     --accent-color-ocean: #4854FF;
+    --accent-color-ocean-light: #0085FF;
     --accent-color-sky: #00A3FF;
     --accent-color-coral: #FF9900;
     --accent-color-coral-light: #FF8E7633;
