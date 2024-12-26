@@ -99,12 +99,12 @@ const getEPTEvents = async ({
 
     invariant(adminExecutor, 'Contract not found');
 
-    let args: { executor?: Address; id?: string } = {
+    let args: { executor?: Address; id?: bigint } = {
       executor: adminExecutor as Address,
     };
 
     if (proposalId) {
-      args.id = proposalId.toString();
+      args.id = proposalId;
     }
 
     const logs = await client.getLogs({

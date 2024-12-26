@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Link } from '@lidofinance/lido-ui';
 import {
   CallTitle,
@@ -14,12 +15,22 @@ type Props = {
   binary?: string;
   parentId?: string | number;
   calls?: DecodedCall[];
+  children?: ReactNode;
 };
 
 // TODO: add nesting when the nested calls will be available from the contract
 
-export const ScriptBody = ({ calls, binary, parentId }: Props) => {
+export const ScriptBody = ({ calls, binary, parentId, children }: Props) => {
   const { chainId } = useLidoSDK();
+
+  if (children) {
+    return (
+      <CallWrapper>
+        <ScriptBox>{children}</ScriptBox>
+      </CallWrapper>
+    );
+  }
+
   if (!calls || calls.length === 0) {
     if (binary) {
       return (
