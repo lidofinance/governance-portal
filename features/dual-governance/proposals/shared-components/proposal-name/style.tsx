@@ -47,13 +47,3 @@ export const WarningIconWrapper = styled.div`
     margin-top: -4px;
   }
 `;
-
-export const UnknownContract = styled.span`
-  font-size: 15px;
-  padding: 8px;
-  border-radius: 8px;
-  line-height: 1;
-  background-color: #d7475814;
-  color: var(--accent-color-berry);
-  align-self: flex-start;
-`;

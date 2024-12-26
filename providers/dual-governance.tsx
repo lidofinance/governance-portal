@@ -1,4 +1,10 @@
-import { PropsWithChildren, createContext, useContext, useMemo } from 'react';
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useMemo,
+  FC,
+} from 'react';
 import invariant from 'tiny-invariant';
 import {
   DualGovernanceState,
@@ -41,7 +47,7 @@ export const useDualGovernanceContext = () => {
   return value;
 };
 
-export const DualGovernanceStateProvider: React.FC<PropsWithChildren> = ({
+export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
   children,
 }) => {
   const { chainId } = useLidoSDK();

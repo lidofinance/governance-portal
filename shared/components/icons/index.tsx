@@ -14,6 +14,7 @@ import { ReactComponent as AragonLogo } from 'assets/icons/aragon-logo.svg';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrow-right.svg';
 import { ReactComponent as ArrowDown } from 'assets/arrow-down-icon.svg';
 import { ReactComponent as SandwatchIcon } from 'assets/sandwatch-icon.svg';
+import { ReactComponent as WarningIconTransparent } from 'assets/icons/warning-icon-transparent.svg';
 
 export {
   RevokeIcon,
@@ -32,4 +33,5 @@ export {
   ArrowRight,
   ArrowDown,
   SandwatchIcon,
+  WarningIconTransparent,
 };

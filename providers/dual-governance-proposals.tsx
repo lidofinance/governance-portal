@@ -72,10 +72,7 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
 
   const [proposals, setProposals] = useState<ProposalCombinedData[]>([]);
 
-  const proposalsData = useProposals({
-    currentPage,
-    limit: PROPOSALS_LIMIT,
-  });
+  const proposalsData = useProposals();
 
   const { refetch: refetchProposals } = proposalsData;
 

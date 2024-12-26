@@ -20,7 +20,7 @@ const getTextColor = ({
   const colorsMap = {
     default: `var(--primary-color-black)`,
     secondary: `var(--primary-color-black-50)`,
-    primary: `var(--primary-color-black)`,
+    primary: `var(--primary-color-black-72)`,
     warning: colors.warning,
     error: colors.error,
     success: colors.success,
