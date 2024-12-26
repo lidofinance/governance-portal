@@ -150,6 +150,7 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
           stEthTotalSupply + lockedAssets.totalUnstETHFinalizedETH,
         detailedState,
         isAssetManagementLocked,
+        firstSealRageQuitSupport: parsePercent16(firstSealRageQuitSupport),
       };
     },
   });

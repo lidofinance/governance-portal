@@ -48,7 +48,7 @@ export const VoteStatusBadge = ({
       {state.status === VoteStatus.ActiveMain && !isMainPhaseFinished && (
         <VotePhaseWrapper>
           <Text>
-            Main phase ends in <b>{mainPhaseCountdown}</b>
+            Main phase ends in <br /> <b>{mainPhaseCountdown}</b>
           </Text>
         </VotePhaseWrapper>
       )}
@@ -57,7 +57,8 @@ export const VoteStatusBadge = ({
         !isObjectionPhaseFinished && (
           <VotePhaseWrapper>
             <Text>
-              Objection phase ends in <b>{objectionPhaseCountdown}</b>
+              Objection phase ends in <br />
+              <b>{objectionPhaseCountdown}</b>
             </Text>
           </VotePhaseWrapper>
         )}

@@ -56,6 +56,7 @@ export type DualGovernanceState = {
     vetoSignallingDuration: number;
   };
   isAssetManagementLocked: boolean;
+  firstSealRageQuitSupport: number;
 };
 
 type DualGovernanceStateChangeEventArgs = {

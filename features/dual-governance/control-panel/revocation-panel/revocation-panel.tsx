@@ -128,7 +128,7 @@ export const RevocationPanel = () => {
             />
             <RevocableTokenItem
               token={Token.unstETH}
-              amount={escrowBalances.vetoSignallingBalance.stETHLockedShares}
+              amount={escrowBalances.vetoSignallingBalance.unstETHLockedShares}
               onClick={() => openModal({ onRevoke: revokeUnsteth })}
               isLocked={!isUnlockPossible}
               unlockCountdown={assetsLockCountdown}

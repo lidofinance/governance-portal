@@ -37,7 +37,8 @@ export const ProposalsListItem = ({
   const { chainId } = useLidoSDK();
 
   const { data: dgConfig } = useDualGovernanceConfig();
-  const { visibleState, detailedState } = useDualGovernanceContext();
+  const { visibleState, detailedState, firstSealRageQuitSupport } =
+    useDualGovernanceContext();
   const vetoSignallingDeactivationMaxDuration =
     dgConfig?.vetoSignallingDeactivationMaxDuration;
 
@@ -88,14 +89,14 @@ export const ProposalsListItem = ({
             <TimeLockDescription>
               <span>Executable if:</span>
               <br />
-              <span>{'stETH veto support < 1%'}</span>
+              <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
             </TimeLockDescription>
           )}
           {visibleState === VisibleGovernanceState.BlockedRageQuit && (
             <TimeLockDescription>
               <span>Executable if:</span>
               <br />
-              <span>{'stETH veto support < 1%,'}</span>
+              <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
               <br />
               <span>RageQuit finished</span>
             </TimeLockDescription>
