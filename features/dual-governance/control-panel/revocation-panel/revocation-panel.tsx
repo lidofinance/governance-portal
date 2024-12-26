@@ -1,25 +1,19 @@
 import { useCallback, useRef, useState } from 'react';
 import invariant from 'tiny-invariant';
 import { Loader } from '@lidofinance/lido-ui';
-import { RevokeIcon } from 'shared/components/icons';
 
-import {
-  NoTokensMessage,
-  RevocableTokenItem,
-  RevocableTokensList,
-  RevokePopupButton,
-} from './style';
+import { NoTokensMessage, RevocableTokensList } from './style';
 import { FlexWrapper } from 'shared/styled-components';
 import { Token } from 'shared/blockchain/types';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { RevokeStEthPopup } from './revoke-steth-popup';
-import { RevocableToken } from './types';
-import { TokenBalance } from 'shared/components/token-balance';
 import { Text } from 'shared/components/text';
 import { useRevocationPanelProcessor } from './use-revocation-panel-processor';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useRevokeUnstethModal } from 'features/dual-governance/modals/modal-manager';
 import { useRevokeUnstethAction } from 'features/dual-governance/write-actions/revoke-unsteth';
+import { RevocableTokenItem } from './revocable-token-item';
+import { useCountdown } from 'shared/hooks/use-countdown';
 
 export const RevocationPanel = () => {
   /**
@@ -48,6 +42,9 @@ export const RevocationPanel = () => {
     refetch: refetchEscrowBalances,
   } = useEscrowBalances();
 
+  const { timeFormatted: assetsLockCountdown, isFinished: isUnlockPossible } =
+    useCountdown(escrowBalances?.assetUnlockTimestamp ?? 0);
+
   /**
    *  Handlers
    */
@@ -67,7 +64,7 @@ export const RevocationPanel = () => {
   });
 
   const handleRevokeTokens = useCallback(
-    (token: RevocableToken) => async () => {
+    (token: Token) => async () => {
       const amount =
         token === Token.stETH
           ? escrowBalances?.vetoSignallingBalance.stETHLockedShares
@@ -121,47 +118,22 @@ export const RevocationPanel = () => {
             </ContractLink> */}
           </FlexWrapper>
           <RevocableTokensList>
-            {Boolean(
-              escrowBalances.vetoSignallingBalance.stETHLockedShares,
-            ) && (
-              <RevocableTokenItem ref={popupAnchorRef}>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={
-                    escrowBalances.vetoSignallingBalance.stETHLockedShares
-                  }
-                />
-                <RevokePopupButton onClick={() => setIsPopupOpen(true)}>
-                  <Text size={14} color="secondary">
-                    Revoke
-                  </Text>
-                  <RevokeIcon />
-                </RevokePopupButton>
-              </RevocableTokenItem>
-            )}
-            {Boolean(escrowBalances.vetoSignallingBalance.unstETHIdsCount) && (
-              <RevocableTokenItem>
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={
-                    escrowBalances.vetoSignallingBalance.unstETHLockedShares
-                  }
-                  addOnText={`${escrowBalances.vetoSignallingBalance.unstETHIdsCount} NFT`}
-                />
-                <RevokePopupButton
-                  onClick={() =>
-                    openModal({
-                      onRevoke: revokeUnsteth,
-                    })
-                  }
-                >
-                  <Text size={14} color="secondary">
-                    Revoke
-                  </Text>
-                  <RevokeIcon />
-                </RevokePopupButton>
-              </RevocableTokenItem>
-            )}
+            <RevocableTokenItem
+              ref={popupAnchorRef}
+              token={Token.stETH}
+              amount={escrowBalances.vetoSignallingBalance.stETHLockedShares}
+              onClick={() => setIsPopupOpen(true)}
+              isLocked={!isUnlockPossible}
+              unlockCountdown={assetsLockCountdown}
+            />
+            <RevocableTokenItem
+              token={Token.unstETH}
+              amount={escrowBalances.vetoSignallingBalance.stETHLockedShares}
+              onClick={() => openModal({ onRevoke: revokeUnsteth })}
+              isLocked={!isUnlockPossible}
+              unlockCountdown={assetsLockCountdown}
+              addOnText={`${escrowBalances.vetoSignallingBalance.unstETHIdsCount} NFT`}
+            />
           </RevocableTokensList>
           {/* <Button fullwidth>Revoke all</Button> */}
         </>
@@ -172,23 +144,15 @@ export const RevocationPanel = () => {
             <Text>Tokens in RageQuit contract</Text>
           </FlexWrapper>
           <RevocableTokensList>
-            {Boolean(escrowBalances.rageQuitBalance.stETHLockedShares) && (
-              <RevocableTokenItem ref={popupAnchorRef}>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={escrowBalances.rageQuitBalance.stETHLockedShares}
-                />
-              </RevocableTokenItem>
-            )}
-            {Boolean(escrowBalances.rageQuitBalance.unstETHIdsCount) && (
-              <RevocableTokenItem>
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={escrowBalances.rageQuitBalance.unstETHLockedShares}
-                  addOnText={`${escrowBalances.rageQuitBalance.unstETHIdsCount} NFT`}
-                />
-              </RevocableTokenItem>
-            )}
+            <RevocableTokenItem
+              token={Token.stETH}
+              amount={escrowBalances.rageQuitBalance.stETHLockedShares}
+            />
+            <RevocableTokenItem
+              token={Token.unstETH}
+              amount={escrowBalances.rageQuitBalance.unstETHLockedShares}
+              addOnText={`${escrowBalances.rageQuitBalance.unstETHIdsCount} NFT`}
+            />
           </RevocableTokensList>
         </>
       )}

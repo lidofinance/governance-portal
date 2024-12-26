@@ -12,7 +12,7 @@ export const VetoSignallingAdditionalSupportInfo = () => {
     if (!detailedState) return;
 
     const { vetoSignallingDuration, vetoSignallingActivatedAt } = detailedState;
-    const currentTimestamp = Math.floor(Date.now() / 1000);
+
     const date = fromUnixTime(
       vetoSignallingActivatedAt + vetoSignallingDuration,
     );

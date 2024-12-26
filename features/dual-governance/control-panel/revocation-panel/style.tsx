@@ -23,6 +23,11 @@ export const RevokeStEthPopupItem = styled.button`
   border: none;
   width: 100%;
   padding: 16px 24px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 133, 255, 0.1);
+  }
 
   &:not(:last-child) {
     border-bottom: 1px solid #0000001a;
@@ -51,7 +56,7 @@ export const RevocableTokensList = styled.div`
   margin-bottom: 30px;
 `;
 
-export const RevocableTokenItem = styled.div`
+export const RevocableTokenItemStyled = styled.div<{ $disabled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,6 +64,19 @@ export const RevocableTokenItem = styled.div`
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--primary-color-white);
+
+  ${({ $disabled }) =>
+    $disabled &&
+    `
+    background: rgba(0, 0, 0, 0.04);
+
+    & > ${RevokePopupButton} {
+    cursor: default;
+    &:hover > svg {
+      background-color: transparent;
+    }
+      }
+  `}
 `;
 
 export const RevokePopupButton = styled.button`
