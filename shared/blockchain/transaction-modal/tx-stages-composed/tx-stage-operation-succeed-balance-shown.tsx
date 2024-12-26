@@ -46,12 +46,16 @@ export const TxStageOperationSucceedBalanceShown = ({
     <TxStageSuccess
       txHash={txHash}
       title={
-        <>
-          Your new balance is <wbr />
-          <BalanceContainer>
-            {balance ? balanceEl : <SkeletonBalance />}
-          </BalanceContainer>
-        </>
+        token === Token.unstETH ? (
+          <></>
+        ) : (
+          <>
+            Your new balance is <wbr />
+            <BalanceContainer>
+              {balance ? balanceEl : <SkeletonBalance />}
+            </BalanceContainer>
+          </>
+        )
       }
       description={
         <SuccessText operationText={operationText} txHash={txHash} />

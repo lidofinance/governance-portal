@@ -37,9 +37,17 @@ export const useEscrowBalances = () => {
         return null;
       }
 
-      const vetoSignallingBalance = await readEscrowContract(
+      const readVetoSignallingContract = readEscrowContract(
         vetoSignallingAddress,
-      )('getVetoerDetails', [address]);
+      );
+
+      const minAssetLockDuration = await readVetoSignallingContract(
+        'getMinAssetsLockDuration',
+      );
+      const vetoSignallingBalance = await readVetoSignallingContract(
+        'getVetoerDetails',
+        [address],
+      );
 
       const vetoSignallingSum =
         vetoSignallingBalance.stETHLockedShares +
@@ -65,6 +73,9 @@ export const useEscrowBalances = () => {
       //   vetoSignallingBalance.stETHLockedShares,
       // ]);
 
+      const assetUnlockTimestamp =
+        vetoSignallingBalance.lastAssetsLockTimestamp + minAssetLockDuration;
+
       return {
         vetoSignallingBalance: {
           totalLockedShares: vetoSignallingSum,
@@ -76,6 +87,7 @@ export const useEscrowBalances = () => {
         },
         lockedSharesInEscrow: vetoSignallingSum + rageQuitSum,
         vetoSharesInWstEth,
+        assetUnlockTimestamp,
       };
     },
   });

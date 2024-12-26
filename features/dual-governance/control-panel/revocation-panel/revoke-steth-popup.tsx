@@ -2,7 +2,6 @@ import { Token } from 'shared/blockchain/types';
 import { RevokeStEthPopupItem, RevokeStEthPopupStyled } from './style';
 import { formatEth, getTokenIcon } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
-import { RevocableToken } from './types';
 
 type Props = {
   anchorRef: React.RefObject<HTMLDivElement>;
@@ -10,7 +9,7 @@ type Props = {
   stEthAmount: bigint;
   wstEthAmount: bigint;
   onClose: () => void;
-  onRevoke: (token: RevocableToken) => () => void;
+  onRevoke: (token: Token) => () => void;
 };
 
 export const RevokeStEthPopup = (props: Props) => {
