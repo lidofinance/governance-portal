@@ -53,6 +53,7 @@ export const ProgressBarWrapper = styled.div<ContainerProps>`
 
     & > ${ProgressBarFiller} {
       width: ${({ $progress }) => `${$progress}%`};
+      max-width: 100%;
       background-color: ${({ $variant }) => progressBarColors[$variant].filler};
     }
   }
