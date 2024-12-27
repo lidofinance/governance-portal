@@ -50,9 +50,11 @@ export const StatusBadge = ({
   );
 
   if (
-    visibleState === VisibleGovernanceState.BlockedVetoSignalling ||
-    visibleState === VisibleGovernanceState.BlockedRageQuit ||
-    visibleState === VisibleGovernanceState.BlockedDeactivation
+    (visibleState === VisibleGovernanceState.BlockedVetoSignalling ||
+      visibleState === VisibleGovernanceState.BlockedRageQuit ||
+      visibleState === VisibleGovernanceState.BlockedDeactivation) &&
+    proposalStatus !== ProposalStatus.Executed &&
+    proposalStatus !== ProposalStatus.Scheduled
   ) {
     return (
       <Badge

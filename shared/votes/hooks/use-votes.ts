@@ -133,7 +133,8 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
             ? votes.filter(
                 (vote) =>
                   vote.state.status === VoteStatus.ActiveMain ||
-                  vote.state.status === VoteStatus.ActiveObjection,
+                  vote.state.status === VoteStatus.ActiveObjection ||
+                  vote.canExecute,
               )
             : votes,
         };
