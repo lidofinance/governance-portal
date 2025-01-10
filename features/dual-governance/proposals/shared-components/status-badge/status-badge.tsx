@@ -11,6 +11,8 @@ import { useProposalTimelock } from 'features/dual-governance/hooks/use-proposal
 import { useMemo } from 'react';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { DGTooltip } from 'features/dual-governance/tooltips';
+import { FlexWrapper } from 'shared/styled-components';
 
 type Props = {
   proposalStatus: ProposalStatus;
@@ -84,7 +86,10 @@ export const StatusBadge = ({
           statusBadgeVariant[ProposalExtraStatus.ReadyToExecute] || 'default'
         }
       >
-        {statusBadgeContent[ProposalExtraStatus.ReadyToExecute]}
+        <FlexWrapper $alignItems="flex-start" $gap="4px">
+          {statusBadgeContent[ProposalExtraStatus.ReadyToExecute]}{' '}
+          {<DGTooltip topic="readyToExecute" />}
+        </FlexWrapper>
       </Badge>
     );
   }

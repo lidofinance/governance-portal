@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { parsePercent16 } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
+import { DGTooltip } from 'features/dual-governance/tooltips';
 
 export const DeactivationAdditionalSupportInfo = () => {
   const { data: dgConfig, isLoading } = useDualGovernanceConfig();
@@ -80,8 +81,8 @@ export const DeactivationAdditionalSupportInfo = () => {
     <Text color="secondary">
       If <Text as="b">{amountUntilVetoSignalling}%</Text> more {Token.stETH}{' '}
       added by <Text as="b">{restartDate?.date}</Text> {restartDate?.timezone}{' '}
-      VetoSignaling restarts. If not, Cooldown begins, and proposals can be
-      executed
+      VetoSignaling restarts. If not, Cooldown <DGTooltip topic="cooldown" />{' '}
+      begins, and proposals can be executed
     </Text>
   );
 };

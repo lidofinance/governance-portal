@@ -141,8 +141,7 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
         detailedState.effectiveState === GovernanceState.RageQuit;
 
       return {
-        // visibleState,
-        visibleState: VisibleGovernanceState.BlockedRageQuit,
+        visibleState,
         rageQuitSupport,
         totalStEthInEscrow: formatEth(totalStEthInEscrow),
         amountTillNextPhasePercent: parsePercent16(amountTillNextPhase),
