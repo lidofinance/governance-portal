@@ -37,10 +37,6 @@ export const CommitteeCardHeading = styled.div`
   align-items: center;
 `;
 
-export const CommitteeCardTitle = styled(Text)`
-  font-weight: 500;
-`;
-
 export const StyledDGLink = styled(Link)`
   &:visited,
   &:active {
@@ -48,18 +44,6 @@ export const StyledDGLink = styled(Link)`
   }
   font-size: 17px;
   font-weight: 600;
-`;
-
-export const ProposalDescription = styled(Text)`
-  margin-top: 14px;
-`;
-
-export const SingersSection = styled.section`
-  flex-shrink: 0;
-`;
-
-export const ProposalDataSection = styled.section`
-  width: 50%;
 `;
 
 export const StyledAragonLink = styled(Link)`

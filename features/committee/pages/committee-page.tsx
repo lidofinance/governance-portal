@@ -21,15 +21,11 @@ const committeesMock = [
   },
   {
     id: 1,
-    label: 'DAO Committee',
-  },
-  {
-    id: 2,
     label: 'NO Committee',
   },
   {
-    id: 3,
-    label: 'CSM Committee',
+    id: 2,
+    label: 'DAO Committee',
   },
   {
     id: 4,
@@ -78,8 +74,8 @@ export const CommitteePage = () => {
             .slice(0, 4)
             .map((proposal) => (
               <CommitteeProposalCard
+                isTiebreaker={activeCommittee.id === 0}
                 key={proposal.id}
-                committeeId={activeCommittee.id}
                 proposalId={proposal.id}
               />
             ))}
