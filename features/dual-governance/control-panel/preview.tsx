@@ -25,7 +25,7 @@ import { PROPOSALS_PATH } from 'constants/urls';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useDualGovernanceConfig } from '../hooks/use-dual-governance-config';
-import { useCountdown } from '../../../shared/hooks/use-countdown';
+import { DGTooltip } from '../tooltips';
 
 const PROPOSALS_TO_SHOW = 3;
 
@@ -75,9 +75,9 @@ const ActiveProposal = ({
         vetoSignallingDeactivationMaxDuration
       : 0;
 
-  const deactivationDate = getDateFromTimestamp({ 
+  const deactivationDate = getDateFromTimestamp({
     timestamp: deactivationTargetTimestamp,
-    showYear: true 
+    showYear: true,
   });
 
   if (isVote) {
@@ -131,7 +131,9 @@ const ActiveProposal = ({
   if (visibleState === VisibleGovernanceState.BlockedDeactivation) {
     return (
       <ActiveProposalWrapper proposalId={proposal.id}>
-        <span>Blocked until <b>{deactivationDate.date}</b> {deactivationDate.tz}</span>
+        <span>
+          Blocked until <b>{deactivationDate.date}</b> {deactivationDate.tz}
+        </span>
       </ActiveProposalWrapper>
     );
   }
@@ -156,7 +158,9 @@ const ActiveProposal = ({
       if (timelockHasPassed) {
         return (
           <ActiveProposalWrapper proposalId={proposal.id}>
-            <span>Ready to Execute</span>
+            <span>
+              Ready to Execute <DGTooltip topic="readyToExecute" />
+            </span>
           </ActiveProposalWrapper>
         );
       } else {
@@ -210,8 +214,10 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       <Description>
         Support Veto with your stETH to help block all proposals execution
-        temporarily (VetoSignaling) or withdraw your stETH before execution
-        (RageQuit).
+        temporarily (VetoSignaling <DGTooltip topic="vetoSignalling" />) or
+        withdraw your stETH before execution (RageQuit{' '}
+        <DGTooltip topic="rageQuit" />
+        ).
       </Description>
       <PreviewControls>
         {isConnected ? (
