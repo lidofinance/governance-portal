@@ -1,5 +1,5 @@
 import { InfoTooltip } from 'shared/components/info-tooltip';
-import { StyledTitle } from './style';
+import { StyledContent } from './style';
 
 export const tooltipTitle = {
   dualGovernance: `Dual Governance allows stakers to withdraw their ETH in the event of a contentious proposal, while also enabling them to express concerns about its content. It requires consensus from both parties, enhancing security and decentralization.`,
@@ -18,6 +18,6 @@ type Props = {
 
 export const DGTooltip = ({ topic }: Props) => {
   return (
-    <InfoTooltip title={<StyledTitle>{tooltipTitle[topic]}</StyledTitle>} />
+    <InfoTooltip title={<StyledContent>{tooltipTitle[topic]}</StyledContent>} />
   );
 };

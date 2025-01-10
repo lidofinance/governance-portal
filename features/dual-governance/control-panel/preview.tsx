@@ -11,6 +11,7 @@ import {
   ProposalWrapper,
   VoteWrapper,
   InlineLoaderStyled,
+  IconWrapper,
 } from './style';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
@@ -26,6 +27,7 @@ import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useDualGovernanceConfig } from '../hooks/use-dual-governance-config';
 import { DGTooltip } from '../tooltips';
+import { FlexWrapper } from 'shared/styled-components';
 
 const PROPOSALS_TO_SHOW = 3;
 
@@ -42,7 +44,9 @@ const ActiveProposalWrapper = ({
 }) => {
   return (
     <ProposalWrapper>
-      <ProposalsIcon />
+      <IconWrapper>
+        <ProposalsIcon />
+      </IconWrapper>
       <Text size={22}>
         <Link href={`${PROPOSALS_PATH}/${proposalId}`}>
           {`Proposal #${proposalId} `}
@@ -158,9 +162,10 @@ const ActiveProposal = ({
       if (timelockHasPassed) {
         return (
           <ActiveProposalWrapper proposalId={proposal.id}>
-            <span>
-              Ready to Execute <DGTooltip topic="readyToExecute" />
-            </span>
+            <FlexWrapper $gap="6px" $alignItems="flex-start">
+              <span>Ready to Execute</span>
+              <DGTooltip topic="readyToExecute" />
+            </FlexWrapper>
           </ActiveProposalWrapper>
         );
       } else {

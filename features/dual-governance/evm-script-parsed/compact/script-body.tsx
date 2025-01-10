@@ -1,8 +1,5 @@
-import { Text } from '@lidofinance/lido-ui';
-import {
-  CallTitle,
-  CallWrapper,
-} from 'features/dual-governance/evm-script-parsed/compact/style';
+import { Box, Text } from '@lidofinance/lido-ui';
+import { CallTitle } from 'features/dual-governance/evm-script-parsed/compact/style';
 import { DecodedCall } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
 
 type Props = {
@@ -14,7 +11,7 @@ export const ScriptBody = ({ calls }: Props) => {
   return (
     <>
       {calls.map(({ id, contractName, decoded }) => (
-        <CallWrapper key={`call-${id}`}>
+        <Box marginBottom={8} key={`call-${id}`}>
           <Text size="sm" color="secondary">
             Call{' '}
             <CallTitle $warning={!decoded?.functionName}>
@@ -25,7 +22,7 @@ export const ScriptBody = ({ calls }: Props) => {
               {contractName || 'Unknown contract'}
             </CallTitle>
           </Text>
-        </CallWrapper>
+        </Box>
       ))}
     </>
   );

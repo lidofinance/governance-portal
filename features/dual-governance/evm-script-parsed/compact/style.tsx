@@ -11,10 +11,6 @@ export const CallTitle = styled.span<{ $warning?: boolean }>`
   font-weight: 500;
 `;
 
-export const CallWrapper = styled.div`
-  margin-bottom: 8px;
-`;
-
 export const NestedPadding = styled.div`
   display: flex;
   gap: 16px;
