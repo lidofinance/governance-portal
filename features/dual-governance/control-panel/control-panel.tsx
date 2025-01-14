@@ -35,7 +35,7 @@ export const DualGovernanceControlPanel = () => {
     <ControlPanelWrapper>
       <ControlPanelHeader>
         <div>
-          <Text size={34} weight={500}>
+          <Text size={30} weight={500}>
             Dual Governance <DGTooltip topic="dualGovernance" />
           </Text>
         </div>

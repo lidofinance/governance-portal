@@ -26,7 +26,7 @@ type Props = {
 
 export const Badge = styled.div<Props>`
   ${({ $variant }) => variantStyles[$variant]}
-  padding: 4px 14px;
+  padding: 4px 10px;
   border-radius: 40px;
   flex-grow: 0;
   font-size: 15px;

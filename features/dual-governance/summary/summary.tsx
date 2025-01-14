@@ -2,6 +2,7 @@ import { StateInfo } from './state-info';
 import { SupportInfo } from './support-info';
 import { ProposalsInfo } from './proposals-info';
 import styled from 'styled-components';
+import { devicesHeaderMedia } from 'styles/global';
 
 const DualGovernanceSummaryWrapper = styled.div`
   display: flex;
@@ -15,6 +16,16 @@ const DualGovernanceSummaryWrapper = styled.div`
   border-right: 1px solid var(--border-color-fog);
   border-top-left-radius: inherit;
   border-bottom-left-radius: inherit;
+
+  @media ${devicesHeaderMedia.mobile} {
+    width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: inherit;
+    border-right: none;
+
+    border-bottom: 1px solid var(--border-color-fog);
+  }
 `;
 
 export const DualGovernanceSummary = () => {

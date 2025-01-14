@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Block, InlineLoader } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const ProposalListItemWrapper = styled(Block)`
   font-size: 26px;
@@ -9,6 +10,9 @@ export const ProposalListItemWrapper = styled(Block)`
   cursor: pointer;
   padding: 30px;
   height: 100%;
+  @media ${devicesHeaderMedia.mobile} {
+    flex-direction: column;
+  }
 `;
 
 export const SummarySection = styled.section`
@@ -17,6 +21,9 @@ export const SummarySection = styled.section`
   justify-content: flex-start;
   padding-right: 20px;
   padding-top: 12px;
+  @media ${devicesHeaderMedia.mobile} {
+    padding: 20px 0;
+  }
 `;
 
 export const ProposalDescription = styled.div`
@@ -26,6 +33,12 @@ export const ProposalDescription = styled.div`
   width: 50%;
   flex-shrink: 0;
   border-left: 1px solid #0000001a;
+  @media ${devicesHeaderMedia.mobile} {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #0000001a;
+    padding: 20px 0 0;
+  }
 `;
 
 export const DescriptionText = styled(Text)`
@@ -40,6 +53,10 @@ export const ProposalsListWrapper = styled.section`
   gap: 20px;
   margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   width: 100%;
+
+  @media ${devicesHeaderMedia.mobile} {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const VoteStatusWrapper = styled.div`
