@@ -34,7 +34,7 @@ yarn dev
 for IPFS mode below:
 
 ```bash
-yarn dev:ipfs # will start with HMR
+yarn dev:ipfs ## will start with HMR
 ```
 
 # Release flow
