@@ -4,6 +4,7 @@ import { VoteData, VoteStatus } from 'shared/votes/types';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { FlexWrapper } from 'shared/styled-components';
 import { useCountdown } from '../../../../../shared/hooks/use-countdown';
+import { useMemo } from 'react';
 
 type Props = {
   startDate: bigint;
@@ -32,14 +33,21 @@ export const VoteStatusBadge = ({
     isFinished: isObjectionPhaseFinished,
   } = useCountdown(objectionPhaseEndTimestamp);
 
-  const isWinning = yea > nay;
+  const isWinning = useMemo(() => yea > nay, [yea, nay]);
+
+  const showIsWinning = useMemo(
+    () => [yea, nay].some((votePower) => votePower !== 0n),
+    [yea, nay],
+  );
 
   return (
     <>
       <FlexWrapper $alignItems="flex-start" $gap="8px">
-        <Badge $variant={isWinning ? 'success' : 'danger'}>
-          {`Winning: ${isWinning ? 'Yes' : 'No'}`}
-        </Badge>
+        {showIsWinning && (
+          <Badge $variant={isWinning ? 'success' : 'danger'}>
+            {`Winning: ${isWinning ? 'Yes' : 'No'}`}
+          </Badge>
+        )}
         <Badge $variant={state.isQuorumReached ? 'success' : 'default'}>
           {state.isQuorumReached ? 'Quorum reached' : 'No quorum'}
         </Badge>

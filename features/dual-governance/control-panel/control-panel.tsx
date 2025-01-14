@@ -7,6 +7,7 @@ import { RevocationPanel } from './revocation-panel';
 import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
 import { InlineLoader, Loader } from '@lidofinance/lido-ui';
+import { DGTooltip } from '../tooltips';
 
 export const DualGovernanceControlPanel = () => {
   const [activeTab, setActiveTab] = useState('support');
@@ -35,7 +36,7 @@ export const DualGovernanceControlPanel = () => {
       <ControlPanelHeader>
         <div>
           <Text size={34} weight={500}>
-            Dual Governance
+            Dual Governance <DGTooltip topic="dualGovernance" />
           </Text>
         </div>
         <ToggleButton

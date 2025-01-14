@@ -37,6 +37,8 @@ export const ProposalsList = () => {
 
   const [pageLimit, setPageLimit] = useState(initialLimit);
 
+  console.log(combinedData, 'combinedData');
+
   const handleLoadMore = () => {
     setCurrentPage(currentPage + 1);
     setPageLimit((prevState) => {

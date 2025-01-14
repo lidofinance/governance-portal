@@ -1,26 +1,25 @@
+import { useMemo } from 'react';
+import { Box } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
 import {
   CommitteeCardHeading,
-  CommitteeCardTitle,
   CommitteeCardWrapper,
-  ProposalDescription,
-  SingersSection,
-  ProposalDataSection,
   StyledDGLink,
   StyledAragonLink,
 } from './style';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
-import { useMemo } from 'react';
 import { Script } from 'features/dual-governance/evm-script-parsed/full';
 import { CommitteeProposalSignersInfo } from '../signers-info/committee-proposal-signers-info';
+import { TiebreakerQuorum } from '../tiebreaker-quorum';
 
 type Props = {
-  committeeId: number;
   proposalId: number;
+  isTiebreaker: boolean;
 };
 
-export const CommitteeProposalCard = ({ committeeId, proposalId }: Props) => {
+export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
   const { proposals } = useDualGovernanceProposalsContext();
   const proposal = useMemo(
     () => proposals.find((proposal) => proposal.id === proposalId),
@@ -35,41 +34,79 @@ export const CommitteeProposalCard = ({ committeeId, proposalId }: Props) => {
 
   return (
     <CommitteeCardWrapper>
-      <SingersSection>
+      <Box flexShrink="0">
         <CommitteeCardHeading>
-          <CommitteeCardTitle color="default" size={34}>
+          <Text color="default" size={34} weight={600}>
             {`Proposal #${proposalId}`}
-          </CommitteeCardTitle>
+          </Text>
+          {!isTiebreaker && (
+            <StyledDGLink
+              target="_blank"
+              href={`${PROPOSALS_PATH}/${proposalId}`}
+            >
+              Open in DG
+            </StyledDGLink>
+          )}
+        </CommitteeCardHeading>
+        {proposal?.voteId && (
+          <Box>
+            <Text color="primary">
+              Submitted from
+              <StyledAragonLink href="#">{` Aragon${proposal.voteId}`}</StyledAragonLink>{' '}
+              on{' '}
+              {
+                getDateFromTimestamp({
+                  timestamp: proposal.proposalDetails.submittedAt,
+                  showYear: true,
+                }).date
+              }
+            </Text>
+          </Box>
+        )}
+        {isTiebreaker && (
+          <Box marginTop={40}>
+            <TiebreakerQuorum />
+          </Box>
+        )}
+        {!isTiebreaker && (
+          <CommitteeProposalSignersInfo proposalId={proposalId} />
+        )}
+      </Box>
+      {!isTiebreaker && (
+        <Box width="50%">
+          {calls && calls.length > 0 && (
+            <Script
+              rawCalls={calls}
+              description={proposal.proposalDualGovernanceDetails?.metadata}
+            />
+          )}
+        </Box>
+      )}
+      {isTiebreaker && (
+        <Box width="100%">
+          <Text size={22} weight={600}>
+            Description
+          </Text>
+          <Box marginTop={10}>
+            <Text color="secondary">
+              <b>Disclaimer:</b> Description provided by the Aragon proposal
+              author; may include items not under Dual Governance
+            </Text>
+          </Box>
+          <Box marginTop={20}>
+            <Text color="primary">
+              {proposal.proposalDualGovernanceDetails?.metadata}
+            </Text>
+          </Box>
+          <br />
           <StyledDGLink
             target="_blank"
             href={`${PROPOSALS_PATH}/${proposalId}`}
           >
-            Open in DG
+            Open Full Proposal in Dual Governance
           </StyledDGLink>
-        </CommitteeCardHeading>
-        {proposal?.voteId && (
-          <ProposalDescription color="primary">
-            Submitted from
-            <StyledAragonLink href="#">{` Aragon${proposal.voteId}`}</StyledAragonLink>{' '}
-            on{' '}
-            {
-              getDateFromTimestamp({
-                timestamp: proposal.proposalDetails.submittedAt,
-                showYear: true,
-              }).date
-            }
-          </ProposalDescription>
-        )}
-        <CommitteeProposalSignersInfo proposalId={proposalId} />
-      </SingersSection>
-      <ProposalDataSection>
-        {calls && calls.length > 0 && (
-          <Script
-            rawCalls={calls}
-            description={proposal.proposalDualGovernanceDetails?.metadata}
-          />
-        )}
-      </ProposalDataSection>
+        </Box>
+      )}
     </CommitteeCardWrapper>
   );
 };

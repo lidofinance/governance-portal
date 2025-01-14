@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { ProgressBar } from 'shared/components/progress-bar';
 import { parsePercent16 } from 'shared/blockchain/utils';
 import { RageQuitProgress } from './rage-quit-progress';
+import { DGTooltip } from 'features/dual-governance/tooltips';
+import { FlexWrapper } from 'shared/styled-components';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;
@@ -30,9 +32,12 @@ export const SupportInfo = () => {
 
   return (
     <div>
-      <Text size={22} weight={300} color="secondary">
-        stETH veto support
-      </Text>
+      <FlexWrapper $alignItems="center" $justifyContent="flex-start" $gap="4px">
+        <Text size={22} weight={300} color="secondary">
+          stETH veto support
+        </Text>
+        <DGTooltip topic="vetoSupport" />
+      </FlexWrapper>
       {visibleState === VisibleGovernanceState.Loading ? (
         <InlineLoaderStyled />
       ) : (

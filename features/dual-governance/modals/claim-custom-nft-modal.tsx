@@ -6,6 +6,7 @@ import { StyledModal, StyledInput } from './style';
 // import { NftData } from '../nft/types';
 import { ActionsWrapper } from '../nft-multiselect/style';
 import { Button } from 'shared/components/button';
+import { DGTooltip } from '../tooltips';
 
 const mockNft = {
   id: 10423,
@@ -26,7 +27,7 @@ export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
 
   const Title = () => (
     <Text size="lg" strong>
-      Claim custom NFTs
+      Claim custom NFTs <DGTooltip topic="customNFT" />
     </Text>
   );
 

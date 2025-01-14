@@ -5,6 +5,7 @@ import { DeactivationAdditionalSupportInfo } from './deactivation-additional-sup
 import { VetoSignallingAdditionalSupportInfo } from './veto-signalling-additional-support-info';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { CooldownAdditionalSupportInfo } from './cooldown-additional-support-info';
+import { DGTooltip } from '../../tooltips';
 
 export const AdditionalSupportInfo = () => {
   const { visibleState, amountTillNextPhasePercent } =
@@ -31,8 +32,9 @@ export const AdditionalSupportInfo = () => {
   // VisibleGovernanceState.BlockedRageQuit
   return (
     <Text color="secondary">
-      VetoSignalling starts if <Text as="b">{amountTillNextPhasePercent}%</Text>{' '}
-      more {Token.stETH} is added
+      VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
+      <Text as="b">{amountTillNextPhasePercent}%</Text> more {Token.stETH} is
+      added
     </Text>
   );
 };

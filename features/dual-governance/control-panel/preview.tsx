@@ -11,6 +11,7 @@ import {
   ProposalWrapper,
   VoteWrapper,
   InlineLoaderStyled,
+  IconWrapper,
 } from './style';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
@@ -25,7 +26,8 @@ import { PROPOSALS_PATH } from 'constants/urls';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useDualGovernanceConfig } from '../hooks/use-dual-governance-config';
-import { useCountdown } from '../../../shared/hooks/use-countdown';
+import { DGTooltip } from '../tooltips';
+import { FlexWrapper } from 'shared/styled-components';
 
 const PROPOSALS_TO_SHOW = 3;
 
@@ -42,7 +44,9 @@ const ActiveProposalWrapper = ({
 }) => {
   return (
     <ProposalWrapper>
-      <ProposalsIcon />
+      <IconWrapper>
+        <ProposalsIcon />
+      </IconWrapper>
       <Text size={22}>
         <Link href={`${PROPOSALS_PATH}/${proposalId}`}>
           {`Proposal #${proposalId} `}
@@ -75,9 +79,9 @@ const ActiveProposal = ({
         vetoSignallingDeactivationMaxDuration
       : 0;
 
-  const deactivationDate = getDateFromTimestamp({ 
+  const deactivationDate = getDateFromTimestamp({
     timestamp: deactivationTargetTimestamp,
-    showYear: true 
+    showYear: true,
   });
 
   if (isVote) {
@@ -131,7 +135,9 @@ const ActiveProposal = ({
   if (visibleState === VisibleGovernanceState.BlockedDeactivation) {
     return (
       <ActiveProposalWrapper proposalId={proposal.id}>
-        <span>Blocked until <b>{deactivationDate.date}</b> {deactivationDate.tz}</span>
+        <span>
+          Blocked until <b>{deactivationDate.date}</b> {deactivationDate.tz}
+        </span>
       </ActiveProposalWrapper>
     );
   }
@@ -156,7 +162,10 @@ const ActiveProposal = ({
       if (timelockHasPassed) {
         return (
           <ActiveProposalWrapper proposalId={proposal.id}>
-            <span>Ready to Execute</span>
+            <FlexWrapper $gap="6px" $alignItems="flex-start">
+              <span>Ready to Execute</span>
+              <DGTooltip topic="readyToExecute" />
+            </FlexWrapper>
           </ActiveProposalWrapper>
         );
       } else {
@@ -210,8 +219,10 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       <Description>
         Support Veto with your stETH to help block all proposals execution
-        temporarily (VetoSignaling) or withdraw your stETH before execution
-        (RageQuit).
+        temporarily (VetoSignaling <DGTooltip topic="vetoSignalling" />) or
+        withdraw your stETH before execution (RageQuit{' '}
+        <DGTooltip topic="rageQuit" />
+        ).
       </Description>
       <PreviewControls>
         {isConnected ? (

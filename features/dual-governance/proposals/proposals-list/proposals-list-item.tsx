@@ -10,7 +10,10 @@ import {
   UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
+import {
+  ProposalCombinedData,
+  ProposalStatus,
+} from 'features/dual-governance/proposals/types';
 import { ProposalTimelock } from 'features/dual-governance/proposals/shared-components/proposal-timelock';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useDualGovernanceContext } from 'providers/dual-governance';
@@ -85,27 +88,32 @@ export const ProposalsListItem = ({
             scheduledAt={scheduledAt}
             hideOnCountdownFinish
           />
-          {visibleState === VisibleGovernanceState.BlockedVetoSignalling && (
-            <TimeLockDescription>
-              <span>Executable if:</span>
-              <br />
-              <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
-            </TimeLockDescription>
-          )}
-          {visibleState === VisibleGovernanceState.BlockedRageQuit && (
-            <TimeLockDescription>
-              <span>Executable if:</span>
-              <br />
-              <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
-              <br />
-              <span>RageQuit finished</span>
-            </TimeLockDescription>
-          )}
-          {visibleState === VisibleGovernanceState.BlockedDeactivation && (
-            <TimeLockDescription>
-              <span>Executable in {deactivationTimeFormatted}</span>
-            </TimeLockDescription>
-          )}
+          {visibleState === VisibleGovernanceState.BlockedVetoSignalling &&
+            status !== ProposalStatus.Scheduled && (
+              <TimeLockDescription>
+                <span>Executable if:</span>
+                <br />
+                <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
+              </TimeLockDescription>
+            )}
+          {visibleState === VisibleGovernanceState.BlockedRageQuit &&
+            status !== ProposalStatus.Executed &&
+            status !== ProposalStatus.Scheduled && (
+              <TimeLockDescription>
+                <span>Executable if:</span>
+                <br />
+                <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
+                <br />
+                <span>RageQuit finished</span>
+              </TimeLockDescription>
+            )}
+          {visibleState === VisibleGovernanceState.BlockedDeactivation &&
+            status !== ProposalStatus.Executed &&
+            status !== ProposalStatus.Scheduled && (
+              <TimeLockDescription>
+                <span>Executable in {deactivationTimeFormatted}</span>
+              </TimeLockDescription>
+            )}
         </TimelockWrapper>
       </SummarySection>
       <ProposalDescription>
