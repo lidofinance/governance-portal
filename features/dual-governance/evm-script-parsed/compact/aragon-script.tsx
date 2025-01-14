@@ -1,10 +1,9 @@
 import { useDecodedScript } from 'shared/hooks';
 import {
   CallTitle,
-  CallWrapper,
   NestedPadding,
 } from 'features/dual-governance/evm-script-parsed/compact/style';
-import { Text } from '@lidofinance/lido-ui';
+import { Box, Text } from '@lidofinance/lido-ui';
 import { getContractName } from 'utils/getContractName';
 import { Dispatch, Fragment, SetStateAction, useEffect } from 'react';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -66,7 +65,7 @@ const ScriptBody = ({ decodedCalls, onUnknownContractCalled }: BodyProps) => {
           decodedCallData,
         }) => (
           <Fragment key={id}>
-            <CallWrapper>
+            <Box>
               <Text size="sm" color="secondary">
                 Call{' '}
                 <CallTitle $warning={!abi?.name}>
@@ -93,7 +92,7 @@ const ScriptBody = ({ decodedCalls, onUnknownContractCalled }: BodyProps) => {
                     ))}
                 </>
               )}
-            </CallWrapper>
+            </Box>
           </Fragment>
         ),
       )}
