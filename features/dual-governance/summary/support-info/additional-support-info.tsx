@@ -4,6 +4,7 @@ import { Text } from 'shared/components/text';
 import { DeactivationAdditionalSupportInfo } from './deactivation-additional-support-info';
 import { VetoSignallingAdditionalSupportInfo } from './veto-signalling-additional-support-info';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { CooldownAdditionalSupportInfo } from './cooldown-additional-support-info';
 import { DGTooltip } from '../../tooltips';
 
 export const AdditionalSupportInfo = () => {
@@ -22,9 +23,12 @@ export const AdditionalSupportInfo = () => {
     return <DeactivationAdditionalSupportInfo />;
   }
 
+  if (visibleState === VisibleGovernanceState.Cooldown) {
+    return <CooldownAdditionalSupportInfo />;
+  }
+
   // VisibleGovernanceState.Normal
   // VisibleGovernanceState.Warning
-  // VisibleGovernanceState.Cooldown
   // VisibleGovernanceState.BlockedRageQuit
   return (
     <Text color="secondary">

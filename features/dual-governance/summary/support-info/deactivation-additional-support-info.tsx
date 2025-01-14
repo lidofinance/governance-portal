@@ -3,7 +3,7 @@ import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
-import { parsePercent16 } from 'shared/blockchain/utils';
+import { formatNumber, parsePercent16 } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from 'features/dual-governance/tooltips';
 
@@ -16,7 +16,7 @@ export const DeactivationAdditionalSupportInfo = () => {
     if (!detailedState || !dgConfig) return;
 
     const currentTimestamp = Math.floor(Date.now() / 1000);
-    const { vetoSignallingActivatedAt } = detailedState;
+    const { persistedStateEnteredAt } = detailedState;
     const {
       firstSealRageQuitSupport,
       secondSealRageQuitSupport,
@@ -25,7 +25,7 @@ export const DeactivationAdditionalSupportInfo = () => {
     } = dgConfig;
 
     const timestampDiff =
-      currentTimestamp - vetoSignallingActivatedAt - vetoSignallingMinDuration;
+      currentTimestamp - persistedStateEnteredAt - vetoSignallingMinDuration;
 
     if (timestampDiff < 0) {
       // edge case
@@ -46,16 +46,16 @@ export const DeactivationAdditionalSupportInfo = () => {
       return null;
     }
 
-    return result;
+    return formatNumber({ value: result, maxFractionDigits: 2 });
   }, [detailedState, dgConfig]);
 
   const restartDate = useMemo(() => {
     if (!dgConfig || !detailedState) return;
 
     const { vetoSignallingDeactivationMaxDuration } = dgConfig;
-    const { vetoSignallingActivatedAt } = detailedState;
+    const { persistedStateEnteredAt } = detailedState;
     const date = fromUnixTime(
-      vetoSignallingActivatedAt + vetoSignallingDeactivationMaxDuration,
+      persistedStateEnteredAt + vetoSignallingDeactivationMaxDuration,
     );
 
     return {
