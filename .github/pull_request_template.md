@@ -19,4 +19,4 @@
 ### Checklist:
 
 - [ ]  Checked the changes locally.
-- [ ]  Affects / requires changes in other services (Matomo / Sentry / CloudFlare / etc.).
+- [ ]  Affects / requires changes in other services ( Sentry / CloudFlare / etc.).

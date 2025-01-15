@@ -90,11 +90,6 @@ export const TimelockWrapper = styled.div`
   margin-top: 12px;
 `;
 
-export const TimeLockDescription = styled(Text)`
-  font-size: 17px;
-  color: var(--primary-color-black-72);
-`;
-
 export const StatusBadgeWrapper = styled.div`
   justify-self: flex-start;
   align-self: flex-start;

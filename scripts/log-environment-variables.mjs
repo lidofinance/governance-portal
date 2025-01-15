@@ -20,16 +20,11 @@ export const openKeys = [
 
   // 'ETH_API_BASE_PATH',
   // 'WQ_API_BASE_PATH',
-  // 'MATOMO_URL',
   'WALLETCONNECT_PROJECT_ID',
   // 'REWARDS_BACKEND_BASE_PATH',
 ];
 
-export const secretKeys = [
-  'EL_RPC_URLS_1',
-  'EL_RPC_URLS_17000',
-]
-
+export const secretKeys = ['EL_RPC_URLS_1', 'EL_RPC_URLS_17000'];
 
 export const logOpenEnvironmentVariables = () => {
   console.log('---------------------------------------------');

@@ -15,9 +15,7 @@ import {
 import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 
 import { Script } from 'features/dual-governance/evm-script-parsed/full';
-import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
-import { ProposalTimelock } from 'features/dual-governance//proposals/shared-components/proposal-timelock';
 import { Button } from 'shared/components/button';
 import {
   DualGovernance,
@@ -29,6 +27,8 @@ import { useExecuteProposalAction } from 'features/dual-governance/write-actions
 import invariant from 'tiny-invariant';
 import { ArrowRight } from 'shared/components/icons';
 import { useRouter } from 'next/router';
+import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
+import { Badge } from '../shared-components/vote-status-badge/style';
 
 type Props = {
   id: number;
@@ -42,6 +42,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
     isLoading,
     refetch: refetchProposal,
   } = useProposal({ id });
+
+  const proposalStatusInfo = useProposalStatus({
+    proposalStatus: proposal?.proposalDetails.status,
+    submittedAt: proposal?.proposalDetails.submittedAt,
+    scheduledAt: proposal?.proposalDetails.scheduledAt,
+  });
 
   const dualGovernance = useReadContract(DualGovernance);
   const emergencyProtectedTimelock = useReadContract(
@@ -121,19 +127,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
         <ArrowIconWrapper onClick={router.back}>
           <ArrowRight />
         </ArrowIconWrapper>
-        {status && (
-          <StatusBadge
-            proposalStatus={status}
-            submittedAt={submittedAt}
-            scheduledAt={scheduledAt}
-          />
+        {proposalStatusInfo && proposalStatusInfo.badge && (
+          <Badge $variant={proposalStatusInfo.badge.variant}>
+            {proposalStatusInfo.badge.text}
+          </Badge>
         )}
-        <ProposalTimelock
-          proposalStatus={status}
-          submittedAt={submittedAt}
-          scheduledAt={scheduledAt}
-          hideOnCountdownFinish
-        />
+        {proposalStatusInfo?.info && proposalStatusInfo.info}
       </ProposalHeader>
       <ProposalName>Proposal #{id}</ProposalName>
       {proposal.proposalDetails.submittedAt && (
