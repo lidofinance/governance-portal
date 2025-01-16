@@ -12,7 +12,7 @@ type UseProposalTimelockProps = {
 const PROPOSAL_AFTER_SUBMIT_DELAY_CONTRACT_METHOD = 'getAfterSubmitDelay';
 const PROPOSAL_AFTER_SCHEDULE_DELAY_CONTRACT_METHOD = 'getAfterScheduleDelay';
 
-const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
+export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );

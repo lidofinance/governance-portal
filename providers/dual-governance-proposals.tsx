@@ -1,6 +1,7 @@
 import {
   createContext,
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -17,11 +18,9 @@ import {
 } from 'features/dual-governance/proposals/types';
 import { useVotes } from 'shared/votes/hooks/use-votes';
 import { isVoteItem } from 'features/dual-governance/types';
-import { useRouter } from 'next/router';
 import { VoteData } from 'shared/votes/types';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 
-const PROPOSALS_LIMIT = 5;
 const VOTES_LIMIT = 5;
 
 type ProposalsContextType = {
@@ -66,8 +65,6 @@ const getCombinedData = (
 export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const router = useRouter();
-
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [proposals, setProposals] = useState<ProposalCombinedData[]>([]);
@@ -93,11 +90,14 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
     );
   }, [proposals]);
 
-  const getProposalById = (id: number) => {
-    const proposal = proposals.find((proposal) => Number(proposal.id) === id);
+  const getProposalById = useCallback(
+    (id: number) => {
+      const proposal = proposals.find((proposal) => Number(proposal.id) === id);
 
-    return proposal || null;
-  };
+      return proposal || null;
+    },
+    [proposals],
+  );
 
   useEffect(() => {
     if (proposalsData.data?.proposals) {
@@ -139,10 +139,10 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       currentPage,
       proposalsData.isFetching,
       proposalsData.isLoading,
-      proposalsData.refetch,
       isVotesFetching,
       isVotesLoading,
       getProposalById,
+      refetchProposals,
     ],
   );
   return (

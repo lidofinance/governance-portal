@@ -48,6 +48,7 @@ export const HomePageIpfs: FC = () => {
    * Example: https://v5.reactrouter.com/web/api/match
    */
   let spaPage;
+  // eslint-disable-next-line sonarjs/no-small-switch
   switch (parsedPath[0]) {
     case getPathWithoutFirstSlash(SETTINGS_PATH): {
       spaPage = <SettingsPage />;

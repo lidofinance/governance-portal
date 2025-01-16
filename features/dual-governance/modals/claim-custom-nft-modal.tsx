@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback } from 'react';
+import { useCallback } from 'react';
 import { ModalProps, Text } from '@lidofinance/lido-ui';
 import { StyledModal, StyledInput } from './style';
 
@@ -19,9 +19,7 @@ type Props = {
 } & ModalProps;
 
 export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
-  const handleInputSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const nftId: any = e.target.value;
-    console.log(nftId);
+  const handleInputSearch = useCallback(() => {
     // Todo: check if nft exists on escrow contract using WQ, get NFT from WQ, check if it's finalized using WQ
   }, []);
 

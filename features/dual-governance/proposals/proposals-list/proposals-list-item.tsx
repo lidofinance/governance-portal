@@ -1,28 +1,21 @@
-import { StatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
 import {
   DescriptionText,
   ProposalDescription,
   ProposalListItemWrapper,
   StatusBadgeWrapper,
   SummarySection,
-  TimeLockDescription,
   TimelockWrapper,
   UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import {
-  ProposalCombinedData,
-  ProposalStatus,
-} from 'features/dual-governance/proposals/types';
-import { ProposalTimelock } from 'features/dual-governance/proposals/shared-components/proposal-timelock';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
-import { useDualGovernanceContext } from 'providers/dual-governance';
-import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
-import { useCountdown } from 'shared/hooks/use-countdown';
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WarningIconTransparent } from 'shared/components/icons';
+import { useProposalStatus } from '../../hooks/use-proposal-status';
+import { Badge } from '../shared-components/vote-status-badge/style';
+import { Box } from '@lidofinance/lido-ui';
 
 type Props = {
   id: number;
@@ -39,24 +32,14 @@ export const ProposalsListItem = ({
 }: Props) => {
   const { chainId } = useLidoSDK();
 
-  const { data: dgConfig } = useDualGovernanceConfig();
-  const { visibleState, detailedState, firstSealRageQuitSupport } =
-    useDualGovernanceContext();
-  const vetoSignallingDeactivationMaxDuration =
-    dgConfig?.vetoSignallingDeactivationMaxDuration;
+  const { status, submittedAt } = proposalDetails;
 
-  const deactivationTargetTimestamp =
-    detailedState?.persistedStateEnteredAt &&
-    vetoSignallingDeactivationMaxDuration
-      ? detailedState.persistedStateEnteredAt +
-        vetoSignallingDeactivationMaxDuration
-      : 0;
+  const proposalStatusInfo = useProposalStatus({
+    proposalStatus: status,
+    submittedAt: submittedAt,
+    scheduledAt: proposalDetails.scheduledAt,
+  });
 
-  const { timeFormatted: deactivationTimeFormatted } = useCountdown(
-    deactivationTargetTimestamp,
-  );
-
-  const { status, scheduledAt, submittedAt } = proposalDetails;
   const descriptionLines = description.split('\n');
 
   const isUnknownContractCalled = calls.some((call) => {
@@ -75,45 +58,16 @@ export const ProposalsListItem = ({
           isUnknownContractCalled={isUnknownContractCalled}
         />
         <StatusBadgeWrapper>
-          <StatusBadge
-            proposalStatus={status}
-            submittedAt={submittedAt}
-            scheduledAt={scheduledAt}
-          />
+          {proposalStatusInfo && proposalStatusInfo.badge && (
+            <Badge $variant={proposalStatusInfo.badge.variant}>
+              {proposalStatusInfo.badge.text}
+            </Badge>
+          )}
         </StatusBadgeWrapper>
         <TimelockWrapper>
-          <ProposalTimelock
-            proposalStatus={status}
-            submittedAt={submittedAt}
-            scheduledAt={scheduledAt}
-            hideOnCountdownFinish
-          />
-          {visibleState === VisibleGovernanceState.BlockedVetoSignalling &&
-            status !== ProposalStatus.Scheduled && (
-              <TimeLockDescription>
-                <span>Executable if:</span>
-                <br />
-                <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
-              </TimeLockDescription>
-            )}
-          {visibleState === VisibleGovernanceState.BlockedRageQuit &&
-            status !== ProposalStatus.Executed &&
-            status !== ProposalStatus.Scheduled && (
-              <TimeLockDescription>
-                <span>Executable if:</span>
-                <br />
-                <span>{`stETH veto support < ${firstSealRageQuitSupport}%`}</span>
-                <br />
-                <span>RageQuit finished</span>
-              </TimeLockDescription>
-            )}
-          {visibleState === VisibleGovernanceState.BlockedDeactivation &&
-            status !== ProposalStatus.Executed &&
-            status !== ProposalStatus.Scheduled && (
-              <TimeLockDescription>
-                <span>Executable in {deactivationTimeFormatted}</span>
-              </TimeLockDescription>
-            )}
+          <Box width={200}>
+            {proposalStatusInfo?.info && proposalStatusInfo.info}
+          </Box>
         </TimelockWrapper>
       </SummarySection>
       <ProposalDescription>

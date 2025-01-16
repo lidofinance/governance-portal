@@ -1,5 +1,5 @@
-import { MouseEventHandler, useEffect, useState } from 'react';
-import { VoteStatusBadge } from 'features/dual-governance/proposals/shared-components/status-badge';
+import { useEffect, useState } from 'react';
+import { VoteStatusBadge } from 'features/dual-governance/proposals/shared-components/vote-status-badge';
 
 import {
   ProposalListItemWrapper,
@@ -12,10 +12,10 @@ import {
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
 import { VoteData } from 'shared/votes/types';
 import { useDecodedScript } from 'shared/hooks';
-import * as contractAddresses from '../../../../shared/blockchain/contract-addresses';
+import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { useLidoSDK } from '../../../../providers/lido-sdk';
-import { WarningIconTransparent } from '../../../../shared/components/icons';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { WarningIconTransparent } from 'shared/components/icons';
 
 type Props = {
   script: string;
@@ -44,7 +44,7 @@ export const VoteItem = ({
   const { decoded } = useDecodedScript(script);
 
   useEffect(() => {
-    if (decoded && decoded.calls.length) {
+    if (decoded && decoded.calls.length > 0) {
       const isUnknownContractCalled = decoded.calls.some((call) => {
         return !Object.values(contractAddresses).some(
           (contract) =>
@@ -54,7 +54,7 @@ export const VoteItem = ({
       });
       setIsUnknownContractCalled(isUnknownContractCalled);
     }
-  }, [decoded]);
+  }, [chainId, decoded]);
 
   return (
     <ProposalListItemWrapper>

@@ -33,7 +33,9 @@ export const TokenSelect = () => {
 
   return (
     <TokenSelectStyled>
-      <Text>Select a token to add to the VetoSignalling contract</Text>
+      <Text color="primary">
+        Select a token to add to the VetoSignalling contract
+      </Text>
       <Tabs>
         {VetoSupportedTokens.map((token) => (
           <Tab key={token} isActive={selectedToken === token}>

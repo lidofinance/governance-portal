@@ -30,7 +30,7 @@ export const LayoutSubTitleStyle = styled.h4`
 export const IPFSInfoBoxOnlyMobileAndPortableWrapper = styled.div`
   display: none;
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     display: block;
     margin-top: -6px;
     margin-bottom: 40px;

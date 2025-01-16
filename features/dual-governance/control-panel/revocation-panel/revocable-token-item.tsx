@@ -17,15 +17,8 @@ type Props = {
 
 export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
   (props: Props, ref) => {
-    const {
-      token,
-      amount,
-      isLocked,
-      addOnText,
-      unlockCountdown,
-      mode,
-      onClick,
-    } = props;
+    const { token, amount, isLocked, addOnText, unlockCountdown, onClick } =
+      props;
 
     if (!amount) {
       return null;

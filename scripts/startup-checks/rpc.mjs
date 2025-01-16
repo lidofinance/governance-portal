@@ -28,9 +28,8 @@ const getRPCUrls = (chainId) => {
 const pushRPCCheckResult = (domain, success) => {
   globalStartupRPCChecks.results.push({ domain, success });
 };
-
+/* eslint-disable no-console */
 const checkRPC = async (url, defaultChain) => {
-  console.log(url, defaultChain, 'url, defaultChain');
   let domain;
   try {
     domain = new URL(url).hostname;
@@ -52,7 +51,9 @@ const checkRPC = async (url, defaultChain) => {
       console.info(`[checkRPC] RPC ${domain} is working`);
       return true;
     } else {
-      throw new Error(`[checkRPC] Expected chainId ${defaultChain}, but got ${chainId}`);
+      throw new Error(
+        `[checkRPC] Expected chainId ${defaultChain}, but got ${chainId}`,
+      );
     }
   } catch (err) {
     console.error(`[checkRPC] Error checking RPC ${domain}: ${err.message}`);
@@ -65,27 +66,40 @@ const checkRPCWithRetries = async (url, defaultChain) => {
 
   for (let attempt = 1; attempt <= MAX_RETRY_COUNT; attempt++) {
     try {
-      console.info(`[checkRPCWithRetries] Attempt ${attempt} for RPC ${domain}`);
+      console.info(
+        `[checkRPCWithRetries] Attempt ${attempt} for RPC ${domain}`,
+      );
 
       const result = await Promise.race([
         checkRPC(url, defaultChain),
-        timeoutPromise(RPC_TIMEOUT_MS, `[checkRPCWithRetries] RPC ${domain} timed out`),
+        timeoutPromise(
+          RPC_TIMEOUT_MS,
+          `[checkRPCWithRetries] RPC ${domain} timed out`,
+        ),
       ]);
 
       if (!result) {
-        throw new Error('[checkRPCWithRetries] Promise(checkRPC) returned false!');
+        throw new Error(
+          '[checkRPCWithRetries] Promise(checkRPC) returned false!',
+        );
       }
 
       // Stop checking for ${url} with success (a success is set in the 'checkRPC' function)
       return true;
     } catch (err) {
-      console.error(`[checkRPCWithRetries] Error on attempt ${attempt} for RPC ${domain}: ${err.message}`);
+      console.error(
+        `[checkRPCWithRetries] Error on attempt ${attempt} for RPC ${domain}: ${err.message}`,
+      );
 
       if (attempt === MAX_RETRY_COUNT) {
-        console.error(`[checkRPCWithRetries] Failed after ${MAX_RETRY_COUNT} attempts for ${domain}`);
+        console.error(
+          `[checkRPCWithRetries] Failed after ${MAX_RETRY_COUNT} attempts for ${domain}`,
+        );
         pushRPCCheckResult(domain, false);
       } else {
-        console.info(`[checkRPCWithRetries] Retrying in ${RETRY_WAIT_TIME_MS} ms...`);
+        console.info(
+          `[checkRPCWithRetries] Retrying in ${RETRY_WAIT_TIME_MS} ms...`,
+        );
         await sleep(RETRY_WAIT_TIME_MS);
       }
     }
@@ -108,14 +122,18 @@ export const startupCheckRPCs = async () => {
       const defaultChain = parseInt(process.env.DEFAULT_CHAIN, 10);
       const rpcUrls = getRPCUrls(defaultChain);
 
-      if (!rpcUrls.length) {
+      if (rpcUrls.length === 0) {
         throw new Error('[startupCheckRPCs] No RPC URLs found!');
       }
 
-      const checkResults = await Promise.all(rpcUrls.map((url) => checkRPCWithRetries(url, defaultChain)));
+      const checkResults = await Promise.all(
+        rpcUrls.map((url) => checkRPCWithRetries(url, defaultChain)),
+      );
       const brokenRPCCount = checkResults.filter((success) => !success).length;
 
-      console.info(`[startupCheckRPCs] Working RPCs: ${rpcUrls.length - brokenRPCCount}`);
+      console.info(
+        `[startupCheckRPCs] Working RPCs: ${rpcUrls.length - brokenRPCCount}`,
+      );
       console.info(`[startupCheckRPCs] Broken RPCs: ${brokenRPCCount}`);
 
       return globalStartupRPCChecks.results;

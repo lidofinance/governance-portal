@@ -14,9 +14,9 @@ export const NftMultiselectItem = (props: NftMultiselectItemProps) => {
       <Text weight={600}>#{id}</Text>
       <Amount>{formatEth(stEthAmount)} stETH</Amount>
       {/* TODO: remove if not needed */}
-      {/* <StatusBadge $variant={nft.finalized ? 'success' : 'default'}>
+      {/* <ProposalStatus $variant={nft.finalized ? 'success' : 'default'}>
         {nft.finalized ? 'Finalized' : 'Not finalized'}
-      </StatusBadge> */}
+      </ProposalStatus> */}
     </NftItemWrapper>
   );
 };

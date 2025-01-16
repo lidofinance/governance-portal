@@ -13,7 +13,6 @@ import { Token } from 'shared/blockchain/types';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { formatEth } from 'shared/blockchain/utils';
 import { TokenBalance } from 'shared/components/token-balance';
-import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
 
 export const HeaderVaultInfo = () => {
