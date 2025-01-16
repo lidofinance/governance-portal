@@ -17,7 +17,7 @@ const DualGovernanceSummaryWrapper = styled.div`
   border-top-left-radius: inherit;
   border-bottom-left-radius: inherit;
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     width: 100%;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

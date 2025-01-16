@@ -6,10 +6,7 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { ActionArgs } from '../types';
 
-export const useScheduleProposalAction = ({
-  onConfirm,
-  onRetry,
-}: ActionArgs) => {
+export const useScheduleProposalAction = ({ onConfirm }: ActionArgs) => {
   const { data: isMultisig } = useIsContract();
 
   const { txModalStages } = useScheduleProposalTxModal();
@@ -30,11 +27,6 @@ export const useScheduleProposalAction = ({
           txModalStages.successMultisig();
           return true;
         }
-
-        console.log(
-          `Transaction scheduleProposal sent for proposal #${id}`,
-          txHash,
-        );
 
         await waitForTx(txHash);
 

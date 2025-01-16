@@ -95,8 +95,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
         console.error('Failed to fetch proposal actions', e);
       }
     };
-    fetchActions();
-  }, [id, proposal]);
+    void fetchActions();
+  }, [dualGovernance, emergencyProtectedTimelock, id, proposal]);
 
   const handleSchedule = async () => {
     setIsScheduleLoading(true);
@@ -119,7 +119,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     );
   }
 
-  const { calls, status, submittedAt, scheduledAt } = proposal.proposalDetails;
+  const { calls } = proposal.proposalDetails;
 
   return (
     <ProposalContainer>

@@ -26,7 +26,7 @@ export const TiebreakerQuorum = () => {
               <Text>3/4</Text>
             </td>
             <td>
-              <Text color="secondary">Voted "Yes"</Text>
+              <Text color="secondary">Voted &quot;Yes&quot;</Text>
             </td>
           </tr>
           <tr>
@@ -37,7 +37,7 @@ export const TiebreakerQuorum = () => {
               <Text>4/4</Text>
             </td>
             <td>
-              <Text color="secondary">Voted "Yes"</Text>
+              <Text color="secondary">Voted &quot;Yes&quot;</Text>
             </td>
           </tr>
           <tr>
@@ -48,7 +48,7 @@ export const TiebreakerQuorum = () => {
               <Text>2/4</Text>
             </td>
             <td>
-              <Text color="secondary">Voted "Yes"</Text>
+              <Text color="secondary">Voted &quot;Yes&quot;</Text>
             </td>
           </tr>
         </tbody>

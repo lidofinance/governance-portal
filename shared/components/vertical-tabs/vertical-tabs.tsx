@@ -1,5 +1,5 @@
 import { VerticalTab, VerticalTabsWrapper } from './style';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type Tab = {
   id: number;
@@ -25,10 +25,6 @@ export const VerticalTabs = ({
     setActiveTab(id);
     onTabChange(id);
   };
-
-  useEffect(() => {
-    onTabChange(activeTab);
-  }, []);
 
   return (
     <VerticalTabsWrapper $hasGap={hasBorder}>

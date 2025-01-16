@@ -33,6 +33,7 @@ export const ProposalsList = () => {
     const itemsLength = activeProposals.length + votes.length;
 
     return PAGE_LIMIT_STEP > itemsLength ? PAGE_LIMIT_STEP : itemsLength;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [pageLimit, setPageLimit] = useState(initialLimit);

@@ -23,7 +23,7 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
   const { proposals } = useDualGovernanceProposalsContext();
   const proposal = useMemo(
     () => proposals.find((proposal) => proposal.id === proposalId),
-    [proposalId],
+    [proposalId, proposals],
   );
 
   if (!proposal) {
@@ -68,9 +68,7 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
             <TiebreakerQuorum />
           </Box>
         )}
-        {!isTiebreaker && (
-          <CommitteeProposalSignersInfo proposalId={proposalId} />
-        )}
+        {!isTiebreaker && <CommitteeProposalSignersInfo />}
       </Box>
       {!isTiebreaker && (
         <Box width="50%">

@@ -1,10 +1,4 @@
-import {
-  AbiEvent,
-  decodeEventLog,
-  keccak256,
-  PublicClient,
-  stringToBytes,
-} from 'viem';
+import { decodeEventLog, keccak256, PublicClient, stringToBytes } from 'viem';
 import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lido-sdk/constants';
 import { ProposalLog } from 'features/dual-governance/proposals/types';

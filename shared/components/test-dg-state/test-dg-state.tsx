@@ -61,10 +61,8 @@ export const TestDgState = () => {
         account: walletClient.account.address,
       });
 
-      console.log('Transaction sent:', tx);
       setTx(tx);
-      const receipt = await client.waitForTransactionReceipt({ hash: tx });
-      console.log('Transaction receipt:', receipt);
+      // const receipt = await client.waitForTransactionReceipt({ hash: tx });
     } catch (error) {
       console.error('Error activating next state:', error);
     } finally {
@@ -149,6 +147,7 @@ export const TestDgState = () => {
                   <a
                     target="_blank"
                     href={`https://holesky.etherscan.io/tx/${tx}`}
+                    rel="noreferrer"
                   >
                     See transaction
                   </a>

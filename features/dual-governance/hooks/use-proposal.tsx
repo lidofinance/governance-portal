@@ -9,10 +9,10 @@ import {
   ProposalCombinedData,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
-import { useGetProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
+import { getProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
 
 type UseProposalConfig = {
-  id: bigint | number | null | undefined;
+  id: number;
   enabled?: boolean;
 };
 
@@ -41,7 +41,7 @@ export const useProposal = ({
           [proposalId],
         );
 
-        const { DGEvents, EPTEvents } = await useGetProposalSubmittedEvents({
+        const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
           client: publicClient,
           chainId,
           EPTContract: emergencyProtectedTimelock,

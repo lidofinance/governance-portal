@@ -26,13 +26,15 @@ export const openKeys = [
 
 export const secretKeys = ['EL_RPC_URLS_1', 'EL_RPC_URLS_17000'];
 
+/* eslint-disable no-console */
+
 export const logOpenEnvironmentVariables = () => {
   console.log('---------------------------------------------');
   console.log('Log environment variables (without secrets):');
   console.log('---------------------------------------------');
 
   for (const key of openKeys) {
-    if (!process.env.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
       console.error(`${key} - ERROR (not exist in process.env)`);
       continue;
     }
@@ -51,7 +53,7 @@ export const logSecretEnvironmentVariables = () => {
 
   // console.log('process.env:', process.env)
   for (const key of secretKeys) {
-    if (!process.env.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
       console.error(`Secret ${key} - ERROR (not exist in process.env)`);
       continue;
     }

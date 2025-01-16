@@ -1,9 +1,8 @@
 import { Badge, VotePhaseWrapper } from './style';
 import { Text } from 'shared/components/text';
 import { VoteData, VoteStatus } from 'shared/votes/types';
-import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { FlexWrapper } from 'shared/styled-components';
-import { useCountdown } from '../../../../../shared/hooks/use-countdown';
+import { useCountdown } from 'shared/hooks/use-countdown';
 import { useMemo } from 'react';
 
 type Props = {

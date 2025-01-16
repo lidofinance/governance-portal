@@ -19,7 +19,7 @@ export const FooterStyle = styled(Container)`
   max-width: var(--footer-max-width);
   padding: var(--footer-desktop-padding-y) var(--footer-desktop-padding-x);
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     margin-bottom: var(--footer-mobile-margin-bottom);
     padding: var(--footer-mobile-padding-x) var(--footer-mobile-padding-y);
     justify-content: center;

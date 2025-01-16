@@ -14,10 +14,6 @@ import {
 } from './style';
 import { Address } from '@lidofinance/lido-ui';
 
-type Props = {
-  proposalId: number;
-};
-
 const signersMock = [
   {
     logo: <AragonLogo />,
@@ -54,7 +50,7 @@ const signersMock = [
   },
 ];
 
-export const CommitteeProposalSignersInfo = ({ proposalId }: Props) => {
+export const CommitteeProposalSignersInfo = () => {
   return (
     <SignersInfoWrapper>
       <SignersInfoSummary>

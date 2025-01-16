@@ -1,8 +1,4 @@
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  useQuery,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
 
@@ -39,9 +35,8 @@ export const useActivateNextStateEventWatcher = ({
     eventName: 'DualGovernanceStateChanged',
     poll: true,
     pollingInterval: WATCH_EVENT_POLLING_INTERVAL,
-    onLogs(logs) {
-      console.log('Dual governance state changed', logs);
-      refetchFn();
+    onLogs() {
+      void refetchFn();
     },
   });
 };

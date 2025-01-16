@@ -12,7 +12,7 @@ export const ControlPanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     width: 100%;
     border-top-right-radius: 0;
     border-bottom-left-radius: inherit;

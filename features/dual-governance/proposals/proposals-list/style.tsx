@@ -10,7 +10,7 @@ export const ProposalListItemWrapper = styled(Block)`
   cursor: pointer;
   padding: 30px;
   height: 100%;
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     flex-direction: column;
   }
 `;
@@ -21,7 +21,7 @@ export const SummarySection = styled.section`
   justify-content: flex-start;
   padding-right: 20px;
   padding-top: 12px;
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     padding: 20px 0;
   }
 `;
@@ -33,7 +33,7 @@ export const ProposalDescription = styled.div`
   width: 50%;
   flex-shrink: 0;
   border-left: 1px solid #0000001a;
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     width: 100%;
     border-left: none;
     border-top: 1px solid #0000001a;
@@ -54,7 +54,7 @@ export const ProposalsListWrapper = styled.section`
   margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   width: 100%;
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     grid-template-columns: 1fr;
   }
 `;

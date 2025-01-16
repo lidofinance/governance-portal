@@ -107,7 +107,15 @@ export const useProposalStatus = ({
     if (proposalStatus === ProposalStatus.Scheduled && scheduledAt && delays) {
       setTargetTime(scheduledAt + delays.afterScheduleDelay);
     }
-  }, [proposalStatus, submittedAt, delays]);
+  }, [
+    proposalStatus,
+    submittedAt,
+    delays,
+    scheduledAt,
+    visibleState,
+    dgConfig?.vetoSignallingDeactivationMaxDuration,
+    detailedState?.persistedStateEnteredAt,
+  ]);
 
   if (!delays || !proposalStatus) {
     return null;

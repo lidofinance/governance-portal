@@ -18,7 +18,7 @@ const DashboardWrapper = styled(Block)`
   display: flex;
   min-height: 530px;
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     flex-direction: column;
   }
 `;

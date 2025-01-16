@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
-import { range, toNumber } from 'lodash';
+import { range } from 'lodash';
 import { getVoteStatus } from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { usePublicClient } from 'wagmi';

@@ -6,7 +6,6 @@ import { VetoSupportForm } from './veto-support-form';
 import { RevocationPanel } from './revocation-panel';
 import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
-import { InlineLoader, Loader } from '@lidofinance/lido-ui';
 import { DGTooltip } from '../tooltips';
 
 export const DualGovernanceControlPanel = () => {
@@ -16,10 +15,8 @@ export const DualGovernanceControlPanel = () => {
   const { data, isLoading } = useEscrowBalances();
 
   useEffect(() => {
-    if (!isLoading && data) {
-      if (data.lockedSharesInEscrow !== 0n) {
-        setIsPreviewVisible(false);
-      }
+    if (!isLoading && data && data.lockedSharesInEscrow !== 0n) {
+      setIsPreviewVisible(false);
     }
   }, [isLoading, data]);
 

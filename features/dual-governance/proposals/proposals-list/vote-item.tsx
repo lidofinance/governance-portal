@@ -44,7 +44,7 @@ export const VoteItem = ({
   const { decoded } = useDecodedScript(script);
 
   useEffect(() => {
-    if (decoded && decoded.calls.length) {
+    if (decoded && decoded.calls.length > 0) {
       const isUnknownContractCalled = decoded.calls.some((call) => {
         return !Object.values(contractAddresses).some(
           (contract) =>
@@ -54,7 +54,7 @@ export const VoteItem = ({
       });
       setIsUnknownContractCalled(isUnknownContractCalled);
     }
-  }, [decoded]);
+  }, [chainId, decoded]);
 
   return (
     <ProposalListItemWrapper>
