@@ -13,9 +13,13 @@ import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract
 import { getTokenAddress } from 'shared/blockchain/get-contract-address';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
-import { GovernanceState } from 'features/dual-governance/types';
+import {
+  GovernanceState,
+  VisibleGovernanceState,
+} from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { erc20Abi } from 'abi/ts';
+import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
 
 type UseWrapFormProcessorArgs = {
   approveData: UseApproveResponse;
@@ -37,8 +41,13 @@ export const useSupportFormProcessor = ({
   const processWrapTx = useSupportVetoTxSend(escrowAddress);
   const waitForTx = useTxConfirmation();
   const readTokenGetter = useReadContractGetter(erc20Abi);
-  const { detailedState } = useDualGovernanceContext();
+  const { detailedState, visibleState } = useDualGovernanceContext();
   const { approve, needsApprove } = approveData;
+
+  const needsRQApprove =
+    visibleState === VisibleGovernanceState.BlockedRageQuit;
+
+  const { confirm } = useConfirmModal();
 
   return useCallback(
     async ({ amount, token, selectedNftIds }: SupportFormInputType) => {
@@ -58,6 +67,20 @@ export const useSupportFormProcessor = ({
           approvalAmount = BigInt(Object.keys(selectedNftIds).length);
         }
         invariant(approvalAmount, 'amount must be presented');
+
+        const hasRQApprove = needsRQApprove
+          ? await confirm({
+              title: 'Warning: RageQuit is in Progress',
+              description:
+                'RageQuit is in progress. Depositing now may result in a long withdrawal times. Do you want to continue?',
+              confirmText: 'Proceed',
+              cancelText: 'Cancel',
+            })
+          : true;
+
+        if (needsRQApprove && !hasRQApprove) {
+          return true;
+        }
 
         if (needsApprove) {
           txModalStages.signApproval(approvalAmount, token);

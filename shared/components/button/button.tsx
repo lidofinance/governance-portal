@@ -35,7 +35,7 @@ export const ButtonStyled = styled(ButtonLib)<ButtonStyledProps>`
     border: 1px solid rgba(0, 0, 0, 0.1);
 
     &:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+      background-color: rgba(0, 0, 0, 0.1) !important;
     }
   `}
 `;
