@@ -99,7 +99,7 @@ const getEPTEvents = async ({
 
     invariant(adminExecutor, 'Contract not found');
 
-    let args: { executor?: Address; id?: bigint } = {
+    const args: { executor?: Address; id?: bigint } = {
       executor: adminExecutor as Address,
     };
 
@@ -129,7 +129,7 @@ const getEPTEvents = async ({
   }
 };
 
-export const useGetProposalSubmittedEvents = async ({
+export const getProposalSubmittedEvents = async ({
   proposalId,
   client,
   chainId,

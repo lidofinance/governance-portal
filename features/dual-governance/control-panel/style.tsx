@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { InlineLoader } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const ControlPanelWrapper = styled.div`
   padding: 40px;
@@ -10,6 +11,12 @@ export const ControlPanelWrapper = styled.div`
   border-bottom-right-radius: inherit;
   display: flex;
   flex-direction: column;
+
+  @media ${devicesHeaderMedia.tablet} {
+    width: 100%;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: inherit;
+  }
 `;
 
 export const ControlPanelHeader = styled.div`

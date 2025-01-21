@@ -15,6 +15,8 @@ import { Token } from 'shared/blockchain/types';
 import { erc20Abi } from 'abi/ts';
 import { ActionArgs } from '../types';
 import { useSupportVetoTxSender } from './tx-sender';
+import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
 
 type Args = {
   approveData: UseApproveResponse;
@@ -33,7 +35,13 @@ export const useSupportVetoAction = ({
   const waitForTx = useTxConfirmation();
   const readTokenGetter = useReadContractGetter(erc20Abi);
   const { isAssetManagementLocked } = useDualGovernanceContext();
+  const { visibleState } = useDualGovernanceContext();
   const { approve, needsApprove } = approveData;
+
+  const needsRQApprove =
+    visibleState === VisibleGovernanceState.BlockedRageQuit;
+
+  const { confirm } = useConfirmModal();
 
   return useCallback(
     async (args: EscrowActionArgs) => {
@@ -57,6 +65,19 @@ export const useSupportVetoAction = ({
           amount: approvalAmount,
           ids: args.token === Token.unstETH ? args.ids : [],
         };
+        const hasRQApprove = needsRQApprove
+          ? await confirm({
+              title: 'Warning: RageQuit is in Progress',
+              description:
+                'RageQuit is in progress. Depositing now may result in a long withdrawal times. Do you want to continue?',
+              confirmText: 'Proceed',
+              cancelText: 'Cancel',
+            })
+          : true;
+
+        if (needsRQApprove && !hasRQApprove) {
+          return true;
+        }
 
         if (needsApprove) {
           txModalStages.signApproval(actionArgs);
@@ -105,15 +126,17 @@ export const useSupportVetoAction = ({
     [
       address,
       isAssetManagementLocked,
+      needsRQApprove,
       needsApprove,
       txModalStages,
-      sendSupportVetoTx,
       isMultisig,
-      waitForTx,
       chainId,
       readTokenGetter,
       onConfirm,
       approve,
+      sendSupportVetoTx,
+      confirm,
+      waitForTx,
       onRetry,
     ],
   );

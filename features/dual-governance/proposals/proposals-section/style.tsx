@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Text } from '@lidofinance/lido-ui';
 import { InputNumber } from 'shared/components/input-number/input-number';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const ProposalsWrapper = styled.section`
   margin-top: 116px;
@@ -37,4 +38,15 @@ export const StyledSearchInput = styled(InputNumber)`
 export const SearchInputWrapper = styled.div`
   width: 100%;
   flex-shrink: 1.5;
+`;
+
+export const ProposalsDisclaimerWrapper = styled.section`
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  @media ${devicesHeaderMedia.tablet} {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;

@@ -3,7 +3,6 @@ import {
   Tabs,
   Tab,
   VoteScriptBodyWrap,
-  ScriptBox,
 } from 'features/dual-governance/evm-script-parsed/full/style';
 import { ScriptBody } from 'features/dual-governance/evm-script-parsed/full/script-body';
 import { decodeCalls } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
@@ -31,7 +30,7 @@ export const Script = ({ rawCalls, description }: Props) => {
     };
     const TabNames = Object.keys(tabMap) as (keyof typeof tabMap)[];
     return TabNames.filter((key) => tabMap[key]);
-  }, [decodedCalls.length]);
+  }, [decodedCalls.length, description]);
 
   return (
     <>

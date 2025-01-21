@@ -8,6 +8,7 @@ import { ProposalsSection } from '../proposals/proposals-section';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { VisibleGovernanceState } from '../types';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
+import { devicesHeaderMedia } from 'styles/global';
 
 const DashboardWrapper = styled(Block)`
   border: 1px solid var(--custom-border);
@@ -16,6 +17,10 @@ const DashboardWrapper = styled(Block)`
   border-radius: 60px;
   display: flex;
   min-height: 530px;
+
+  @media ${devicesHeaderMedia.tablet} {
+    flex-direction: column;
+  }
 `;
 
 export const DualGovernancePage = () => {

@@ -10,8 +10,8 @@ import { DGTooltip } from '../tooltips';
 import { useAccount } from 'wagmi';
 
 export const DualGovernanceControlPanel = () => {
-  const [activeTab, setActiveTab] = useState('support');
   const { isConnected } = useAccount();
+  const [activeTab, setActiveTab] = useState('support');
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
   const { data } = useEscrowBalances();

@@ -1,8 +1,4 @@
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  useQuery,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
 
@@ -22,7 +18,7 @@ import { Address } from 'viem';
 import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 
-const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
+const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;
 const WATCH_EVENT_POLLING_INTERVAL = 60000;
 
 type Args = {
@@ -39,9 +35,8 @@ export const useActivateNextStateEventWatcher = ({
     eventName: 'DualGovernanceStateChanged',
     poll: true,
     pollingInterval: WATCH_EVENT_POLLING_INTERVAL,
-    onLogs(logs) {
-      console.log('Dual governance state changed', logs);
-      refetchFn();
+    onLogs() {
+      void refetchFn();
     },
   });
 };
@@ -109,6 +104,12 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
       const warningStateThreshold =
         (firstSealRageQuitSupport * NORMAL_WARNING_STATE_THRESHOLD_PERCENT) /
         100n;
+
+      console.log(
+        rageQuitSupport,
+        warningStateThreshold,
+        'warningStateThreshold',
+      );
 
       let visibleState: VisibleGovernanceState = VisibleGovernanceState.Loading;
 

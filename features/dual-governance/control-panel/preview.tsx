@@ -84,21 +84,10 @@ const ActiveProposal = ({
     showYear: true,
   });
 
-  if (isVote) {
-    return (
-      <VoteWrapper>
-        <AragonLogo />
-        <Text size={22}>
-          <Link href={`${config.voteOrigin}/vote/${proposal.id}`}>
-            {`LDO Vote #${proposal.id} `}
-          </Link>
-          &mdash; Not submitted to Dual Governance yet
-        </Text>
-      </VoteWrapper>
-    );
-  }
-
-  const { status, submittedAt, scheduledAt } = proposal.proposalDetails;
+  const { status, submittedAt, scheduledAt } =
+    'proposalDetails' in proposal
+      ? proposal.proposalDetails
+      : { status: null, submittedAt: undefined, scheduledAt: undefined };
 
   const timelockData = useProposalTimelock({
     proposalStatus: status,
@@ -118,6 +107,20 @@ const ActiveProposal = ({
       <span>
         <b>{dateObj.date}</b> {dateObj.tz}
       </span>
+    );
+  }
+
+  if (isVote) {
+    return (
+      <VoteWrapper>
+        <AragonLogo />
+        <Text size={22}>
+          <Link href={`${config.voteOrigin}/vote/${proposal.id}`}>
+            {`LDO Vote #${proposal.id} `}
+          </Link>
+          &mdash; Not submitted to Dual Governance yet
+        </Text>
+      </VoteWrapper>
     );
   }
 
@@ -178,6 +181,8 @@ const ActiveProposal = ({
           </ActiveProposalWrapper>
         );
       }
+    default:
+      return <></>;
   }
 };
 

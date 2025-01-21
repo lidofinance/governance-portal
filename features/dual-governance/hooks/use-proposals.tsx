@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { usePublicClient, useWatchContractEvent } from 'wagmi';
+import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -10,7 +10,7 @@ import {
   ProposalDetails,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
-import { useGetProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
+import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
 
 type GetProposalResult = readonly [
   ProposalDetails,
@@ -58,7 +58,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
       }
 
       try {
-        const { DGEvents, EPTEvents } = await useGetProposalSubmittedEvents({
+        const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
           client: publicClient,
           chainId,
           EPTContract: emergencyProtectedTimelock,

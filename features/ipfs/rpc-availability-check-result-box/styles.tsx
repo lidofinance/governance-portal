@@ -37,7 +37,7 @@ export const Wrap = styled.div`
     border-radius: 2px 0 0 0;
     background: var(--lido-color-accent);
 
-    @media ${devicesHeaderMedia.mobile} {
+    @media ${devicesHeaderMedia.tablet} {
       display: none;
     }
   }

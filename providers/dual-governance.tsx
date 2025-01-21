@@ -64,7 +64,6 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
     error: dualGovernanceStateError,
     refetch: refetchDualGovernanceState,
   } = useDualGovernanceState({ vetoSignallingAddress });
-  console.log(addressDataError || dualGovernanceStateError);
 
   useActivateNextStateEventWatcher({
     chainId,

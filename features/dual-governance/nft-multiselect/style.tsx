@@ -71,16 +71,6 @@ export const ActionsWrapper = styled.section`
   gap: 10px;
 `;
 
-// TODO: remove if not used
-export const StatusBadge = styled.span<StatusBadgeProps>`
-  padding: 10px 30px;
-  border-radius: 20px;
-  background-color: ${({ $variant }) =>
-    $variant === 'success' ? '#29C38C33' : '#1312170F'};
-  color: ${({ $variant }) =>
-    $variant === 'success' ? '#29C38C' : '#131217B8'};
-`;
-
 export const NftMultiselectInput = styled(Input)`
   width: 100%;
   *,

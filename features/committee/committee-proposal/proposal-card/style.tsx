@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Block } from '@lidofinance/lido-ui';
-import { Text } from 'shared/components/text';
 import Link from 'next/link';
 
 export const CommitteeHeader = styled.div`

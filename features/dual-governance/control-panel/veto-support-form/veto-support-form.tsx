@@ -12,22 +12,6 @@ export const VetoSupportForm = () => {
         <TokenSelect />
         <VetoSupportFormControls />
         <SupportFormAdditionalInfo />
-        {/* {activeTab === 1 && (
-          <>
-            <StyledInput
-              onChange={handleInputChange}
-              // maxValue={BigNumber.from(10000)}
-              fullwidth
-              disabled={false}
-              placeholder="Enter your amount of wstETH"
-            />
-          </>
-        )}
-        {activeTab === 2 && (
-          <>
-            <NftMultiselect></NftMultiselect>
-          </>
-        )} */}
         <SubmitButtonSupport />
       </FormController>
     </SupportFormProvider>

@@ -4,11 +4,11 @@ import styled, { css } from 'styled-components';
 export const BackgroundGradientSvgStyle = styled.svg`
   position: fixed;
   z-index: -1;
-  width: 100vw;
-  height: calc(100vh + 40%);
+  width: calc(100vw + 400px);
+  height: calc(100vh + 190px);
   pointer-events: none;
-  top: -40%;
-  left: -15%;
+  top: -190px;
+  left: -400px;
 `;
 
 type GradientProps = {

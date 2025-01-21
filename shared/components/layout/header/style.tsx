@@ -9,6 +9,10 @@ export const HeaderContainer = styled((props) => <Container {...props} />)`
   padding: 25px 60px;
   display: flex;
   align-items: center;
+
+  @media ${devicesHeaderMedia.mobile} {
+    padding: 20px;
+  }
 `;
 
 export const HeaderActionsWrapper = styled.div`
@@ -40,7 +44,33 @@ export const LogoTextStyle = styled(Text).attrs({
     left: 0;
     top: -25%;
   }
+  @media ${devicesHeaderMedia.mobile} {
+    display: none;
+  }
 `;
+
+export const LogoTextStyleMobile = styled(Text).attrs({
+  strong: true,
+  size: 19,
+})`
+  display: none;
+  position: relative;
+  margin-left: 20px;
+  padding-left: 20px;
+    
+  &:before {
+      position: absolute;
+      content: '';
+      width: 1px;
+      height: 40px;
+      background-color: var(--primary-color-black-72);
+      left: 0;
+      top: -25%;
+  }
+  @media ${devicesHeaderMedia.mobile} {
+      display: block;
+  }
+}`;
 
 export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
   position: absolute;
@@ -49,7 +79,7 @@ export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
   width: 255px;
   z-index: 3;
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     display: none;
   }
 `;
