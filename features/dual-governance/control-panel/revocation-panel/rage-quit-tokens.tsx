@@ -5,6 +5,8 @@ import { Token } from 'shared/blockchain/types';
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
 import { useWithdrawEthAction } from 'features/dual-governance/write-actions/withdraw-eth';
+import { useRageQuitEscrowDetails } from 'features/dual-governance/hooks/use-rage-quit-escrow-details';
+import { useCountdown } from 'shared/hooks/use-countdown';
 
 type Props = {
   rageQuitBalance: {
@@ -23,6 +25,12 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
 
   const withdrawEth = useWithdrawEthAction({ onConfirm });
 
+  const { data } = useRageQuitEscrowDetails();
+
+  const { timeFormatted: assetsLockCountdown, isFinished } = useCountdown(
+    data?.withdrawalsUnlockTimestamp ?? 0,
+  );
+
   const handleWithdrawEth = useCallback(
     (token: Token) => async (selectedNftIds?: string[]) => {
       if (token === Token.unstETH) {
@@ -38,6 +46,8 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
     [stETHLockedShares, withdrawEth],
   );
 
+  const isWithdrawalLocked = !isFinished || !data?.withdrawalsUnlockTimestamp;
+
   return (
     <>
       <Text>Tokens in RageQuit contract</Text>
@@ -47,12 +57,16 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
           amount={stETHLockedShares}
           mode="withdraw"
           onClick={handleWithdrawEth(Token.stETH)}
+          unlockCountdown={assetsLockCountdown}
+          isLocked={isWithdrawalLocked}
         />
         <RevocableTokenItem
           token={Token.unstETH}
           amount={unstETHLockedShares}
           addOnText={`${unstETHIdsCount} NFT`}
           mode="withdraw"
+          unlockCountdown={assetsLockCountdown}
+          isLocked={isWithdrawalLocked}
           onClick={handleWithdrawEth(Token.unstETH)}
         />
       </RevocableTokensList>
