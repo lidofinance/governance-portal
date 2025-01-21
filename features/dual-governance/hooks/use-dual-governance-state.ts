@@ -18,7 +18,7 @@ import { Address } from 'viem';
 import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 
-const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 30n;
+const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;
 const WATCH_EVENT_POLLING_INTERVAL = 60000;
 
 type Args = {
@@ -104,6 +104,12 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
       const warningStateThreshold =
         (firstSealRageQuitSupport * NORMAL_WARNING_STATE_THRESHOLD_PERCENT) /
         100n;
+
+      console.log(
+        rageQuitSupport,
+        warningStateThreshold,
+        'warningStateThreshold',
+      );
 
       let visibleState: VisibleGovernanceState = VisibleGovernanceState.Loading;
 
