@@ -7,8 +7,10 @@ import { RevocationPanel } from './revocation-panel';
 import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
 import { DGTooltip } from '../tooltips';
+import { useAccount } from 'wagmi';
 
 export const DualGovernanceControlPanel = () => {
+  const { isConnected } = useAccount();
   const [activeTab, setActiveTab] = useState('support');
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
@@ -18,7 +20,10 @@ export const DualGovernanceControlPanel = () => {
     if (!isLoading && data && data.lockedSharesInEscrow !== 0n) {
       setIsPreviewVisible(false);
     }
-  }, [isLoading, data]);
+    if (!isConnected) {
+      setIsPreviewVisible(true);
+    }
+  }, [isLoading, data, isConnected]);
 
   if (isPreviewVisible) {
     return (
