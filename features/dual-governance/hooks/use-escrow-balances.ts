@@ -68,7 +68,7 @@ export const useEscrowBalances = () => {
       }
 
       // TODO: change mock value to a real one once we get into testing with real wsteth
-      const vetoSharesInWstEth = vetoSignallingBalance.stETHLockedShares;
+      const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
       // const vetoSharesInWstEth = await wstEth.readContract('getWstETHByStETH', [
       //   vetoSignallingBalance.stETHLockedShares,
       // ]);
@@ -79,6 +79,7 @@ export const useEscrowBalances = () => {
       return {
         vetoSignallingBalance: {
           totalLockedShares: vetoSignallingSum,
+          wstETHLockedShares,
           ...vetoSignallingBalance,
         },
         rageQuitBalance: {
@@ -86,7 +87,6 @@ export const useEscrowBalances = () => {
           ...rageQuitBalance,
         },
         lockedSharesInEscrow: vetoSignallingSum + rageQuitSum,
-        vetoSharesInWstEth,
         assetUnlockTimestamp,
       };
     },

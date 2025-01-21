@@ -3,15 +3,20 @@ import { useConnect } from 'reef-knot/core-react';
 import { useUserConfig } from 'config/user-config';
 import { Button } from 'shared/components/button';
 
-export const ConnectWalletButton = (props: ComponentProps<typeof Button>) => {
+type Props = {
+  onConnect?: () => void;
+} & ComponentProps<typeof Button>;
+
+export const ConnectWalletButton = (props: Props) => {
   const { isWalletConnectionAllowed } = useUserConfig();
-  const { onClick, ...rest } = props;
+  const { onClick, onConnect, ...rest } = props;
   const { connect } = useConnect();
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
     if (!isWalletConnectionAllowed) return;
-    void connect();
-  }, [isWalletConnectionAllowed, connect]);
+    await connect();
+    onConnect?.();
+  }, [isWalletConnectionAllowed, connect, onConnect]);
 
   return (
     <Button

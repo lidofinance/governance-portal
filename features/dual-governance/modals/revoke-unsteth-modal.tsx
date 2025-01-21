@@ -14,7 +14,7 @@ import { Text } from 'shared/components/text';
 import { useEscrowUnstethBalance } from '../hooks/use-escrow-unsteth-balance';
 
 type Props = {
-  onRevoke: (selectedNftIds: string[]) => Promise<boolean>;
+  onRevoke: (selectedNftIds?: string[]) => Promise<void>;
 } & ModalProps;
 
 export const RevokeUnstethModal = (props: Props) => {
