@@ -235,7 +235,9 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
             Go to Veto Support
           </Button>
         ) : (
-          <ConnectWalletButton size="lg">Connect wallet</ConnectWalletButton>
+          <ConnectWalletButton size="lg" onConnect={onContinue}>
+            Connect wallet
+          </ConnectWalletButton>
         )}
       </PreviewControls>
     </ControlPanelWrapper>

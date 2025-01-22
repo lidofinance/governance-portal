@@ -24,12 +24,15 @@ import {
   UseApproveResponse,
   useApprove,
 } from 'shared/blockchain/hooks/use-approve';
-import { useSupportFormProcessor } from './use-support-form-processor';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
-import { VetoSupportedTokens } from 'features/dual-governance/types';
+import {
+  EscrowActionArgs,
+  VetoSupportedTokens,
+} from 'features/dual-governance/types';
 import { useUnstEthBalance } from 'shared/blockchain/hooks/use-unsteth-balance';
 import { NftMultiselectValuesMap } from 'features/dual-governance/nft-multiselect';
+import { useSupportVetoAction } from 'features/dual-governance/write-actions/support-veto/action';
 
 export type SupportFormInputType = {
   amount: bigint | null;
@@ -173,9 +176,8 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
     await Promise.allSettled([networkData.refetch(), approveData.refetch()]);
   }, [networkData, approveData]);
 
-  const processWrapFormFlow = useSupportFormProcessor({
+  const processWrapFormFlow = useSupportVetoAction({
     approveData,
-    escrowAddress: networkData.vetoSignallingAddress,
     onConfirm,
     onRetry: retryFire,
   });
@@ -201,9 +203,9 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   const formControllerValue = useMemo(
-    (): FormControllerContextValueType<SupportFormInputType> => ({
+    (): FormControllerContextValueType<EscrowActionArgs> => ({
       onSubmit: processWrapFormFlow,
-      onReset: ({ token }: SupportFormInputType) => {
+      onReset: ({ token }: EscrowActionArgs) => {
         reset({
           ...defaultValues,
           token,

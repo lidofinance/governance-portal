@@ -3,20 +3,32 @@ import invariant from 'tiny-invariant';
 import { escrowAbi } from 'abi/ts';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { EscrowActionArgs } from 'features/dual-governance/types';
+import { Token } from 'shared/blockchain/types';
 
-export const useRevokeUnstethTxSend = () => {
+export const useRevokeTokensTxSender = () => {
   const { vetoSignallingAddress } = useDualGovernanceContext();
   const writeEscrowContract = useWriteContract(escrowAbi);
 
   return useCallback(
-    async (ids: string[]) => {
+    async (args: EscrowActionArgs) => {
       invariant(vetoSignallingAddress, 'escrowAddress must be presented');
-      invariant(ids.length > 0, 'ids must be presented');
+
+      if (args.token === Token.unstETH) {
+        return writeEscrowContract({
+          address: vetoSignallingAddress,
+          functionName: 'unlockUnstETH',
+          args: [args.ids.map(BigInt)],
+        });
+      }
+
+      const functionName =
+        args.token === Token.stETH ? 'unlockStETH' : 'unlockWstETH';
 
       return writeEscrowContract({
         address: vetoSignallingAddress,
-        functionName: 'unlockUnstETH',
-        args: [ids.map(BigInt)],
+        functionName,
+        args: [],
       });
     },
     [vetoSignallingAddress, writeEscrowContract],

@@ -87,3 +87,7 @@ export type UseEventWatcherConfig<T> = {
     options?: RefetchOptions | undefined,
   ) => Promise<QueryObserverResult<T | undefined, Error>>;
 };
+
+export type EscrowActionArgs =
+  | { token: 'unstETH'; ids: string[] }
+  | { token: 'stETH' | 'wstETH'; amount: bigint };

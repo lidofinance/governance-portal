@@ -6,44 +6,46 @@ import { useAccount } from 'wagmi';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { ActionArgs } from '../types';
-import { useRevokeUnstethTxModal } from './modal-stages';
-import { useRevokeUnstethTxSend } from './tx-sender';
+import { useRevokeTokensModalStages } from './modal-stages';
+import { useRevokeTokensTxSender } from './tx-sender';
+import { EscrowActionArgs } from 'features/dual-governance/types';
+import { Token } from 'shared/blockchain/types';
 
-export const useRevokeUnstethAction = ({ onRetry }: ActionArgs) => {
+export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
   const { data: isMultisig } = useIsContract();
-  const { txModalStages } = useRevokeUnstethTxModal();
-  const processRevokeTx = useRevokeUnstethTxSend();
+  const { txModalStages } = useRevokeTokensModalStages();
+  const sendRevokeTx = useRevokeTokensTxSender();
   const waitForTx = useTxConfirmation();
   const { isAssetManagementLocked } = useDualGovernanceContext();
 
   return useCallback(
-    async (selectedNftIds: string[]) => {
+    async (args: EscrowActionArgs) => {
       try {
         invariant(address, 'address must be presented');
         invariant(
           !isAssetManagementLocked,
           'Cannot support veto signalling in pending RageQuit state',
         );
-        invariant(
-          selectedNftIds.length > 0,
-          'selectedNftIds must be presented',
-        );
+        if (args.token === Token.unstETH) {
+          invariant(args.ids.length > 0, 'ids must be presented');
+        }
 
-        txModalStages.sign(selectedNftIds);
+        txModalStages.sign(args);
 
-        const txHash = await processRevokeTx(selectedNftIds);
+        const txHash = await sendRevokeTx(args);
 
         if (isMultisig) {
           txModalStages.successMultisig();
           return true;
         }
 
-        txModalStages.pending(selectedNftIds, txHash);
+        txModalStages.pending(args, txHash);
 
         await waitForTx(txHash);
 
-        txModalStages.success(txHash);
+        txModalStages.success(args, txHash);
+        await onConfirm();
         return true;
       } catch (error) {
         console.warn(error);
@@ -56,8 +58,9 @@ export const useRevokeUnstethAction = ({ onRetry }: ActionArgs) => {
       isAssetManagementLocked,
       txModalStages,
       isMultisig,
-      processRevokeTx,
+      onConfirm,
       waitForTx,
+      sendRevokeTx,
       onRetry,
     ],
   );

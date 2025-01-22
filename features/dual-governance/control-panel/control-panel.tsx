@@ -14,18 +14,15 @@ export const DualGovernanceControlPanel = () => {
   const [activeTab, setActiveTab] = useState('support');
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
-  const { data, isLoading } = useEscrowBalances();
+  const { data } = useEscrowBalances();
 
   useEffect(() => {
-    if (!isLoading && data && data.lockedSharesInEscrow !== 0n) {
+    if (data && data.lockedSharesInEscrow !== 0n) {
       setIsPreviewVisible(false);
     }
-    if (!isConnected) {
-      setIsPreviewVisible(true);
-    }
-  }, [isLoading, data, isConnected]);
+  }, [data]);
 
-  if (isPreviewVisible) {
+  if (isPreviewVisible || !isConnected) {
     return (
       <DualGovernanceControlPanelPreview
         onContinue={() => setIsPreviewVisible(false)}
