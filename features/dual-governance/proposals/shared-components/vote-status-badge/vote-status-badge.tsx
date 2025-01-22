@@ -4,6 +4,7 @@ import { VoteData, VoteStatus } from 'shared/votes/types';
 import { FlexWrapper } from 'shared/styled-components';
 import { useCountdown } from 'shared/hooks/use-countdown';
 import { useMemo } from 'react';
+import { Box } from 'shared/components/box';
 
 type Props = {
   startDate: bigint;
@@ -27,6 +28,12 @@ export const VoteStatusBadge = ({
   const { timeFormatted: mainPhaseCountdown, isFinished: isMainPhaseFinished } =
     useCountdown(mainPhaseEndTimestamp);
 
+  const readyToEnact = useMemo(
+    () =>
+      state.status === VoteStatus.Pending || state.status === VoteStatus.Passed,
+    [state.status],
+  );
+
   const {
     timeFormatted: objectionPhaseCountdown,
     isFinished: isObjectionPhaseFinished,
@@ -38,6 +45,14 @@ export const VoteStatusBadge = ({
     () => [yea, nay].some((votePower) => votePower !== 0n),
     [yea, nay],
   );
+
+  if (readyToEnact) {
+    return (
+      <Box alignItems="flex-start" gap={8}>
+        <Badge $variant={'default'}>Ready to enact</Badge>
+      </Box>
+    );
+  }
 
   return (
     <>

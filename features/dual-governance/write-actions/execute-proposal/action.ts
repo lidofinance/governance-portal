@@ -19,9 +19,11 @@ export const useExecuteProposalAction = ({ onConfirm }: ActionArgs) => {
       try {
         invariant(id, 'Proposal ID is required');
 
-        txModalStages.pendingStage(id);
+        txModalStages.signStage(id);
 
         const txHash = await processScheduleProposal(id);
+
+        txModalStages.pendingStage(id);
 
         if (isMultisig) {
           txModalStages.successMultisig();

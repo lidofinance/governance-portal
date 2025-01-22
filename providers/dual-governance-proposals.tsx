@@ -21,7 +21,7 @@ import { isVoteItem } from 'features/dual-governance/types';
 import { VoteData } from 'shared/votes/types';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 
-const VOTES_LIMIT = 5;
+const VOTES_LIMIT = 15;
 
 type ProposalsContextType = {
   proposals: ProposalCombinedData[];

@@ -7,7 +7,7 @@ const isVoteEnactable = (vote: Vote): boolean | string => {
   return vote.script && vote.script !== EMPTY_SCRIPT;
 };
 
-const isQuorumReached = (vote: Vote): boolean => {
+export const isQuorumReached = (vote: Vote): boolean => {
   const totalSupply = Number(
     formatUnits(vote.votingPower as unknown as bigint, 18),
   );

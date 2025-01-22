@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const TxAmount = ({ amount, token }: Props) => (
-  <Text>
+  <Text as="span">
     {token === Token.unstETH ? amount.toString() : formatEthFull(amount)}{' '}
     {token}
   </Text>

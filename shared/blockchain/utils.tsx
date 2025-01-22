@@ -76,5 +76,8 @@ export const parsePercent16 = (value: bigint | null | undefined) => {
     maxFractionDigits: 2,
   });
 
-  return parseFloat(formattedString);
+  // Remove "<" getting from the formatNumber util before parseFloat to avoid NaN result
+  const cleanFormattedString = formattedString.replace('<', '').trim();
+
+  return parseFloat(cleanFormattedString);
 };

@@ -105,12 +105,6 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
         (firstSealRageQuitSupport * NORMAL_WARNING_STATE_THRESHOLD_PERCENT) /
         100n;
 
-      console.log(
-        rageQuitSupport,
-        warningStateThreshold,
-        'warningStateThreshold',
-      );
-
       let visibleState: VisibleGovernanceState = VisibleGovernanceState.Loading;
 
       switch (detailedState.persistedState) {

@@ -1,5 +1,5 @@
-import { TxStageSign } from '../tx-stages-basic/tx-stage-sign';
-import { TxStagePending } from '../tx-stages-basic/tx-stage-pending';
+import { TxStageSign } from '../tx-stages-basic';
+import { TxStagePending } from '../tx-stages-basic';
 import { TxAmount } from '../tx-stages-parts/tx-amount';
 import { Token } from 'shared/blockchain/types';
 import { EscrowActionArgs } from 'features/dual-governance/types';

@@ -2,7 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
 import { range } from 'lodash';
-import { getVoteStatus } from 'shared/votes/utils/get-vote-status';
+import {
+  getVoteStatus,
+  isQuorumReached,
+} from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { usePublicClient } from 'wagmi';
 import { VoteData, VoteStatus } from 'shared/votes/types';
@@ -36,6 +39,23 @@ const mapPayload = (
     },
     {},
   );
+};
+
+const filterVotes = (votes: VoteData[]) => {
+  return votes.filter((voteData) => {
+    voteData.state.status, VoteStatus.ActiveObjection;
+    if (
+      voteData.state.status === VoteStatus.ActiveObjection &&
+      !isQuorumReached(voteData.vote)
+    ) {
+      return false;
+    }
+    return (
+      voteData.state.status === VoteStatus.ActiveMain ||
+      voteData.state.status === VoteStatus.ActiveObjection ||
+      voteData.canExecute
+    );
+  });
 };
 
 export const useVotes = ({ limit, getActive = false }: Props) => {
@@ -129,14 +149,7 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
         }
 
         return {
-          votes: getActive
-            ? votes.filter(
-                (vote) =>
-                  vote.state.status === VoteStatus.ActiveMain ||
-                  vote.state.status === VoteStatus.ActiveObjection ||
-                  vote.canExecute,
-              )
-            : votes,
+          votes: getActive ? filterVotes(votes) : votes,
         };
       } catch (e) {
         console.error('Error in useVotes:', e);

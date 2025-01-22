@@ -6,8 +6,8 @@ import {
 import {
   TxStageFail,
   TxStagePending,
-  TxStagePermit,
   TxStageSuccess,
+  TxStageSign,
 } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 
 const getTxModalStagesScheduleProposal = (
@@ -15,7 +15,13 @@ const getTxModalStagesScheduleProposal = (
 ) => ({
   ...getGeneralTransactionModalStages(transitStage),
 
-  confirmStage: () => transitStage(<TxStagePermit />),
+  signStage: (proposalId: number) =>
+    transitStage(
+      <TxStageSign
+        title={`You are scheduling proposal #${proposalId}`}
+        description=""
+      />,
+    ),
   pendingStage: (proposalId: number) =>
     transitStage(
       <TxStagePending title={`You are scheduling proposal #${proposalId}`} />,
