@@ -1,8 +1,13 @@
 import { formatEther, formatUnits } from 'viem';
-import { StethIcon, WstethIcon, UnstethIcon } from '../components/icons';
+import {
+  StethIcon,
+  WstethIcon,
+  UnstethIcon,
+  EthIcon,
+} from '../components/icons';
 import { Token } from './types';
 
-export const getTokenIcon = (token: Token) => {
+export const getTokenIcon = (token: Token | 'ETH') => {
   switch (token) {
     case Token.stETH:
       return <StethIcon viewBox="0 0 36 36" />;
@@ -10,6 +15,8 @@ export const getTokenIcon = (token: Token) => {
       return <WstethIcon viewBox="0 0 36 36" />;
     case Token.unstETH:
       return <UnstethIcon viewBox="0 0 36 36" />;
+    case 'ETH':
+      return <EthIcon viewBox="0 0 36 36" />;
     default:
       return null;
   }

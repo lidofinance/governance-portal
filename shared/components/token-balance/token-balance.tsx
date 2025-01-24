@@ -11,7 +11,7 @@ import { Text } from '../text';
 import { isBigInt } from 'shared/blockchain/isBigInt';
 
 type Props = {
-  token: Token;
+  token: Token | 'ETH';
   balance: bigint | undefined;
   variant?: 'default' | 'compact';
   addOnText?: string;

@@ -1,4 +1,4 @@
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 import { getGeneralTransactionModalStages } from './get-general-transaction-modal-stages';
 import { TransactionModalTransitStage } from './use-transaction-modal-stage';
 import { TxStageSignOperationAmount } from '../tx-stages-composed/tx-stage-amount-operation';
@@ -8,12 +8,12 @@ export const getEscrowActionModalStages = (operationText: string) => {
   return (transitStage: TransactionModalTransitStage) => ({
     ...getGeneralTransactionModalStages(transitStage),
 
-    sign: (args: EscrowActionArgs) =>
+    sign: (args: EscrowActionWithEthArgs) =>
       transitStage(
         <TxStageSignOperationAmount operationText={operationText} {...args} />,
       ),
 
-    pending: (args: EscrowActionArgs, txHash?: string) =>
+    pending: (args: EscrowActionWithEthArgs, txHash?: string) =>
       transitStage(
         <TxStageSignOperationAmount
           operationText={operationText}
@@ -23,7 +23,11 @@ export const getEscrowActionModalStages = (operationText: string) => {
         />,
       ),
 
-    success: (args: EscrowActionArgs, txHash?: string, balance?: bigint) =>
+    success: (
+      args: EscrowActionWithEthArgs,
+      txHash?: string,
+      balance?: bigint,
+    ) =>
       transitStage(
         <TxStageOperationSucceedBalanceShown
           txHash={txHash}

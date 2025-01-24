@@ -72,7 +72,8 @@ export const DeactivationAdditionalSupportInfo = () => {
     return (
       <Text color="secondary">
         RageQuit starts if <Text as="b">{amountTillNextPhasePercent}%</Text>{' '}
-        more {Token.stETH} is added
+        more {Token.stETH} is added by <Text as="b">{restartDate?.date}</Text>{' '}
+        {restartDate?.timezone}{' '}
       </Text>
     );
   }

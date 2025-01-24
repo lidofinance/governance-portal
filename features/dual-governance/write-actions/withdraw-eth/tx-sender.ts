@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { escrowAbi } from 'abi/ts';
 import { useDualGovernanceContext } from 'providers/dual-governance';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 
 export const useWithdrawEthTxSender = () => {
   const { rageQuitAddress } = useDualGovernanceContext();
@@ -11,7 +11,7 @@ export const useWithdrawEthTxSender = () => {
   const writeEscrowContract = useWriteContract(escrowAbi);
 
   return useCallback(
-    async (args: EscrowActionArgs) => {
+    async (args: EscrowActionWithEthArgs) => {
       invariant(rageQuitAddress, 'rageQuitAddress must be presented');
 
       if (args.token === 'unstETH') {

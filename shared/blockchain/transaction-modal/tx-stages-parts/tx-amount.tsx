@@ -4,7 +4,7 @@ import { Text } from 'shared/components/text';
 
 type Props = {
   amount: bigint;
-  token: Token;
+  token: Token | 'ETH';
 };
 
 export const TxAmount = ({ amount, token }: Props) => (

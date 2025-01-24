@@ -1,19 +1,16 @@
 import { escrowAbi } from 'abi/ts';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { VisibleGovernanceState } from '../types';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 export const useRageQuitEscrowDetails = () => {
   const { chainId } = useLidoSDK();
-  const { rageQuitAddress, visibleState } = useDualGovernanceContext();
+  const { rageQuitAddress } = useDualGovernanceContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
 
-  const isEnabled =
-    !!rageQuitAddress &&
-    visibleState === VisibleGovernanceState.BlockedRageQuit;
+  const isEnabled = !!rageQuitAddress;
 
   return useQuery({
     queryKey: ['rage-quit-details', chainId],

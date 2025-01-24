@@ -22,7 +22,7 @@ export const BalanceContainer = styled('span')`
 
 type Props = {
   balance?: bigint;
-  token: Token;
+  token: Token | 'ETH';
   operationText: string;
   txHash?: string;
   footer?: React.ReactNode;

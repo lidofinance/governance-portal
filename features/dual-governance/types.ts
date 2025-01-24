@@ -91,3 +91,7 @@ export type UseEventWatcherConfig<T> = {
 export type EscrowActionArgs =
   | { token: 'unstETH'; ids: string[] }
   | { token: 'stETH' | 'wstETH'; amount: bigint };
+
+export type EscrowActionWithEthArgs =
+  | EscrowActionArgs
+  | { token: 'ETH'; amount: bigint };

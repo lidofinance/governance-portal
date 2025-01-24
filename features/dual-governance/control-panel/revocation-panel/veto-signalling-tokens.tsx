@@ -7,7 +7,7 @@ import { Text } from 'shared/components/text';
 import { RevocableTokensList } from './style';
 import { RevocableTokenItem } from './revocable-token-item';
 import { useCountdown } from 'shared/hooks/use-countdown';
-import { useRevokeUnstethModal } from 'features/dual-governance/modals/modal-manager';
+import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
 
 type Props = {
   vetoSignallingBalance: {
@@ -36,7 +36,7 @@ export const VetoSignallingTokens = ({
   } = vetoSignallingBalance;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupAnchorRef = useRef<HTMLDivElement>(null);
-  const { openModal } = useRevokeUnstethModal();
+  const { openModal } = useSelectUnstethModal();
 
   const revokeTokens = useRevokeTokensAction({ onConfirm });
 
@@ -66,6 +66,8 @@ export const VetoSignallingTokens = ({
     return null;
   }
 
+  const isLocked = !isUnlockPossible;
+
   return (
     <>
       <RevokeStEthPopup
@@ -83,18 +85,23 @@ export const VetoSignallingTokens = ({
           token={Token.stETH}
           amount={stETHLockedShares}
           onClick={() => setIsPopupOpen(true)}
-          isLocked={!isUnlockPossible}
+          isLocked={isLocked}
           unlockCountdown={assetsLockCountdown}
+          actionLabel="revoke"
         />
         <RevocableTokenItem
           token={Token.unstETH}
           amount={unstETHLockedShares}
           onClick={() =>
-            openModal({ onRevoke: handleRevokeTokens(Token.unstETH) })
+            openModal({
+              onConfirm: handleRevokeTokens(Token.unstETH),
+              actionLabel: 'revoke',
+            })
           }
-          isLocked={!isUnlockPossible}
+          isLocked={isLocked}
           unlockCountdown={assetsLockCountdown}
-          addOnText={`${unstETHIdsCount} NFT`}
+          amountLabel={`${unstETHIdsCount} NFT`}
+          actionLabel="revoke"
         />
       </RevocableTokensList>
     </>

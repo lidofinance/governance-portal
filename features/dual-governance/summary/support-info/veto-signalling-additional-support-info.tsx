@@ -23,6 +23,20 @@ export const VetoSignallingAdditionalSupportInfo = () => {
     };
   }, [detailedState]);
 
+  if (typeof amountTillNextPhasePercent !== 'number') {
+    return null;
+  }
+
+  if (amountTillNextPhasePercent <= 0) {
+    return (
+      <Text color="secondary">
+        RageQuit starts on <Text as="b">{vetoSignallingEndDate?.date}</Text>{' '}
+        {vetoSignallingEndDate?.timezone} if stETH support stays above the
+        threshold. Otherwise, Deactivation starts.
+      </Text>
+    );
+  }
+
   return (
     <Text color="secondary">
       RageQuit starts if{' '}

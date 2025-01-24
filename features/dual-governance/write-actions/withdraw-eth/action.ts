@@ -6,18 +6,21 @@ import { useAccount } from 'wagmi';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useWithdrawEthModalStages } from './modal-stages';
 import { useWithdrawEthTxSender } from './tx-sender';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 import { ActionArgs } from '../types';
+import { getBalance } from 'viem/actions';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
+  const { rpcProvider } = useLidoSDK();
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useWithdrawEthModalStages();
   const sendWithdrawTx = useWithdrawEthTxSender();
   const waitForTx = useTxConfirmation();
 
   return useCallback(
-    async (args: EscrowActionArgs) => {
+    async (args: EscrowActionWithEthArgs) => {
       try {
         invariant(address, 'address must be presented');
 
@@ -34,7 +37,12 @@ export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         await waitForTx(txHash);
 
-        txModalStages.success(args, txHash);
+        let balance: bigint | undefined;
+        if (args.token === 'ETH') {
+          balance = await getBalance(rpcProvider, { address });
+        }
+
+        txModalStages.success(args, txHash, balance);
         await onConfirm();
         return true;
       } catch (error) {
@@ -47,10 +55,11 @@ export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
       address,
       txModalStages,
       isMultisig,
-      sendWithdrawTx,
-      waitForTx,
-      onConfirm,
+      rpcProvider,
       onRetry,
+      sendWithdrawTx,
+      onConfirm,
+      waitForTx,
     ],
   );
 };
