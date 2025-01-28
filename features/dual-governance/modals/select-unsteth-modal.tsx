@@ -14,11 +14,12 @@ import { Text } from 'shared/components/text';
 import { useEscrowUnstethBalance } from '../hooks/use-escrow-unsteth-balance';
 
 type Props = {
-  onRevoke: (selectedNftIds?: string[]) => Promise<void>;
+  onConfirm: (selectedNftIds?: string[]) => Promise<void | boolean>;
+  actionLabel: string;
 } & ModalProps;
 
-export const RevokeUnstethModal = (props: Props) => {
-  const { onRevoke, ...modalProps } = props;
+export const SelectUnstEthModal = (props: Props) => {
+  const { actionLabel, onConfirm, ...modalProps } = props;
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, true | undefined>
   >({});
@@ -61,7 +62,7 @@ export const RevokeUnstethModal = (props: Props) => {
       <RevokeModalWrapper>
         <RevokeModalHeader>
           <Text size={28} weight={500}>
-            Select NFTs to revoke
+            Select NFTs to {actionLabel}
           </Text>
           <SelectAllButton onClick={handleSelectAll}>
             Select all
@@ -85,11 +86,11 @@ export const RevokeUnstethModal = (props: Props) => {
         <RevokeModalControls>
           <Button
             fullwidth
-            onClick={() => onRevoke(selectedOptionsArray)}
+            onClick={() => onConfirm(selectedOptionsArray)}
             disabled={selectedOptionsArray.length === 0}
             loading={isLoading}
           >
-            Revoke
+            {actionLabel}
           </Button>
           <Button fullwidth variant="outlined" onClick={props.onClose}>
             Close

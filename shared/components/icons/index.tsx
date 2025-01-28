@@ -16,6 +16,7 @@ import { ReactComponent as ArrowDown } from 'assets/arrow-down-icon.svg';
 import { ReactComponent as SandwatchIcon } from 'assets/sandwatch-icon.svg';
 import { ReactComponent as WarningIconTransparent } from 'assets/icons/warning-icon-transparent.svg';
 import { ReactComponent as InfoIcon } from 'assets/icons/info-icon.svg';
+import { ReactComponent as EthIcon } from 'assets/icons/tokens/eth.svg';
 
 export {
   RevokeIcon,
@@ -36,4 +37,5 @@ export {
   SandwatchIcon,
   WarningIconTransparent,
   InfoIcon,
+  EthIcon,
 };

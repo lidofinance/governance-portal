@@ -2,7 +2,7 @@ import { TxStageSign } from '../tx-stages-basic';
 import { TxStagePending } from '../tx-stages-basic';
 import { TxAmount } from '../tx-stages-parts/tx-amount';
 import { Token } from 'shared/blockchain/types';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 
 type CommonProps = {
   operationText: string;
@@ -10,7 +10,7 @@ type CommonProps = {
   txHash?: string;
 };
 
-type Props = CommonProps & EscrowActionArgs;
+type Props = CommonProps & EscrowActionWithEthArgs;
 
 export const TxStageSignOperationAmount = (props: Props) => {
   const { token, operationText, isPending, txHash } = props;

@@ -1,0 +1,28 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="40" height="40" rx="20" fill="white" fill-opacity="0.8"/>
+<rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="black" stroke-opacity="0.1"/>
+<g clip-path="url(#clip0_973_20005)">
+<path opacity="0.6" d="M19.859 16.6992L12.082 20.2362L19.859 24.8308L27.633 20.2362L19.859 16.6992Z" fill="black"/>
+<path opacity="0.45" d="M12.082 20.2356L19.859 24.8303V7.33203L12.082 20.2356Z" fill="black"/>
+<path opacity="0.8" d="M19.8555 7.33203V24.8303L27.6294 20.2356L19.8555 7.33203Z" fill="black"/>
+<path opacity="0.45" d="M12.082 21.7109L19.859 32.6672V26.3056L12.082 21.7109Z" fill="black"/>
+<path opacity="0.8" d="M19.8555 26.3017V32.6633L27.6355 21.707L19.8555 26.3017Z" fill="black"/>
+<g opacity="0.3" filter="url(#filter0_f_973_20005)">
+<path opacity="0.6" d="M23.9762 16.543L16.1992 20.0799L23.9762 24.6746L31.7502 20.0799L23.9762 16.543Z" fill="black"/>
+<path opacity="0.45" d="M16.1992 20.0794L23.9762 24.674V7.17578L16.1992 20.0794Z" fill="black"/>
+<path opacity="0.8" d="M23.9727 7.17578V24.674L31.7466 20.0794L23.9727 7.17578Z" fill="black"/>
+<path opacity="0.45" d="M16.1992 21.5547L23.9762 32.511V26.1494L16.1992 21.5547Z" fill="black"/>
+<path opacity="0.8" d="M23.9727 26.1455V32.5071L31.7527 21.5508L23.9727 26.1455Z" fill="black"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_973_20005" x="2.19922" y="-6.82422" width="43.5547" height="53.3359" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="7" result="effect1_foregroundBlur_973_20005"/>
+</filter>
+<clipPath id="clip0_973_20005">
+<rect width="38" height="38" fill="white" transform="translate(1 1)"/>
+</clipPath>
+</defs>
+</svg>
