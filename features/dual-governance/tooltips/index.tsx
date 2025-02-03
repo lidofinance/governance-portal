@@ -21,7 +21,7 @@ export const tooltipTitle = {
   customNFT: () =>
     `Use this option to claim an NFT using its ID, even if it doesn't belong to you.`,
   readyToExecute: () =>
-    `Indicates that the proposal is ready for execution. All items under Dual Governance can now be sent to Dual Governance.`,
+    `Proposal ready for execution can be enacted at any time, regardless of the governance state`,
   emergencyMode: () =>
     `Activates under severe risk, granting the Emergency Committee power to block or execute proposals outside normal flow or disconnect Dual Governance.`,
 };

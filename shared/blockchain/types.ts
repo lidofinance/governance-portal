@@ -4,7 +4,7 @@ import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
 export const Token = {
   stETH: 'stETH',
   wstETH: 'wstETH',
-  unstETH: 'unstETH',
+  unstETH: 'Withdrawal NFT',
 } as const;
 
 export type Token = (typeof Token)[keyof typeof Token];

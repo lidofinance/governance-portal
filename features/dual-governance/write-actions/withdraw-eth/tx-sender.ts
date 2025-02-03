@@ -14,13 +14,13 @@ export const useWithdrawEthTxSender = () => {
     async (args: EscrowActionWithEthArgs) => {
       invariant(rageQuitAddress, 'rageQuitAddress must be presented');
 
-      if (args.token === 'unstETH') {
-        invariant(args.ids.length > 0, 'ids must be presented');
+      if (args.token === 'Withdrawal NFT') {
+        invariant(args.selectedNftIds.length > 0, 'ids must be presented');
 
         return writeEscrowContract({
           address: rageQuitAddress,
           functionName: 'withdrawETH',
-          args: [args.ids.map(BigInt)],
+          args: [args.selectedNftIds.map(BigInt)],
         });
       }
 

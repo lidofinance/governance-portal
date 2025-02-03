@@ -13,12 +13,11 @@ export const useSupportVetoTxSender = () => {
   return useCallback(
     async (args: EscrowActionArgs) => {
       invariant(vetoSignallingAddress, 'escrowAddress must be presented');
-
       if (args.token === Token.unstETH) {
-        invariant(args.ids, 'ids must be presented');
+        invariant(args.selectedNftIds, 'ids must be presented');
 
-        const ids = Object.keys(args.ids)
-          .filter((key) => args.ids[Number(key)])
+        const ids = Object.keys(args.selectedNftIds)
+          .filter((key) => args.selectedNftIds[Number(key)])
           .map(BigInt);
 
         return writeEscrowContract({

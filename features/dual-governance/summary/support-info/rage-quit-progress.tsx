@@ -39,6 +39,7 @@ export const RageQuitProgress = () => {
       } = lockedAssets;
 
       const claimedAmount = totalStETHClaimedETH + totalUnstETHFinalizedETH;
+
       const totalAmount =
         totalStETHLockedShares + totalUnstETHUnfinalizedShares;
 

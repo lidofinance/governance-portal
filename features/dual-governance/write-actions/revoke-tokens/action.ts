@@ -34,7 +34,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
           'Cannot support veto signalling in pending RageQuit state',
         );
         if (args.token === Token.unstETH) {
-          invariant(args.ids.length > 0, 'ids must be presented');
+          invariant(args.selectedNftIds.length > 0, 'ids must be presented');
         }
 
         txModalStages.sign(args);

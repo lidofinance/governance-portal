@@ -18,7 +18,7 @@ export const useRevokeTokensTxSender = () => {
         return writeEscrowContract({
           address: vetoSignallingAddress,
           functionName: 'unlockUnstETH',
-          args: [args.ids.map(BigInt)],
+          args: [args.selectedNftIds.map(BigInt)],
         });
       }
 

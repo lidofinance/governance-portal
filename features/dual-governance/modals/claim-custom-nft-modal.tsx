@@ -1,27 +1,139 @@
-import { useCallback } from 'react';
+import { ChangeEvent, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { ModalProps, Text } from '@lidofinance/lido-ui';
 import { StyledModal, StyledInput } from './style';
-
-// import { NftItem } from '../nft/nft-multiselect-item';
-// import { NftData } from '../nft/types';
 import { ActionsWrapper } from '../nft-multiselect/style';
 import { Button } from 'shared/components/button';
 import { DGTooltip } from '../tooltips';
-
-const mockNft = {
-  id: 10423,
-  amount: 103.740782,
-  finalized: true,
-};
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { WithdrawalQueue } from 'shared/blockchain/contracts';
+import {
+  NftMultiselectItem,
+  NftWithdrawalRequestReturnType,
+} from '../nft-multiselect';
+import { formatEth } from 'shared/blockchain/utils';
 
 type Props = {
-  closeModal: () => void;
+  claimNft: (nftId: number) => Promise<boolean | undefined>;
 } & ModalProps;
 
-export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
-  const handleInputSearch = useCallback(() => {
-    // Todo: check if nft exists on escrow contract using WQ, get NFT from WQ, check if it's finalized using WQ
+type CTAProps = {
+  onClick: () => void;
+  nftId: string;
+  nftData: NftWithdrawalRequestReturnType | null;
+  isLoading: boolean;
+};
+
+const CTA = ({ onClick, nftId, nftData, isLoading }: CTAProps) => {
+  if (!nftId) {
+    return (
+      <Button loading={isLoading} disabled>
+        Enter NFT Token ID or Contract Address
+      </Button>
+    );
+  }
+
+  if (!nftData) {
+    return (
+      <Button loading={isLoading} disabled>
+        NFT not found
+      </Button>
+    );
+  }
+
+  if (nftData && !nftData.isFinalized) {
+    return (
+      <Button loading={isLoading} disabled>
+        NFT is not finalized
+      </Button>
+    );
+  }
+
+  if (nftData && nftData.isFinalized && nftData.isClaimed) {
+    return (
+      <Button loading={isLoading} disabled>
+        NFT is already claimed
+      </Button>
+    );
+  }
+
+  if (
+    nftData &&
+    !nftData.isClaimed &&
+    nftData.isFinalized &&
+    nftData.amountOfStETH !== 0n
+  ) {
+    return (
+      <Button
+        onClick={onClick}
+        loading={isLoading}
+      >{`Claim ${formatEth(nftData.amountOfStETH)} ETH`}</Button>
+    );
+  }
+
+  return null;
+};
+
+export const ClaimCustomNftModal = ({ claimNft, ...modalProps }: Props) => {
+  const withdrawalQueueContract = useReadContract(WithdrawalQueue);
+
+  const [nftId, setNftId] = useState('');
+  const [debouncedValue, setDebouncedValue] = useState('');
+  const [nft, setNft] = useState<NftWithdrawalRequestReturnType | null>(null);
+  const [isCTALoading, setCTALoading] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(nftId);
+    }, 500);
+
+    if (nftId === '') {
+      setNft(null);
+    }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [nftId]);
+
+  const searchNft = useCallback(async (value: string) => {
+    if (!value || !withdrawalQueueContract) return;
+
+    setCTALoading(true);
+
+    try {
+      const nftStatus = await withdrawalQueueContract.readContract(
+        'getWithdrawalStatus',
+        [[BigInt(value)]],
+      );
+      if (nftStatus.length === 1) {
+        setNft(nftStatus[0]);
+      } else {
+        setNft(null);
+      }
+    } catch (error) {
+      console.error('Error fetching NFT status:', error);
+      setNft(null);
+    } finally {
+      setCTALoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    void searchNft(debouncedValue);
+  }, [debouncedValue, searchNft]);
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNftId(event.target.value);
+  };
+
+  const handleClaim = useCallback(async () => {
+    try {
+      await claimNft(Number(nftId));
+    } catch (error) {
+      console.error('Unable to claim NFT:', error);
+    }
+  }, [claimNft, nftId]);
 
   const Title = () => (
     <Text size="lg" strong>
@@ -29,15 +141,32 @@ export const ClaimCustomNftModal = ({ closeModal, ...modalProps }: Props) => {
     </Text>
   );
 
-  // Todo: check if we need a number input or if we should start search with #
-
   return (
     <StyledModal title={<Title />} {...modalProps}>
-      <StyledInput onChange={handleInputSearch} fullwidth></StyledInput>
-      {/* <NftItem nft={mockNft}></NftItem> */}
+      <StyledInput
+        onChange={handleInputChange}
+        value={nftId}
+        fullwidth
+        type="number"
+        placeholder="Enter NFT Token ID or Contract Address"
+      ></StyledInput>
+      {nft && (
+        <NftMultiselectItem
+          id={nftId}
+          stEthAmount={nft.amountOfStETH}
+          onClick={() => {}}
+          customNftData={nft}
+        ></NftMultiselectItem>
+      )}
       <ActionsWrapper>
-        <Button>{`Claim ${mockNft.amount} ETH`}</Button>
-        <Button onClick={closeModal}>Close</Button>
+        <CTA
+          isLoading={isCTALoading}
+          onClick={handleClaim}
+          nftId={nftId}
+          nftData={nft}
+        />
+        {/*<Button onClick={closeModal}>Close</Button>*/}
+        <Button variant="outlined">Close</Button>
       </ActionsWrapper>
     </StyledModal>
   );

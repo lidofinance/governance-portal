@@ -2,23 +2,24 @@ import styled, { css } from 'styled-components';
 import { Button, Checkbox, Input, PopupMenu } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
-type StatusBadgeProps = {
-  $variant: 'success' | 'default';
-};
-
-export const Wrapper = styled.div`
-  width: 100%;
-  background: white;
-`;
-
-export const NftItemsList = styled.section`
-  padding: 0 16px;
-  border-radius: 30px;
-  border: 1px solid #0000001a;
-`;
-
+// type StatusBadgeProps = {
+//   $variant: 'success' | 'default';
+// };
+//
+// export const Wrapper = styled.div`
+//   width: 100%;
+//   background: white;
+// `;
+//
+// export const NftItemsList = styled.section`
+//   padding: 0 16px;
+//   border-radius: 30px;
+//   border: 1px solid #0000001a;
+// `;
+//
 type ItemProps = {
   $checked?: boolean;
+  $interactive?: boolean;
 };
 
 export const NftItemWrapper = styled.div<ItemProps>`
@@ -26,7 +27,6 @@ export const NftItemWrapper = styled.div<ItemProps>`
   align-items: center;
   gap: 8px;
   padding: 16px;
-  cursor: pointer;
 
   ${({ $checked }) =>
     $checked &&
@@ -34,9 +34,19 @@ export const NftItemWrapper = styled.div<ItemProps>`
       background-color: #0085ff14;
     `}
 
-  &: hover {
-    background-color: rgba(0, 133, 255, 0.1);
-  }
+  ${({ $interactive }) =>
+    $interactive &&
+    css`
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(0, 133, 255, 0.1);
+      }
+      &:not(:last-child) {
+        border-bottom: 1px solid #0000001a;
+      }
+    `}
+  
+    
   transition: background-color 0.2s;
   &:first-child {
     border-top-left-radius: inherit;
@@ -45,9 +55,6 @@ export const NftItemWrapper = styled.div<ItemProps>`
   &:last-child {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
-  }
-  &:not(:last-child) {
-    border-bottom: 1px solid #0000001a;
   }
 `;
 

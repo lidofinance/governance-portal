@@ -16,7 +16,6 @@ import { Address } from 'viem';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 
 type Props = {
-  proposalId?: bigint;
   client: ReturnType<typeof usePublicClient>;
   chainId: CHAINS;
   EPTContract?: ReturnType<typeof useReadContract>;
@@ -25,7 +24,6 @@ type Props = {
 const EVENT_NAME = 'ProposalSubmitted';
 
 const getDGEvents = async ({
-  proposalId,
   client,
   chainId,
 }: Props): Promise<ProposalDualGovernanceLog[]> => {
@@ -44,16 +42,9 @@ const getDGEvents = async ({
 
     invariant(proposerAccount, 'Contract not found');
 
-    let args = <{ proposerAccount: Address; proposalId?: string }>{
+    const args = <{ proposerAccount: Address }>{
       proposerAccount,
     };
-
-    if (proposalId) {
-      args = {
-        proposerAccount,
-        ...(proposalId ? { proposalId: proposalId.toString() } : {}),
-      };
-    }
 
     const logs = await client.getLogs({
       address: contractAddress,
@@ -78,7 +69,6 @@ const getDGEvents = async ({
 };
 
 const getEPTEvents = async ({
-  proposalId,
   client,
   EPTContract,
 }: Props): Promise<ProposalLog[]> => {
@@ -94,7 +84,6 @@ const getEPTEvents = async ({
 
   try {
     const contractAddress = EPTContract.address;
-
     const adminExecutor = await EPTContract.readContract('getAdminExecutor');
 
     invariant(adminExecutor, 'Contract not found');
@@ -102,10 +91,6 @@ const getEPTEvents = async ({
     const args: { executor?: Address; id?: bigint } = {
       executor: adminExecutor as Address,
     };
-
-    if (proposalId) {
-      args.id = proposalId;
-    }
 
     const logs = await client.getLogs({
       address: contractAddress,
@@ -130,7 +115,6 @@ const getEPTEvents = async ({
 };
 
 export const getProposalSubmittedEvents = async ({
-  proposalId,
   client,
   chainId,
   EPTContract,
@@ -141,8 +125,8 @@ export const getProposalSubmittedEvents = async ({
   invariant(chainId, 'Chain id must be provided');
   try {
     const [DGEvents, EPTEvents] = await Promise.all([
-      getDGEvents({ proposalId, client, chainId }),
-      getEPTEvents({ proposalId, client, chainId, EPTContract }),
+      getDGEvents({ client, chainId }),
+      getEPTEvents({ client, chainId, EPTContract }),
     ]);
 
     return {

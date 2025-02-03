@@ -1,5 +1,5 @@
 import { Text } from 'shared/components/text';
-import { RevocableTokensList } from './style';
+import { NftClaimTrigger, RevocableTokensList } from './style';
 import { RevocableTokenItem } from './revocable-token-item';
 import { Token } from 'shared/blockchain/types';
 import { useCallback, useMemo } from 'react';
@@ -7,7 +7,12 @@ import invariant from 'tiny-invariant';
 import { useWithdrawEthAction } from 'features/dual-governance/write-actions/withdraw-eth';
 import { useRageQuitEscrowDetails } from 'features/dual-governance/hooks/use-rage-quit-escrow-details';
 import { useCountdown } from 'shared/hooks/use-countdown';
-import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
+import {
+  useClaimCustomNftModal,
+  useSelectUnstethModal,
+} from 'features/dual-governance/modals/modal-manager';
+import { Box } from 'shared/components/box';
+import { useClaimCustomNftAction } from '../../write-actions/claim-custom-nft';
 
 type Props = {
   rageQuitBalance: {
@@ -56,13 +61,17 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
     timeRemaining,
   ]);
 
+  const claimNft = useClaimCustomNftAction();
+
+  const { openModal: openCustomNftModal } = useClaimCustomNftModal();
+
   const handleWithdrawEth = useCallback(
-    (token: 'unstETH' | 'ETH') => async () => {
+    (token: 'Withdrawal NFT' | 'ETH') => async () => {
       if (token === Token.unstETH) {
         openModal({
-          onConfirm: async (ids) => {
-            invariant(ids?.length, 'ids must be presented');
-            await withdrawEth({ token, ids });
+          onConfirm: async (selectedNftIds) => {
+            invariant(selectedNftIds?.length, 'ids must be presented');
+            await withdrawEth({ token, selectedNftIds });
           },
           actionLabel: 'withdraw',
         });
@@ -85,7 +94,18 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
 
   return (
     <>
-      <Text>Tokens in RageQuit contract</Text>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Text>Tokens in RageQuit contract</Text>
+        <NftClaimTrigger
+          onClick={() =>
+            openCustomNftModal({
+              claimNft,
+            })
+          }
+        >
+          Claim custom nft
+        </NftClaimTrigger>
+      </Box>
       <RevocableTokensList>
         <RevocableTokenItem
           token={'ETH'}

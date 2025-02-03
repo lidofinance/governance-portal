@@ -17,16 +17,19 @@ export const TxStageSignOperationAmount = (props: Props) => {
   const Component = isPending ? TxStagePending : TxStageSign;
 
   if (token === Token.unstETH) {
-    const nftString = props.ids.map((id) => `#${id}`).join(', ');
+    const nftString = Object.keys(props.selectedNftIds)
+      .map((id) => `#${id}`)
+      .join(', ');
 
-    const s = props.ids.length > 1 ? 's' : '';
+    const s = props.selectedNftIds.length > 1 ? 's' : '';
 
     return (
       <Component
         txHash={txHash}
         title={
           <>
-            You are {operationText.toLowerCase()} {props.ids.length} NFT{s}
+            You are {operationText.toLowerCase()} {props.selectedNftIds.length}{' '}
+            NFT{s}
           </>
         }
         description={
