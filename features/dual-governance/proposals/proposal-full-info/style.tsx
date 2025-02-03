@@ -29,12 +29,6 @@ export const ProposalLink = styled(Link)`
   color: var(--accent-color-ocean);
 `;
 
-export const ProposalDescription = styled(Text)`
-  margin-top: 30px;
-  font-size: 22px;
-  margin-bottom: 30px;
-`;
-
 export const ActionsWrapper = styled.div`
   margin-top: 30px;
 

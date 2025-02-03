@@ -102,3 +102,10 @@ export const NoTokensMessage = styled.div`
   justify-content: center;
   height: 100%;
 `;
+
+export const NftClaimTrigger = styled(Text)`
+  color: var(--accent-color-ocean-light);
+  cursor: pointer;
+  padding-bottom: 10px;
+  text-align: right;
+`;

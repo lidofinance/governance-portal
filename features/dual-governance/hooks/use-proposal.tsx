@@ -40,12 +40,10 @@ export const useProposal = ({
           'getProposal',
           [proposalId],
         );
-
         const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
           client: publicClient,
           chainId,
           EPTContract: emergencyProtectedTimelock,
-          proposalId,
         });
 
         const dualGovernanceEvent = DGEvents.find(
@@ -53,7 +51,6 @@ export const useProposal = ({
         );
 
         const proposalLog = EPTEvents[0] || {};
-
         const result: ProposalCombinedData = {
           id: Number(proposalId),
           event: proposalLog,

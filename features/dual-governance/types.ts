@@ -89,7 +89,7 @@ export type UseEventWatcherConfig<T> = {
 };
 
 export type EscrowActionArgs =
-  | { token: 'unstETH'; ids: string[] }
+  | { token: 'Withdrawal NFT'; selectedNftIds: string[] }
   | { token: 'stETH' | 'wstETH'; amount: bigint };
 
 export type EscrowActionWithEthArgs =

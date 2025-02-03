@@ -11,11 +11,13 @@ import { useDualGovernanceConfig } from './use-dual-governance-config';
 const statusText = {
   loading: 'Loading...',
   pending: 'Pending in DualGovernance',
-  readyToSchedule: 'Ready to schedule',
+  readyToSchedule: 'Ready to Schedule Execution',
   readyToExecute: 'Ready to execute',
+  executionScheduled: 'Execution Scheduled',
   executed: 'Executed',
   blocked: 'Blocked',
   vetoPossible: 'Veto possible for',
+  cancelled: 'Cancelled',
 };
 
 type Props = {
@@ -35,7 +37,7 @@ type UseProposalStatusReturnType = {
 // TODO: add link
 const emergencyCommitteeLinkText = (
   <span>
-    Only <b>Emergency Committee</b> can stop the execution for
+    Only <b>Emergency Committee</b> may stop the execution for
   </span>
 );
 
@@ -54,7 +56,6 @@ export const useProposalStatus = ({
   const { visibleState, detailedState, firstSealRageQuitSupport } =
     useDualGovernanceContext();
   const { data: dgConfig } = useDualGovernanceConfig();
-
   const vetoSignallingDeactivationMaxDuration =
     dgConfig?.vetoSignallingDeactivationMaxDuration;
 
@@ -172,7 +173,7 @@ export const useProposalStatus = ({
       return {
         badge: {
           text: statusText.readyToSchedule,
-          variant: 'default',
+          variant: 'warning',
         },
         info: null,
       };
@@ -197,13 +198,15 @@ export const useProposalStatus = ({
   /**
    * Scheduled proposals can be executed regardless of the Governance status after the 'afterScheduleDelay'
    */
+
+  // TODO: add badge id for conditional rendering
   if (proposalStatus === ProposalStatus.Scheduled) {
     return {
       badge: {
         text: isCountdownFinished
           ? statusText.readyToExecute
-          : statusText.pending,
-        variant: isCountdownFinished ? 'default' : 'warning',
+          : statusText.executionScheduled,
+        variant: isCountdownFinished ? 'success' : 'warning',
       },
       info: isCountdownFinished ? null : visibleState ===
         VisibleGovernanceState.BlockedDeactivation ? (
@@ -216,6 +219,16 @@ export const useProposalStatus = ({
           </Text>
         </Text>
       ),
+    };
+  }
+
+  if (proposalStatus === ProposalStatus.Cancelled) {
+    return {
+      badge: {
+        text: statusText.cancelled,
+        variant: 'default',
+      },
+      info: null,
     };
   }
 

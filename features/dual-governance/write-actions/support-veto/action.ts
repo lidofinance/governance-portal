@@ -52,18 +52,20 @@ export const useSupportVetoAction = ({
           throw new Error('Cannot support veto signalling in RageQuit state');
         }
 
-        let approvalAmount = BigInt(0);
+        let approvalAmount;
         if (args.token === Token.unstETH) {
-          approvalAmount = BigInt(Object.keys(args.ids).length);
+          approvalAmount = BigInt(Object.keys(args.selectedNftIds).length);
         } else {
           approvalAmount = args.amount;
         }
+
         invariant(approvalAmount, 'amount must be presented');
 
         const actionArgs = {
           token: args.token,
           amount: approvalAmount,
-          ids: args.token === Token.unstETH ? args.ids : [],
+          selectedNftIds:
+            args.token === Token.unstETH ? args.selectedNftIds : [],
         };
         const hasRQApprove = needsRQApprove
           ? await confirm({

@@ -17,6 +17,7 @@ export const useEscrowBalances = () => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
   const { vetoSignallingAddress, rageQuitAddress } = useDualGovernanceContext();
+
   // const wstEth = useReadContract(WstETH);
 
   const readEscrowContract = useReadContractGetter(escrowAbi);

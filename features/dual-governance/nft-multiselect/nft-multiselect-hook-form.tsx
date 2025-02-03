@@ -8,13 +8,14 @@ type Props = { fieldName: string } & Omit<
 >;
 
 export const NftMultiselectHookForm = (props: Props) => {
-  const { fieldName, ...rest } = props;
+  const { fieldName, disabled, ...rest } = props;
   const { watch, setValue } = useFormContext();
 
   const selectedOptions: NftMultiselectValuesMap = watch(fieldName);
 
   return (
     <NftMultiselect
+      disabled={disabled}
       {...rest}
       selectedOptions={selectedOptions}
       onChange={(value) => setValue(fieldName, value)}

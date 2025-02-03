@@ -4,14 +4,13 @@ import {
   ActionsWrapper,
   InlineLoaderStyled,
   ProposalContainer,
-  ProposalDescription,
   ProposalHeader,
   ProposalLink,
   ProposalName,
   SubmitDate,
   ArrowIconWrapper,
-  AuthorDescription,
 } from 'features/dual-governance/proposals/proposal-full-info/style';
+import { Text } from 'shared/components/text';
 import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 
 import { Script } from 'features/dual-governance/evm-script-parsed/full';
@@ -29,6 +28,8 @@ import { ArrowRight } from 'shared/components/icons';
 import { useRouter } from 'next/router';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
+import { config } from 'config';
+import { Box } from '@lidofinance/lido-ui';
 
 type Props = {
   id: number;
@@ -137,24 +138,35 @@ export const ProposalFullInfo = ({ id }: Props) => {
       <ProposalName>Proposal #{id}</ProposalName>
       {proposal.proposalDetails.submittedAt && (
         <SubmitDate>
-          {`Submitted ${getDateFromTimestamp({ timestamp: proposal.proposalDetails.submittedAt, showYear: true }).date}`}
+          Submitted from{' '}
+          <ProposalLink href={`${config.voteOrigin}/vote/${proposal.voteId}`}>
+            Aragon {proposal.voteId}
+          </ProposalLink>{' '}
+          on{' '}
+          {
+            getDateFromTimestamp({
+              timestamp: proposal.proposalDetails.submittedAt,
+              showYear: true,
+            }).date
+          }
         </SubmitDate>
       )}
-      <ProposalDescription>
-        {proposal?.voteId ? (
-          <>
-            This proposal is a part of{' '}
-            <ProposalLink href="#">Aragon {proposal?.voteId}</ProposalLink>
-          </>
-        ) : (
-          <span>Proposal #{proposal?.id}</span>
+      <Box margin={'30px 0'}>
+        <Text size={28}>Description</Text>
+        <Box marginTop={12}>
+          <Text size={14} color="secondary">
+            Disclaimer: Description provided by the Aragon proposal author; may
+            include items not under Dual Governance
+          </Text>
+        </Box>
+        {proposal.proposalDualGovernanceDetails?.metadata && (
+          <Box marginTop={30}>
+            <Text size={22}>
+              {proposal.proposalDualGovernanceDetails?.metadata}
+            </Text>
+          </Box>
         )}
-        {proposal?.proposalDualGovernanceDetails?.metadata && (
-          <AuthorDescription>
-            {proposal?.proposalDualGovernanceDetails?.metadata}
-          </AuthorDescription>
-        )}
-      </ProposalDescription>
+      </Box>
 
       {calls && calls.length > 0 && <Script rawCalls={calls} />}
 

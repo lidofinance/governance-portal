@@ -24,6 +24,7 @@ type Props = {
   $variant: BadgeVariant;
 };
 
+// TODO: Move to shared components
 export const Badge = styled.div<Props>`
   ${({ $variant }) => variantStyles[$variant]}
   padding: 4px 10px;

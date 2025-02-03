@@ -6,13 +6,24 @@ type Props = {
 
 export const ButtonWrapper = styled.div<Props>`
   display: flex;
-  padding: 3px;
+  align-items: center;
   border-radius: 70px;
-  border: 3px solid
-    ${({ $isActive }) => ($isActive ? '#0085FF' : 'transparent')};
+  box-sizing: content-box;
+
+  button {
+    border: none;
+    height: 46px;
+    padding: 0 20px;
+    margin: -1px;
+    &:hover {
+        ${({ $isActive }) => !$isActive && `background-color: transparent!important`}
+  }
 `;
 
 export const ToggleWrapper = styled.div`
   display: flex;
   gap: 16px;
+  border: 1px solid var(--border-color-fog);
+  border-radius: 70px;
+  background-color: #1312170a;
 `;

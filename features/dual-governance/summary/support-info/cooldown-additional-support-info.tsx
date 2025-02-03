@@ -34,11 +34,12 @@ export const CooldownAdditionalSupportInfo = () => {
     return null;
   }
 
-  if (amountTillNextPhasePercent <= 0) {
+  if (amountTillNextPhasePercent < 0) {
     return (
       <Text color="secondary">
         VetoSignalling starts on <Text as="b">{cooldownEndDate?.date}</Text>{' '}
-        {cooldownEndDate?.timezone}{' '}
+        {cooldownEndDate?.timezone} unless stETH support decreases below{' '}
+        <Text as="b">{firstSealRageQuitSupport}%</Text>
       </Text>
     );
   }
@@ -46,9 +47,7 @@ export const CooldownAdditionalSupportInfo = () => {
   return (
     <Text color="secondary">
       VetoSignalling starts if <Text as="b">{amountTillNextPhasePercent}%</Text>{' '}
-      more {Token.stETH} is added. Otherwise, governance will return to Normal
-      state on <Text as="b">{cooldownEndDate?.date}</Text>{' '}
-      {cooldownEndDate?.timezone}{' '}
+      more {Token.stETH} is added
     </Text>
   );
 };

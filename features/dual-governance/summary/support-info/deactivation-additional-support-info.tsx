@@ -32,6 +32,9 @@ export const DeactivationAdditionalSupportInfo = () => {
       return null;
     }
 
+    // We use this timestamp to add a hardcoded gap of 3 hours to the approximate VetoSignalling restart date
+    const futureTimestamp = currentTimestamp + 3 * 3600;
+
     const firstThreshold = parsePercent16(firstSealRageQuitSupport);
     const secondThreshold = parsePercent16(secondSealRageQuitSupport);
 
@@ -39,7 +42,9 @@ export const DeactivationAdditionalSupportInfo = () => {
     const durationDiff = vetoSignallingMaxDuration - vetoSignallingMinDuration;
 
     const result =
-      firstThreshold + (timestampDiff * thresholdDiff) / durationDiff;
+      (thresholdDiff *
+        (currentTimestamp + futureTimestamp + persistedStateEnteredAt)) /
+      durationDiff;
 
     if (result > secondThreshold || result < 0) {
       // edge case

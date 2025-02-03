@@ -48,7 +48,7 @@ export const VetoSignallingTokens = ({
       if (token === Token.unstETH) {
         invariant(selectedNftIds?.length, 'ids must be presented');
 
-        await revokeTokens({ token, ids: selectedNftIds });
+        await revokeTokens({ token, selectedNftIds });
       } else {
         setIsPopupOpen(false);
 

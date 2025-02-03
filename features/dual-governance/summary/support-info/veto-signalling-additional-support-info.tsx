@@ -5,8 +5,11 @@ import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 
 export const VetoSignallingAdditionalSupportInfo = () => {
-  const { detailedState, amountTillNextPhasePercent } =
-    useDualGovernanceContext();
+  const {
+    detailedState,
+    amountTillNextPhasePercent,
+    nextPhaseSupportThresholdPercent,
+  } = useDualGovernanceContext();
 
   const vetoSignallingEndDate = useMemo(() => {
     if (!detailedState) return;
@@ -27,27 +30,30 @@ export const VetoSignallingAdditionalSupportInfo = () => {
     return null;
   }
 
+  // TODO: check UI when in veto signalling
+
   if (amountTillNextPhasePercent <= 0) {
     return (
       <Text color="secondary">
-        RageQuit starts on <Text as="b">{vetoSignallingEndDate?.date}</Text>{' '}
-        {vetoSignallingEndDate?.timezone} if stETH support stays above the
-        threshold. Otherwise, Deactivation starts.
+        <b>RageQuit</b> starts on{' '}
+        <Text as="b">{vetoSignallingEndDate?.date}</Text>{' '}
+        {vetoSignallingEndDate?.timezone}, unless veto stETH support decreases
+        below {nextPhaseSupportThresholdPercent}%
       </Text>
     );
   }
 
   return (
     <Text color="secondary">
-      RageQuit starts if{' '}
+      <b>RageQuit</b> starts if{' '}
       {amountTillNextPhasePercent && (
         <Text as="b">
           {Math.round(amountTillNextPhasePercent * 100) / 100}%
         </Text>
       )}{' '}
-      more {Token.stETH} is added till{' '}
+      more {Token.stETH} is added by{' '}
       <Text as="b">{vetoSignallingEndDate?.date}</Text>{' '}
-      {vetoSignallingEndDate?.timezone}
+      {vetoSignallingEndDate?.timezone}; <b>Otherwise, Deactivation</b> begins
     </Text>
   );
 };
