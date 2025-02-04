@@ -38,7 +38,7 @@ export const Script = ({ rawCalls, description }: Props) => {
         {tabs.map((tab, i) => (
           <Tab
             key={tab}
-            isActive={activeTab === i}
+            $isActive={activeTab === i}
             onClick={() => setActiveTab(i)}
           >
             {tab}

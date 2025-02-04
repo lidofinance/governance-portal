@@ -3,10 +3,11 @@ import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lido-sdk/constants';
 import { ProposalLog } from 'features/dual-governance/proposals/types';
 import { findAbiItem } from '../find-abi-item';
+import invariant from 'tiny-invariant';
 
 type Props = {
   client: PublicClient;
-  proposalLog: ProposalLog;
+  proposalLog: ProposalLog | null;
   chainId: CHAINS;
 };
 
@@ -15,12 +16,12 @@ export const isAragonProposal = async ({
   proposalLog,
   chainId,
 }: Props): Promise<bigint | false> => {
+  invariant(proposalLog, 'Proposal log is required');
   if (!proposalLog.transactionHash) return false;
 
   const receipt = await client.getTransactionReceipt({
     hash: proposalLog.transactionHash,
   });
-
   const aragonAddress = Voting.chainAddressMap[chainId]?.toLowerCase();
   const aragonEvents = receipt.logs.filter(
     (log) => log.address.toLowerCase() === aragonAddress,

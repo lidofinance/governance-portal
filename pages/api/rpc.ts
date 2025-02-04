@@ -7,42 +7,34 @@ import {
   rateLimit,
   responseTimeMetric,
   defaultErrorHandler,
-  requestAddressMetric,
   httpMethodGuard,
   HttpMethod,
 } from 'utilsApi';
 import Metrics from 'utilsApi/metrics';
 import { rpcFactory } from 'utilsApi/rpcFactory';
-import {
-  // METRIC_CONTRACT_ADDRESSES,
-  METRIC_CONTRACT_EVENT_ADDRESSES,
-} from 'utilsApi/contractAddressesMetricsMap';
 import { METRICS_PREFIX } from 'constants/metrics';
 import { CHAINS } from '@lido-sdk/constants';
+import {
+  DualGovernance,
+  EmergencyProtectedTimelock,
+  Voting,
+} from 'shared/blockchain/contract-addresses';
+import { Address } from 'viem';
 
-// const allowedCallAddresses: Record<string, string[]> = Object.entries(
-//   METRIC_CONTRACT_ADDRESSES,
-// ).reduce(
-//   (acc, [chainId, addresses]) => {
-//     acc[chainId] = Object.keys(addresses);
-//     return acc;
-//   },
-//   {} as Record<string, string[]>,
-// );
+const allowedLogContracts = (chainId: CHAINS) => {
+  return [
+    DualGovernance[chainId],
+    EmergencyProtectedTimelock[chainId],
+    Voting[chainId],
+  ].filter((address): address is Address => address !== undefined);
+};
 
-const allowedLogsAddresses: Record<string, string[]> = Object.entries(
-  METRIC_CONTRACT_EVENT_ADDRESSES,
-).reduce(
-  (acc, [chainId, addresses]) => {
-    acc[chainId] = [
-      ...Object.keys(addresses),
-      '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0', //TODO: move addresses to a proper list
-      '0xdA7d2573Df555002503F29aA4003e398d28cc00f', // Voting
-      '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199', // DG
-    ];
-    return acc;
+const allowedLogsAddresses = config.supportedChains.reduce(
+  (allowedAddresses, chainId: CHAINS) => {
+    allowedAddresses[chainId] = allowedLogContracts(chainId) || [];
+    return allowedAddresses;
   },
-  {} as Record<string, string[]>,
+  {} as Record<CHAINS, Address[]>,
 );
 
 const rpc = rpcFactory({
@@ -77,7 +69,6 @@ const rpc = rpcFactory({
     'eth_chainId',
     'net_version',
   ],
-  // allowedCallAddresses,
   allowedLogsAddresses,
   maxBatchCount: config.PROVIDER_MAX_BATCH,
   disallowEmptyAddressGetLogs: true,
@@ -87,6 +78,5 @@ export default wrapNextRequest([
   httpMethodGuard([HttpMethod.POST]),
   rateLimit,
   responseTimeMetric(Metrics.request.apiTimings, API_ROUTES.RPC),
-  requestAddressMetric(Metrics.request.ethCallToAddress),
   defaultErrorHandler,
 ])(rpc);

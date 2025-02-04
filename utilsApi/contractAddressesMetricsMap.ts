@@ -92,18 +92,6 @@ export const METRIC_CONTRACT_ADDRESSES = (
         getAggregatorAddress,
         chainId,
       ),
-      // [CONTRACT_NAMES.AggregatorStEthUsdPriceFeed]: getAddressOrNull(
-      //   getAggregatorStEthUsdPriceFeedAddress,
-      //   chainId,
-      // ),
-      // [CONTRACT_NAMES.StakingRouter]: getAddressOrNull(
-      //   getStakingRouterAddress,
-      //   chainId,
-      // ),
-      // [CONTRACT_NAMES.StethCurve]: getAddressOrNull((chainId: CHAINS) => {
-      //   if (chainId === 1) return MAINNET_CURVE;
-      //   else throw new Error('no contract address');
-      // }, chainId),
       [CONTRACT_NAMES.LidoLocator]: getAddressOrNull((chainId: CHAINS) => {
         return (LIDO_LOCATOR_BY_CHAIN as any)[chainId] as string;
       }, chainId),

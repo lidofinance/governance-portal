@@ -245,6 +245,7 @@ export const AdminExecutor: ChainAddressMap = {
 };
 
 export const EmergencyProtectedTimelock: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
   [CHAINS.Holesky]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
 };
 

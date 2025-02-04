@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   ActionsWrapper,
@@ -109,6 +109,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
     await executeProposal(id);
   };
 
+  const submittedAt = useMemo(() => {
+    if (!proposal) {
+      return null;
+    }
+
+    const date = getDateFromTimestamp({
+      timestamp: proposal.proposalDetails.submittedAt,
+      showYear: true,
+    });
+
+    return `${date.date} ${date.tz}`;
+  }, [proposal]);
+
   if (!proposal || isLoading) {
     return (
       <>
@@ -142,19 +155,15 @@ export const ProposalFullInfo = ({ id }: Props) => {
           <ProposalLink href={`${config.voteOrigin}/vote/${proposal.voteId}`}>
             Aragon {proposal.voteId}
           </ProposalLink>{' '}
-          on{' '}
-          {
-            getDateFromTimestamp({
-              timestamp: proposal.proposalDetails.submittedAt,
-              showYear: true,
-            }).date
-          }
+          on {submittedAt}
         </SubmitDate>
       )}
       <Box margin={'30px 0'}>
-        <Text size={28}>Description</Text>
+        <Text weight={500} size={28}>
+          Description
+        </Text>
         <Box marginTop={12}>
-          <Text size={14} color="secondary">
+          <Text size={15} color="secondary">
             Disclaimer: Description provided by the Aragon proposal author; may
             include items not under Dual Governance
           </Text>

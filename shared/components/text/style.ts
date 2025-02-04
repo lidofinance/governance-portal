@@ -2,7 +2,7 @@ import { Text, Theme } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 
 type TextStyledProps = {
-  size?: 14 | 17 | 19 | 22 | 28 | 30 | 34 | 50;
+  size?: number;
 };
 
 type InjectedProps = {
