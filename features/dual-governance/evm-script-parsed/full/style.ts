@@ -6,7 +6,7 @@ export const Tabs = styled.div`
   display: flex;
 `;
 
-type TabProps = { isActive?: boolean };
+type TabProps = { $isActive?: boolean };
 export const Tab = styled.div<TabProps>`
   position: relative;
   padding: 20px;
@@ -20,6 +20,9 @@ export const Tab = styled.div<TabProps>`
   width: 100%;
   text-align: center;
 
+  background-color: ${({ $isActive }) =>
+    $isActive ? 'transparent' : '#1312170A'};
+
   &:not(:first-child) {
     border-left: none;
   }
@@ -32,8 +35,8 @@ export const Tab = styled.div<TabProps>`
     border-top-right-radius: 20px;
   }
 
-  ${({ isActive }) =>
-    isActive &&
+  ${({ $isActive }) =>
+    $isActive &&
     css`
       border-bottom: 1px solid var(--accent-color-ocean);
     `}

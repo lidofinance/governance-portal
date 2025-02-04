@@ -50,7 +50,13 @@ export const useProposal = ({
           (log) => Number(log.args.proposalId) === Number(id),
         );
 
-        const proposalLog = EPTEvents[0] || {};
+        const proposalLog =
+          EPTEvents.find((event) => event.args.id === BigInt(id)) || null;
+
+        if (!proposalLog) {
+          throw new Error('No proposal events found');
+        }
+
         const result: ProposalCombinedData = {
           id: Number(proposalId),
           event: proposalLog,
