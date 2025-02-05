@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Layout } from 'shared/components';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ProposalPage as ProposalPageComponent } from 'features/dual-governance/pages/proposal-page';
+import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
 
 interface Props {
   id: string;
@@ -22,17 +23,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const id = params?.id;
-  if (!id) {
-    return {
-      notFound: true,
-    };
-  }
+export const getStaticProps: GetStaticProps = getDefaultStaticProps(
+  async ({ params }) => {
+    const id = params?.id;
+    if (!id) {
+      return {
+        notFound: true,
+      };
+    }
 
-  return {
-    props: { id },
-  };
-};
+    return {
+      props: { id },
+    };
+  },
+);
 
 export default ProposalPage;

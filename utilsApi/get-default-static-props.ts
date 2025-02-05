@@ -16,19 +16,19 @@ export const getDefaultStaticProps = <
     /// common props
     const { ___prefetch_manifest___ } = await fetchExternalManifest();
     const props = ___prefetch_manifest___ ? { ___prefetch_manifest___ } : {};
-    const base = {
+    const base: GetStaticPropsResult<typeof props> = {
       props,
       // because next only remembers first value, default to short revalidation period
       revalidate: config.DEFAULT_REVALIDATION,
     };
+    let result = base as GetStaticPropsResult<P>;
 
     /// custom getStaticProps
-    let result = base as GetStaticPropsResult<P>;
     if (custom) {
       const { props: customProps, ...rest } = (await custom(context)) as any;
       result = {
-        ...base,
         ...rest,
+        ...result,
         props: { ...base.props, ...customProps },
       };
     }

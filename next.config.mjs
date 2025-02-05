@@ -27,6 +27,7 @@ export const CACHE_CONTROL_PAGES = [
   '/manifest.json',
   '/favicon:size*',
   '/public/runtime/window-env.js',
+  '/proposals/:id',
 ];
 export const CACHE_CONTROL_VALUE =
   'public, max-age=15, s-max-age=30, stale-if-error=604800, stale-while-revalidate=172800';
@@ -132,9 +133,7 @@ export default withBundleAnalyzer({
       })),
     ];
   },
-  redirects: () => [
-
-  ],
+  redirects: () => [],
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`
   serverRuntimeConfig: {
