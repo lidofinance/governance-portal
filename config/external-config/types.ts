@@ -17,3 +17,10 @@ export type ExternalConfig = Omit<ManifestEntry, 'config'> &
   ManifestConfig & {
     fetchMeta: SWRResponse<ManifestEntry>;
   };
+
+export enum ManifestConfigPageEnum {
+  DualGovernance = '/',
+  Proposal = '/proposal',
+}
+
+export type ManifestConfigPage = `${ManifestConfigPageEnum}`;
