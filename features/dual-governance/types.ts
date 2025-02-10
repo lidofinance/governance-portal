@@ -95,3 +95,11 @@ export type EscrowActionArgs =
 export type EscrowActionWithEthArgs =
   | EscrowActionArgs
   | { token: 'ETH'; amount: bigint };
+
+export enum UnstETHRecordStatus {
+  NotLocked,
+  Locked,
+  Finalized,
+  Claimed,
+  Withdrawn,
+}
