@@ -17,7 +17,7 @@ export const DualGovernanceControlPanel = () => {
   const { data } = useEscrowBalances();
 
   useEffect(() => {
-    if (data && data.lockedSharesInEscrow !== 0n) {
+    if (data && data.totalLockedSharesInEscrows !== 0n) {
       setIsPreviewVisible(false);
     }
   }, [data]);

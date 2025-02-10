@@ -25,6 +25,7 @@ type WithUndefined<T> = {
 type DualGovernanceContextValue = {
   vetoSignallingAddress?: Address;
   rageQuitAddress?: Address;
+  historicalEscrowAddresses?: Address[] | null;
   visibleState: VisibleGovernanceState;
   isLoading: boolean;
   error: Error | null;
@@ -54,6 +55,7 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
   const {
     vetoSignallingAddress,
     rageQuitAddress,
+    historicalEscrowAddresses,
     isLoading: isAddressDataLoading,
     error: addressDataError,
   } = useEscrowAddresses();
@@ -75,6 +77,7 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
       ...dualGovernanceState,
       vetoSignallingAddress,
       rageQuitAddress,
+      historicalEscrowAddresses,
       visibleState:
         dualGovernanceState?.visibleState ?? VisibleGovernanceState.Loading,
       isLoading: isAddressDataLoading || isDualGovernanceStateLoading,
@@ -86,6 +89,7 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
     [
       vetoSignallingAddress,
       rageQuitAddress,
+      historicalEscrowAddresses,
       dualGovernanceState,
       isAddressDataLoading,
       isDualGovernanceStateLoading,

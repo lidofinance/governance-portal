@@ -32,13 +32,13 @@ export const HeaderVaultInfo = () => {
       <VaultInfoButton
         ref={vaultInfoRef}
         onClick={() => setVaultInfoMenuOpen(true)}
-        disabled={!data?.lockedSharesInEscrow}
+        disabled={!data?.totalLockedSharesInEscrows}
       >
         <VaultIcon />
         {isLoading || !data ? (
           <VaultInfoLoader />
         ) : (
-          `${formatEth(data.lockedSharesInEscrow)} stETH`
+          `${formatEth(data.totalLockedSharesInEscrows)} stETH`
         )}
       </VaultInfoButton>
       {data ? (
@@ -72,18 +72,24 @@ export const HeaderVaultInfo = () => {
               </TokensList>
             </>
           ) : null}
-          {data.rageQuitBalance.totalLockedShares ? (
+          {data.rageQuitsBalance.totalLockedShares ? (
             <>
               <VaultInfoSubtitle>Tokens in RageQuit contract</VaultInfoSubtitle>
               <TokensList>
                 <TokenBalance
                   token={Token.stETH}
-                  balance={data.rageQuitBalance.stETHLockedShares}
+                  balance={
+                    data.rageQuitsBalance
+                      .totalStETHLockedSharesInRageQuitEscrows
+                  }
                   showZeroBalance={false}
                 />
                 <TokenBalance
                   token={Token.unstETH}
-                  balance={data.rageQuitBalance.unstETHLockedShares}
+                  balance={
+                    data.rageQuitsBalance
+                      .totalUnstETHLockedSharesInRageQuitEscrows
+                  }
                   showZeroBalance={false}
                 />
               </TokensList>

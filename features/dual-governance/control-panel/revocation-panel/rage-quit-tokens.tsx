@@ -13,24 +13,35 @@ import {
 } from 'features/dual-governance/modals/modal-manager';
 import { Box } from 'shared/components/box';
 import { useClaimCustomNftAction } from '../../write-actions/claim-custom-nft';
+import { Address } from 'viem';
+import { RageQuitEscrowUnstETHRecord } from '../../utils';
+import { UnstETHRecordStatus } from '../../types';
+import { Link } from '@lidofinance/lido-ui';
+import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { ExternalLinkIcon } from 'shared/components/icons';
+
+type RageQuitBalance = {
+  rageQuitEscrowAddress: Address;
+  totalStETHLockedShares?: bigint | undefined;
+  totalUnstETHLockedShares?: bigint | undefined;
+  unstETHRecords: readonly RageQuitEscrowUnstETHRecord[];
+  totalLockedShares: bigint;
+};
 
 type Props = {
-  rageQuitBalance: {
-    unstETHIdsCount?: bigint | undefined;
-    stETHLockedShares?: bigint | undefined;
-    unstETHLockedShares?: bigint | undefined;
-    lastAssetsLockTimestamp?: number | undefined;
-    totalLockedShares: bigint;
-  };
   onConfirm: () => Promise<void>;
+  rageQuitBalance: RageQuitBalance;
 };
 
 export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
+  const { chainId } = useLidoSDK();
+
   const {
-    stETHLockedShares,
-    unstETHLockedShares,
-    unstETHIdsCount,
+    totalStETHLockedShares,
     totalLockedShares,
+    unstETHRecords,
+    rageQuitEscrowAddress,
   } = rageQuitBalance;
 
   const { openModal } = useSelectUnstethModal();
@@ -53,6 +64,8 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
     }
     if (timeRemaining > 0) {
       return `${assetsLockCountdown} till withdrawal`;
+    } else {
+      return 'Withdraw';
     }
   }, [
     assetsLockCountdown,
@@ -65,6 +78,13 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
 
   const { openModal: openCustomNftModal } = useClaimCustomNftModal();
 
+  const sumUpUnstETHRecordShares = useCallback(
+    (records: RageQuitEscrowUnstETHRecord[]) => {
+      return records.reduce((sum, record) => sum + record.shares, 0n);
+    },
+    [],
+  );
+
   const handleWithdrawEth = useCallback(
     (token: 'Withdrawal NFT' | 'ETH') => async () => {
       if (token === Token.unstETH) {
@@ -76,12 +96,12 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
           actionLabel: 'withdraw',
         });
       } else {
-        invariant(stETHLockedShares, 'Amount is not defined');
+        invariant(totalStETHLockedShares, 'Amount is not defined');
 
-        await withdrawEth({ amount: stETHLockedShares, token });
+        await withdrawEth({ amount: totalStETHLockedShares, token });
       }
     },
-    [stETHLockedShares, withdrawEth, openModal],
+    [totalStETHLockedShares, withdrawEth, openModal],
   );
 
   if (!totalLockedShares || isRageQuitDataLoading) {
@@ -92,10 +112,23 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
     typeof rageQuitDetails?.withdrawalsUnlockTimestamp !== 'number' ||
     timeRemaining > 0;
 
+  const finalizedUnstETHRecords = unstETHRecords.filter(
+    (record) => record.status === UnstETHRecordStatus.Finalized,
+  );
+
+  const claimedUnstETHRecords = unstETHRecords.filter(
+    (record) => record.status === UnstETHRecordStatus.Claimed,
+  );
+
   return (
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Text>Tokens in RageQuit contract</Text>
+        <Text>
+          Tokens in RageQuit{' '}
+          <Link href={getEtherscanAddressLink(chainId, rageQuitEscrowAddress)}>
+            contract <ExternalLinkIcon />
+          </Link>
+        </Text>
         <NftClaimTrigger
           onClick={() =>
             openCustomNftModal({
@@ -109,19 +142,35 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
       <RevocableTokensList>
         <RevocableTokenItem
           token={'ETH'}
-          amount={stETHLockedShares}
+          amount={totalStETHLockedShares}
           isLocked={isWithdrawalLocked}
           actionLabel={actionLabel}
           onClick={handleWithdrawEth('ETH')}
         />
-        <RevocableTokenItem
-          token={Token.unstETH}
-          amount={unstETHLockedShares}
-          amountLabel={`${unstETHIdsCount} NFT`}
-          isLocked={isWithdrawalLocked}
-          actionLabel={actionLabel}
-          onClick={handleWithdrawEth(Token.unstETH)}
-        />
+        {finalizedUnstETHRecords.length > 0 &&
+          finalizedUnstETHRecords.map((record) => (
+            <RevocableTokenItem
+              key={record.id}
+              token={Token.unstETH}
+              amount={sumUpUnstETHRecordShares(finalizedUnstETHRecords)}
+              amountLabel={`${finalizedUnstETHRecords.length} NFT`}
+              isLocked={isWithdrawalLocked}
+              actionLabel="Claim"
+              onClick={handleWithdrawEth(Token.unstETH)}
+            />
+          ))}
+        {claimedUnstETHRecords.length > 0 &&
+          claimedUnstETHRecords.map((record) => (
+            <RevocableTokenItem
+              key={record.id}
+              token={Token.unstETH}
+              amount={sumUpUnstETHRecordShares(finalizedUnstETHRecords)}
+              amountLabel={`${claimedUnstETHRecords.length} NFT`}
+              isLocked={isWithdrawalLocked}
+              actionLabel={actionLabel}
+              onClick={handleWithdrawEth(Token.unstETH)}
+            />
+          ))}
       </RevocableTokensList>
     </>
   );

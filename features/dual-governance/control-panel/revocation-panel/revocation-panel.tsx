@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
+import { Address } from 'viem';
 
 import { NoTokensMessage } from './style';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
@@ -19,6 +20,8 @@ export const RevocationPanel = () => {
     refetch: refetchEscrowBalances,
   } = useEscrowBalances();
 
+  const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
+
   const updateDualGovernanceState = useCallback(async () => {
     await Promise.allSettled([
       refetchDualGovernanceState(),
@@ -26,13 +29,11 @@ export const RevocationPanel = () => {
     ]);
   }, [refetchDualGovernanceState, refetchEscrowBalances]);
 
-  const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
-
   if (isLoading) {
     return <Loader />;
   }
 
-  if (!escrowBalances?.lockedSharesInEscrow) {
+  if (!escrowBalances) {
     return (
       <NoTokensMessage>
         <Text color="secondary" size={22} weight={600}>
@@ -42,6 +43,19 @@ export const RevocationPanel = () => {
     );
   }
 
+  const rageQuitBalances = Object.keys(
+    escrowBalances.rageQuitsBalance.historicalBalances,
+  ) as Address[];
+
+  const mappedRageQuitBalances = rageQuitBalances
+    .map((rageQuitEscrowAddress) => ({
+      rageQuitEscrowAddress,
+      ...escrowBalances.rageQuitsBalance.historicalBalances[
+        rageQuitEscrowAddress
+      ],
+    }))
+    .filter((balanceRecord) => balanceRecord.totalLockedShares > 0);
+
   return (
     <div>
       <VetoSignallingTokens
@@ -49,10 +63,13 @@ export const RevocationPanel = () => {
         assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
         onConfirm={updateDualGovernanceState}
       />
-      <RageQuitTokens
-        rageQuitBalance={escrowBalances.rageQuitBalance}
-        onConfirm={updateDualGovernanceState}
-      />
+      {mappedRageQuitBalances.map((balanceRecord) => (
+        <RageQuitTokens
+          key={balanceRecord.rageQuitEscrowAddress}
+          rageQuitBalance={balanceRecord}
+          onConfirm={updateDualGovernanceState}
+        />
+      ))}
     </div>
   );
 };
