@@ -2,12 +2,14 @@ import { useCallback } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
 import { Address } from 'viem';
 
-import { NoTokensMessage } from './style';
+import { NftClaimTrigger, NoTokensMessage } from './style';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { VetoSignallingTokens } from './veto-signalling-tokens';
 import { RageQuitTokens } from './rage-quit-tokens';
+import { useClaimCustomNftAction } from '../../write-actions/claim-custom-nft';
+import { useClaimCustomNftModal } from '../../modals/modal-manager';
 
 export const RevocationPanel = () => {
   const {
@@ -21,6 +23,8 @@ export const RevocationPanel = () => {
   } = useEscrowBalances();
 
   const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
+  const claimNft = useClaimCustomNftAction();
+  const { openModal: openCustomNftModal } = useClaimCustomNftModal();
 
   const updateDualGovernanceState = useCallback(async () => {
     await Promise.allSettled([
@@ -32,14 +36,24 @@ export const RevocationPanel = () => {
   if (isLoading) {
     return <Loader />;
   }
-
-  if (!escrowBalances) {
+  if (!escrowBalances || escrowBalances.totalLockedSharesInEscrows === 0n) {
     return (
-      <NoTokensMessage>
-        <Text color="secondary" size={22} weight={600}>
-          You have no tokens in Dual Governance
-        </Text>
-      </NoTokensMessage>
+      <>
+        <NftClaimTrigger
+          onClick={() =>
+            openCustomNftModal({
+              claimNft,
+            })
+          }
+        >
+          Claim custom nft
+        </NftClaimTrigger>
+        <NoTokensMessage>
+          <Text color="secondary" size={22} weight={600}>
+            You have no tokens in Dual Governance
+          </Text>
+        </NoTokensMessage>
+      </>
     );
   }
 
@@ -58,6 +72,15 @@ export const RevocationPanel = () => {
 
   return (
     <div>
+      <NftClaimTrigger
+        onClick={() =>
+          openCustomNftModal({
+            claimNft,
+          })
+        }
+      >
+        Claim custom nft
+      </NftClaimTrigger>
       <VetoSignallingTokens
         vetoSignallingBalance={escrowBalances.vetoSignallingBalance}
         assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}

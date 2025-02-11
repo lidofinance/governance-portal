@@ -12,9 +12,13 @@ import {
   NftWithdrawalRequestReturnType,
 } from '../nft-multiselect';
 import { formatEth } from 'shared/blockchain/utils';
+import { Address } from 'viem';
 
 type Props = {
-  claimNft: (nftId: number) => Promise<boolean | undefined>;
+  claimNft: (
+    nftId: number,
+    escrowAddress: Address,
+  ) => Promise<boolean | undefined>;
 } & ModalProps;
 
 type CTAProps = {
@@ -105,6 +109,7 @@ export const ClaimCustomNftModal = ({ claimNft, ...modalProps }: Props) => {
         'getWithdrawalStatus',
         [[BigInt(value)]],
       );
+
       if (nftStatus.length === 1) {
         setNft(nftStatus[0]);
       } else {
@@ -129,11 +134,11 @@ export const ClaimCustomNftModal = ({ claimNft, ...modalProps }: Props) => {
 
   const handleClaim = useCallback(async () => {
     try {
-      await claimNft(Number(nftId));
+      await claimNft(Number(nftId), nft?.owner as Address);
     } catch (error) {
       console.error('Unable to claim NFT:', error);
     }
-  }, [claimNft, nftId]);
+  }, [claimNft, nft?.owner, nftId]);
 
   const Title = () => (
     <Text size="lg" strong>
