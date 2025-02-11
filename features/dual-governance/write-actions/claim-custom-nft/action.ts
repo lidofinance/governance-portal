@@ -1,29 +1,28 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
 import { useClaimCustomNftTxModal } from './modal-stages';
-// import { useClaimCustomNftTxSend } from './tx-sender';
+import { useClaimCustomNftTxSend } from './tx-sender';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
+import { Address } from 'viem';
 
 export const useClaimCustomNftAction = () => {
   const { data: isMultisig } = useIsContract();
 
   const { txModalStages } = useClaimCustomNftTxModal();
 
-  // const processClaimCustomNft = useClaimCustomNftTxSend();
+  const processClaimCustomNft = useClaimCustomNftTxSend();
 
   const waitForTx = useTxConfirmation();
 
   return useCallback(
-    async (nftId: number) => {
+    async (nftId: number, escrowAddress: Address) => {
       try {
         invariant(nftId, 'NFT ID is required');
 
         txModalStages.signStage(nftId);
 
-        // const txHash = await processClaimCustomNft(nftId);
-
-        const txHash = '';
+        const txHash = await processClaimCustomNft(nftId, escrowAddress);
 
         txModalStages.pendingStage(nftId);
 
@@ -45,6 +44,6 @@ export const useClaimCustomNftAction = () => {
         return false;
       }
     },
-    [txModalStages, isMultisig, waitForTx],
+    [txModalStages, processClaimCustomNft, isMultisig, waitForTx],
   );
 };

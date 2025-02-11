@@ -1,5 +1,5 @@
 import { Text } from 'shared/components/text';
-import { NftClaimTrigger, RevocableTokensList } from './style';
+import { RevocableTokensList } from './style';
 import { RevocableTokenItem } from './revocable-token-item';
 import { Token } from 'shared/blockchain/types';
 import { useCallback, useMemo } from 'react';
@@ -7,12 +7,8 @@ import invariant from 'tiny-invariant';
 import { useWithdrawEthAction } from 'features/dual-governance/write-actions/withdraw-eth';
 import { useRageQuitEscrowDetails } from 'features/dual-governance/hooks/use-rage-quit-escrow-details';
 import { useCountdown } from 'shared/hooks/use-countdown';
-import {
-  useClaimCustomNftModal,
-  useSelectUnstethModal,
-} from 'features/dual-governance/modals/modal-manager';
+import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
 import { Box } from 'shared/components/box';
-import { useClaimCustomNftAction } from '../../write-actions/claim-custom-nft';
 import { Address } from 'viem';
 import { RageQuitEscrowUnstETHRecord } from '../../utils';
 import { UnstETHRecordStatus } from '../../types';
@@ -74,10 +70,6 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
     timeRemaining,
   ]);
 
-  const claimNft = useClaimCustomNftAction();
-
-  const { openModal: openCustomNftModal } = useClaimCustomNftModal();
-
   const sumUpUnstETHRecordShares = useCallback(
     (records: RageQuitEscrowUnstETHRecord[]) => {
       return records.reduce((sum, record) => sum + record.shares, 0n);
@@ -129,15 +121,6 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
             contract <ExternalLinkIcon />
           </Link>
         </Text>
-        <NftClaimTrigger
-          onClick={() =>
-            openCustomNftModal({
-              claimNft,
-            })
-          }
-        >
-          Claim custom nft
-        </NftClaimTrigger>
       </Box>
       <RevocableTokensList>
         <RevocableTokenItem
