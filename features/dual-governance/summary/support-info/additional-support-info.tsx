@@ -34,9 +34,9 @@ export const AdditionalSupportInfo = () => {
     if (amountTillNextPhasePercent && amountTillNextPhasePercent > 0) {
       return (
         <Text color="secondary">
-          <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> starts
-          after RageQuit if <Text as="b">{amountTillNextPhasePercent}%</Text>{' '}
-          more {Token.stETH} is added; <b>Otherwise, Cooldown</b> begins
+          VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
+          RageQuit if {amountTillNextPhasePercent}% more {Token.stETH} is added;
+          Otherwise, Cooldown begins
         </Text>
       );
     }
@@ -44,10 +44,9 @@ export const AdditionalSupportInfo = () => {
     if (amountTillNextPhasePercent && amountTillNextPhasePercent <= 0) {
       return (
         <Text color="secondary">
-          <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> starts
-          after RageQuit unless stETH support decreases below{' '}
-          <Text as="b">{nextPhaseSupportThresholdPercent}%</Text>;{' '}
-          <b>Otherwise, Cooldown</b> begins
+          VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
+          RageQuit unless stETH support decreases below{' '}
+          {nextPhaseSupportThresholdPercent}%; Otherwise, Cooldown begins
         </Text>
       );
     }
@@ -58,9 +57,8 @@ export const AdditionalSupportInfo = () => {
   // VisibleGovernanceState.BlockedRageQuit
   return (
     <Text color="secondary">
-      <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      <Text as="b">{amountTillNextPhasePercent}%</Text> more {Token.stETH} is
-      added
+      VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
+      {amountTillNextPhasePercent}% more {Token.stETH} is added
     </Text>
   );
 };

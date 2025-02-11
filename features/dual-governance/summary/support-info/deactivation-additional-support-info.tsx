@@ -76,19 +76,18 @@ export const DeactivationAdditionalSupportInfo = () => {
   if (amountUntilVetoSignalling === null) {
     return (
       <Text color="secondary">
-        RageQuit starts if <Text as="b">{amountTillNextPhasePercent}%</Text>{' '}
-        more {Token.stETH} is added by <Text as="b">{restartDate?.date}</Text>{' '}
-        {restartDate?.timezone}{' '}
+        RageQuit starts if {amountTillNextPhasePercent}% more {Token.stETH} is
+        added by {restartDate?.date} {restartDate?.timezone}
       </Text>
     );
   }
 
   return (
     <Text color="secondary">
-      If <Text as="b">{amountUntilVetoSignalling}%</Text> more {Token.stETH}{' '}
-      added by <Text as="b">{restartDate?.date}</Text> {restartDate?.timezone}{' '}
-      VetoSignaling restarts. If not, Cooldown <DGTooltip topic="cooldown" />{' '}
-      begins, and proposals can be executed
+      If {amountUntilVetoSignalling}% more {Token.stETH} added by
+      {restartDate?.date} {restartDate?.timezone} VetoSignaling restarts. If
+      not, Cooldown <DGTooltip topic="cooldown" /> begins, and proposals can be
+      executed
     </Text>
   );
 };

@@ -35,8 +35,7 @@ export const VetoSignallingAdditionalSupportInfo = () => {
   if (amountTillNextPhasePercent <= 0) {
     return (
       <Text color="secondary">
-        <b>RageQuit</b> starts on{' '}
-        <Text as="b">{vetoSignallingEndDate?.date}</Text>{' '}
+        RageQuit starts on {vetoSignallingEndDate?.date}{' '}
         {vetoSignallingEndDate?.timezone}, unless veto stETH support decreases
         below {nextPhaseSupportThresholdPercent}%
       </Text>
@@ -45,15 +44,12 @@ export const VetoSignallingAdditionalSupportInfo = () => {
 
   return (
     <Text color="secondary">
-      <b>RageQuit</b> starts if{' '}
+      RageQuit starts if{' '}
       {amountTillNextPhasePercent && (
-        <Text as="b">
-          {Math.round(amountTillNextPhasePercent * 100) / 100}%
-        </Text>
-      )}{' '}
-      more {Token.stETH} is added by{' '}
-      <Text as="b">{vetoSignallingEndDate?.date}</Text>{' '}
-      {vetoSignallingEndDate?.timezone}; <b>Otherwise, Deactivation</b> begins
+        <Text>{Math.round(amountTillNextPhasePercent * 100) / 100}%</Text>
+      )}
+      more {Token.stETH} is added by <Text>{vetoSignallingEndDate?.date}</Text>{' '}
+      {vetoSignallingEndDate?.timezone}; Otherwise, Deactivation begins
     </Text>
   );
 };

@@ -8,6 +8,11 @@ import { RevocableTokensList } from './style';
 import { RevocableTokenItem } from './revocable-token-item';
 import { useCountdown } from 'shared/hooks/use-countdown';
 import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
+import { useDualGovernanceContext } from 'providers/dual-governance';
+import { Link } from '@lidofinance/lido-ui';
+import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { ExternalLinkIcon } from '../../../../shared/components/icons';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
   vetoSignallingBalance: {
@@ -37,6 +42,10 @@ export const VetoSignallingTokens = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupAnchorRef = useRef<HTMLDivElement>(null);
   const { openModal } = useSelectUnstethModal();
+
+  const { chainId } = useLidoSDK();
+
+  const { vetoSignallingAddress } = useDualGovernanceContext();
 
   const revokeTokens = useRevokeTokensAction({ onConfirm });
 
@@ -78,7 +87,16 @@ export const VetoSignallingTokens = ({
         onClose={() => setIsPopupOpen(false)}
         onRevoke={handleRevokeTokens}
       />
-      <Text>Tokens in VetoSignalling contract</Text>
+      <Text>
+        Tokens in VetoSignalling{' '}
+        {vetoSignallingAddress ? (
+          <Link href={getEtherscanAddressLink(chainId, vetoSignallingAddress)}>
+            contract <ExternalLinkIcon />
+          </Link>
+        ) : (
+          'contract'
+        )}
+      </Text>
       <RevocableTokensList>
         <RevocableTokenItem
           ref={popupAnchorRef}

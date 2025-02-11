@@ -13,8 +13,8 @@ export const tooltipTitle = {
   },
   cooldown: () =>
     `Begins when the VetoSignaling dynamic timelock ends without triggering RageQuit, letting previously blocked proposals become executable`,
-  rageQuit: (totalPercent?: number) => {
-    const _totalPercent = totalPercent ? `${totalPercent}%` : '10%';
+  rageQuit: () => {
+    const _totalPercent = '15%';
 
     return `Activates at a ${_totalPercent} stETH deposit threshold. Automatically withdraws deposited stETH so holders can reclaim ETH before proposals execute`;
   },

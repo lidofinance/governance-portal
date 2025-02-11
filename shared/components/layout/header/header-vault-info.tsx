@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { VaultIcon } from 'shared/components/icons';
+import { ExternalLinkIcon, VaultIcon } from 'shared/components/icons';
 import { StyledPopupMenu } from 'shared/styled-components';
 import {
   TokensList,
@@ -14,10 +14,17 @@ import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-bal
 import { formatEth } from 'shared/blockchain/utils';
 import { TokenBalance } from 'shared/components/token-balance';
 import { Text } from 'shared/components/text';
+import { useDualGovernanceContext } from 'providers/dual-governance';
+import Link from 'next/link';
+import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 export const HeaderVaultInfo = () => {
   const [isVaultInfoMenuOpen, setVaultInfoMenuOpen] = useState(false);
   const { isConnected } = useAccount();
+  const { chainId } = useLidoSDK();
+
+  const { vetoSignallingAddress, rageQuitAddress } = useDualGovernanceContext();
 
   const vaultInfoRef = useRef(null);
 
@@ -56,7 +63,21 @@ export const HeaderVaultInfo = () => {
           {data?.vetoSignallingBalance.totalLockedShares ? (
             <>
               <VaultInfoSubtitle>
-                Tokens in VetoSignalling contract
+                Tokens in VetoSignalling{' '}
+                {vetoSignallingAddress ? (
+                  <Link
+                    target="_blank"
+                    href={getEtherscanAddressLink(
+                      chainId,
+                      vetoSignallingAddress,
+                    )}
+                  >
+                    {'contract '}
+                    <ExternalLinkIcon />
+                  </Link>
+                ) : (
+                  'contract'
+                )}
               </VaultInfoSubtitle>
               <TokensList>
                 <TokenBalance
@@ -74,7 +95,20 @@ export const HeaderVaultInfo = () => {
           ) : null}
           {data.rageQuitsBalance.totalLockedShares ? (
             <>
-              <VaultInfoSubtitle>Tokens in RageQuit contract</VaultInfoSubtitle>
+              <VaultInfoSubtitle>
+                Tokens in RageQuit contract{' '}
+                {rageQuitAddress ? (
+                  <Link
+                    target="_blank"
+                    href={getEtherscanAddressLink(chainId, rageQuitAddress)}
+                  >
+                    {'contract '}
+                    <ExternalLinkIcon />
+                  </Link>
+                ) : (
+                  'contract'
+                )}
+              </VaultInfoSubtitle>
               <TokensList>
                 <TokenBalance
                   token={Token.stETH}
