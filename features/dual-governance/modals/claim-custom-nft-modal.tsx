@@ -153,7 +153,7 @@ export const ClaimCustomNftModal = ({ claimNft, ...modalProps }: Props) => {
         value={nftId}
         fullwidth
         type="number"
-        placeholder="Enter NFT Token ID or Contract Address"
+        placeholder="Enter NFT Token ID"
       ></StyledInput>
       {nft && (
         <NftMultiselectItem

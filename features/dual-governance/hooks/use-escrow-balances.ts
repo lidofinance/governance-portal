@@ -5,9 +5,11 @@ import { escrowAbi } from 'abi/ts';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { computeRageQuitEscrowsBalances } from '../utils';
+import { useState } from 'react';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
+  const [isLoading, setIsLoading] = useState(true);
   const { chainId } = useLidoSDK();
   const {
     vetoSignallingAddress,
@@ -60,6 +62,8 @@ export const useEscrowBalances = () => {
           accountAddress,
         });
 
+      setIsLoading(false);
+
       // TODO: change mock value to a real one once we get into testing with real wsteth
       const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
       // const vetoSharesInWstEth = await wstEth.readContract('getWstETHByStETH', [
@@ -104,6 +108,7 @@ export const useEscrowBalances = () => {
         totalLockedSharesInEscrows:
           vetoSignallingSum + totalLockedSharesInRageQuitEscrows,
         assetUnlockTimestamp,
+        isLoading,
       };
     },
   });

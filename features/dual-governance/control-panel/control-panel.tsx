@@ -1,20 +1,22 @@
-import { ControlPanelWrapper, ControlPanelHeader } from './style';
+import {
+  ControlPanelWrapper,
+  ControlPanelHeader,
+  InlineLoaderStyled,
+} from './style';
 import { Text } from 'shared/components/text';
 import { ToggleButton } from 'shared/components/toggle-button';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { VetoSupportForm } from './veto-support-form';
 import { RevocationPanel } from './revocation-panel';
 import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
 import { DGTooltip } from '../tooltips';
-import { useAccount } from 'wagmi';
 
 export const DualGovernanceControlPanel = () => {
-  const { isConnected } = useAccount();
   const [activeTab, setActiveTab] = useState('support');
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
-  const { data } = useEscrowBalances();
+  const { data, isLoading } = useEscrowBalances();
 
   useEffect(() => {
     if (data && data.totalLockedSharesInEscrows !== 0n) {
@@ -22,11 +24,21 @@ export const DualGovernanceControlPanel = () => {
     }
   }, [data]);
 
-  if (isPreviewVisible || !isConnected) {
+  const handleClosePreview = useCallback(() => {
+    setIsPreviewVisible(false);
+  }, []);
+
+  if (isLoading) {
     return (
-      <DualGovernanceControlPanelPreview
-        onContinue={() => setIsPreviewVisible(false)}
-      />
+      <ControlPanelWrapper>
+        <InlineLoaderStyled />
+      </ControlPanelWrapper>
+    );
+  }
+
+  if (isPreviewVisible) {
+    return (
+      <DualGovernanceControlPanelPreview onContinue={handleClosePreview} />
     );
   }
 

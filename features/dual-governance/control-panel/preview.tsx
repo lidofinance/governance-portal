@@ -109,7 +109,6 @@ const ActiveProposal = ({
       </span>
     );
   }
-
   if (isVote) {
     return (
       <VoteWrapper>
@@ -235,9 +234,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
             Go to Veto Support
           </Button>
         ) : (
-          <ConnectWalletButton size="lg" onConnect={onContinue}>
-            Connect wallet
-          </ConnectWalletButton>
+          <ConnectWalletButton size="lg">Connect wallet</ConnectWalletButton>
         )}
       </PreviewControls>
     </ControlPanelWrapper>
