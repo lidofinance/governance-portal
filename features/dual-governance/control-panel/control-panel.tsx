@@ -8,7 +8,7 @@ import { ToggleButton } from 'shared/components/toggle-button';
 import { useCallback, useEffect, useState } from 'react';
 import { VetoSupportForm } from './veto-support-form';
 import { RevocationPanel } from './revocation-panel';
-import { DualGovernanceControlPanelPreview } from './preview';
+import { DualGovernanceControlPanelPreview } from './preview/preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
 import { DGTooltip } from '../tooltips';
 

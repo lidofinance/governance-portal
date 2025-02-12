@@ -49,6 +49,7 @@ export const Description = styled(Text)`
   font-weight: 200;
   line-height: 1.8;
   margin: 24px 0;
+  max-width: 690px;
 `;
 
 export const IconWrapper = styled.div`
