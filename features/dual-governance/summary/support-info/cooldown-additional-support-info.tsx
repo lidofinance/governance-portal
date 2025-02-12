@@ -47,7 +47,7 @@ export const CooldownAdditionalSupportInfo = () => {
   return (
     <Text color="secondary">
       VetoSignalling starts if {amountTillNextPhasePercent}% more {Token.stETH}{' '}
-      is added; Otherwise normal begins on {cooldownEndDate?.date}
+      is added; Otherwise, Normal begins on {cooldownEndDate?.date}
     </Text>
   );
 };

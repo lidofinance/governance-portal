@@ -87,7 +87,7 @@ export const DeactivationAdditionalSupportInfo = () => {
       If {amountUntilVetoSignalling}% more {Token.stETH} added by
       {restartDate?.date} {restartDate?.timezone} VetoSignaling restarts. If
       not, Cooldown <DGTooltip topic="cooldown" /> begins, and proposals can be
-      executed
+      scheduled
     </Text>
   );
 };

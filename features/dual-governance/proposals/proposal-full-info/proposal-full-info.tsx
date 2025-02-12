@@ -30,6 +30,8 @@ import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-s
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
 import { Box } from '@lidofinance/lido-ui';
+import { useAccount } from 'wagmi';
+import { ConnectWalletButton } from 'shared/wallet';
 
 type Props = {
   id: number;
@@ -37,6 +39,8 @@ type Props = {
 
 export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
+
+  const { isConnected } = useAccount();
 
   const {
     data: proposal,
@@ -181,21 +185,33 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
       {showScheduleButton && (
         <ActionsWrapper>
-          <Button
-            size="md"
-            onClick={handleSchedule}
-            loading={isScheduleLoading}
-          >
-            Schedule
-          </Button>
+          {isConnected ? (
+            <Button
+              size="md"
+              onClick={handleSchedule}
+              loading={isScheduleLoading}
+            >
+              Schedule
+            </Button>
+          ) : (
+            <ConnectWalletButton />
+          )}
         </ActionsWrapper>
       )}
 
       {showExecuteButton && (
         <ActionsWrapper>
-          <Button size="md" onClick={handleExecute} loading={isExecuteLoading}>
-            Execute
-          </Button>
+          {isConnected ? (
+            <Button
+              size="md"
+              onClick={handleExecute}
+              loading={isExecuteLoading}
+            >
+              Execute
+            </Button>
+          ) : (
+            <ConnectWalletButton />
+          )}
         </ActionsWrapper>
       )}
     </ProposalContainer>
