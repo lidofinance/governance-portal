@@ -51,7 +51,7 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
             </>
           </InQueueInfo>
         ) : (
-          <RevokeButton size="sm">
+          <RevokeButton onClick={onClick} size="sm">
             <Box display="flex" alignItems="center">
               {actionLabel}
               <RevokeIcon />
