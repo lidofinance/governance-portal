@@ -1,9 +1,10 @@
 import { TokenBalance } from 'shared/components/token-balance';
-import { RevocableTokenItemStyled, RevokePopupButton } from './style';
+import { RevocableTokenItemStyled, InQueueInfo, RevokeButton } from './style';
 import { forwardRef } from 'react';
 import { Text } from 'shared/components/text';
 import { RevokeIcon, SandwatchIcon } from 'shared/components/icons';
 import { Token } from 'shared/blockchain/types';
+import { Box } from 'shared/components/box';
 
 type Props = {
   token: Token | 'ETH';
@@ -34,30 +35,28 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
     return (
       <RevocableTokenItemStyled ref={ref} $disabled={isLocked}>
         <TokenBalance token={token} balance={amount} addOnText={amountLabel} />
-        {!!onClick && (
-          <RevokePopupButton onClick={!isLocked ? onClick : undefined}>
-            {isLocked ? (
-              <>
-                <Text size={14} color="secondary">
-                  {unlockCountdown ? (
-                    <>
-                      <b>{unlockCountdown}</b> till {actionLabel}
-                    </>
-                  ) : (
-                    actionLabel
-                  )}
-                </Text>
-                <SandwatchIcon />
-              </>
-            ) : (
-              <>
-                <Text size={14} color="secondary">
-                  {actionLabel}
-                </Text>
-                <RevokeIcon />
-              </>
-            )}
-          </RevokePopupButton>
+        {!!onClick && isLocked ? (
+          <InQueueInfo>
+            <>
+              <Text size={14} color="secondary">
+                {unlockCountdown ? (
+                  <>
+                    <b>{unlockCountdown}</b> till {actionLabel}
+                  </>
+                ) : (
+                  actionLabel
+                )}
+              </Text>
+              <SandwatchIcon />
+            </>
+          </InQueueInfo>
+        ) : (
+          <RevokeButton size="sm">
+            <Box display="flex" alignItems="center">
+              {actionLabel}
+              <RevokeIcon />
+            </Box>
+          </RevokeButton>
         )}
       </RevocableTokenItemStyled>
     );

@@ -11,7 +11,7 @@ import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-man
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from '@lido-sdk/helpers';
-import { ExternalLinkIcon } from '../../../../shared/components/icons';
+import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {

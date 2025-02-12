@@ -45,10 +45,9 @@ export const VetoSignallingAdditionalSupportInfo = () => {
   return (
     <Text color="secondary">
       RageQuit starts if{' '}
-      {amountTillNextPhasePercent && (
-        <Text>{Math.round(amountTillNextPhasePercent * 100) / 100}%</Text>
-      )}
-      more {Token.stETH} is added by <Text>{vetoSignallingEndDate?.date}</Text>{' '}
+      {amountTillNextPhasePercent &&
+        Math.round(amountTillNextPhasePercent * 100) / 100}
+      % more {Token.stETH} is added by {vetoSignallingEndDate?.date}{' '}
       {vetoSignallingEndDate?.timezone}; Otherwise, Deactivation begins
     </Text>
   );

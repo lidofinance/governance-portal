@@ -10,13 +10,13 @@ import { Token } from './types';
 export const getTokenIcon = (token: Token | 'ETH') => {
   switch (token) {
     case Token.stETH:
-      return <StethIcon viewBox="0 0 36 36" />;
+      return <StethIcon viewBox="0 0 40 40" />;
     case Token.wstETH:
-      return <WstethIcon viewBox="0 0 36 36" />;
+      return <WstethIcon viewBox="0 0 40 40" />;
     case Token.unstETH:
-      return <UnstethIcon viewBox="0 0 36 36" />;
+      return <UnstethIcon viewBox="0 0 40 40" />;
     case 'ETH':
-      return <EthIcon viewBox="0 0 36 36" />;
+      return <EthIcon viewBox="0 0 40 40" />;
     default:
       return null;
   }

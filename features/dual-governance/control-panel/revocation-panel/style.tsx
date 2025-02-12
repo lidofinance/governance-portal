@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { PopupMenu, PopupMenuProps, Text } from '@lidofinance/lido-ui';
+import { Button } from 'shared/components/button';
 
 export const RevokeTokenItemsWrapper = styled.div`
   display: flex;
@@ -40,14 +41,6 @@ export const RevokeStEthPopupItem = styled.button`
   }
 `;
 
-export const ContractLink = styled(Text).attrs({
-  as: 'span',
-})`
-  cursor: pointer;
-  color: #0085ff;
-  font-size: 18px;
-`;
-
 export const RevocableTokensList = styled.div`
   display: flex;
   flex-direction: column;
@@ -64,13 +57,14 @@ export const RevocableTokenItemStyled = styled.div<{ $disabled?: boolean }>`
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--primary-color-white);
+  line-height: 0;
 
   ${({ $disabled }) =>
     $disabled &&
     `
     background: rgba(0, 0, 0, 0.04);
 
-    & > ${RevokePopupButton} {
+    & > ${InQueueInfo} {
     cursor: default;
     &:hover > svg {
       background-color: transparent;
@@ -79,7 +73,7 @@ export const RevocableTokenItemStyled = styled.div<{ $disabled?: boolean }>`
   `}
 `;
 
-export const RevokePopupButton = styled.button`
+export const InQueueInfo = styled.button`
   display: flex;
   align-items: center;
   gap: 12px;
@@ -93,6 +87,17 @@ export const RevokePopupButton = styled.button`
 
   &:hover > svg {
     background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const RevokeButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  padding: 5px 7px 5px 20px;
+  line-height: 0;
+
+  svg {
+    fill: white;
   }
 `;
 

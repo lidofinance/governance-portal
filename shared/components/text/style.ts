@@ -24,6 +24,7 @@ const getTextColor = ({
     warning: colors.warning,
     error: colors.error,
     success: colors.success,
+    white: colors.primaryContrast,
   };
 
   return colorsMap[color];
