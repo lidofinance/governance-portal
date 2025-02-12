@@ -223,9 +223,9 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       <Description>
         Support Veto with your stETH to help block all proposals execution
-        temporarily (VetoSignaling <DGTooltip topic="vetoSignalling" />) or
-        withdraw your stETH before execution (RageQuit{' '}
-        <DGTooltip topic="rageQuit" />
+        temporarily (VetoSignaling
+        <DGTooltip topic="vetoSignalling" />) or withdraw your stETH before
+        execution (RageQuit <DGTooltip topic="rageQuit" />
         ).
       </Description>
       <PreviewControls>

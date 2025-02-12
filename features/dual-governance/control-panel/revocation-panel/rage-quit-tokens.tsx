@@ -118,7 +118,7 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
         <Text>
           Tokens in RageQuit{' '}
           <Link href={getEtherscanAddressLink(chainId, rageQuitEscrowAddress)}>
-            contract <ExternalLinkIcon />
+            contract <ExternalLinkIcon /> {rageQuitEscrowAddress}
           </Link>
         </Text>
       </Box>
@@ -130,30 +130,26 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
           actionLabel={actionLabel}
           onClick={handleWithdrawEth('ETH')}
         />
-        {finalizedUnstETHRecords.length > 0 &&
-          finalizedUnstETHRecords.map((record) => (
-            <RevocableTokenItem
-              key={record.id}
-              token={Token.unstETH}
-              amount={sumUpUnstETHRecordShares(finalizedUnstETHRecords)}
-              amountLabel={`${finalizedUnstETHRecords.length} NFT`}
-              isLocked={isWithdrawalLocked}
-              actionLabel="Claim"
-              onClick={handleWithdrawEth(Token.unstETH)}
-            />
-          ))}
-        {claimedUnstETHRecords.length > 0 &&
-          claimedUnstETHRecords.map((record) => (
-            <RevocableTokenItem
-              key={record.id}
-              token={Token.unstETH}
-              amount={sumUpUnstETHRecordShares(finalizedUnstETHRecords)}
-              amountLabel={`${claimedUnstETHRecords.length} NFT`}
-              isLocked={isWithdrawalLocked}
-              actionLabel={actionLabel}
-              onClick={handleWithdrawEth(Token.unstETH)}
-            />
-          ))}
+        {finalizedUnstETHRecords.length > 0 && (
+          <RevocableTokenItem
+            token={Token.unstETH}
+            amount={sumUpUnstETHRecordShares(finalizedUnstETHRecords)}
+            amountLabel={`${finalizedUnstETHRecords.length} NFT`}
+            isLocked={isWithdrawalLocked}
+            actionLabel="Claim"
+            onClick={handleWithdrawEth(Token.unstETH)}
+          />
+        )}
+        {claimedUnstETHRecords.length > 0 && (
+          <RevocableTokenItem
+            token={Token.unstETH}
+            amount={sumUpUnstETHRecordShares(claimedUnstETHRecords)}
+            amountLabel={`${claimedUnstETHRecords.length} NFT`}
+            isLocked={isWithdrawalLocked}
+            actionLabel={actionLabel}
+            onClick={handleWithdrawEth(Token.unstETH)}
+          />
+        )}
       </RevocableTokensList>
     </>
   );
