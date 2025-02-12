@@ -118,7 +118,7 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
         <Text>
           Tokens in RageQuit{' '}
           <Link href={getEtherscanAddressLink(chainId, rageQuitEscrowAddress)}>
-            contract <ExternalLinkIcon /> {rageQuitEscrowAddress}
+            contract <ExternalLinkIcon />
           </Link>
         </Text>
       </Box>

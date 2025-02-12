@@ -91,7 +91,7 @@ export const VetoSignallingTokens = ({
         Tokens in VetoSignalling{' '}
         {vetoSignallingAddress ? (
           <Link href={getEtherscanAddressLink(chainId, vetoSignallingAddress)}>
-            contract <ExternalLinkIcon /> {vetoSignallingAddress}
+            contract <ExternalLinkIcon />
           </Link>
         ) : (
           'contract'
