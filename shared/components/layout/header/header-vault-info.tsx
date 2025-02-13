@@ -39,7 +39,6 @@ export const HeaderVaultInfo = () => {
       <VaultInfoButton
         ref={vaultInfoRef}
         onClick={() => setVaultInfoMenuOpen(true)}
-        disabled={!data?.totalLockedSharesInEscrows}
       >
         <VaultIcon />
         {isLoading || !data ? (
@@ -57,7 +56,9 @@ export const HeaderVaultInfo = () => {
         >
           <VaultInfoPopupTitle>
             <Text size={28} weight={500}>
-              Your tokens in DG
+              {data.totalLockedSharesInEscrows > 0
+                ? 'Your tokens in DG'
+                : 'You have no tokens in DG'}
             </Text>
           </VaultInfoPopupTitle>
           {data?.vetoSignallingBalance.totalLockedShares ? (

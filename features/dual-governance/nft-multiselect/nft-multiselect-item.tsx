@@ -4,20 +4,36 @@ import { formatEth } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
 import { NftMultiselectItemProps } from './types';
 import { Badge } from '../proposals/shared-components/vote-status-badge/style';
+import { useRef } from 'react';
 
 export const NftMultiselectItem = (props: NftMultiselectItemProps) => {
   const { id, stEthAmount, checked, onClick, selectable, customNftData } =
     props;
 
+  const checkboxRef = useRef(null);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    onClick();
+  };
   return (
     <NftItemWrapper
-      $interactive={customNftData === null}
+      $interactive={customNftData === null || selectable}
       $checked={checked}
-      onClick={onClick}
+      onClick={selectable ? undefined : onClick}
     >
-      {selectable && <CheckboxStyled checked={!!checked} readOnly />}
+      {selectable && (
+        <CheckboxStyled
+          ref={checkboxRef}
+          onChange={handleCheckboxChange}
+          onClick={(event) => event.stopPropagation()}
+          checked={!!checked}
+        />
+      )}
       <UnstethIcon />
-      <Text weight={600}>#{id}</Text>
+      <Text color="default" weight={600}>
+        #{id}
+      </Text>
       <Amount>{formatEth(stEthAmount)} stETH</Amount>
       {customNftData && (
         <Badge $variant={customNftData.isFinalized ? 'success' : 'default'}>

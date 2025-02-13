@@ -2,27 +2,12 @@ import styled, { css } from 'styled-components';
 import { Button, Checkbox, Input, PopupMenu } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
-// type StatusBadgeProps = {
-//   $variant: 'success' | 'default';
-// };
-//
-// export const Wrapper = styled.div`
-//   width: 100%;
-//   background: white;
-// `;
-//
-// export const NftItemsList = styled.section`
-//   padding: 0 16px;
-//   border-radius: 30px;
-//   border: 1px solid #0000001a;
-// `;
-//
 type ItemProps = {
   $checked?: boolean;
   $interactive?: boolean;
 };
 
-export const NftItemWrapper = styled.div<ItemProps>`
+export const NftItemWrapper = styled.label<ItemProps>`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -59,7 +44,7 @@ export const NftItemWrapper = styled.div<ItemProps>`
 `;
 
 export const Amount = styled(Text).attrs({
-  color: 'secondary',
+  color: 'primary',
   size: 14,
 })`
   margin-left: auto;
@@ -78,7 +63,7 @@ export const ActionsWrapper = styled.section`
   gap: 10px;
 `;
 
-export const NftMultiselectInput = styled(Input)`
+export const NftMultiselectInput = styled(Input)<{ $isOpen: boolean }>`
   width: 100%;
   *,
   & > * {
@@ -102,9 +87,14 @@ export const NftMultiselectInput = styled(Input)`
       }
     }
   }
+  svg {
+    ${({ $isOpen }) => $isOpen && `transform: rotate(180deg);`}
+    transition: transform .2s;
+  }
 `;
 
 export const PopupMenuStyled = styled(PopupMenu)`
+  margin-top: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 30px;
 `;

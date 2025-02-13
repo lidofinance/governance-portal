@@ -12,7 +12,13 @@ import { ArrowDown } from 'shared/components/icons';
 import { useClickOutside } from 'shared/hooks/use-click-outside';
 
 export const NftMultiselect = (props: NftMultiselectProps) => {
-  const { options, selectedOptions, onChange, disabled = false } = props;
+  const {
+    options,
+    selectedOptions,
+    onChange,
+    disabled = false,
+    selectable = false,
+  } = props;
 
   const optionsArray = useMemo(() => {
     if (!options) return [];
@@ -73,6 +79,7 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
         onClick={() => setPopupOpen(true)}
         rightDecorator={<ArrowDown />}
         disabled={disabled}
+        $isOpen={isPopupOpen}
       />
       <PopupMenuStyled
         ref={popupRef}
@@ -93,6 +100,7 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
             stEthAmount={option.stEthAmount}
             onClick={handleChange(option.id)}
             checked={selectedOptions[option.id]}
+            selectable={selectable}
           />
         ))}
       </PopupMenuStyled>

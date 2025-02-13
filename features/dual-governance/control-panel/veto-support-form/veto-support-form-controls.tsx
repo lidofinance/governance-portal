@@ -35,6 +35,7 @@ export const VetoSupportFormControls = () => {
         fieldName="selectedNftIds"
         options={networkData.withdrawalRequests}
         disabled={networkData.unstEthBalance === 0n}
+        selectable
       />
     );
   }

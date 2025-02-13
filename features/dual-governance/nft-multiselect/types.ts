@@ -1,13 +1,14 @@
 import { WithdrawalsMap } from '../types';
 import { Address } from 'viem';
 
-export type NftMultiselectValuesMap = Record<string, true | undefined>;
+export type NftMultiselectValuesMap = Record<string, boolean | undefined>;
 
 export type NftMultiselectProps = {
   options: WithdrawalsMap | undefined;
   selectedOptions: NftMultiselectValuesMap;
   onChange: (value: Partial<NftMultiselectValuesMap>) => void;
   disabled?: boolean;
+  selectable?: boolean;
 };
 
 export type NftMultiselectItemProps = {
