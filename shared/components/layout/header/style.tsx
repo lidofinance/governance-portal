@@ -168,3 +168,35 @@ export const VaultInfoSubtitle = styled(Text).attrs({
 })`
   margin: ${({ theme }) => theme.spaceMap.md}px 0;
 `;
+
+export const WalletInfo = styled.div`
+  position: relative;
+`;
+
+export const UnsupportedChainBannerStyled = styled.div`
+  background: var(--primary-color-black);
+  padding: 30px;
+  position: absolute;
+  color: white;
+  z-index: 1;
+  border-radius: 30px;
+  width: 289px;
+  top: 70px;
+  right: -50px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    border-radius: 4px;
+    left: 70%;
+    transform: rotate(45deg);
+    border: 14px solid black;
+    border-left-color: var(--primary-color-black);
+    border-right-color: transparent;
+    border-top-color: var(--primary-color-black);
+    border-bottom-color: transparent;
+    //border-top-color: black;
+    //border-bottom-color: transparent;
+  }
+`;
