@@ -38,6 +38,7 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
     totalLockedShares,
     unstETHRecords,
     rageQuitEscrowAddress,
+    totalUnstETHLockedShares,
   } = rageQuitBalance;
 
   const { openModal } = useSelectUnstethModal();
@@ -140,6 +141,14 @@ export const RageQuitTokens = ({ rageQuitBalance, onConfirm }: Props) => {
             onClick={handleWithdrawEth(Token.unstETH)}
           />
         )}
+        <RevocableTokenItem
+          token={Token.unstETH}
+          amount={totalUnstETHLockedShares}
+          amountLabel={`${unstETHRecords.length} NFT`}
+          isLocked={isWithdrawalLocked}
+          actionLabel={actionLabel}
+          onClick={handleWithdrawEth(Token.unstETH)}
+        />
         {claimedUnstETHRecords.length > 0 && (
           <RevocableTokenItem
             token={Token.unstETH}
