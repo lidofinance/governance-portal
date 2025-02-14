@@ -74,6 +74,7 @@ export const SelectUnstEthModal = (props: Props) => {
           <NftList>
             {unstEthItems?.map(({ id, stEthAmount }) => (
               <NftMultiselectItem
+                selectable
                 key={id}
                 id={id}
                 stEthAmount={stEthAmount}
