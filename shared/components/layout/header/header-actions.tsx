@@ -26,7 +26,7 @@ export const HeaderActions = () => {
         <TestDgState />
         <WalletInfo>
           {isConnected ? <WalletButton /> : <ConnectWalletButton />}
-          {!isSupportedChain && <UnsupportedChainBanner />}
+          {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
         </WalletInfo>
         {config.ipfsMode && (
           <IPFSInfoBoxOnlyDesktopWrapper>
