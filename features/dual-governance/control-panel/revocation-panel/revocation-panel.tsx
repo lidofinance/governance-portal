@@ -23,7 +23,6 @@ export const RevocationPanel = () => {
   } = useEscrowBalances();
 
   const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
-  const claimNft = useClaimCustomNftAction();
   const claimNFTs = useClaimCustomNftAction();
   const { openModal: openCustomNftModal } = useClaimCustomNftModal();
 
@@ -40,15 +39,15 @@ export const RevocationPanel = () => {
   if (!escrowBalances || escrowBalances.totalLockedSharesInEscrows === 0n) {
     return (
       <>
-        {/*<NftClaimTrigger*/}
-        {/*  onClick={() =>*/}
-        {/*    openCustomNftModal({*/}
-        {/*      claimNFTs,*/}
-        {/*    })*/}
-        {/*  }*/}
-        {/*>*/}
-        {/*  Claim custom nft*/}
-        {/*</NftClaimTrigger>*/}
+        <NftClaimTrigger
+          onClick={() =>
+            openCustomNftModal({
+              claimNFTs,
+            })
+          }
+        >
+          Claim custom nft
+        </NftClaimTrigger>
         <NoTokensMessage>
           <Text color="secondary" size={22} weight={600}>
             You have no tokens in Dual Governance
@@ -73,15 +72,15 @@ export const RevocationPanel = () => {
 
   return (
     <div>
-      {/*<NftClaimTrigger*/}
-      {/*  onClick={() =>*/}
-      {/*    openCustomNftModal({*/}
-      {/*      claimNFTs,*/}
-      {/*    })*/}
-      {/*  }*/}
-      {/*>*/}
-      {/*  Claim custom nft*/}
-      {/*</NftClaimTrigger>*/}
+      <NftClaimTrigger
+        onClick={() =>
+          openCustomNftModal({
+            claimNFTs,
+          })
+        }
+      >
+        Claim custom nft
+      </NftClaimTrigger>
       <VetoSignallingTokens
         vetoSignallingBalance={escrowBalances.vetoSignallingBalance}
         assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}

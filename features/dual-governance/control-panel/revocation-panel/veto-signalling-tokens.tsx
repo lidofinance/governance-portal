@@ -40,9 +40,15 @@ export const VetoSignallingTokens = ({
     unstETHLockedShares,
     unstETHIdsCount,
   } = vetoSignallingBalance;
+
+  // console.log(vetoSignallingBalance, 'vetoSignallingBalance');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupAnchorRef = useRef<HTMLDivElement>(null);
   const { openModal } = useSelectUnstethModal();
+
+  const { data } = useEscrowUnstethBalance();
+
+  console.log(data);
 
   const { chainId } = useLidoSDK();
 
@@ -108,20 +114,23 @@ export const VetoSignallingTokens = ({
           unlockCountdown={assetsLockCountdown}
           actionLabel="revoke"
         />
-        {/*<RevocableTokenItem*/}
-        {/*  token={Token.unstETH}*/}
-        {/*  amount={unstETHLockedShares}*/}
-        {/*  onClick={() =>*/}
-        {/*    openModal({*/}
-        {/*      onConfirm: handleRevokeTokens(Token.unstETH),*/}
-        {/*      actionLabel: 'revoke',*/}
-        {/*    })*/}
-        {/*  }*/}
-        {/*  isLocked={isLocked}*/}
-        {/*  unlockCountdown={assetsLockCountdown}*/}
-        {/*  amountLabel={`${unstETHIdsCount} NFT`}*/}
-        {/*  actionLabel="revoke"*/}
-        {/*/>*/}
+        {data && (
+          <RevocableTokenItem
+            token={Token.unstETH}
+            amount={unstETHLockedShares}
+            onClick={() =>
+              openModal({
+                onConfirm: handleRevokeTokens(Token.unstETH),
+                actionLabel: 'revoke',
+                unstETHRecords: data,
+              })
+            }
+            isLocked={isLocked}
+            unlockCountdown={assetsLockCountdown}
+            amountLabel={`${unstETHIdsCount} NFT`}
+            actionLabel="revoke"
+          />
+        )}
       </RevocableTokensList>
     </>
   );

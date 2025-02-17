@@ -15,8 +15,8 @@ import { formatEth } from 'shared/blockchain/utils';
 import { Address } from 'viem';
 
 type Props = {
-  claimNft: (
-    nftId: number,
+  claimNFTs: (
+    selectedNftIds: string[],
     escrowAddress: Address,
   ) => Promise<boolean | undefined>;
 } & ModalProps;
@@ -78,7 +78,7 @@ const CTA = ({ onClick, nftId, nftData, isLoading }: CTAProps) => {
   return null;
 };
 
-export const ClaimCustomNftModal = ({ claimNft, ...modalProps }: Props) => {
+export const ClaimCustomNftModal = ({ claimNFTs, ...modalProps }: Props) => {
   const withdrawalQueueContract = useReadContract(WithdrawalQueue);
 
   const [nftId, setNftId] = useState('');
@@ -134,11 +134,11 @@ export const ClaimCustomNftModal = ({ claimNft, ...modalProps }: Props) => {
 
   const handleClaim = useCallback(async () => {
     try {
-      await claimNft(Number(nftId), nft?.owner as Address);
+      await claimNFTs([nftId], nft?.owner as Address);
     } catch (error) {
       console.error('Unable to claim NFT:', error);
     }
-  }, [claimNft, nft?.owner, nftId]);
+  }, [claimNFTs, nft?.owner, nftId]);
 
   const Title = () => (
     <Text size="lg" strong>

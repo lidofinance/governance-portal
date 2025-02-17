@@ -52,8 +52,6 @@ export const RageQuitTokens = ({
     totalUnstETHLockedShares,
   } = rageQuitBalance;
 
-  // console.log(rageQuitBalance, 'rageQuitBalance');
-
   const claimableUnstETHRecords = unstETHRecords.filter(
     (record) => record.status === UnstETHRecordStatus.Locked,
   );
@@ -61,9 +59,6 @@ export const RageQuitTokens = ({
   const claimedUnstETHRecords = unstETHRecords.filter(
     (record) => record.status === UnstETHRecordStatus.Claimed,
   );
-
-  // console.log(claimableUnstETHRecords, 'claimableUnstETHRecords');
-  console.log(claimedUnstETHRecords, 'claimedUnstETHRecords');
 
   const { openModal } = useSelectUnstethModal();
 

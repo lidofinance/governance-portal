@@ -17,7 +17,10 @@ import { RageQuitEscrowUnstETHRecord } from '../utils';
 type Props = {
   onConfirm: (selectedNftIds?: string[]) => Promise<void | boolean>;
   actionLabel: string;
-  unstETHRecords: RageQuitEscrowUnstETHRecord[];
+  unstETHRecords: Omit<
+    RageQuitEscrowUnstETHRecord,
+    'claimableAmount' | 'status'
+  >[];
 } & ModalProps;
 
 export const SelectUnstEthModal = (props: Props) => {

@@ -45,7 +45,7 @@ export const useEscrowUnstethBalance = () => {
 
       const unstethIds = await readEscrowContract(vetoSignallingAddress)(
         'getVetoerUnstETHIds',
-        [address],
+        ['0x9a9B0b60842051a2ED51407b179f35Ac37f262F3'],
       );
 
       const withdrawalRequests = await withdrawalQueue.readContract(
@@ -53,10 +53,12 @@ export const useEscrowUnstethBalance = () => {
         [unstethIds],
       );
 
+      console.log(withdrawalRequests, 'withdrawalRequests');
+
       return unstethIds.map((id, index) => ({
-        id: id.toString(),
-        stEthAmount: withdrawalRequests[index].amountOfStETH,
-        status: getUnstEthStatus(withdrawalRequests[index]),
+        id,
+        lockedBy: withdrawalRequests[index].owner,
+        shares: withdrawalRequests[index].amountOfStETH,
       }));
     },
   });
