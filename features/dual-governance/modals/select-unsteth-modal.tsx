@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Loader, ModalProps } from '@lidofinance/lido-ui';
+import { ModalProps } from '@lidofinance/lido-ui';
 import {
   NftList,
   RevokeModalControls,
@@ -11,22 +11,26 @@ import {
 import { Button } from 'shared/components/button';
 import { NftMultiselectItem } from '../nft-multiselect';
 import { Text } from 'shared/components/text';
-import { useEscrowUnstethBalance } from '../hooks/use-escrow-unsteth-balance';
+// import { useEscrowUnstethBalance } from '../hooks/use-escrow-unsteth-balance';
+import { RageQuitEscrowUnstETHRecord } from '../utils';
 
 type Props = {
   onConfirm: (selectedNftIds?: string[]) => Promise<void | boolean>;
   actionLabel: string;
+  unstETHRecords: RageQuitEscrowUnstETHRecord[];
 } & ModalProps;
 
 export const SelectUnstEthModal = (props: Props) => {
-  const { actionLabel, onConfirm, ...modalProps } = props;
+  const { actionLabel, unstETHRecords, onConfirm, ...modalProps } = props;
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, true | undefined>
   >({});
 
   const selectedOptionsArray = Object.keys(selectedOptions);
 
-  const { data: unstEthItems, isLoading } = useEscrowUnstethBalance();
+  // const { data: unstEthItems, isLoading } = useEscrowUnstethBalance();
+
+  // console.log(unstEthItems, 'unstEthItems');
 
   const handleSelect = useCallback(
     (value: string) => () => {
@@ -41,21 +45,21 @@ export const SelectUnstEthModal = (props: Props) => {
   );
 
   const handleSelectAll = useCallback(() => {
-    if (!unstEthItems) return;
+    if (!unstETHRecords) return;
 
-    if (Object.keys(selectedOptions).length === unstEthItems.length) {
+    if (Object.keys(selectedOptions).length === unstETHRecords.length) {
       setSelectedOptions({});
     } else {
-      const newState = unstEthItems.reduce<Record<string, true | undefined>>(
+      const newState = unstETHRecords.reduce<Record<string, true | undefined>>(
         (acc, item) => {
-          acc[item.id] = true;
+          acc[String(item.id)] = true;
           return acc;
         },
         {},
       );
       setSelectedOptions(newState);
     }
-  }, [unstEthItems, selectedOptions]);
+  }, [unstETHRecords, selectedOptions]);
 
   return (
     <StyledModal {...modalProps}>
@@ -68,28 +72,24 @@ export const SelectUnstEthModal = (props: Props) => {
             Select all
           </SelectAllButton>
         </RevokeModalHeader>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <NftList>
-            {unstEthItems?.map(({ id, stEthAmount }) => (
-              <NftMultiselectItem
-                selectable
-                key={id}
-                id={id}
-                stEthAmount={stEthAmount}
-                checked={selectedOptions[id]}
-                onClick={handleSelect(id)}
-              />
-            ))}
-          </NftList>
-        )}
+
+        <NftList>
+          {unstETHRecords?.map(({ id, shares }) => (
+            <NftMultiselectItem
+              selectable
+              key={id}
+              id={String(id)}
+              stEthAmount={shares}
+              checked={selectedOptions[String(id)]}
+              onClick={handleSelect(String(id))}
+            />
+          ))}
+        </NftList>
         <RevokeModalControls>
           <Button
             fullwidth
             onClick={() => onConfirm(selectedOptionsArray)}
             disabled={selectedOptionsArray.length === 0}
-            loading={isLoading}
           >
             {actionLabel}
           </Button>

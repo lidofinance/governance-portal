@@ -24,6 +24,7 @@ export const RevocationPanel = () => {
 
   const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
   const claimNft = useClaimCustomNftAction();
+  const claimNFTs = useClaimCustomNftAction();
   const { openModal: openCustomNftModal } = useClaimCustomNftModal();
 
   const updateDualGovernanceState = useCallback(async () => {
@@ -39,15 +40,15 @@ export const RevocationPanel = () => {
   if (!escrowBalances || escrowBalances.totalLockedSharesInEscrows === 0n) {
     return (
       <>
-        <NftClaimTrigger
-          onClick={() =>
-            openCustomNftModal({
-              claimNft,
-            })
-          }
-        >
-          Claim custom nft
-        </NftClaimTrigger>
+        {/*<NftClaimTrigger*/}
+        {/*  onClick={() =>*/}
+        {/*    openCustomNftModal({*/}
+        {/*      claimNFTs,*/}
+        {/*    })*/}
+        {/*  }*/}
+        {/*>*/}
+        {/*  Claim custom nft*/}
+        {/*</NftClaimTrigger>*/}
         <NoTokensMessage>
           <Text color="secondary" size={22} weight={600}>
             You have no tokens in Dual Governance
@@ -72,15 +73,15 @@ export const RevocationPanel = () => {
 
   return (
     <div>
-      <NftClaimTrigger
-        onClick={() =>
-          openCustomNftModal({
-            claimNft,
-          })
-        }
-      >
-        Claim custom nft
-      </NftClaimTrigger>
+      {/*<NftClaimTrigger*/}
+      {/*  onClick={() =>*/}
+      {/*    openCustomNftModal({*/}
+      {/*      claimNFTs,*/}
+      {/*    })*/}
+      {/*  }*/}
+      {/*>*/}
+      {/*  Claim custom nft*/}
+      {/*</NftClaimTrigger>*/}
       <VetoSignallingTokens
         vetoSignallingBalance={escrowBalances.vetoSignallingBalance}
         assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
@@ -91,6 +92,7 @@ export const RevocationPanel = () => {
           key={balanceRecord.rageQuitEscrowAddress}
           rageQuitBalance={balanceRecord}
           onConfirm={updateDualGovernanceState}
+          claimNFTs={claimNFTs}
         />
       ))}
     </div>

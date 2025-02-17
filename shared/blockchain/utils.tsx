@@ -7,7 +7,7 @@ import {
 } from '../components/icons';
 import { Token } from './types';
 
-export const getTokenIcon = (token: Token | 'ETH') => {
+export const getTokenIcon = (token: Token | 'ETH' | 'unstETH') => {
   switch (token) {
     case Token.stETH:
       return <StethIcon viewBox="0 0 40 40" />;
@@ -17,6 +17,8 @@ export const getTokenIcon = (token: Token | 'ETH') => {
       return <UnstethIcon viewBox="0 0 40 40" />;
     case 'ETH':
       return <EthIcon viewBox="0 0 40 40" />;
+    case 'unstETH':
+      return <UnstethIcon viewBox="0 0 40 40" />;
     default:
       return null;
   }

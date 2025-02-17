@@ -16,15 +16,18 @@ export const useClaimCustomNftAction = () => {
   const waitForTx = useTxConfirmation();
 
   return useCallback(
-    async (nftId: number, escrowAddress: Address) => {
+    async (selectedNftIds: string[], escrowAddress: Address) => {
       try {
-        invariant(nftId, 'NFT ID is required');
+        invariant(selectedNftIds, 'NFT IDs are required');
 
-        txModalStages.signStage(nftId);
+        txModalStages.signStage(selectedNftIds);
 
-        const txHash = await processClaimCustomNft(nftId, escrowAddress);
+        const txHash = await processClaimCustomNft(
+          selectedNftIds,
+          escrowAddress,
+        );
 
-        txModalStages.pendingStage(nftId);
+        txModalStages.pendingStage(selectedNftIds);
 
         if (isMultisig) {
           txModalStages.successMultisig();
@@ -35,11 +38,14 @@ export const useClaimCustomNftAction = () => {
 
         txModalStages.successStage({
           txHash,
-          nftId,
+          selectedNftIds,
         });
       } catch (error) {
         console.warn(error);
-        console.warn(`Error executing 'execute' for NFT #${nftId}`, error);
+        console.warn(
+          `Error executing 'execute' for NFT #${selectedNftIds}`,
+          error,
+        );
         txModalStages.failureStage();
         return false;
       }

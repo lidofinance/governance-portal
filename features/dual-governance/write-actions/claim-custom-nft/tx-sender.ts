@@ -11,8 +11,8 @@ export const useClaimCustomNftTxSend = () => {
   const writeEscrow = useWriteContract(escrowAbi);
 
   return useCallback(
-    async (nftId: number, escrowAddress: Address) => {
-      invariant(nftId, 'NFT Id must be provided');
+    async (nftIds: string[], escrowAddress: Address) => {
+      invariant(nftIds, 'NFT Id must be provided');
       invariant(escrowAddress, 'Escrow address must be provided');
       try {
         const lastCheckpointIndex = await readWithdrawalQueue.readContract(
@@ -20,13 +20,13 @@ export const useClaimCustomNftTxSend = () => {
         );
         const hints = await readWithdrawalQueue.readContract(
           'findCheckpointHints',
-          [[BigInt(nftId)], 1n, lastCheckpointIndex],
+          [nftIds.map((nftId) => BigInt(nftId)), 1n, lastCheckpointIndex],
         );
 
         return await writeEscrow({
           address: escrowAddress,
           functionName: 'claimUnstETH',
-          args: [[BigInt(nftId)], hints],
+          args: [nftIds.map((nftId) => BigInt(nftId)), hints],
         });
       } catch (error) {
         console.error('Error claiming NFT:', error);

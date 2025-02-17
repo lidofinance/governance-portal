@@ -7,7 +7,7 @@ import { Token } from 'shared/blockchain/types';
 import { Box } from 'shared/components/box';
 
 type Props = {
-  token: Token | 'ETH';
+  token: Token | 'ETH' | 'unstETH';
   amount: bigint | undefined;
   amountLabel?: string;
   unlockCountdown?: string;

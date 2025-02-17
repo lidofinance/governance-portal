@@ -15,17 +15,30 @@ const getTxModalStagesClaimCustomNft = (
 ) => ({
   ...getGeneralTransactionModalStages(transitStage),
 
-  signStage: (nftId: number) =>
+  signStage: (selectedNftIds: string[]) =>
     transitStage(
-      <TxStageSign title={`You are claiming NFT #${nftId}`} description="" />,
+      <TxStageSign
+        title={`You are claiming NFTs #${selectedNftIds.join(', #')}`}
+        description=""
+      />,
     ),
-  pendingStage: (nftId: number) =>
-    transitStage(<TxStagePending title={`You are claiming NFT #${nftId}`} />),
-  successStage: ({ txHash, nftId }: { txHash: string; nftId: number }) =>
+  pendingStage: (selectedNftIds: string[]) =>
+    transitStage(
+      <TxStagePending
+        title={`You are claiming NFTs #${selectedNftIds.join(', #')}`}
+      />,
+    ),
+  successStage: ({
+    txHash,
+    selectedNftIds,
+  }: {
+    txHash: string;
+    selectedNftIds: string[];
+  }) =>
     transitStage(
       <TxStageSuccess
         title="Success"
-        description={`NFT #${nftId} was successfully claimed`}
+        description={`NFTs #${selectedNftIds.join(', #')} were successfully claimed`}
         txHash={txHash}
         showEtherscan
       />,
