@@ -8,8 +8,7 @@ import { computeRageQuitEscrowsBalances } from '../utils';
 import { useState } from 'react';
 
 export const useEscrowBalances = () => {
-  // const { address: accountAddress } = useAccount();
-  const accountAddress = '0x9a9B0b60842051a2ED51407b179f35Ac37f262F3';
+  const { address: accountAddress } = useAccount();
   const [isLoading, setIsLoading] = useState(true);
   const { chainId } = useLidoSDK();
   const {
