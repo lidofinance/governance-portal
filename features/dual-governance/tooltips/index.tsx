@@ -1,14 +1,13 @@
 import { InfoTooltip } from 'shared/components/info-tooltip';
 import { StyledContent } from './style';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 
 export const tooltipTitle = {
   dualGovernance: () =>
     `Dual Governance allows stakers to withdraw their ETH in the event of a contentious proposal, while also enabling them to express concerns about its content. It requires consensus from both parties, enhancing security and decentralization.`,
   vetoSupport: () =>
     `Fraction of stETH (including wstETH and unstETH) used to block governance, shown as a percentage of the total stETH supply`,
-  vetoSignalling: (totalPercent?: number) => {
-    const _totalPercent = totalPercent ? `${totalPercent}%` : '3%';
+  vetoSignalling: () => {
+    const _totalPercent = '3%';
     return `Triggered at a ${_totalPercent} stETH deposit threshold. Pauses proposal execution with a dynamic timelock, giving dissenting stakers time to act or exit.`;
   },
   cooldown: () =>
@@ -31,15 +30,9 @@ type Props = {
 };
 
 export const DGTooltip = ({ topic }: Props) => {
-  const { nextPhaseSupportThresholdPercent } = useDualGovernanceContext();
-
   return (
     <InfoTooltip
-      title={
-        <StyledContent>
-          {tooltipTitle[topic](nextPhaseSupportThresholdPercent)}
-        </StyledContent>
-      }
+      title={<StyledContent>{tooltipTitle[topic]()}</StyledContent>}
     />
   );
 };

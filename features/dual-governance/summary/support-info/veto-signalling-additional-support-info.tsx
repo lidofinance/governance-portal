@@ -3,6 +3,7 @@ import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
+import { DGTooltip } from '../../tooltips';
 
 export const VetoSignallingAdditionalSupportInfo = () => {
   const {
@@ -35,16 +36,16 @@ export const VetoSignallingAdditionalSupportInfo = () => {
   if (amountTillNextPhasePercent <= 0) {
     return (
       <Text color="secondary">
-        RageQuit starts on {vetoSignallingEndDate?.date}{' '}
-        {vetoSignallingEndDate?.timezone}, unless veto stETH support decreases
-        below {nextPhaseSupportThresholdPercent}%
+        RageQuit <DGTooltip topic="rageQuit" /> starts on{' '}
+        {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}, unless
+        veto stETH support decreases below {nextPhaseSupportThresholdPercent}%
       </Text>
     );
   }
 
   return (
     <Text color="secondary">
-      RageQuit starts if{' '}
+      RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
       {amountTillNextPhasePercent &&
         Math.round(amountTillNextPhasePercent * 100) / 100}
       % more {Token.stETH} is added by {vetoSignallingEndDate?.date}{' '}

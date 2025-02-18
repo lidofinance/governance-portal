@@ -4,6 +4,7 @@ import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
+import { DGTooltip } from '../../tooltips';
 
 export const CooldownAdditionalSupportInfo = () => {
   const { data: dgConfig, isLoading } = useDualGovernanceConfig();
@@ -37,17 +38,18 @@ export const CooldownAdditionalSupportInfo = () => {
   if (amountTillNextPhasePercent < 0) {
     return (
       <Text color="secondary">
-        VetoSignalling starts on {cooldownEndDate?.date}{' '}
-        {cooldownEndDate?.timezone} unless stETH support decreases below{' '}
-        {firstSealRageQuitSupport}%
+        VetoSignalling <DGTooltip topic="vetoSignalling" /> starts on{' '}
+        {cooldownEndDate?.date} {cooldownEndDate?.timezone} unless stETH support
+        decreases below {firstSealRageQuitSupport}%
       </Text>
     );
   }
 
   return (
     <Text color="secondary">
-      VetoSignalling starts if {amountTillNextPhasePercent}% more {Token.stETH}{' '}
-      is added; Otherwise, Normal begins on {cooldownEndDate?.date}
+      VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
+      {amountTillNextPhasePercent}% more {Token.stETH} is added; Otherwise,
+      Normal begins on {cooldownEndDate?.date}
     </Text>
   );
 };
