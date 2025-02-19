@@ -49,7 +49,7 @@ export const RageQuitTokens = ({
     totalLockedShares,
     unstETHRecords,
     rageQuitEscrowAddress,
-    totalUnstETHLockedShares,
+    // totalUnstETHLockedShares,
   } = rageQuitBalance;
 
   const claimableUnstETHRecords = unstETHRecords.filter(
@@ -110,7 +110,7 @@ export const RageQuitTokens = ({
         unstETHRecords: [...claimedUnstETHRecords],
       });
     },
-    [openModal, unstETHRecords, withdrawEth],
+    [claimedUnstETHRecords, openModal, withdrawEth],
   );
 
   const handleClaimNFTs = useCallback(

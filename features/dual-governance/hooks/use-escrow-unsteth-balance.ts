@@ -9,24 +9,24 @@ import {
 } from 'shared/blockchain/hooks/use-read-contract';
 import { useAccount } from 'wagmi';
 
-type UnstEth = {
-  amountOfStETH: bigint;
-  amountOfShares: bigint;
-  owner: `0x${string}`;
-  timestamp: bigint;
-  isFinalized: boolean;
-  isClaimed: boolean;
-};
+// type UnstEth = {
+//   amountOfStETH: bigint;
+//   amountOfShares: bigint;
+//   owner: `0x${string}`;
+//   timestamp: bigint;
+//   isFinalized: boolean;
+//   isClaimed: boolean;
+// };
 
-const getUnstEthStatus = (unstEth: UnstEth) => {
-  if (unstEth.isFinalized) {
-    return 'Finalized';
-  }
-  if (unstEth.isClaimed) {
-    return 'Claimed';
-  }
-  return 'Not finalized';
-};
+// const getUnstEthStatus = (unstEth: UnstEth) => {
+//   if (unstEth.isFinalized) {
+//     return 'Finalized';
+//   }
+//   if (unstEth.isClaimed) {
+//     return 'Claimed';
+//   }
+//   return 'Not finalized';
+// };
 
 export const useEscrowUnstethBalance = () => {
   const { address } = useAccount();
@@ -52,8 +52,6 @@ export const useEscrowUnstethBalance = () => {
         'getWithdrawalStatus',
         [unstethIds],
       );
-
-      console.log(withdrawalRequests, 'withdrawalRequests');
 
       return unstethIds.map((id, index) => ({
         id,
