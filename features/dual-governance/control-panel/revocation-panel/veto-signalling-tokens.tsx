@@ -48,8 +48,6 @@ export const VetoSignallingTokens = ({
 
   const { data } = useEscrowUnstethBalance();
 
-  console.log(data);
-
   const { chainId } = useLidoSDK();
 
   const { vetoSignallingAddress } = useDualGovernanceContext();
