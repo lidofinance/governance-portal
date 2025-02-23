@@ -45,7 +45,7 @@ export const useEscrowUnstethBalance = () => {
 
       const unstethIds = await readEscrowContract(vetoSignallingAddress)(
         'getVetoerUnstETHIds',
-        ['0x9a9B0b60842051a2ED51407b179f35Ac37f262F3'],
+        [address],
       );
 
       const withdrawalRequests = await withdrawalQueue.readContract(
