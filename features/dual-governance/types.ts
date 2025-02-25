@@ -3,7 +3,7 @@ import { ProposalCombinedData } from './proposals/types';
 import { VoteData } from 'shared/votes/types';
 import { CHAINS } from '@lido-sdk/constants';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
-import { Log } from 'viem';
+import { Log, Address } from 'viem';
 
 export const isVoteItem = (
   item: ProposalCombinedData | VoteData,
@@ -89,12 +89,20 @@ export type UseEventWatcherConfig<T> = {
 };
 
 export type EscrowActionArgs =
-  | { token: 'Withdrawal NFT'; selectedNftIds: string[] }
-  | { token: 'stETH' | 'wstETH'; amount: bigint };
+  | {
+      token: 'Withdrawal NFT';
+      selectedNftIds: string[];
+      escrowAddress: Address;
+    }
+  | {
+      token: 'stETH' | 'wstETH';
+      amount: bigint;
+      escrowAddress: Address;
+    };
 
 export type EscrowActionWithEthArgs =
   | EscrowActionArgs
-  | { token: 'ETH'; amount: bigint };
+  | { token: 'ETH'; amount: bigint; escrowAddress: Address };
 
 export enum UnstETHRecordStatus {
   NotLocked,

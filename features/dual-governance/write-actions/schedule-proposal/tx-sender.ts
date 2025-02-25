@@ -13,6 +13,7 @@ export const useScheduleProposalTxSend = () => {
     async (id: number) => {
       invariant(writeDualGovernanceContract, 'Contract is not found');
 
+      // TODO: get governance contract from EPT contract
       return writeDualGovernanceContract({
         address: DualGovernance.chainAddressMap[chainId] as Address,
         functionName: 'scheduleProposal',

@@ -41,7 +41,6 @@ export const VetoSignallingTokens = ({
     unstETHIdsCount,
   } = vetoSignallingBalance;
 
-  // console.log(vetoSignallingBalance, 'vetoSignallingBalance');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupAnchorRef = useRef<HTMLDivElement>(null);
   const { openModal } = useSelectUnstethModal();
@@ -59,10 +58,19 @@ export const VetoSignallingTokens = ({
 
   const handleRevokeTokens = useCallback(
     (token: Token) => async (selectedNftIds?: string[]) => {
+      invariant(
+        vetoSignallingAddress,
+        'VetoSignalling address must be defined',
+      );
+
       if (token === Token.unstETH) {
         invariant(selectedNftIds?.length, 'ids must be presented');
 
-        await revokeTokens({ token, selectedNftIds });
+        await revokeTokens({
+          token,
+          selectedNftIds,
+          escrowAddress: vetoSignallingAddress,
+        });
       } else {
         setIsPopupOpen(false);
 
@@ -70,10 +78,19 @@ export const VetoSignallingTokens = ({
           token === Token.stETH ? stETHLockedShares : wstETHLockedShares;
         invariant(amount, 'Amount is not defined');
 
-        await revokeTokens({ amount, token });
+        await revokeTokens({
+          amount,
+          token,
+          escrowAddress: vetoSignallingAddress,
+        });
       }
     },
-    [revokeTokens, stETHLockedShares, wstETHLockedShares],
+    [
+      revokeTokens,
+      stETHLockedShares,
+      vetoSignallingAddress,
+      wstETHLockedShares,
+    ],
   );
 
   if (!totalLockedShares) {

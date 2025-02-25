@@ -34,7 +34,8 @@ export const useSupportVetoAction = ({
   const sendSupportVetoTx = useSupportVetoTxSender();
   const waitForTx = useTxConfirmation();
   const readTokenGetter = useReadContractGetter(erc20Abi);
-  const { isAssetManagementLocked } = useDualGovernanceContext();
+  const { isAssetManagementLocked, vetoSignallingAddress } =
+    useDualGovernanceContext();
   const { visibleState } = useDualGovernanceContext();
   const { approve, needsApprove } = approveData;
 
@@ -47,6 +48,10 @@ export const useSupportVetoAction = ({
     async (args: EscrowActionArgs) => {
       try {
         invariant(address, 'address must be presented');
+        invariant(
+          vetoSignallingAddress,
+          'VetoSignallingAddress must be defined',
+        );
 
         if (isAssetManagementLocked) {
           throw new Error('Cannot support veto signalling in RageQuit state');
@@ -66,6 +71,7 @@ export const useSupportVetoAction = ({
           amount: approvalAmount,
           selectedNftIds:
             args.token === Token.unstETH ? args.selectedNftIds : [],
+          escrowAddress: vetoSignallingAddress,
         };
         const hasRQApprove = needsRQApprove
           ? await confirm({
@@ -127,18 +133,19 @@ export const useSupportVetoAction = ({
     },
     [
       address,
+      vetoSignallingAddress,
       isAssetManagementLocked,
       needsRQApprove,
+      confirm,
       needsApprove,
       txModalStages,
+      sendSupportVetoTx,
       isMultisig,
+      waitForTx,
       chainId,
       readTokenGetter,
       onConfirm,
       approve,
-      sendSupportVetoTx,
-      confirm,
-      waitForTx,
       onRetry,
     ],
   );

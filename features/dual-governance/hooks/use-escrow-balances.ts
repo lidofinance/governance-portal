@@ -85,7 +85,6 @@ export const useEscrowBalances = () => {
               0n,
             )
           : 0n;
-
       const totalLockedSharesInRageQuitEscrows =
         totalStETHLockedSharesInRageQuitEscrows +
         totalUnstETHLockedSharesInRageQuitEscrows;

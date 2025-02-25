@@ -4,15 +4,13 @@ import { escrowAbi } from 'abi/ts';
 import { Token } from 'shared/blockchain/types';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { EscrowActionArgs } from 'features/dual-governance/types';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 
 export const useSupportVetoTxSender = () => {
-  const { vetoSignallingAddress } = useDualGovernanceContext();
   const writeEscrowContract = useWriteContract(escrowAbi);
 
   return useCallback(
     async (args: EscrowActionArgs) => {
-      invariant(vetoSignallingAddress, 'escrowAddress must be presented');
+      invariant(args.escrowAddress, 'escrowAddress must be presented');
       if (args.token === Token.unstETH) {
         invariant(args.selectedNftIds, 'ids must be presented');
 
@@ -21,7 +19,7 @@ export const useSupportVetoTxSender = () => {
           .map(BigInt);
 
         return writeEscrowContract({
-          address: vetoSignallingAddress,
+          address: args.escrowAddress,
           functionName: 'lockUnstETH',
           args: [ids],
         });
@@ -33,11 +31,11 @@ export const useSupportVetoTxSender = () => {
         args.token === Token.stETH ? 'lockStETH' : 'lockWstETH';
 
       return writeEscrowContract({
-        address: vetoSignallingAddress,
+        address: args.escrowAddress,
         functionName,
         args: [args.amount],
       });
     },
-    [vetoSignallingAddress, writeEscrowContract],
+    [writeEscrowContract],
   );
 };

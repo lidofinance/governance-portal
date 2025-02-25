@@ -49,7 +49,6 @@ export const RageQuitTokens = ({
     totalLockedShares,
     unstETHRecords,
     rageQuitEscrowAddress,
-    // totalUnstETHLockedShares,
   } = rageQuitBalance;
 
   const claimableUnstETHRecords = unstETHRecords.filter(
@@ -94,9 +93,13 @@ export const RageQuitTokens = ({
     (token: 'ETH') => async () => {
       invariant(totalStETHLockedShares, 'Amount is not defined');
 
-      await withdrawEth({ amount: totalStETHLockedShares, token });
+      await withdrawEth({
+        amount: totalStETHLockedShares,
+        token,
+        escrowAddress: rageQuitEscrowAddress,
+      });
     },
-    [withdrawEth, totalStETHLockedShares],
+    [totalStETHLockedShares, withdrawEth, rageQuitEscrowAddress],
   );
 
   const handleWithdrawUnstETH = useCallback(
@@ -104,13 +107,17 @@ export const RageQuitTokens = ({
       openModal({
         onConfirm: async (selectedNftIds) => {
           invariant(selectedNftIds?.length, 'ids must be presented');
-          await withdrawEth({ token, selectedNftIds });
+          await withdrawEth({
+            token,
+            selectedNftIds,
+            escrowAddress: rageQuitEscrowAddress,
+          });
         },
         actionLabel: 'Withdraw',
         unstETHRecords: [...claimedUnstETHRecords],
       });
     },
-    [claimedUnstETHRecords, openModal, withdrawEth],
+    [claimedUnstETHRecords, openModal, rageQuitEscrowAddress, withdrawEth],
   );
 
   const handleClaimNFTs = useCallback(
