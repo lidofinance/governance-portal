@@ -146,7 +146,7 @@ export const TestDgState = () => {
                 <Text>
                   <a
                     target="_blank"
-                    href={`https://holesky.etherscan.io/tx/${tx}`}
+                    href={`https://hoodi.etherscan.io/tx/${tx}`}
                     rel="noreferrer"
                   >
                     See transaction

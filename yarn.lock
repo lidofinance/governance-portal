@@ -2270,53 +2270,53 @@
     bignumber.js "^9.1.2"
     rxjs "^7.8.1"
 
-"@lido-sdk/constants@3.3.0", "@lido-sdk/constants@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@lido-sdk/constants/-/constants-3.3.0.tgz#044b652a000a067b9ee0ae9f58814434779bb108"
-  integrity sha512-R5XINgj/EQvyBfPF+Zv9B/ycFCqARD8rbWDp3J4luAMDbSUP3ncGw0x7Aj836k96eVnrh+jfd2tz/c99Dm6IaA==
+"@lido-sdk/constants@3.5.1", "@lido-sdk/constants@^3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@lido-sdk/constants/-/constants-3.5.1.tgz#ffc80c69f4c96584979696e53b035f42f0155136"
+  integrity sha512-Cwxeu2uf+enLOQ/WJgnp20JIYRDUyelPIIouSNV7hXrZEs2aTZF+PuWn4o2aTdZfapjM4cw2QBN4KHjdTZw6Qg==
   dependencies:
     tiny-invariant "^1.1.0"
 
-"@lido-sdk/contracts@3.0.5", "@lido-sdk/contracts@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@lido-sdk/contracts/-/contracts-3.0.5.tgz#9778e83258de241e26bcd5c76589ff010856afbb"
-  integrity sha512-piu5wKqxs9QS85qG9OrwXfdg5ZCg+xlggj6Q8PMo9qbAk0UzBVuU7CcXUalpKeJpTQMV4SnvcJ0dwZNR2weK8g==
+"@lido-sdk/contracts@3.1.4", "@lido-sdk/contracts@^3.1.4":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@lido-sdk/contracts/-/contracts-3.1.4.tgz#54d48f52274695db93a983c9b277d25f7823fed4"
+  integrity sha512-IlwH2/ZOV/HkCqMAYXqSaYyWRAEwTrm3Y9pdgkj5lluQGwC80fJR+2dq+wjxgOMoEv+sWyGmljpBapKRnO090g==
   dependencies:
-    "@lido-sdk/constants" "3.3.0"
+    "@lido-sdk/constants" "3.5.1"
     tiny-invariant "^1.1.0"
 
-"@lido-sdk/fetch@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@lido-sdk/fetch/-/fetch-2.2.0.tgz#e0034083edaed471f29163ebfdccc9b10cd58ea7"
-  integrity sha512-Jwi2W5azP4uuhmsWexkk4al0Y+pMx5PpB74klIBzgX/eoVnK+NOTxLemJa6GDq4KTIlriAM79jscY0TJvJJWQA==
+"@lido-sdk/fetch@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@lido-sdk/fetch/-/fetch-2.3.2.tgz#47cbc10e5f63cffa01ba5bad3bf3ced5d8e5a1fe"
+  integrity sha512-EIJUlcjyFxlBDKKZKRBeAIJpmXmJodejqcP/sC6ko17cQsXZY2KEHspSM2H414kFTwRkmV0mshKrpU6DpwnQew==
   dependencies:
-    "@lido-sdk/constants" "3.3.0"
+    "@lido-sdk/constants" "3.5.1"
     node-fetch "^2.6.7"
     tiny-invariant "^1.1.0"
 
-"@lido-sdk/helpers@1.6.0", "@lido-sdk/helpers@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@lido-sdk/helpers/-/helpers-1.6.0.tgz#551cde8aa1251b310d4e1f93f7ec12680992c639"
-  integrity sha512-rg8sV7l3SWebx8tiagaDf+Q1F+UfgZ2FS31NDPzBUtG++QKP+9V1hTOrpwLNsmJhqQ0zbNhm84+ykHbCmEO+Cw==
+"@lido-sdk/helpers@1.7.1", "@lido-sdk/helpers@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@lido-sdk/helpers/-/helpers-1.7.1.tgz#73b76a61bacfa414c757c370d4dd6fd45aca97b5"
+  integrity sha512-1DEz/jEWOlC369DaqLi475VeMy4TFL0vHb+be6pKn98fplCCiLV0iucFwTtWCOGinVyMMe7xLzOWrY9t66Fogg==
   dependencies:
-    "@lido-sdk/constants" "3.3.0"
+    "@lido-sdk/constants" "3.5.1"
     tiny-invariant "^1.1.0"
 
-"@lido-sdk/providers@^1.4.15":
-  version "1.4.15"
-  resolved "https://registry.yarnpkg.com/@lido-sdk/providers/-/providers-1.4.15.tgz#2640afbd247cff90952d6710888d8b6a3c2ad0cd"
-  integrity sha512-155BlcEgKWFlC17itMAeflhfRnF+ejrRUOONfexgIzjcOtam+PB1WNLzpXj8zkhcLbuMW11zYJ0cfIc4QsToag==
+"@lido-sdk/providers@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@lido-sdk/providers/-/providers-1.5.1.tgz#114a0c25c43b1d0dde1a88e53e8d4a7050465ecb"
+  integrity sha512-Afv0DjoT/X1vQO78Q/wzw+dtG63Tkxaj/z3zbWrKoT61fW8uCPEEtquXp2YSm9++KbFYEiQxtLi3yPeILAn10Q==
   dependencies:
-    "@lido-sdk/constants" "3.3.0"
+    "@lido-sdk/constants" "3.5.1"
 
-"@lido-sdk/react@^2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@lido-sdk/react/-/react-2.0.6.tgz#f1a245803eb7136f396ceff695a598b0c92056dd"
-  integrity sha512-4Gwnl+6v/3JS6yyfbyyJj4P/r6slcfW8GESSl5XvPQcK3T/Jt54MN3vIv1tmFyPr1RM/vxtiR4doR+jKEItadA==
+"@lido-sdk/react@^2.0.12":
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/@lido-sdk/react/-/react-2.0.12.tgz#2516bcc0c2d8977fb705a9dca8e2b3e7d99508cb"
+  integrity sha512-lJCBNgS2SGg7Cmt4lTRygSS3aNKNyEuJpEehMDigDpmPAevgQKfI9c5kgW/iX72wYdSXQODlsZ8IKILMmiuDCA==
   dependencies:
-    "@lido-sdk/constants" "3.3.0"
-    "@lido-sdk/contracts" "3.0.5"
-    "@lido-sdk/helpers" "1.6.0"
+    "@lido-sdk/constants" "3.5.1"
+    "@lido-sdk/contracts" "3.1.4"
+    "@lido-sdk/helpers" "1.7.1"
     swr "^1.0.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
@@ -10540,7 +10540,7 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -10556,15 +10556,6 @@ string-width@^2.1.0:
   dependencies:
     is-fullwidth-code-point "^2.0.0"
     strip-ansi "^4.0.0"
-
-string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
 
 string-width@^5.0.1, string-width@^5.1.2:
   version "5.1.2"
@@ -10649,7 +10640,7 @@ stringify-entities@^3.0.1:
     character-entities-legacy "^1.0.0"
     xtend "^4.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -10669,13 +10660,6 @@ strip-ansi@^5.1.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1, strip-ansi@^7.1.0:
   version "7.1.0"
@@ -11725,7 +11709,7 @@ winston@*:
     triple-beam "^1.3.0"
     winston-transport "^4.5.0"
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -11738,15 +11722,6 @@ wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"
