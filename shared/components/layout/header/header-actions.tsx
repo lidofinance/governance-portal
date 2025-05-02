@@ -1,14 +1,8 @@
 import { useAccount } from 'wagmi';
-import { config } from 'config';
 
-import { IPFSInfoBox } from 'features/ipfs/ipfs-info-box';
 import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
 
-import {
-  HeaderActionsWrapper,
-  IPFSInfoBoxOnlyDesktopWrapper,
-  WalletInfo,
-} from './style';
+import { HeaderActionsWrapper, WalletInfo } from './style';
 import { HeaderVaultInfo } from './header-vault-info';
 import { ConnectWalletButton, WalletButton } from 'shared/wallet';
 import { TestDgState } from '../../test-dg-state';
@@ -28,11 +22,6 @@ export const HeaderActions = () => {
           {isConnected ? <WalletButton /> : <ConnectWalletButton />}
           {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
         </WalletInfo>
-        {config.ipfsMode && (
-          <IPFSInfoBoxOnlyDesktopWrapper>
-            <IPFSInfoBox />
-          </IPFSInfoBoxOnlyDesktopWrapper>
-        )}
       </HeaderActionsWrapper>
     </NoSSRWrapper>
   );

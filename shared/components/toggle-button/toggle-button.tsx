@@ -10,12 +10,11 @@ type ToggleItem = {
 type Props = {
   items: ToggleItem[];
   onChange?: (value: string) => void;
+  value: string;
 };
 
-export const ToggleButton = ({ items, onChange }: Props) => {
-  const [activeItem, setActiveItem] = useState<string | null>(
-    items[0].value || null,
-  );
+export const ToggleButton = ({ items, onChange, value }: Props) => {
+  const [activeItem, setActiveItem] = useState<string | null>(value || null);
 
   const handleClick = useCallback(
     (value: string) => () => {

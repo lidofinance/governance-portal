@@ -19,10 +19,21 @@ export const ProposalName = styled.div`
   line-height: 1;
 `;
 
+export const ProposalStateLogWrapper = styled.section`
+  margin-top: 24px;
+  min-height: 82px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
 export const SubmitDate = styled(Text)`
   font-size: 17px;
-  color: var(--primary-color-black-72);
-  margin-top: 30px;
+  color: var(--primary-color-black-50);
+
+  &:before {
+    content: '\\2022';
+  }
 `;
 
 export const ProposalLink = styled(Link)`

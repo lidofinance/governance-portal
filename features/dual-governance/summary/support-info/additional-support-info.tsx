@@ -6,8 +6,17 @@ import { VetoSignallingAdditionalSupportInfo } from './veto-signalling-additiona
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { CooldownAdditionalSupportInfo } from './cooldown-additional-support-info';
 import { DGTooltip } from '../../tooltips';
+import { formatEth } from 'shared/blockchain/utils';
 
-export const AdditionalSupportInfo = () => {
+type Props = {
+  amountTillVSPhaseWei: bigint;
+  amountTillRQPhaseWei: bigint;
+};
+
+export const AdditionalSupportInfo = ({
+  amountTillVSPhaseWei,
+  amountTillRQPhaseWei,
+}: Props) => {
   const {
     visibleState,
     amountTillNextPhasePercent,
@@ -19,24 +28,36 @@ export const AdditionalSupportInfo = () => {
   }
 
   if (visibleState === VisibleGovernanceState.BlockedVetoSignalling) {
-    return <VetoSignallingAdditionalSupportInfo />;
+    return (
+      <VetoSignallingAdditionalSupportInfo
+        amountTillRQPhaseWei={amountTillRQPhaseWei}
+      />
+    );
   }
 
   if (visibleState === VisibleGovernanceState.BlockedDeactivation) {
-    return <DeactivationAdditionalSupportInfo />;
+    return (
+      <DeactivationAdditionalSupportInfo
+        amountTillRQPhaseWei={amountTillRQPhaseWei}
+      />
+    );
   }
 
   if (visibleState === VisibleGovernanceState.Cooldown) {
-    return <CooldownAdditionalSupportInfo />;
+    return (
+      <CooldownAdditionalSupportInfo
+        amountTillVSPhaseWei={amountTillVSPhaseWei}
+      />
+    );
   }
 
   if (visibleState === VisibleGovernanceState.BlockedRageQuit) {
-    if (amountTillNextPhasePercent && amountTillNextPhasePercent > 0) {
+    if (amountTillVSPhaseWei) {
       return (
         <Text color="secondary">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
-          RageQuit if {amountTillNextPhasePercent}% more {Token.stETH} is added;
-          Otherwise, Cooldown begins
+          RageQuit if {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is
+          added; Otherwise, Cooldown begins
         </Text>
       );
     }
@@ -55,10 +76,13 @@ export const AdditionalSupportInfo = () => {
   // VisibleGovernanceState.Normal
   // VisibleGovernanceState.Warning
   // VisibleGovernanceState.BlockedRageQuit
+  if (!nextPhaseSupportThresholdPercent) {
+    return;
+  }
   return (
     <Text color="secondary">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      {amountTillNextPhasePercent}% more {Token.stETH} is added
+      {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is added
     </Text>
   );
 };

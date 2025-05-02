@@ -30,10 +30,12 @@ export const ProgressBar = (props: Props) => {
     return null;
   }
 
-  const progress = Math.ceil((progressPercent / totalPercent) * 100);
+  // const progress = (progressPercent / totalPercent) * 100;
+
+  // const roundProgress = Math.round(progress * 100) / 100;
 
   return (
-    <ProgressBarWrapper $variant={variant} $progress={progress}>
+    <ProgressBarWrapper $variant={variant} $progress={progressPercent}>
       <ProgressBarOutline>
         <ProgressBarFiller />
       </ProgressBarOutline>
@@ -43,7 +45,7 @@ export const ProgressBar = (props: Props) => {
             {progressPercent}% {progressTitle ? progressTitle : ''}
           </Text>
           <Text as="span" size={14} weight={600} color="secondary">
-            {totalTitle ? `${totalTitle}: ` : ''} {props.totalPercent}%
+            {totalTitle || ''}
           </Text>
         </ProgressBarInfo>
       )}

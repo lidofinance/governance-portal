@@ -16,6 +16,7 @@ import { getEtherscanAddressLink } from '@lido-sdk/helpers';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { UnstETHRecordStatus } from '../../types';
+import { CHAINS } from '@lido-sdk/constants';
 
 type RageQuitBalance = {
   rageQuitEscrowAddress: Address;
@@ -147,7 +148,12 @@ export const RageQuitTokens = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Text>
           Tokens in RageQuit{' '}
-          <Link href={getEtherscanAddressLink(chainId, rageQuitEscrowAddress)}>
+          <Link
+            href={getEtherscanAddressLink(
+              chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
+              rageQuitEscrowAddress,
+            )}
+          >
             contract <ExternalLinkIcon />
           </Link>
         </Text>

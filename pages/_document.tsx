@@ -12,7 +12,6 @@ import { Fonts, LidoUIHead } from '@lidofinance/lido-ui';
 
 import { config } from 'config';
 import { contentSecurityPolicy } from 'config/csp';
-import { InsertIpfsBaseScript } from 'features/ipfs/ipfs-base-script';
 
 const secureHeaders = createHeadersObject({ contentSecurityPolicy });
 const cspMetaTagContent =
@@ -29,6 +28,8 @@ export default class MyDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           enhanceApp: (App) => (props) =>
             sheet.collectStyles(<App {...props} />),
         });
@@ -128,7 +129,6 @@ export default class MyDocument extends Document {
           <meta name="currentChain" content={String(config.defaultChain)} />
           <Fonts />
           <LidoUIHead />
-          <InsertIpfsBaseScript />
           {/* eslint-disable-next-line @next/next/no-sync-scripts */}
           <script src={`${config.BASE_PATH_ASSET}/runtime/window-env.js`} />
         </Head>

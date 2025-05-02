@@ -4,7 +4,6 @@ import { GlobalStyleOverwrite } from 'styles';
 
 import { ConfigProvider } from 'config';
 
-import { IPFSInfoBoxStatusesProvider } from './ipfs-info-box-statuses';
 import { ModalProvider } from './modal-provider';
 import Web3Provider from './web3';
 import { LidoSDKProvider } from './lido-sdk';
@@ -22,12 +21,10 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
     <CookieThemeProvider initialThemeName={ThemeName.light}>
       <Web3Provider>
         <LidoSDKProvider>
-          <IPFSInfoBoxStatusesProvider>
-            <DualGovernanceStateProvider>
-              <GlobalStyleOverwrite />
-              <ModalProvider>{children}</ModalProvider>
-            </DualGovernanceStateProvider>
-          </IPFSInfoBoxStatusesProvider>
+          <DualGovernanceStateProvider>
+            <GlobalStyleOverwrite />
+            <ModalProvider>{children}</ModalProvider>
+          </DualGovernanceStateProvider>
         </LidoSDKProvider>
       </Web3Provider>
     </CookieThemeProvider>

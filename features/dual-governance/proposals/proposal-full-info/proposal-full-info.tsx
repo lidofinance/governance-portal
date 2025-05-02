@@ -9,7 +9,8 @@ import {
   ProposalName,
   SubmitDate,
   ArrowIconWrapper,
-} from 'features/dual-governance/proposals/proposal-full-info/style';
+  ProposalStateLogWrapper,
+} from './style';
 import { Text } from 'shared/components/text';
 import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 
@@ -30,8 +31,11 @@ import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-s
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
 import { Box } from '@lidofinance/lido-ui';
-import { useAccount } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
+import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { CHAINS } from '@lido-sdk/constants';
 
 type Props = {
   id: number;
@@ -41,6 +45,16 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
 
   const { isConnected } = useAccount();
+
+  const { chainId } = useLidoSDK();
+
+  const client = usePublicClient();
+
+  const [proposalExecutedAt, setProposalExecutedAt] = useState<string | null>(
+    null,
+  );
+
+  // const [logsLoading, setLogsLoading] = useState(true);
 
   const {
     data: proposal,
@@ -58,6 +72,44 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      if (!proposal?.id || !client || !chainId) {
+        return;
+      }
+
+      const _chainId = chainId as unknown as CHAINS;
+
+      try {
+        const proposalExecutedEvent = await getProposalExecutedEvent({
+          proposalId: proposal.id,
+          client,
+          chainId: _chainId,
+        });
+
+        if (proposalExecutedEvent && proposalExecutedEvent.blockNumber) {
+          const block = await client.getBlock({
+            blockNumber: proposalExecutedEvent.blockNumber,
+          });
+          if (block) {
+            const date = getDateFromTimestamp({
+              timestamp: Number(block.timestamp),
+              showYear: true,
+            });
+
+            setProposalExecutedAt(`${date.date} ${date.tz}`);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching proposal executed event:', error);
+      } finally {
+        // setLogsLoading(false);
+      }
+    };
+
+    void fetchEvent();
+  }, [chainId, client, proposal?.id]);
 
   const updateProposalState = useCallback(async () => {
     await refetchProposal();
@@ -126,6 +178,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
+  const scheduledAt = useMemo(() => {
+    if (!proposal || !proposal.proposalDetails.scheduledAt) {
+      return null;
+    }
+
+    const date = getDateFromTimestamp({
+      timestamp: proposal.proposalDetails.scheduledAt,
+      showYear: true,
+    });
+
+    return `${date.date} ${date.tz}`;
+  }, [proposal]);
+
   if (!proposal || isLoading) {
     return (
       <>
@@ -153,15 +218,23 @@ export const ProposalFullInfo = ({ id }: Props) => {
         {proposalStatusInfo?.info && proposalStatusInfo.info}
       </ProposalHeader>
       <ProposalName>Proposal #{id}</ProposalName>
-      {proposal.proposalDetails.submittedAt && (
-        <SubmitDate>
-          Submitted from{' '}
-          <ProposalLink href={`${config.voteOrigin}/vote/${proposal.voteId}`}>
-            Aragon {proposal.voteId}
-          </ProposalLink>{' '}
-          on {submittedAt}
-        </SubmitDate>
-      )}
+      <ProposalStateLogWrapper>
+        {submittedAt && (
+          <SubmitDate as="span">
+            Submitted from{' '}
+            <ProposalLink href={`${config.voteOrigin}/vote/${proposal.voteId}`}>
+              Aragon {proposal.voteId}
+            </ProposalLink>{' '}
+            on {submittedAt}
+          </SubmitDate>
+        )}
+        {scheduledAt && (
+          <SubmitDate as="span">Scheduled on {scheduledAt}</SubmitDate>
+        )}
+        {proposalExecutedAt && (
+          <SubmitDate as="span">Executed on {proposalExecutedAt}</SubmitDate>
+        )}
+      </ProposalStateLogWrapper>
       <Box margin={'30px 0'}>
         <Text weight={500} size={28}>
           Description

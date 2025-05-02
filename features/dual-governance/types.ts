@@ -40,7 +40,8 @@ export enum TransactionState {
 
 export type DualGovernanceState = {
   rageQuitSupport: bigint;
-  totalStEthInEscrow: string;
+  totalStEthInEscrowFormatted: string;
+  totalStEthInEscrow: bigint;
   amountTillNextPhasePercent: number;
   nextPhaseSupportThresholdPercent: number;
   visibleState: VisibleGovernanceState;
@@ -57,6 +58,7 @@ export type DualGovernanceState = {
   };
   isAssetManagementLocked: boolean;
   firstSealRageQuitSupport: number;
+  secondSealRageQuitSupport: number;
 };
 
 type DualGovernanceStateChangeEventArgs = {

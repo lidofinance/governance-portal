@@ -11,7 +11,7 @@ const STAGE_APPROVE_TEXT = 'approving';
 const getTxModalStagesSupport = (
   transitStage: TransactionModalTransitStage,
 ) => ({
-  ...getEscrowActionModalStages('supporting veto with')(transitStage),
+  ...getEscrowActionModalStages('supporting veto')(transitStage),
 
   signApproval: (args: EscrowActionArgs) => {
     return transitStage(

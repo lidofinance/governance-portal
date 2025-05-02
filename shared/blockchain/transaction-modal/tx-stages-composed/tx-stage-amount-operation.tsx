@@ -17,9 +17,11 @@ export const TxStageSignOperationAmount = (props: Props) => {
   const Component = isPending ? TxStagePending : TxStageSign;
 
   if (token === Token.unstETH) {
-    const nftString = Object.keys(props.selectedNftIds)
-      .map((id) => `#${id}`)
-      .join(', ');
+    const nftString = Array.isArray(props.selectedNftIds)
+      ? props.selectedNftIds.map((id) => `#${id}`).join(', ')
+      : Object.keys(props.selectedNftIds)
+          .map((id) => `#${id}`)
+          .join(', ');
 
     const s = props.selectedNftIds.length > 1 ? 's' : '';
 
@@ -45,21 +47,21 @@ export const TxStageSignOperationAmount = (props: Props) => {
 
   const amountEl = <TxAmount amount={props.amount} token={token} />;
 
+  const operationTextFormatted = operationText.toLowerCase();
+
   return (
     <Component
       txHash={txHash}
       title={
         <>
-          You are {operationText.toLowerCase()} {amountEl}
+          You are{' '}
+          {operationTextFormatted === 'approving'
+            ? operationTextFormatted
+            : `${operationTextFormatted} with`}{' '}
+          {amountEl}
         </>
       }
-      description={
-        !isPending && (
-          <>
-            {operationText} {amountEl}.{' '}
-          </>
-        )
-      }
+      description=""
     />
   );
 };

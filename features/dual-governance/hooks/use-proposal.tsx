@@ -4,12 +4,13 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
-import { isAragonProposal } from 'utils/proposals/isAragonProposal';
+import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import {
   ProposalCombinedData,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
+import { CHAINS } from '@lido-sdk/constants';
 
 type UseProposalConfig = {
   id: number;
@@ -40,9 +41,11 @@ export const useProposal = ({
           'getProposal',
           [proposalId],
         );
+        const _chainId = chainId as unknown as CHAINS;
+
         const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
           client: publicClient,
-          chainId,
+          chainId: _chainId,
           EPTContract: emergencyProtectedTimelock,
         });
 
@@ -69,7 +72,7 @@ export const useProposal = ({
         const voteId = await isAragonProposal({
           client: publicClient,
           proposalLog: proposalLog,
-          chainId,
+          chainId: _chainId,
         });
 
         if (voteId) {

@@ -27,6 +27,7 @@ declare module 'next/config' {
       defaultChain: string;
       rpcUrls_1: string | undefined;
       rpcUrls_17000: string | undefined;
+      rpcUrls_560048: string | undefined;
 
       cspTrustedHosts: string | undefined;
       cspReportUri: string | undefined;

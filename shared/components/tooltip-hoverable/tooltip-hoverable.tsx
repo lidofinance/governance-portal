@@ -21,6 +21,8 @@ const TooltipHoverableRaw = (
   const child = Children.only(children);
 
   const anchorRef = useRef<HTMLElement>(null);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const mergedRef = useMergeRefs([child.ref, anchorRef]);
 
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);

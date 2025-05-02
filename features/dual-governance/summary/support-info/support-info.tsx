@@ -5,10 +5,11 @@ import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { InlineLoader } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 import { ProgressBar } from 'shared/components/progress-bar';
-import { parsePercent16 } from 'shared/blockchain/utils';
 import { RageQuitProgress } from './rage-quit-progress';
 import { DGTooltip } from 'features/dual-governance/tooltips';
 import { FlexWrapper } from 'shared/styled-components';
+import { calculateCurrentThresholdProgress } from '../../utils/calculate-current-threshold-progress';
+import { useMemo } from 'react';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;
@@ -18,10 +19,12 @@ const InlineLoaderStyled = styled(InlineLoader)`
 
 export const SupportInfo = () => {
   const {
-    rageQuitSupport,
     totalStEthInEscrow,
+    totalStEthInEscrowFormatted,
     visibleState,
-    nextPhaseSupportThresholdPercent,
+    stEthTotalSupply,
+    firstSealRageQuitSupport,
+    secondSealRageQuitSupport,
   } = useDualGovernanceContext();
 
   const nextStateTitle =
@@ -29,6 +32,49 @@ export const SupportInfo = () => {
     visibleState === VisibleGovernanceState.BlockedVetoSignalling
       ? 'RageQuit'
       : 'VetoSignalling';
+
+  const vetoSignallingThresholdProgress = useMemo(() => {
+    if (
+      totalStEthInEscrow === undefined ||
+      stEthTotalSupply === undefined ||
+      firstSealRageQuitSupport === undefined
+    ) {
+      return null;
+    }
+
+    return calculateCurrentThresholdProgress({
+      targetPercent: firstSealRageQuitSupport,
+      currentSupport: totalStEthInEscrow,
+      stEthTotalSupply,
+    });
+  }, [totalStEthInEscrow, stEthTotalSupply, firstSealRageQuitSupport]);
+
+  const rageQuitThresholdProgress = useMemo(() => {
+    if (
+      totalStEthInEscrow === undefined ||
+      stEthTotalSupply === undefined ||
+      secondSealRageQuitSupport === undefined
+    ) {
+      return null;
+    }
+
+    return calculateCurrentThresholdProgress({
+      targetPercent: secondSealRageQuitSupport,
+      currentSupport: totalStEthInEscrow,
+      stEthTotalSupply,
+    });
+  }, [totalStEthInEscrow, stEthTotalSupply, secondSealRageQuitSupport]);
+
+  const currentThreshold = useMemo(() => {
+    return visibleState === VisibleGovernanceState.BlockedVetoSignalling ||
+      visibleState === VisibleGovernanceState.BlockedDeactivation
+      ? rageQuitThresholdProgress
+      : vetoSignallingThresholdProgress;
+  }, [
+    rageQuitThresholdProgress,
+    vetoSignallingThresholdProgress,
+    visibleState,
+  ]);
 
   return (
     <div>
@@ -43,17 +89,34 @@ export const SupportInfo = () => {
       ) : (
         <>
           <Text size={22} weight={600}>
-            {totalStEthInEscrow} stETH
+            {totalStEthInEscrowFormatted} stETH
           </Text>
-          <ProgressBar
-            variant="danger"
-            progressPercent={parsePercent16(rageQuitSupport)}
-            totalPercent={nextPhaseSupportThresholdPercent}
-            totalTitle={`${nextStateTitle} Threshold`}
-          />
+
+          {vetoSignallingThresholdProgress && (
+            <ProgressBar
+              variant="danger"
+              progressPercent={Number(
+                currentThreshold?.thresholdSupportPercent,
+              )}
+              totalPercent={Number(currentThreshold?.targetValue)}
+              totalTitle={`${nextStateTitle} Threshold`}
+            />
+          )}
         </>
       )}
-      <AdditionalSupportInfo />
+
+      {totalStEthInEscrow !== undefined &&
+        vetoSignallingThresholdProgress &&
+        rageQuitThresholdProgress && (
+          <AdditionalSupportInfo
+            amountTillVSPhaseWei={
+              vetoSignallingThresholdProgress.targetValue - totalStEthInEscrow
+            }
+            amountTillRQPhaseWei={
+              rageQuitThresholdProgress.targetValue - totalStEthInEscrow
+            }
+          />
+        )}
       {visibleState === VisibleGovernanceState.BlockedRageQuit && (
         <RageQuitProgress />
       )}

@@ -3,14 +3,23 @@ import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
-import { formatNumber, parsePercent16 } from 'shared/blockchain/utils';
+import {
+  formatEth,
+  formatNumber,
+  parsePercent16,
+} from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from 'features/dual-governance/tooltips';
 
-export const DeactivationAdditionalSupportInfo = () => {
+type Props = {
+  amountTillRQPhaseWei: bigint;
+};
+
+export const DeactivationAdditionalSupportInfo = ({
+  amountTillRQPhaseWei,
+}: Props) => {
   const { data: dgConfig, isLoading } = useDualGovernanceConfig();
-  const { detailedState, amountTillNextPhasePercent } =
-    useDualGovernanceContext();
+  const { detailedState } = useDualGovernanceContext();
 
   const amountUntilVetoSignalling = useMemo(() => {
     if (!detailedState || !dgConfig) return;
@@ -77,7 +86,7 @@ export const DeactivationAdditionalSupportInfo = () => {
     return (
       <Text color="secondary">
         RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
-        {amountTillNextPhasePercent}% more {Token.stETH} is added by{' '}
+        {formatEth(amountTillRQPhaseWei, 2)} more {Token.stETH} is added by{' '}
         {restartDate?.date} {restartDate?.timezone}. If not, Cooldown{' '}
         <DGTooltip topic="cooldown" /> begins, and proposals can be scheduled
       </Text>
@@ -86,7 +95,7 @@ export const DeactivationAdditionalSupportInfo = () => {
 
   return (
     <Text color="secondary">
-      If {amountUntilVetoSignalling}% more {Token.stETH} added by
+      If {formatEth(amountTillRQPhaseWei, 2)} more {Token.stETH} added by
       {restartDate?.date} {restartDate?.timezone} VetoSignaling{' '}
       <DGTooltip topic="cooldown" /> restarts. If not, Cooldown{' '}
       <DGTooltip topic="cooldown" /> begins, and proposals can be scheduled

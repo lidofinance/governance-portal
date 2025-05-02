@@ -4,8 +4,15 @@ import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from '../../tooltips';
+import { formatEth } from 'shared/blockchain/utils';
 
-export const VetoSignallingAdditionalSupportInfo = () => {
+type Props = {
+  amountTillRQPhaseWei: bigint;
+};
+
+export const VetoSignallingAdditionalSupportInfo = ({
+  amountTillRQPhaseWei,
+}: Props) => {
   const {
     detailedState,
     amountTillNextPhasePercent,
@@ -31,8 +38,6 @@ export const VetoSignallingAdditionalSupportInfo = () => {
     return null;
   }
 
-  // TODO: check UI when in veto signalling
-
   if (amountTillNextPhasePercent <= 0) {
     return (
       <Text color="secondary">
@@ -46,10 +51,9 @@ export const VetoSignallingAdditionalSupportInfo = () => {
   return (
     <Text color="secondary">
       RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
-      {amountTillNextPhasePercent &&
-        Math.round(amountTillNextPhasePercent * 100) / 100}
-      % more {Token.stETH} is added by {vetoSignallingEndDate?.date}{' '}
-      {vetoSignallingEndDate?.timezone}; Otherwise, Deactivation begins
+      {formatEth(amountTillRQPhaseWei, 2)} more {Token.stETH} is added by{' '}
+      {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone};
+      Otherwise, Deactivation begins
     </Text>
   );
 };

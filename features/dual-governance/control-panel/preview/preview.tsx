@@ -22,11 +22,9 @@ type Props = {
 
 export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
   const { isConnected } = useAccount();
-  const { votes, activeProposals, isLoading } =
-    useDualGovernanceProposalsContext();
-  const votesProposalsList = [...votes, ...activeProposals];
+  const { combinedData, isLoading } = useDualGovernanceProposalsContext();
 
-  const restProposalsAmount = votesProposalsList.length - PROPOSALS_TO_SHOW;
+  const restProposalsAmount = combinedData.length - PROPOSALS_TO_SHOW;
 
   return (
     <ControlPanelWrapper>
@@ -36,9 +34,9 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
         <>
-          {votesProposalsList.length > 0 && (
+          {combinedData.length > 0 && (
             <PreviewProposalList>
-              {votesProposalsList
+              {combinedData
                 .map((proposal) => (
                   <PreviewProposal key={proposal.id} proposal={proposal} />
                 ))
@@ -48,7 +46,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
               )}
             </PreviewProposalList>
           )}
-          {votesProposalsList.length === 0 && (
+          {combinedData.length === 0 && (
             <>
               <br />
               <Text>No active proposals</Text>

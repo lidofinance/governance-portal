@@ -51,8 +51,11 @@ export const RageQuitProgress = () => {
         };
       }
 
+      const progressBigInt = (claimedAmount * 10000n) / totalAmount;
+      const progress = Number(progressBigInt) / 100;
+
       return {
-        progress: Number(claimedAmount / totalAmount) * 100,
+        progress: Number(progress.toFixed(2)),
         claimedAmount,
         totalAmount,
       };
@@ -86,7 +89,7 @@ export const RageQuitProgress = () => {
         </Text>
       </RageQuitWithdrawals>
       <ProgressBar
-        progressTitle="finalised"
+        progressTitle="finalized"
         progressPercent={rageQuitData.progress}
         totalPercent={100}
       />

@@ -7,10 +7,10 @@ export const Wrap = styled.div`
 `;
 
 export const Title = styled(Text).attrs({
-  size: 17,
+  size: 28,
 })`
   margin-top: ${({ theme }) => theme.spaceMap.xl}px;
-  font-weight: 800;
+  font-weight: 500;
   text-align: center;
 `;
 

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   NftMultiselectInput,
   PopupHeader,
@@ -22,27 +22,40 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
 
   const optionsArray = useMemo(() => {
     if (!options) return [];
-
     return Object.keys(options).map((id) => ({
       id,
       stEthAmount: options[id],
     }));
   }, [options]);
 
-  const handleChange = useCallback(
-    (value: string) => () => {
-      if (!selectedOptions[value]) {
-        onChange({ ...selectedOptions, [value]: true });
-      } else {
-        const { [value]: _, ...rest } = selectedOptions;
-        onChange(rest);
+  const initialSelectAllDone = useRef(false);
+
+  useEffect(() => {
+    if (optionsArray.length > 0 && !initialSelectAllDone.current && !disabled) {
+      const currentSelectedKeys = Object.keys(selectedOptions || {});
+      const isAlreadyFullySelected =
+        optionsArray.length === currentSelectedKeys.length &&
+        optionsArray.every((opt) => currentSelectedKeys.includes(opt.id));
+
+      if (!isAlreadyFullySelected) {
+        const allSelectedState = optionsArray.reduce<NftMultiselectValuesMap>(
+          (acc, item) => {
+            acc[item.id] = true;
+            return acc;
+          },
+          {},
+        );
+        onChange(allSelectedState);
       }
-    },
-    [onChange, selectedOptions],
-  );
+
+      initialSelectAllDone.current = true;
+    }
+  }, [optionsArray, onChange, disabled, selectedOptions]);
 
   const handleSelectAll = useCallback(() => {
-    if (Object.keys(selectedOptions).length === optionsArray.length) {
+    const currentSelectedLength = Object.keys(selectedOptions || {}).length;
+
+    if (currentSelectedLength === optionsArray.length) {
       onChange({});
     } else {
       const newState = optionsArray.reduce<NftMultiselectValuesMap>(
@@ -56,9 +69,25 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
     }
   }, [optionsArray, onChange, selectedOptions]);
 
+  const handleChange = useCallback(
+    (value: string) => () => {
+      const currentSelection = selectedOptions || {};
+      let newSelection: NftMultiselectValuesMap;
+
+      if (!currentSelection[value]) {
+        newSelection = { ...currentSelection, [value]: true };
+      } else {
+        const { [value]: _, ...rest } = currentSelection;
+        newSelection = rest;
+      }
+      onChange(newSelection);
+    },
+    [onChange, selectedOptions],
+  );
+
   const stringValue = useMemo(
     () =>
-      Object.keys(selectedOptions)
+      Object.keys(selectedOptions || {})
         .map((id) => `#${id}`)
         .join(', '),
     [selectedOptions],
@@ -76,7 +105,7 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
         wrapperRef={anchorRef}
         value={stringValue}
         label="Select NFTs"
-        onClick={() => setPopupOpen(true)}
+        onClick={() => !disabled && setPopupOpen(true)}
         rightDecorator={<ArrowDown />}
         disabled={disabled}
         $isOpen={isPopupOpen}
@@ -89,9 +118,13 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
       >
         <PopupHeader>
           <Text>Select NFTs</Text>
-          <PopupSelectAllButton onClick={handleSelectAll}>
-            Select All
-          </PopupSelectAllButton>
+          {optionsArray.length > 0 && (
+            <PopupSelectAllButton onClick={handleSelectAll} disabled={disabled}>
+              {Object.keys(selectedOptions || {}).length === optionsArray.length
+                ? 'Deselect All'
+                : 'Select All'}
+            </PopupSelectAllButton>
+          )}
         </PopupHeader>
         {optionsArray.map((option) => (
           <NftMultiselectItem
@@ -99,10 +132,20 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
             id={option.id}
             stEthAmount={option.stEthAmount}
             onClick={handleChange(option.id)}
-            checked={selectedOptions[option.id]}
+            checked={!!(selectedOptions && selectedOptions[option.id])}
             selectable={selectable}
           />
         ))}
+        {optionsArray.length === 0 && !disabled && (
+          <div style={{ padding: '10px', textAlign: 'center' }}>
+            <Text color="secondary">No NFTs available.</Text>
+          </div>
+        )}
+        {optionsArray.length === 0 && disabled && (
+          <div style={{ padding: '10px', textAlign: 'center' }}>
+            <Text color="secondary">Loading or no NFTs...</Text>
+          </div>
+        )}
       </PopupMenuStyled>
     </div>
   );

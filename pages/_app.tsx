@@ -13,7 +13,6 @@ import {
 
 import { config } from 'config';
 import { withCsp } from 'config/csp';
-import { SecurityStatusBanner } from 'features/ipfs';
 import { Providers } from 'providers';
 import { ErrorBoundaryFallback } from 'shared/components/error-boundary';
 import NoSsrWrapper from 'shared/components/no-ssr-wrapper';
@@ -58,7 +57,6 @@ const AppWrapper = (
         <CookiesTooltip privacyLink={`${config.rootOrigin}/privacy-notice`} />
       </NoSsrWrapper>
 
-      <SecurityStatusBanner />
       {/* see https://nextjs.org/docs/messages/no-document-viewport-meta */}
     </Providers>
   );

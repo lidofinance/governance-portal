@@ -14,6 +14,7 @@ import { getEtherscanAddressLink } from '@lido-sdk/helpers';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useEscrowUnstethBalance } from '../../hooks/use-escrow-unsteth-balance';
+import { CHAINS } from '@lido-sdk/constants';
 
 type Props = {
   vetoSignallingBalance: {
@@ -112,7 +113,12 @@ export const VetoSignallingTokens = ({
       <Text>
         Tokens in VetoSignalling{' '}
         {vetoSignallingAddress ? (
-          <Link href={getEtherscanAddressLink(chainId, vetoSignallingAddress)}>
+          <Link
+            href={getEtherscanAddressLink(
+              chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
+              vetoSignallingAddress,
+            )}
+          >
             contract <ExternalLinkIcon />
           </Link>
         ) : (
@@ -127,7 +133,7 @@ export const VetoSignallingTokens = ({
           onClick={() => setIsPopupOpen(true)}
           isLocked={isLocked}
           unlockCountdown={assetsLockCountdown}
-          actionLabel="revoke"
+          actionLabel="Revoke"
         />
         {data && (
           <RevocableTokenItem
@@ -136,14 +142,14 @@ export const VetoSignallingTokens = ({
             onClick={() =>
               openModal({
                 onConfirm: handleRevokeTokens(Token.unstETH),
-                actionLabel: 'revoke',
+                actionLabel: 'Revoke',
                 unstETHRecords: data,
               })
             }
             isLocked={isLocked}
             unlockCountdown={assetsLockCountdown}
             amountLabel={`${unstETHIdsCount} NFT`}
-            actionLabel="revoke"
+            actionLabel="Revoke"
           />
         )}
       </RevocableTokensList>

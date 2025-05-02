@@ -12,6 +12,7 @@ import { getEtherscanAddressLink } from '@lido-sdk/helpers';
 import Link from 'next/link';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
+import { CHAINS } from '@lido-sdk/constants';
 
 export const TokenSelect = () => {
   const { networkData, selectedToken } = useSupportFormDataContext();
@@ -47,7 +48,10 @@ export const TokenSelect = () => {
         {vetoSignallingAddress ? (
           <Link
             target="_blank"
-            href={getEtherscanAddressLink(chainId, vetoSignallingAddress)}
+            href={getEtherscanAddressLink(
+              chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
+              vetoSignallingAddress,
+            )}
           >
             {'contract '}
             <ExternalLinkIcon />

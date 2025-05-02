@@ -10,7 +10,6 @@ import {
   Version,
   LinkDivider,
 } from './styles';
-import { LinkToIpfs } from './link-to-ipfs';
 
 const getVersionInfo = () => {
   const { version, branch } = buildInfo;
@@ -54,11 +53,17 @@ export const Footer: FC = () => {
         <FooterLink
           data-testid="privacyNotice"
           href={`${config.rootOrigin}/privacy-notice`}
-          $marginRight="auto"
         >
           Privacy Notice
         </FooterLink>
-        <LinkToIpfs />
+        <LinkDivider />
+        <FooterLink
+          data-testid="privacyNotice"
+          href={`${config.selfOrigin}/committee`}
+          $marginRight="auto"
+        >
+          Tiebreaker committee
+        </FooterLink>
         <Version data-testid="appVersion" href={link}>
           {label}
         </Version>

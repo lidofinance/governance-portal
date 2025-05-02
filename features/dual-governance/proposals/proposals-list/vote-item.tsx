@@ -13,7 +13,7 @@ import { ProposalName } from 'features/dual-governance/proposals/shared-componen
 import { VoteData } from 'shared/votes/types';
 import { useDecodedScript } from 'shared/hooks';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { CHAINS } from '@lido-sdk/constants';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WarningIconTransparent } from 'shared/components/icons';
 
@@ -48,7 +48,7 @@ export const VoteItem = ({
       const isUnknownContractCalled = decoded.calls.some((call) => {
         return !Object.values(contractAddresses).some(
           (contract) =>
-            contract[chainId as CHAINS]?.toLowerCase() ===
+            contract[chainId as unknown as CHAINS]?.toLowerCase() ===
             call.address.toLowerCase(),
         );
       });

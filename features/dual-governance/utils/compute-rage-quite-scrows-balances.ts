@@ -92,7 +92,6 @@ export const computeRageQuitEscrowsBalances = async ({
       return { ...balanceRecord, rageQuitLockedUnstETHDetails };
     }),
   );
-
   return detailedEscrowBalances.reduce(
     (acc, balanceRecord) => {
       const unstETHRecords = balanceRecord.rageQuitLockedUnstETHDetails.filter(
