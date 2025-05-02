@@ -65,28 +65,29 @@ export const ActionsWrapper = styled.section`
 
 export const NftMultiselectInput = styled(Input)<{ $isOpen: boolean }>`
   width: 100%;
+
   *,
   & > * {
     cursor: pointer;
   }
+
   & > span {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
     border-top: none;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-radius: 0 0 30px 30px;
     padding: 30px 14px 30px 20px;
 
     & > div {
       & > input {
         font-size: 17px;
       }
+
       & > span {
         font-size: 17px;
         color: var(--primary-color-black-50);
       }
     }
   }
+
   svg {
     ${({ $isOpen }) => $isOpen && `transform: rotate(180deg);`}
     transition: transform .2s;

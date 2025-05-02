@@ -9,7 +9,7 @@ import {
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { Button } from 'shared/components/button';
 import { isVoteItem } from 'features/dual-governance/types';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
 import Link from 'next/link';
 import { config } from 'config';
@@ -29,14 +29,23 @@ export const ProposalsList = () => {
     votes,
   } = useDualGovernanceProposalsContext();
 
-  const initialLimit = useMemo(() => {
+  const [pageLimit, setPageLimit] = useState(PAGE_LIMIT_STEP);
+
+  useEffect(() => {
+    if (initialLoading) {
+      return;
+    }
     const itemsLength = activeProposals.length + votes.length;
 
-    return PAGE_LIMIT_STEP > itemsLength ? PAGE_LIMIT_STEP : itemsLength;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const _pageLimit =
+      PAGE_LIMIT_STEP > itemsLength ? PAGE_LIMIT_STEP : itemsLength;
 
-  const [pageLimit, setPageLimit] = useState(initialLimit);
+    if (_pageLimit % 2 === 0) {
+      setPageLimit(_pageLimit);
+    } else {
+      setPageLimit(_pageLimit + 1);
+    }
+  }, [activeProposals.length, initialLoading, votes.length]);
 
   const handleLoadMore = () => {
     setCurrentPage(currentPage + 1);

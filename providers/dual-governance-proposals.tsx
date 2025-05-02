@@ -17,9 +17,10 @@ import {
   ProposalStatus,
 } from 'features/dual-governance/proposals/types';
 import { useVotes } from 'shared/votes/hooks/use-votes';
-import { isVoteItem } from 'features/dual-governance/types';
 import { VoteData } from 'shared/votes/types';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+import { useProposalDelaysQuery } from '../features/dual-governance/hooks/use-proposal-timelock';
+import { sortProposals } from '../utils/proposals/sort-proposals';
 
 const VOTES_LIMIT = 15;
 
@@ -51,16 +52,41 @@ export const useDualGovernanceProposalsContext = () => {
   return value;
 };
 
-const getCombinedData = (
-  proposals: ProposalCombinedData[],
-  votes: VoteData[] | [],
-) =>
-  [...proposals, ...votes].sort((a, b) => {
-    if (isVoteItem(a) && !isVoteItem(b)) return -1;
-    if (!isVoteItem(a) && isVoteItem(b)) return 1;
+const getCombinedData = ({
+  proposals,
+  votes = [],
+  afterSubmitDelay = 0,
+  afterScheduleDelay = 0,
+}: {
+  proposals: ProposalCombinedData[];
+  votes?: VoteData[];
+  afterSubmitDelay?: number;
+  afterScheduleDelay?: number;
+}): Array<ProposalCombinedData | VoteData> => {
+  if (afterSubmitDelay <= 0 || afterScheduleDelay <= 0) {
+    return [];
+  }
 
-    return b.id;
+  const sortedProposals = sortProposals({
+    proposals,
+    afterScheduleDelay,
+    afterSubmitDelay,
   });
+
+  const [activeProposals, executedProposals] = sortedProposals.reduce(
+    ([active, executed], proposal) => {
+      const target =
+        proposal.proposalDetails.status === ProposalStatus.Executed
+          ? executed
+          : active;
+      target.push(proposal);
+      return [active, executed];
+    },
+    [[], []] as [ProposalCombinedData[], ProposalCombinedData[]],
+  );
+
+  return [...activeProposals, ...votes, ...executedProposals];
+};
 
 export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -72,6 +98,8 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   const proposalsData = useProposals();
 
   const { refetch: refetchProposals } = proposalsData;
+
+  const { data: proposalsDelays } = useProposalDelaysQuery({ enabled: true });
 
   const {
     data: votesData,
@@ -120,7 +148,12 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       proposals: proposals,
       activeProposals,
       votes: votesData?.votes || [],
-      combinedData: getCombinedData(proposals, votesData?.votes || []),
+      combinedData: getCombinedData({
+        proposals,
+        votes: votesData?.votes || [],
+        afterSubmitDelay: proposalsDelays?.afterSubmitDelay,
+        afterScheduleDelay: proposalsDelays?.afterScheduleDelay,
+      }),
       currentPage,
       setCurrentPage,
       isFetching: [proposalsData.isFetching || isVotesFetching].some(
@@ -143,6 +176,7 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       isVotesLoading,
       getProposalById,
       refetchProposals,
+      proposalsDelays,
     ],
   );
   return (

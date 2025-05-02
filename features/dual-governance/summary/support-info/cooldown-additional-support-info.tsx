@@ -5,8 +5,15 @@ import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from '../../tooltips';
+import { formatEth } from '../../../../shared/blockchain/utils';
 
-export const CooldownAdditionalSupportInfo = () => {
+type Props = {
+  amountTillVSPhaseWei: bigint;
+};
+
+export const CooldownAdditionalSupportInfo = ({
+  amountTillVSPhaseWei,
+}: Props) => {
   const { data: dgConfig, isLoading } = useDualGovernanceConfig();
   const {
     detailedState,
@@ -35,7 +42,7 @@ export const CooldownAdditionalSupportInfo = () => {
     return null;
   }
 
-  if (amountTillNextPhasePercent < 0) {
+  if (amountTillVSPhaseWei < 0) {
     return (
       <Text color="secondary">
         VetoSignalling <DGTooltip topic="vetoSignalling" /> starts on{' '}
@@ -48,8 +55,8 @@ export const CooldownAdditionalSupportInfo = () => {
   return (
     <Text color="secondary">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      {amountTillNextPhasePercent}% more {Token.stETH} is added; Otherwise,
-      Normal begins on {cooldownEndDate?.date}
+      {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is added;
+      Otherwise, Normal begins on {cooldownEndDate?.date}
     </Text>
   );
 };

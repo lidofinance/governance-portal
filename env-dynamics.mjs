@@ -20,11 +20,14 @@ export const ipfsMode = toBoolean(process.env.IPFS_MODE);
 
 /** @type string */
 export const rootOrigin = process.env.ROOT_ORIGIN || 'https://#';
+export const selfOrigin =
+  process.env.SELF_ORIGIN || 'https://dg-holesky.testnet.fi/';
 // Fix in the build time (build time don't have env vars)
 
 /** @type string */
 // export const researchOrigin = process.env.RESEARCH_ORIGIN || 'https://research.lido.fi';
-export const voteOrigin = process.env.VOTE_ORIGIN || 'https://vote.lido.fi';
+export const voteOrigin =
+  process.env.VOTE_ORIGIN || 'https://vote-holesky.testnet.fi';
 // Fix in the build time (build time don't have env vars)
 
 // Keep fallback as in 'config/get-secret-config.ts'

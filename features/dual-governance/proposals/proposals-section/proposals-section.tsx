@@ -9,6 +9,7 @@ import {
 import { SearchInput } from './search-input';
 import { useRouter } from 'next/router';
 import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals-list/proposal-search-item';
+import { ProposalFlowBanner } from '../proposal-flow-banner';
 
 export const ProposalsSection = () => {
   const router = useRouter();
@@ -33,6 +34,7 @@ export const ProposalsSection = () => {
           <SearchInput />
         </ProposalsDisclaimerWrapper>
       </FlexWrapper>
+      <ProposalFlowBanner />
       {proposalId ? <ProposalSearchItem id={proposalId} /> : <ProposalsList />}
     </ProposalsWrapper>
   );

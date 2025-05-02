@@ -138,7 +138,8 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
       return {
         visibleState,
         rageQuitSupport,
-        totalStEthInEscrow: formatEth(totalStEthInEscrow),
+        totalStEthInEscrow,
+        totalStEthInEscrowFormatted: formatEth(totalStEthInEscrow),
         amountTillNextPhasePercent: parsePercent16(amountTillNextPhase),
         nextPhaseSupportThresholdPercent: parsePercent16(nextPhaseThreshold),
         stEthTotalSupply:
@@ -146,6 +147,7 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
         detailedState,
         isAssetManagementLocked,
         firstSealRageQuitSupport: parsePercent16(firstSealRageQuitSupport),
+        secondSealRageQuitSupport: parsePercent16(secondSealRageQuitSupport),
       };
     },
   });

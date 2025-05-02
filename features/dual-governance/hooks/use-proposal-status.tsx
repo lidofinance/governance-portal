@@ -10,7 +10,7 @@ import { useDualGovernanceConfig } from './use-dual-governance-config';
 
 const statusText = {
   loading: 'Loading...',
-  pending: 'Pending in DualGovernance',
+  pending: 'Pending in Dual Governance',
   readyToSchedule: 'Ready to Schedule Execution',
   readyToExecute: 'Ready to execute',
   executionScheduled: 'Execution Scheduled',
@@ -75,7 +75,10 @@ export const useProposalStatus = ({
 
   useEffect(() => {
     if (proposalStatus === ProposalStatus.Submitted && submittedAt && delays) {
-      if (visibleState === VisibleGovernanceState.Normal) {
+      if (
+        visibleState === VisibleGovernanceState.Normal ||
+        visibleState === VisibleGovernanceState.Warning
+      ) {
         setTargetTime(submittedAt + delays.afterSubmitDelay);
       }
 

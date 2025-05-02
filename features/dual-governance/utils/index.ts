@@ -1,1 +1,1 @@
-export * from './computeRageQuitEscrowsBalances';
+export * from './compute-rage-quite-scrows-balances';

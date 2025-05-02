@@ -55,10 +55,10 @@ export const formatNumber = (args: FormatNumberArgs) => {
   return formattedNumber;
 };
 
-export const formatEth = (amount: bigint) => {
+export const formatEth = (amount: bigint, maxFractionDigits?: number) => {
   return formatNumber({
     value: formatEther(amount),
-    maxFractionDigits: 4,
+    maxFractionDigits: maxFractionDigits || 4,
   });
 };
 

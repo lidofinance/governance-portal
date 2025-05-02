@@ -11,6 +11,7 @@ import { useWriteContract } from './use-write-contract';
 import { getTokenAddress } from '../get-contract-address';
 import { erc20Abi, erc721Abi } from 'abi/ts';
 import { useIsContract } from './use-is-contract';
+import { CHAINS } from '@lido-sdk/constants';
 
 type ApproveOptions =
   | {
@@ -57,7 +58,7 @@ export const useApprove = (
       invariant(spender, 'spender is required');
       await onTxStart?.();
 
-      const tokenAddress = getTokenAddress(token, chainId);
+      const tokenAddress = getTokenAddress(token, chainId as unknown as CHAINS);
 
       const approveTxHash = await writeTokenContract({
         address: tokenAddress,

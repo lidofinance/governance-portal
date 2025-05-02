@@ -21,6 +21,7 @@ import { useDualGovernanceState } from 'features/dual-governance/hooks';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Address } from 'viem';
+import { CHAINS } from '@lido-sdk/constants';
 
 export const TestDgState = () => {
   const stateRef = useRef(null);
@@ -55,7 +56,9 @@ export const TestDgState = () => {
 
     try {
       const tx = await walletClient.writeContract({
-        address: DualGovernance.chainAddressMap[chainId] as Address,
+        address: DualGovernance.chainAddressMap[
+          chainId as unknown as CHAINS
+        ] as Address,
         abi: DualGovernance.abi,
         functionName: 'activateNextState',
         account: walletClient.account.address,

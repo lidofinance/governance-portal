@@ -4,7 +4,6 @@ import { BackgroundGradient, Layout } from 'shared/components';
 import Head from 'next/head';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
-import { TempRedBackgroundStyle } from '../../features/committee/pages/temporary-red-background-style';
 
 export const getStaticProps = getDefaultStaticProps();
 
@@ -22,7 +21,7 @@ const CommitteePage = () => {
         />
         <CommitteePageComponent />
       </DualGovernanceProposalsProvider>
-      <TempRedBackgroundStyle />
+      {/*<TempRedBackgroundStyle />*/}
     </Layout>
   );
 };

@@ -8,8 +8,8 @@ type Props = {
 };
 
 export const TxAmount = ({ amount, token }: Props) => (
-  <Text as="span">
-    {token === Token.unstETH ? amount.toString() : formatEthFull(amount)}{' '}
+  <Text as="span" size={24}>
+    {token === Token.unstETH ? amount.toString() : formatEthFull(amount)}&nbsp;
     {token}
   </Text>
 );

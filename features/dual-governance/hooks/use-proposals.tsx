@@ -3,7 +3,7 @@ import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { isAragonProposal } from 'utils/proposals/isAragonProposal';
+import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 
 import {
   ProposalCombinedData,
@@ -11,6 +11,7 @@ import {
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
+import { CHAINS } from '@lido-sdk/constants';
 
 type GetProposalResult = readonly [
   ProposalDetails,
@@ -57,10 +58,12 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
         return { proposalsCount: 0n, proposals: [] };
       }
 
+      const _chainId = chainId as unknown as CHAINS;
+
       try {
         const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
           client: publicClient,
-          chainId,
+          chainId: _chainId,
           EPTContract: emergencyProtectedTimelock,
         });
 
@@ -87,7 +90,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
             const voteId = await isAragonProposal({
               client: publicClient,
               proposalLog: proposalEventLog,
-              chainId,
+              chainId: _chainId,
             });
 
             if (voteId) {
@@ -110,9 +113,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
 
         const proposals = await Promise.all(mapProposalsData);
 
-        const sortProposals = proposals.sort((a, b) => b.id - a.id);
-
-        return { proposalsCount, proposals: sortProposals };
+        return { proposalsCount, proposals };
       } catch (error) {
         console.error('Failed to fetch proposals:', error);
         throw new Error('Failed to fetch proposals');

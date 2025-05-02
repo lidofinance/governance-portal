@@ -9,6 +9,7 @@ import { Dispatch, Fragment, SetStateAction, useEffect } from 'react';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { TurnArrow } from 'shared/components/icons';
 import { EVMScriptCall } from '@lidofinance/evm-script-decoder/lib/types';
+import { CHAINS } from '@lido-sdk/constants';
 
 type ScriptProps = {
   script: string;
@@ -32,8 +33,10 @@ const ScriptBody = ({ decodedCalls, onUnknownContractCalled }: BodyProps) => {
       [] as number[],
     );
     const showNestedScripts = nestedScriptsIdxs && nestedScriptsIdxs.length > 0;
-    const contractNameListed = getContractName(chainId, address);
-
+    const contractNameListed = getContractName(
+      chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
+      address,
+    );
     return {
       id,
       abi,

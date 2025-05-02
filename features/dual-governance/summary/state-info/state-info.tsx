@@ -1,4 +1,7 @@
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import {
+  GovernanceState,
+  VisibleGovernanceState,
+} from 'features/dual-governance/types';
 import {
   StateIndicator,
   StateInfoStyled,
@@ -7,6 +10,10 @@ import {
 } from './style';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceContext } from 'providers/dual-governance';
+import { FlexWrapper } from '../../../../shared/styled-components';
+import { getNextGovernanceState } from '../../utils/get-next-dg-state';
+import { calculateCurrentThresholdProgress } from '../../utils/calculate-current-threshold-progress';
+import { useMemo } from 'react';
 
 const getStateLabel = (state: VisibleGovernanceState) => {
   switch (state) {
@@ -38,8 +45,83 @@ const getStateSubtitle = (state: VisibleGovernanceState) => {
 };
 
 export const StateInfo = () => {
-  const { visibleState } = useDualGovernanceContext();
+  const {
+    visibleState,
+    detailedState,
+    totalStEthInEscrow,
+    stEthTotalSupply,
+    firstSealRageQuitSupport,
+    secondSealRageQuitSupport,
+  } = useDualGovernanceContext();
   const subtitle = getStateSubtitle(visibleState);
+
+  const vetoSignallingThresholdProgress = useMemo(() => {
+    if (
+      totalStEthInEscrow === undefined ||
+      stEthTotalSupply === undefined ||
+      firstSealRageQuitSupport === undefined
+    ) {
+      return null;
+    }
+
+    return calculateCurrentThresholdProgress({
+      targetPercent: firstSealRageQuitSupport,
+      currentSupport: totalStEthInEscrow,
+      stEthTotalSupply,
+    });
+  }, [totalStEthInEscrow, stEthTotalSupply, firstSealRageQuitSupport]);
+
+  const rageQuitThresholdProgress = useMemo(() => {
+    if (
+      totalStEthInEscrow === undefined ||
+      stEthTotalSupply === undefined ||
+      secondSealRageQuitSupport === undefined
+    ) {
+      return null;
+    }
+
+    return calculateCurrentThresholdProgress({
+      targetPercent: secondSealRageQuitSupport,
+      currentSupport: totalStEthInEscrow,
+      stEthTotalSupply,
+    });
+  }, [totalStEthInEscrow, stEthTotalSupply, secondSealRageQuitSupport]);
+
+  const showNextState = useMemo(() => {
+    if (!vetoSignallingThresholdProgress || !rageQuitThresholdProgress) {
+      return false;
+    }
+    const nextState = getNextGovernanceState({
+      currentState: detailedState?.persistedState,
+      vetoSignallingThresholdPercent:
+        vetoSignallingThresholdProgress?.thresholdSupportPercent,
+      rageQuitThresholdPercent:
+        rageQuitThresholdProgress?.thresholdSupportPercent,
+    });
+
+    return (
+      nextState &&
+      detailedState &&
+      [
+        GovernanceState.VetoSignalling,
+        GovernanceState.VetoSignallingDeactivation,
+        GovernanceState.RageQuit,
+      ].indexOf(detailedState.persistedState) !== -1 &&
+      detailedState?.persistedState !== nextState
+    );
+  }, [
+    detailedState,
+    rageQuitThresholdProgress,
+    vetoSignallingThresholdProgress,
+  ]);
+
+  const nextState = getNextGovernanceState({
+    currentState: detailedState?.persistedState,
+    vetoSignallingThresholdPercent:
+      vetoSignallingThresholdProgress?.thresholdSupportPercent || 0,
+    rageQuitThresholdPercent:
+      rageQuitThresholdProgress?.thresholdSupportPercent || 0,
+  });
 
   return (
     <StateInfoStyled>
@@ -54,7 +136,14 @@ export const StateInfo = () => {
           <StateIndicator $state={visibleState} />
         </StateStatus>
       )}
-      {subtitle ? <Text>{subtitle}</Text> : null}
+      {subtitle && detailedState ? (
+        <FlexWrapper $gap="12px">
+          <Text>{subtitle}</Text>
+          {showNextState && (
+            <Text color="secondary">{`Next state: ${GovernanceState[nextState || 1]}`}</Text>
+          )}
+        </FlexWrapper>
+      ) : null}
     </StateInfoStyled>
   );
 };

@@ -17,6 +17,7 @@ import {
 import { Address } from 'viem';
 import { useActivateNextStateEventWatcher } from '../features/dual-governance/hooks/use-dual-governance-state';
 import { useLidoSDK } from './lido-sdk';
+import { CHAINS } from '@lido-sdk/constants';
 
 type WithUndefined<T> = {
   [K in keyof T]?: T[K];
@@ -67,8 +68,10 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
     refetch: refetchDualGovernanceState,
   } = useDualGovernanceState({ vetoSignallingAddress });
 
+  const _chainId = chainId as unknown as CHAINS;
+
   useActivateNextStateEventWatcher({
-    chainId,
+    chainId: _chainId,
     refetchFn: refetchDualGovernanceState,
   });
 

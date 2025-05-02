@@ -41,9 +41,9 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
     });
 
     return {
-      rpcProvider: core.rpcProvider as PublicClient,
+      rpcProvider: core.rpcProvider,
       web3Provider: core.web3Provider as WalletClient,
-      chainId: core.chainId,
+      chainId: core.chainId as CHAINS,
       subscribeToTokenUpdates: subscribe,
     };
   }, [chainId, fallbackRpcUrl, publicClient, walletClient, subscribe]);

@@ -8,12 +8,20 @@ import { ToggleButton } from 'shared/components/toggle-button';
 import { useCallback, useEffect, useState } from 'react';
 import { VetoSupportForm } from './veto-support-form';
 import { RevocationPanel } from './revocation-panel';
-import { DualGovernanceControlPanelPreview } from './preview/preview';
+import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
 import { DGTooltip } from '../tooltips';
+import { GovernanceState } from '../types';
+import { useDualGovernanceContext } from 'providers/dual-governance';
 
 export const DualGovernanceControlPanel = () => {
-  const [activeTab, setActiveTab] = useState('support');
+  const { detailedState } = useDualGovernanceContext();
+
+  const [activeTab, setActiveTab] = useState(
+    detailedState?.persistedState === GovernanceState.RageQuit
+      ? 'revoke'
+      : 'support',
+  );
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
   const { data, isLoading } = useEscrowBalances();
@@ -52,6 +60,7 @@ export const DualGovernanceControlPanel = () => {
         </div>
         <ToggleButton
           onChange={setActiveTab}
+          value={activeTab}
           items={[
             { label: 'Support Veto', value: 'support' },
             { label: 'Manage Tokens', value: 'revoke' },

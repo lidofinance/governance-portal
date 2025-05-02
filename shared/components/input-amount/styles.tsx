@@ -3,11 +3,9 @@ import { Input } from '@lidofinance/lido-ui';
 
 export const InputStyled = styled(Input)`
   & > span {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    width: 100%;
     border-top: none;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-radius: 0 0 30px 30px;
     padding: 30px 14px 30px 20px;
 
     button {
@@ -20,6 +18,7 @@ export const InputStyled = styled(Input)`
       & > input {
         font-size: 17px;
       }
+
       & > span {
         font-size: 17px;
         color: var(--primary-color-black-50);

@@ -4,6 +4,7 @@ import { Address } from 'viem';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { CHAINS } from '@lido-sdk/constants';
 
 export const useScheduleProposalTxSend = () => {
   const { chainId } = useLidoSDK();
@@ -15,7 +16,9 @@ export const useScheduleProposalTxSend = () => {
 
       // TODO: get governance contract from EPT contract
       return writeDualGovernanceContract({
-        address: DualGovernance.chainAddressMap[chainId] as Address,
+        address: DualGovernance.chainAddressMap[
+          chainId as unknown as CHAINS
+        ] as Address,
         functionName: 'scheduleProposal',
         args: [BigInt(id)],
       });

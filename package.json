@@ -39,7 +39,7 @@
     "@lidofinance/eth-api-providers": "^0.45.1",
     "@lidofinance/eth-providers": "^0.45.1",
     "@lidofinance/evm-script-decoder": "0.2.2",
-    "@lidofinance/lido-ethereum-sdk": "^3.4.0",
+    "@lidofinance/lido-ethereum-sdk": "^4.4.0",
     "@lidofinance/lido-ui": "^3.26.0",
     "@lidofinance/next-api-wrapper": "^0.45.1",
     "@lidofinance/next-ip-rate-limit": "^0.45.1",
