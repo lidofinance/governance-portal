@@ -1,4 +1,4 @@
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { ContractObject, Token } from './types';
 import { TOKEN_CONTRACT_MAP } from './constants';
 import { Address } from 'viem';
@@ -7,7 +7,7 @@ export const getContractAddress = (
   contract: ContractObject,
   chainId: CHAINS,
 ): Address => {
-  const address = contract.chainAddressMap[chainId as unknown as CHAINS];
+  const address = contract.chainAddressMap[chainId];
 
   if (!address) {
     throw new Error(

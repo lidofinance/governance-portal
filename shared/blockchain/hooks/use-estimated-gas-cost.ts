@@ -6,7 +6,6 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { ESTIMATE_ACCOUNT } from 'config/groups/web3';
-import { CHAINS } from '@lido-sdk/constants';
 
 export const useEstimateContractGas = <
   T extends Abi,
@@ -24,7 +23,7 @@ export const useEstimateContractGas = <
       return contract.address;
     }
 
-    return getContractAddress(contract, chainId as unknown as CHAINS);
+    return getContractAddress(contract, chainId);
   }, [chainId, contract]);
 
   return useQuery({

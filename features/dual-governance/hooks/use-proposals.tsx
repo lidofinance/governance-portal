@@ -11,7 +11,6 @@ import {
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
-import { CHAINS } from '@lido-sdk/constants';
 
 type GetProposalResult = readonly [
   ProposalDetails,
@@ -58,7 +57,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
         return { proposalsCount: 0n, proposals: [] };
       }
 
-      const _chainId = chainId as unknown as CHAINS;
+      const _chainId = chainId;
 
       try {
         const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({

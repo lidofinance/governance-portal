@@ -1,4 +1,4 @@
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
 
 export const Token = {

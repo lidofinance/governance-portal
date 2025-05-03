@@ -1,9 +1,10 @@
 import { Token } from 'shared/blockchain/types';
 import { ProposalCombinedData } from './proposals/types';
 import { VoteData } from 'shared/votes/types';
-import { CHAINS } from '@lido-sdk/constants';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { Log, Address } from 'viem';
+
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 export const isVoteItem = (
   item: ProposalCombinedData | VoteData,
@@ -28,6 +29,7 @@ export const VisibleGovernanceState = {
   BlockedRageQuit: 'BlockedRageQuit',
   BlockedDeactivation: 'BlockedDeactivation',
   Cooldown: 'Cooldown',
+  Emergency: 'Emergency',
 } as const;
 
 export type VisibleGovernanceState = keyof typeof VisibleGovernanceState;

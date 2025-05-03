@@ -11,7 +11,7 @@ import {
   ProposalLog,
 } from 'features/dual-governance/proposals/types';
 import { usePublicClient } from 'wagmi';
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Address } from 'viem';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 

@@ -17,7 +17,6 @@ import { ActionArgs } from '../types';
 import { useSupportVetoTxSender } from './tx-sender';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
-import { CHAINS } from '@lido-sdk/constants';
 
 type Args = {
   approveData: UseApproveResponse;
@@ -117,10 +116,7 @@ export const useSupportVetoAction = ({
 
         await waitForTx(txHash);
 
-        const tokenAddress = getTokenAddress(
-          args.token,
-          chainId as unknown as CHAINS,
-        );
+        const tokenAddress = getTokenAddress(args.token, chainId);
 
         const [tokenBalance] = await Promise.all([
           readTokenGetter(tokenAddress)('balanceOf', [address]),

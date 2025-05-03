@@ -1,7 +1,7 @@
 import * as ADDR from 'shared/blockchain/contract-addresses';
 import * as abis from 'generated';
 import { Address, decodeFunctionData, Hex } from 'viem';
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 type ContractName = keyof typeof ADDR;
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;

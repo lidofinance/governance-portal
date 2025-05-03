@@ -14,7 +14,6 @@ import { getTokenAddress } from 'shared/blockchain/get-contract-address';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { erc20Abi } from 'abi/ts';
-import { CHAINS } from '@lido-sdk/constants';
 
 export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { chainId } = useLidoSDK();
@@ -51,10 +50,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         await waitForTx(txHash);
 
-        const tokenAddress = getTokenAddress(
-          args.token,
-          chainId as unknown as CHAINS,
-        );
+        const tokenAddress = getTokenAddress(args.token, chainId);
 
         const [tokenBalance] = await Promise.all([
           readTokenGetter(tokenAddress)('balanceOf', [address]),

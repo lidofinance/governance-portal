@@ -35,7 +35,6 @@ import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { CHAINS } from '@lido-sdk/constants';
 
 type Props = {
   id: number;
@@ -79,7 +78,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         return;
       }
 
-      const _chainId = chainId as unknown as CHAINS;
+      const _chainId = chainId;
 
       try {
         const proposalExecutedEvent = await getProposalExecutedEvent({

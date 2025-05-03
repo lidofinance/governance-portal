@@ -18,8 +18,6 @@ export const Script = ({ rawCalls, description }: Props) => {
   const { chainId } = useLidoSDK();
   const decodedCalls = decodeCalls({
     calls: rawCalls,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     chainId,
   });
 

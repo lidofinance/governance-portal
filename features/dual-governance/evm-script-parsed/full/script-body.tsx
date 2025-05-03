@@ -6,11 +6,10 @@ import {
   ScriptBox,
 } from 'features/dual-governance/evm-script-parsed/full/style';
 
-import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { formatDecodedCallString } from 'features/dual-governance/evm-script-parsed/utils';
 import { DecodedCall } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
-import { CHAINS } from '@lido-sdk/constants';
 
 type Props = {
   binary?: string;
@@ -60,12 +59,7 @@ export const ScriptBody = ({ calls, binary, parentId, children }: Props) => {
                   <br />
                 </>
               )}
-              <Link
-                href={getEtherscanAddressLink(
-                  chainId as unknown as CHAINS,
-                  contractAddress,
-                )}
-              >
+              <Link href={getEtherscanAddressLink(chainId, contractAddress)}>
                 {contractAddress}
               </Link>
             </CallTitle>

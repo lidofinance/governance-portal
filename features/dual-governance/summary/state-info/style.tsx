@@ -19,6 +19,8 @@ const getIndicatorColor = (state: VisibleGovernanceState | undefined) => {
       return 'var(--accent-color-berry)';
     case VisibleGovernanceState.Cooldown:
       return 'var(--accent-color-ocean)';
+    case VisibleGovernanceState.Emergency:
+      return 'var(--accent-color-berry)';
     default:
       return 'var(--accent-color-leaf)';
   }

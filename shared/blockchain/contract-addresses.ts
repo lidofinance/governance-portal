@@ -1,4 +1,4 @@
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { ChainAddressMap } from './types';
 
 export const GovernanceToken: ChainAddressMap = {
@@ -264,7 +264,7 @@ export const WstETH: ChainAddressMap = {
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a',
+  [CHAINS.Mainnet]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a', // TODO: add real one
   [CHAINS.Holesky]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a',
   [CHAINS.Hoodi]: '0x00074C2974354C492508905d0268A5d921C999B7',
 };

@@ -2,7 +2,7 @@ import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernanceStateChangeEventLog, GovernanceState } from '../types';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { PublicClient } from 'viem';
 
 type Props = {

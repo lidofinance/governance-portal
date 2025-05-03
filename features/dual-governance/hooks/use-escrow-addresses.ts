@@ -5,7 +5,6 @@ import { getContractAddress } from 'shared/blockchain/get-contract-address';
 import { usePublicClient, useReadContracts } from 'wagmi';
 import { findAbiItem } from 'utils/find-abi-item';
 import { Address } from 'viem';
-import { CHAINS } from '@lido-sdk/constants';
 
 const ESCROW_CHANGED_EVENT_NAME = 'NewSignallingEscrowDeployed';
 
@@ -20,7 +19,7 @@ export const useEscrowAddresses = () => {
 
   const dgContract = useMemo(
     () => ({
-      address: getContractAddress(DualGovernance, chainId as unknown as CHAINS),
+      address: getContractAddress(DualGovernance, chainId),
       abi: DualGovernance.abi,
     }),
     [chainId],
@@ -59,10 +58,7 @@ export const useEscrowAddresses = () => {
     const fetchLogs = async () => {
       try {
         const logs = await publicClient.getLogs({
-          address: getContractAddress(
-            DualGovernance,
-            chainId as unknown as CHAINS,
-          ),
+          address: getContractAddress(DualGovernance, chainId),
           event: eventAbi,
           fromBlock: 0n,
           toBlock: 'latest',

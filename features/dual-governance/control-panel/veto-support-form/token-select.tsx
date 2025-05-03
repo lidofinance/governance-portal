@@ -8,11 +8,10 @@ import { useFormContext } from 'react-hook-form';
 import { VetoSupportedTokens } from 'features/dual-governance/types';
 import { useCallback } from 'react';
 import { useDualGovernanceContext } from 'providers/dual-governance';
-import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 import Link from 'next/link';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
-import { CHAINS } from '@lido-sdk/constants';
 
 export const TokenSelect = () => {
   const { networkData, selectedToken } = useSupportFormDataContext();
@@ -49,7 +48,7 @@ export const TokenSelect = () => {
           <Link
             target="_blank"
             href={getEtherscanAddressLink(
-              chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
+              chainId, // chains mismatch between @lido-sdk & lido-ethereum-sdk
               vetoSignallingAddress,
             )}
           >

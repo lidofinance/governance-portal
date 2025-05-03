@@ -1,4 +1,4 @@
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { findAbiItem } from 'utils/find-abi-item';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
@@ -42,7 +42,7 @@ export const getProposalExecutedEvent = async ({
     `Contract address not found for chainId ${chainId}`,
   );
 
-  // TODO: Replace hardcoded start block with dynamic deployment block retrieval
+  // TODO: Replace hardcoded start block with deployment block
   const deploymentBlock = 0n;
   const eventArgs: ProposalExecutedEventArgs = {
     id: BigInt(proposalId),

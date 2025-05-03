@@ -1,4 +1,4 @@
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import * as addressMaps from 'shared/blockchain/contract-addresses';
 
 export const getContractName = (chainId: CHAINS, address: string) => {

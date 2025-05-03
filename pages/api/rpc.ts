@@ -13,7 +13,7 @@ import {
 import Metrics from 'utilsApi/metrics';
 import { rpcFactory } from 'utilsApi/rpcFactory';
 import { METRICS_PREFIX } from 'constants/metrics';
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
   DualGovernance,
   EmergencyProtectedTimelock,

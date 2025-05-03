@@ -11,7 +11,7 @@ import {
   abiProviders,
 } from '@lidofinance/evm-script-decoder';
 
-import { getStaticRpcBatchProvider } from '@lido-sdk/providers';
+import { getStaticRpcBatchProvider } from 'utils/providersRPC';
 
 import * as abis from 'generated';
 import * as ADDR from 'shared/blockchain/contract-addresses';
@@ -19,6 +19,7 @@ import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useUserConfig } from 'config/user-config';
 import { useSDK } from '@lido-sdk/react';
 import { ABIProviderEtherscan } from '@lidofinance/evm-script-decoder/lib/ABIProviderEtherscan';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 type ContractName = keyof typeof ADDR;
 
@@ -47,7 +48,7 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
   const { chainId } = useSDK();
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
   const userConfig = useUserConfig();
-  const rpcUrl = getRpcUrlByChainId(chainId);
+  const rpcUrl = getRpcUrlByChainId(chainId as unknown as CHAINS);
   const { etherscanApiKey } = userConfig;
 
   return useGlobalMemo(() => {
@@ -55,7 +56,8 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
     // needed to initialize the localDecoder
     const abiMap = Object.keys(ADDR).reduce(
       (result, contractName: string) => {
-        const address = ADDR[contractName as ContractName][chainId];
+        const address =
+          ADDR[contractName as ContractName][chainId as unknown as CHAINS];
         if (!address) {
           return result;
         }
