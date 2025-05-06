@@ -1,11 +1,11 @@
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { findAbiItem } from 'utils/find-abi-item';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
 import { Log, PublicClient } from 'viem';
 
 const EVENT_NAME = 'ProposalExecuted';
-const MAX_BLOCK_RANGE = 4900n;
+const MAX_BLOCK_RANGE = 49999n;
 
 type Props = {
   proposalId: number;
@@ -42,8 +42,8 @@ export const getProposalExecutedEvent = async ({
     `Contract address not found for chainId ${chainId}`,
   );
 
-  // TODO: Replace hardcoded start block with dynamic deployment block retrieval
-  const deploymentBlock = 0n;
+  // TODO: Replace hardcoded start block with deployment block
+  const deploymentBlock = 252978n; // TODO: current HOODI deployment block
   const eventArgs: ProposalExecutedEventArgs = {
     id: BigInt(proposalId),
   };

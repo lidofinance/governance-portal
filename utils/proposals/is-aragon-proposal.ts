@@ -1,6 +1,6 @@
 import { decodeEventLog, keccak256, PublicClient, stringToBytes } from 'viem';
 import { Voting } from 'shared/blockchain/contracts';
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { ProposalLog } from 'features/dual-governance/proposals/types';
 import { findAbiItem } from '../find-abi-item';
 import invariant from 'tiny-invariant';

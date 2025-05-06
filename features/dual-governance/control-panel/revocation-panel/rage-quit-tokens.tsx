@@ -12,11 +12,10 @@ import { Box } from 'shared/components/box';
 import { Address } from 'viem';
 import { RageQuitEscrowUnstETHRecord } from '../../utils';
 import { Link } from '@lidofinance/lido-ui';
-import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { UnstETHRecordStatus } from '../../types';
-import { CHAINS } from '@lido-sdk/constants';
 
 type RageQuitBalance = {
   rageQuitEscrowAddress: Address;
@@ -148,12 +147,7 @@ export const RageQuitTokens = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Text>
           Tokens in RageQuit{' '}
-          <Link
-            href={getEtherscanAddressLink(
-              chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
-              rageQuitEscrowAddress,
-            )}
-          >
+          <Link href={getEtherscanAddressLink(chainId, rageQuitEscrowAddress)}>
             contract <ExternalLinkIcon />
           </Link>
         </Text>

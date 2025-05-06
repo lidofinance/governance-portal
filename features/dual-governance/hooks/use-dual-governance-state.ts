@@ -17,6 +17,7 @@ import {
 import { Address } from 'viem';
 import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
+import { useIsEmergencyModeActive } from './useIsEmergencyModeActive';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;
 const WATCH_EVENT_POLLING_INTERVAL = 60000;
@@ -47,10 +48,11 @@ export const useActivateNextStateEventWatcher = ({
 // BlockedRageQuit: DG.RageQuit
 // BlockedDeactivation: DG.VetoSignallingDeactivation
 // Cooldown: DG.Cooldown
-// Deadlock: DG.RageQuit && Reseal something something TBA
 export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
   const { chainId } = useLidoSDK();
   const { data: dualGovernanceConfig } = useDualGovernanceConfig();
+
+  const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const dualGovernance = useReadContract(DualGovernance);
   const stEth = useReadContract(StETH);
@@ -107,26 +109,30 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
 
       let visibleState: VisibleGovernanceState = VisibleGovernanceState.Loading;
 
-      switch (detailedState.persistedState) {
-        case GovernanceState.Normal:
-          if (rageQuitSupport >= warningStateThreshold) {
-            visibleState = VisibleGovernanceState.Warning;
-          } else {
-            visibleState = VisibleGovernanceState.Normal;
-          }
-          break;
-        case GovernanceState.VetoSignalling:
-          visibleState = VisibleGovernanceState.BlockedVetoSignalling;
-          break;
-        case GovernanceState.VetoSignallingDeactivation:
-          visibleState = VisibleGovernanceState.BlockedDeactivation;
-          break;
-        case GovernanceState.RageQuit:
-          visibleState = VisibleGovernanceState.BlockedRageQuit;
-          break;
-        case GovernanceState.VetoCooldown:
-          visibleState = VisibleGovernanceState.Cooldown;
-          break;
+      if (isEmergencyModeActive) {
+        visibleState = VisibleGovernanceState.Emergency;
+      } else {
+        switch (detailedState.persistedState) {
+          case GovernanceState.Normal:
+            if (rageQuitSupport >= warningStateThreshold) {
+              visibleState = VisibleGovernanceState.Warning;
+            } else {
+              visibleState = VisibleGovernanceState.Normal;
+            }
+            break;
+          case GovernanceState.VetoSignalling:
+            visibleState = VisibleGovernanceState.BlockedVetoSignalling;
+            break;
+          case GovernanceState.VetoSignallingDeactivation:
+            visibleState = VisibleGovernanceState.BlockedDeactivation;
+            break;
+          case GovernanceState.RageQuit:
+            visibleState = VisibleGovernanceState.BlockedRageQuit;
+            break;
+          case GovernanceState.VetoCooldown:
+            visibleState = VisibleGovernanceState.Cooldown;
+            break;
+        }
       }
 
       const stEthTotalSupply = await stEth.readContract('totalSupply');

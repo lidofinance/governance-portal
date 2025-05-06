@@ -10,7 +10,6 @@ import {
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
-import { CHAINS } from '@lido-sdk/constants';
 
 type UseProposalConfig = {
   id: number;
@@ -41,7 +40,7 @@ export const useProposal = ({
           'getProposal',
           [proposalId],
         );
-        const _chainId = chainId as unknown as CHAINS;
+        const _chainId = chainId;
 
         const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
           client: publicClient,

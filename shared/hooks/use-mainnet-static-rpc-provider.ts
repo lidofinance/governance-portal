@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { getStaticRpcBatchProvider } from '@lido-sdk/providers';
+import { getStaticRpcBatchProvider } from 'utils/providersRPC';
 import { StaticJsonRpcBatchProvider } from '@lidofinance/eth-providers';
 
 import { useGetRpcUrlByChainId } from 'config/rpc';
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { config } from 'config';
 
 export const useMainnetStaticRpcProvider = (): StaticJsonRpcBatchProvider => {

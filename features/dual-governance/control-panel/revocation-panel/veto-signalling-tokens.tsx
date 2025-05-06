@@ -10,11 +10,10 @@ import { useCountdown } from 'shared/hooks/use-countdown';
 import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { Link } from '@lidofinance/lido-ui';
-import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useEscrowUnstethBalance } from '../../hooks/use-escrow-unsteth-balance';
-import { CHAINS } from '@lido-sdk/constants';
 
 type Props = {
   vetoSignallingBalance: {
@@ -115,7 +114,7 @@ export const VetoSignallingTokens = ({
         {vetoSignallingAddress ? (
           <Link
             href={getEtherscanAddressLink(
-              chainId as unknown as CHAINS, // chains mismatch between @lido-sdk & lido-ethereum-sdk
+              chainId, // chains mismatch between @lido-sdk & lido-ethereum-sdk
               vetoSignallingAddress,
             )}
           >

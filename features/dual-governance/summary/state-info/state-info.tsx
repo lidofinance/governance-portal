@@ -14,6 +14,7 @@ import { FlexWrapper } from '../../../../shared/styled-components';
 import { getNextGovernanceState } from '../../utils/get-next-dg-state';
 import { calculateCurrentThresholdProgress } from '../../utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
+import { Link } from '@lidofinance/lido-ui';
 
 const getStateLabel = (state: VisibleGovernanceState) => {
   switch (state) {
@@ -26,6 +27,10 @@ const getStateLabel = (state: VisibleGovernanceState) => {
       return 'Blocked';
     case VisibleGovernanceState.Cooldown:
       return 'Cooldown';
+    case VisibleGovernanceState.Emergency:
+      return 'Emergency mode';
+    case VisibleGovernanceState.Unset:
+      return 'Unset';
     default:
       return null;
   }
@@ -124,26 +129,34 @@ export const StateInfo = () => {
   });
 
   return (
-    <StateInfoStyled>
-      <Text size={22} weight={300} color="secondary">
-        State
-      </Text>
-      {visibleState === VisibleGovernanceState.Loading ? (
-        <StateLoader />
-      ) : (
-        <StateStatus>
-          <Text size={34}>{getStateLabel(visibleState)}</Text>
-          <StateIndicator $state={visibleState} />
-        </StateStatus>
+    <>
+      <StateInfoStyled>
+        <Text size={22} weight={300} color="secondary">
+          State
+        </Text>
+        {visibleState === VisibleGovernanceState.Loading ? (
+          <StateLoader />
+        ) : (
+          <StateStatus>
+            <Text size={34}>{getStateLabel(visibleState)}</Text>
+            <StateIndicator $state={visibleState} />
+          </StateStatus>
+        )}
+        {subtitle && detailedState ? (
+          <FlexWrapper $gap="12px">
+            <Text>{subtitle}</Text>
+            {showNextState && (
+              <Text color="secondary">{`Next state: ${GovernanceState[nextState || 1]}`}</Text>
+            )}
+          </FlexWrapper>
+        ) : null}
+      </StateInfoStyled>
+      {visibleState === VisibleGovernanceState.Emergency && (
+        <Text size={22} weight={300}>
+          <Link href={'#'}>Emergency Committee</Link> can reset Dual Governance
+          and execute blocked proposals
+        </Text>
       )}
-      {subtitle && detailedState ? (
-        <FlexWrapper $gap="12px">
-          <Text>{subtitle}</Text>
-          {showNextState && (
-            <Text color="secondary">{`Next state: ${GovernanceState[nextState || 1]}`}</Text>
-          )}
-        </FlexWrapper>
-      ) : null}
-    </StateInfoStyled>
+    </>
   );
 };

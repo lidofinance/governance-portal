@@ -16,9 +16,8 @@ import { TokenBalance } from 'shared/components/token-balance';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import Link from 'next/link';
-import { getEtherscanAddressLink } from '@lido-sdk/helpers';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { CHAINS } from '@lido-sdk/constants';
 
 export const HeaderVaultInfo = () => {
   const [isVaultInfoMenuOpen, setVaultInfoMenuOpen] = useState(false);
@@ -70,7 +69,7 @@ export const HeaderVaultInfo = () => {
                   <Link
                     target="_blank"
                     href={getEtherscanAddressLink(
-                      chainId as unknown as CHAINS,
+                      chainId,
                       vetoSignallingAddress,
                     )}
                   >
@@ -102,10 +101,7 @@ export const HeaderVaultInfo = () => {
                 {rageQuitAddress ? (
                   <Link
                     target="_blank"
-                    href={getEtherscanAddressLink(
-                      chainId as unknown as CHAINS,
-                      rageQuitAddress,
-                    )}
+                    href={getEtherscanAddressLink(chainId, rageQuitAddress)}
                   >
                     {'contract '}
                     <ExternalLinkIcon />

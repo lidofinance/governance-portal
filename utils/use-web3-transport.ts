@@ -43,7 +43,10 @@ const runtimeMutableTransport = (
               ? withInjectedTransport(params)
               : defaultTransport;
 
-            if (DISABLED_METHODS.has(requestParams.method)) {
+            if (
+              DISABLED_METHODS &&
+              DISABLED_METHODS.has(requestParams.method)
+            ) {
               const error = new UnsupportedProviderMethodError(
                 new Error(`Method ${requestParams.method} is not supported`),
               );

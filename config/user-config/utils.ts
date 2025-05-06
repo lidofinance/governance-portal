@@ -4,7 +4,7 @@
 // '''
 // otherwise you will get something like a cyclic error!
 
-import { CHAINS } from '@lido-sdk/constants';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { config } from '../get-config';
 import { UserConfigDefaultType } from './types';
 

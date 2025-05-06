@@ -38,6 +38,12 @@ const GradientVariants = {
     [VisibleGovernanceState.Cooldown]: css`
       stop-color: var(--layout-gradient-start-cooldown);
     `,
+    [VisibleGovernanceState.Emergency]: css`
+      stop-color: var(--layout-gradient-start-blocked);
+    `,
+    [VisibleGovernanceState.Unset]: css`
+      stop-color: var(--layout-gradient-start-attention);
+    `,
   },
   stop: {
     [VisibleGovernanceState.Loading]: css`
@@ -60,6 +66,12 @@ const GradientVariants = {
     `,
     [VisibleGovernanceState.Cooldown]: css`
       stop-color: var(--layout-gradient-stop-cooldown);
+    `,
+    [VisibleGovernanceState.Emergency]: css`
+      stop-color: var(--layout-gradient-stop-blocked);
+    `,
+    [VisibleGovernanceState.Unset]: css`
+      stop-color: var(--layout-gradient-stop-attention);
     `,
   },
 };
