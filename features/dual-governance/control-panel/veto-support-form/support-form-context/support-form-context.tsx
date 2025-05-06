@@ -153,14 +153,13 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
   } = formObject;
 
   useEffect(() => {
-    const { unsubscribe } = watch((_, { name }) => {
-      if (name === 'token') {
+    const { unsubscribe } = watch((value, { name }) => {
+      if (name === 'token' && value.amount !== null) {
         setValue('amount', null, { shouldDirty: true });
       }
     });
     return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch]);
+  }, [watch, setValue]);
 
   const { amount, token: selectedToken, selectedNftIds } = watch();
 
