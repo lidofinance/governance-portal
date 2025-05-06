@@ -37,17 +37,17 @@ export const DualGovernancePage = () => {
         {visibleState !== VisibleGovernanceState.Loading && (
           <BackgroundGradient state={visibleState} width={1700} height={800} />
         )}
-        <Box
-          borderBottom="1px solid var(--custom-border);"
-          borderTop="1px solid var(--custom-border);"
-          padding="3rem 0"
-        >
-          {visibleState === VisibleGovernanceState.Unset && (
+        {visibleState === VisibleGovernanceState.Unset && (
+          <Box
+            borderBottom="1px solid var(--custom-border);"
+            borderTop="1px solid var(--custom-border);"
+            padding="3rem 0"
+          >
             <Text size={32}>
               Current Dual Governance state is <b>Unset</b>
             </Text>
-          )}
-        </Box>
+          </Box>
+        )}
         {visibleState !== VisibleGovernanceState.Unset && (
           <DashboardWrapper>
             <DualGovernanceSummary />
