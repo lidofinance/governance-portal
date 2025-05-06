@@ -154,7 +154,7 @@ export const StateInfo = () => {
       {visibleState === VisibleGovernanceState.Emergency && (
         <Text size={22} weight={300}>
           <Link href={'#'}>Emergency Committee</Link> can reset Dual Governance
-          and execute any active proposal
+          and execute blocked proposals
         </Text>
       )}
     </>

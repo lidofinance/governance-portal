@@ -215,7 +215,7 @@ export const useProposalStatus = ({
         },
         info: (
           <Text color="primary">
-            Only Emergency committee can execute any active proposal
+            Only Emergency committee can execute blocked proposals
           </Text>
         ),
       };

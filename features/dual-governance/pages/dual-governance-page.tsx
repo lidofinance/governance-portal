@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { BackgroundGradient, Layout } from 'shared/components';
 import styled from 'styled-components';
-import { Block } from '@lidofinance/lido-ui';
+import { Block, Link } from '@lidofinance/lido-ui';
 import { DualGovernanceSummary } from '../summary';
 import { DualGovernanceControlPanel } from '../control-panel';
 import { ProposalsSection } from '../proposals/proposals-section';
@@ -10,7 +10,7 @@ import { VisibleGovernanceState } from '../types';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 import { devicesHeaderMedia } from 'styles/global';
 import { Text } from 'shared/components/text';
-import { Box } from '../../../shared/components/box';
+import { Box } from 'shared/components/box';
 
 const DashboardWrapper = styled(Block)`
   border: 1px solid var(--custom-border);
@@ -44,7 +44,10 @@ export const DualGovernancePage = () => {
             padding="3rem 0"
           >
             <Text size={32}>
-              Current Dual Governance state is <b>Unset</b>
+              Dual Governance is <b>Unset</b>
+            </Text>
+            <Text>
+              <Link href="#">Emergency Committee</Link> reset governance
             </Text>
           </Box>
         )}
