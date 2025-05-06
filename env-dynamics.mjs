@@ -27,7 +27,7 @@ export const selfOrigin =
 /** @type string */
 // export const researchOrigin = process.env.RESEARCH_ORIGIN || 'https://research.lido.fi';
 export const voteOrigin =
-  process.env.VOTE_ORIGIN || 'https://vote-holesky.testnet.fi';
+  process.env.VOTE_ORIGIN || 'https://vote-hoodi.testnet.fi';
 // Fix in the build time (build time don't have env vars)
 
 // Keep fallback as in 'config/get-secret-config.ts'

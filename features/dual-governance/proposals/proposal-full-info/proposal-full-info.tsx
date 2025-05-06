@@ -35,6 +35,7 @@ import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
 
 type Props = {
   id: number;
@@ -53,7 +54,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     null,
   );
 
-  // const [logsLoading, setLogsLoading] = useState(true);
+  const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const {
     data: proposal,
@@ -219,13 +220,22 @@ export const ProposalFullInfo = ({ id }: Props) => {
       <ProposalName>Proposal #{id}</ProposalName>
       <ProposalStateLogWrapper>
         {submittedAt && (
-          <SubmitDate as="span">
-            Submitted from{' '}
-            <ProposalLink href={`${config.voteOrigin}/vote/${proposal.voteId}`}>
-              Aragon {proposal.voteId}
-            </ProposalLink>{' '}
-            on {submittedAt}
-          </SubmitDate>
+          <>
+            {proposal.voteId && (
+              <SubmitDate as="span">
+                Submitted from{' '}
+                <ProposalLink
+                  href={`${config.voteOrigin}/vote/${proposal.voteId}`}
+                >
+                  Aragon {proposal.voteId}
+                </ProposalLink>{' '}
+                on {submittedAt}
+              </SubmitDate>
+            )}
+            {!proposal.voteId && (
+              <SubmitDate as="span">Submitted on {submittedAt}</SubmitDate>
+            )}
+          </>
         )}
         {scheduledAt && (
           <SubmitDate as="span">Scheduled on {scheduledAt}</SubmitDate>
@@ -271,7 +281,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         </ActionsWrapper>
       )}
 
-      {showExecuteButton && (
+      {showExecuteButton && !isEmergencyModeActive && (
         <ActionsWrapper>
           {isConnected ? (
             <Button

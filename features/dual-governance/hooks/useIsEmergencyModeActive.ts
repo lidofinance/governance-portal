@@ -27,22 +27,5 @@ export const useIsEmergencyModeActive = () => {
     },
   });
 
-  // if (isEmergencyModeActive) {
-  //   const { data: emergencyGovernance } = useQuery<boolean>({
-  //     queryKey: ['isEmergencyModeActive', chainId],
-  //     staleTime: Infinity,
-  //     queryFn: async () => {
-  //       try {
-  //         return await emergencyProtectedTimelockContract.readContract(
-  //           'isEmergencyModeActive',
-  //         );
-  //       } catch (error) {
-  //         console.error(`Failed to get emergencyMode status: ${error}`);
-  //         throw new Error(`Failed to get emergencyMode status: ${error}`);
-  //       }
-  //     },
-  //   });
-  // }
-
   return { isEmergencyModeActive, governanceAddress };
 };

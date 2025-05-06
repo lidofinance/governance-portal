@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { BadgeVariant } from '../proposals/shared-components/vote-status-badge/types';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
+import { useIsEmergencyModeActive } from './useIsEmergencyModeActive';
 
 const statusText = {
   loading: 'Loading...',
@@ -61,6 +62,8 @@ export const useProposalStatus = ({
 
   const { timeFormatted: targetCountdown, isFinished: isCountdownFinished } =
     useCountdown(targetTime);
+
+  const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const deactivationTargetTimestamp =
     detailedState?.persistedStateEnteredAt &&
@@ -204,6 +207,19 @@ export const useProposalStatus = ({
 
   // TODO: add badge id for conditional rendering
   if (proposalStatus === ProposalStatus.Scheduled) {
+    if (isEmergencyModeActive && isCountdownFinished) {
+      return {
+        badge: {
+          text: statusText.blocked,
+          variant: 'danger',
+        },
+        info: (
+          <Text color="primary">
+            Only Emergency committee can execute any active proposal
+          </Text>
+        ),
+      };
+    }
     return {
       badge: {
         text: isCountdownFinished

@@ -41,6 +41,9 @@ const GradientVariants = {
     [VisibleGovernanceState.Emergency]: css`
       stop-color: var(--layout-gradient-start-blocked);
     `,
+    [VisibleGovernanceState.Unset]: css`
+      stop-color: var(--layout-gradient-start-attention);
+    `,
   },
   stop: {
     [VisibleGovernanceState.Loading]: css`
@@ -66,6 +69,9 @@ const GradientVariants = {
     `,
     [VisibleGovernanceState.Emergency]: css`
       stop-color: var(--layout-gradient-stop-blocked);
+    `,
+    [VisibleGovernanceState.Unset]: css`
+      stop-color: var(--layout-gradient-stop-attention);
     `,
   },
 };

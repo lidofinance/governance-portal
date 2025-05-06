@@ -29,6 +29,8 @@ const getStateLabel = (state: VisibleGovernanceState) => {
       return 'Cooldown';
     case VisibleGovernanceState.Emergency:
       return 'Emergency mode';
+    case VisibleGovernanceState.Unset:
+      return 'Unset';
     default:
       return null;
   }
@@ -151,8 +153,8 @@ export const StateInfo = () => {
       </StateInfoStyled>
       {visibleState === VisibleGovernanceState.Emergency && (
         <Text size={22} weight={300}>
-          <Link href={'#'}>Emergency Committee</Link> can disable Dual
-          Governance and execute any active proposal
+          <Link href={'#'}>Emergency Committee</Link> can reset Dual Governance
+          and execute any active proposal
         </Text>
       )}
     </>

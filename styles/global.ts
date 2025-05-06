@@ -42,6 +42,9 @@ const LayoutVariants = {
   [VisibleGovernanceState.Emergency]: css`
     background-color: var(--layout-background-blocked);
   `,
+  [VisibleGovernanceState.Unset]: css`
+    background-color: var(--layout-background-attention);
+  `,
 };
 
 const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`

@@ -30,6 +30,7 @@ export const VisibleGovernanceState = {
   BlockedDeactivation: 'BlockedDeactivation',
   Cooldown: 'Cooldown',
   Emergency: 'Emergency',
+  Unset: 'Unset',
 } as const;
 
 export type VisibleGovernanceState = keyof typeof VisibleGovernanceState;
