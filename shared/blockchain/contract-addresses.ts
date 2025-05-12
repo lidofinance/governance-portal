@@ -254,15 +254,15 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 export const StETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494', // MOCK
   [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
-  // [CHAINS.Hoodi]: '0x4ecAC76fEd32DADd892aB0697f47622FdcB0F955', // MOCK
-  [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a', // Actual
+  [CHAINS.Hoodi]: '0x4ecAC76fEd32DADd892aB0697f47622FdcB0F955', // MOCK
+  // [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a', // Actual
 };
 
 export const WstETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
   [CHAINS.Holesky]: '0x67b3c1e122ff0b778c9dedc1de2fb0f451aa12c8',
-  // [CHAINS.Hoodi]: '0xD3B035A5590aD0FEc95cdce9C54b50BFd108AEa5', // MOCK
-  [CHAINS.Hoodi]: '0x7E99eE3C66636DE415D2d7C880938F2f40f94De4', // Actual
+  [CHAINS.Hoodi]: '0xD3B035A5590aD0FEc95cdce9C54b50BFd108AEa5', // MOCK
+  // [CHAINS.Hoodi]: '0x7E99eE3C66636DE415D2d7C880938F2f40f94De4', // Actual
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
@@ -274,15 +274,15 @@ export const WithdrawalQueue: ChainAddressMap = {
 export const Voting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x2e59A20f205bB85a89C53f1936454680651E618e',
   [CHAINS.Holesky]: '0xdA7d2573Df555002503F29aA4003e398d28cc00f',
-  [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B', // Actual
-  // [CHAINS.Hoodi]: '0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636', // Test
+  // [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B', // Actual
+  [CHAINS.Hoodi]: '0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636', // Test
 };
 
 export const DualGovernance: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199', // MOCK
   [CHAINS.Holesky]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199',
-  // [CHAINS.Hoodi]: '0x8648E40335337a8c68C1aC5617dCaE24d3dC8408', // MOCK
-  [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F', // Actual
+  [CHAINS.Hoodi]: '0x8648E40335337a8c68C1aC5617dCaE24d3dC8408', // MOCK
+  // [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F', // Actual
 };
 
 export const AdminExecutor: ChainAddressMap = {
@@ -293,8 +293,8 @@ export const AdminExecutor: ChainAddressMap = {
 export const EmergencyProtectedTimelock: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
   [CHAINS.Holesky]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
-  // [CHAINS.Hoodi]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41', // MOCK,
-  [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d', // Actual
+  [CHAINS.Hoodi]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41', // MOCK,
+  // [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d', // Actual
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
