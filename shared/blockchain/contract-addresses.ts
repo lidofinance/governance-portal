@@ -345,6 +345,10 @@ export const DualGovernanceTimeConstraints: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xB26Fd3b50280AbC55c572EE73071778A51088408',
 };
 
+export const DualGovernanceAdminExecutor: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x0eCc17597D292271836691358B22340b78F3035B',
+};
+
 export const DualGovernanceEscrow: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x0AB2eBf304E41bcc5Db37Bf0a3fdB83faa19324e',
 };
