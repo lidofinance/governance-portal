@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { Text } from '@lidofinance/lido-ui';
 
 export const Tabs = styled.div`
   position: relative;
@@ -43,44 +42,30 @@ export const Tab = styled.div<TabProps>`
 `;
 
 export const VoteScriptBodyWrap = styled.div`
+  padding: 16px 32px;
+  font-size: 15px;
   position: relative;
   margin-top: -1px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;
   border: 1px solid var(--border-color-fog);
-  font-size: 15px;
-  font-weight: 600;
 `;
 
 export const CallWrapper = styled.div`
-  padding: ${({ theme }) => theme.spaceMap.lg}px;
   word-break: break-all;
+  margin-bottom: 16px;
   &:not(:last-child) {
     border-bottom: 1px solid var(--lido-color-border);
   }
 `;
 
-export const CallTitle = styled(Text)`
-  margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
+export const CallTitle = styled.p`
   font-weight: 600;
-  font-family:
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    Liberation Mono,
-    Courier New,
-    monospace !important;
-`;
-
-export const NestedPadding = styled.div`
-  margin-top: 10px;
-  border-left: 2px solid var(--lido-color-borderLight);
-
-  & > ${CallWrapper} {
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-right: 0;
+  b {
+    font-weight: 800;
+  }
+  a {
+    font-weight: normal;
   }
 `;
 
@@ -101,4 +86,18 @@ export const ScriptBox = styled.div`
   border-radius: 8px;
   word-break: break-all;
   white-space: pre-wrap;
+`;
+
+// Looks redundant, but we keep it for the future design improvements
+export const CallFunction = styled.p`
+  margin-top: 8px;
+`;
+export const CallData = styled.p`
+  margin-top: 8px;
+`;
+export const CallDataItem = styled.p`
+  font-weight: 600;
+`;
+export const NestedCallWrapper = styled.p`
+  margin-top: 8px;
 `;

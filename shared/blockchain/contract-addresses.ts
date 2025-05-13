@@ -297,9 +297,25 @@ export const EmergencyProtectedTimelock: ChainAddressMap = {
   // [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d', // Actual
 };
 
+export const EmergencyExecutionCommittee: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
+  [CHAINS.Hoodi]: '0x8E1Ce8995E370222CbD825fFD7Dce2A5BfE1E631',
+};
+
+export const EmergencyActivationCommittee: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
+  [CHAINS.Hoodi]: '0xA678c29cbFde2C74aF15C7724EE4b1527A50D45B',
+};
+
 export const EmergencyGovernance: ChainAddressMap = {
   [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
   [CHAINS.Hoodi]: '0xF1Fbb8360C19830228260Ed5Bb432476A9d4897a',
+};
+
+export const EmergencyTimelockedGovernance: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
+  [CHAINS.Holesky]: '0x2D99B1Fe6AFA9d102C7125908081414b5C3Cc759',
+  [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
 };
 
 export const ResealManager: ChainAddressMap = {
@@ -315,4 +331,32 @@ export const TiebreakerCoreCommittee: ChainAddressMap = {
 export const TiebreakerSubCommittee: ChainAddressMap = {
   [CHAINS.Holesky]: '0xcd02db64a217E6442525Aff03BE765d56e6A06Ac',
   [CHAINS.Hoodi]: '0x32F9CA8B1621E5AC2E38e1b8715633DE237F58Db',
+};
+
+export const DualGovernanceLaunchVerifier: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x98FC7b149767302647D8e1dA1463F0051978826B',
+};
+
+export const DualGovernanceRolesValidator: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x9CCe5BfAcDcf80DAd2287106b57197284DacaE3F',
+};
+
+export const DualGovernanceTimeConstraints: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0xB26Fd3b50280AbC55c572EE73071778A51088408',
+};
+
+export const DualGovernanceAdminExecutor: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x0eCc17597D292271836691358B22340b78F3035B',
+};
+
+export const DualGovernanceEscrow: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x0AB2eBf304E41bcc5Db37Bf0a3fdB83faa19324e',
+};
+
+export const DualGovernanceResealManager: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x05172CbCDb7307228F781436b327679e4DAE166B',
+};
+
+export const DualGovernanceTieBreakerCore: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
 };

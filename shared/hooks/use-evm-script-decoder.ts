@@ -44,6 +44,11 @@ const ABI_EXCEPTIONS = {
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
 type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
 
+/**
+  The only reason we still keep EVMScriptDecoder is to check whether the ongoing Aragon vote item has Unknown contracts.
+  We need later to move on to Viem parsing as we do for the parsed calls of the DG Items
+*/
+
 export const useEVMScriptDecoder = (): EVMScriptDecoder => {
   const { chainId } = useSDK();
   const getRpcUrlByChainId = useGetRpcUrlByChainId();

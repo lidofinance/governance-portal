@@ -14,7 +14,7 @@ import {
 import { Text } from 'shared/components/text';
 import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 
-import { Script } from 'features/dual-governance/evm-script-parsed/full';
+import { Script } from 'features/dual-governance/evm-script-parsed';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { Button } from 'shared/components/button';
 import {
