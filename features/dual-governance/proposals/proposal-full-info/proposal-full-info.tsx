@@ -30,12 +30,14 @@ import { useRouter } from 'next/router';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
-import { Box } from '@lidofinance/lido-ui';
+import { Box, Link } from '@lidofinance/lido-ui';
 import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
+import { getEtherscanAddressLink } from 'utils/etherscan';
+import { getContractName } from 'utils/get-contract-name';
 
 type Props = {
   id: number;
@@ -191,6 +193,28 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
+  const executor = useMemo(() => {
+    if (!proposal || !proposal.proposalDetails.executor) {
+      return null;
+    }
+
+    const executorContract = getContractName(
+      chainId,
+      proposal.proposalDetails.executor,
+    );
+
+    return (
+      <Link
+        href={getEtherscanAddressLink(
+          chainId,
+          proposal.proposalDetails.executor,
+        )}
+      >
+        {executorContract || proposal.proposalDetails.executor}
+      </Link>
+    );
+  }, [proposal, chainId]);
+
   if (!proposal || isLoading) {
     return (
       <>
@@ -245,21 +269,30 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
       </ProposalStateLogWrapper>
       <Box margin={'30px 0'}>
-        <Text weight={500} size={28}>
-          Description
-        </Text>
-        <Box marginTop={12}>
-          <Text size={15} color="secondary">
-            Disclaimer: Description provided by the Aragon proposal author; may
-            include items not under Dual Governance
-          </Text>
-        </Box>
-        {proposal.proposalDualGovernanceDetails?.metadata && (
-          <Box marginTop={30}>
-            <Text size={22}>
-              {proposal.proposalDualGovernanceDetails?.metadata}
+        {proposal.voteId && (
+          <>
+            <Text weight={500} size={28}>
+              Description
             </Text>
-          </Box>
+            <Box marginTop={12}>
+              <Text size={15} color="secondary">
+                Disclaimer: Description provided by the Aragon proposal author;
+                may include items not under Dual Governance
+              </Text>
+            </Box>
+            {proposal.proposalDualGovernanceDetails?.metadata && (
+              <Box marginTop={30}>
+                <Text size={22}>
+                  {proposal.proposalDualGovernanceDetails?.metadata}
+                </Text>
+              </Box>
+            )}
+          </>
+        )}
+        {!proposal.voteId && (
+          <Text weight={500} size={22}>
+            Proposal executed by {executor}
+          </Text>
         )}
       </Box>
 

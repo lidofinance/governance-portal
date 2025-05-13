@@ -37,7 +37,7 @@ export const Tab = styled.div<TabProps>`
   ${({ $isActive }) =>
     $isActive &&
     css`
-      border-bottom: 1px solid var(--accent-color-ocean);
+      border-bottom: 2px solid var(--accent-color-ocean-light);
     `}
 `;
 

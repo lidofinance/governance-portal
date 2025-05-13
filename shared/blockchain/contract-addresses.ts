@@ -252,7 +252,7 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 };
 
 export const StETH: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494', // MOCK
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // MOCK // TODO: add real one
   [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
   [CHAINS.Hoodi]: '0x4ecAC76fEd32DADd892aB0697f47622FdcB0F955', // MOCK
   // [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a', // Actual
@@ -266,7 +266,7 @@ export const WstETH: ChainAddressMap = {
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a', // TODO: add real one
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // TODO: add real one
   [CHAINS.Holesky]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a',
   [CHAINS.Hoodi]: '0x00074C2974354C492508905d0268A5d921C999B7',
 };
@@ -279,7 +279,7 @@ export const Voting: ChainAddressMap = {
 };
 
 export const DualGovernance: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199', // MOCK
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // MOCK
   [CHAINS.Holesky]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199',
   [CHAINS.Hoodi]: '0x8648E40335337a8c68C1aC5617dCaE24d3dC8408', // MOCK
   // [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F', // Actual
@@ -343,10 +343,6 @@ export const DualGovernanceRolesValidator: ChainAddressMap = {
 
 export const DualGovernanceTimeConstraints: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xB26Fd3b50280AbC55c572EE73071778A51088408',
-};
-
-export const DualGovernanceAdminExecutor: ChainAddressMap = {
-  [CHAINS.Hoodi]: '0x0eCc17597D292271836691358B22340b78F3035B',
 };
 
 export const DualGovernanceEscrow: ChainAddressMap = {
