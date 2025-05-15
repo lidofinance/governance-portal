@@ -254,21 +254,21 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 export const StETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // MOCK // TODO: add real one
   [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
-  [CHAINS.Hoodi]: '0x4ecAC76fEd32DADd892aB0697f47622FdcB0F955', // MOCK
+  [CHAINS.Hoodi]: '0x7853038c89a91752de79094db32fede15b5c6a4b', // MOCK
   // [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a', // Actual
 };
 
 export const WstETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
   [CHAINS.Holesky]: '0x67b3c1e122ff0b778c9dedc1de2fb0f451aa12c8',
-  [CHAINS.Hoodi]: '0xD3B035A5590aD0FEc95cdce9C54b50BFd108AEa5', // MOCK
+  [CHAINS.Hoodi]: '0xccdc9c43eaa165edeb1fc0c98d781b9fe318582a', // MOCK
   // [CHAINS.Hoodi]: '0x7E99eE3C66636DE415D2d7C880938F2f40f94De4', // Actual
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // TODO: add real one
   [CHAINS.Holesky]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a',
-  [CHAINS.Hoodi]: '0x00074C2974354C492508905d0268A5d921C999B7',
+  [CHAINS.Hoodi]: '0x7cc545e36c7571782922b075c2976e938a0cda05',
 };
 
 export const Voting: ChainAddressMap = {
@@ -346,7 +346,7 @@ export const DualGovernanceTimeConstraints: ChainAddressMap = {
 };
 
 export const DualGovernanceEscrow: ChainAddressMap = {
-  [CHAINS.Hoodi]: '0x0AB2eBf304E41bcc5Db37Bf0a3fdB83faa19324e',
+  [CHAINS.Hoodi]: '0x5e2EE9DCBE8C9433F22Dd3c5EFDe0Af6DC293405',
 };
 
 export const DualGovernanceResealManager: ChainAddressMap = {
