@@ -3,8 +3,8 @@ import {
   Tabs,
   Tab,
   VoteScriptBodyWrap,
-} from 'features/dual-governance/evm-script-parsed/full/style';
-import { ScriptBody } from 'features/dual-governance/evm-script-parsed/full/script-body';
+} from 'features/dual-governance/evm-script-parsed/style';
+import { ScriptBody } from 'features/dual-governance/evm-script-parsed/script-body';
 import { decodeCalls } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { SubmitProposalCall } from 'features/dual-governance/proposals/types';
