@@ -23,10 +23,10 @@ type Props = {
   startDate: bigint;
   yea: bigint;
   nay: bigint;
-} & Pick<VoteData, 'id' | 'voteTime' | 'objectionPhaseTime'>;
+} & Pick<VoteData, 'proposalId' | 'voteTime' | 'objectionPhaseTime'>;
 
 export const VoteItem = ({
-  id,
+  proposalId,
   description,
   state,
   voteTime,
@@ -57,7 +57,7 @@ export const VoteItem = ({
   return (
     <ProposalListItemWrapper>
       <SummarySection>
-        <ProposalName isAragon id={id} chainId={chainId} />
+        <ProposalName isAragon id={proposalId} chainId={chainId} />
         <VoteStatusWrapper>
           <VoteStatusBadge
             state={state}

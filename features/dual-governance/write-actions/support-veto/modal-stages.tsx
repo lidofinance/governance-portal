@@ -13,7 +13,7 @@ const getTxModalStagesSupport = (
 ) => ({
   ...getEscrowActionModalStages(
     'supporting veto with',
-    'supported veto with',
+    'You have supported veto with',
   )(transitStage),
 
   signApproval: (args: EscrowActionArgs) => {

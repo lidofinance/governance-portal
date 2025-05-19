@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   ActionsWrapper,
+  ArrowIconWrapper,
   InlineLoaderStyled,
   ProposalContainer,
   ProposalHeader,
   ProposalLink,
   ProposalName,
-  SubmitDate,
-  ArrowIconWrapper,
   ProposalStateLogWrapper,
+  SubmitDate,
 } from './style';
 import { Text } from 'shared/components/text';
 import { useProposal } from 'features/dual-governance/hooks/use-proposal';
@@ -30,14 +30,12 @@ import { useRouter } from 'next/router';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
-import { Box, Link } from '@lidofinance/lido-ui';
+import { Box } from '@lidofinance/lido-ui';
 import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
-import { getEtherscanAddressLink } from 'utils/etherscan';
-import { getContractName } from 'utils/get-contract-name';
 
 type Props = {
   id: number;
@@ -77,17 +75,15 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   useEffect(() => {
     const fetchEvent = async () => {
-      if (!proposal?.id || !client || !chainId) {
+      if (!proposal?.proposalId || !client || !chainId) {
         return;
       }
 
-      const _chainId = chainId;
-
       try {
         const proposalExecutedEvent = await getProposalExecutedEvent({
-          proposalId: proposal.id,
+          proposalId: proposal.proposalId,
           client,
-          chainId: _chainId,
+          chainId: chainId,
         });
 
         if (proposalExecutedEvent && proposalExecutedEvent.blockNumber) {
@@ -111,7 +107,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     };
 
     void fetchEvent();
-  }, [chainId, client, proposal?.id]);
+  }, [chainId, client, proposal?.proposalId]);
 
   const updateProposalState = useCallback(async () => {
     await refetchProposal();
@@ -193,28 +189,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
-  const executor = useMemo(() => {
-    if (!proposal || !proposal.proposalDetails.executor) {
-      return null;
-    }
-
-    const executorContract = getContractName(
-      chainId,
-      proposal.proposalDetails.executor,
-    );
-
-    return (
-      <Link
-        href={getEtherscanAddressLink(
-          chainId,
-          proposal.proposalDetails.executor,
-        )}
-      >
-        {executorContract || proposal.proposalDetails.executor}
-      </Link>
-    );
-  }, [proposal, chainId]);
-
   if (!proposal || isLoading) {
     return (
       <>
@@ -226,7 +200,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     );
   }
 
-  const { calls } = proposal.proposalDetails;
+  const calls = proposal.EPTEvent?.args.calls;
 
   return (
     <ProposalContainer>
@@ -280,18 +254,16 @@ export const ProposalFullInfo = ({ id }: Props) => {
                 author; may include items not under Dual Governance
               </Text>
             </Box>
-            {proposal.proposalDualGovernanceDetails?.metadata && (
+            {proposal.DGEvent?.args?.metadata && (
               <Box marginTop={30}>
-                <Text size={22}>
-                  {proposal.proposalDualGovernanceDetails?.metadata}
-                </Text>
+                <Text size={22}>{proposal?.DGEvent.args?.metadata}</Text>
               </Box>
             )}
           </>
         )}
         {!proposal.voteId && (
           <Text weight={500} size={22}>
-            Proposal executed by {executor}
+            Proposal submitted by {proposal?.DGEvent?.args.proposerAccount}
           </Text>
         )}
       </Box>

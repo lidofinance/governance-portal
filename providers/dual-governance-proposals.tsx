@@ -120,7 +120,9 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
 
   const getProposalById = useCallback(
     (id: number) => {
-      const proposal = proposals.find((proposal) => Number(proposal.id) === id);
+      const proposal = proposals.find(
+        (proposal) => Number(proposal.proposalId) === id,
+      );
 
       return proposal || null;
     },
@@ -133,10 +135,14 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
 
       setProposals((prevProposals) => {
         // this is to properly handle the status update on refetch while using lazy loading
-        const updatedIds = new Set(newProposals.map((proposal) => proposal.id));
+        const updatedIds = new Set(
+          newProposals.map((proposal) => proposal.proposalId),
+        );
 
         return [
-          ...prevProposals.filter((proposal) => !updatedIds.has(proposal.id)), // Keep the old proposals that are not updated
+          ...prevProposals.filter(
+            (proposal) => !updatedIds.has(proposal.proposalId),
+          ), // Keep the old proposals that are not updated
           ...newProposals,
         ];
       });

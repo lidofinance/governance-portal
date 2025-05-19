@@ -125,7 +125,7 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
 
               return {
                 voteId,
-                id: voteId,
+                proposalId: voteId,
                 vote,
                 canExecute,
                 event: startEvent,

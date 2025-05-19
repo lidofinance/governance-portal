@@ -5,18 +5,8 @@ import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 
-import {
-  ProposalCombinedData,
-  ProposalDetails,
-  SubmitProposalCall,
-} from 'features/dual-governance/proposals/types';
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
-import { getAragonProposer } from '../../../utils/proposals/get-aragon-proposer';
-
-type GetProposalResult = readonly [
-  ProposalDetails,
-  readonly SubmitProposalCall[],
-];
 
 export type ProposalsQueryResult = {
   proposalsCount: bigint;
@@ -57,67 +47,49 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
       if (!publicClient || proposalsCount === undefined) {
         return { proposalsCount: 0n, proposals: [] };
       }
-
-      const _chainId = chainId;
-
       try {
-        const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
-          client: publicClient,
-          chainId: _chainId,
-          EPTContract: emergencyProtectedTimelock,
-        });
+        const { mergedProposalSubmittedEvents } =
+          await getProposalSubmittedEvents({
+            client: publicClient,
+            EPTContract: emergencyProtectedTimelock,
+          });
 
-        const mapProposalsData = EPTEvents.map(async (proposalEventLog) => {
-          try {
-            const proposalInfo = (await emergencyProtectedTimelock.readContract(
-              'getProposal',
-              [proposalEventLog.args.id],
-            )) as GetProposalResult;
+        const mapProposalsData = mergedProposalSubmittedEvents.map(
+          async (mergedProposalSubmittedEvent) => {
+            try {
+              const proposalInfo =
+                await emergencyProtectedTimelock.readContract('getProposal', [
+                  BigInt(mergedProposalSubmittedEvent.proposalId.toString()),
+                ]);
 
-            const dualGovernanceEvent = DGEvents.find(
-              (log) => log.args.proposalId === proposalEventLog.args.id,
-            );
+              const result: ProposalCombinedData = {
+                ...mergedProposalSubmittedEvent,
+                proposalId: Number(mergedProposalSubmittedEvent.proposalId),
+                proposalDetails: {
+                  ...proposalInfo[0],
+                },
+              };
 
-            const result: ProposalCombinedData = {
-              id: Number(proposalEventLog.args.id),
-              event: proposalEventLog,
-              proposalDetails: {
-                ...proposalInfo[0],
-                calls: proposalInfo[1] as SubmitProposalCall[],
-              },
-            };
-
-            const voteId = await isAragonProposal({
-              client: publicClient,
-              proposalLog: proposalEventLog,
-              chainId: _chainId,
-            });
-
-            if (voteId) {
-              result.voteId = Number(voteId);
-              const aragonProposer = await getAragonProposer({
+              const voteId = await isAragonProposal({
                 client: publicClient,
+                proposalLog: mergedProposalSubmittedEvent.DGEvent,
                 chainId,
-                voteId,
               });
-              if (aragonProposer) {
-                result.aragonProposer = aragonProposer;
+
+              if (voteId) {
+                result.voteId = Number(voteId);
               }
-            }
 
-            if (dualGovernanceEvent) {
-              result.proposalDualGovernanceDetails = dualGovernanceEvent.args;
+              return result;
+            } catch (e) {
+              console.error(
+                `Failed to process proposal data for log with ID ${mergedProposalSubmittedEvent.proposalId}:`,
+                e,
+              );
+              throw new Error('Failed to prepare proposals data');
             }
-
-            return result;
-          } catch (e) {
-            console.error(
-              `Failed to process proposal data for log with ID ${proposalEventLog.args.id}:`,
-              e,
-            );
-            throw new Error('Failed to prepare proposals data');
-          }
-        });
+          },
+        );
 
         const proposals = await Promise.all(mapProposalsData);
 

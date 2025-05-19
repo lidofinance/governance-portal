@@ -8,7 +8,10 @@ import {
   UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
+import {
+  ProposalCombinedData,
+  SubmitProposalCall,
+} from 'features/dual-governance/proposals/types';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WarningIconTransparent } from 'shared/components/icons';
@@ -16,13 +19,14 @@ import { useProposalStatus } from '../../hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
 import { DGTooltip } from '../../tooltips';
+import { Address } from 'viem';
 
 type Props = {
   id: number;
   description: string;
-  calls: any[];
+  calls: SubmitProposalCall[] | undefined;
   proposalDetails: ProposalCombinedData['proposalDetails'];
-  proposer: ProposalCombinedData['aragonProposer'];
+  proposer?: Address;
 };
 
 export const ProposalsListItem = ({
@@ -44,12 +48,14 @@ export const ProposalsListItem = ({
 
   const descriptionLines = description.split('\n');
 
-  const isUnknownContractCalled = calls.some((call) => {
-    return !Object.values(contractAddresses).some(
-      (contract) =>
-        contract[chainId]?.toLowerCase() === call.target.toLowerCase(),
-    );
-  });
+  const isUnknownContractCalled = calls
+    ? calls.some((call) => {
+        return !Object.values(contractAddresses).some(
+          (contract) =>
+            contract[chainId]?.toLowerCase() === call.target.toLowerCase(),
+        );
+      })
+    : false;
 
   return (
     <ProposalListItemWrapper>

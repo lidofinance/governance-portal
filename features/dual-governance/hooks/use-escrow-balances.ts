@@ -2,10 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
-import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
+import {
+  useReadContract,
+  useReadContractGetter,
+} from 'shared/blockchain/hooks/use-read-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { computeRageQuitEscrowsBalances } from '../utils';
 import { useState } from 'react';
+import { WstETH } from 'shared/blockchain/contracts';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
@@ -18,6 +22,7 @@ export const useEscrowBalances = () => {
   } = useDualGovernanceContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
+  const readWstEthContract = useReadContract(WstETH);
 
   const isEnabled =
     !!vetoSignallingAddress &&
@@ -64,11 +69,11 @@ export const useEscrowBalances = () => {
 
       setIsLoading(false);
 
-      // TODO: change mock value to a real one once we get into testing with real wsteth
-      const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
-      // const vetoSharesInWstEth = await wstEth.readContract('getWstETHByStETH', [
-      //   vetoSignallingBalance.stETHLockedShares,
-      // ])
+      // const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
+      const wstETHLockedShares = await readWstEthContract.readContract(
+        'getStETHByWstETH',
+        [vetoSignallingBalance.stETHLockedShares],
+      );
 
       const totalStETHLockedSharesInRageQuitEscrows =
         computedRageQuitEscrowsBalances

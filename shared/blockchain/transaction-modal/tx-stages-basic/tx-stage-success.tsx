@@ -29,7 +29,7 @@ export const TxStageSuccess = ({
 }: TxStageSuccessProps) => {
   const _title = (
     <span>
-      You {title}{' '}
+      {title}{' '}
       {amount && token ? (
         <TxAmount amount={amount} token={token} />
       ) : nftIds ? (

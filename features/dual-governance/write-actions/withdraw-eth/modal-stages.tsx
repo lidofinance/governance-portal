@@ -3,5 +3,5 @@ import { useTransactionModalStage } from 'shared/blockchain/transaction-modal/ho
 
 export const useWithdrawEthModalStages = () =>
   useTransactionModalStage(
-    getEscrowActionModalStages('withdrawing', 'have withdrawn'),
+    getEscrowActionModalStages('withdrawing', 'You have withdrawn'),
   );

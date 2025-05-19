@@ -43,7 +43,10 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
             <PreviewProposalList>
               {combinedData
                 .map((proposal) => (
-                  <PreviewProposal key={proposal.id} proposal={proposal} />
+                  <PreviewProposal
+                    key={proposal.proposalId}
+                    proposal={proposal}
+                  />
                 ))
                 .slice(0, PROPOSALS_TO_SHOW)}
               {restProposalsAmount > 0 && (

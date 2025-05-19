@@ -1,19 +1,14 @@
-import { Address, Hex, Log } from 'viem';
+import { Address } from 'viem';
+import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
+import { BigNumber } from 'ethers';
 
 type TimeStamp = number;
 
-export type SubmitProposalCall = {
-  payload: Hex;
-  target: Address;
-  value: bigint;
-};
-
-export type SubmitProposalEventArgs = {
-  metadata: string;
-  id: bigint;
-  proposer: Address;
-  timestamp: TimeStamp;
-  calls: any[];
+export type SubmitProposalCall = [string, BigNumber, string] & {
+  target: string;
+  value: BigNumber;
+  payload: string;
 };
 
 export type ProposalDetails = {
@@ -24,34 +19,13 @@ export type ProposalDetails = {
   submittedAt: TimeStamp;
 };
 
-export type ProposalDualGovernanceDetails = {
-  proposerAccount: Address;
-  proposalId: bigint;
-  metadata: string;
-};
-
-export type ProposalLog = Log & {
-  args: SubmitProposalEventArgs;
-};
-
-export type ProposalDualGovernanceLog = Log & {
-  args: ProposalDualGovernanceDetails;
-};
-
 export type ProposalCombinedData = {
-  id: number;
-  event: ProposalLog;
-  proposalDetails: ProposalDetails & { calls: SubmitProposalCall[] };
-  proposalDualGovernanceDetails?: ProposalDualGovernanceDetails;
+  proposalId: number;
   voteId?: number;
-  aragonProposer?: Address;
+  DGEvent?: DGProposalSubmittedEvent;
+  EPTEvent?: EPTProposalSubmittedEvent;
+  proposalDetails: ProposalDetails;
 };
-
-export enum ProposalExtraStatus {
-  ReadyToSchedule = 'ReadyToSchedule',
-  ReadyToExecute = 'ReadyToExecute',
-  Blocked = 'Blocked',
-}
 
 export enum ProposalStatus {
   NotExist,

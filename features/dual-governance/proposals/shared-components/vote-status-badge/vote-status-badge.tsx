@@ -56,7 +56,7 @@ export const VoteStatusBadge = ({
 
   return (
     <>
-      <FlexWrapper $alignItems="flex-start" $gap="8px">
+      <FlexWrapper $alignItems="flex-start" $gap="8px" $flexWrap="wrap">
         {showIsWinning && (
           <Badge $variant={isWinning ? 'success' : 'danger'}>
             {`Winning: ${isWinning ? 'Yes' : 'No'}`}
