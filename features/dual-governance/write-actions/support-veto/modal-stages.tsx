@@ -6,12 +6,15 @@ import {
 } from 'shared/blockchain/transaction-modal/hooks/use-transaction-modal-stage';
 import { TxStageSignOperationAmount } from 'shared/blockchain/transaction-modal/tx-stages-composed/tx-stage-amount-operation';
 
-const STAGE_APPROVE_TEXT = 'approving';
+const STAGE_APPROVE_TEXT = 'unlocking';
 
 const getTxModalStagesSupport = (
   transitStage: TransactionModalTransitStage,
 ) => ({
-  ...getEscrowActionModalStages('supporting veto')(transitStage),
+  ...getEscrowActionModalStages(
+    'supporting veto with',
+    'supported veto with',
+  )(transitStage),
 
   signApproval: (args: EscrowActionArgs) => {
     return transitStage(

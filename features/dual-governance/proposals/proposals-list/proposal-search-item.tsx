@@ -48,6 +48,7 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
         <Link href={`${PROPOSALS_PATH}/${proposal.id}`} key={proposal.id}>
           <ProposalsListItem
             id={proposal.id}
+            proposer={proposal.aragonProposer}
             description={proposal.proposalDualGovernanceDetails?.metadata || ''}
             calls={proposal.event.args.calls}
             proposalDetails={proposal.proposalDetails}

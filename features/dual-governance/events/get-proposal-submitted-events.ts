@@ -37,7 +37,7 @@ const getDGEvents = async ({
   invariant(eventAbi, 'Event ABI not found');
 
   try {
-    const contractAddress = DualGovernance.chainAddressMap[chainId];
+    const contractAddress = DualGovernance.chainAddressMap[chainId]; // GovernanceSet все адреса
     const proposerAccount = Voting.chainAddressMap[chainId];
 
     invariant(proposerAccount, 'Contract not found');

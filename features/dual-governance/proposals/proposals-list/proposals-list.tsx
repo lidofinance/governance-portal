@@ -105,6 +105,7 @@ export const ProposalsList = () => {
                     }
                     calls={dataItem.event.args.calls}
                     proposalDetails={dataItem.proposalDetails}
+                    proposer={dataItem.aragonProposer}
                   />
                 </Link>
               );

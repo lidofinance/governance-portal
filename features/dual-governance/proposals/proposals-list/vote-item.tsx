@@ -57,7 +57,7 @@ export const VoteItem = ({
   return (
     <ProposalListItemWrapper>
       <SummarySection>
-        <ProposalName isAragon id={id} />
+        <ProposalName isAragon id={id} chainId={chainId} />
         <VoteStatusWrapper>
           <VoteStatusBadge
             state={state}

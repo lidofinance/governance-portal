@@ -42,8 +42,11 @@ export const VetoSignallingAdditionalSupportInfo = ({
     return (
       <Text color="secondary">
         RageQuit <DGTooltip topic="rageQuit" /> starts on{' '}
-        {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}, unless
-        veto stETH support decreases below {nextPhaseSupportThresholdPercent}%
+        <b>
+          {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}
+        </b>
+        , unless veto stETH support decreases below{' '}
+        <b>{nextPhaseSupportThresholdPercent}%</b>
       </Text>
     );
   }
@@ -51,9 +54,14 @@ export const VetoSignallingAdditionalSupportInfo = ({
   return (
     <Text color="secondary">
       RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
-      {formatEth(amountTillRQPhaseWei, 2)} more {Token.stETH} is added by{' '}
-      {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone};
-      Otherwise, Deactivation begins
+      <b>
+        {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
+      </b>{' '}
+      is added by{' '}
+      <b>
+        {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}
+      </b>
+      ; Otherwise, Deactivation begins
     </Text>
   );
 };

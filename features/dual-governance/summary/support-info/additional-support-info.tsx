@@ -56,8 +56,11 @@ export const AdditionalSupportInfo = ({
       return (
         <Text color="secondary">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
-          RageQuit if {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is
-          added; Otherwise, Cooldown begins
+          RageQuit if{' '}
+          <b>
+            {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
+          </b>{' '}
+          is added; Otherwise, Cooldown begins
         </Text>
       );
     }
@@ -67,7 +70,7 @@ export const AdditionalSupportInfo = ({
         <Text color="secondary">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
           RageQuit unless stETH support decreases below{' '}
-          {nextPhaseSupportThresholdPercent}%; Otherwise, Cooldown begins
+          <b>{nextPhaseSupportThresholdPercent}%</b>; Otherwise, Cooldown begins
         </Text>
       );
     }
@@ -82,7 +85,10 @@ export const AdditionalSupportInfo = ({
   return (
     <Text color="secondary">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is added
+      <b>
+        {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
+      </b>{' '}
+      is added
     </Text>
   );
 };

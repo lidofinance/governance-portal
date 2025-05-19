@@ -11,7 +11,6 @@ import {
 import { Button } from 'shared/components/button';
 import { NftMultiselectItem } from '../nft-multiselect';
 import { Text } from 'shared/components/text';
-// import { useEscrowUnstethBalance } from '../hooks/use-escrow-unsteth-balance';
 import { RageQuitEscrowUnstETHRecord } from '../utils';
 
 type Props = {
@@ -30,10 +29,6 @@ export const SelectUnstEthModal = (props: Props) => {
   >({});
 
   const selectedOptionsArray = Object.keys(selectedOptions);
-
-  // const { data: unstEthItems, isLoading } = useEscrowUnstethBalance();
-
-  // console.log(unstEthItems, 'unstEthItems');
 
   const handleSelect = useCallback(
     (value: string) => () => {

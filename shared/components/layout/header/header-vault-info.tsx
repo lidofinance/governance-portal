@@ -55,11 +55,17 @@ export const HeaderVaultInfo = () => {
           placement="bottomRight"
         >
           <VaultInfoPopupTitle>
-            <Text size={28} weight={500}>
-              {data.totalLockedSharesInEscrows > 0
-                ? 'Your tokens in DG'
-                : 'You have no tokens in DG'}
-            </Text>
+            {data.totalLockedSharesInEscrows > 0 && (
+              <Text size={22} weight={500}>
+                Your tokens in DG
+              </Text>
+            )}
+            {data.totalLockedSharesInEscrows === 0n && (
+              <Text size={22} weight={500}>
+                You don’t have any assets <br /> in Dual Governance contracts
+                yet
+              </Text>
+            )}
           </VaultInfoPopupTitle>
           {data?.vetoSignallingBalance.totalLockedShares ? (
             <>

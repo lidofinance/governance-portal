@@ -7,7 +7,6 @@ export const useIsEmergencyModeActive = () => {
   const { chainId } = useLidoSDK();
 
   const governanceAddress = null;
-
   const emergencyProtectedTimelockContract = useReadContract(
     EmergencyProtectedTimelock,
   );

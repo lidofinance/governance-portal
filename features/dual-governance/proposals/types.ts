@@ -44,6 +44,7 @@ export type ProposalCombinedData = {
   proposalDetails: ProposalDetails & { calls: SubmitProposalCall[] };
   proposalDualGovernanceDetails?: ProposalDualGovernanceDetails;
   voteId?: number;
+  aragonProposer?: Address;
 };
 
 export enum ProposalExtraStatus {

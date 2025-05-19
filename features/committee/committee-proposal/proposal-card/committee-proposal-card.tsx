@@ -87,8 +87,8 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
           </Text>
           <Box marginTop={10}>
             <Text color="secondary">
-              <b>Disclaimer:</b> Description provided by the Aragon proposal
-              author; may include items not under Dual Governance
+              <b>Descriptions</b> of the Aragon proposals may include items that
+              fall outside the scope of the Dual Governance
             </Text>
           </Box>
           <Box marginTop={20}>

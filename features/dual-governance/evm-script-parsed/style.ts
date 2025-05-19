@@ -59,7 +59,7 @@ export const CallWrapper = styled.div`
   }
 `;
 
-export const CallTitle = styled.p`
+export const CallTitle = styled.span`
   font-weight: 600;
   b {
     font-weight: 800;
@@ -89,15 +89,15 @@ export const ScriptBox = styled.div`
 `;
 
 // Looks redundant, but we keep it for the future design improvements
-export const CallFunction = styled.p`
+export const CallFunction = styled.div`
   margin-top: 8px;
 `;
-export const CallData = styled.p`
+export const CallData = styled.div`
   margin-top: 8px;
 `;
-export const CallDataItem = styled.p`
+export const CallDataItem = styled.div`
   font-weight: 600;
 `;
-export const NestedCallWrapper = styled.p`
+export const NestedCallWrapper = styled.div`
   margin-top: 8px;
 `;

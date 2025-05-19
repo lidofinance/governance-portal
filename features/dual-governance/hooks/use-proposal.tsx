@@ -10,6 +10,7 @@ import {
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
+import { getAragonProposer } from 'utils/proposals/get-aragon-proposer';
 
 type UseProposalConfig = {
   id: number;
@@ -76,6 +77,14 @@ export const useProposal = ({
 
         if (voteId) {
           result.voteId = Number(voteId);
+          const aragonProposer = await getAragonProposer({
+            client: publicClient,
+            chainId,
+            voteId,
+          });
+          if (aragonProposer) {
+            result.aragonProposer = aragonProposer;
+          }
         }
 
         if (dualGovernanceEvent) {

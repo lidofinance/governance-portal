@@ -86,18 +86,30 @@ export const DeactivationAdditionalSupportInfo = ({
     return (
       <Text color="secondary">
         RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
-        {formatEth(amountTillRQPhaseWei, 2)} more {Token.stETH} is added by{' '}
-        {restartDate?.date} {restartDate?.timezone}. If not, Cooldown{' '}
-        <DGTooltip topic="cooldown" /> begins, and proposals can be scheduled
+        <b>
+          {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
+        </b>{' '}
+        is added by{' '}
+        <b>
+          {restartDate?.date} {restartDate?.timezone}
+        </b>
+        . If not, Cooldown <DGTooltip topic="cooldown" /> begins, and proposals
+        can be scheduled
       </Text>
     );
   }
 
   return (
     <Text color="secondary">
-      If {formatEth(amountTillRQPhaseWei, 2)} more {Token.stETH} added by
-      {restartDate?.date} {restartDate?.timezone} VetoSignaling{' '}
-      <DGTooltip topic="cooldown" /> restarts. If not, Cooldown{' '}
+      If{' '}
+      <b>
+        {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
+      </b>{' '}
+      added by
+      <b>
+        {restartDate?.date} {restartDate?.timezone}
+      </b>{' '}
+      VetoSignalling <DGTooltip topic="cooldown" /> restarts. If not, Cooldown{' '}
       <DGTooltip topic="cooldown" /> begins, and proposals can be scheduled
     </Text>
   );

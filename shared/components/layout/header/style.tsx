@@ -25,9 +25,9 @@ export const HeaderActionsWrapper = styled.div`
 `;
 
 export const LogoTextStyle = styled(Text).attrs({
-  strong: true,
   size: 19,
 })`
+  font-weight: 500;
   position: relative;
   color: var(--custom-inverse-color-black);
   text-transform: uppercase;
@@ -103,8 +103,11 @@ export const VaultInfoButton = styled.button`
 export const VaultInfoPopupTitle = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: ${({ theme }) => theme.spaceMap.lg}px;
+  p {
+    text-align: center;
+  }
 `;
 
 // TODO: uncomment or remove when we decide if we have dark theme

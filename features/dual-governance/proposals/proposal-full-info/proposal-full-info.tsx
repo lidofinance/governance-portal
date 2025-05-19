@@ -276,8 +276,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
             </Text>
             <Box marginTop={12}>
               <Text size={15} color="secondary">
-                Disclaimer: Description provided by the Aragon proposal author;
-                may include items not under Dual Governance
+                <b>Disclaimer:</b> Description provided by the Aragon proposal
+                author; may include items not under Dual Governance
               </Text>
             </Box>
             {proposal.proposalDualGovernanceDetails?.metadata && (

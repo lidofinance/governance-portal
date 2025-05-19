@@ -1,6 +1,8 @@
 import { TxLinkEtherscan } from 'shared/components/tx-link-etherscan';
 import { StageIconSuccess } from './icons';
 import { TransactionModalContent } from '../transaction-modal-content';
+import { Token } from '../../types';
+import { TxAmount } from '../tx-stages-parts/tx-amount';
 
 type TxStageSuccessProps = {
   txHash?: string | null;
@@ -9,6 +11,9 @@ type TxStageSuccessProps = {
   footer?: React.ReactNode;
   showEtherscan?: boolean;
   onClickEtherscan?: React.MouseEventHandler<HTMLAnchorElement>;
+  amount?: bigint | null;
+  nftIds?: string[] | object | null;
+  token?: Token | 'ETH' | null;
 };
 
 export const TxStageSuccess = ({
@@ -18,11 +23,32 @@ export const TxStageSuccess = ({
   footer,
   showEtherscan = true,
   onClickEtherscan,
+  amount,
+  nftIds,
+  token,
 }: TxStageSuccessProps) => {
+  const _title = (
+    <span>
+      You {title}{' '}
+      {amount && token ? (
+        <TxAmount amount={amount} token={token} />
+      ) : nftIds ? (
+        <span>
+          NFTs: #{' '}
+          {Array.isArray(nftIds)
+            ? nftIds.join(', ')
+            : Object.keys(nftIds).join(', ')}
+        </span>
+      ) : (
+        ''
+      )}
+    </span>
+  );
+
   return (
     <TransactionModalContent
       icon={<StageIconSuccess />}
-      title={title}
+      title={_title}
       description={description}
       footerHint={
         showEtherscan &&

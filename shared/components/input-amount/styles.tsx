@@ -8,6 +8,10 @@ export const InputStyled = styled(Input)`
     border-radius: 0 0 30px 30px;
     padding: 30px 14px 30px 20px;
 
+    &:nth-child(2) {
+      border-radius: 30px;
+    }
+
     button {
       border-radius: 60px;
       font-size: 17px;

@@ -41,7 +41,7 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
               <Text size={14} color="secondary">
                 {unlockCountdown ? (
                   <>
-                    <b>{unlockCountdown}</b> till {actionLabel}
+                    <b>{unlockCountdown}</b>
                   </>
                 ) : (
                   actionLabel

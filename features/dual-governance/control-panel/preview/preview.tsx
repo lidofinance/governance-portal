@@ -34,7 +34,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
   return (
     <ControlPanelWrapper>
       <Text size={22} weight={600}>
-        Active Proposals:
+        Active proposals:
       </Text>
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
@@ -61,20 +61,21 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       {!isEmergencyModeActive && (
         <Description>
-          Support Veto with your stETH to help block all proposals execution
-          temporarily (VetoSignaling
-          <DGTooltip topic="vetoSignalling" />) or withdraw your stETH before
-          execution (RageQuit <DGTooltip topic="rageQuit" />
-          ).
+          Support Veto with your stETH, wstETH, or withdrawal NFTs. <br />
+          If <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> is
+          triggered, execution is paused for 5–45 days, depending on support. If{' '}
+          <b>RageQuit </b>
+          <DGTooltip topic="rageQuit" /> starts, all escrowed assets are
+          withdrawn to ETH before any proposal can be executed.
         </Description>
       )}
       {isEmergencyModeActive && (
         <Box marginBottom="3rem">
           <Description>
             During Emergency Mode , you can still support the veto by depositing
-            stETH. However, the <Link href={'#'}>Emergency Committee</Link> can
-            execute even blocked proposals. If the 10% RageQuit threshold is
-            reached, stETH begins exiting the protocol
+            stETH. However, only <Link href="#">Emergency Committee</Link> can
+            execute any scheduled proposal now. If the 10% RageQuit threshold is
+            reached, stETH begins exiting the protocol.
           </Description>
         </Box>
       )}

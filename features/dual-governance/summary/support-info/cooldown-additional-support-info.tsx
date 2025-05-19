@@ -46,8 +46,8 @@ export const CooldownAdditionalSupportInfo = ({
     return (
       <Text color="secondary">
         VetoSignalling <DGTooltip topic="vetoSignalling" /> starts on{' '}
-        {cooldownEndDate?.date} {cooldownEndDate?.timezone} unless stETH support
-        decreases below {firstSealRageQuitSupport}%
+        <b>{cooldownEndDate?.date}</b> {cooldownEndDate?.timezone} unless stETH
+        support decreases below <b>{firstSealRageQuitSupport}%</b>
       </Text>
     );
   }
@@ -55,8 +55,10 @@ export const CooldownAdditionalSupportInfo = ({
   return (
     <Text color="secondary">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is added;
-      Otherwise, Normal begins on {cooldownEndDate?.date}
+      <b>
+        {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
+      </b>{' '}
+      is added; Otherwise, Normal begins on <b>{cooldownEndDate?.date}</b>
     </Text>
   );
 };

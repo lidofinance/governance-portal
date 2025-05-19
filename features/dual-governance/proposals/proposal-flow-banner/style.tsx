@@ -4,6 +4,7 @@ import { Text } from 'shared/components/text';
 
 export const FlowBannerWrapper = styled(Block)`
   margin-top: 20px;
+  background: white;
 `;
 
 export const Arrow = styled.span`

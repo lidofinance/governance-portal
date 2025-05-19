@@ -225,7 +225,7 @@ export const useProposalStatus = ({
         text: isCountdownFinished
           ? statusText.readyToExecute
           : statusText.executionScheduled,
-        variant: isCountdownFinished ? 'success' : 'warning',
+        variant: isCountdownFinished ? 'default' : 'warning',
       },
       info: isCountdownFinished ? null : visibleState ===
         VisibleGovernanceState.BlockedDeactivation ? (
@@ -255,7 +255,7 @@ export const useProposalStatus = ({
     return {
       badge: {
         text: statusText.executed,
-        variant: 'success',
+        variant: 'default',
       },
       info: null,
     };

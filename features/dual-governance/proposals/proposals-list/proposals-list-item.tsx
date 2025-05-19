@@ -22,6 +22,7 @@ type Props = {
   description: string;
   calls: any[];
   proposalDetails: ProposalCombinedData['proposalDetails'];
+  proposer: ProposalCombinedData['aragonProposer'];
 };
 
 export const ProposalsListItem = ({
@@ -29,6 +30,7 @@ export const ProposalsListItem = ({
   description,
   proposalDetails,
   calls,
+  proposer,
 }: Props) => {
   const { chainId } = useLidoSDK();
 
@@ -55,6 +57,8 @@ export const ProposalsListItem = ({
         <ProposalName
           id={id}
           isUnknownContractCalled={isUnknownContractCalled}
+          proposer={proposer}
+          chainId={chainId}
         />
         <StatusBadgeWrapper>
           {proposalStatusInfo && proposalStatusInfo.badge && (
