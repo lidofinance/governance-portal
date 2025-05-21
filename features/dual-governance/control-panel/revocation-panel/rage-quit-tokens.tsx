@@ -16,8 +16,6 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { UnstETHRecordStatus } from '../../types';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { WithdrawalQueue } from 'shared/blockchain/contracts';
 
 type RageQuitBalance = {
   rageQuitEscrowAddress: Address;
@@ -34,6 +32,7 @@ type Props = {
     selectedNftIds: string[],
     escrowAddress: Address,
   ) => Promise<boolean | undefined>;
+  withdrawalQueueContract: any;
 };
 
 const sumUpUnstETHShares = (records: RageQuitEscrowUnstETHRecord[]) =>
@@ -43,6 +42,7 @@ export const RageQuitTokens = ({
   rageQuitBalance,
   onConfirm,
   claimNFTs,
+  withdrawalQueueContract,
 }: Props) => {
   const { chainId } = useLidoSDK();
 
@@ -53,51 +53,55 @@ export const RageQuitTokens = ({
     rageQuitEscrowAddress,
   } = rageQuitBalance;
 
-  const withdrawalQueueContract = useReadContract(WithdrawalQueue);
-
   const [resolvedRecords, setResolvedRecords] = useState<
     RageQuitEscrowUnstETHRecord[]
   >([]);
 
-  const _unstETHRecords = useMemo(() => {
-    return Promise.all(
-      unstETHRecords.map(async (record) => {
-        try {
-          const nftStatus = await withdrawalQueueContract.readContract(
-            'getWithdrawalStatus',
-            [[BigInt(record.id)]],
-          );
-
-          let status: UnstETHRecordStatus;
-          const statusObj = nftStatus[0];
-          if (statusObj.isClaimed) {
-            status = UnstETHRecordStatus.Claimed;
-          } else if (statusObj.isFinalized) {
-            status = UnstETHRecordStatus.Finalized;
-          } else {
-            status = UnstETHRecordStatus.Locked;
-          }
-
-          return {
-            ...record,
-            status,
-          };
-        } catch (error) {
-          console.error(
-            `Failed to fetch status for NFT ID ${record.id}:`,
-            error,
-          );
-          return record;
-        }
-      }),
-    );
-  }, [unstETHRecords, withdrawalQueueContract]);
-
   useEffect(() => {
-    void _unstETHRecords.then((records) => {
-      setResolvedRecords(records);
-    });
-  }, [_unstETHRecords]);
+    if (unstETHRecords.length === 0) {
+      setResolvedRecords([]);
+      return;
+    }
+    let cancelled = false;
+    const fetchRecords = async () => {
+      const records = await Promise.all(
+        unstETHRecords.map(async (record) => {
+          try {
+            const nftStatus = await withdrawalQueueContract.readContract(
+              'getWithdrawalStatus',
+              [[BigInt(record.id)]],
+            );
+
+            let status: UnstETHRecordStatus;
+            const statusObj = nftStatus[0];
+            if (statusObj.isClaimed) {
+              status = UnstETHRecordStatus.Claimed;
+            } else if (statusObj.isFinalized) {
+              status = UnstETHRecordStatus.Finalized;
+            } else {
+              status = UnstETHRecordStatus.Locked;
+            }
+
+            return {
+              ...record,
+              status,
+            };
+          } catch (error) {
+            console.error(
+              `Failed to fetch status for NFT ID ${record.id}:`,
+              error,
+            );
+            return record;
+          }
+        }),
+      );
+      if (!cancelled) setResolvedRecords(records);
+    };
+    void fetchRecords();
+    return () => {
+      cancelled = true;
+    };
+  }, [unstETHRecords, withdrawalQueueContract]);
 
   const claimedUnstETHRecords = resolvedRecords.filter(
     (record) => record.status === UnstETHRecordStatus.Claimed,

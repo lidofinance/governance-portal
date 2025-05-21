@@ -14,6 +14,8 @@ import { Button } from 'shared/components/button';
 import { FlexWrapper } from 'shared/styled-components';
 import { Box } from 'shared/components/box';
 import { VisibleGovernanceState } from '../../types';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { WithdrawalQueue } from 'shared/blockchain/contracts';
 
 export const RevocationPanel = () => {
   const {
@@ -28,6 +30,7 @@ export const RevocationPanel = () => {
   } = useEscrowBalances();
 
   const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
+
   const claimNFTs = useClaimCustomNftAction();
   const { openModal: openCustomNftModal } = useClaimCustomNftModal();
 
@@ -37,6 +40,8 @@ export const RevocationPanel = () => {
       refetchEscrowBalances(),
     ]);
   }, [refetchDualGovernanceState, refetchEscrowBalances]);
+
+  const withdrawalQueueContract = useReadContract(WithdrawalQueue);
 
   if (isLoading) {
     return <Loader />;
@@ -129,6 +134,7 @@ export const RevocationPanel = () => {
           rageQuitBalance={balanceRecord}
           onConfirm={updateDualGovernanceState}
           claimNFTs={claimNFTs}
+          withdrawalQueueContract={withdrawalQueueContract}
         />
       ))}
     </>
