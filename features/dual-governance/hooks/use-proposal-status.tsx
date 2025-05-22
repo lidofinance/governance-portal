@@ -225,7 +225,7 @@ export const useProposalStatus = ({
         text: isCountdownFinished
           ? statusText.readyToExecute
           : statusText.executionScheduled,
-        variant: isCountdownFinished ? 'default' : 'warning',
+        variant: 'default',
       },
       info: isCountdownFinished ? null : visibleState ===
         VisibleGovernanceState.BlockedDeactivation ? (

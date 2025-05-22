@@ -13,6 +13,7 @@ import { ActionArgs } from '../types';
 import { useSupportVetoTxSender } from './tx-sender';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
+import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
 
 type Args = {
   approveData: UseApproveResponse;
@@ -33,6 +34,7 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
     visibleState === VisibleGovernanceState.BlockedRageQuit;
 
   const { confirm } = useConfirmModal();
+  const { refetchAll } = useRefetchEscrowData();
 
   return useCallback(
     async (args: EscrowActionArgs) => {
@@ -107,6 +109,9 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
         await waitForTx(txHash);
 
         txModalStages.success(actionArgs, txHash);
+
+        await refetchAll();
+
         return true;
       } catch (error) {
         console.warn(error);
@@ -125,6 +130,7 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
       sendSupportVetoTx,
       isMultisig,
       waitForTx,
+      refetchAll,
       approve,
       onRetry,
     ],

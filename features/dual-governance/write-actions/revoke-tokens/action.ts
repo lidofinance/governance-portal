@@ -10,6 +10,7 @@ import { useRevokeTokensModalStages } from './modal-stages';
 import { useRevokeTokensTxSender } from './tx-sender';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
+import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
 
 export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
@@ -18,6 +19,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const sendRevokeTx = useRevokeTokensTxSender();
   const waitForTx = useTxConfirmation();
   const { isAssetManagementLocked } = useDualGovernanceContext();
+  const { refetchAll } = useRefetchEscrowData();
 
   return useCallback(
     async (args: EscrowActionArgs) => {
@@ -46,6 +48,8 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         txModalStages.success(args, txHash);
 
+        await refetchAll();
+
         await onConfirm();
 
         return true;
@@ -62,6 +66,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
       sendRevokeTx,
       isMultisig,
       waitForTx,
+      refetchAll,
       onConfirm,
       onRetry,
     ],

@@ -81,6 +81,7 @@ export const ProposalsList = () => {
                 <Link
                   href={`${config.voteOrigin}/vote/${dataItem.voteId}`}
                   key={dataItem.voteId}
+                  target="_blank"
                 >
                   <VoteItem
                     proposalId={dataItem.proposalId}

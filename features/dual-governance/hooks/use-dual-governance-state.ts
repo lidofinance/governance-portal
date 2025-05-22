@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { DualGovernance, StETH } from 'shared/blockchain/contracts';
 
@@ -59,10 +59,52 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
   const readEscrowGetter = useReadContractGetter(escrowAbi);
 
   const isEnabled = !!dualGovernanceConfig && !!vetoSignallingAddress;
+  const queryClient = useQueryClient();
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'StETHSharesLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+    },
+  });
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'StETHSharesUnlocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+    },
+  });
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'UnstETHLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+    },
+  });
+
+  // Watch for UnstETH being unlocked (when user revokes veto support)
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'UnstETHUnlocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+    },
+  });
 
   return useQuery<DualGovernanceState | undefined>({
     queryKey: ['dg-current-state', chainId],
-    staleTime: Infinity,
+    staleTime: 5000, // 5 seconds stale time to match useEscrowBalances
     enabled: isEnabled,
 
     queryFn: async () => {

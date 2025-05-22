@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useAccount } from 'wagmi';
+import { useAccount, useWatchContractEvent } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
 import {
   useReadContract,
@@ -13,7 +13,7 @@ import { WstETH } from 'shared/blockchain/contracts';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadingState, setLoadingState] = useState(true);
   const { chainId } = useLidoSDK();
   const {
     vetoSignallingAddress,
@@ -28,15 +28,39 @@ export const useEscrowBalances = () => {
     !!vetoSignallingAddress &&
     !!currentRageQuitEscrowAddress &&
     !!accountAddress;
+
+  const queryClient = useQueryClient();
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'StETHSharesLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+    },
+  });
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'UnstETHLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+    },
+  });
+
   return useQuery({
     queryKey: [
       'escrow-balances',
       chainId,
+      accountAddress,
       vetoSignallingAddress,
       currentRageQuitEscrowAddress,
-      accountAddress,
+      historicalEscrowAddresses,
     ],
-    staleTime: Infinity,
+    staleTime: 5000, // 5 seconds stale time
     enabled: isEnabled,
     queryFn: async () => {
       if (!isEnabled) {
@@ -67,7 +91,7 @@ export const useEscrowBalances = () => {
           accountAddress,
         });
 
-      setIsLoading(false);
+      setLoadingState(false);
 
       // const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
       const wstETHLockedShares = await readWstEthContract.readContract(
@@ -112,7 +136,7 @@ export const useEscrowBalances = () => {
         totalLockedSharesInEscrows:
           vetoSignallingSum + totalLockedSharesInRageQuitEscrows,
         assetUnlockTimestamp,
-        isLoading,
+        isLoading: loadingState,
       };
     },
   });

@@ -224,6 +224,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
                 Submitted from{' '}
                 <ProposalLink
                   href={`${config.voteOrigin}/vote/${proposal.voteId}`}
+                  target="_blank"
                 >
                   Aragon {proposal.voteId}
                 </ProposalLink>{' '}
