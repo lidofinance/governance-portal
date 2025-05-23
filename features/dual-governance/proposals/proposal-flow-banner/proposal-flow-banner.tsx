@@ -20,10 +20,15 @@ export const ProposalFlowBanner = () => {
       <Text size={22} weight={600}>
         Proposal Flow in Dual Governance
       </Text>
-      <Text color="secondary">
-        Minimum time to execution is 72h — but it can be longer if a dynamic
-        timelock is triggered
-      </Text>
+      {delays && (
+        <Text color="secondary">
+          Minimum time to execution is{' '}
+          {delays.afterScheduleDelay + delays.afterSubmitDelay < 3600
+            ? `${Math.round((delays.afterScheduleDelay + delays.afterSubmitDelay) / 60)} minutes`
+            : `${Math.round((delays.afterScheduleDelay + delays.afterSubmitDelay) / 3600)} hours`}{' '}
+          — but it can be longer if a dynamic timelock is triggered
+        </Text>
+      )}
       <ProposalsWrapper>
         <FlowItem>
           <FlexWrapper $alignItems="center">

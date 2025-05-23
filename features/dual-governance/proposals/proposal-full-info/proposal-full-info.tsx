@@ -36,6 +36,7 @@ import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
+import { DGTooltip } from '../../tooltips';
 
 type Props = {
   id: number;
@@ -210,7 +211,10 @@ export const ProposalFullInfo = ({ id }: Props) => {
         </ArrowIconWrapper>
         {proposalStatusInfo && proposalStatusInfo.badge && (
           <Badge $variant={proposalStatusInfo.badge.variant}>
-            {proposalStatusInfo.badge.text}
+            {proposalStatusInfo.badge.text}{' '}
+            {proposalStatusInfo.badge.text === 'Ready to execute' && (
+              <DGTooltip topic="readyToExecute" />
+            )}
           </Badge>
         )}
         {proposalStatusInfo?.info && proposalStatusInfo.info}

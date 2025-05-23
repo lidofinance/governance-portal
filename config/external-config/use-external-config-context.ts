@@ -3,7 +3,7 @@ import useSWR from 'swr';
 
 import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { getConfig } from '../get-config';
-import { getBackwardCompatibleConfig, isManifestEntryValid, useFallbackManifestEntry } from './utils';
+import { getBackwardCompatibleConfig, useFallbackManifestEntry } from './utils';
 
 import type { ExternalConfig, ManifestEntry } from './types';
 
@@ -26,25 +26,22 @@ export const useExternalConfigContext = (
   const swr = useSWR<ManifestEntry>(
     ['swr:external-config', defaultChain],
     async () => {
-      // const result = await standardFetcher<Record<string, any>>(
-      //   IPFS_MANIFEST_URL,
-      //   {
-      //     headers: { Accept: 'application/json' },
-      //   },
-      // );
-
-      // TODO: figure out...something
-      const result: any = {};
-      const entry = result[defaultChain.toString()];
-      if (isManifestEntryValid(entry)) return entry;
-      throw new Error(
-        '[useExternalConfigContext] received invalid manifest',
-        result,
-      );
+      try {
+        return fallbackData;
+      } catch (error) {
+        console.warn(
+          '[useExternalConfigContext] Error fetching manifest:',
+          error,
+        );
+        return fallbackData;
+      }
     },
     {
       ...STRATEGY_LAZY,
       onError: onFetchError,
+      fallbackData,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     },
   );
 
