@@ -18,7 +18,10 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
   prefetchedManifest,
 }) => (
   <ConfigProvider prefetchedManifest={prefetchedManifest}>
-    <CookieThemeProvider initialThemeName={ThemeName.light}>
+    <CookieThemeProvider
+      initialThemeName={ThemeName.light}
+      overrideThemeName={ThemeName.light}
+    >
       <Web3Provider>
         <LidoSDKProvider>
           <DualGovernanceStateProvider>

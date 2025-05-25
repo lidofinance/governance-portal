@@ -2,6 +2,8 @@ import { SubmitButtonHookForm } from 'shared/hook-form/submit-button-hook-form';
 import { useSupportFormDataContext } from './support-form-context';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
+import { useFormContext } from 'react-hook-form';
+import { NftMultiselectValuesMap } from '../../nft-multiselect';
 
 export const SubmitButtonSupport = () => {
   const {
@@ -9,6 +11,16 @@ export const SubmitButtonSupport = () => {
     networkData,
     selectedToken,
   } = useSupportFormDataContext();
+  const { watch } = useFormContext();
+
+  const selectedNftIds: NftMultiselectValuesMap = watch('selectedNftIds');
+
+  const isNoNFTsSelected = useMemo(() => {
+    if (selectedToken === Token.unstETH && selectedNftIds) {
+      return Object.keys(selectedNftIds).length === 0;
+    }
+    return false;
+  }, [selectedToken, selectedNftIds]);
 
   const isZeroBalance = useMemo(() => {
     switch (selectedToken) {
@@ -36,7 +48,9 @@ export const SubmitButtonSupport = () => {
   return (
     <SubmitButtonHookForm
       isLocked={needsApprove}
-      disabled={isZeroBalance || networkData.isAssetManagementLocked}
+      disabled={
+        isZeroBalance || networkData.isAssetManagementLocked || isNoNFTsSelected
+      }
       errorField="amount"
       data-testid="supportBtn"
     >

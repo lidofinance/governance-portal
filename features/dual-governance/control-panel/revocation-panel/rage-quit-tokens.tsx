@@ -58,6 +58,10 @@ export const RageQuitTokens = ({
   const [resolvedRecords, setResolvedRecords] = useState<
     RageQuitEscrowUnstETHRecord[]
   >([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const refreshNftStatus = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     if (unstETHRecords.length === 0) {
@@ -103,7 +107,7 @@ export const RageQuitTokens = ({
     return () => {
       cancelled = true;
     };
-  }, [unstETHRecords, withdrawalQueueContract]);
+  }, [unstETHRecords, withdrawalQueueContract, refreshTrigger]);
 
   const claimedUnstETHRecords = resolvedRecords.filter(
     (record) => record.status === UnstETHRecordStatus.Claimed,
@@ -183,13 +187,25 @@ export const RageQuitTokens = ({
       openModal({
         onConfirm: async (selectedNftIds) => {
           invariant(selectedNftIds?.length, 'ids must be presented');
-          await claimNFTs(selectedNftIds, rageQuitEscrowAddress);
+          const success = await claimNFTs(
+            selectedNftIds,
+            rageQuitEscrowAddress,
+          );
+          if (success) {
+            refreshNftStatus();
+          }
         },
         actionLabel: 'Claim',
         unstETHRecords: [...claimableUnstETHRecords],
       });
     },
-    [claimNFTs, claimableUnstETHRecords, openModal, rageQuitEscrowAddress],
+    [
+      claimNFTs,
+      claimableUnstETHRecords,
+      openModal,
+      rageQuitEscrowAddress,
+      refreshNftStatus,
+    ],
   );
 
   const isWithdrawalLocked = useMemo(() => {
@@ -221,7 +237,11 @@ export const RageQuitTokens = ({
       <RevocableTokensList>
         {totalStETHLockedShares && (
           <RevocableTokenItem
-            token={Token.stETH}
+            token={
+              rageQuitDetails?.isRageQuitExtensionPeriodStarted
+                ? 'ETH'
+                : Token.stETH
+            }
             amount={totalStETHLockedShares}
             isLocked={isWithdrawalLocked}
             actionLabel={tokenActionLabel}
