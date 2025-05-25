@@ -19,6 +19,7 @@ type Props = {
     selectedNftIds: string[],
     escrowAddress: Address,
   ) => Promise<boolean | undefined>;
+  historicalEscrowAddresses?: Address[] | null;
 } & ModalProps;
 
 type CTAProps = {
@@ -26,9 +27,16 @@ type CTAProps = {
   nftId: string;
   nftData: NftWithdrawalRequestReturnType | null;
   isLoading: boolean;
+  historicalEscrowAddresses?: Address[] | null;
 };
 
-const CTA = ({ onClick, nftId, nftData, isLoading }: CTAProps) => {
+const CTA = ({
+  onClick,
+  nftId,
+  nftData,
+  isLoading,
+  historicalEscrowAddresses,
+}: CTAProps) => {
   if (!nftId) {
     return (
       <Button loading={isLoading} disabled>
@@ -67,6 +75,22 @@ const CTA = ({ onClick, nftId, nftData, isLoading }: CTAProps) => {
     nftData.isFinalized &&
     nftData.amountOfStETH !== 0n
   ) {
+    // Check if the NFT owner is a RageQuit escrow address
+    const isOwnerRageQuitEscrow =
+      historicalEscrowAddresses &&
+      historicalEscrowAddresses.some(
+        (escrowAddress) =>
+          escrowAddress.toLowerCase() === nftData.owner.toLowerCase(),
+      );
+
+    if (!isOwnerRageQuitEscrow) {
+      return (
+        <Button loading={isLoading} disabled>
+          NFT owner is not a RageQuit escrow
+        </Button>
+      );
+    }
+
     return (
       <Button
         onClick={onClick}
@@ -78,7 +102,11 @@ const CTA = ({ onClick, nftId, nftData, isLoading }: CTAProps) => {
   return null;
 };
 
-export const ClaimCustomNftModal = ({ claimNFTs, ...modalProps }: Props) => {
+export const ClaimCustomNftModal = ({
+  claimNFTs,
+  historicalEscrowAddresses,
+  ...modalProps
+}: Props) => {
   const withdrawalQueueContract = useReadContract(WithdrawalQueue);
 
   const [nftId, setNftId] = useState('');
@@ -169,6 +197,7 @@ export const ClaimCustomNftModal = ({ claimNFTs, ...modalProps }: Props) => {
           onClick={handleClaim}
           nftId={nftId}
           nftData={nft}
+          historicalEscrowAddresses={historicalEscrowAddresses}
         />
         {/*<Button onClick={closeModal}>Close</Button>*/}
         <Button variant="outlined">Close</Button>

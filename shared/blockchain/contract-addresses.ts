@@ -252,7 +252,7 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 };
 
 export const StETH: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // MOCK // TODO: add real one
+  [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
   [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
   [CHAINS.Hoodi]: '0x7853038c89a91752de79094db32fede15b5c6a4b', // MOCK
   // [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a', // Actual
@@ -266,7 +266,7 @@ export const WstETH: ChainAddressMap = {
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000', // TODO: add real one
+  [CHAINS.Mainnet]: '0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1',
   [CHAINS.Holesky]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a',
   [CHAINS.Hoodi]: '0x7cc545e36c7571782922b075c2976e938a0cda05',
 };

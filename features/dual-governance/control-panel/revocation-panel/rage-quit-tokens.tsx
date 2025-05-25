@@ -16,6 +16,7 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { UnstETHRecordStatus } from '../../types';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type RageQuitBalance = {
   rageQuitEscrowAddress: Address;
@@ -44,6 +45,7 @@ export const RageQuitTokens = ({
   claimNFTs,
   withdrawalQueueContract,
 }: Props) => {
+  const isSupportedChain = useIsSupportedChain();
   const { chainId } = useLidoSDK();
 
   const {
@@ -193,9 +195,14 @@ export const RageQuitTokens = ({
   const isWithdrawalLocked = useMemo(() => {
     return (
       typeof rageQuitDetails?.withdrawalsUnlockTimestamp !== 'number' ||
-      timeRemaining > 0
+      timeRemaining > 0 ||
+      !isSupportedChain
     );
-  }, [rageQuitDetails?.withdrawalsUnlockTimestamp, timeRemaining]);
+  }, [
+    isSupportedChain,
+    rageQuitDetails?.withdrawalsUnlockTimestamp,
+    timeRemaining,
+  ]);
 
   if (!totalLockedShares || isRageQuitDataLoading) {
     return null;

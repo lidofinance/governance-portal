@@ -137,7 +137,7 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
 
       const contractState = detailedState.persistedState;
 
-      const nextPhaseThreshold =
+      const nextPhaseThreshold: bigint =
         contractState === GovernanceState.VetoSignalling ||
         contractState === GovernanceState.VetoSignallingDeactivation
           ? secondSealRageQuitSupport

@@ -36,7 +36,7 @@ export const useUnstEthBalance = () => {
 
       let requestsTotalStEthAmount = 0n;
 
-      withdrawalRequests.forEach((request, id) => {
+      withdrawalRequests.forEach((request: any, id: number) => {
         const { isClaimed, isFinalized, owner, amountOfStETH } = request;
         if (owner === address && !isClaimed && !isFinalized) {
           eligibleRequests[(id + 1).toString()] = amountOfStETH;

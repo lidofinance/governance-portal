@@ -37,6 +37,7 @@ import { getProposalExecutedEvent } from 'features/dual-governance/events/getPro
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
 import { DGTooltip } from '../../tooltips';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type Props = {
   id: number;
@@ -46,6 +47,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
 
   const { isConnected } = useAccount();
+  const isSupportedChain = useIsSupportedChain();
 
   const { chainId } = useLidoSDK();
 
@@ -282,6 +284,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
               size="md"
               onClick={handleSchedule}
               loading={isScheduleLoading}
+              disabled={!isSupportedChain}
             >
               Schedule
             </Button>
@@ -298,6 +301,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
               size="md"
               onClick={handleExecute}
               loading={isExecuteLoading}
+              disabled={!isSupportedChain}
             >
               Execute
             </Button>

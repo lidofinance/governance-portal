@@ -1,9 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { usePublicClient } from 'wagmi';
+import { usePublicClient, useChainId, useAccount } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
@@ -14,23 +15,30 @@ export type ProposalsQueryResult = {
 };
 
 export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
-  const { chainId } = useLidoSDK();
+  const { chainId: sdkChainId } = useLidoSDK();
+  const chainId = useChainId();
+  const { isConnected } = useAccount();
+  const isSupportedChain = useIsSupportedChain();
   const publicClient = usePublicClient();
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
 
+  const _enabled =
+    isSupportedChain && (isConnected ? chainId === sdkChainId : true);
+
   const { data: proposalsCount } = useQuery<bigint>({
     queryKey: ['proposalsCount', chainId],
     staleTime: Infinity,
+    enabled: _enabled,
     queryFn: async () => {
       try {
-        return await emergencyProtectedTimelock.readContract(
-          'getProposalsCount',
-        );
+        const result =
+          await emergencyProtectedTimelock.readContract('getProposalsCount');
+        return result === null ? 0n : result;
       } catch (error) {
-        console.error('Failed to fetch proposals count:', error);
-        throw new Error('Failed to fetch proposals count');
+        console.debug('Proposals count check skipped:', error);
+        return 0n;
       }
     },
   });
@@ -41,8 +49,9 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
           'getProposals',
           emergencyProtectedTimelock.address,
           proposalsCount.toString(),
+          chainId,
         ]
-      : ['getProposals', emergencyProtectedTimelock.address],
+      : ['getProposals', emergencyProtectedTimelock.address, chainId],
     queryFn: async (): Promise<ProposalsQueryResult> => {
       if (!publicClient || proposalsCount === undefined) {
         return { proposalsCount: 0n, proposals: [] };
@@ -100,6 +109,6 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
       }
     },
     refetchOnWindowFocus: true,
-    enabled: !!publicClient && proposalsCount !== undefined,
+    enabled: !!publicClient && proposalsCount !== undefined && _enabled,
   });
 };

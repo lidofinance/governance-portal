@@ -1,4 +1,11 @@
-import { FC, PropsWithChildren, useEffect, useMemo, useRef } from 'react';
+import {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, createConfig, useConnections } from 'wagmi';
 import * as wagmiChains from 'wagmi/chains';
@@ -97,6 +104,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
 
   const [activeConnection] = useConnections({ config: wagmiConfig });
   const previousChainIdRef = useRef<number | null>(null);
+  const [isNetworkSwitching, setIsNetworkSwitching] = useState(false);
 
   useEffect(() => {
     void onActiveConnection(activeConnection ?? null);
@@ -106,14 +114,20 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
       previousChainIdRef.current !== null &&
       previousChainIdRef.current !== activeConnection.chainId
     ) {
+      setIsNetworkSwitching(true);
+
       clearStorageOnNetworkSwitch();
-      window.location.reload();
+
+      setTimeout(() => {
+        queryClient.clear();
+        window.location.reload();
+      }, 100);
     }
 
-    if (activeConnection?.chainId) {
+    if (activeConnection?.chainId && !isNetworkSwitching) {
       previousChainIdRef.current = activeConnection.chainId;
     }
-  }, [activeConnection, onActiveConnection]);
+  }, [activeConnection, onActiveConnection, isNetworkSwitching]);
 
   return (
     // default wagmi autoConnect, MUST be false in our case, because we use custom autoConnect from Reef Knot
