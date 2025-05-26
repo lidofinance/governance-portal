@@ -276,7 +276,9 @@ export const RageQuitTokens = ({
             actionLabel={
               timeRemaining > 0
                 ? `${assetsLockCountdown} till withdrawal`
-                : 'Withdraw'
+                : isWithdrawalLocked
+                  ? 'In withdrawal queue'
+                  : 'Withdraw'
             }
             onClick={handleWithdrawUnstETH('Withdrawal NFT')}
           />
