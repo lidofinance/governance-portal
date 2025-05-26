@@ -60,20 +60,12 @@ export const AdditionalSupportInfo = ({
   }
 
   if (visibleState === VisibleGovernanceState.BlockedRageQuit) {
-    if (amountTillVSPhaseWei) {
-      return (
-        <Text color="secondary">
-          VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
-          RageQuit if{' '}
-          <b>
-            {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
-          </b>{' '}
-          is added; Otherwise, Cooldown begins
-        </Text>
-      );
-    }
+    // If amountTillNextPhasePercent is negative, it means we've exceeded the threshold
+    // and need to decrease support to go back
+    const isExceedingThreshold =
+      amountTillNextPhasePercent && amountTillNextPhasePercent < 0;
 
-    if (amountTillNextPhasePercent && amountTillNextPhasePercent <= 0) {
+    if (isExceedingThreshold) {
       return (
         <Text color="secondary">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
@@ -84,6 +76,18 @@ export const AdditionalSupportInfo = ({
               : `${firstSealRageQuitSupport}%`}
           </b>
           ; Otherwise, Cooldown begins
+        </Text>
+      );
+    } else if (amountTillVSPhaseWei) {
+      // If we need to add more support
+      return (
+        <Text color="secondary">
+          VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
+          RageQuit if{' '}
+          <b>
+            {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
+          </b>{' '}
+          is added; Otherwise, Cooldown begins
         </Text>
       );
     }

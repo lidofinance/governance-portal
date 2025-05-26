@@ -18,6 +18,7 @@ import { Address } from 'viem';
 import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 import { useIsEmergencyModeActive } from './useIsEmergencyModeActive';
+import { useDynamicDualGovernance } from './use-dynamic-dual-governance';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;
 const WATCH_EVENT_POLLING_INTERVAL = 60000;
@@ -30,8 +31,14 @@ export const useActivateNextStateEventWatcher = ({
   chainId,
   refetchFn,
 }: UseEventWatcherConfig<DualGovernanceState>) => {
+  // Get the dynamic DualGovernance address
+  const { currentDualGovernanceAddress } = useDynamicDualGovernance();
+
+  // Use the dynamic address for watching events if available
   useWatchContractEvent({
-    address: DualGovernance.chainAddressMap[chainId] as Address,
+    address:
+      currentDualGovernanceAddress ||
+      (DualGovernance.chainAddressMap[chainId] as Address),
     abi: DualGovernance.abi,
     eventName: 'DualGovernanceStateChanged',
     poll: true,
@@ -54,7 +61,8 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
-  const dualGovernance = useReadContract(DualGovernance);
+  // Use the dynamic DualGovernance contract address
+  const { readDynamicContract } = useDynamicDualGovernance();
   const stEth = useReadContract(StETH);
   const readEscrowGetter = useReadContractGetter(escrowAbi);
 
@@ -129,8 +137,13 @@ export const useDualGovernanceState = ({ vetoSignallingAddress }: Args) => {
       const totalStEthInEscrow =
         pooledEthByShares + lockedAssets.totalUnstETHFinalizedETH;
 
-      const detailedState =
-        await dualGovernance.readContract('getStateDetails');
+      // Use the dynamic DualGovernance contract
+      const detailedState = await readDynamicContract('getStateDetails');
+      if (!detailedState) {
+        throw new Error(
+          'Failed to get state details from DualGovernance contract',
+        );
+      }
 
       const { firstSealRageQuitSupport, secondSealRageQuitSupport } =
         dualGovernanceConfig;

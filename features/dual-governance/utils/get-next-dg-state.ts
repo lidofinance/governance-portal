@@ -38,7 +38,9 @@ export const getNextGovernanceState = ({
   }
 
   if (currentState === GovernanceState.RageQuit) {
-    if (vetoSignallingThresholdPercent > 100) {
+    // If we've reached the VetoSignalling threshold, the next state is VetoSignalling
+    // Otherwise, the next state is VetoCooldown
+    if (vetoSignallingThresholdPercent >= 100) {
       return GovernanceState.VetoSignalling;
     } else {
       return GovernanceState.VetoCooldown;

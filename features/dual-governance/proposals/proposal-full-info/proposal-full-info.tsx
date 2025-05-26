@@ -17,10 +17,7 @@ import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { Button } from 'shared/components/button';
-import {
-  DualGovernance,
-  EmergencyProtectedTimelock,
-} from 'shared/blockchain/contracts';
+import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useScheduleProposalAction } from 'features/dual-governance/write-actions/schedule-proposal';
 import { useExecuteProposalAction } from 'features/dual-governance/write-actions/execute-proposal';
@@ -38,6 +35,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useDynamicDualGovernance } from '../../hooks/use-dynamic-dual-governance';
 
 type Props = {
   id: number;
@@ -71,7 +69,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
     scheduledAt: proposal?.proposalDetails.scheduledAt,
   });
 
-  const dualGovernance = useReadContract(DualGovernance);
+  // Use the dynamic DualGovernance contract address
+  const { readDynamicContract } = useDynamicDualGovernance();
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
@@ -139,23 +138,30 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   useEffect(() => {
     const fetchActions = async () => {
-      invariant(dualGovernance, 'Contract not found');
       invariant(emergencyProtectedTimelock, 'Contract not found');
       invariant(id, 'ID must be provided');
 
       try {
-        const [canSchedule, canExecute] = await Promise.all([
-          dualGovernance.readContract('canScheduleProposal', [BigInt(id)]),
-          emergencyProtectedTimelock.readContract('canExecute', [BigInt(id)]),
+        // Use the dynamic DualGovernance contract for canScheduleProposal
+        const canSchedule = await readDynamicContract('canScheduleProposal', [
+          BigInt(id),
         ]);
-        setShowScheduleButton(canSchedule);
-        setShowExecuteButton(canExecute);
+
+        // Use the EmergencyProtectedTimelock contract for canExecute
+        const canExecute = await emergencyProtectedTimelock.readContract(
+          'canExecute',
+          [BigInt(id)],
+        );
+
+        setShowScheduleButton(!!canSchedule);
+        setShowExecuteButton(!!canExecute);
       } catch (e) {
         console.error('Failed to fetch proposal actions', e);
       }
     };
+
     void fetchActions();
-  }, [dualGovernance, emergencyProtectedTimelock, id, proposal]);
+  }, [readDynamicContract, emergencyProtectedTimelock, id, proposal]);
 
   const handleSchedule = async () => {
     setIsScheduleLoading(true);
