@@ -7,6 +7,7 @@ import { useDualGovernanceContext } from 'providers/dual-governance';
 import { CooldownAdditionalSupportInfo } from './cooldown-additional-support-info';
 import { DGTooltip } from '../../tooltips';
 import { formatEth } from 'shared/blockchain/utils';
+import { useThresholdValue } from 'features/dual-governance/hooks';
 
 type Props = {
   amountTillVSPhaseWei: bigint;
@@ -21,7 +22,14 @@ export const AdditionalSupportInfo = ({
     visibleState,
     amountTillNextPhasePercent,
     nextPhaseSupportThresholdPercent,
+    firstSealRageQuitSupport,
+    stEthTotalSupply,
   } = useDualGovernanceContext();
+
+  const firstSealThresholdWei = useThresholdValue(
+    firstSealRageQuitSupport,
+    stEthTotalSupply,
+  );
 
   if (visibleState === VisibleGovernanceState.Loading) {
     return null;
@@ -70,7 +78,12 @@ export const AdditionalSupportInfo = ({
         <Text color="secondary">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
           RageQuit unless stETH support decreases below{' '}
-          <b>{nextPhaseSupportThresholdPercent}%</b>; Otherwise, Cooldown begins
+          <b>
+            {firstSealThresholdWei
+              ? `${formatEth(firstSealThresholdWei, 2)} ${Token.stETH}`
+              : `${firstSealRageQuitSupport}%`}
+          </b>
+          ; Otherwise, Cooldown begins
         </Text>
       );
     }

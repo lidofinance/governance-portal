@@ -26,7 +26,15 @@ export const SelectUnstEthModal = (props: Props) => {
   const { actionLabel, unstETHRecords, onConfirm, ...modalProps } = props;
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, true | undefined>
-  >({});
+  >(() => {
+    return unstETHRecords.reduce<Record<string, true | undefined>>(
+      (acc, item) => {
+        acc[String(item.id)] = true;
+        return acc;
+      },
+      {},
+    );
+  });
 
   const selectedOptionsArray = Object.keys(selectedOptions);
 

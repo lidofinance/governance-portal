@@ -10,17 +10,20 @@ import { VetoSupportForm } from './veto-support-form';
 import { RevocationPanel } from './revocation-panel';
 import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
-import { GovernanceState } from '../types';
+import { VisibleGovernanceState } from '../types';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 
 export const DualGovernanceControlPanel = () => {
-  const { detailedState } = useDualGovernanceContext();
+  const { visibleState } = useDualGovernanceContext();
+  const [activeTab, setActiveTab] = useState('support');
 
-  const [activeTab, setActiveTab] = useState(
-    detailedState?.persistedState === GovernanceState.RageQuit
-      ? 'revoke'
-      : 'support',
-  );
+  useEffect(() => {
+    if (visibleState === VisibleGovernanceState.BlockedRageQuit) {
+      setActiveTab('revoke');
+    } else if (visibleState !== VisibleGovernanceState.Loading) {
+      setActiveTab('support');
+    }
+  }, [visibleState]);
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
   const { data, isLoading } = useEscrowBalances();

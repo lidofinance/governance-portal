@@ -36,7 +36,7 @@ export const defaultChain = parseInt(process.env.DEFAULT_CHAIN || '560048', 10);
 /** @type number[] */
 export const supportedChains = process.env.SUPPORTED_CHAINS
   ? process.env.SUPPORTED_CHAINS.split(',').map((chain) => parseInt(chain, 10))
-  : [1, 560048];
+  : [560048];
 
 /** @type string[] */
 export const prefillUnsafeElRpcUrls1 =

@@ -2,8 +2,7 @@ import { InfoTooltip } from 'shared/components/info-tooltip';
 import { StyledContent } from './style';
 
 export const tooltipTitle = {
-  vetoSupport: () =>
-    `Amount of stETH currently signaling to pause execution. Bar shows progress toward the next threshold.`,
+  vetoSupport: () => `The amount of stETH opposing execution now.`,
   vetoSignalling: () => {
     // TODO: get dynamic percent
     const _totalPercent = '1%';

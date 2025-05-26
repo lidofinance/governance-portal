@@ -40,7 +40,7 @@ const CTA = ({
   if (!nftId) {
     return (
       <Button loading={isLoading} disabled>
-        Enter NFT Token ID or Contract Address
+        Enter NFT Token ID
       </Button>
     );
   }

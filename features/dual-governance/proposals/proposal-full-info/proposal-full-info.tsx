@@ -115,6 +115,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const updateProposalState = useCallback(async () => {
     await refetchProposal();
     setIsScheduleLoading(false);
+    setIsExecuteLoading(false);
     setShowExecuteButton(false);
   }, [refetchProposal]);
 
@@ -158,12 +159,20 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const handleSchedule = async () => {
     setIsScheduleLoading(true);
-    await scheduleProposal(id);
+    const success = await scheduleProposal(id);
+
+    if (!success) {
+      setIsScheduleLoading(false);
+    }
   };
 
   const handleExecute = async () => {
     setIsExecuteLoading(true);
-    await executeProposal(id);
+    const success = await executeProposal(id);
+
+    if (!success) {
+      setIsExecuteLoading(false);
+    }
   };
 
   const submittedAt = useMemo(() => {

@@ -109,8 +109,8 @@ export const DeactivationAdditionalSupportInfo = ({
       <b>
         {restartDate?.date} {restartDate?.timezone}
       </b>{' '}
-      VetoSignalling <DGTooltip topic="cooldown" /> restarts. If not, Cooldown{' '}
-      <DGTooltip topic="cooldown" /> begins, and proposals can be scheduled
+      VetoSignalling <DGTooltip topic="cooldown" /> restarts. If not, Cooldown
+      begins, and proposals can be scheduled
     </Text>
   );
 };

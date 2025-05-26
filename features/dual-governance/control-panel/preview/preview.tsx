@@ -45,7 +45,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
   return (
     <ControlPanelWrapper>
       <Text size={22} weight={600}>
-        Active proposals:
+        Active:
       </Text>
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
@@ -75,7 +75,8 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       {!isEmergencyModeActive && (
         <Description>
-          Support Veto with your stETH, wstETH, or withdrawal NFTs. <br />
+          If your intent is to delay or prevent execution, you can support veto
+          using your stETH, wstETH, or withdrawal NFTs. <br />
           If <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> is
           triggered, execution is paused for 5–45 days, depending on support. If{' '}
           <b>RageQuit </b>

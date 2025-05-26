@@ -273,7 +273,11 @@ export const RageQuitTokens = ({
             amount={sumUpUnstETHShares(claimedUnstETHRecords)}
             amountLabel={`${claimedUnstETHRecords.length} NFT`}
             isLocked={isWithdrawalLocked}
-            actionLabel="Withdraw"
+            actionLabel={
+              timeRemaining > 0
+                ? `${assetsLockCountdown} till withdrawal`
+                : 'Withdraw'
+            }
             onClick={handleWithdrawUnstETH('Withdrawal NFT')}
           />
         )}
