@@ -49,6 +49,7 @@ export const VoteScriptBodyWrap = styled.div`
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;
   border: 1px solid var(--border-color-fog);
+  background: #f0f2f6;
 `;
 
 export const CallWrapper = styled.div`

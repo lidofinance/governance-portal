@@ -346,6 +346,11 @@ export const TieBreakerSubCommittee3: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x7aDD2cFf6D61D0496d1E2Aa3C4089e126ef88D74',
 };
 
+export const EVMScriptExecutor: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xFE5986E06210aC1eCC1aDCafc0cc7f8D63B3F977',
+  [CHAINS.Hoodi]: '0x79a20FD0FA36453B2F45eAbab19bfef43575Ba9E',
+};
+
 export const DualGovernanceLaunchVerifier: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x98FC7b149767302647D8e1dA1463F0051978826B',
 };

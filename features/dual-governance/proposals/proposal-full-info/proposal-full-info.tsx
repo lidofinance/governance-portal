@@ -21,7 +21,6 @@ import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useScheduleProposalAction } from 'features/dual-governance/write-actions/schedule-proposal';
 import { useExecuteProposalAction } from 'features/dual-governance/write-actions/execute-proposal';
-import invariant from 'tiny-invariant';
 import { ArrowRight } from 'shared/components/icons';
 import { useRouter } from 'next/router';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
@@ -36,6 +35,7 @@ import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useDynamicDualGovernance } from '../../hooks/use-dynamic-dual-governance';
+import { ProposalStatus } from '../types';
 
 type Props = {
   id: number;
@@ -44,7 +44,7 @@ type Props = {
 export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
 
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const isSupportedChain = useIsSupportedChain();
 
   const { chainId } = useLidoSDK();
@@ -69,7 +69,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
     scheduledAt: proposal?.proposalDetails.scheduledAt,
   });
 
-  // Use the dynamic DualGovernance contract address
   const { readDynamicContract } = useDynamicDualGovernance();
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
@@ -124,10 +123,13 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const executeProposal = useExecuteProposalAction({
     onConfirm: updateProposalState,
+    isEmergencyMode: isEmergencyModeActive,
   });
 
   const [showScheduleButton, setShowScheduleButton] = useState(false);
   const [showExecuteButton, setShowExecuteButton] = useState(false);
+  const [isEmergencyExecutionCommittee, setIsEmergencyExecutionCommittee] =
+    useState(false);
 
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState(false);
@@ -137,31 +139,88 @@ export const ProposalFullInfo = ({ id }: Props) => {
    **/
 
   useEffect(() => {
-    const fetchActions = async () => {
-      invariant(emergencyProtectedTimelock, 'Contract not found');
-      invariant(id, 'ID must be provided');
+    const fetchEmergencyExecutionCommittee = async () => {
+      if (
+        !emergencyProtectedTimelock ||
+        !address ||
+        !isConnected ||
+        !isSupportedChain
+      ) {
+        setIsEmergencyExecutionCommittee(false);
+        return;
+      }
 
       try {
-        // Use the dynamic DualGovernance contract for canScheduleProposal
+        const emergencyExecutionCommittee =
+          await emergencyProtectedTimelock.readContract(
+            'getEmergencyExecutionCommittee',
+          );
+
+        if (typeof emergencyExecutionCommittee === 'string' && address) {
+          setIsEmergencyExecutionCommittee(
+            emergencyExecutionCommittee.toLowerCase() === address.toLowerCase(),
+          );
+        } else {
+          setIsEmergencyExecutionCommittee(false);
+        }
+      } catch (error) {
+        console.error('Error fetching emergency execution committee:', error);
+        setIsEmergencyExecutionCommittee(false);
+      }
+    };
+
+    void fetchEmergencyExecutionCommittee();
+  }, [emergencyProtectedTimelock, address, isConnected, isSupportedChain]);
+
+  useEffect(() => {
+    const fetchActions = async () => {
+      if (
+        !emergencyProtectedTimelock ||
+        !readDynamicContract ||
+        !id ||
+        !proposal
+      ) {
+        return;
+      }
+
+      try {
         const canSchedule = await readDynamicContract('canScheduleProposal', [
           BigInt(id),
         ]);
 
-        // Use the EmergencyProtectedTimelock contract for canExecute
         const canExecute = await emergencyProtectedTimelock.readContract(
           'canExecute',
           [BigInt(id)],
         );
 
         setShowScheduleButton(!!canSchedule);
-        setShowExecuteButton(!!canExecute);
+
+        const isExecuted =
+          proposal?.proposalDetails.status === ProposalStatus.Executed;
+
+        if (
+          !isExecuted &&
+          (canExecute ||
+            (isEmergencyModeActive && isEmergencyExecutionCommittee))
+        ) {
+          setShowExecuteButton(true);
+        } else {
+          setShowExecuteButton(false);
+        }
       } catch (e) {
         console.error('Failed to fetch proposal actions', e);
       }
     };
 
     void fetchActions();
-  }, [readDynamicContract, emergencyProtectedTimelock, id, proposal]);
+  }, [
+    readDynamicContract,
+    emergencyProtectedTimelock,
+    id,
+    proposal,
+    isEmergencyModeActive,
+    isEmergencyExecutionCommittee,
+  ]);
 
   const handleSchedule = async () => {
     setIsScheduleLoading(true);
@@ -309,7 +368,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         </ActionsWrapper>
       )}
 
-      {showExecuteButton && !isEmergencyModeActive && (
+      {showExecuteButton && (
         <ActionsWrapper>
           {isConnected ? (
             <Button
@@ -318,7 +377,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
               loading={isExecuteLoading}
               disabled={!isSupportedChain}
             >
-              Execute
+              {isEmergencyModeActive ? 'Emergency Execute' : 'Execute'}
             </Button>
           ) : (
             <ConnectWalletButton />

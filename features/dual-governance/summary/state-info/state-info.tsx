@@ -10,11 +10,18 @@ import {
 } from './style';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceContext } from 'providers/dual-governance';
-import { FlexWrapper } from '../../../../shared/styled-components';
+import { FlexWrapper } from 'shared/styled-components';
 import { getNextGovernanceState } from '../../utils/get-next-dg-state';
 import { calculateCurrentThresholdProgress } from '../../utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
 import { Link } from '@lidofinance/lido-ui';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
+import { useQuery } from '@tanstack/react-query';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
+import { Box } from 'shared/components/box';
 
 const getStateLabel = (state: VisibleGovernanceState) => {
   switch (state) {
@@ -58,6 +65,12 @@ export const StateInfo = () => {
     firstSealRageQuitSupport,
     secondSealRageQuitSupport,
   } = useDualGovernanceContext();
+
+  const { chainId } = useLidoSDK();
+  const isSupportedChain = useIsSupportedChain();
+  const emergencyProtectedTimelockContract = useReadContract(
+    EmergencyProtectedTimelock,
+  );
   const subtitle = getStateSubtitle(visibleState);
 
   const vetoSignallingThresholdProgress = useMemo(() => {
@@ -128,6 +141,50 @@ export const StateInfo = () => {
       rageQuitThresholdProgress?.thresholdSupportPercent || 0,
   });
 
+  const {
+    data: emergencyProtectionDetails,
+    isLoading: isLoadingEmergencyDetails,
+  } = useQuery({
+    queryKey: ['emergencyProtectionDetails', chainId],
+    staleTime: 60 * 1000,
+    enabled:
+      isSupportedChain &&
+      !!emergencyProtectedTimelockContract &&
+      visibleState === VisibleGovernanceState.Emergency,
+    queryFn: async () => {
+      try {
+        const result = await emergencyProtectedTimelockContract.readContract(
+          'getEmergencyProtectionDetails',
+        );
+
+        if (!result) return null;
+
+        return {
+          emergencyModeDuration: Number(result.emergencyModeDuration || 0),
+          emergencyModeEndsAfter: Number(result.emergencyModeEndsAfter || 0),
+          emergencyProtectionEndsAfter: Number(
+            result.emergencyProtectionEndsAfter || 0,
+          ),
+        };
+      } catch (error) {
+        console.error('Error fetching emergency protection details:', error);
+        return null;
+      }
+    },
+  });
+
+  const emergencyModeEndTime = useMemo(() => {
+    if (!emergencyProtectionDetails?.emergencyModeEndsAfter) return null;
+
+    const timestamp = emergencyProtectionDetails.emergencyModeEndsAfter;
+    const date = getDateFromTimestamp({
+      timestamp,
+      showYear: true,
+    });
+
+    return `${date.date} ${date.tz}`;
+  }, [emergencyProtectionDetails]);
+
   return (
     <>
       <StateInfoStyled>
@@ -142,6 +199,19 @@ export const StateInfo = () => {
             <StateIndicator $state={visibleState} />
           </StateStatus>
         )}
+        {visibleState === VisibleGovernanceState.Emergency && (
+          <Box marginTop={15}>
+            {isLoadingEmergencyDetails ? (
+              <Text size={16} color="secondary">
+                Loading emergency mode end time...
+              </Text>
+            ) : emergencyModeEndTime ? (
+              <Text size={16} color="default">
+                ends on <b>{emergencyModeEndTime}</b>
+              </Text>
+            ) : null}
+          </Box>
+        )}
         {subtitle && detailedState ? (
           <FlexWrapper $gap="12px">
             <Text>{subtitle}</Text>
@@ -152,10 +222,12 @@ export const StateInfo = () => {
         ) : null}
       </StateInfoStyled>
       {visibleState === VisibleGovernanceState.Emergency && (
-        <Text size={22} weight={300}>
-          <Link href="#">Emergency Committee</Link> can reset Dual Governance
-          and execute scheduled proposals
-        </Text>
+        <>
+          <Text size={22} weight={300}>
+            <Link href="#">Emergency Committee</Link> can reset Dual Governance
+            and execute scheduled proposals
+          </Text>
+        </>
       )}
     </>
   );
