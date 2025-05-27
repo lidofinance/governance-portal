@@ -54,11 +54,7 @@ export const TxStageSignOperationAmount = (props: Props) => {
       txHash={txHash}
       title={
         <>
-          You are{' '}
-          {operationTextFormatted === 'approving'
-            ? operationTextFormatted
-            : `${operationTextFormatted} with`}{' '}
-          {amountEl}
+          You are {operationTextFormatted} {amountEl}
         </>
       }
       description=""

@@ -53,7 +53,7 @@ export const useEscrowUnstethBalance = () => {
         [unstethIds],
       );
 
-      return unstethIds.map((id, index) => ({
+      return unstethIds.map((id: bigint, index: number) => ({
         id,
         lockedBy: withdrawalRequests[index].owner,
         shares: withdrawalRequests[index].amountOfStETH,

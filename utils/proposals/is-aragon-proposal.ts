@@ -1,13 +1,19 @@
-import { decodeEventLog, keccak256, PublicClient, stringToBytes } from 'viem';
+import {
+  decodeEventLog,
+  Hex,
+  keccak256,
+  PublicClient,
+  stringToBytes,
+} from 'viem';
 import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { ProposalLog } from 'features/dual-governance/proposals/types';
 import { findAbiItem } from '../find-abi-item';
 import invariant from 'tiny-invariant';
+import { MergedProposalSubmittedEvent } from '../../features/dual-governance/events/get-proposal-submitted-events';
 
 type Props = {
   client: PublicClient;
-  proposalLog: ProposalLog | null;
+  proposalLog: MergedProposalSubmittedEvent['DGEvent'] | null;
   chainId: CHAINS;
 };
 
@@ -20,7 +26,7 @@ export const isAragonProposal = async ({
   if (!proposalLog.transactionHash) return false;
 
   const receipt = await client.getTransactionReceipt({
-    hash: proposalLog.transactionHash,
+    hash: proposalLog.transactionHash as Hex,
   });
   const aragonAddress = Voting.chainAddressMap[chainId]?.toLowerCase();
   const aragonEvents = receipt.logs.filter(

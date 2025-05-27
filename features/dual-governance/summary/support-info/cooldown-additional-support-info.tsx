@@ -6,6 +6,7 @@ import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from '../../tooltips';
 import { formatEth } from '../../../../shared/blockchain/utils';
+import { useThresholdValue } from 'features/dual-governance/hooks';
 
 type Props = {
   amountTillVSPhaseWei: bigint;
@@ -19,7 +20,13 @@ export const CooldownAdditionalSupportInfo = ({
     detailedState,
     amountTillNextPhasePercent,
     firstSealRageQuitSupport,
+    stEthTotalSupply,
   } = useDualGovernanceContext();
+
+  const firstSealThresholdWei = useThresholdValue(
+    firstSealRageQuitSupport,
+    stEthTotalSupply,
+  );
 
   const cooldownEndDate = useMemo(() => {
     if (!dgConfig || !detailedState) return;
@@ -46,8 +53,13 @@ export const CooldownAdditionalSupportInfo = ({
     return (
       <Text color="secondary">
         VetoSignalling <DGTooltip topic="vetoSignalling" /> starts on{' '}
-        {cooldownEndDate?.date} {cooldownEndDate?.timezone} unless stETH support
-        decreases below {firstSealRageQuitSupport}%
+        <b>{cooldownEndDate?.date}</b> {cooldownEndDate?.timezone} unless stETH
+        support decreases below{' '}
+        <b>
+          {firstSealThresholdWei
+            ? `${formatEth(firstSealThresholdWei, 2)} ${Token.stETH}`
+            : `${firstSealRageQuitSupport}%`}
+        </b>
       </Text>
     );
   }
@@ -55,8 +67,10 @@ export const CooldownAdditionalSupportInfo = ({
   return (
     <Text color="secondary">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      {formatEth(amountTillVSPhaseWei, 2)} more {Token.stETH} is added;
-      Otherwise, Normal begins on {cooldownEndDate?.date}
+      <b>
+        {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
+      </b>{' '}
+      is added; Otherwise, Normal begins on <b>{cooldownEndDate?.date}</b>
     </Text>
   );
 };

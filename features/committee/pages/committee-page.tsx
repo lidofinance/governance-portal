@@ -75,8 +75,8 @@ export const CommitteePage = () => {
             .map((proposal) => (
               <CommitteeProposalCard
                 isTiebreaker={activeCommittee.id === 0}
-                key={proposal.id}
-                proposalId={proposal.id}
+                key={proposal.proposalId}
+                proposalId={proposal.proposalId}
               />
             ))}
       </CommitteeSection>

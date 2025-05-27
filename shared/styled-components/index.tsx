@@ -13,6 +13,7 @@ type FlexWrapperProps = {
     | 'space-around'
     | 'space-evenly';
   $gap?: string;
+  $flexWrap?: string;
 };
 
 export const FlexWrapper = styled.div<FlexWrapperProps>`
@@ -22,6 +23,7 @@ export const FlexWrapper = styled.div<FlexWrapperProps>`
   flex-direction: ${({ $flexDirection }) => $flexDirection || 'row'};
   justify-content: ${({ $justifyContent }) => $justifyContent || 'flex-start'};
   gap: ${({ $gap }) => $gap || 0};
+  flex-wrap: ${({ $flexWrap }) => $flexWrap || 'wrap'};
 `;
 
 export const StyledPopupMenu = styled(PopupMenu)<PopupMenuProps>`

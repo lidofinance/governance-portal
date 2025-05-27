@@ -15,7 +15,9 @@ import { useDualGovernanceProposalsContext } from 'providers/dual-governance-pro
 import { DGTooltip } from 'features/dual-governance/tooltips';
 import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
 import { Link } from '@lidofinance/lido-ui';
-import { Box } from '../../../../shared/components/box';
+import { Box } from 'shared/components/box';
+import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { isVoteItem } from 'features/dual-governance/types';
 
 const PROPOSALS_TO_SHOW = 3;
 
@@ -29,21 +31,33 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
-  const restProposalsAmount = combinedData.length - PROPOSALS_TO_SHOW;
+  const activeProposals = combinedData.filter((proposal) => {
+    if (isVoteItem(proposal)) {
+      return true;
+    } else {
+      // Only filter out executed proposals for ProposalCombinedData items
+      return proposal.proposalDetails.status !== ProposalStatus.Executed;
+    }
+  });
+
+  const restProposalsAmount = activeProposals.length - PROPOSALS_TO_SHOW;
 
   return (
     <ControlPanelWrapper>
       <Text size={22} weight={600}>
-        Active Proposals:
+        Active:
       </Text>
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
         <>
-          {combinedData.length > 0 && (
+          {activeProposals.length > 0 && (
             <PreviewProposalList>
-              {combinedData
+              {activeProposals
                 .map((proposal) => (
-                  <PreviewProposal key={proposal.id} proposal={proposal} />
+                  <PreviewProposal
+                    key={proposal.proposalId}
+                    proposal={proposal}
+                  />
                 ))
                 .slice(0, PROPOSALS_TO_SHOW)}
               {restProposalsAmount > 0 && (
@@ -51,7 +65,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
               )}
             </PreviewProposalList>
           )}
-          {combinedData.length === 0 && (
+          {activeProposals.length === 0 && (
             <>
               <br />
               <Text>No active proposals</Text>
@@ -61,20 +75,22 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       {!isEmergencyModeActive && (
         <Description>
-          Support Veto with your stETH to help block all proposals execution
-          temporarily (VetoSignaling
-          <DGTooltip topic="vetoSignalling" />) or withdraw your stETH before
-          execution (RageQuit <DGTooltip topic="rageQuit" />
-          ).
+          If your intent is to delay or prevent execution, you can support veto
+          using your stETH, wstETH, or withdrawal NFTs. <br />
+          If <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> is
+          triggered, execution is paused for 5–45 days, depending on support. If{' '}
+          <b>RageQuit </b>
+          <DGTooltip topic="rageQuit" /> starts, all escrowed assets are
+          withdrawn to ETH before any proposal can be executed.
         </Description>
       )}
       {isEmergencyModeActive && (
         <Box marginBottom="3rem">
           <Description>
             During Emergency Mode , you can still support the veto by depositing
-            stETH. However, the <Link href={'#'}>Emergency Committee</Link> can
-            execute even blocked proposals. If the 10% RageQuit threshold is
-            reached, stETH begins exiting the protocol
+            stETH. However, only <Link href="#">Emergency Committee</Link> can
+            execute any scheduled proposal now. If the 10% RageQuit threshold is
+            reached, stETH begins exiting the protocol.
           </Description>
         </Box>
       )}

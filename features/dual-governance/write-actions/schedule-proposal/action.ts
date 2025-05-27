@@ -23,7 +23,7 @@ export const useScheduleProposalAction = ({ onConfirm }: ActionArgs) => {
 
         const txHash = await processScheduleProposal(id);
 
-        txModalStages.pendingStage(id);
+        txModalStages.pendingStage({ txHash, proposalId: id });
 
         if (isMultisig) {
           txModalStages.successMultisig();

@@ -15,7 +15,7 @@ export enum VoteStatus {
 
 export type VoteData = {
   voteId: number;
-  id: number;
+  proposalId: number;
   vote: any;
   canExecute: boolean;
   event?: {

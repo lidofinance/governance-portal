@@ -1,15 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useAccount } from 'wagmi';
+import { useAccount, useWatchContractEvent } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
-import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
+import {
+  useReadContract,
+  useReadContractGetter,
+} from 'shared/blockchain/hooks/use-read-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { computeRageQuitEscrowsBalances } from '../utils';
 import { useState } from 'react';
+import { WstETH } from 'shared/blockchain/contracts';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadingState, setLoadingState] = useState(true);
   const { chainId } = useLidoSDK();
   const {
     vetoSignallingAddress,
@@ -18,20 +22,45 @@ export const useEscrowBalances = () => {
   } = useDualGovernanceContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
+  const readWstEthContract = useReadContract(WstETH);
 
   const isEnabled =
     !!vetoSignallingAddress &&
     !!currentRageQuitEscrowAddress &&
     !!accountAddress;
+
+  const queryClient = useQueryClient();
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'StETHSharesLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+    },
+  });
+
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'UnstETHLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+    },
+  });
+
   return useQuery({
     queryKey: [
       'escrow-balances',
       chainId,
+      accountAddress,
       vetoSignallingAddress,
       currentRageQuitEscrowAddress,
-      accountAddress,
+      historicalEscrowAddresses,
     ],
-    staleTime: Infinity,
+    staleTime: 5000, // 5 seconds stale time
     enabled: isEnabled,
     queryFn: async () => {
       if (!isEnabled) {
@@ -42,13 +71,17 @@ export const useEscrowBalances = () => {
         vetoSignallingAddress,
       );
 
-      const minAssetLockDuration = await readVetoSignallingContract(
-        'getMinAssetsLockDuration',
-      );
-      const vetoSignallingBalance = await readVetoSignallingContract(
+      const minAssetLockDuration =
+        (await readVetoSignallingContract('getMinAssetsLockDuration')) || 0n;
+
+      const vetoSignallingBalance = (await readVetoSignallingContract(
         'getVetoerDetails',
         [accountAddress],
-      );
+      )) || {
+        stETHLockedShares: 0n,
+        unstETHLockedShares: 0n,
+        lastAssetsLockTimestamp: 0n,
+      };
 
       const vetoSignallingSum =
         vetoSignallingBalance.stETHLockedShares +
@@ -62,13 +95,13 @@ export const useEscrowBalances = () => {
           accountAddress,
         });
 
-      setIsLoading(false);
+      setLoadingState(false);
 
-      // TODO: change mock value to a real one once we get into testing with real wsteth
-      const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
-      // const vetoSharesInWstEth = await wstEth.readContract('getWstETHByStETH', [
-      //   vetoSignallingBalance.stETHLockedShares,
-      // ])
+      // const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
+      const wstETHLockedShares =
+        (await readWstEthContract.readContract('getStETHByWstETH', [
+          vetoSignallingBalance.stETHLockedShares,
+        ])) || vetoSignallingBalance.stETHLockedShares;
 
       const totalStETHLockedSharesInRageQuitEscrows =
         computedRageQuitEscrowsBalances
@@ -107,7 +140,7 @@ export const useEscrowBalances = () => {
         totalLockedSharesInEscrows:
           vetoSignallingSum + totalLockedSharesInRageQuitEscrows,
         assetUnlockTimestamp,
-        isLoading,
+        isLoading: loadingState,
       };
     },
   });

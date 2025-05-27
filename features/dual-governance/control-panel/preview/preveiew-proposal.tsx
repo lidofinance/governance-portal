@@ -59,8 +59,8 @@ export const PreviewProposal = ({ proposal }: Props) => {
       <VoteWrapper>
         <AragonLogo />
         <Text size={22}>
-          <Link href={`${config.voteOrigin}/vote/${proposal.id}`}>
-            {`LDO Vote #${proposal.id} `}
+          <Link href={`${config.voteOrigin}/vote/${proposal.proposalId}`}>
+            {`LDO Vote #${proposal.proposalId} `}
           </Link>
           &mdash; Not submitted to Dual Governance yet
         </Text>
@@ -69,7 +69,7 @@ export const PreviewProposal = ({ proposal }: Props) => {
   }
 
   return (
-    <ActiveProposalWrapper proposalId={proposal.id}>
+    <ActiveProposalWrapper proposalId={proposal.proposalId}>
       {proposalStatusInfo && (
         <>
           {proposalStatusInfo.badge.text}{' '}

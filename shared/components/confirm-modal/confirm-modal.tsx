@@ -29,10 +29,10 @@ export const ConfirmModal: ModalComponentType<ConfirmModalProps> = ({
       </Text>
     )}
     <Box display="flex" flexDirection="column" gap={20} marginTop={30}>
+      <Button onClick={onConfirm}>{confirmText}</Button>
       <Button onClick={onCancel} variant="outlined">
         {cancelText}
       </Button>
-      <Button onClick={onConfirm}>{confirmText}</Button>
     </Box>
   </Modal>
 );

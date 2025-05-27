@@ -1,23 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { dgConfigProviderAbi } from 'abi/ts';
-import {
-  useReadContract,
-  useReadContractGetter,
-} from 'shared/blockchain/hooks/use-read-contract';
-import { DualGovernance } from 'shared/blockchain/contracts';
+import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
+import { useDynamicDualGovernance } from './use-dynamic-dual-governance';
 
 export const useDualGovernanceConfig = () => {
   const { chainId } = useLidoSDK();
-  const dualGovernance = useReadContract(DualGovernance);
+  const { readDynamicContract } = useDynamicDualGovernance();
   const readConfigContract = useReadContractGetter(dgConfigProviderAbi);
 
   return useQuery({
     queryKey: ['dual-governance-config', chainId],
     staleTime: Infinity,
     queryFn: async () => {
-      const configAddress =
-        await dualGovernance.readContract('getConfigProvider');
+      // Get the config provider address from the dynamic DualGovernance contract
+      const configAddress = await readDynamicContract('getConfigProvider');
+      if (!configAddress) {
+        throw new Error('Failed to get config provider address');
+      }
 
       return readConfigContract(configAddress)('getDualGovernanceConfig');
     },

@@ -69,15 +69,20 @@ export const computeRageQuitEscrowsBalances = async ({
     return null;
   }
 
-  const escrowBalances = await Promise.all(
-    rageQuitEscrowAddresses.map(async (address) => {
-      const vetoerDetails = await readEscrowContract(address)(
-        'getVetoerDetails',
-        [accountAddress],
-      );
-      return { rageQuitEscrowAddress: address, vetoerDetails };
-    }),
-  );
+  const balancePromises = rageQuitEscrowAddresses.map(async (address) => {
+    const vetoerDetails = (await readEscrowContract(address)(
+      'getVetoerDetails',
+      [accountAddress],
+    )) || {
+      unstETHIdsCount: 0n,
+      stETHLockedShares: 0n,
+      unstETHLockedShares: 0n,
+    };
+
+    return { rageQuitEscrowAddress: address, vetoerDetails };
+  });
+
+  const escrowBalances = await Promise.all(balancePromises);
 
   const detailedEscrowBalances = await Promise.all(
     escrowBalances.map(async (balanceRecord) => {
@@ -93,15 +98,15 @@ export const computeRageQuitEscrowsBalances = async ({
     }),
   );
   return detailedEscrowBalances.reduce(
-    (acc, balanceRecord) => {
+    (acc: Record<Address, EscrowBalanceDetails>, balanceRecord) => {
       const unstETHRecords = balanceRecord.rageQuitLockedUnstETHDetails.filter(
-        (record) => record.status !== UnstETHRecordStatus.Withdrawn,
+        (record: any) => record.status !== UnstETHRecordStatus.Withdrawn,
       );
 
       const totalStETHLockedShares =
         balanceRecord.vetoerDetails.stETHLockedShares;
       const totalUnstETHLockedShares = unstETHRecords.reduce(
-        (sum, record) => sum + record.shares,
+        (sum: bigint, record: any) => sum + record.shares,
         0n,
       );
       const totalLockedShares =

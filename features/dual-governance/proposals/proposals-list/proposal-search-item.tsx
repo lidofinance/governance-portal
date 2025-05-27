@@ -6,6 +6,7 @@ import { useProposal } from 'features/dual-governance/hooks/use-proposal';
 import { ProposalCombinedData } from '../types';
 import { PROPOSALS_PATH } from 'constants/urls';
 import Link from 'next/link';
+import { Address } from 'viem';
 
 export const ProposalSearchItem = ({ id }: { id: string }) => {
   const [proposal, setProposal] = useState<ProposalCombinedData | null>(null);
@@ -45,11 +46,15 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
   if (proposal) {
     return (
       <ProposalSearchItemWrapper>
-        <Link href={`${PROPOSALS_PATH}/${proposal.id}`} key={proposal.id}>
+        <Link
+          href={`${PROPOSALS_PATH}/${proposal.proposalId}`}
+          key={proposal.proposalId}
+        >
           <ProposalsListItem
-            id={proposal.id}
-            description={proposal.proposalDualGovernanceDetails?.metadata || ''}
-            calls={proposal.event.args.calls}
+            id={proposal.proposalId}
+            proposer={proposal.DGEvent?.args.proposerAccount as Address}
+            description={proposal.DGEvent?.args?.metadata || ''}
+            calls={proposal.EPTEvent?.args.calls}
             proposalDetails={proposal.proposalDetails}
           />
         </Link>

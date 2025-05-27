@@ -3,33 +3,66 @@ import { findAbiItem } from 'utils/find-abi-item';
 import {
   DualGovernance,
   EmergencyProtectedTimelock,
-  Voting,
 } from 'shared/blockchain/contracts';
-import {
-  ProposalDualGovernanceDetails,
-  ProposalDualGovernanceLog,
-  ProposalLog,
-} from 'features/dual-governance/proposals/types';
 import { usePublicClient } from 'wagmi';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { Address } from 'viem';
+import { Address, parseAbiItem } from 'viem';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
+import { BigNumber } from 'ethers';
 
 type Props = {
   client: ReturnType<typeof usePublicClient>;
-  chainId: CHAINS;
   EPTContract?: ReturnType<typeof useReadContract>;
 };
 
-const EVENT_NAME = 'ProposalSubmitted';
+export type MergedProposalSubmittedEvent = {
+  proposalId: BigNumber;
+  DGEvent?: DGProposalSubmittedEvent;
+  EPTEvent?: EPTProposalSubmittedEvent;
+};
 
-const getDGEvents = async ({
+const PROPOSAL_SUBMITTED_EVENT = 'ProposalSubmitted';
+
+const getGovernanceSetAddresses = async ({
   client,
-  chainId,
-}: Props): Promise<ProposalDualGovernanceLog[]> => {
+  EPTContract,
+}: Props): Promise<Address[]> => {
+  const eventAbi = parseAbiItem('event GovernanceSet(address newGovernance)');
+
+  invariant(client, 'Client must be provided');
+  invariant(eventAbi, 'Event ABI not found');
+  invariant(EPTContract, 'EPTContract not found');
+
+  try {
+    const contractAddress = EPTContract.address;
+
+    const logs = await client.getLogs({
+      address: contractAddress,
+      event: eventAbi,
+      fromBlock: 252997n,
+      toBlock: 'latest',
+    });
+
+    return logs
+      .map((log) => log.args.newGovernance as Address)
+      .filter((addr): addr is Address => !!addr);
+  } catch (error) {
+    console.error('Error fetching GovernanceSet events:', error);
+    return [];
+  }
+};
+
+const getGovernanceProposalSubmittedEvents = async ({
+  client,
+  address,
+}: {
+  client: ReturnType<typeof usePublicClient>;
+  address: Address;
+}): Promise<DGProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: DualGovernance.abi,
-    name: EVENT_NAME,
+    name: PROPOSAL_SUBMITTED_EVENT,
     type: 'event',
   });
 
@@ -37,44 +70,29 @@ const getDGEvents = async ({
   invariant(eventAbi, 'Event ABI not found');
 
   try {
-    const contractAddress = DualGovernance.chainAddressMap[chainId];
-    const proposerAccount = Voting.chainAddressMap[chainId];
-
-    invariant(proposerAccount, 'Contract not found');
-
-    const args = <{ proposerAccount: Address }>{
-      proposerAccount,
-    };
-
     const logs = await client.getLogs({
-      address: contractAddress,
+      address,
       event: eventAbi,
-      args,
-      fromBlock: 0n,
+      fromBlock: 252997n,
       toBlock: 'latest',
     });
-
-    return logs.map((log) => {
-      const args = log.args as ProposalDualGovernanceDetails;
-
-      return {
-        ...log,
-        args,
-      };
-    });
+    return logs as unknown as DGProposalSubmittedEvent[];
   } catch (error) {
-    console.error('Error fetching events:', error);
+    console.error(
+      `Error fetching ProposalSubmitted events for ${address}:`,
+      error,
+    );
     return [];
   }
 };
 
-const getEPTEvents = async ({
+const getEPTProposalSubmittedEvents = async ({
   client,
   EPTContract,
-}: Props): Promise<ProposalLog[]> => {
+}: Props): Promise<EPTProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: EmergencyProtectedTimelock.abi,
-    name: EVENT_NAME,
+    name: PROPOSAL_SUBMITTED_EVENT,
     type: 'event',
   });
 
@@ -84,60 +102,92 @@ const getEPTEvents = async ({
 
   try {
     const contractAddress = EPTContract.address;
-    const adminExecutor = await EPTContract.readContract('getAdminExecutor');
-
-    invariant(adminExecutor, 'Contract not found');
-
-    const args: { executor?: Address; id?: bigint } = {
-      executor: adminExecutor as Address,
-    };
 
     const logs = await client.getLogs({
       address: contractAddress,
       event: eventAbi,
-      args,
-      fromBlock: 0n,
+      fromBlock: 252997n,
       toBlock: 'latest',
     });
 
-    return logs.map((log) => {
-      const args = log.args as ProposalLog['args'];
-
-      return {
-        ...log,
-        args,
-      };
-    });
+    return logs as unknown as EPTProposalSubmittedEvent[];
   } catch (error) {
-    console.error('Error fetching events:', error);
+    console.error('Error fetching EPT ProposalSubmitted events:', error);
     return [];
   }
 };
 
 export const getProposalSubmittedEvents = async ({
   client,
-  chainId,
   EPTContract,
 }: Props): Promise<{
-  DGEvents: ProposalDualGovernanceLog[];
-  EPTEvents: ProposalLog[];
+  mergedProposalSubmittedEvents: MergedProposalSubmittedEvent[];
 }> => {
-  invariant(chainId, 'Chain id must be provided');
   try {
-    const [DGEvents, EPTEvents] = await Promise.all([
-      getDGEvents({ client, chainId }),
-      getEPTEvents({ client, chainId, EPTContract }),
-    ]);
+    // Get all governance addresses from GovernanceSet events
+    const governanceAddresses = await getGovernanceSetAddresses({
+      client,
+      EPTContract,
+    });
+
+    // Fetch ProposalSubmitted events from governance addresses
+    const governanceEventsPromises = governanceAddresses.map((address) =>
+      getGovernanceProposalSubmittedEvents({ client, address }),
+    );
+    const governanceEventsArrays = await Promise.all(governanceEventsPromises);
+
+    // Deduplicate governance events by proposalId
+    const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
+    for (const events of governanceEventsArrays) {
+      for (const event of events) {
+        const proposalId = event.args.proposalId.toString();
+        // Keep the first occurrence of each proposalId
+        if (!governanceEventsMap.has(proposalId)) {
+          governanceEventsMap.set(proposalId, event);
+        }
+      }
+    }
+    const governanceEvents = Array.from(governanceEventsMap.values());
+
+    // Fetch ProposalSubmitted events from EPT contract
+    const EPTEvents = await getEPTProposalSubmittedEvents({
+      client,
+      EPTContract,
+    });
+
+    // Merge events based on proposalId (governance) and id (EPT)
+    const mergedEventsMap = new Map<string, MergedProposalSubmittedEvent>();
+
+    // Process governance events
+    for (const event of governanceEvents) {
+      const proposalId = event.args.proposalId.toString();
+      mergedEventsMap.set(proposalId, {
+        proposalId: event.args.proposalId,
+        DGEvent: event,
+      });
+    }
+
+    // Process EPT events and merge with governance events
+    for (const event of EPTEvents) {
+      const proposalId = event.args.id.toString();
+      const existing = mergedEventsMap.get(proposalId) || {
+        proposalId: event.args.id,
+      };
+      mergedEventsMap.set(proposalId, {
+        ...existing,
+        EPTEvent: event,
+      });
+    }
+
+    const mergedProposalSubmittedEvents = Array.from(mergedEventsMap.values());
 
     return {
-      DGEvents,
-      EPTEvents,
+      mergedProposalSubmittedEvents,
     };
-  } catch (e) {
-    console.error('Error fetching events:', e);
+  } catch (error) {
+    console.error('Error fetching and merging proposal events:', error);
     return {
-      DGEvents: [],
-      EPTEvents: [],
+      mergedProposalSubmittedEvents: [],
     };
   }
 };

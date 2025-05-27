@@ -14,6 +14,7 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useEscrowUnstethBalance } from '../../hooks/use-escrow-unsteth-balance';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type Props = {
   vetoSignallingBalance: {
@@ -33,6 +34,7 @@ export const VetoSignallingTokens = ({
   assetUnlockTimestamp,
   onConfirm,
 }: Props) => {
+  const isSupportedChain = useIsSupportedChain();
   const {
     totalLockedShares,
     stETHLockedShares,
@@ -130,7 +132,7 @@ export const VetoSignallingTokens = ({
           token={Token.stETH}
           amount={stETHLockedShares}
           onClick={() => setIsPopupOpen(true)}
-          isLocked={isLocked}
+          isLocked={isLocked || !isSupportedChain}
           unlockCountdown={assetsLockCountdown}
           actionLabel="Revoke"
         />
@@ -145,7 +147,7 @@ export const VetoSignallingTokens = ({
                 unstETHRecords: data,
               })
             }
-            isLocked={isLocked}
+            isLocked={isLocked || !isSupportedChain}
             unlockCountdown={assetsLockCountdown}
             amountLabel={`${unstETHIdsCount} NFT`}
             actionLabel="Revoke"

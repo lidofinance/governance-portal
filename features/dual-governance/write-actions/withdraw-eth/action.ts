@@ -8,12 +8,9 @@ import { useWithdrawEthModalStages } from './modal-stages';
 import { useWithdrawEthTxSender } from './tx-sender';
 import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 import { ActionArgs } from '../types';
-import { getBalance } from 'viem/actions';
-import { useLidoSDK } from 'providers/lido-sdk';
 
 export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
-  const { rpcProvider } = useLidoSDK();
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useWithdrawEthModalStages();
   const sendWithdrawTx = useWithdrawEthTxSender();
@@ -37,12 +34,7 @@ export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         await waitForTx(txHash);
 
-        let balance: bigint | undefined;
-        if (args.token === 'ETH') {
-          balance = await getBalance(rpcProvider, { address });
-        }
-
-        txModalStages.success(args, txHash, balance);
+        txModalStages.success(args, txHash);
         await onConfirm();
         return true;
       } catch (error) {
@@ -55,7 +47,6 @@ export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
       address,
       txModalStages,
       isMultisig,
-      rpcProvider,
       onRetry,
       sendWithdrawTx,
       onConfirm,

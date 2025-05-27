@@ -22,9 +22,18 @@ const getTxModalStagesScheduleProposal = (
         description=""
       />,
     ),
-  pendingStage: (proposalId: number) =>
+  pendingStage: ({
+    txHash,
+    proposalId,
+  }: {
+    txHash: string;
+    proposalId: number;
+  }) =>
     transitStage(
-      <TxStagePending title={`You are scheduling proposal #${proposalId}`} />,
+      <TxStagePending
+        title={`You are scheduling proposal #${proposalId}`}
+        txHash={txHash}
+      />,
     ),
   successStage: ({
     txHash,

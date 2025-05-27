@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import type { Manifest, ManifestEntry } from './types';
-// import { getDexConfig } from 'features/withdrawals/request/withdrawal-rates';
 
 import FallbackLocalManifest from 'IPFS.json' assert { type: 'json' };
 
@@ -89,9 +88,38 @@ export const useFallbackManifestEntry = (
   chain: number,
 ): ManifestEntry => {
   return useMemo(() => {
-    const isValid = isManifestValid(prefetchedManifest, chain);
-    return isValid
-      ? prefetchedManifest[chain]
-      : (FallbackLocalManifest as unknown as Manifest)[chain];
+    if (isManifestValid(prefetchedManifest, chain)) {
+      return prefetchedManifest[chain];
+    }
+
+    const fallbackManifest = FallbackLocalManifest as unknown as Manifest;
+
+    if (
+      chain in fallbackManifest &&
+      isManifestEntryValid(fallbackManifest[chain])
+    ) {
+      return fallbackManifest[chain];
+    }
+
+    if (
+      '1' in fallbackManifest &&
+      isManifestEntryValid(fallbackManifest['1'])
+    ) {
+      return fallbackManifest['1'];
+    }
+
+    const firstAvailableChain = Object.keys(fallbackManifest)[0];
+    if (
+      firstAvailableChain &&
+      isManifestEntryValid(fallbackManifest[firstAvailableChain])
+    ) {
+      return fallbackManifest[firstAvailableChain];
+    }
+    return {
+      config: {
+        enabledWithdrawalDexes: [],
+        multiChainBanner: [],
+      },
+    };
   }, [prefetchedManifest, chain]);
 };

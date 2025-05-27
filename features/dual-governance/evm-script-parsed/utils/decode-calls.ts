@@ -16,7 +16,7 @@ type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
 
 export type DecodedCall = {
   contractName: string | undefined;
-  contractAddress: Address;
+  contractAddress: string;
   decoded: {
     functionName: string;
     args: readonly unknown[] | undefined;
@@ -26,8 +26,8 @@ export type DecodedCall = {
 };
 
 type BaseCall = {
-  target: Address;
-  payload: Hex;
+  target: string;
+  payload: string;
 };
 
 type Props<TCall extends BaseCall> = {

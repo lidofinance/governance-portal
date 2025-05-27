@@ -1,17 +1,26 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
-import { useExecuteProposalTxModal } from './modal-stages';
-import { useExecuteProposalTxSend } from './tx-sender';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
+import { useExecuteProposalTxSend } from './tx-sender';
+import { useEmergencyExecuteProposalTxSend } from './emergency-tx-sender';
+import { useExecuteProposalTxModal } from './modal-stages';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
-import { ActionArgs } from '../types';
 
-export const useExecuteProposalAction = ({ onConfirm }: ActionArgs) => {
+type ActionArgs = {
+  onConfirm: () => Promise<void>;
+  isEmergencyMode?: boolean;
+};
+
+export const useExecuteProposalAction = ({
+  onConfirm,
+  isEmergencyMode = false,
+}: ActionArgs) => {
   const { data: isMultisig } = useIsContract();
 
   const { txModalStages } = useExecuteProposalTxModal();
 
-  const processScheduleProposal = useExecuteProposalTxSend();
+  const processExecuteProposal = useExecuteProposalTxSend();
+  const processEmergencyExecuteProposal = useEmergencyExecuteProposalTxSend();
   const waitForTx = useTxConfirmation();
 
   return useCallback(
@@ -21,9 +30,11 @@ export const useExecuteProposalAction = ({ onConfirm }: ActionArgs) => {
 
         txModalStages.signStage(id);
 
-        const txHash = await processScheduleProposal(id);
+        const txHash = isEmergencyMode
+          ? await processEmergencyExecuteProposal(id)
+          : await processExecuteProposal(id);
 
-        txModalStages.pendingStage(id);
+        txModalStages.pendingStage({ txHash, proposalId: id });
 
         if (isMultisig) {
           txModalStages.successMultisig();
@@ -45,6 +56,14 @@ export const useExecuteProposalAction = ({ onConfirm }: ActionArgs) => {
         return false;
       }
     },
-    [txModalStages, isMultisig, processScheduleProposal, waitForTx, onConfirm],
+    [
+      txModalStages,
+      isMultisig,
+      processExecuteProposal,
+      processEmergencyExecuteProposal,
+      isEmergencyMode,
+      waitForTx,
+      onConfirm,
+    ],
   );
 };

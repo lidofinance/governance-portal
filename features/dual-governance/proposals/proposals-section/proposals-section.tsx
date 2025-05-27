@@ -10,13 +10,37 @@ import { SearchInput } from './search-input';
 import { useRouter } from 'next/router';
 import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals-list/proposal-search-item';
 import { ProposalFlowBanner } from '../proposal-flow-banner';
+import { useIsEmergencyModeActive } from 'features/dual-governance/hooks/useIsEmergencyModeActive';
+import { useEffect, useState } from 'react';
+
+const MAX_SCREEN_WIDTH_PROPOSAL_FLOW = 1270;
 
 export const ProposalsSection = () => {
   const router = useRouter();
+  const { isEmergencyModeActive } = useIsEmergencyModeActive();
+  const [showBanner, setShowBanner] = useState(true);
 
   const proposalId = Array.isArray(router.query.proposalId)
     ? router.query.proposalId[0]
     : router.query.proposalId;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowBanner(window.innerWidth >= MAX_SCREEN_WIDTH_PROPOSAL_FLOW);
+    };
+
+    handleResize();
+
+    const observer = new ResizeObserver(() => {
+      handleResize();
+    });
+
+    observer.observe(document.body);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <ProposalsWrapper>
@@ -34,7 +58,7 @@ export const ProposalsSection = () => {
           <SearchInput />
         </ProposalsDisclaimerWrapper>
       </FlexWrapper>
-      <ProposalFlowBanner />
+      {!isEmergencyModeActive && showBanner && <ProposalFlowBanner />}
       {proposalId ? <ProposalSearchItem id={proposalId} /> : <ProposalsList />}
     </ProposalsWrapper>
   );

@@ -4,36 +4,27 @@ import invariant from 'tiny-invariant';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { UseApproveResponse } from 'shared/blockchain/hooks/use-approve';
 import { useTxModalSupport } from './modal-stages';
-import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
-import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { getTokenAddress } from 'shared/blockchain/get-contract-address';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useDualGovernanceContext } from 'providers/dual-governance';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
-import { erc20Abi } from 'abi/ts';
 import { ActionArgs } from '../types';
 import { useSupportVetoTxSender } from './tx-sender';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
+import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
 
 type Args = {
   approveData: UseApproveResponse;
 } & ActionArgs;
 
-export const useSupportVetoAction = ({
-  approveData,
-  onConfirm,
-  onRetry,
-}: Args) => {
-  const { chainId } = useLidoSDK();
+export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
   const { address } = useAccount();
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalSupport();
   const sendSupportVetoTx = useSupportVetoTxSender();
   const waitForTx = useTxConfirmation();
-  const readTokenGetter = useReadContractGetter(erc20Abi);
   const { isAssetManagementLocked, vetoSignallingAddress } =
     useDualGovernanceContext();
   const { visibleState } = useDualGovernanceContext();
@@ -43,6 +34,7 @@ export const useSupportVetoAction = ({
     visibleState === VisibleGovernanceState.BlockedRageQuit;
 
   const { confirm } = useConfirmModal();
+  const { refetchAll } = useRefetchEscrowData();
 
   return useCallback(
     async (args: EscrowActionArgs) => {
@@ -116,14 +108,10 @@ export const useSupportVetoAction = ({
 
         await waitForTx(txHash);
 
-        const tokenAddress = getTokenAddress(args.token, chainId);
+        txModalStages.success(actionArgs, txHash);
 
-        const [tokenBalance] = await Promise.all([
-          readTokenGetter(tokenAddress)('balanceOf', [address]),
-          onConfirm(),
-        ]);
+        await refetchAll();
 
-        txModalStages.success(actionArgs, txHash, tokenBalance);
         return true;
       } catch (error) {
         console.warn(error);
@@ -142,9 +130,7 @@ export const useSupportVetoAction = ({
       sendSupportVetoTx,
       isMultisig,
       waitForTx,
-      chainId,
-      readTokenGetter,
-      onConfirm,
+      refetchAll,
       approve,
       onRetry,
     ],

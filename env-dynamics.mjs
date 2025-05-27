@@ -19,9 +19,9 @@ const toBoolean = (val) => {
 export const ipfsMode = toBoolean(process.env.IPFS_MODE);
 
 /** @type string */
-export const rootOrigin = process.env.ROOT_ORIGIN || 'https://#';
+export const rootOrigin = process.env.ROOT_ORIGIN || 'https://lido.fi';
 export const selfOrigin =
-  process.env.SELF_ORIGIN || 'https://dg-holesky.testnet.fi/';
+  process.env.SELF_ORIGIN || 'https://dg-holesky.testnet.fi';
 // Fix in the build time (build time don't have env vars)
 
 /** @type string */
@@ -30,11 +30,13 @@ export const voteOrigin =
   process.env.VOTE_ORIGIN || 'https://vote-hoodi.testnet.fi';
 // Fix in the build time (build time don't have env vars)
 
-// Keep fallback as in 'config/get-secret-config.ts'
+// Parse supported chains from environment or use defaults
 /** @type number */
-export const defaultChain = 560048;
+export const defaultChain = parseInt(process.env.DEFAULT_CHAIN || '560048', 10);
 /** @type number[] */
-export const supportedChains = [560048];
+export const supportedChains = process.env.SUPPORTED_CHAINS
+  ? process.env.SUPPORTED_CHAINS.split(',').map((chain) => parseInt(chain, 10))
+  : [560048];
 
 /** @type string[] */
 export const prefillUnsafeElRpcUrls1 =

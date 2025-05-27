@@ -73,18 +73,23 @@ const FormatSingleCall: React.FC<{
       .map((arg, i) => {
         const formatted = formatArg(arg, chainId);
         return formatted ? (
-          <CallDataItem key={i}>
+          <CallDataItem key={`${id}-arg-${i}`}>
             [{i + 1}] {formatted}
           </CallDataItem>
         ) : null;
       })
       .filter((item) => item)
   ) : (
-    <CallDataItem>[empty]</CallDataItem>
+    <CallDataItem key={`${id}-empty`}>[empty]</CallDataItem>
   );
 
   return (
-    <CallWrapper style={{ paddingLeft: `${depth * 20}px` }}>
+    <CallWrapper
+      style={{
+        paddingLeft: `${depth * 20}px`,
+        marginBottom: '40px',
+      }}
+    >
       <CallTitle>
         {id}. On [{decodedCall.contractName || 'Unknown'}]
         <br />
@@ -100,14 +105,12 @@ const FormatSingleCall: React.FC<{
             <>
               (
               {formattedArgs.map((param, i) => (
-                <>
+                <React.Fragment key={`${id}-param-${i}`}>
                   <br />
-                  <React.Fragment key={i}>
-                    <span>{` ${param}`}</span>
-                    {i < formattedArgs.length - 1 && ','}
-                    {i === formattedArgs.length - 1 && <br />}
-                  </React.Fragment>
-                </>
+                  <span>{` ${param}`}</span>
+                  {i < formattedArgs.length - 1 && ','}
+                  {i === formattedArgs.length - 1 && <br />}
+                </React.Fragment>
               ))}
               )
             </>

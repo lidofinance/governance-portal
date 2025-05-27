@@ -5,10 +5,7 @@ import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import {
-  ProposalCombinedData,
-  SubmitProposalCall,
-} from 'features/dual-governance/proposals/types';
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from '../events/get-proposal-submitted-events';
 
 type UseProposalConfig = {
@@ -42,44 +39,37 @@ export const useProposal = ({
         );
         const _chainId = chainId;
 
-        const { DGEvents, EPTEvents } = await getProposalSubmittedEvents({
-          client: publicClient,
-          chainId: _chainId,
-          EPTContract: emergencyProtectedTimelock,
-        });
-
-        const dualGovernanceEvent = DGEvents.find(
-          (log) => Number(log.args.proposalId) === Number(id),
-        );
+        const { mergedProposalSubmittedEvents } =
+          await getProposalSubmittedEvents({
+            client: publicClient,
+            EPTContract: emergencyProtectedTimelock,
+          });
 
         const proposalLog =
-          EPTEvents.find((event) => event.args.id === BigInt(id)) || null;
+          mergedProposalSubmittedEvents.find(
+            (event) => Number(event.proposalId) === id,
+          ) || null;
 
         if (!proposalLog) {
           throw new Error('No proposal events found');
         }
 
         const result: ProposalCombinedData = {
-          id: Number(proposalId),
-          event: proposalLog,
+          ...proposalLog,
+          proposalId: Number(proposalLog.proposalId),
           proposalDetails: {
             ...proposalInfo[0],
-            calls: proposalInfo[1] as SubmitProposalCall[],
           },
         };
 
         const voteId = await isAragonProposal({
           client: publicClient,
-          proposalLog: proposalLog,
+          proposalLog: proposalLog.DGEvent,
           chainId: _chainId,
         });
 
         if (voteId) {
           result.voteId = Number(voteId);
-        }
-
-        if (dualGovernanceEvent) {
-          result.proposalDualGovernanceDetails = dualGovernanceEvent.args;
         }
 
         return result;

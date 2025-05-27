@@ -18,12 +18,19 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
         functionName: F,
         args?: A,
       ) => {
-        return readContract(rpcProvider, {
-          abi,
-          address,
-          functionName,
-          args,
-        });
+        try {
+          return await readContract(rpcProvider, {
+            abi,
+            address,
+            functionName,
+            args,
+          });
+        } catch (error) {
+          console.debug(
+            `Error reading contract ${address}.${String(functionName)}`,
+          );
+          return null as any;
+        }
       },
     [abi, rpcProvider],
   );

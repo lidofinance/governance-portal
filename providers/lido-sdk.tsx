@@ -31,8 +31,9 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
   const { data: walletClient } = useConnectorClient();
 
   const sdk = useMemo(() => {
+    const currentChainId = chainId;
     const core = new LidoSDKCore({
-      chainId,
+      chainId: currentChainId,
       logMode: 'none',
       rpcProvider: publicClient as any,
       web3Provider: walletClient as any,
@@ -40,10 +41,12 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
       rpcUrls: !publicClient && fallbackRpcUrl ? [fallbackRpcUrl] : undefined,
     });
 
+    console.debug(`LidoSDK initialized with chainId: ${currentChainId}`);
+
     return {
       rpcProvider: core.rpcProvider,
       web3Provider: core.web3Provider as WalletClient,
-      chainId: core.chainId as CHAINS,
+      chainId: currentChainId as CHAINS,
       subscribeToTokenUpdates: subscribe,
     };
   }, [chainId, fallbackRpcUrl, publicClient, walletClient, subscribe]);

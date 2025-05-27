@@ -43,6 +43,18 @@ export const NftItemWrapper = styled.label<ItemProps>`
   }
 `;
 
+export const OwnerWrapper = styled.div`
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const OwnerLabel = styled(Text)`
+  font-size: 14px;
+  margin-bottom: 2px;
+`;
+
 export const Amount = styled(Text).attrs({
   color: 'primary',
   size: 14,

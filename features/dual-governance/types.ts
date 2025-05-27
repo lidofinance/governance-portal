@@ -109,6 +109,28 @@ export type EscrowActionWithEthArgs =
   | EscrowActionArgs
   | { token: 'ETH'; amount: bigint; escrowAddress: Address };
 
+export const isWithdrawalNFTArgs = (
+  args: EscrowActionWithEthArgs,
+): args is {
+  token: 'Withdrawal NFT';
+  selectedNftIds: string[];
+  escrowAddress: Address;
+} => {
+  return args.token === 'Withdrawal NFT';
+};
+
+export const isTokenAmountArgs = (
+  args: EscrowActionWithEthArgs,
+): args is {
+  token: 'stETH' | 'wstETH' | 'ETH';
+  amount: bigint;
+  escrowAddress: Address;
+} => {
+  return (
+    args.token === 'stETH' || args.token === 'wstETH' || args.token === 'ETH'
+  );
+};
+
 export enum UnstETHRecordStatus {
   NotLocked,
   Locked,

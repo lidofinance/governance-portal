@@ -7,9 +7,11 @@ import {
   isQuorumReached,
 } from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { usePublicClient } from 'wagmi';
+import { usePublicClient, useChainId } from 'wagmi';
 import { VoteData, VoteStatus } from 'shared/votes/types';
 import { findAbiItem } from 'utils/find-abi-item';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
   limit: number;
@@ -61,11 +63,27 @@ const filterVotes = (votes: VoteData[]) => {
 export const useVotes = ({ limit, getActive = false }: Props) => {
   const AragonVoting = useReadContract(Voting);
   const client = usePublicClient();
+  const isSupportedChain = useIsSupportedChain();
+  const chainId = useChainId();
+  const { chainId: sdkChainId } = useLidoSDK();
 
   return useQuery({
-    queryKey: ['activeVotes', limit],
+    queryKey: ['activeVotes', limit, chainId],
+    enabled: isSupportedChain && chainId === sdkChainId,
     queryFn: async () => {
       try {
+        if (!isSupportedChain) {
+          console.warn('Votes query skipped - unsupported chain');
+          return { votes: [] };
+        }
+
+        if (chainId !== sdkChainId) {
+          console.warn(
+            `Chain mismatch: Current chain ${chainId}, SDK chain ${sdkChainId}`,
+          );
+          return { votes: [] };
+        }
+
         const votesTotalBn = await AragonVoting.readContract('votesLength');
         const votesTotal = Number(votesTotalBn);
         if (!votesTotal) {
@@ -125,7 +143,7 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
 
               return {
                 voteId,
-                id: voteId,
+                proposalId: voteId,
                 vote,
                 canExecute,
                 event: startEvent,

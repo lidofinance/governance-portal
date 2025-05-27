@@ -13,14 +13,17 @@ import { useClaimCustomNftModal } from '../../modals/modal-manager';
 import { Button } from 'shared/components/button';
 import { FlexWrapper } from 'shared/styled-components';
 import { Box } from 'shared/components/box';
-import { VisibleGovernanceState } from '../../types';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { WithdrawalQueue } from 'shared/blockchain/contracts';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 export const RevocationPanel = () => {
   const {
     isLoading: isDualGovernanceStateLoading,
     refetch: refetchDualGovernanceState,
-    visibleState,
+    historicalEscrowAddresses,
   } = useDualGovernanceContext();
+  const isSupportedChain = useIsSupportedChain();
   const {
     data: escrowBalances,
     isLoading: isEscrowBalanceDataLoading,
@@ -28,6 +31,7 @@ export const RevocationPanel = () => {
   } = useEscrowBalances();
 
   const isLoading = isDualGovernanceStateLoading || isEscrowBalanceDataLoading;
+
   const claimNFTs = useClaimCustomNftAction();
   const { openModal: openCustomNftModal } = useClaimCustomNftModal();
 
@@ -38,13 +42,15 @@ export const RevocationPanel = () => {
     ]);
   }, [refetchDualGovernanceState, refetchEscrowBalances]);
 
+  const withdrawalQueueContract = useReadContract(WithdrawalQueue);
+
   if (isLoading) {
     return <Loader />;
   }
   if (!escrowBalances || escrowBalances.totalLockedSharesInEscrows === 0n) {
     return (
       <>
-        {visibleState === VisibleGovernanceState.BlockedRageQuit && (
+        {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
           <Box marginBottom="20px">
             <RevocableTokenItemStyled>
               <FlexWrapper
@@ -59,9 +65,11 @@ export const RevocationPanel = () => {
                   onClick={() =>
                     openCustomNftModal({
                       claimNFTs,
+                      historicalEscrowAddresses,
                     })
                   }
                   size="sm"
+                  disabled={!isSupportedChain}
                 >
                   Claim
                 </Button>
@@ -93,7 +101,7 @@ export const RevocationPanel = () => {
 
   return (
     <>
-      {visibleState === VisibleGovernanceState.BlockedRageQuit && (
+      {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
         <Box marginBottom="20px">
           <RevocableTokenItemStyled>
             <FlexWrapper
@@ -108,9 +116,11 @@ export const RevocationPanel = () => {
                 onClick={() =>
                   openCustomNftModal({
                     claimNFTs,
+                    historicalEscrowAddresses,
                   })
                 }
                 size="sm"
+                disabled={!isSupportedChain}
               >
                 Claim
               </Button>
@@ -129,6 +139,7 @@ export const RevocationPanel = () => {
           rageQuitBalance={balanceRecord}
           onConfirm={updateDualGovernanceState}
           claimNFTs={claimNFTs}
+          withdrawalQueueContract={withdrawalQueueContract}
         />
       ))}
     </>

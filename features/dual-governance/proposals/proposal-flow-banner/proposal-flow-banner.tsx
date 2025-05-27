@@ -8,17 +8,27 @@ import {
 } from './style';
 import { Text } from 'shared/components/text';
 import { FlexWrapper } from 'shared/styled-components';
+import { useProposalDelaysQuery } from '../../hooks/use-proposal-timelock';
 
 export const ProposalFlowBanner = () => {
+  const { data: delays } = useProposalDelaysQuery({
+    enabled: true,
+  });
+
   return (
     <FlowBannerWrapper>
       <Text size={22} weight={600}>
         Proposal Flow in Dual Governance
       </Text>
-      <Text color="secondary">
-        Minimum time to execution is 72h — but it can be longer if a dynamic
-        timelock is triggered
-      </Text>
+      {delays && (
+        <Text color="secondary">
+          Minimum time to execution is{' '}
+          {delays.afterScheduleDelay + delays.afterSubmitDelay < 3600
+            ? `${Math.round((delays.afterScheduleDelay + delays.afterSubmitDelay) / 60)} minutes`
+            : `${Math.round((delays.afterScheduleDelay + delays.afterSubmitDelay) / 3600)} hours`}{' '}
+          — but it can be longer if a dynamic timelock is triggered
+        </Text>
+      )}
       <ProposalsWrapper>
         <FlowItem>
           <FlexWrapper $alignItems="center">
@@ -29,7 +39,7 @@ export const ProposalFlowBanner = () => {
             </Badge>
           </FlexWrapper>
           <FlowDescription size={15} color="secondary">
-            LDO quorum reached and proposal approved
+            LDO quorum reached <br /> and proposal approved
           </FlowDescription>
         </FlowItem>
         <Arrow>
@@ -43,11 +53,16 @@ export const ProposalFlowBanner = () => {
               </Text>
             </Badge>
           </FlexWrapper>
-          <FlowDescription size={15} color="secondary">
-            Timelock: 72 hours
-            <br />
-            Veto power: stETH
-          </FlowDescription>
+          {delays && (
+            <FlowDescription size={15} color="secondary">
+              Timelock:{' '}
+              {delays.afterSubmitDelay < 3600
+                ? `${Math.round(delays.afterSubmitDelay / 60)} minutes`
+                : `${Math.round(delays.afterSubmitDelay / 3600)} hours`}
+              <br />
+              Override: stETH
+            </FlowDescription>
+          )}
           <FlowDescription size={15} color="secondary"></FlowDescription>
         </FlowItem>
         <Arrow>
@@ -61,26 +76,31 @@ export const ProposalFlowBanner = () => {
               </Text>
             </Badge>
           </FlexWrapper>
-          <FlowDescription size={15} color="secondary">
-            Timelock: 48 hours
-            <br />
-            Veto power: Emergency committee
-          </FlowDescription>
+          {delays && (
+            <FlowDescription size={15} color="secondary">
+              Timelock:{' '}
+              {delays.afterScheduleDelay < 3600
+                ? `${Math.round(delays.afterScheduleDelay / 60)} minutes`
+                : `${Math.round(delays.afterScheduleDelay / 3600)} hours`}
+              <br />
+              Override: Emergency committee
+            </FlowDescription>
+          )}
         </FlowItem>
         <Arrow>
           <span></span>
         </Arrow>
         <FlowItem>
           <FlexWrapper $alignItems="center">
-            <Badge $variant="success">
+            <Badge $variant="default">
               <Text color="primary" weight={600}>
                 Executed
               </Text>
             </Badge>
           </FlexWrapper>
           <FlowDescription size={15} color="secondary">
-            Execution is permissionless <br />
-            after the submission timelock ends
+            Anyone can execute the proposal <br /> after the scheduled delay
+            ends
           </FlowDescription>
         </FlowItem>
       </ProposalsWrapper>

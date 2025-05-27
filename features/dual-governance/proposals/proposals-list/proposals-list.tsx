@@ -14,6 +14,7 @@ import { FlexWrapper } from 'shared/styled-components';
 import Link from 'next/link';
 import { config } from 'config';
 import { PROPOSALS_PATH } from 'constants/urls';
+import { Address } from 'viem';
 
 const PAGE_LIMIT_STEP = 4;
 
@@ -80,9 +81,10 @@ export const ProposalsList = () => {
                 <Link
                   href={`${config.voteOrigin}/vote/${dataItem.voteId}`}
                   key={dataItem.voteId}
+                  target="_blank"
                 >
                   <VoteItem
-                    id={dataItem.id}
+                    proposalId={dataItem.proposalId}
                     description={dataItem.event?.metadata}
                     script={dataItem.vote.script}
                     state={dataItem.state}
@@ -95,16 +97,15 @@ export const ProposalsList = () => {
                 </Link>
               ) : (
                 <Link
-                  href={`${PROPOSALS_PATH}/${dataItem.id}`}
-                  key={dataItem.id}
+                  href={`${PROPOSALS_PATH}/${dataItem.proposalId}`}
+                  key={dataItem.proposalId}
                 >
                   <ProposalsListItem
-                    id={dataItem.id}
-                    description={
-                      dataItem.proposalDualGovernanceDetails?.metadata || ''
-                    }
-                    calls={dataItem.event.args.calls}
+                    id={dataItem.proposalId}
+                    description={dataItem.DGEvent?.args.metadata || ''}
+                    calls={dataItem.EPTEvent?.args?.calls}
                     proposalDetails={dataItem.proposalDetails}
+                    proposer={dataItem.DGEvent?.args.proposerAccount as Address}
                   />
                 </Link>
               );
