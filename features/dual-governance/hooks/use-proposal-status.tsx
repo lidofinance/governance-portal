@@ -79,6 +79,7 @@ export const useProposalStatus = ({
   useEffect(() => {
     if (proposalStatus === ProposalStatus.Submitted && submittedAt && delays) {
       if (
+        visibleState === VisibleGovernanceState.Loading ||
         visibleState === VisibleGovernanceState.Normal ||
         visibleState === VisibleGovernanceState.Warning
       ) {
