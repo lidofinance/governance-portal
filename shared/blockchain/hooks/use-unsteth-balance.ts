@@ -8,7 +8,7 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 /**
  *  For the Mainnet network we use the getWithdrawalRequests method directly, for the rest we have unoptimized workaround,
- *  as WithdrawalQueueMock contract doesnt' have this method
+ *  as WithdrawalQueueMock contract doesn't have this method
  */
 export const useUnstEthBalance = () => {
   const { chainId } = useLidoSDK();

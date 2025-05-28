@@ -4,22 +4,28 @@ import { Address } from 'viem';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useDynamicDualGovernance } from '../../hooks/use-dynamic-dual-governance';
 
 export const useScheduleProposalTxSend = () => {
   const { chainId } = useLidoSDK();
   const writeDualGovernanceContract = useWriteContract(DualGovernance.abi);
+  const { currentDualGovernanceAddress } = useDynamicDualGovernance();
 
   return useCallback(
     async (id: number) => {
       invariant(writeDualGovernanceContract, 'Contract is not found');
 
-      // TODO: get governance contract from EPT contract
+      // Use the dynamic DualGovernance address from EmergencyProtectedTimelock
+      const governanceAddress =
+        currentDualGovernanceAddress ||
+        (DualGovernance.chainAddressMap[chainId] as Address);
+
       return writeDualGovernanceContract({
-        address: DualGovernance.chainAddressMap[chainId] as Address,
+        address: governanceAddress,
         functionName: 'scheduleProposal',
         args: [BigInt(id)],
       });
     },
-    [chainId, writeDualGovernanceContract],
+    [chainId, writeDualGovernanceContract, currentDualGovernanceAddress],
   );
 };
