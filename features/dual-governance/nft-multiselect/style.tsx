@@ -1,0 +1,131 @@
+import styled, { css } from 'styled-components';
+import { Button, Checkbox, Input, PopupMenu } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
+
+type ItemProps = {
+  $checked?: boolean;
+  $interactive?: boolean;
+};
+
+export const NftItemWrapper = styled.label<ItemProps>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+
+  ${({ $checked }) =>
+    $checked &&
+    css`
+      background-color: #0085ff14;
+    `}
+
+  ${({ $interactive }) =>
+    $interactive &&
+    css`
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(0, 133, 255, 0.1);
+      }
+      &:not(:last-child) {
+        border-bottom: 1px solid #0000001a;
+      }
+    `}
+  
+    
+  transition: background-color 0.2s;
+  &:first-child {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+  &:last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+`;
+
+export const OwnerWrapper = styled.div`
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const OwnerLabel = styled(Text)`
+  font-size: 14px;
+  margin-bottom: 2px;
+`;
+
+export const Amount = styled(Text).attrs({
+  color: 'primary',
+  size: 14,
+})`
+  margin-left: auto;
+  margin-right: 8px;
+`;
+
+export const CheckboxStyled = styled(Checkbox)`
+  // ignore flex gap
+  margin-right: calc(20px - 8px);
+`;
+
+export const ActionsWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  gap: 10px;
+`;
+
+export const NftMultiselectInput = styled(Input)<{ $isOpen: boolean }>`
+  width: 100%;
+
+  *,
+  & > * {
+    cursor: pointer;
+  }
+
+  & > span {
+    border-top: none;
+    border-radius: 0 0 30px 30px;
+    padding: 30px 14px 30px 20px;
+
+    & > div {
+      & > input {
+        font-size: 17px;
+      }
+
+      & > span {
+        font-size: 17px;
+        color: var(--primary-color-black-50);
+      }
+    }
+  }
+
+  svg {
+    ${({ $isOpen }) => $isOpen && `transform: rotate(180deg);`}
+    transition: transform .2s;
+  }
+`;
+
+export const PopupMenuStyled = styled(PopupMenu)`
+  margin-top: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+`;
+
+export const PopupHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 16px;
+`;
+
+export const PopupSelectAllButton = styled(Button).attrs({
+  variant: 'text',
+  size: 'xs',
+})`
+  color: #0085ff;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 26px;
+  border-radius: 30px;
+`;

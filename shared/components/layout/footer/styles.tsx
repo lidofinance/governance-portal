@@ -3,7 +3,8 @@ import { Container, Link } from '@lidofinance/lido-ui';
 
 import { LogoLido } from 'shared/components/logos/logos';
 
-import { ReactComponent as ExternalLinkIcon } from 'assets/icons/external-link-icon.svg';
+import { ExternalLinkIcon } from 'shared/components/icons';
+
 import { devicesHeaderMedia } from 'styles/global';
 
 export const FooterStyle = styled(Container)`
@@ -18,11 +19,15 @@ export const FooterStyle = styled(Container)`
   max-width: var(--footer-max-width);
   padding: var(--footer-desktop-padding-y) var(--footer-desktop-padding-x);
 
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     margin-bottom: var(--footer-mobile-margin-bottom);
     padding: var(--footer-mobile-padding-x) var(--footer-mobile-padding-y);
     justify-content: center;
   }
+`;
+
+export const FooterBorderWrapper = styled.div`
+  border-top: 1px solid var(--custom-border);
 `;
 
 type FooterLinkProps = {
@@ -70,20 +75,6 @@ export const LinkDivider = styled.div`
 
 export const LogoLidoStyle = styled(LogoLido)`
   margin-right: ${({ theme }) => theme.spaceMap.xxl}px;
-`;
-
-export const FooterDivider = styled.div`
-  position: absolute;
-  top: 0;
-  left: var(--footer-desktop-padding-x);
-  width: calc(100% - var(--footer-desktop-padding-x) * 2);
-  height: 1px;
-  background: var(--lido-color-popupMenuItemBgActiveHover);
-  opacity: 0.12;
-
-  @media ${devicesHeaderMedia.mobile} {
-    display: none;
-  }
 `;
 
 export const Version = styled(FooterLink)`

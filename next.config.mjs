@@ -26,7 +26,8 @@ export const CACHE_CONTROL_PAGES = [
   '/',
   '/manifest.json',
   '/favicon:size*',
-  '/runtime/window-env.js',
+  '/public/runtime/window-env.js',
+  '/proposals/:id',
 ];
 export const CACHE_CONTROL_VALUE =
   'public, max-age=15, s-max-age=30, stale-if-error=604800, stale-while-revalidate=172800';
@@ -132,9 +133,7 @@ export default withBundleAnalyzer({
       })),
     ];
   },
-  redirects: () => [
-
-  ],
+  redirects: () => [],
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`
   serverRuntimeConfig: {
@@ -145,7 +144,8 @@ export default withBundleAnalyzer({
     defaultChain: process.env.DEFAULT_CHAIN,
     rpcUrls_1: process.env.EL_RPC_URLS_1,
     rpcUrls_17000: process.env.EL_RPC_URLS_17000,
-    rpcUrls_11155111: process.env.EL_RPC_URLS_11155111,
+    rpcUrls_560048: process.env.EL_RPC_URLS_560048,
+    etherscanApiKey: process.env.ETHERSCAN_API_KEY,
 
     cspTrustedHosts: process.env.CSP_TRUSTED_HOSTS,
     cspReportUri: process.env.CSP_REPORT_URI,

@@ -2,18 +2,10 @@ import { ReactNode, FC, PropsWithChildren } from 'react';
 
 import { ContainerProps } from '@lidofinance/lido-ui';
 
-import { config } from 'config';
-
-import { IPFSInfoBox } from 'features/ipfs/ipfs-info-box';
-
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
 import { Main } from './main/main';
-import {
-  LayoutTitleStyle,
-  LayoutSubTitleStyle,
-  IPFSInfoBoxOnlyMobileAndPortableWrapper,
-} from './styles';
+import { LayoutTitleStyle, LayoutSubTitleStyle } from './style';
 
 type Props = {
   title?: ReactNode;
@@ -29,11 +21,6 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
     <>
       <Header />
       <Main size={containerSize}>
-        {config.ipfsMode && (
-          <IPFSInfoBoxOnlyMobileAndPortableWrapper>
-            <IPFSInfoBox />
-          </IPFSInfoBoxOnlyMobileAndPortableWrapper>
-        )}
         <LayoutTitleStyle>{title}</LayoutTitleStyle>
         <LayoutSubTitleStyle>{subtitle}</LayoutSubTitleStyle>
         {children}

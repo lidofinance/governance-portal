@@ -1,6 +1,5 @@
-export { Button } from './button/button';
+export { WalletButton } from './wallet-button';
 export { Card, CardRow, CardBalance, CardAccount } from './card/card';
-export { Connect } from './connect/connect';
+export { ConnectWalletButton } from './connect-wallet-button';
 export { Fallback } from './fallback/fallback';
-export { LidoMultichainFallback } from './lido-multichain-fallback/lido-multichain-fallback';
 export { UnsupportedChainButton } from './unsupported-chain-button/unsupported-chain-button';

@@ -1,0 +1,1 @@
+export { useClaimCustomNftAction } from './action';

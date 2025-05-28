@@ -1,18 +1,15 @@
 import { createContext, useContext, useMemo } from 'react';
-import { LidoSDKCore } from '@lidofinance/lido-ethereum-sdk/core';
-import {
-  LidoSDKstETH,
-  LidoSDKwstETH,
-} from '@lidofinance/lido-ethereum-sdk/erc20';
+import { CHAINS, LidoSDKCore } from '@lidofinance/lido-ethereum-sdk/core';
 import invariant from 'tiny-invariant';
 import { useChainId, useClient, useConnectorClient } from 'wagmi';
-import { useTokenTransferSubscription } from 'shared/hooks/use-balance';
 import { useGetRpcUrlByChainId } from 'config/rpc';
+import { useTokenTransferSubscription } from 'shared/blockchain/hooks/use-token-transfer-subscription';
+import { PublicClient, WalletClient } from 'viem';
 
 type LidoSDKContextValue = {
-  core: LidoSDKCore;
-  steth: LidoSDKstETH;
-  wsteth: LidoSDKwstETH;
+  rpcProvider: PublicClient;
+  web3Provider: WalletClient;
+  chainId: CHAINS;
   subscribeToTokenUpdates: ReturnType<typeof useTokenTransferSubscription>;
 };
 
@@ -26,16 +23,17 @@ export const useLidoSDK = () => {
 };
 
 export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
-  const subscribe = useTokenTransferSubscription();
   const publicClient = useClient();
+  const subscribe = useTokenTransferSubscription();
   const chainId = useChainId();
   const getRpcUrl = useGetRpcUrlByChainId();
   const fallbackRpcUrl = !publicClient ? getRpcUrl(chainId) : undefined;
   const { data: walletClient } = useConnectorClient();
 
   const sdk = useMemo(() => {
+    const currentChainId = chainId;
     const core = new LidoSDKCore({
-      chainId,
+      chainId: currentChainId,
       logMode: 'none',
       rpcProvider: publicClient as any,
       web3Provider: walletClient as any,
@@ -43,11 +41,15 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
       rpcUrls: !publicClient && fallbackRpcUrl ? [fallbackRpcUrl] : undefined,
     });
 
-    const steth = new LidoSDKstETH({ core });
-    const wsteth = new LidoSDKwstETH({ core });
+    console.debug(`LidoSDK initialized with chainId: ${currentChainId}`);
 
-    return { core, steth, wsteth, subscribeToTokenUpdates: subscribe };
-  }, [chainId, fallbackRpcUrl, publicClient, subscribe, walletClient]);
+    return {
+      rpcProvider: core.rpcProvider,
+      web3Provider: core.web3Provider as WalletClient,
+      chainId: currentChainId as CHAINS,
+      subscribeToTokenUpdates: subscribe,
+    };
+  }, [chainId, fallbackRpcUrl, publicClient, walletClient, subscribe]);
   return (
     <LidoSDKContext.Provider value={sdk}>{children}</LidoSDKContext.Provider>
   );

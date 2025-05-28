@@ -1,12 +1,11 @@
 import { FC } from 'react';
 import { ButtonProps } from '@lidofinance/lido-ui';
-
-import { ButtonStyle } from './styles';
+import { Button } from 'shared/components/button';
 
 export const UnsupportedChainButton: FC<ButtonProps> = (props) => {
   return (
-    <ButtonStyle disabled={true} fullwidth {...props}>
+    <Button disabled={true} fullwidth {...props}>
       Unsupported chain
-    </ButtonStyle>
+    </Button>
   );
 };

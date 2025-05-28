@@ -2,7 +2,6 @@ import type { GetStaticProps, GetStaticPropsResult, PreviewData } from 'next';
 import type { ParsedUrlQuery } from 'querystring';
 
 import Metrics from 'utilsApi/metrics';
-import { fetchExternalManifest } from './fetch-external-manifest';
 import { config } from 'config';
 
 export const getDefaultStaticProps = <
@@ -14,21 +13,22 @@ export const getDefaultStaticProps = <
 ): GetStaticProps<P & { ___prefetch_manifest___?: object }, Q, D> => {
   return async (context) => {
     /// common props
-    const { ___prefetch_manifest___ } = await fetchExternalManifest();
-    const props = ___prefetch_manifest___ ? { ___prefetch_manifest___ } : {};
-    const base = {
+    // we don't have IPFS so far
+    // const props = ___prefetch_manifest___ ? { ___prefetch_manifest___ } : {};
+    const props = {};
+    const base: GetStaticPropsResult<typeof props> = {
       props,
       // because next only remembers first value, default to short revalidation period
       revalidate: config.DEFAULT_REVALIDATION,
     };
+    let result = base as GetStaticPropsResult<P>;
 
     /// custom getStaticProps
-    let result = base as GetStaticPropsResult<P>;
     if (custom) {
       const { props: customProps, ...rest } = (await custom(context)) as any;
       result = {
-        ...base,
         ...rest,
+        ...result,
         props: { ...base.props, ...customProps },
       };
     }

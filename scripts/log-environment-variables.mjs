@@ -1,38 +1,36 @@
 export const openKeys = [
-  'SELF_ORIGIN',
   'ROOT_ORIGIN',
-  'DOCS_ORIGIN',
-  'HELP_ORIGIN',
-  'RESEARCH_ORIGIN',
+  // 'DOCS_ORIGIN',
+  // 'HELP_ORIGIN',
+  // 'RESEARCH_ORIGIN',
 
   'SUPPORTED_CHAINS',
   'DEFAULT_CHAIN',
 
-  'CSP_TRUSTED_HOSTS',
-  'CSP_REPORT_ONLY',
-  'CSP_REPORT_URI',
+  // 'CSP_TRUSTED_HOSTS',
+  // 'CSP_REPORT_ONLY',
+  // 'CSP_REPORT_URI',
 
-  'ENABLE_QA_HELPERS',
+  // 'ENABLE_QA_HELPERS',
 
-  'REWARDS_BACKEND',
+  // 'REWARDS_BACKEND',
 
-  'RATE_LIMIT',
-  'RATE_LIMIT_TIME_FRAME',
+  // 'RATE_LIMIT',
+  // 'RATE_LIMIT_TIME_FRAME',
 
-  'ETH_API_BASE_PATH',
-  'WQ_API_BASE_PATH',
-  'MATOMO_URL',
+  // 'ETH_API_BASE_PATH',
+  // 'WQ_API_BASE_PATH',
   'WALLETCONNECT_PROJECT_ID',
-  'REWARDS_BACKEND_BASE_PATH',
+  // 'REWARDS_BACKEND_BASE_PATH',
 ];
 
 export const secretKeys = [
   'EL_RPC_URLS_1',
-  'EL_RPC_URLS_5',
   'EL_RPC_URLS_17000',
-  'EL_RPC_URLS_11155111',
-]
+  'EL_RPC_URLS_560048',
+];
 
+/* eslint-disable no-console */
 
 export const logOpenEnvironmentVariables = () => {
   console.log('---------------------------------------------');
@@ -40,7 +38,7 @@ export const logOpenEnvironmentVariables = () => {
   console.log('---------------------------------------------');
 
   for (const key of openKeys) {
-    if (!process.env.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
       console.error(`${key} - ERROR (not exist in process.env)`);
       continue;
     }
@@ -59,7 +57,7 @@ export const logSecretEnvironmentVariables = () => {
 
   // console.log('process.env:', process.env)
   for (const key of secretKeys) {
-    if (!process.env.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
       console.error(`Secret ${key} - ERROR (not exist in process.env)`);
       continue;
     }

@@ -1,5 +1,5 @@
 import { Gauge, Registry } from 'prom-client';
-import { METRICS_PREFIX, METRIC_NAMES } from 'consts/metrics';
+import { METRICS_PREFIX, METRIC_NAMES } from 'constants/metrics';
 
 export class StartupChecksRPCMetrics {
   requestStatusGauge: Gauge<'rpc_domain' | 'success'>;

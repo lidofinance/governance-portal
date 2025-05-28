@@ -12,7 +12,6 @@ import { Fonts, LidoUIHead } from '@lidofinance/lido-ui';
 
 import { config } from 'config';
 import { contentSecurityPolicy } from 'config/csp';
-import { InsertIpfsBaseScript } from 'features/ipfs/ipfs-base-script';
 
 const secureHeaders = createHeadersObject({ contentSecurityPolicy });
 const cspMetaTagContent =
@@ -29,6 +28,8 @@ export default class MyDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           enhanceApp: (App) => (props) =>
             sheet.collectStyles(<App {...props} />),
         });
@@ -56,15 +57,14 @@ export default class MyDocument extends Document {
 
   // TODO: add meta description
   get metaDescription(): string {
-    return (
-      ''
-    );
+    return '';
   }
 
   get metaPreviewImgUrl(): string {
     const origin = config.ipfsMode
       ? 'https://stake.lido.fi'
-      : config.selfOrigin;
+      : // TODO: fix type
+        (config as any).selfOrigin;
     return `${origin}/lido-preview.png`;
   }
 
@@ -129,7 +129,6 @@ export default class MyDocument extends Document {
           <meta name="currentChain" content={String(config.defaultChain)} />
           <Fonts />
           <LidoUIHead />
-          <InsertIpfsBaseScript />
           {/* eslint-disable-next-line @next/next/no-sync-scripts */}
           <script src={`${config.BASE_PATH_ASSET}/runtime/window-env.js`} />
         </Head>

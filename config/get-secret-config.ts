@@ -10,7 +10,8 @@ export type SecretConfigType = Modify<
 
     rpcUrls_1: [string, ...string[]];
     rpcUrls_17000: [string, ...string[]];
-    rpcUrls_11155111: [string, ...string[]];
+    rpcUrls_560048: [string, ...string[]];
+
     // Dynamic keys like rpcUrls_<number>
     [key: `rpcUrls_${number}`]: string[];
 
@@ -31,7 +32,7 @@ export const getSecretConfig = (): SecretConfigType => {
     ...serverRuntimeConfig,
 
     // Keep fallback as in 'env-dynamics.mjs'
-    defaultChain: Number(serverRuntimeConfig.defaultChain) || 17000,
+    defaultChain: Number(serverRuntimeConfig.defaultChain) || 560048,
 
     // Hack: in the current implementation we can treat an empty array as a "tuple" (conditionally)
     rpcUrls_1: (serverRuntimeConfig.rpcUrls_1?.split(',') ?? []) as [
@@ -42,9 +43,10 @@ export const getSecretConfig = (): SecretConfigType => {
       string,
       ...string[],
     ],
-    rpcUrls_11155111: (serverRuntimeConfig.rpcUrls_11155111?.split(',') ??
-      []) as [string, ...string[]],
-
+    rpcUrls_560048: (serverRuntimeConfig.rpcUrls_560048?.split(',') ?? []) as [
+      string,
+      ...string[],
+    ],
     cspReportOnly: toBoolean(serverRuntimeConfig.cspReportOnly),
 
     rateLimit: Number(serverRuntimeConfig.rateLimit) || 100,

@@ -1,6 +1,6 @@
 import { Link } from '@lidofinance/lido-ui';
-import { useSDK } from '@lido-sdk/react';
-import { getEtherscanTxLink } from '@lido-sdk/helpers';
+import { getEtherscanTxLink } from 'utils/etherscan';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 type TxLinkEtherscanProps = {
   text?: string;
@@ -10,7 +10,7 @@ type TxLinkEtherscanProps = {
 
 export const TxLinkEtherscan = (props: TxLinkEtherscanProps) => {
   const { txHash, text = 'View on Etherscan', onClick } = props;
-  const { chainId } = useSDK();
+  const { chainId } = useLidoSDK();
 
   if (!txHash) return null;
 

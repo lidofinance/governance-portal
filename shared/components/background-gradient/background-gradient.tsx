@@ -1,30 +1,32 @@
+import { VisibleGovernanceState } from 'features/dual-governance/types';
 import {
   BackgroundGradientSvgStyle,
   BackgroundGradientStartStyle,
   BackgroundGradientStopStyle,
-} from './styles';
+} from './style';
 import { Component } from 'types';
 
 export type BackgroundGradientComponent = Component<
   'svg',
-  { width: number; height: number }
+  { width: number; height: number; state: VisibleGovernanceState }
 >;
 
 // svg gradient looks better than css gradient in some browsers
 
 export const BackgroundGradient: BackgroundGradientComponent = (props) => {
-  const { width, height, ...rest } = props;
+  const { width, height, state } = props;
 
   return (
-    <BackgroundGradientSvgStyle width={width} height={height} {...rest}>
-      <radialGradient id="background-gradient" cx="50%" y="50%">
-        <BackgroundGradientStartStyle offset="0%" />
-        <BackgroundGradientStopStyle offset="100%" />
+    <BackgroundGradientSvgStyle>
+      <radialGradient id="background-gradient" cx="50%" y="10%">
+        <BackgroundGradientStartStyle offset="0%" $variant={state} />
+        <BackgroundGradientStopStyle offset="100%" $variant={state} />
       </radialGradient>
       <rect
         width={width}
         height={height}
-        opacity=".1"
+        transform="rotate(-28.8448 1189.71 1017.02)"
+        opacity=".5"
         fill="url(#background-gradient)"
       />
     </BackgroundGradientSvgStyle>

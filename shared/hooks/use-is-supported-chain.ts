@@ -1,14 +1,17 @@
 import { useMemo } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { useUserConfig } from 'config/user-config';
 
 export const useIsSupportedChain = () => {
-  const { chainId } = useAccount();
+  const { chainId: walletChainId } = useAccount();
+  const chainId = useChainId();
   const { supportedChainIds } = useUserConfig();
 
   return useMemo(() => {
-    if (!chainId) return false;
+    if (walletChainId) {
+      return supportedChainIds.indexOf(walletChainId) > -1;
+    }
 
     return supportedChainIds.indexOf(chainId) > -1;
-  }, [chainId, supportedChainIds]);
+  }, [walletChainId, chainId, supportedChainIds]);
 };

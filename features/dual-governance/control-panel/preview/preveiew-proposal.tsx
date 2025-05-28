@@ -1,0 +1,83 @@
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
+import { VoteData } from 'shared/votes/types';
+import { isVoteItem } from '../../types';
+import { IconWrapper, ProposalWrapper, VoteWrapper } from '../style';
+import { AragonLogo, ProposalsIcon } from 'shared/components/icons';
+import { Text } from 'shared/components/text';
+import Link from 'next/link';
+import { config } from 'config';
+import { DGTooltip } from 'features/dual-governance/tooltips';
+import { ReactNode } from 'react';
+import { PROPOSALS_PATH } from 'constants/urls';
+import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
+
+type Props = {
+  proposal: ProposalCombinedData | VoteData;
+};
+
+const ActiveProposalWrapper = ({
+  proposalId,
+  children,
+}: {
+  proposalId: number;
+  children: ReactNode;
+}) => {
+  return (
+    <ProposalWrapper>
+      <IconWrapper>
+        <ProposalsIcon />
+      </IconWrapper>
+      <Text size={22}>
+        <Link href={`${PROPOSALS_PATH}/${proposalId}`}>
+          {`Proposal #${proposalId} `}
+        </Link>
+        &mdash;
+      </Text>
+      <Text as="div" size={22}>
+        {children}
+      </Text>
+    </ProposalWrapper>
+  );
+};
+
+export const PreviewProposal = ({ proposal }: Props) => {
+  const isVote = isVoteItem(proposal);
+
+  const { status, submittedAt, scheduledAt } =
+    'proposalDetails' in proposal
+      ? proposal.proposalDetails
+      : { status: undefined, submittedAt: undefined, scheduledAt: undefined };
+
+  const proposalStatusInfo = useProposalStatus({
+    proposalStatus: status,
+    submittedAt: submittedAt,
+    scheduledAt: scheduledAt,
+  });
+
+  if (isVote) {
+    return (
+      <VoteWrapper>
+        <AragonLogo />
+        <Text size={22}>
+          <Link href={`${config.voteOrigin}/vote/${proposal.proposalId}`}>
+            {`LDO Vote #${proposal.proposalId} `}
+          </Link>
+          &mdash; Not submitted to Dual Governance yet
+        </Text>
+      </VoteWrapper>
+    );
+  }
+
+  return (
+    <ActiveProposalWrapper proposalId={proposal.proposalId}>
+      {proposalStatusInfo && (
+        <>
+          {proposalStatusInfo.badge.text}{' '}
+          {proposalStatusInfo.badge.text === 'Ready to execute' && (
+            <DGTooltip topic="readyToExecute" />
+          )}
+        </>
+      )}
+    </ActiveProposalWrapper>
+  );
+};

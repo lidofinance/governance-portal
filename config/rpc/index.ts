@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
-import { useSDK } from '@lido-sdk/react';
-
-import { CHAINS } from 'consts/chains';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 // Don't use absolute import here!
 // code'''
@@ -42,6 +41,6 @@ export const useGetRpcUrlByChainId = () => {
 };
 
 export const useRpcUrl = () => {
-  const { chainId } = useSDK();
+  const { chainId } = useLidoSDK();
   return useGetRpcUrlByChainId()(chainId as number);
 };

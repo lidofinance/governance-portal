@@ -7,9 +7,9 @@ import { mainnet } from 'wagmi/chains';
 
 import { Web3Provider } from '@ethersproject/providers';
 import { ProviderSDK } from '@lido-sdk/react';
-import { getStaticRpcBatchProvider } from '@lido-sdk/providers';
+import { getStaticRpcBatchProvider } from 'utils/providersRPC';
 
-import { useDappStatus } from 'shared/hooks/use-dapp-status';
+import { useDappStatus } from 'shared/hooks';
 
 type SDKLegacyProviderProps = PropsWithChildren<{
   defaultChainId: number;

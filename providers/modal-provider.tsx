@@ -83,7 +83,7 @@ const ModalProviderRaw = ({ children }: ModalProviderRaw) => {
       setModalState({ modal, props });
 
       /**
-       * Sessin-based handlers
+       * Session-based handlers
        */
       const updateProps = (nextProps: typeof props) => {
         if (modalSessionRef.current === modalSession) {
