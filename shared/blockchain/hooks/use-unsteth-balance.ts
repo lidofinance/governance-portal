@@ -4,47 +4,111 @@ import { useAccount } from 'wagmi';
 import { useReadContract } from './use-read-contract';
 import { WithdrawalQueue } from '../contracts';
 import { WithdrawalsMap } from 'features/dual-governance/types';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
-// WARNING: The current implementation of fetching user's withdrawal requests is far from optimal.
-// This is becase the `getWithdrawalRequests` method is not implemented in the mocked version of the WithdrawalQueue contract.
-// TODO: Use the `getWithdrawalRequests` method from the WithdrawalQueue contract.
+/**
+ *  For the Mainnet network we use the getWithdrawalRequests method directly, for the rest we have unoptimized workaround,
+ *  as WithdrawalQueueMock contract doesnt' have this method
+ */
 export const useUnstEthBalance = () => {
   const { chainId } = useLidoSDK();
-  const { address } = useAccount();
+  const { address: accountAddress } = useAccount();
   const withdrawalQueue = useReadContract(WithdrawalQueue);
 
   return useQuery({
-    queryKey: ['unsteth-balance', chainId, address],
-    enabled: !!address,
+    queryKey: ['unsteth-balance', chainId, accountAddress],
+    enabled: !!accountAddress,
     queryFn: async () => {
-      if (!address) return;
+      if (!accountAddress)
+        return { withdrawalRequests: {}, requestsTotalStEthAmount: 0n };
 
-      const lastRequestId = Number(
-        await withdrawalQueue.readContract('getLastRequestId'),
-      );
+      try {
+        if (chainId === CHAINS.Mainnet) {
+          try {
+            const withdrawalRequests = await withdrawalQueue.readContract(
+              'getWithdrawalRequests' as any,
+              [accountAddress],
+            );
 
-      const requestIds = Array.from({ length: lastRequestId }, (_, i) =>
-        BigInt(i + 1),
-      );
+            const eligibleRequests: WithdrawalsMap = {};
+            let requestsTotalStEthAmount = 0n;
 
-      const eligibleRequests: WithdrawalsMap = {};
+            if (
+              Array.isArray(withdrawalRequests) &&
+              withdrawalRequests.length > 0
+            ) {
+              withdrawalRequests.forEach((requestId: any) => {
+                if (requestId && typeof requestId === 'bigint') {
+                  eligibleRequests[requestId.toString()] = 0n;
+                }
+              });
 
-      const withdrawalRequests = await withdrawalQueue.readContract(
-        'getWithdrawalStatus',
-        [requestIds],
-      );
+              const requestDetails = await withdrawalQueue.readContract(
+                'getWithdrawalStatus',
+                [withdrawalRequests],
+              );
 
-      let requestsTotalStEthAmount = 0n;
+              if (Array.isArray(requestDetails)) {
+                requestDetails.forEach((request: any, index: number) => {
+                  if (request && typeof request === 'object') {
+                    const { amountOfStETH } = request;
+                    const requestId = withdrawalRequests[index];
+                    eligibleRequests[requestId.toString()] = amountOfStETH;
+                    requestsTotalStEthAmount += amountOfStETH;
+                  }
+                });
+              }
+            }
 
-      withdrawalRequests.forEach((request: any, id: number) => {
-        const { isClaimed, isFinalized, owner, amountOfStETH } = request;
-        if (owner === address && !isClaimed && !isFinalized) {
-          eligibleRequests[(id + 1).toString()] = amountOfStETH;
-          requestsTotalStEthAmount += amountOfStETH;
+            return {
+              withdrawalRequests: eligibleRequests,
+              requestsTotalStEthAmount,
+            };
+          } catch (error) {
+            console.error('Error using Mainnet approach:', error);
+          }
         }
-      });
 
-      return { withdrawalRequests: eligibleRequests, requestsTotalStEthAmount };
+        const lastRequestId = Number(
+          await withdrawalQueue.readContract('getLastRequestId'),
+        );
+
+        if (lastRequestId === 0) {
+          return { withdrawalRequests: {}, requestsTotalStEthAmount: 0n };
+        }
+
+        const requestIds = Array.from({ length: lastRequestId }, (_, i) =>
+          BigInt(i + 1),
+        );
+
+        const eligibleRequests: WithdrawalsMap = {};
+        let requestsTotalStEthAmount = 0n;
+
+        const withdrawalRequests = await withdrawalQueue.readContract(
+          'getWithdrawalStatus',
+          [requestIds],
+        );
+
+        if (Array.isArray(withdrawalRequests)) {
+          withdrawalRequests.forEach((request: any, id: number) => {
+            if (request && typeof request === 'object') {
+              const { isClaimed, isFinalized, owner, amountOfStETH } = request;
+              if (owner === accountAddress && !isClaimed && !isFinalized) {
+                eligibleRequests[(id + 1).toString()] = amountOfStETH;
+                requestsTotalStEthAmount += amountOfStETH;
+              }
+            }
+          });
+        }
+
+        return {
+          withdrawalRequests: eligibleRequests,
+          requestsTotalStEthAmount,
+        };
+      } catch (error) {
+        console.error('Error in useUnstEthBalance:', error);
+        return { withdrawalRequests: {}, requestsTotalStEthAmount: 0n };
+      }
     },
   });
 };
