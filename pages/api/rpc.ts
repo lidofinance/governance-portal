@@ -14,28 +14,30 @@ import Metrics from 'utilsApi/metrics';
 import { rpcFactory } from 'utilsApi/rpcFactory';
 import { METRICS_PREFIX } from 'constants/metrics';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import {
-  DualGovernance,
-  EmergencyProtectedTimelock,
-  Voting,
-} from 'shared/blockchain/contract-addresses';
-import { Address } from 'viem';
+// import {
+//   DualGovernance,
+//   EmergencyGovernance,
+//   EmergencyProtectedTimelock,
+//   Voting,
+// } from 'shared/blockchain/contract-addresses';
+// import { Address } from 'viem';
 
-const allowedLogContracts = (chainId: CHAINS) => {
-  return [
-    DualGovernance[chainId],
-    EmergencyProtectedTimelock[chainId],
-    Voting[chainId],
-  ].filter((address): address is Address => address !== undefined);
-};
+// const allowedLogContracts = (chainId: CHAINS) => {
+//   return [
+//     DualGovernance[chainId],
+//     EmergencyProtectedTimelock[chainId],
+//     EmergencyGovernance[chainId],
+//     Voting[chainId],
+//   ].filter((address): address is Address => address !== undefined);
+// };
 
-const allowedLogsAddresses = config.supportedChains.reduce(
-  (allowedAddresses, chainId: CHAINS) => {
-    allowedAddresses[chainId] = allowedLogContracts(chainId) || [];
-    return allowedAddresses;
-  },
-  {} as Record<CHAINS, Address[]>,
-);
+// const allowedLogsAddresses = config.supportedChains.reduce(
+//   (allowedAddresses, chainId: CHAINS) => {
+//     allowedAddresses[chainId] = allowedLogContracts(chainId) || [];
+//     return allowedAddresses;
+//   },
+//   {} as Record<CHAINS, Address[]>,
+// );
 
 const rpc = rpcFactory({
   fetchRPC: trackedFetchRpcFactory({
@@ -70,7 +72,7 @@ const rpc = rpcFactory({
     'eth_chainId',
     'net_version',
   ],
-  allowedLogsAddresses,
+  // allowedLogsAddresses,
   maxBatchCount: config.PROVIDER_MAX_BATCH,
   disallowEmptyAddressGetLogs: true,
 });

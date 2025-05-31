@@ -52,7 +52,7 @@ export type RPCFactoryParams = {
   allowedRPCMethods: string[];
   // filtration by eth_call to addresses
   allowedCallAddresses?: Record<number, string[]>;
-  allowedLogsAddresses?: Record<number, string[]>;
+  // allowedLogsAddresses?: Record<number, string[]>;
   disallowEmptyAddressGetLogs?: boolean;
   maxBatchCount?: number;
   maxResponseSize?: number;
@@ -65,9 +65,9 @@ export const rpcFactory = ({
   defaultChain,
   allowedRPCMethods,
   allowedCallAddresses = {},
-  allowedLogsAddresses = {},
+  // allowedLogsAddresses = {},
   maxBatchCount,
-  disallowEmptyAddressGetLogs = false,
+  // disallowEmptyAddressGetLogs = false,
 }: RPCFactoryParams) => {
   const rpcRequestBlocked = new Counter({
     name: prefix + 'rpc_service_request_blocked',
@@ -85,13 +85,13 @@ export const rpcFactory = ({
     {} as Record<string, Set<string>>,
   );
 
-  const allowedLogsAddressMap = Object.entries(allowedLogsAddresses).reduce(
-    (acc, [chainId, addresses]) => {
-      acc[chainId] = new Set(addresses.map((a) => a.toLowerCase()));
-      return acc;
-    },
-    {} as Record<string, Set<string>>,
-  );
+  // const allowedLogsAddressMap = Object.entries(allowedLogsAddresses).reduce(
+  //   (acc, [chainId, addresses]) => {
+  //     acc[chainId] = new Set(addresses.map((a) => a.toLowerCase()));
+  //     return acc;
+  //   },
+  //   {} as Record<string, Set<string>>,
+  // );
 
   return async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     try {
@@ -144,37 +144,37 @@ export const rpcFactory = ({
           } else
             throw new InvalidRequestError(`RPC method eth_call is invalid`);
         }
-        if (
-          method === 'eth_getLogs' &&
-          (disallowEmptyAddressGetLogs || allowedLogsAddressMap[chainId])
-        ) {
-          if (Array.isArray(params) && typeof params[0] === 'object') {
-            const address = params[0].address;
-            if (
-              disallowEmptyAddressGetLogs &&
-              (!address || (Array.isArray(address) && address.length === 0))
-            ) {
-              rpcRequestBlocked.inc();
-              throw new InvalidRequestError(`No empty address on eth_getLogs`);
-            }
-            const addresses = Array.isArray(address) ? address : [address];
-            if (
-              addresses.some(
-                (eventAddress) =>
-                  // needs this check before toLowerCase
-                  typeof eventAddress !== 'string' ||
-                  !allowedLogsAddressMap[chainId].has(
-                    eventAddress.toLowerCase(),
-                  ),
-              )
-            ) {
-              rpcRequestBlocked.inc();
-              throw new InvalidRequestError(
-                `Address not allowed for eth_getLogs`,
-              );
-            }
-          } else throw new InvalidRequestError(`Invalid eth_getLogs`);
-        }
+        // if (
+        //   method === 'eth_getLogs' &&
+        //   (disallowEmptyAddressGetLogs || allowedLogsAddressMap[chainId])
+        // ) {
+        //   if (Array.isArray(params) && typeof params[0] === 'object') {
+        //     const address = params[0].address;
+        //     if (
+        //       disallowEmptyAddressGetLogs &&
+        //       (!address || (Array.isArray(address) && address.length === 0))
+        //     ) {
+        //       rpcRequestBlocked.inc();
+        //       throw new InvalidRequestError(`No empty address on eth_getLogs`);
+        //     }
+        //     const addresses = Array.isArray(address) ? address : [address];
+        //     if (
+        //       addresses.some(
+        //         (eventAddress) =>
+        //           // needs this check before toLowerCase
+        //           typeof eventAddress !== 'string' ||
+        //           !allowedLogsAddressMap[chainId].has(
+        //             eventAddress.toLowerCase(),
+        //           ),
+        //       )
+        //     ) {
+        //       rpcRequestBlocked.inc();
+        //       throw new InvalidRequestError(
+        //         `Address not allowed for eth_getLogs`,
+        //       );
+        //     }
+        //   } else throw new InvalidRequestError(`Invalid eth_getLogs`);
+        // }
       }
 
       const requested = await iterateUrls(

@@ -1,8 +1,11 @@
+import { StateInfo as StateInfoEmergencyGovernance } from './state-info-emergency-governance';
+
 import { StateInfo } from './state-info';
 import { SupportInfo } from './support-info';
 import { ProposalsInfo } from './proposals-info';
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
+import { useIsEmergencyGovernanceActive } from '../hooks/use-is-emergency-governance-active';
 
 const DualGovernanceSummaryWrapper = styled.div`
   display: flex;
@@ -29,10 +32,19 @@ const DualGovernanceSummaryWrapper = styled.div`
 `;
 
 export const DualGovernanceSummary = () => {
+  const { isEmergencyGovernanceActive, isLoading } =
+    useIsEmergencyGovernanceActive();
+
   return (
     <DualGovernanceSummaryWrapper>
-      <StateInfo />
-      <SupportInfo />
+      {isEmergencyGovernanceActive && !isLoading && (
+        <StateInfoEmergencyGovernance />
+      )}
+      {/*{isEmergencyGovernanceActive && !isLoading && (*/}
+      {/*  <SupportInfoEmergencyGovernance />*/}
+      {/*)}*/}
+      {!isEmergencyGovernanceActive && !isLoading && <StateInfo />}
+      {!isEmergencyGovernanceActive && !isLoading && <SupportInfo />}
       <ProposalsInfo />
     </DualGovernanceSummaryWrapper>
   );

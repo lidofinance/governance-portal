@@ -304,14 +304,9 @@ export const EmergencyActivationCommittee: ChainAddressMap = {
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
+  // [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE', // actual
+  [CHAINS.Mainnet]: '0x75850938C1Aa50B8cC6eb3c00995759dc1425ae6', // temporary emergency for smoke test
   [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
-  [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
-};
-
-export const EmergencyTimelockedGovernance: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
-  [CHAINS.Holesky]: '0x2D99B1Fe6AFA9d102C7125908081414b5C3Cc759',
   [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
 };
 
