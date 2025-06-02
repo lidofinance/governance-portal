@@ -57,13 +57,13 @@ export const Footer: FC = () => {
           Privacy Notice
         </FooterLink>
         <LinkDivider />
-        <FooterLink
-          data-testid="privacyNotice"
-          href={`${config.selfOrigin}/committee`}
-          $marginRight="auto"
-        >
-          Tiebreaker committee
-        </FooterLink>
+        {/*<FooterLink*/}
+        {/*  data-testid="privacyNotice"*/}
+        {/*  href={`${config.selfOrigin}/committee`}*/}
+        {/*  $marginRight="auto"*/}
+        {/*>*/}
+        {/*  Tiebreaker committee*/}
+        {/*</FooterLink>*/}
         <Version data-testid="appVersion" href={link}>
           {label}
         </Version>

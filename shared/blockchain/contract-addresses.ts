@@ -293,19 +293,25 @@ export const EmergencyProtectedTimelock: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
 };
 
-export const EmergencyExecutionCommittee: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
+export const EmergencyExecutionCommitteeProposed: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xC7792b3F2B399bB0EdF53fECDceCeB97FBEB18AF',
   [CHAINS.Hoodi]: '0x8E1Ce8995E370222CbD825fFD7Dce2A5BfE1E631',
 };
 
-export const EmergencyActivationCommittee: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
+export const EmergencyActivationCommitteeProposed: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x8B7854488Fde088d686Ea672B6ba1A5242515f45',
   [CHAINS.Hoodi]: '0xA678c29cbFde2C74aF15C7724EE4b1527A50D45B',
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
   // [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE', // actual
   [CHAINS.Mainnet]: '0x75850938C1Aa50B8cC6eb3c00995759dc1425ae6', // temporary emergency for smoke test
+  [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
+  [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
+};
+
+export const EmergencyGovernanceProposed: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
   [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
   [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
 };
