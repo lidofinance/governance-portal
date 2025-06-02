@@ -14,6 +14,9 @@ type HistoricalGovernanceAddressesResult = {
   error: Error | null;
 };
 
+/**
+ *  This hook is in a draft state ATM. Do not use.
+ */
 export const useGetHistoricalGovernanceAddresses =
   (): HistoricalGovernanceAddressesResult => {
     const { chainId } = useLidoSDK();
