@@ -40,3 +40,11 @@ export const EmergencyProtectedTimelock: ContractObject<
   abi: abi.emergencyProtectedTimelockAbi,
   chainAddressMap: addr.EmergencyProtectedTimelock,
 };
+
+export const EmergencyGovernance: ContractObject<
+  typeof abi.emergencyGovernanceAbi
+> = {
+  name: 'EmergencyGovernance',
+  abi: abi.emergencyGovernanceAbi,
+  chainAddressMap: addr.EmergencyGovernance,
+};

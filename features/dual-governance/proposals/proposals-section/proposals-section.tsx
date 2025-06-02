@@ -10,7 +10,7 @@ import { SearchInput } from './search-input';
 import { useRouter } from 'next/router';
 import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals-list/proposal-search-item';
 import { ProposalFlowBanner } from '../proposal-flow-banner';
-import { useIsEmergencyModeActive } from 'features/dual-governance/hooks/useIsEmergencyModeActive';
+import { useIsEmergencyModeActive } from 'features/dual-governance/hooks/use-is-emergency-mode-active';
 import { useEffect, useState } from 'react';
 
 const MAX_SCREEN_WIDTH_PROPOSAL_FLOW = 1270;

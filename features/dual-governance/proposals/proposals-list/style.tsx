@@ -33,11 +33,36 @@ export const ProposalDescription = styled.div`
   width: 50%;
   flex-shrink: 0;
   border-left: 1px solid #0000001a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 1)
+    );
+    pointer-events: none;
+  }
+
   @media ${devicesHeaderMedia.tablet} {
     width: 100%;
     border-left: none;
     border-top: 1px solid #0000001a;
     padding: 20px 0 0;
+    max-height: none;
+
+    &::after {
+      display: none;
+    }
   }
 `;
 
@@ -45,6 +70,88 @@ export const DescriptionText = styled(Text)`
   color: var(--primary-color-black-72);
   margin-bottom: 12px;
   font-size: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const MarkdownWrap = styled.div`
+  hyphens: auto;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 15px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  width: 100%;
+
+  & p {
+    white-space: pre-wrap;
+  }
+  & > ol > li {
+    line-height: 1.5;
+  }
+  & img {
+    max-width: 100%;
+  }
+  & ol {
+    padding-left: 20px;
+  }
+  & blockquote {
+    padding: 0 1em;
+    border-left: 0.25em solid var(--lido-color-border);
+    //background-color: var(--lido-color-border);
+    color: var(--lido-color-textSecondary);
+  }
+  & table {
+    display: block;
+    width: 100%;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
+    border-spacing: 0;
+    border-collapse: collapse;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  & table tr {
+    border-top: 1px solid var(--lido-color-border);
+  }
+  & table tr:nth-child(2n) {
+    background-color: var(--lido-color-backgroundSecondary);
+  }
+  & table th,
+  & table td {
+    padding: 6px 13px;
+    border: 1px solid var(--lido-color-border);
+  }
+  & pre {
+    overflow: auto;
+  }
+  & pre > code {
+    display: block;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    color: var(--lido-color-text);
+    background-color: var(--lido-color-backgroundSecondary);
+    border-radius: 6px;
+    padding: 8px;
+  }
+
+  code {
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    color: var(--lido-color-text);
+    background-color: var(--lido-color-backgroundSecondary);
+    border-radius: 6px;
+    padding: 2px 4px;
+  }
 `;
 
 export const ProposalsListWrapper = styled.section`

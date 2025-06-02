@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { DGTooltip } from 'features/dual-governance/tooltips';
-import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
+import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { Link } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';

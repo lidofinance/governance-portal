@@ -17,7 +17,7 @@ import {
 import { Address } from 'viem';
 import { useWatchContractEvent } from 'wagmi';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
-import { useIsEmergencyModeActive } from './useIsEmergencyModeActive';
+import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
 import { useDynamicDualGovernance } from './use-dynamic-dual-governance';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;

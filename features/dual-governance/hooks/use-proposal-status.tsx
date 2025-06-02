@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { BadgeVariant } from '../proposals/shared-components/vote-status-badge/types';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
-import { useIsEmergencyModeActive } from './useIsEmergencyModeActive';
+import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
 
 const statusText = {
   loading: 'Loading...',

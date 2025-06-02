@@ -31,7 +31,7 @@ import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useIsEmergencyModeActive } from '../../hooks/useIsEmergencyModeActive';
+import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useDynamicDualGovernance } from '../../hooks/use-dynamic-dual-governance';
