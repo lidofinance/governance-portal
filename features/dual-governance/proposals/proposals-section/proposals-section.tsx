@@ -12,12 +12,14 @@ import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals
 import { ProposalFlowBanner } from '../proposal-flow-banner';
 import { useIsEmergencyModeActive } from 'features/dual-governance/hooks/use-is-emergency-mode-active';
 import { useEffect, useState } from 'react';
+import { useIsEmergencyGovernanceActive } from '../../hooks/use-is-emergency-governance-active';
 
 const MAX_SCREEN_WIDTH_PROPOSAL_FLOW = 1270;
 
 export const ProposalsSection = () => {
   const router = useRouter();
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
+  const { isEmergencyGovernanceActive } = useIsEmergencyGovernanceActive();
   const [showBanner, setShowBanner] = useState(true);
 
   const proposalId = Array.isArray(router.query.proposalId)
@@ -58,7 +60,9 @@ export const ProposalsSection = () => {
           <SearchInput />
         </ProposalsDisclaimerWrapper>
       </FlexWrapper>
-      {!isEmergencyModeActive && showBanner && <ProposalFlowBanner />}
+      {!isEmergencyModeActive && !isEmergencyGovernanceActive && showBanner && (
+        <ProposalFlowBanner />
+      )}
       {proposalId ? <ProposalSearchItem id={proposalId} /> : <ProposalsList />}
     </ProposalsWrapper>
   );

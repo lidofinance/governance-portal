@@ -11,6 +11,9 @@ import { DualGovernance } from '../../../shared/blockchain/contracts';
 
 const ESCROW_CHANGED_EVENT_NAME = 'NewSignallingEscrowDeployed';
 
+/**
+ *  This hook is in a draft state ATM. Do not use.
+ */
 export const useGetHistoricalEscrowBalances = () => {
   const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
