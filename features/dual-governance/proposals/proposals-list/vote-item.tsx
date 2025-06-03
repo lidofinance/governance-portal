@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import remarkGfm from 'remark-gfm';
 import { VoteStatusBadge } from 'features/dual-governance/proposals/shared-components/vote-status-badge';
 
 import {
   ProposalListItemWrapper,
   SummarySection,
   ProposalDescription,
-  DescriptionText,
   VoteStatusWrapper,
+  MarkdownWrap,
+  DescriptionText,
   UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
@@ -14,6 +16,15 @@ import { VoteData } from 'shared/votes/types';
 import { useDecodedScript } from 'shared/hooks';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
+import { fetcherIPFS } from 'utils/fetcher-ipfs';
+import { useQuery } from '@tanstack/react-query';
+import ReactMarkdown from 'react-markdown';
+import {
+  replaceAddressAndCIDInMD,
+  replaceImagesInMD,
+  replaceLinksInMD,
+} from 'utils/replace-custom-elements-in-MD';
 import { WarningIconTransparent } from 'shared/components/icons';
 
 type Props = {
@@ -24,6 +35,8 @@ type Props = {
   yea: bigint;
   nay: bigint;
 } & Pick<VoteData, 'proposalId' | 'voteTime' | 'objectionPhaseTime'>;
+
+const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
 
 export const VoteItem = ({
   proposalId,
@@ -38,6 +51,17 @@ export const VoteItem = ({
 }: Props) => {
   const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
   const { chainId } = useLidoSDK();
+
+  const cid = description?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
+
+  const { data = '', isLoading: isIPFSLoading } = useQuery({
+    queryKey: [cid],
+    queryFn: async () => await fetcherIPFS(cid || ''),
+    enabled: !!cid,
+  });
+
+  const trimmedData = trimStart(data);
+
   const descriptionLines = description ? description.split('\n') : [];
 
   const { decoded } = useDecodedScript(script);
@@ -69,19 +93,36 @@ export const VoteItem = ({
           />
         </VoteStatusWrapper>
       </SummarySection>
-      {descriptionLines.length > 0 && (
-        <ProposalDescription>
-          {descriptionLines.map((line, index) => (
-            <DescriptionText key={index}>{line}</DescriptionText>
-          ))}
-          {isUnknownContractCalled && (
-            <UnknownContract>
-              <WarningIconTransparent />
-              <span>Unknown Сontract Сalled</span>
-            </UnknownContract>
-          )}
-        </ProposalDescription>
-      )}
+
+      <ProposalDescription>
+        {trimmedData && cid && !isIPFSLoading && (
+          <MarkdownWrap>
+            <ReactMarkdown
+              remarkPlugins={[[remarkGfm, {}]]}
+              components={{
+                a: replaceLinksInMD,
+                img: replaceImagesInMD,
+                code: replaceAddressAndCIDInMD,
+              }}
+            >
+              {trimmedData}
+            </ReactMarkdown>
+          </MarkdownWrap>
+        )}
+        {descriptionLines.length > 0 && !trimmedData && !isIPFSLoading && (
+          <ProposalDescription>
+            {descriptionLines.map((line, index) => (
+              <DescriptionText key={index}>{line}</DescriptionText>
+            ))}
+            {isUnknownContractCalled && (
+              <UnknownContract>
+                <WarningIconTransparent />
+                <span>Unknown Contract Called</span>
+              </UnknownContract>
+            )}
+          </ProposalDescription>
+        )}
+      </ProposalDescription>
     </ProposalListItemWrapper>
   );
 };

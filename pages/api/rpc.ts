@@ -16,6 +16,7 @@ import { METRICS_PREFIX } from 'constants/metrics';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
   DualGovernance,
+  EmergencyGovernance,
   EmergencyProtectedTimelock,
   Voting,
 } from 'shared/blockchain/contract-addresses';
@@ -25,6 +26,7 @@ const allowedLogContracts = (chainId: CHAINS) => {
   return [
     DualGovernance[chainId],
     EmergencyProtectedTimelock[chainId],
+    EmergencyGovernance[chainId],
     Voting[chainId],
   ].filter((address): address is Address => address !== undefined);
 };
