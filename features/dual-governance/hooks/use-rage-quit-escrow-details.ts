@@ -1,12 +1,12 @@
 import { escrowAbi } from 'abi/ts';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 export const useRageQuitEscrowDetails = () => {
   const { chainId } = useLidoSDK();
-  const { rageQuitAddress } = useDualGovernanceContext();
+  const { rageQuitAddress } = useEscrowContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
 

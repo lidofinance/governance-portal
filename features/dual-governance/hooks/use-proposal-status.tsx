@@ -1,5 +1,5 @@
 import { ProposalStatus } from '../proposals/types';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { VisibleGovernanceState } from '../types';
 import { useProposalDelaysQuery } from './use-proposal-timelock';
 import { useCountdown } from 'shared/hooks/use-countdown';
@@ -8,6 +8,7 @@ import { BadgeVariant } from '../proposals/shared-components/vote-status-badge/t
 import { Text } from 'shared/components/text';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
+import { parsePercent16 } from 'shared/blockchain/utils';
 
 const statusText = {
   loading: 'Loading...',
@@ -54,11 +55,14 @@ export const useProposalStatus = ({
     enabled: !!proposalStatus,
   });
 
-  const { visibleState, detailedState, firstSealRageQuitSupport } =
-    useDualGovernanceContext();
+  const { visibleState, detailedState } = useDualGovernanceStateContext();
   const { data: dgConfig } = useDualGovernanceConfig();
   const vetoSignallingDeactivationMaxDuration =
     dgConfig?.vetoSignallingDeactivationMaxDuration;
+
+  const firstSealRageQuitSupport = parsePercent16(
+    dgConfig?.firstSealRageQuitSupport,
+  );
 
   const { timeFormatted: targetCountdown, isFinished: isCountdownFinished } =
     useCountdown(targetTime);

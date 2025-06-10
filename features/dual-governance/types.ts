@@ -64,6 +64,32 @@ export type DualGovernanceState = {
   secondSealRageQuitSupport: number;
 };
 
+export type DualGovernanceDetailedState = {
+  effectiveState: GovernanceState;
+  persistedState: GovernanceState;
+  persistedStateEnteredAt: number;
+  vetoSignallingActivatedAt: number;
+  vetoSignallingReactivationTime: number;
+  normalOrVetoCooldownExitedAt: number;
+  rageQuitRound: bigint;
+  vetoSignallingDuration: number;
+};
+
+export type DualGovernanceConfig = {
+  firstSealRageQuitSupport: bigint;
+  secondSealRageQuitSupport: bigint;
+  minAssetsLockDuration: number;
+  vetoSignallingMinDuration: number;
+  vetoSignallingMaxDuration: number;
+  vetoSignallingMinActiveDuration: number;
+  vetoSignallingDeactivationMaxDuration: number;
+  vetoCooldownDuration: number;
+  rageQuitExtensionPeriodDuration: number;
+  rageQuitEthWithdrawalsMinDelay: number;
+  rageQuitEthWithdrawalsMaxDelay: number;
+  rageQuitEthWithdrawalsDelayGrowth: number;
+};
+
 type DualGovernanceStateChangeEventArgs = {
   from: GovernanceState;
   to: GovernanceState;

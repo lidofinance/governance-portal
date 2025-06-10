@@ -4,13 +4,13 @@ import invariant from 'tiny-invariant';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useAccount } from 'wagmi';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 import { ActionArgs } from '../types';
 import { useRevokeTokensModalStages } from './modal-stages';
 import { useRevokeTokensTxSender } from './tx-sender';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
@@ -18,7 +18,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { txModalStages } = useRevokeTokensModalStages();
   const sendRevokeTx = useRevokeTokensTxSender();
   const waitForTx = useTxConfirmation();
-  const { isAssetManagementLocked } = useDualGovernanceContext();
+  const { isAssetManagementLocked } = useDualGovernanceStateContext();
   const { refetchAll } = useRefetchEscrowData();
 
   return useCallback(

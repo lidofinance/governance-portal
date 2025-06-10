@@ -14,7 +14,7 @@ import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-bal
 import { formatEth } from 'shared/blockchain/utils';
 import { TokenBalance } from 'shared/components/token-balance';
 import { Text } from 'shared/components/text';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import Link from 'next/link';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -24,7 +24,7 @@ export const HeaderVaultInfo = () => {
   const { isConnected } = useAccount();
   const { chainId } = useLidoSDK();
 
-  const { vetoSignallingAddress, rageQuitAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress, rageQuitAddress } = useEscrowContext();
 
   const vaultInfoRef = useRef(null);
 

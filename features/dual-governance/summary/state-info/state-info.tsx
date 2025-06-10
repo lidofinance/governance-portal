@@ -9,10 +9,11 @@ import {
   StateStatus,
 } from './style';
 import { Text } from 'shared/components/text';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
 import { FlexWrapper } from 'shared/styled-components';
-import { getNextGovernanceState } from '../../utils/get-next-dg-state';
-import { calculateCurrentThresholdProgress } from '../../utils/calculate-current-threshold-progress';
+import { getNextGovernanceState } from 'features/dual-governance/utils/get-next-dg-state';
+import { calculateCurrentThresholdProgress } from 'features/dual-governance/utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
 import { Link } from '@lidofinance/lido-ui';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
@@ -22,6 +23,8 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { Box } from 'shared/components/box';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
+import { parsePercent16 } from 'shared/blockchain/utils';
 
 const getStateLabel = (state: VisibleGovernanceState) => {
   switch (state) {
@@ -57,14 +60,18 @@ const getStateSubtitle = (state: VisibleGovernanceState) => {
 };
 
 export const StateInfo = () => {
-  const {
-    visibleState,
-    detailedState,
-    totalStEthInEscrow,
-    stEthTotalSupply,
-    firstSealRageQuitSupport,
-    secondSealRageQuitSupport,
-  } = useDualGovernanceContext();
+  const { totalStEthInEscrow, stEthTotalSupply } = useEscrowContext();
+
+  const { data: dgConfig } = useDualGovernanceConfig();
+
+  const firstSealRageQuitSupport = parsePercent16(
+    dgConfig?.firstSealRageQuitSupport,
+  );
+  const secondSealRageQuitSupport = parsePercent16(
+    dgConfig?.secondSealRageQuitSupport,
+  );
+
+  const { visibleState, detailedState } = useDualGovernanceStateContext();
 
   const { chainId } = useLidoSDK();
   const isSupportedChain = useIsSupportedChain();

@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 /**
  * Hook to refetch all escrow-related data after a transaction
@@ -7,7 +7,8 @@ import { useDualGovernanceContext } from 'providers/dual-governance';
  */
 export const useRefetchEscrowData = () => {
   const queryClient = useQueryClient();
-  const { refetch: refetchDualGovernanceState } = useDualGovernanceContext();
+  const { refetch: refetchDualGovernanceState } =
+    useDualGovernanceStateContext();
 
   const refetchAll = async () => {
     await queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });

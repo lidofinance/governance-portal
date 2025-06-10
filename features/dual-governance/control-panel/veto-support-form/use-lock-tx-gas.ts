@@ -3,14 +3,14 @@ import { useSupportFormDataContext } from './support-form-context';
 import { useMemo } from 'react';
 import { useTokenContractObject } from 'shared/blockchain/hooks/use-token-contract-object';
 import { zeroAddress } from 'viem';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 
 const LOCK_GAS_AMOUNT_MOCK = 100500n;
 
 export const useLockTxGas = () => {
   const { networkData, selectedToken, approveData } =
     useSupportFormDataContext();
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
   const tokenContractObject = useTokenContractObject(selectedToken);
 
   // TODO: figure out how to estimate gas properly given the fact that escrow address is dynamic

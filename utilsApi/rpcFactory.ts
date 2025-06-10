@@ -170,7 +170,7 @@ export const rpcFactory = ({
             ) {
               rpcRequestBlocked.inc();
               throw new InvalidRequestError(
-                `Address not allowed for eth_getLogs`,
+                `Address ${address} not allowed for eth_getLogs`,
               );
             }
           } else throw new InvalidRequestError(`Invalid eth_getLogs`);

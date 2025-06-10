@@ -5,7 +5,7 @@ import { Block, Link } from '@lidofinance/lido-ui';
 import { DualGovernanceSummary } from '../summary';
 import { DualGovernanceControlPanel } from '../control-panel';
 import { ProposalsSection } from '../proposals/proposals-section';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { VisibleGovernanceState } from '../types';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 import { devicesHeaderMedia } from 'styles/global';
@@ -38,7 +38,7 @@ const WarningReleaseBanner = styled.div`
 `;
 
 export const DualGovernancePage = () => {
-  const { visibleState } = useDualGovernanceContext();
+  const { visibleState } = useDualGovernanceStateContext();
 
   return (
     <Layout containerSize="full">

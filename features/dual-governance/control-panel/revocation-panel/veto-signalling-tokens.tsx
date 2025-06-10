@@ -8,7 +8,7 @@ import { RevocableTokensList } from './style';
 import { RevocableTokenItem } from './revocable-token-item';
 import { useCountdown } from 'shared/hooks/use-countdown';
 import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ExternalLinkIcon } from 'shared/components/icons';
@@ -51,7 +51,7 @@ export const VetoSignallingTokens = ({
 
   const { chainId } = useLidoSDK();
 
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
 
   const revokeTokens = useRevokeTokensAction({ onConfirm });
 

@@ -6,10 +6,10 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 import { computeRageQuitEscrowsBalances } from '../utils';
 import { useState } from 'react';
 import { WstETH } from 'shared/blockchain/contracts';
+import { useEscrowContext } from 'providers/escrow';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
@@ -19,7 +19,7 @@ export const useEscrowBalances = () => {
     vetoSignallingAddress,
     rageQuitAddress: currentRageQuitEscrowAddress,
     historicalEscrowAddresses,
-  } = useDualGovernanceContext();
+  } = useEscrowContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
   const readWstEthContract = useReadContract(WstETH);

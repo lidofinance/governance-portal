@@ -13,9 +13,9 @@ export const useIsEmergencyModeActive = () => {
     EmergencyProtectedTimelock,
   );
 
-  const { data: isEmergencyModeActive } = useQuery<boolean>({
+  const { data: isEmergencyModeActive, isLoading } = useQuery<boolean>({
     queryKey: ['isEmergencyModeActive', chainId],
-    staleTime: Infinity,
+    staleTime: 5000,
     enabled: isSupportedChain,
     queryFn: async () => {
       try {
@@ -30,5 +30,5 @@ export const useIsEmergencyModeActive = () => {
     },
   });
 
-  return { isEmergencyModeActive, governanceAddress };
+  return { isEmergencyModeActive, governanceAddress, isLoading };
 };

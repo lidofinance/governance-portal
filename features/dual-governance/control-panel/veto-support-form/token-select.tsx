@@ -7,7 +7,7 @@ import { TokenBalance } from 'shared/components/token-balance';
 import { useFormContext } from 'react-hook-form';
 import { VetoSupportedTokens } from 'features/dual-governance/types';
 import { useCallback } from 'react';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import Link from 'next/link';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -18,7 +18,7 @@ export const TokenSelect = () => {
 
   const { chainId } = useLidoSDK();
 
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
 
   const { register } = useFormContext();
 

@@ -6,7 +6,8 @@ import { UseApproveResponse } from 'shared/blockchain/hooks/use-approve';
 import { useTxModalSupport } from './modal-stages';
 import { useAccount } from 'wagmi';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { ActionArgs } from '../types';
@@ -25,9 +26,9 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
   const { txModalStages } = useTxModalSupport();
   const sendSupportVetoTx = useSupportVetoTxSender();
   const waitForTx = useTxConfirmation();
-  const { isAssetManagementLocked, vetoSignallingAddress } =
-    useDualGovernanceContext();
-  const { visibleState } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
+  const { visibleState, isAssetManagementLocked } =
+    useDualGovernanceStateContext();
   const { approve, needsApprove } = approveData;
 
   const needsRQApprove =

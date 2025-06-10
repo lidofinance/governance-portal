@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { escrowAbi } from 'abi/ts';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
 import {
@@ -31,7 +31,7 @@ import { useAccount } from 'wagmi';
 export const useEscrowUnstethBalance = () => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
   const readEscrowContract = useReadContractGetter(escrowAbi);
   const withdrawalQueue = useReadContract(WithdrawalQueue);
 
