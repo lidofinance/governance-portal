@@ -273,7 +273,8 @@ export const WithdrawalQueue: ChainAddressMap = {
 export const Voting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x2e59A20f205bB85a89C53f1936454680651E618e',
   [CHAINS.Holesky]: '0xdA7d2573Df555002503F29aA4003e398d28cc00f',
-  [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
+  // [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
+  [CHAINS.Hoodi]: '0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636',
 };
 
 export const DualGovernance: ChainAddressMap = {

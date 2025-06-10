@@ -35,8 +35,10 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
     if (isVoteItem(proposal)) {
       return true;
     } else {
-      // Only filter out executed proposals for ProposalCombinedData items
-      return proposal.proposalDetails.status !== ProposalStatus.Executed;
+      return (
+        proposal.proposalDetails.status !== ProposalStatus.Executed &&
+        proposal.proposalDetails.status !== ProposalStatus.Cancelled
+      );
     }
   });
 

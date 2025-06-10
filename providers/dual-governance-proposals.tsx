@@ -73,19 +73,20 @@ const getCombinedData = ({
     afterSubmitDelay,
   });
 
-  const [activeProposals, executedProposals] = sortedProposals.reduce(
-    ([active, executed], proposal) => {
+  const [activeProposals, completedProposals] = sortedProposals.reduce(
+    ([active, completed], proposal) => {
       const target =
-        proposal.proposalDetails.status === ProposalStatus.Executed
-          ? executed
+        proposal.proposalDetails.status === ProposalStatus.Executed ||
+        proposal.proposalDetails.status === ProposalStatus.Cancelled
+          ? completed
           : active;
       target.push(proposal);
-      return [active, executed];
+      return [active, completed];
     },
     [[], []] as [ProposalCombinedData[], ProposalCombinedData[]],
   );
 
-  return [...activeProposals, ...votes, ...executedProposals];
+  return [...activeProposals, ...votes, ...completedProposals];
 };
 
 export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
