@@ -260,7 +260,7 @@ export const useProposalStatus = ({
     return {
       badge: {
         text: statusText.executed,
-        variant: 'default',
+        variant: 'success',
       },
       info: null,
     };

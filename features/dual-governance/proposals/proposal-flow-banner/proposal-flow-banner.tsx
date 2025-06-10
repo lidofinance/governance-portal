@@ -92,7 +92,7 @@ export const ProposalFlowBanner = () => {
         </Arrow>
         <FlowItem>
           <FlexWrapper $alignItems="center">
-            <Badge $variant="default">
+            <Badge $variant="success">
               <Text color="primary" weight={600}>
                 Executed
               </Text>
