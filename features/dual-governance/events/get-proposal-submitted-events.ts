@@ -10,6 +10,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { BigNumber } from 'ethers';
+import { addDynamicGovernanceAddress } from '../../../utils/dynamic-addresses';
 
 type Props = {
   client: ReturnType<typeof usePublicClient>;
@@ -44,9 +45,24 @@ const getGovernanceSetAddresses = async ({
       toBlock: 'latest',
     });
 
-    return logs
+    const governanceAddresses = logs
       .map((log) => log.args.newGovernance as Address)
       .filter((addr): addr is Address => !!addr);
+
+    // Whitelist governance addresses to bypass RPC validation
+    const chainId = client.chain?.id;
+    if (chainId) {
+      governanceAddresses.forEach((address) => {
+        addDynamicGovernanceAddress(chainId, address).catch((err) => {
+          console.error(
+            `Error registering governance address ${address}:`,
+            err,
+          );
+        });
+      });
+    }
+
+    return governanceAddresses;
   } catch (error) {
     console.error('Error fetching GovernanceSet events:', error);
     return [];

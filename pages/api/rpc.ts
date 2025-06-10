@@ -21,14 +21,20 @@ import {
   Voting,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
+import { getDynamicGovernanceAddresses } from './register-governance-address';
 
 const allowedLogContracts = (chainId: CHAINS) => {
-  return [
+  const hardcodedAddresses = [
     DualGovernance[chainId],
     EmergencyProtectedTimelock[chainId],
     EmergencyGovernance[chainId],
     Voting[chainId],
   ].filter((address): address is Address => address !== undefined);
+
+  // Add dynamic governance addresses
+  const dynamicAddresses = getDynamicGovernanceAddresses(chainId);
+
+  return [...hardcodedAddresses, ...dynamicAddresses];
 };
 
 const allowedLogsAddresses = config.supportedChains.reduce(
