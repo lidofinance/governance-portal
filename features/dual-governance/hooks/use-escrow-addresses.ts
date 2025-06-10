@@ -5,6 +5,7 @@ import { getContractAddress } from 'shared/blockchain/get-contract-address';
 import { usePublicClient, useReadContracts } from 'wagmi';
 import { findAbiItem } from 'utils/find-abi-item';
 import { Address } from 'viem';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
 const ESCROW_CHANGED_EVENT_NAME = 'NewSignallingEscrowDeployed';
 
@@ -57,12 +58,43 @@ export const useEscrowAddresses = () => {
 
     const fetchLogs = async () => {
       try {
-        const logs = await publicClient.getLogs({
-          address: getContractAddress(DualGovernance, chainId),
-          event: eventAbi,
-          fromBlock: 0n,
-          toBlock: 'latest',
-        });
+        const deploymentBlock =
+          CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
+
+        const BLOCK_RANGE = 4999n;
+
+        const latestBlock = await publicClient.getBlockNumber();
+
+        let fromBlock = deploymentBlock;
+
+        const contractAddress = getContractAddress(DualGovernance, chainId);
+
+        const logs: any[] = [];
+
+        while (fromBlock <= latestBlock) {
+          const toBlock =
+            fromBlock + BLOCK_RANGE > latestBlock
+              ? latestBlock
+              : fromBlock + BLOCK_RANGE;
+
+          try {
+            const logs = await publicClient.getLogs({
+              address: contractAddress,
+              event: eventAbi,
+              fromBlock,
+              toBlock,
+            });
+
+            logs.push(...logs);
+          } catch (error) {
+            console.error(
+              `Error fetching EPT proposal logs from ${fromBlock} to ${toBlock}:`,
+              error,
+            );
+          }
+
+          fromBlock = toBlock + 1n;
+        }
 
         if (logs.length > 0) {
           const _escrowAddresses = logs.map((log: any) => log.args.escrow);

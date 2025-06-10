@@ -43,6 +43,7 @@ export const useProposal = ({
           await getProposalSubmittedEvents({
             client: publicClient,
             EPTContract: emergencyProtectedTimelock,
+            chainId,
           });
 
         const proposalLog =

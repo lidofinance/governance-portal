@@ -100,7 +100,11 @@ export const SupportInfo = () => {
 
           {vetoSignallingThresholdProgress && (
             <ProgressBar
-              variant="danger"
+              variant={
+                visibleState === VisibleGovernanceState.Normal
+                  ? 'default'
+                  : 'danger'
+              }
               progressPercent={Number(
                 currentThreshold?.thresholdSupportPercent,
               )}

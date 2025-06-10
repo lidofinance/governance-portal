@@ -10,11 +10,14 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { BigNumber } from 'ethers';
-import { addDynamicGovernanceAddress } from '../../../utils/dynamic-addresses';
+import { addDynamicGovernanceAddress } from 'utils/dynamic-addresses';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
 type Props = {
   client: ReturnType<typeof usePublicClient>;
   EPTContract?: ReturnType<typeof useReadContract>;
+  chainId: CHAINS;
 };
 
 export type MergedProposalSubmittedEvent = {
@@ -28,6 +31,7 @@ const PROPOSAL_SUBMITTED_EVENT = 'ProposalSubmitted';
 const getGovernanceSetAddresses = async ({
   client,
   EPTContract,
+  chainId,
 }: Props): Promise<Address[]> => {
   const eventAbi = parseAbiItem('event GovernanceSet(address newGovernance)');
 
@@ -37,27 +41,50 @@ const getGovernanceSetAddresses = async ({
 
   try {
     const contractAddress = EPTContract.address;
+    const deploymentBlock =
+      CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.emergencyProtectedTimelock || 0n;
 
-    const logs = await client.getLogs({
-      address: contractAddress,
-      event: eventAbi,
-      fromBlock: 252997n,
-      toBlock: 'latest',
-    });
+    const allLogs: any[] = [];
+    const BLOCK_RANGE = 4999n;
 
-    const governanceAddresses = logs
-      .map((log) => log.args.newGovernance as Address)
-      .filter((addr): addr is Address => !!addr);
+    const latestBlock = await client.getBlockNumber();
+
+    let fromBlock = deploymentBlock;
+
+    while (fromBlock <= latestBlock) {
+      const toBlock =
+        fromBlock + BLOCK_RANGE > latestBlock
+          ? latestBlock
+          : fromBlock + BLOCK_RANGE;
+
+      try {
+        const logs = await client.getLogs({
+          address: contractAddress,
+          event: eventAbi,
+          fromBlock,
+          toBlock,
+        });
+
+        allLogs.push(...logs);
+      } catch (error) {
+        console.error(
+          `Error fetching GovernanceSet logs from ${fromBlock} to ${toBlock}:`,
+          error,
+        );
+      }
+
+      fromBlock = toBlock + 1n;
+    }
+
+    const governanceAddresses = allLogs
+      .map((log: any) => log.args?.newGovernance as Address)
+      .filter((addr: any): addr is Address => !!addr);
 
     // Whitelist governance addresses to bypass RPC validation
-    const chainId = client.chain?.id;
     if (chainId) {
-      governanceAddresses.forEach((address) => {
+      governanceAddresses.forEach((address: Address) => {
         addDynamicGovernanceAddress(chainId, address).catch((err) => {
-          console.error(
-            `Error registering governance address ${address}:`,
-            err,
-          );
+          console.error('Error registering governance address:', err);
         });
       });
     }
@@ -72,9 +99,11 @@ const getGovernanceSetAddresses = async ({
 const getGovernanceProposalSubmittedEvents = async ({
   client,
   address,
+  chainId,
 }: {
   client: ReturnType<typeof usePublicClient>;
   address: Address;
+  chainId: CHAINS;
 }): Promise<DGProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: DualGovernance.abi,
@@ -85,19 +114,45 @@ const getGovernanceProposalSubmittedEvents = async ({
   invariant(client, 'Client must be provided');
   invariant(eventAbi, 'Event ABI not found');
 
+  const deploymentBlock =
+    CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
+
   try {
-    const logs = await client.getLogs({
-      address,
-      event: eventAbi,
-      fromBlock: 252997n,
-      toBlock: 'latest',
-    });
-    return logs as unknown as DGProposalSubmittedEvent[];
+    const allLogs: DGProposalSubmittedEvent[] = [];
+    const BLOCK_RANGE = 4999n;
+
+    const latestBlock = await client.getBlockNumber();
+
+    let fromBlock = deploymentBlock;
+
+    while (fromBlock <= latestBlock) {
+      const toBlock =
+        fromBlock + BLOCK_RANGE > latestBlock
+          ? latestBlock
+          : fromBlock + BLOCK_RANGE;
+
+      try {
+        const logs = await client.getLogs({
+          address,
+          event: eventAbi,
+          fromBlock,
+          toBlock,
+        });
+
+        allLogs.push(...(logs as unknown as DGProposalSubmittedEvent[]));
+      } catch (error) {
+        console.error(
+          `Error fetching logs from ${fromBlock} to ${toBlock} for address ${address}:`,
+          error,
+        );
+      }
+
+      fromBlock = toBlock + 1n;
+    }
+
+    return allLogs;
   } catch (error) {
-    console.error(
-      `Error fetching ProposalSubmitted events for ${address}:`,
-      error,
-    );
+    console.error('Error fetching governance proposal events:', error);
     return [];
   }
 };
@@ -105,6 +160,7 @@ const getGovernanceProposalSubmittedEvents = async ({
 const getEPTProposalSubmittedEvents = async ({
   client,
   EPTContract,
+  chainId,
 }: Props): Promise<EPTProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: EmergencyProtectedTimelock.abi,
@@ -119,14 +175,42 @@ const getEPTProposalSubmittedEvents = async ({
   try {
     const contractAddress = EPTContract.address;
 
-    const logs = await client.getLogs({
-      address: contractAddress,
-      event: eventAbi,
-      fromBlock: 252997n,
-      toBlock: 'latest',
-    });
+    const deploymentBlock =
+      CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.emergencyProtectedTimelock || 0n;
 
-    return logs as unknown as EPTProposalSubmittedEvent[];
+    const allLogs: any[] = [];
+    const BLOCK_RANGE = 4999n;
+
+    const latestBlock = await client.getBlockNumber();
+
+    let fromBlock = deploymentBlock;
+
+    while (fromBlock <= latestBlock) {
+      const toBlock =
+        fromBlock + BLOCK_RANGE > latestBlock
+          ? latestBlock
+          : fromBlock + BLOCK_RANGE;
+
+      try {
+        const logs = await client.getLogs({
+          address: contractAddress,
+          event: eventAbi,
+          fromBlock,
+          toBlock,
+        });
+
+        allLogs.push(...logs);
+      } catch (error) {
+        console.error(
+          `Error fetching EPT proposal logs from ${fromBlock} to ${toBlock}:`,
+          error,
+        );
+      }
+
+      fromBlock = toBlock + 1n;
+    }
+
+    return allLogs as unknown as EPTProposalSubmittedEvent[];
   } catch (error) {
     console.error('Error fetching EPT ProposalSubmitted events:', error);
     return [];
@@ -136,6 +220,7 @@ const getEPTProposalSubmittedEvents = async ({
 export const getProposalSubmittedEvents = async ({
   client,
   EPTContract,
+  chainId,
 }: Props): Promise<{
   mergedProposalSubmittedEvents: MergedProposalSubmittedEvent[];
 }> => {
@@ -144,20 +229,18 @@ export const getProposalSubmittedEvents = async ({
     const governanceAddresses = await getGovernanceSetAddresses({
       client,
       EPTContract,
+      chainId,
     });
 
-    // Fetch ProposalSubmitted events from governance addresses
     const governanceEventsPromises = governanceAddresses.map((address) =>
-      getGovernanceProposalSubmittedEvents({ client, address }),
+      getGovernanceProposalSubmittedEvents({ client, address, chainId }),
     );
     const governanceEventsArrays = await Promise.all(governanceEventsPromises);
 
-    // Deduplicate governance events by proposalId
     const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
     for (const events of governanceEventsArrays) {
       for (const event of events) {
         const proposalId = event.args.proposalId.toString();
-        // Keep the first occurrence of each proposalId
         if (!governanceEventsMap.has(proposalId)) {
           governanceEventsMap.set(proposalId, event);
         }
@@ -165,16 +248,14 @@ export const getProposalSubmittedEvents = async ({
     }
     const governanceEvents = Array.from(governanceEventsMap.values());
 
-    // Fetch ProposalSubmitted events from EPT contract
     const EPTEvents = await getEPTProposalSubmittedEvents({
       client,
       EPTContract,
+      chainId,
     });
 
-    // Merge events based on proposalId (governance) and id (EPT)
     const mergedEventsMap = new Map<string, MergedProposalSubmittedEvent>();
 
-    // Process governance events
     for (const event of governanceEvents) {
       const proposalId = event.args.proposalId.toString();
       mergedEventsMap.set(proposalId, {
@@ -183,7 +264,6 @@ export const getProposalSubmittedEvents = async ({
       });
     }
 
-    // Process EPT events and merge with governance events
     for (const event of EPTEvents) {
       const proposalId = event.args.id.toString();
       const existing = mergedEventsMap.get(proposalId) || {

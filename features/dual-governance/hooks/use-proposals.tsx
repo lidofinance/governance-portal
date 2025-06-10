@@ -61,6 +61,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
           await getProposalSubmittedEvents({
             client: publicClient,
             EPTContract: emergencyProtectedTimelock,
+            chainId,
           });
 
         const mapProposalsData = mergedProposalSubmittedEvents.map(

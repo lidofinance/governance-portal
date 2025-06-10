@@ -7,6 +7,8 @@ import { parseAbiItem } from 'viem';
 import { Address } from 'viem';
 import invariant from 'tiny-invariant';
 import { usePublicClient } from 'wagmi';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 type HistoricalGovernanceAddressesResult = {
   addresses: Address[];
@@ -38,6 +40,7 @@ export const useGetHistoricalGovernanceAddresses =
         return getGovernanceSetAddresses({
           client,
           EPTContract,
+          chainId,
         });
       },
       enabled: !!EPTContract && isSupportedChain,
@@ -57,11 +60,13 @@ type Props = {
   EPTContract: {
     address: Address;
   };
+  chainId?: CHAINS;
 };
 
 const getGovernanceSetAddresses = async ({
   client,
   EPTContract,
+  chainId,
 }: Props): Promise<Address[]> => {
   const eventAbi = parseAbiItem('event GovernanceSet(address newGovernance)');
 
@@ -72,10 +77,15 @@ const getGovernanceSetAddresses = async ({
   try {
     const contractAddress = EPTContract.address;
 
+    const deploymentBlock =
+      chainId && chainId in CONTRACT_DEPLOYMENT_BLOCKS
+        ? CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.emergencyProtectedTimelock || 0n
+        : 0n;
+
     const logs = await client.getLogs({
       address: contractAddress,
       event: eventAbi,
-      fromBlock: 252997n,
+      fromBlock: deploymentBlock,
       toBlock: 'latest',
     });
 

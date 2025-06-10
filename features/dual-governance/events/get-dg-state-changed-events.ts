@@ -4,6 +4,7 @@ import { DualGovernance } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { PublicClient } from 'viem';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
 type Props = {
   from?: GovernanceState;
@@ -32,6 +33,9 @@ export const getDGStateChangedEvents = async ({
   invariant(eventAbi, 'Event ABI not found');
 
   try {
+    const deploymentBlock =
+      CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
+
     const logs = await client.getLogs({
       address: contractAddress,
       event: eventAbi,
@@ -39,7 +43,7 @@ export const getDGStateChangedEvents = async ({
         ...(from ? { from } : {}),
         ...(to ? { to } : {}),
       },
-      fromBlock: 0n,
+      fromBlock: deploymentBlock,
       toBlock: 'latest',
     });
 
