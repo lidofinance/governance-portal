@@ -10,7 +10,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { BigNumber } from 'ethers';
-import { addDynamicGovernanceAddress } from 'utils/dynamic-addresses';
+import { registerDynamicAddress } from 'utils/dynamic-addresses';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
@@ -66,9 +66,14 @@ const getGovernanceSetAddresses = async ({
     // Whitelist governance addresses to bypass RPC validation
     if (chainId) {
       governanceAddresses.forEach((address: Address) => {
-        addDynamicGovernanceAddress(chainId, address).catch((err) => {
-          console.error('Error registering governance address:', err);
-        });
+        registerDynamicAddress(chainId, address, 'governance').catch(
+          (error) => {
+            console.error(
+              `Error registering governance address ${address}:`,
+              error,
+            );
+          },
+        );
       });
     }
 

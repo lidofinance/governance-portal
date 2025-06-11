@@ -1,45 +1,99 @@
 import { Address } from 'viem';
 
 /**
- * This util is to getLogs from the historical governance addresses
- * Bypassing RPC allowedGetLogs addresses validation
+ * This util is for registering blockchain addresses with the server
+ * to bypass RPC validation for getLogs calls
  */
 
-const dynamicGovernanceAddresses: Record<number, Set<Address>> = {};
+type AddressType = 'governance' | 'escrow' | 'other';
+const dynamicAddressesCache: Record<
+  number,
+  Record<AddressType, Set<Address>>
+> = {};
 
-export const addDynamicGovernanceAddress = async (
+const initializeCache = (chainId: number): void => {
+  if (!dynamicAddressesCache[chainId]) {
+    dynamicAddressesCache[chainId] = {
+      governance: new Set(),
+      escrow: new Set(),
+      other: new Set(),
+    };
+  }
+};
+
+export const registerDynamicAddress = async (
   chainId: number,
   address: Address,
+  type: AddressType = 'other',
 ): Promise<void> => {
-  if (!dynamicGovernanceAddresses[chainId]) {
-    dynamicGovernanceAddresses[chainId] = new Set();
-  }
+  addDynamicAddress(chainId, address, type);
 
-  if (dynamicGovernanceAddresses[chainId].has(address)) {
-    return;
-  }
-
-  dynamicGovernanceAddresses[chainId].add(address);
   try {
-    const response = await fetch('/api/register-governance-address', {
+    await fetch('/api/register-dynamic-address', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ chainId, address }),
+      body: JSON.stringify({ chainId, address, type }),
     });
-
-    if (!response.ok) {
-      console.error(
-        'Failed to register governance address with server:',
-        await response.text(),
-      );
-    }
   } catch (error) {
-    console.error('Error registering governance address with server:', error);
+    console.error(`Error registering ${type} address with server:`, error);
   }
 };
 
-export const getDynamicGovernanceAddresses = (chainId: number): Address[] => {
-  return Array.from(dynamicGovernanceAddresses[chainId] || new Set());
+export const addDynamicAddress = (
+  chainId: number,
+  address: Address,
+  type: AddressType = 'other',
+): void => {
+  initializeCache(chainId);
+  dynamicAddressesCache[chainId][type].add(address);
+};
+
+export const getDynamicAddresses = (
+  chainId: number,
+  type?: AddressType,
+): Address[] => {
+  if (!dynamicAddressesCache[chainId]) return [];
+
+  if (type) {
+    return Array.from(dynamicAddressesCache[chainId][type] || new Set());
+  }
+
+  const allAddresses = new Set<Address>();
+  Object.values(dynamicAddressesCache[chainId]).forEach((addressSet) => {
+    addressSet.forEach((address) => allAddresses.add(address));
+  });
+
+  return Array.from(allAddresses);
+};
+
+/**
+ * Re-registers all cached addresses with the server
+ * Call this function when navigating between pages to ensure
+ * the server has the latest addresses
+ */
+export const syncAddressesWithServer = async (
+  chainId: number,
+): Promise<void> => {
+  const allAddresses = getDynamicAddresses(chainId);
+  if (allAddresses.length === 0) return;
+
+  console.debug(
+    `[Dynamic Addresses] Re-registering ${allAddresses.length} addresses for chain ${chainId}`,
+  );
+
+  await Promise.all(
+    allAddresses.map((address) =>
+      fetch('/api/register-dynamic-address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chainId, address, type: 'other' }),
+      }).catch((error) => {
+        console.error('Error re-registering address with server:', error);
+      }),
+    ),
+  );
 };

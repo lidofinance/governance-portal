@@ -15,11 +15,14 @@ import Link from 'next/link';
 import { config } from 'config';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { Address } from 'viem';
+import { useChainId } from 'wagmi';
+import { syncAddressesWithServer } from 'utils/dynamic-addresses';
 
 const PAGE_LIMIT_STEP = 4;
 
 export const ProposalsList = () => {
   const [initialLoading, setInitialLoading] = useState(true);
+  const chainId = useChainId();
 
   const {
     currentPage,
@@ -63,6 +66,13 @@ export const ProposalsList = () => {
       setInitialLoading(false);
     }
   }, [combinedData, initialLoading, isFetching]);
+
+  // Sync governance addresses with server when the proposals list loads
+  useEffect(() => {
+    syncAddressesWithServer(chainId).catch((error) => {
+      console.error('Failed to sync governance addresses with server:', error);
+    });
+  }, [chainId]);
 
   return (
     <>

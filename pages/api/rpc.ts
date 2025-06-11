@@ -21,7 +21,7 @@ import {
   Voting,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
-import { getDynamicGovernanceAddresses } from './register-governance-address';
+import { getDynamicAddresses } from 'utils/dynamic-addresses';
 
 const allowedLogContracts = (chainId: CHAINS) => {
   const hardcodedAddresses = [
@@ -31,8 +31,8 @@ const allowedLogContracts = (chainId: CHAINS) => {
     Voting[chainId],
   ].filter((address): address is Address => address !== undefined);
 
-  // Add dynamic governance addresses
-  const dynamicAddresses = getDynamicGovernanceAddresses(chainId);
+  // Add all dynamic addresses (governance, escrow, etc.)
+  const dynamicAddresses = getDynamicAddresses(chainId);
 
   return [...hardcodedAddresses, ...dynamicAddresses];
 };
