@@ -110,7 +110,7 @@ export const VoteItem = ({
           </MarkdownWrap>
         )}
         {descriptionLines.length > 0 && !trimmedData && !isIPFSLoading && (
-          <ProposalDescription>
+          <div>
             {descriptionLines.map((line, index) => (
               <DescriptionText key={index}>{line}</DescriptionText>
             ))}
@@ -120,7 +120,7 @@ export const VoteItem = ({
                 <span>Unknown Contract Called</span>
               </UnknownContract>
             )}
-          </ProposalDescription>
+          </div>
         )}
       </ProposalDescription>
     </ProposalListItemWrapper>

@@ -50,22 +50,20 @@ export default class MyDocument extends Document {
     }
   }
 
-  // TODO: add title
   get metaTitle(): string {
-    return '';
+    return 'Dual Governance | Lido';
   }
 
-  // TODO: add meta description
   get metaDescription(): string {
-    return '';
+    return 'Lido Dual Governance uses a Dynamic Timelock so stETH holders can delay execution until withdrawal—enhancing protocol safety and stETH oversight.';
   }
 
   get metaPreviewImgUrl(): string {
     const origin = config.ipfsMode
-      ? 'https://stake.lido.fi'
+      ? 'https://dg.lido.fi'
       : // TODO: fix type
         (config as any).selfOrigin;
-    return `${origin}/lido-preview.png`;
+    return `${origin}/dg-preview.png`;
   }
 
   render(): JSX.Element {

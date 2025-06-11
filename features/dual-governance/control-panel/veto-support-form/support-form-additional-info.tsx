@@ -27,8 +27,12 @@ export const SupportFormAdditionalInfo = () => {
           <AdditionalInfoLoader />
         ) : (
           <Text size={14} color="secondary">
-            {formatEthFull(ethAmount)} ETH
-            {usdAmount && <span>(${formatNumber({ value: usdAmount })})</span>}
+            {ethAmount !== undefined
+              ? `${formatEthFull(ethAmount)} ETH`
+              : '0 ETH'}
+            {usdAmount != null && usdAmount > 0 && (
+              <span> (${formatNumber({ value: usdAmount })})</span>
+            )}
           </Text>
         )}
       </SummaryRow>
