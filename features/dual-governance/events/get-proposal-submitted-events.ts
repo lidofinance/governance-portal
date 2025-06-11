@@ -45,35 +45,18 @@ const getGovernanceSetAddresses = async ({
       CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.emergencyProtectedTimelock || 0n;
 
     const allLogs: any[] = [];
-    const BLOCK_RANGE = 4999n;
 
-    const latestBlock = await client.getBlockNumber();
+    try {
+      const logs = await client.getLogs({
+        address: contractAddress,
+        event: eventAbi,
+        fromBlock: deploymentBlock,
+        toBlock: 'latest',
+      });
 
-    let fromBlock = deploymentBlock;
-
-    while (fromBlock <= latestBlock) {
-      const toBlock =
-        fromBlock + BLOCK_RANGE > latestBlock
-          ? latestBlock
-          : fromBlock + BLOCK_RANGE;
-
-      try {
-        const logs = await client.getLogs({
-          address: contractAddress,
-          event: eventAbi,
-          fromBlock,
-          toBlock,
-        });
-
-        allLogs.push(...logs);
-      } catch (error) {
-        console.error(
-          `Error fetching GovernanceSet logs from ${fromBlock} to ${toBlock}:`,
-          error,
-        );
-      }
-
-      fromBlock = toBlock + 1n;
+      allLogs.push(...logs);
+    } catch (error) {
+      console.error(`Error fetching GovernanceSet logs`, error);
     }
 
     const governanceAddresses = allLogs
@@ -119,35 +102,18 @@ const getGovernanceProposalSubmittedEvents = async ({
 
   try {
     const allLogs: DGProposalSubmittedEvent[] = [];
-    const BLOCK_RANGE = 4999n;
 
-    const latestBlock = await client.getBlockNumber();
+    try {
+      const logs = await client.getLogs({
+        address,
+        event: eventAbi,
+        fromBlock: deploymentBlock,
+        toBlock: 'latest',
+      });
 
-    let fromBlock = deploymentBlock;
-
-    while (fromBlock <= latestBlock) {
-      const toBlock =
-        fromBlock + BLOCK_RANGE > latestBlock
-          ? latestBlock
-          : fromBlock + BLOCK_RANGE;
-
-      try {
-        const logs = await client.getLogs({
-          address,
-          event: eventAbi,
-          fromBlock,
-          toBlock,
-        });
-
-        allLogs.push(...(logs as unknown as DGProposalSubmittedEvent[]));
-      } catch (error) {
-        console.error(
-          `Error fetching logs from ${fromBlock} to ${toBlock} for address ${address}:`,
-          error,
-        );
-      }
-
-      fromBlock = toBlock + 1n;
+      allLogs.push(...(logs as unknown as DGProposalSubmittedEvent[]));
+    } catch (error) {
+      console.error(`Error fetching logs for address ${address}:`, error);
     }
 
     return allLogs;
@@ -179,35 +145,18 @@ const getEPTProposalSubmittedEvents = async ({
       CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.emergencyProtectedTimelock || 0n;
 
     const allLogs: any[] = [];
-    const BLOCK_RANGE = 4999n;
 
-    const latestBlock = await client.getBlockNumber();
+    try {
+      const logs = await client.getLogs({
+        address: contractAddress,
+        event: eventAbi,
+        fromBlock: deploymentBlock,
+        toBlock: 'latest',
+      });
 
-    let fromBlock = deploymentBlock;
-
-    while (fromBlock <= latestBlock) {
-      const toBlock =
-        fromBlock + BLOCK_RANGE > latestBlock
-          ? latestBlock
-          : fromBlock + BLOCK_RANGE;
-
-      try {
-        const logs = await client.getLogs({
-          address: contractAddress,
-          event: eventAbi,
-          fromBlock,
-          toBlock,
-        });
-
-        allLogs.push(...logs);
-      } catch (error) {
-        console.error(
-          `Error fetching EPT proposal logs from ${fromBlock} to ${toBlock}:`,
-          error,
-        );
-      }
-
-      fromBlock = toBlock + 1n;
+      allLogs.push(...logs);
+    } catch (error) {
+      console.error('Error fetching EPT proposal logs', error);
     }
 
     return allLogs as unknown as EPTProposalSubmittedEvent[];

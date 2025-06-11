@@ -13,6 +13,7 @@ import { useMemo } from 'react';
 import { useEscrowContext } from 'providers/escrow';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
+import { useEscrowBalances } from '../../hooks/use-escrow-balances';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;
@@ -21,7 +22,9 @@ const InlineLoaderStyled = styled(InlineLoader)`
 `;
 
 export const SupportInfo = () => {
-  const { stEthTotalSupply, totalStEthInEscrow } = useEscrowContext();
+  const { stEthTotalSupply } = useEscrowContext();
+
+  const { data: escrowBalances } = useEscrowBalances();
 
   const { data: dgConfig } = useDualGovernanceConfig();
   const firstSealRageQuitSupport = parsePercent16(
@@ -41,7 +44,7 @@ export const SupportInfo = () => {
 
   const vetoSignallingThresholdProgress = useMemo(() => {
     if (
-      totalStEthInEscrow === undefined ||
+      escrowBalances?.totalLockedSharesInEscrows === undefined ||
       stEthTotalSupply === undefined ||
       firstSealRageQuitSupport === undefined
     ) {
@@ -50,14 +53,14 @@ export const SupportInfo = () => {
 
     return calculateCurrentThresholdProgress({
       targetPercent: firstSealRageQuitSupport,
-      currentSupport: totalStEthInEscrow,
+      currentSupport: escrowBalances.totalLockedSharesInEscrows,
       stEthTotalSupply,
     });
-  }, [totalStEthInEscrow, stEthTotalSupply, firstSealRageQuitSupport]);
+  }, [escrowBalances, stEthTotalSupply, firstSealRageQuitSupport]);
 
   const rageQuitThresholdProgress = useMemo(() => {
     if (
-      totalStEthInEscrow === undefined ||
+      escrowBalances?.totalLockedSharesInEscrows === undefined ||
       stEthTotalSupply === undefined ||
       secondSealRageQuitSupport === undefined
     ) {
@@ -66,10 +69,10 @@ export const SupportInfo = () => {
 
     return calculateCurrentThresholdProgress({
       targetPercent: secondSealRageQuitSupport,
-      currentSupport: totalStEthInEscrow,
+      currentSupport: escrowBalances.totalLockedSharesInEscrows,
       stEthTotalSupply,
     });
-  }, [totalStEthInEscrow, stEthTotalSupply, secondSealRageQuitSupport]);
+  }, [escrowBalances, stEthTotalSupply, secondSealRageQuitSupport]);
 
   const currentThreshold = useMemo(() => {
     return visibleState === VisibleGovernanceState.BlockedVetoSignalling ||
@@ -95,10 +98,10 @@ export const SupportInfo = () => {
       ) : (
         <>
           <Text size={22} weight={600}>
-            {formatEth(totalStEthInEscrow)} stETH
+            {formatEth(escrowBalances?.totalLockedSharesInEscrows || 0n)} stETH
           </Text>
 
-          {vetoSignallingThresholdProgress && (
+          {stEthTotalSupply && firstSealRageQuitSupport && (
             <ProgressBar
               variant={
                 visibleState === VisibleGovernanceState.Normal
@@ -106,24 +109,26 @@ export const SupportInfo = () => {
                   : 'danger'
               }
               progressPercent={Number(
-                currentThreshold?.thresholdSupportPercent,
+                currentThreshold?.thresholdSupportPercent || 0,
               )}
-              totalPercent={Number(currentThreshold?.targetValue)}
+              totalPercent={Number(currentThreshold?.targetValue || 100)}
               totalTitle={`${nextStateTitle} Threshold`}
             />
           )}
         </>
       )}
 
-      {totalStEthInEscrow !== undefined &&
+      {escrowBalances?.totalLockedSharesInEscrows !== undefined &&
         vetoSignallingThresholdProgress &&
         rageQuitThresholdProgress && (
           <AdditionalSupportInfo
             amountTillVSPhaseWei={
-              vetoSignallingThresholdProgress.targetValue - totalStEthInEscrow
+              vetoSignallingThresholdProgress.targetValue -
+              escrowBalances.totalLockedSharesInEscrows
             }
             amountTillRQPhaseWei={
-              rageQuitThresholdProgress.targetValue - totalStEthInEscrow
+              rageQuitThresholdProgress.targetValue -
+              escrowBalances.totalLockedSharesInEscrows
             }
           />
         )}

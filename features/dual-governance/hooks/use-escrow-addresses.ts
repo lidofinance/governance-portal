@@ -61,43 +61,25 @@ export const useEscrowAddresses = () => {
         const deploymentBlock =
           CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
 
-        const BLOCK_RANGE = 4999n;
-
-        const latestBlock = await publicClient.getBlockNumber();
-
-        let fromBlock = deploymentBlock;
-
         const contractAddress = getContractAddress(DualGovernance, chainId);
 
-        const logs: any[] = [];
+        const allLogs: any[] = [];
 
-        while (fromBlock <= latestBlock) {
-          const toBlock =
-            fromBlock + BLOCK_RANGE > latestBlock
-              ? latestBlock
-              : fromBlock + BLOCK_RANGE;
+        try {
+          const logs = await publicClient.getLogs({
+            address: contractAddress,
+            event: eventAbi,
+            fromBlock: deploymentBlock,
+            toBlock: 'latest',
+          });
 
-          try {
-            const logs = await publicClient.getLogs({
-              address: contractAddress,
-              event: eventAbi,
-              fromBlock,
-              toBlock,
-            });
-
-            logs.push(...logs);
-          } catch (error) {
-            console.error(
-              `Error fetching EPT proposal logs from ${fromBlock} to ${toBlock}:`,
-              error,
-            );
-          }
-
-          fromBlock = toBlock + 1n;
+          allLogs.push(...logs);
+        } catch (error) {
+          console.error(`Error fetching EPT proposal logs`, error);
         }
 
-        if (logs.length > 0) {
-          const _escrowAddresses = logs.map((log: any) => log.args.escrow);
+        if (allLogs.length > 0) {
+          const _escrowAddresses = allLogs.map((log: any) => log.args.escrow);
 
           setHistoricalEscrowAddresses(_escrowAddresses);
         }

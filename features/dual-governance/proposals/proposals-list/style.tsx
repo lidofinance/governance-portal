@@ -38,21 +38,6 @@ export const ProposalDescription = styled.div`
   overflow: hidden;
   position: relative;
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 24px;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 1)
-    );
-    pointer-events: none;
-  }
-
   @media ${devicesHeaderMedia.tablet} {
     width: 100%;
     border-left: none;

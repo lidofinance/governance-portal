@@ -13,8 +13,9 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
+import { useWatchContractEvent } from 'wagmi';
 import { escrowAbi } from '../abi/ts';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from './lido-sdk';
 import { StETH } from 'shared/blockchain/contracts';
 
@@ -84,7 +85,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
       return await readVetoSignalling('getSignallingEscrowDetails');
     },
     enabled: !!vetoSignallingAddress,
-    staleTime: 300000,
+    staleTime: 0,
     retry: 2,
   });
 
@@ -102,7 +103,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
       return await readVetoSignalling('getRageQuitSupport');
     },
     enabled: !!vetoSignallingAddress,
-    staleTime: 300000,
+    staleTime: 0,
     retry: 2,
   });
 
@@ -127,7 +128,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
       ]);
     },
     enabled: !!unfinalizedShares,
-    staleTime: 300000,
+    staleTime: 0,
     retry: 2,
   });
 
@@ -140,7 +141,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     queryFn: async () => {
       return await stEthContract.readContract('totalSupply');
     },
-    staleTime: 300000,
+    staleTime: 0,
     retry: 2,
   });
 
@@ -150,7 +151,10 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [_stEthTotalSupply, lockedAssets]);
 
   const totalStEthInEscrow = useMemo(() => {
-    if (!pooledEthByShares || !lockedAssets) return 0n;
+    if (!pooledEthByShares || !lockedAssets) {
+      return 0n;
+    }
+
     return pooledEthByShares + lockedAssets.totalUnstETHFinalizedETH;
   }, [lockedAssets, pooledEthByShares]);
 
@@ -192,6 +196,73 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     refetchTotalSupply,
     refetchRageQuitSupport,
   ]);
+
+  const queryClient = useQueryClient();
+  const isEnabled = !!vetoSignallingAddress;
+
+  // Watch for StETHSharesLocked events (when user locks tokens)
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'StETHSharesLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
+      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
+      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
+      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      void refetchAll();
+    },
+  });
+
+  // Watch for StETHSharesUnlocked events (when user unlocks stETH tokens)
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'StETHSharesUnlocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
+      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
+      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
+      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      void refetchAll();
+    },
+  });
+
+  // Watch for UnstETHLocked events (when user locks unstETH tokens)
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'UnstETHLocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
+      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
+      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
+      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      void refetchAll();
+    },
+  });
+
+  // Watch for UnstETHUnlocked events (when user unlocks unstETH tokens)
+  useWatchContractEvent({
+    address: vetoSignallingAddress,
+    abi: escrowAbi,
+    eventName: 'UnstETHUnlocked',
+    enabled: isEnabled,
+    onLogs: () => {
+      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
+      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
+      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
+      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
+      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      void refetchAll();
+    },
+  });
 
   const value: EscrowContextValue = useMemo(
     () => ({
