@@ -9,9 +9,9 @@ import {
   defaultErrorHandler,
   httpMethodGuard,
   HttpMethod,
-} from 'utilsApi';
-import Metrics from 'utilsApi/metrics';
-import { rpcFactory } from 'utilsApi/rpcFactory';
+} from 'utils-api';
+import Metrics from 'utils-api/metrics';
+import { rpcFactory } from 'utils-api/rpc-factory';
 import { METRICS_PREFIX } from 'constants/metrics';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {

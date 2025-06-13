@@ -7,7 +7,7 @@ import { mainnet } from 'wagmi/chains';
 
 import { Web3Provider } from '@ethersproject/providers';
 import { ProviderSDK } from '@lido-sdk/react';
-import { getStaticRpcBatchProvider } from 'utils/providersRPC';
+import { getStaticRpcBatchProvider } from 'utils/providers-rpc';
 
 import { useDappStatus } from 'shared/hooks';
 

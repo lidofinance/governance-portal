@@ -13,7 +13,6 @@ import { useMemo } from 'react';
 import { useEscrowContext } from 'providers/escrow';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
-import { useEscrowBalances } from '../../hooks/use-escrow-balances';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;
@@ -23,8 +22,6 @@ const InlineLoaderStyled = styled(InlineLoader)`
 
 export const SupportInfo = () => {
   const { stEthTotalSupply, totalStEthInEscrow } = useEscrowContext();
-
-  const { data: escrowBalances } = useEscrowBalances();
 
   const { data: dgConfig } = useDualGovernanceConfig();
   const firstSealRageQuitSupport = parsePercent16(
@@ -118,17 +115,15 @@ export const SupportInfo = () => {
         </>
       )}
 
-      {escrowBalances?.totalLockedSharesInEscrows !== undefined &&
+      {totalStEthInEscrow !== undefined &&
         vetoSignallingThresholdProgress &&
         rageQuitThresholdProgress && (
           <AdditionalSupportInfo
             amountTillVSPhaseWei={
-              vetoSignallingThresholdProgress.targetValue -
-              escrowBalances.totalLockedSharesInEscrows
+              vetoSignallingThresholdProgress.targetValue - totalStEthInEscrow
             }
             amountTillRQPhaseWei={
-              rageQuitThresholdProgress.targetValue -
-              escrowBalances.totalLockedSharesInEscrows
+              rageQuitThresholdProgress.targetValue - totalStEthInEscrow
             }
           />
         )}

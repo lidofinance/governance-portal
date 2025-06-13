@@ -2,7 +2,7 @@ import {
   getErrorMessage,
   ErrorMessage,
   extractCodeFromError,
-} from '../getErrorMessage';
+} from '../get-error-message';
 
 console.error = jest.fn();
 
@@ -15,11 +15,6 @@ describe('getErrorMessage', () => {
   it('should return DENIED_SIG error message when error code is 4001', () => {
     const error = { code: 4001 };
     expect(getErrorMessage(error)).toBe(ErrorMessage.DENIED_SIG);
-  });
-
-  it('should return LIMIT_REACHED error message when error reason includes STAKE_LIMIT', () => {
-    const error = { reason: 'STAKE_LIMIT' };
-    expect(getErrorMessage(error)).toBe(ErrorMessage.LIMIT_REACHED);
   });
 
   it('should return ACTION_REJECTED error message when error message includes "denied message signature"', () => {

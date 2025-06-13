@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Layout } from 'shared/components';
-import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 
 const _settings: FC = () => {
   return (

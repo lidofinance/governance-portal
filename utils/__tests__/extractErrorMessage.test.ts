@@ -1,4 +1,4 @@
-import { extractErrorMessage } from '../extractErrorMessage';
+import { extractErrorMessage } from '../extract-error-message';
 
 describe('extractErrorMessage', () => {
   it('should return the error message if the error is a string', () => {

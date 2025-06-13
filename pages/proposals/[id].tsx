@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Layout } from 'shared/components';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ProposalPage as ProposalPageComponent } from 'features/dual-governance/pages/proposal-page';
-import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 
 interface Props {
   id: string;

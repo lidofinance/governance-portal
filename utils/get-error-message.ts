@@ -4,7 +4,6 @@ export enum ErrorMessage {
   SOMETHING_WRONG = 'Something went wrong.',
   TRANSACTION_REVERTED = 'Transaction was included into block but reverted during execution',
   ENABLE_BLIND_SIGNING = 'Please enable blind signing on your Ledger hardware wallet.',
-  LIMIT_REACHED = 'Transaction could not be completed because stake limit is exhausted. Please wait until the stake limit restores and try again. Otherwise, you can swap your Ethereum on 1inch platform instantly.',
   DEVICE_LOCKED = 'Please unlock your Ledger hardware wallet',
   INVALID_REFERRAL = 'Invalid referral address or ENS',
   INVALID_SIGNATURE = 'Invalid Permit signature. Perhaps it has expired or already been used. Try submitting a withdrawal request again.',
@@ -36,8 +35,6 @@ export const getErrorMessage = (error: unknown): ErrorMessage => {
     case 4001:
     case 200001:
       return ErrorMessage.DENIED_SIG;
-    case 'LIMIT_REACHED':
-      return ErrorMessage.LIMIT_REACHED;
     case 'INVALID_REFERRAL':
       return ErrorMessage.INVALID_REFERRAL;
     case 'TRANSACTION_REVERTED':

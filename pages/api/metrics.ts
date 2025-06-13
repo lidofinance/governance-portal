@@ -6,8 +6,8 @@ import {
   responseTimeMetric,
   errorAndCacheDefaultWrappers,
   rateLimit,
-} from 'utilsApi';
-import Metrics from 'utilsApi/metrics';
+} from 'utils-api';
+import Metrics from 'utils-api/metrics';
 
 const metrics = metricsFactory({
   registry: Metrics.registry,

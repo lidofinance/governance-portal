@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { wrapRequest as wrapNextRequest } from '@lidofinance/next-api-wrapper';
-import { addDynamicAllowedLogsAddress } from 'utilsApi/rpcFactory';
+import { addDynamicAllowedLogsAddress } from 'utils-api/rpc-factory';
 import { API_ROUTES } from 'constants/api';
 import {
   rateLimit,
@@ -8,8 +8,8 @@ import {
   defaultErrorHandler,
   httpMethodGuard,
   HttpMethod,
-} from 'utilsApi';
-import Metrics from 'utilsApi/metrics';
+} from 'utils-api';
+import Metrics from 'utils-api/metrics';
 
 type AddressType = 'governance' | 'escrow' | 'other';
 const dynamicAddressesCache: Record<

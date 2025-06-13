@@ -1,7 +1,7 @@
 import type { GetStaticProps, GetStaticPropsResult, PreviewData } from 'next';
 import type { ParsedUrlQuery } from 'querystring';
 
-import Metrics from 'utilsApi/metrics';
+import Metrics from 'utils-api/metrics';
 import { config } from 'config';
 
 export const getDefaultStaticProps = <

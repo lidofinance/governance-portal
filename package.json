@@ -16,9 +16,7 @@
     "types": "tsc --noEmit",
     "typechain": "typechain --target=ethers-v5 --out-dir ./generated ./abi/*.json",
     "postinstall": "husky install && yarn typechain || true",
-    "test": "yarn test:e2e",
     "test:unit": "jest",
-    "test:e2e": "playwright test",
     "prepare": "husky"
   },
   "dependencies": {

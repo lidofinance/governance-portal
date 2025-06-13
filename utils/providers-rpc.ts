@@ -4,7 +4,7 @@ import {
   StaticJsonRpcProvider,
   Networkish,
 } from '@ethersproject/providers';
-import { StaticJsonRpcBatchProvider } from './staticJsonRpcBatchProvider';
+import { StaticJsonRpcBatchProvider } from './static-json-rpc-batch-provider';
 
 /**
  * Local copy of the same file from "@lido-sdk"
