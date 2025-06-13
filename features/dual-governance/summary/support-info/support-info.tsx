@@ -22,7 +22,7 @@ const InlineLoaderStyled = styled(InlineLoader)`
 `;
 
 export const SupportInfo = () => {
-  const { stEthTotalSupply } = useEscrowContext();
+  const { stEthTotalSupply, totalStEthInEscrow } = useEscrowContext();
 
   const { data: escrowBalances } = useEscrowBalances();
 
@@ -44,7 +44,7 @@ export const SupportInfo = () => {
 
   const vetoSignallingThresholdProgress = useMemo(() => {
     if (
-      escrowBalances?.totalLockedSharesInEscrows === undefined ||
+      totalStEthInEscrow === undefined ||
       stEthTotalSupply === undefined ||
       firstSealRageQuitSupport === undefined
     ) {
@@ -53,14 +53,14 @@ export const SupportInfo = () => {
 
     return calculateCurrentThresholdProgress({
       targetPercent: firstSealRageQuitSupport,
-      currentSupport: escrowBalances.totalLockedSharesInEscrows,
+      currentSupport: totalStEthInEscrow,
       stEthTotalSupply,
     });
-  }, [escrowBalances, stEthTotalSupply, firstSealRageQuitSupport]);
+  }, [totalStEthInEscrow, stEthTotalSupply, firstSealRageQuitSupport]);
 
   const rageQuitThresholdProgress = useMemo(() => {
     if (
-      escrowBalances?.totalLockedSharesInEscrows === undefined ||
+      totalStEthInEscrow === undefined ||
       stEthTotalSupply === undefined ||
       secondSealRageQuitSupport === undefined
     ) {
@@ -69,10 +69,10 @@ export const SupportInfo = () => {
 
     return calculateCurrentThresholdProgress({
       targetPercent: secondSealRageQuitSupport,
-      currentSupport: escrowBalances.totalLockedSharesInEscrows,
+      currentSupport: totalStEthInEscrow,
       stEthTotalSupply,
     });
-  }, [escrowBalances, stEthTotalSupply, secondSealRageQuitSupport]);
+  }, [totalStEthInEscrow, stEthTotalSupply, secondSealRageQuitSupport]);
 
   const currentThreshold = useMemo(() => {
     return visibleState === VisibleGovernanceState.BlockedVetoSignalling ||
@@ -98,7 +98,7 @@ export const SupportInfo = () => {
       ) : (
         <>
           <Text size={22} weight={600}>
-            {formatEth(escrowBalances?.totalLockedSharesInEscrows || 0n)} stETH
+            {formatEth(totalStEthInEscrow || 0n)} stETH
           </Text>
 
           {stEthTotalSupply && firstSealRageQuitSupport && (
