@@ -43,7 +43,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
     },
   });
 
-  return useQuery<ProposalsQueryResult, Error>({
+  return useQuery<ProposalsQueryResult>({
     queryKey: proposalsCount
       ? [
           'getProposals',

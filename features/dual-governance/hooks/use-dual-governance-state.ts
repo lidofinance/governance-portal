@@ -227,7 +227,7 @@ export const useDualGovernanceState = ({
 
   const readDualGovernanceContract = useReadContract(DualGovernance);
 
-  return useQuery<DualGovernanceDetailedState | Error>({
+  return useQuery<DualGovernanceDetailedState>({
     queryKey: ['dg-current-state', chainId],
     staleTime: 5000,
     enabled: isEnabled,

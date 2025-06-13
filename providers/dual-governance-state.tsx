@@ -72,17 +72,13 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
     isEnabled: !isEmergencyModeActive && !isEmergencyModeActiveLoading,
   });
 
-  const isDetailedStateError = detailedState instanceof Error;
+  const actualDetailedState = !detailedState
+    ? defaultDetailedState
+    : detailedState;
 
-  const actualDetailedState =
-    !detailedState || isDetailedStateError
-      ? defaultDetailedState
-      : detailedState;
-
-  const persistedState =
-    !isDetailedStateError && detailedState
-      ? detailedState.persistedState
-      : GovernanceState.Normal;
+  const persistedState = detailedState
+    ? detailedState.persistedState
+    : GovernanceState.Normal;
 
   const isAssetManagementLocked =
     actualDetailedState.persistedState !== GovernanceState.RageQuit &&
@@ -105,7 +101,7 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
     isAssetManagementLocked,
     detailedState: actualDetailedState,
     isLoading: isDualGovernanceStateLoading,
-    error: isDetailedStateError ? detailedState : dualGovernanceStateError,
+    error: dualGovernanceStateError,
     refetch: async () => {
       try {
         await refetchDualGovernanceState();
