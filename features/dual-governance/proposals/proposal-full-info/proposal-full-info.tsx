@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   ActionsWrapper,
@@ -51,10 +52,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const client = usePublicClient();
 
-  const [proposalExecutedAt, setProposalExecutedAt] = useState<string | null>(
-    null,
-  );
-
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const {
@@ -74,10 +71,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
     EmergencyProtectedTimelock,
   );
 
-  useEffect(() => {
-    const fetchEvent = async () => {
+  const { data: proposalExecutedAt } = useQuery({
+    queryKey: ['proposal-executed-event', proposal?.proposalId, chainId],
+    queryFn: async () => {
       if (!proposal?.proposalId || !client || !chainId) {
-        return;
+        return null;
       }
 
       try {
@@ -97,24 +95,22 @@ export const ProposalFullInfo = ({ id }: Props) => {
               showYear: true,
             });
 
-            setProposalExecutedAt(`${date.date} ${date.tz}`);
+            return `${date.date} ${date.tz}`;
           }
         }
+        return null;
       } catch (error) {
         console.error('Error fetching proposal executed event:', error);
-      } finally {
-        // setLogsLoading(false);
+        return null;
       }
-    };
-
-    void fetchEvent();
-  }, [chainId, client, proposal?.proposalId]);
+    },
+    enabled: !!proposal?.proposalId && !!client && !!chainId,
+  });
 
   const updateProposalState = useCallback(async () => {
     await refetchProposal();
     setIsScheduleLoading(false);
     setIsExecuteLoading(false);
-    setShowExecuteButton(false);
   }, [refetchProposal]);
 
   const scheduleProposal = useScheduleProposalAction({
@@ -123,31 +119,26 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const executeProposal = useExecuteProposalAction({
     onConfirm: updateProposalState,
-    isEmergencyMode: isEmergencyModeActive,
   });
-
-  const [showScheduleButton, setShowScheduleButton] = useState(false);
-  const [showExecuteButton, setShowExecuteButton] = useState(false);
-  const [isEmergencyExecutionCommittee, setIsEmergencyExecutionCommittee] =
-    useState(false);
 
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState(false);
 
-  /**
-   *  Check if we can schedule | execute proposals
-   **/
-
-  useEffect(() => {
-    const fetchEmergencyExecutionCommittee = async () => {
+  const { data: isEmergencyExecutionCommittee = false } = useQuery({
+    queryKey: [
+      'emergency-execution-committee',
+      address,
+      isConnected,
+      isSupportedChain,
+    ],
+    queryFn: async () => {
       if (
         !emergencyProtectedTimelock ||
         !address ||
         !isConnected ||
         !isSupportedChain
       ) {
-        setIsEmergencyExecutionCommittee(false);
-        return;
+        return false;
       }
 
       try {
@@ -157,30 +148,45 @@ export const ProposalFullInfo = ({ id }: Props) => {
           );
 
         if (typeof emergencyExecutionCommittee === 'string' && address) {
-          setIsEmergencyExecutionCommittee(
-            emergencyExecutionCommittee.toLowerCase() === address.toLowerCase(),
+          return (
+            emergencyExecutionCommittee.toLowerCase() === address.toLowerCase()
           );
         } else {
-          setIsEmergencyExecutionCommittee(false);
+          return false;
         }
       } catch (error) {
         console.error('Error fetching emergency execution committee:', error);
-        setIsEmergencyExecutionCommittee(false);
+        return false;
       }
-    };
+    },
+    enabled:
+      !!emergencyProtectedTimelock &&
+      !!address &&
+      isConnected &&
+      isSupportedChain,
+  });
 
-    void fetchEmergencyExecutionCommittee();
-  }, [emergencyProtectedTimelock, address, isConnected, isSupportedChain]);
-
-  useEffect(() => {
-    const fetchActions = async () => {
+  const {
+    data: actionButtons = {
+      showScheduleButton: false,
+      showExecuteButton: false,
+    },
+  } = useQuery({
+    queryKey: [
+      'proposal-actions',
+      id,
+      proposal?.proposalDetails.status,
+      isEmergencyModeActive,
+      isEmergencyExecutionCommittee,
+    ],
+    queryFn: async () => {
       if (
         !emergencyProtectedTimelock ||
         !readDynamicContract ||
         !id ||
         !proposal
       ) {
-        return;
+        return { showScheduleButton: false, showExecuteButton: false };
       }
 
       try {
@@ -193,34 +199,31 @@ export const ProposalFullInfo = ({ id }: Props) => {
           [BigInt(id)],
         );
 
-        setShowScheduleButton(!!canSchedule);
-
         const isExecuted =
           proposal?.proposalDetails.status === ProposalStatus.Executed;
 
-        if (
+        const showExecuteButton =
           !isExecuted &&
           (canExecute ||
-            (isEmergencyModeActive && isEmergencyExecutionCommittee))
-        ) {
-          setShowExecuteButton(true);
-        } else {
-          setShowExecuteButton(false);
-        }
+            (isEmergencyModeActive && isEmergencyExecutionCommittee));
+
+        return {
+          showScheduleButton: !!canSchedule,
+          showExecuteButton,
+        };
       } catch (e) {
         console.error('Failed to fetch proposal actions', e);
+        return { showScheduleButton: false, showExecuteButton: false };
       }
-    };
+    },
+    enabled:
+      !!emergencyProtectedTimelock &&
+      !!readDynamicContract &&
+      !!id &&
+      !!proposal,
+  });
 
-    void fetchActions();
-  }, [
-    readDynamicContract,
-    emergencyProtectedTimelock,
-    id,
-    proposal,
-    isEmergencyModeActive,
-    isEmergencyExecutionCommittee,
-  ]);
+  const { showScheduleButton, showExecuteButton } = actionButtons;
 
   const handleSchedule = async () => {
     setIsScheduleLoading(true);

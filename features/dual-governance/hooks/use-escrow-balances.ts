@@ -71,17 +71,14 @@ export const useEscrowBalances = () => {
         vetoSignallingAddress,
       );
 
-      const minAssetLockDuration =
-        (await readVetoSignallingContract('getMinAssetsLockDuration')) || 0n;
+      const minAssetLockDuration = await readVetoSignallingContract(
+        'getMinAssetsLockDuration',
+      );
 
-      const vetoSignallingBalance = (await readVetoSignallingContract(
+      const vetoSignallingBalance = await readVetoSignallingContract(
         'getVetoerDetails',
         [accountAddress],
-      )) || {
-        stETHLockedShares: 0n,
-        unstETHLockedShares: 0n,
-        lastAssetsLockTimestamp: 0n,
-      };
+      );
 
       const vetoSignallingSum =
         vetoSignallingBalance.stETHLockedShares +

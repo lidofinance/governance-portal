@@ -18,6 +18,7 @@ type Props = {
   client: ReturnType<typeof usePublicClient>;
   EPTContract?: ReturnType<typeof useReadContract>;
   chainId: CHAINS;
+  proposalId?: string | number; // Optional parameter passed from useProposal()
 };
 
 export type MergedProposalSubmittedEvent = {
@@ -88,10 +89,12 @@ const getGovernanceProposalSubmittedEvents = async ({
   client,
   address,
   chainId,
+  proposalId,
 }: {
   client: ReturnType<typeof usePublicClient>;
   address: Address;
   chainId: CHAINS;
+  proposalId?: string | number;
 }): Promise<DGProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: DualGovernance.abi,
@@ -109,12 +112,20 @@ const getGovernanceProposalSubmittedEvents = async ({
     const allLogs: DGProposalSubmittedEvent[] = [];
 
     try {
-      const logs = await client.getLogs({
+      const filter: any = {
         address,
         event: eventAbi,
         fromBlock: deploymentBlock,
         toBlock: 'latest',
-      });
+      };
+
+      if (proposalId !== undefined) {
+        filter.args = {
+          proposalId: BigInt(proposalId),
+        };
+      }
+
+      const logs = await client.getLogs(filter);
 
       allLogs.push(...(logs as unknown as DGProposalSubmittedEvent[]));
     } catch (error) {
@@ -132,6 +143,7 @@ const getEPTProposalSubmittedEvents = async ({
   client,
   EPTContract,
   chainId,
+  proposalId,
 }: Props): Promise<EPTProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: EmergencyProtectedTimelock.abi,
@@ -152,12 +164,20 @@ const getEPTProposalSubmittedEvents = async ({
     const allLogs: any[] = [];
 
     try {
-      const logs = await client.getLogs({
+      const filter: any = {
         address: contractAddress,
         event: eventAbi,
         fromBlock: deploymentBlock,
         toBlock: 'latest',
-      });
+      };
+
+      if (proposalId !== undefined) {
+        filter.args = {
+          id: BigInt(proposalId),
+        };
+      }
+
+      const logs = await client.getLogs(filter);
 
       allLogs.push(...logs);
     } catch (error) {
@@ -175,11 +195,11 @@ export const getProposalSubmittedEvents = async ({
   client,
   EPTContract,
   chainId,
+  proposalId,
 }: Props): Promise<{
   mergedProposalSubmittedEvents: MergedProposalSubmittedEvent[];
 }> => {
   try {
-    // Get all governance addresses from GovernanceSet events
     const governanceAddresses = await getGovernanceSetAddresses({
       client,
       EPTContract,
@@ -187,7 +207,12 @@ export const getProposalSubmittedEvents = async ({
     });
 
     const governanceEventsPromises = governanceAddresses.map((address) =>
-      getGovernanceProposalSubmittedEvents({ client, address, chainId }),
+      getGovernanceProposalSubmittedEvents({
+        client,
+        address,
+        chainId,
+        proposalId,
+      }),
     );
     const governanceEventsArrays = await Promise.all(governanceEventsPromises);
 
@@ -206,27 +231,38 @@ export const getProposalSubmittedEvents = async ({
       client,
       EPTContract,
       chainId,
+      proposalId,
     });
 
     const mergedEventsMap = new Map<string, MergedProposalSubmittedEvent>();
 
     for (const event of governanceEvents) {
-      const proposalId = event.args.proposalId.toString();
-      mergedEventsMap.set(proposalId, {
-        proposalId: event.args.proposalId,
-        DGEvent: event,
-      });
+      const eventProposalId = event.args.proposalId.toString();
+      if (
+        proposalId === undefined ||
+        eventProposalId === proposalId.toString()
+      ) {
+        mergedEventsMap.set(eventProposalId, {
+          proposalId: event.args.proposalId,
+          DGEvent: event,
+        });
+      }
     }
 
     for (const event of EPTEvents) {
-      const proposalId = event.args.id.toString();
-      const existing = mergedEventsMap.get(proposalId) || {
-        proposalId: event.args.id,
-      };
-      mergedEventsMap.set(proposalId, {
-        ...existing,
-        EPTEvent: event,
-      });
+      const eventProposalId = event.args.id.toString();
+      if (
+        proposalId === undefined ||
+        eventProposalId === proposalId.toString()
+      ) {
+        const existing = mergedEventsMap.get(eventProposalId) || {
+          proposalId: event.args.id,
+        };
+        mergedEventsMap.set(eventProposalId, {
+          ...existing,
+          EPTEvent: event,
+        });
+      }
     }
 
     const mergedProposalSubmittedEvents = Array.from(mergedEventsMap.values());

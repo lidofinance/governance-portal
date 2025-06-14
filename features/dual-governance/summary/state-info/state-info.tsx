@@ -112,17 +112,18 @@ export const StateInfo = () => {
     });
   }, [totalStEthInEscrow, stEthTotalSupply, secondSealRageQuitSupport]);
 
+  const nextState = getNextGovernanceState({
+    currentState: detailedState?.persistedState,
+    vetoSignallingThresholdPercent:
+      vetoSignallingThresholdProgress?.thresholdSupportPercent || 0,
+    rageQuitThresholdPercent:
+      rageQuitThresholdProgress?.thresholdSupportPercent || 0,
+  });
+
   const showNextState = useMemo(() => {
     if (!vetoSignallingThresholdProgress || !rageQuitThresholdProgress) {
       return false;
     }
-    const nextState = getNextGovernanceState({
-      currentState: detailedState?.persistedState,
-      vetoSignallingThresholdPercent:
-        vetoSignallingThresholdProgress?.thresholdSupportPercent,
-      rageQuitThresholdPercent:
-        rageQuitThresholdProgress?.thresholdSupportPercent,
-    });
 
     return (
       nextState &&
@@ -136,17 +137,10 @@ export const StateInfo = () => {
     );
   }, [
     detailedState,
+    nextState,
     rageQuitThresholdProgress,
     vetoSignallingThresholdProgress,
   ]);
-
-  const nextState = getNextGovernanceState({
-    currentState: detailedState?.persistedState,
-    vetoSignallingThresholdPercent:
-      vetoSignallingThresholdProgress?.thresholdSupportPercent || 0,
-    rageQuitThresholdPercent:
-      rageQuitThresholdProgress?.thresholdSupportPercent || 0,
-  });
 
   const {
     data: emergencyProtectionDetails,

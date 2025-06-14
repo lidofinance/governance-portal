@@ -44,6 +44,7 @@ export const useProposal = ({
             client: publicClient,
             EPTContract: emergencyProtectedTimelock,
             chainId,
+            proposalId: id,
           });
 
         const proposalLog =

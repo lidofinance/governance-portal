@@ -26,7 +26,7 @@ const VOTES_LIMIT = 15;
 
 type ProposalsContextType = {
   proposals: ProposalCombinedData[];
-  activeProposals: ProposalCombinedData[];
+  activeProposals: (ProposalCombinedData | VoteData)[];
   currentPage: number;
   setCurrentPage: (page: number) => void;
   isFetching: boolean;
@@ -112,12 +112,16 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   });
 
   const activeProposals = useMemo(() => {
-    return proposals.filter((proposal) =>
+    const _proposals = proposals.filter((proposal) =>
       [ProposalStatus.Submitted, ProposalStatus.Scheduled].includes(
         proposal.proposalDetails.status,
       ),
     );
-  }, [proposals]);
+
+    const votes = votesData?.votes ?? [];
+
+    return [..._proposals, ...votes];
+  }, [proposals, votesData]);
 
   const getProposalById = useCallback(
     (id: number) => {
