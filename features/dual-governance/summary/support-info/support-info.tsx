@@ -101,7 +101,8 @@ export const SupportInfo = () => {
           {stEthTotalSupply && firstSealRageQuitSupport && (
             <ProgressBar
               variant={
-                visibleState === VisibleGovernanceState.Normal
+                visibleState === VisibleGovernanceState.Normal ||
+                visibleState === VisibleGovernanceState.Warning
                   ? 'default'
                   : 'danger'
               }

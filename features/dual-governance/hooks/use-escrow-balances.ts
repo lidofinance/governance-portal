@@ -94,11 +94,10 @@ export const useEscrowBalances = () => {
 
       setLoadingState(false);
 
-      // const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
-      const wstETHLockedShares =
-        (await readWstEthContract.readContract('getStETHByWstETH', [
-          vetoSignallingBalance.stETHLockedShares,
-        ])) || vetoSignallingBalance.stETHLockedShares;
+      const wstETHLockedShares = await readWstEthContract.readContract(
+        'getStETHByWstETH',
+        [vetoSignallingBalance.stETHLockedShares],
+      );
 
       const totalStETHLockedSharesInRageQuitEscrows =
         computedRageQuitEscrowsBalances

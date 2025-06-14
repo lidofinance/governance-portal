@@ -15,7 +15,7 @@ export const useRageQuitEscrowDetails = () => {
   return useQuery({
     queryKey: ['rage-quit-details', chainId],
     enabled: isEnabled,
-    staleTime: 300_000, // 5 minutes
+    staleTime: 300000, // 5 minutes
     queryFn: async () => {
       if (!isEnabled) return;
 

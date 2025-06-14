@@ -27,8 +27,6 @@ const VOTES_LIMIT = 15;
 type ProposalsContextType = {
   proposals: ProposalCombinedData[];
   activeProposals: (ProposalCombinedData | VoteData)[];
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
   isFetching: boolean;
   isLoading: boolean;
   votes: VoteData[];
@@ -92,8 +90,6 @@ const getCombinedData = ({
 export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
   const [proposals, setProposals] = useState<ProposalCombinedData[]>([]);
 
   const proposalsData = useProposals();
@@ -108,7 +104,6 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
     isLoading: isVotesLoading,
   } = useVotes({
     limit: VOTES_LIMIT,
-    getActive: true,
   });
 
   const activeProposals = useMemo(() => {
@@ -165,8 +160,6 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
         afterSubmitDelay: proposalsDelays?.afterSubmitDelay,
         afterScheduleDelay: proposalsDelays?.afterScheduleDelay,
       }),
-      currentPage,
-      setCurrentPage,
       isFetching: [proposalsData.isFetching || isVotesFetching].some(
         (isFetching) => isFetching,
       ),
@@ -180,7 +173,6 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       proposals,
       activeProposals,
       votesData?.votes,
-      currentPage,
       proposalsData.isFetching,
       proposalsData.isLoading,
       isVotesFetching,

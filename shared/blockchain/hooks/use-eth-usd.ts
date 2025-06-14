@@ -20,7 +20,7 @@ export const useEthUsd = (amount: bigint | undefined) => {
   } = useQuery({
     queryKey: ['eth-usd-price', publicClient],
     enabled: !!publicClient,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 300000, // 5 minutes
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
     queryFn: async () => {
