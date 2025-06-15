@@ -8,6 +8,7 @@ import { Address } from 'viem';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 import { registerDynamicAddress } from 'utils/dynamic-addresses';
 import { useQuery } from '@tanstack/react-query';
+import { getBatchedLogs } from 'utils/batched-logs';
 
 export const useEscrowAddresses = () => {
   const { chainId } = useLidoSDK();
@@ -46,15 +47,21 @@ export const useEscrowAddresses = () => {
   });
 
   const {
-    data: historicalEscrowAddresses,
-    isLoading: isHistoricalAddressesLoading,
+    data: historicalAddresses,
+    isLoading: isLoadingHistoricalAddresses,
     error: historicalAddressesError,
     refetch: refetchHistoricalAddresses,
   } = useQuery<Address[] | null>({
     queryKey: ['historical-escrow-addresses', chainId],
+    networkMode: 'always',
+    enabled: !!publicClient && !!chainId && !!eventAbi,
+    staleTime: 30000, // 5 minutes
     queryFn: async () => {
       if (!publicClient) {
         throw new Error('Public client must be defined');
+      }
+      if (!eventAbi) {
+        throw new Error('eventAbi must be defined');
       }
 
       const deploymentBlock =
@@ -65,11 +72,18 @@ export const useEscrowAddresses = () => {
       const allLogs: any[] = [];
 
       try {
-        const logs = await publicClient.getLogs({
+        const logs = await getBatchedLogs({
+          publicClient,
           address: contractAddress,
           event: eventAbi,
           fromBlock: deploymentBlock,
           toBlock: 'latest',
+          onProgress: (current, total) => {
+            const percentComplete = Number((current * 100n) / total);
+            console.debug(
+              `Loading escrowAddresses logs: ${percentComplete}% complete`,
+            );
+          },
         });
 
         allLogs.push(...logs);
@@ -99,8 +113,6 @@ export const useEscrowAddresses = () => {
 
       return null;
     },
-    enabled: !!publicClient && !!chainId,
-    staleTime: 60000,
   });
 
   const refetch = async () => {
@@ -108,12 +120,12 @@ export const useEscrowAddresses = () => {
   };
 
   const error = escrowAddressError || historicalAddressesError || null;
-  const isLoading = isEscrowAddressLoading || isHistoricalAddressesLoading;
+  const isLoading = isEscrowAddressLoading || isLoadingHistoricalAddresses;
 
   return {
     vetoSignallingAddress: data?.[0].result,
     rageQuitAddress: data?.[1].result,
-    historicalEscrowAddresses,
+    historicalEscrowAddresses: historicalAddresses,
     isLoading,
     error,
     refetch,

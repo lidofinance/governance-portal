@@ -1,10 +1,11 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { usePublicClient, useChainId, useAccount } from 'wagmi';
+import { useAccount, useChainId, usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useGetHistoricalGovernanceAddresses } from './use-get-historical-governance-addresses';
 
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
@@ -18,29 +19,31 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
   const { chainId: sdkChainId } = useLidoSDK();
   const chainId = useChainId();
   const { isConnected } = useAccount();
-  const isSupportedChain = useIsSupportedChain();
   const publicClient = usePublicClient();
+  const isSupportedChain = useIsSupportedChain();
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
+  const { addresses: governanceAddresses } =
+    useGetHistoricalGovernanceAddresses();
 
   const _enabled =
     isSupportedChain && (isConnected ? chainId === sdkChainId : true);
 
-  const { data: proposalsCount } = useQuery<bigint>({
-    queryKey: ['proposalsCount', chainId],
-    staleTime: Infinity,
-    enabled: _enabled,
+  const { data: proposalsCount } = useQuery({
+    queryKey: ['proposalsCount', emergencyProtectedTimelock?.address, chainId],
     queryFn: async () => {
-      try {
-        const result =
-          await emergencyProtectedTimelock.readContract('getProposalsCount');
-        return result === null ? 0n : result;
-      } catch (error) {
-        console.debug('Proposals count check skipped:', error);
-        return 0n;
+      if (!emergencyProtectedTimelock) {
+        throw new Error('Emergency Protected Timelock contract not found');
       }
+
+      return await emergencyProtectedTimelock.readContract('getProposalsCount');
     },
+    enabled:
+      !!emergencyProtectedTimelock &&
+      !!emergencyProtectedTimelock.address &&
+      _enabled,
+    staleTime: 30000,
   });
 
   return useQuery<ProposalsQueryResult>({
@@ -52,6 +55,8 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
           chainId,
         ]
       : ['getProposals', emergencyProtectedTimelock.address, chainId],
+    staleTime: 30000, // 5 minutes
+    networkMode: 'always',
     queryFn: async (): Promise<ProposalsQueryResult> => {
       if (!publicClient || proposalsCount === undefined) {
         return { proposalsCount: 0n, proposals: [] };
@@ -62,6 +67,7 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
             client: publicClient,
             EPTContract: emergencyProtectedTimelock,
             chainId,
+            governanceAddresses,
           });
 
         const mapProposalsData = mergedProposalSubmittedEvents.map(
@@ -110,6 +116,5 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
       }
     },
     refetchOnWindowFocus: true,
-    enabled: !!publicClient && proposalsCount !== undefined && _enabled,
   });
 };

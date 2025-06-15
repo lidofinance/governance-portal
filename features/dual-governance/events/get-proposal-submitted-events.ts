@@ -1,24 +1,27 @@
 import invariant from 'tiny-invariant';
+import { parseAbiItem } from 'viem';
+import { usePublicClient } from 'wagmi';
+import { Address } from 'viem';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import { registerDynamicAddress } from 'utils/dynamic-addresses';
+import { getBatchedLogs } from 'utils/batched-logs';
 import { findAbiItem } from 'utils/find-abi-item';
 import {
   DualGovernance,
   EmergencyProtectedTimelock,
 } from 'shared/blockchain/contracts';
-import { usePublicClient } from 'wagmi';
-import { Address, parseAbiItem } from 'viem';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
-import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { BigNumber } from 'ethers';
-import { registerDynamicAddress } from 'utils/dynamic-addresses';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
 type Props = {
   client: ReturnType<typeof usePublicClient>;
-  EPTContract?: ReturnType<typeof useReadContract>;
+  EPTContract: ReturnType<typeof useReadContract>;
   chainId: CHAINS;
-  proposalId?: string | number; // Optional parameter passed from useProposal()
+  proposalId?: number;
+  governanceAddresses?: Address[];
 };
 
 export type MergedProposalSubmittedEvent = {
@@ -48,7 +51,8 @@ const getGovernanceSetAddresses = async ({
     const allLogs: any[] = [];
 
     try {
-      const logs = await client.getLogs({
+      const logs = await getBatchedLogs({
+        publicClient: client,
         address: contractAddress,
         event: eventAbi,
         fromBlock: deploymentBlock,
@@ -94,7 +98,7 @@ const getGovernanceProposalSubmittedEvents = async ({
   client: ReturnType<typeof usePublicClient>;
   address: Address;
   chainId: CHAINS;
-  proposalId?: string | number;
+  proposalId?: number;
 }): Promise<DGProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: DualGovernance.abi,
@@ -125,7 +129,10 @@ const getGovernanceProposalSubmittedEvents = async ({
         };
       }
 
-      const logs = await client.getLogs(filter);
+      const logs = await getBatchedLogs({
+        publicClient: client,
+        ...filter,
+      });
 
       allLogs.push(...(logs as unknown as DGProposalSubmittedEvent[]));
     } catch (error) {
@@ -177,7 +184,16 @@ const getEPTProposalSubmittedEvents = async ({
         };
       }
 
-      const logs = await client.getLogs(filter);
+      const logs = await getBatchedLogs({
+        publicClient: client,
+        ...filter,
+        onProgress: (current, total) => {
+          const percentComplete = Number((current * 100n) / total);
+          console.debug(
+            `Loading EPT ProposalSubmitted logs: ${percentComplete}% complete`,
+          );
+        },
+      });
 
       allLogs.push(...logs);
     } catch (error) {
@@ -196,43 +212,74 @@ export const getProposalSubmittedEvents = async ({
   EPTContract,
   chainId,
   proposalId,
+  governanceAddresses,
 }: Props): Promise<{
   mergedProposalSubmittedEvents: MergedProposalSubmittedEvent[];
 }> => {
-  try {
-    const governanceAddresses = await getGovernanceSetAddresses({
-      client,
-      EPTContract,
-      chainId,
-    });
+  const eptEventsPromise = getEPTProposalSubmittedEvents({
+    client,
+    EPTContract,
+    chainId,
+    proposalId,
+  });
 
-    const governanceEventsPromises = governanceAddresses.map((address) =>
-      getGovernanceProposalSubmittedEvents({
+  // Start fetching governance addresses in parallel
+  const governanceAddressesPromise = governanceAddresses
+    ? Promise.resolve(governanceAddresses)
+    : getGovernanceSetAddresses({
         client,
-        address,
+        EPTContract,
         chainId,
-        proposalId,
-      }),
-    );
-    const governanceEventsArrays = await Promise.all(governanceEventsPromises);
+      });
 
-    const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
-    for (const events of governanceEventsArrays) {
-      for (const event of events) {
-        const proposalId = event.args.proposalId.toString();
-        if (!governanceEventsMap.has(proposalId)) {
-          governanceEventsMap.set(proposalId, event);
+  try {
+    // Wait for governance addresses to start fetching governance events
+    const governanceAddresses = await governanceAddressesPromise;
+
+    // Register dynamic addresses if we're using cached governance addresses
+    if (governanceAddresses && chainId) {
+      governanceAddresses.forEach((address: Address) => {
+        registerDynamicAddress(chainId, address, 'governance').catch(
+          (error) => {
+            console.error(
+              `Error registering governance address ${address}:`,
+              error,
+            );
+          },
+        );
+      });
+    }
+
+    // Start fetching governance events
+    const governanceEventsPromise = (async () => {
+      const governanceEventsArrays = await Promise.all(
+        governanceAddresses.map((address) =>
+          getGovernanceProposalSubmittedEvents({
+            client,
+            address,
+            chainId,
+            proposalId,
+          }),
+        ),
+      );
+
+      const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
+      for (const events of governanceEventsArrays) {
+        for (const event of events) {
+          const proposalId = event.args.proposalId.toString();
+          if (!governanceEventsMap.has(proposalId)) {
+            governanceEventsMap.set(proposalId, event);
+          }
         }
       }
-    }
-    const governanceEvents = Array.from(governanceEventsMap.values());
+      return Array.from(governanceEventsMap.values());
+    })();
 
-    const EPTEvents = await getEPTProposalSubmittedEvents({
-      client,
-      EPTContract,
-      chainId,
-      proposalId,
-    });
+    // Wait for both EPT events and governance events to complete
+    const [EPTEvents, governanceEvents] = await Promise.all([
+      eptEventsPromise,
+      governanceEventsPromise,
+    ]);
 
     const mergedEventsMap = new Map<string, MergedProposalSubmittedEvent>();
 

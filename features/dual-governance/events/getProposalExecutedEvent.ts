@@ -3,6 +3,7 @@ import { findAbiItem } from 'utils/find-abi-item';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
 import { Log, PublicClient } from 'viem';
+import { getBatchedLogs } from '../../../utils/batched-logs';
 
 const EVENT_NAME = 'ProposalExecuted';
 const MAX_BLOCK_RANGE = 49999n;
@@ -65,7 +66,8 @@ export const getProposalExecutedEvent = async ({
         break;
       }
 
-      const logs = await client.getLogs({
+      const logs = await getBatchedLogs({
+        publicClient: client,
         address: contractAddress,
         event: eventAbi,
         args: eventArgs,
