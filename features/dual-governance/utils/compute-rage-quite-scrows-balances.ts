@@ -70,14 +70,10 @@ export const computeRageQuitEscrowsBalances = async ({
   }
 
   const balancePromises = rageQuitEscrowAddresses.map(async (address) => {
-    const vetoerDetails = (await readEscrowContract(address)(
+    const vetoerDetails = await readEscrowContract(address)(
       'getVetoerDetails',
       [accountAddress],
-    )) || {
-      unstETHIdsCount: 0n,
-      stETHLockedShares: 0n,
-      unstETHLockedShares: 0n,
-    };
+    );
 
     return { rageQuitEscrowAddress: address, vetoerDetails };
   });
