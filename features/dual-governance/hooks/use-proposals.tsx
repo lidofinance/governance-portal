@@ -56,7 +56,6 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
         ]
       : ['getProposals', emergencyProtectedTimelock.address, chainId],
     staleTime: 30000, // 5 minutes
-    networkMode: 'always',
     queryFn: async (): Promise<ProposalsQueryResult> => {
       if (!publicClient || proposalsCount === undefined) {
         return { proposalsCount: 0n, proposals: [] };

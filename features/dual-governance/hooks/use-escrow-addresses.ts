@@ -53,7 +53,6 @@ export const useEscrowAddresses = () => {
     refetch: refetchHistoricalAddresses,
   } = useQuery<Address[] | null>({
     queryKey: ['historical-escrow-addresses', chainId],
-    networkMode: 'always',
     enabled: !!publicClient && !!chainId && !!eventAbi,
     staleTime: 30000, // 5 minutes
     queryFn: async () => {

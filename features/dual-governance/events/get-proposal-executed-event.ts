@@ -4,6 +4,7 @@ import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
 import { Log, PublicClient } from 'viem';
 import { getBatchedLogs } from '../../../utils/batched-logs';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
 const EVENT_NAME = 'ProposalExecuted';
 const MAX_BLOCK_RANGE = 49999n;
@@ -43,8 +44,8 @@ export const getProposalExecutedEvent = async ({
     `Contract address not found for chainId ${chainId}`,
   );
 
-  // TODO: Replace hardcoded start block with deployment block
-  const deploymentBlock = 252978n; // TODO: current HOODI deployment block
+  const deploymentBlock =
+    CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.emergencyProtectedTimelock || 0n;
   const eventArgs: ProposalExecutedEventArgs = {
     id: BigInt(proposalId),
   };

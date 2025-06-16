@@ -30,7 +30,7 @@ import { config } from 'config';
 import { Box } from '@lidofinance/lido-ui';
 import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
-import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
+import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { DGTooltip } from '../../tooltips';
