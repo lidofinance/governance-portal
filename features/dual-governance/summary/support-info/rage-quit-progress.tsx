@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { escrowAbi } from 'abi/ts';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { ProgressBar } from 'shared/components/progress-bar';
@@ -15,7 +15,7 @@ import { formatEth } from 'shared/blockchain/utils';
 
 export const RageQuitProgress = () => {
   const { chainId } = useLidoSDK();
-  const { rageQuitAddress } = useDualGovernanceContext();
+  const { rageQuitAddress } = useEscrowContext();
   const readEscrowContract = useReadContractGetter(escrowAbi);
 
   const isEnabled = !!rageQuitAddress && rageQuitAddress !== zeroAddress;

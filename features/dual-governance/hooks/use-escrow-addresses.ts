@@ -1,21 +1,18 @@
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { getContractAddress } from 'shared/blockchain/get-contract-address';
 import { usePublicClient, useReadContracts } from 'wagmi';
 import { findAbiItem } from 'utils/find-abi-item';
 import { Address } from 'viem';
-
-const ESCROW_CHANGED_EVENT_NAME = 'NewSignallingEscrowDeployed';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import { registerDynamicAddress } from 'utils/dynamic-addresses';
+import { useQuery } from '@tanstack/react-query';
+import { getBatchedLogs } from 'utils/batched-logs';
 
 export const useEscrowAddresses = () => {
   const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
-  const [historicalEscrowAddresses, setHistoricalEscrowAddresses] = useState<
-    Address[] | null
-  >(null);
-
-  const [isLoading, setIsLoading] = useState(true);
 
   const dgContract = useMemo(
     () => ({
@@ -27,15 +24,15 @@ export const useEscrowAddresses = () => {
 
   const eventAbi = findAbiItem({
     abi: DualGovernance.abi,
-    name: ESCROW_CHANGED_EVENT_NAME,
+    name: 'NewSignallingEscrowDeployed',
     type: 'event',
   });
 
   const {
     data,
     isLoading: isEscrowAddressLoading,
-    error,
-    refetch,
+    error: escrowAddressError,
+    refetch: refetchEscrowAddresses,
   } = useReadContracts({
     contracts: [
       {
@@ -49,42 +46,86 @@ export const useEscrowAddresses = () => {
     ],
   });
 
-  useEffect(() => {
-    if (!publicClient) {
-      console.error('Public client must be defined');
-      return;
-    }
+  const {
+    data: historicalAddresses,
+    isLoading: isLoadingHistoricalAddresses,
+    error: historicalAddressesError,
+    refetch: refetchHistoricalAddresses,
+  } = useQuery<Address[] | null>({
+    queryKey: ['historical-escrow-addresses', chainId],
+    enabled: !!publicClient && !!chainId && !!eventAbi,
+    staleTime: 30000, // 5 minutes
+    queryFn: async () => {
+      if (!publicClient) {
+        throw new Error('Public client must be defined');
+      }
+      if (!eventAbi) {
+        throw new Error('eventAbi must be defined');
+      }
 
-    const fetchLogs = async () => {
+      const deploymentBlock =
+        CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
+
+      const contractAddress = getContractAddress(DualGovernance, chainId);
+
+      const allLogs: any[] = [];
+
       try {
-        const logs = await publicClient.getLogs({
-          address: getContractAddress(DualGovernance, chainId),
+        const logs = await getBatchedLogs({
+          publicClient,
+          address: contractAddress,
           event: eventAbi,
-          fromBlock: 0n,
+          fromBlock: deploymentBlock,
           toBlock: 'latest',
+          onProgress: (current, total) => {
+            const percentComplete = Number((current * 100n) / total);
+            console.debug(
+              `Loading escrowAddresses logs: ${percentComplete}% complete`,
+            );
+          },
         });
 
-        if (logs.length > 0) {
-          const _escrowAddresses = logs.map((log: any) => log.args.escrow);
-
-          setHistoricalEscrowAddresses(_escrowAddresses);
-        }
+        allLogs.push(...logs);
       } catch (error) {
-        console.error('Error fetching logs:', error);
-      } finally {
-        setIsLoading(false);
+        console.error(`Error fetching EPT proposal logs`, error);
       }
-    };
 
-    void fetchLogs();
-    setIsLoading(false);
-  }, [publicClient, chainId, data, eventAbi]);
+      if (allLogs.length > 0) {
+        const _escrowAddresses = allLogs.map((log: any) => log.args.escrow);
+
+        // Whitelist escrow addresses
+        if (_escrowAddresses.length > 0) {
+          _escrowAddresses.forEach((address) => {
+            registerDynamicAddress(chainId, address, 'escrow').catch(
+              (error) => {
+                console.error(
+                  `Error registering escrow address ${address}:`,
+                  error,
+                );
+              },
+            );
+          });
+        }
+
+        return _escrowAddresses;
+      }
+
+      return null;
+    },
+  });
+
+  const refetch = async () => {
+    await Promise.all([refetchEscrowAddresses(), refetchHistoricalAddresses()]);
+  };
+
+  const error = escrowAddressError || historicalAddressesError || null;
+  const isLoading = isEscrowAddressLoading || isLoadingHistoricalAddresses;
 
   return {
     vetoSignallingAddress: data?.[0].result,
     rageQuitAddress: data?.[1].result,
-    historicalEscrowAddresses,
-    isLoading: isLoading && isEscrowAddressLoading,
+    historicalEscrowAddresses: historicalAddresses,
+    isLoading,
     error,
     refetch,
   };

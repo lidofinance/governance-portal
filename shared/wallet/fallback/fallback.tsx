@@ -1,7 +1,7 @@
 import { WalletCardComponent } from 'shared/wallet/card/types';
 
 import { FallbackWalletStyle, TextStyle } from './styles';
-import { useErrorMessage } from './useErrorMessage';
+import { useErrorMessage } from './use-error-message';
 
 export const Fallback: WalletCardComponent = (props) => {
   const error = useErrorMessage();

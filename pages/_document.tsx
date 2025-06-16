@@ -50,22 +50,20 @@ export default class MyDocument extends Document {
     }
   }
 
-  // TODO: add title
   get metaTitle(): string {
-    return '';
+    return 'Dual Governance | Lido';
   }
 
-  // TODO: add meta description
   get metaDescription(): string {
-    return '';
+    return 'Lido Dual Governance uses a Dynamic Timelock so stETH holders can delay execution until withdrawal—enhancing protocol safety and stETH oversight.';
   }
 
   get metaPreviewImgUrl(): string {
     const origin = config.ipfsMode
-      ? 'https://stake.lido.fi'
+      ? 'https://dg.lido.fi'
       : // TODO: fix type
         (config as any).selfOrigin;
-    return `${origin}/lido-preview.png`;
+    return `${origin}/dg-preview.png`;
   }
 
   render(): JSX.Element {
@@ -124,7 +122,6 @@ export default class MyDocument extends Document {
           <meta name="twitter:description" content={this.metaDescription} />
           <meta name="twitter:image:src" content={this.metaPreviewImgUrl} />
           <meta name="twitter:site" content="@lidofinance" />
-          <meta name="twitter:creator" content="@lomashuk" />
           <meta name="description" content={this.metaDescription} />
           <meta name="currentChain" content={String(config.defaultChain)} />
           <Fonts />

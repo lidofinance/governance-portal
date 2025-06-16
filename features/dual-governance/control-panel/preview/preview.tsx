@@ -16,8 +16,6 @@ import { DGTooltip } from 'features/dual-governance/tooltips';
 import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { Link } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
-import { ProposalStatus } from 'features/dual-governance/proposals/types';
-import { isVoteItem } from 'features/dual-governance/types';
 
 const PROPOSALS_TO_SHOW = 3;
 
@@ -27,18 +25,9 @@ type Props = {
 
 export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
   const { isConnected } = useAccount();
-  const { combinedData, isLoading } = useDualGovernanceProposalsContext();
+  const { activeProposals, isLoading } = useDualGovernanceProposalsContext();
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
-
-  const activeProposals = combinedData.filter((proposal) => {
-    if (isVoteItem(proposal)) {
-      return true;
-    } else {
-      // Only filter out executed proposals for ProposalCombinedData items
-      return proposal.proposalDetails.status !== ProposalStatus.Executed;
-    }
-  });
 
   const restProposalsAmount = activeProposals.length - PROPOSALS_TO_SHOW;
 

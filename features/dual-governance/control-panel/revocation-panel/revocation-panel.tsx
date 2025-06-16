@@ -5,7 +5,6 @@ import { Address } from 'viem';
 import { NoTokensMessage, RevocableTokenItemStyled } from './style';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { Text } from 'shared/components/text';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 import { VetoSignallingTokens } from './veto-signalling-tokens';
 import { RageQuitTokens } from './rage-quit-tokens';
 import { useClaimCustomNftAction } from '../../write-actions/claim-custom-nft';
@@ -16,13 +15,17 @@ import { Box } from 'shared/components/box';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 export const RevocationPanel = () => {
   const {
     isLoading: isDualGovernanceStateLoading,
     refetch: refetchDualGovernanceState,
-    historicalEscrowAddresses,
-  } = useDualGovernanceContext();
+  } = useDualGovernanceStateContext();
+
+  const { historicalEscrowAddresses } = useEscrowContext();
+
   const isSupportedChain = useIsSupportedChain();
   const {
     data: escrowBalances,

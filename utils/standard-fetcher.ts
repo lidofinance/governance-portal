@@ -1,5 +1,5 @@
 import { extractErrorMessage } from 'utils';
-import { FetcherError } from './fetcherError';
+import { FetcherError } from './fetcher-error';
 
 const DEFAULT_PARAMS = {
   method: 'GET',

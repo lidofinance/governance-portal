@@ -1,4 +1,4 @@
-import Metrics from 'utilsApi/metrics';
+import Metrics from 'utils-api/metrics';
 import { Histogram } from 'prom-client';
 
 export type FetchAPI<T = void> = () => Promise<T> | T;

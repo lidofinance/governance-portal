@@ -23,7 +23,7 @@ export const useProposal = ({
     EmergencyProtectedTimelock,
   );
 
-  return useQuery<ProposalCombinedData, Error>({
+  return useQuery<ProposalCombinedData>({
     queryKey: ['getProposal', id],
     queryFn: async (): Promise<ProposalCombinedData> => {
       if (!publicClient || !id) {
@@ -43,6 +43,8 @@ export const useProposal = ({
           await getProposalSubmittedEvents({
             client: publicClient,
             EPTContract: emergencyProtectedTimelock,
+            chainId,
+            proposalId: id,
           });
 
         const proposalLog =

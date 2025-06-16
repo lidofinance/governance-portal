@@ -1,6 +1,6 @@
 import { Text } from 'shared/components/text';
 import { AdditionalSupportInfo } from './additional-support-info';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { InlineLoader } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
@@ -10,6 +10,9 @@ import { DGTooltip } from 'features/dual-governance/tooltips';
 import { FlexWrapper } from 'shared/styled-components';
 import { calculateCurrentThresholdProgress } from '../../utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
+import { useEscrowContext } from 'providers/escrow';
+import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
+import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;
@@ -18,14 +21,17 @@ const InlineLoaderStyled = styled(InlineLoader)`
 `;
 
 export const SupportInfo = () => {
-  const {
-    totalStEthInEscrow,
-    totalStEthInEscrowFormatted,
-    visibleState,
-    stEthTotalSupply,
-    firstSealRageQuitSupport,
-    secondSealRageQuitSupport,
-  } = useDualGovernanceContext();
+  const { stEthTotalSupply, totalStEthInEscrow } = useEscrowContext();
+
+  const { data: dgConfig } = useDualGovernanceConfig();
+  const firstSealRageQuitSupport = parsePercent16(
+    dgConfig?.firstSealRageQuitSupport,
+  );
+  const secondSealRageQuitSupport = parsePercent16(
+    dgConfig?.secondSealRageQuitSupport,
+  );
+
+  const { visibleState } = useDualGovernanceStateContext();
 
   const nextStateTitle =
     visibleState === VisibleGovernanceState.BlockedDeactivation ||
@@ -89,16 +95,21 @@ export const SupportInfo = () => {
       ) : (
         <>
           <Text size={22} weight={600}>
-            {totalStEthInEscrowFormatted} stETH
+            {formatEth(totalStEthInEscrow || 0n)} stETH
           </Text>
 
-          {vetoSignallingThresholdProgress && (
+          {stEthTotalSupply && firstSealRageQuitSupport && (
             <ProgressBar
-              variant="danger"
+              variant={
+                visibleState === VisibleGovernanceState.Normal ||
+                visibleState === VisibleGovernanceState.Warning
+                  ? 'default'
+                  : 'danger'
+              }
               progressPercent={Number(
-                currentThreshold?.thresholdSupportPercent,
+                currentThreshold?.thresholdSupportPercent || 0,
               )}
-              totalPercent={Number(currentThreshold?.targetValue)}
+              totalPercent={Number(currentThreshold?.targetValue || 100)}
               totalTitle={`${nextStateTitle} Threshold`}
             />
           )}

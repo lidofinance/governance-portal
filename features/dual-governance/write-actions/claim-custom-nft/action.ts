@@ -6,7 +6,7 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 
 export const useClaimCustomNftAction = () => {
   const { data: isMultisig } = useIsContract();
@@ -14,7 +14,7 @@ export const useClaimCustomNftAction = () => {
   const processClaimCustomNft = useClaimCustomNftTxSend();
   const waitForTx = useTxConfirmation();
   const withdrawalQueueContract = useReadContract(WithdrawalQueue);
-  const { historicalEscrowAddresses } = useDualGovernanceContext();
+  const { historicalEscrowAddresses } = useEscrowContext();
 
   return useCallback(
     async (selectedNftIds: string[]) => {

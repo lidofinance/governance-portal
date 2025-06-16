@@ -17,6 +17,9 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { UnstETHRecordStatus } from '../../types';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useQuery } from '@tanstack/react-query';
+import { StETH } from 'shared/blockchain/contracts';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 
 type RageQuitBalance = {
   rageQuitEscrowAddress: Address;
@@ -62,6 +65,32 @@ export const RageQuitTokens = ({
   const refreshNftStatus = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
   }, []);
+
+  const readStEthContract = useReadContract(StETH);
+
+  const {
+    data: convertedStethLockedShares,
+    isLoading: isConvertStEthLockedSharesLoading,
+  } = useQuery({
+    queryKey: ['converted-steth-locked-shares', chainId],
+    queryFn: async (): Promise<bigint> => {
+      if (!readStEthContract) {
+        throw new Error('readStEthContract must be defined');
+      }
+
+      if (!totalStETHLockedShares) {
+        throw new Error('totalStETHLockedShares must be defined');
+      }
+
+      return await readStEthContract.readContract('getPooledEthByShares', [
+        totalStETHLockedShares,
+      ]);
+    },
+    enabled:
+      !!readStEthContract &&
+      !!totalStETHLockedShares &&
+      totalStETHLockedShares > 0n,
+  });
 
   useEffect(() => {
     if (unstETHRecords.length === 0) {
@@ -220,7 +249,11 @@ export const RageQuitTokens = ({
     timeRemaining,
   ]);
 
-  if (!totalLockedShares || isRageQuitDataLoading) {
+  if (
+    !totalLockedShares ||
+    isRageQuitDataLoading ||
+    isConvertStEthLockedSharesLoading
+  ) {
     return null;
   }
 
@@ -242,7 +275,7 @@ export const RageQuitTokens = ({
                 ? 'ETH'
                 : Token.stETH
             }
-            amount={totalStETHLockedShares}
+            amount={convertedStethLockedShares}
             isLocked={isWithdrawalLocked}
             actionLabel={tokenActionLabel}
             onClick={handleWithdrawEth('ETH')}

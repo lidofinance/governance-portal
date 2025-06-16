@@ -110,17 +110,6 @@ export const VaultInfoPopupTitle = styled.div`
   }
 `;
 
-// TODO: uncomment or remove when we decide if we have dark theme
-// export const ThemeTogglerWrapper = styled.div`
-//   button {
-//     border-radius: 50%;
-//     background: transparent;
-//     border: 1px solid var(--custom-border);
-//     width: 46px;
-//     height: 46px;
-//   }
-// `;
-
 type HeaderControlButtonProps = {
   isActive?: boolean;
 };

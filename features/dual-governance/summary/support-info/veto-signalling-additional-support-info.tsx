@@ -1,11 +1,14 @@
 import { format, fromUnixTime } from 'date-fns';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
+import { useEscrowContext } from 'providers/escrow';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from '../../tooltips';
-import { formatEth } from 'shared/blockchain/utils';
+import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import { useThresholdValue } from 'features/dual-governance/hooks';
+import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
+import { GovernanceState } from '../../types';
 
 type Props = {
   amountTillRQPhaseWei: bigint;
@@ -14,17 +17,31 @@ type Props = {
 export const VetoSignallingAdditionalSupportInfo = ({
   amountTillRQPhaseWei,
 }: Props) => {
-  const {
-    detailedState,
-    amountTillNextPhasePercent,
-    secondSealRageQuitSupport,
-    stEthTotalSupply,
-  } = useDualGovernanceContext();
+  const { stEthTotalSupply, rageQuitSupport } = useEscrowContext();
+  const { detailedState } = useDualGovernanceStateContext();
+  const { data: dgConfig } = useDualGovernanceConfig();
+  const secondSealRageQuitSupport = parsePercent16(
+    dgConfig?.secondSealRageQuitSupport,
+  );
 
   const secondSealThresholdWei = useThresholdValue(
     secondSealRageQuitSupport,
     stEthTotalSupply,
   );
+
+  const nextPhaseThreshold = useMemo(() => {
+    return detailedState.persistedState === GovernanceState.VetoSignalling ||
+      detailedState.persistedState ===
+        GovernanceState.VetoSignallingDeactivation
+      ? dgConfig?.secondSealRageQuitSupport
+      : dgConfig?.firstSealRageQuitSupport;
+  }, [detailedState.persistedState, dgConfig]);
+
+  const amountTillNextPhase = nextPhaseThreshold
+    ? nextPhaseThreshold - rageQuitSupport
+    : undefined;
+
+  const amountTillNextPhasePercent = parsePercent16(amountTillNextPhase);
 
   const vetoSignallingEndDate = useMemo(() => {
     if (!detailedState) return;
@@ -41,7 +58,7 @@ export const VetoSignallingAdditionalSupportInfo = ({
     };
   }, [detailedState]);
 
-  if (typeof amountTillNextPhasePercent !== 'number') {
+  if (!amountTillNextPhasePercent) {
     return null;
   }
 

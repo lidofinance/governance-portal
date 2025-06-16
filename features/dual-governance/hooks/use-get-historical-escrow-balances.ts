@@ -6,6 +6,7 @@ import { useGetHistoricalGovernanceAddresses } from './use-get-historical-govern
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { findAbiItem } from '../../../utils/find-abi-item';
 import { DualGovernance } from '../../../shared/blockchain/contracts';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 // import { useReadContractGetter } from '../../../shared/blockchain/hooks/use-read-contract';
 // import { escrowAbi } from '../../../abi/ts';
 
@@ -54,10 +55,13 @@ export const useGetHistoricalEscrowBalances = () => {
             type: 'event',
           });
 
+          const deploymentBlock =
+            CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
+
           const logs = await publicClient.getLogs({
             address: governanceAddress,
             event: eventAbi,
-            fromBlock: 0n,
+            fromBlock: deploymentBlock,
             toBlock: 'latest',
           });
 
@@ -96,7 +100,7 @@ export const useGetHistoricalEscrowBalances = () => {
         addresses: allEscrowAddresses,
       };
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 300000, // 5 minutes
   });
 
   return {

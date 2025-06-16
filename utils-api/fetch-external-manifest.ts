@@ -1,7 +1,6 @@
 import { Cache } from 'memory-cache';
-import { IPFS_MANIFEST_URL } from 'constants/external-links';
-import { responseTimeExternalMetricWrapper } from './fetchApiWrapper';
-import { standardFetcher } from 'utils/standardFetcher';
+import { responseTimeExternalMetricWrapper } from './fetch-api-wrapper';
+import { standardFetcher } from 'utils/standard-fetcher';
 import { config } from 'config';
 
 import FallbackLocalManifest from 'IPFS.json' assert { type: 'json' };
@@ -14,6 +13,8 @@ const cache = new Cache<
   typeof config.CACHE_EXTERNAL_CONFIG_KEY,
   ExternalConfigResult
 >();
+
+const IPFS_MANIFEST_URL = 'http://localhost:3000/runtime/IPFS.json';
 
 export const fetchExternalManifest = async () => {
   const cachedConfig = cache.get(config.CACHE_EXTERNAL_CONFIG_KEY);

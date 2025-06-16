@@ -18,8 +18,8 @@ type Props = {
  * 3) Ready to schedule
  * 4) Submitted
  * 5) Aragon items
- * 6) Executed
- * 7) Cancelled
+ * 6) Cancelled
+ * 7) Executed
  * 8) Default
  */
 export const getProposalSortPriority = ({
@@ -36,7 +36,7 @@ export const getProposalSortPriority = ({
 
     switch (status) {
       case ProposalStatus.Executed:
-        return 6;
+        return 7;
 
       case ProposalStatus.Scheduled:
         if (
@@ -54,7 +54,7 @@ export const getProposalSortPriority = ({
         return 4;
 
       case ProposalStatus.Cancelled:
-        return 7;
+        return 6;
 
       default:
         return 8;

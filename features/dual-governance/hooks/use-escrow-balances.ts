@@ -6,10 +6,10 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 import { computeRageQuitEscrowsBalances } from '../utils';
 import { useState } from 'react';
 import { WstETH } from 'shared/blockchain/contracts';
+import { useEscrowContext } from 'providers/escrow';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
@@ -19,7 +19,7 @@ export const useEscrowBalances = () => {
     vetoSignallingAddress,
     rageQuitAddress: currentRageQuitEscrowAddress,
     historicalEscrowAddresses,
-  } = useDualGovernanceContext();
+  } = useEscrowContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
   const readWstEthContract = useReadContract(WstETH);
@@ -71,17 +71,14 @@ export const useEscrowBalances = () => {
         vetoSignallingAddress,
       );
 
-      const minAssetLockDuration =
-        (await readVetoSignallingContract('getMinAssetsLockDuration')) || 0n;
+      const minAssetLockDuration = await readVetoSignallingContract(
+        'getMinAssetsLockDuration',
+      );
 
-      const vetoSignallingBalance = (await readVetoSignallingContract(
+      const vetoSignallingBalance = await readVetoSignallingContract(
         'getVetoerDetails',
         [accountAddress],
-      )) || {
-        stETHLockedShares: 0n,
-        unstETHLockedShares: 0n,
-        lastAssetsLockTimestamp: 0n,
-      };
+      );
 
       const vetoSignallingSum =
         vetoSignallingBalance.stETHLockedShares +
@@ -97,11 +94,10 @@ export const useEscrowBalances = () => {
 
       setLoadingState(false);
 
-      // const wstETHLockedShares = vetoSignallingBalance.stETHLockedShares;
-      const wstETHLockedShares =
-        (await readWstEthContract.readContract('getStETHByWstETH', [
-          vetoSignallingBalance.stETHLockedShares,
-        ])) || vetoSignallingBalance.stETHLockedShares;
+      const wstETHLockedShares = await readWstEthContract.readContract(
+        'getStETHByWstETH',
+        [vetoSignallingBalance.stETHLockedShares],
+      );
 
       const totalStETHLockedSharesInRageQuitEscrows =
         computedRageQuitEscrowsBalances

@@ -1,6 +1,6 @@
 import { format, fromUnixTime } from 'date-fns';
 import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import {
@@ -19,7 +19,7 @@ export const DeactivationAdditionalSupportInfo = ({
   amountTillRQPhaseWei,
 }: Props) => {
   const { data: dgConfig, isLoading } = useDualGovernanceConfig();
-  const { detailedState } = useDualGovernanceContext();
+  const { detailedState } = useDualGovernanceStateContext();
 
   const amountUntilVetoSignalling = useMemo(() => {
     if (!detailedState || !dgConfig) return;

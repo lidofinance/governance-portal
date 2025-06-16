@@ -1,18 +1,32 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 /**
  * Hook to refetch all escrow-related data after a transaction
  * This ensures that the UI updates immediately after supporting veto or revoking tokens
  */
 export const useRefetchEscrowData = () => {
+  const {
+    refetch: refetchEscrowData,
+    ESCROW_QUERY_KEYS,
+    invalidateEscrowQueries,
+  } = useEscrowContext();
+  const { refetch: refetchDualGovernanceState } =
+    useDualGovernanceStateContext();
   const queryClient = useQueryClient();
-  const { refetch: refetchDualGovernanceState } = useDualGovernanceContext();
 
   const refetchAll = async () => {
-    await queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+    invalidateEscrowQueries();
+    await queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.escrowBalances,
+    });
+
     await refetchDualGovernanceState();
+    await refetchEscrowData();
   };
 
-  return { refetchAll };
+  return {
+    refetchAll,
+  };
 };

@@ -7,7 +7,8 @@ import { ConfigProvider } from 'config';
 import { ModalProvider } from './modal-provider';
 import Web3Provider from './web3';
 import { LidoSDKProvider } from './lido-sdk';
-import { DualGovernanceStateProvider } from './dual-governance';
+import { DualGovernanceStateProvider } from './dual-governance-state';
+import { EscrowProvider } from './escrow';
 
 type ProvidersProps = {
   prefetchedManifest?: unknown;
@@ -25,8 +26,10 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
       <Web3Provider>
         <LidoSDKProvider>
           <DualGovernanceStateProvider>
-            <GlobalStyleOverwrite />
-            <ModalProvider>{children}</ModalProvider>
+            <EscrowProvider>
+              <GlobalStyleOverwrite />
+              <ModalProvider>{children}</ModalProvider>
+            </EscrowProvider>
           </DualGovernanceStateProvider>
         </LidoSDKProvider>
       </Web3Provider>

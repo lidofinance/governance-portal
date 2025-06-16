@@ -26,9 +26,7 @@ const VOTES_LIMIT = 15;
 
 type ProposalsContextType = {
   proposals: ProposalCombinedData[];
-  activeProposals: ProposalCombinedData[];
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
+  activeProposals: (ProposalCombinedData | VoteData)[];
   isFetching: boolean;
   isLoading: boolean;
   votes: VoteData[];
@@ -73,26 +71,25 @@ const getCombinedData = ({
     afterSubmitDelay,
   });
 
-  const [activeProposals, executedProposals] = sortedProposals.reduce(
-    ([active, executed], proposal) => {
+  const [activeProposals, completedProposals] = sortedProposals.reduce(
+    ([active, completed], proposal) => {
       const target =
-        proposal.proposalDetails.status === ProposalStatus.Executed
-          ? executed
+        proposal.proposalDetails.status === ProposalStatus.Executed ||
+        proposal.proposalDetails.status === ProposalStatus.Cancelled
+          ? completed
           : active;
       target.push(proposal);
-      return [active, executed];
+      return [active, completed];
     },
     [[], []] as [ProposalCombinedData[], ProposalCombinedData[]],
   );
 
-  return [...activeProposals, ...votes, ...executedProposals];
+  return [...activeProposals, ...votes, ...completedProposals];
 };
 
 export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
   const [proposals, setProposals] = useState<ProposalCombinedData[]>([]);
 
   const proposalsData = useProposals();
@@ -107,16 +104,19 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
     isLoading: isVotesLoading,
   } = useVotes({
     limit: VOTES_LIMIT,
-    getActive: true,
   });
 
   const activeProposals = useMemo(() => {
-    return proposals.filter((proposal) =>
+    const _proposals = proposals.filter((proposal) =>
       [ProposalStatus.Submitted, ProposalStatus.Scheduled].includes(
         proposal.proposalDetails.status,
       ),
     );
-  }, [proposals]);
+
+    const votes = votesData?.votes ?? [];
+
+    return [..._proposals, ...votes];
+  }, [proposals, votesData]);
 
   const getProposalById = useCallback(
     (id: number) => {
@@ -160,8 +160,6 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
         afterSubmitDelay: proposalsDelays?.afterSubmitDelay,
         afterScheduleDelay: proposalsDelays?.afterScheduleDelay,
       }),
-      currentPage,
-      setCurrentPage,
       isFetching: [proposalsData.isFetching || isVotesFetching].some(
         (isFetching) => isFetching,
       ),
@@ -175,7 +173,6 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
       proposals,
       activeProposals,
       votesData?.votes,
-      currentPage,
       proposalsData.isFetching,
       proposalsData.isLoading,
       isVotesFetching,
