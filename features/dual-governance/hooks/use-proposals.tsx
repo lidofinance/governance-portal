@@ -85,14 +85,16 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
                 },
               };
 
-              const voteId = await isAragonProposal({
-                client: publicClient,
-                proposalLog: mergedProposalSubmittedEvent.DGEvent,
-                chainId,
-              });
+              if (mergedProposalSubmittedEvent.DGEvent) {
+                const voteId = await isAragonProposal({
+                  client: publicClient,
+                  proposalLog: mergedProposalSubmittedEvent.DGEvent,
+                  chainId,
+                });
 
-              if (voteId) {
-                result.voteId = Number(voteId);
+                if (voteId) {
+                  result.voteId = Number(voteId);
+                }
               }
 
               return result;
