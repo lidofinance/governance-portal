@@ -19,6 +19,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from './lido-sdk';
 import { StETH } from 'shared/blockchain/contracts';
 
+type EscrowQueryKeys = {
+  escrowData: readonly string[];
+  pooledEthByShares: readonly string[];
+  stEthTotalSupply: readonly string[];
+  dgCurrentState: readonly string[];
+  escrowBalances: readonly string[];
+};
+
 type EscrowContextValue = {
   vetoSignallingAddress?: Address;
   rageQuitAddress?: Address;
@@ -29,6 +37,8 @@ type EscrowContextValue = {
   rageQuitSupport: bigint;
   error: Error | null;
   refetch: () => Promise<void>;
+  ESCROW_QUERY_KEYS: EscrowQueryKeys;
+  invalidateEscrowQueries: () => void;
 };
 
 type LockedAssets = {
@@ -38,6 +48,14 @@ type LockedAssets = {
   totalUnstETHFinalizedETH: bigint;
 };
 
+const DEFAULT_QUERY_KEYS: EscrowQueryKeys = {
+  escrowData: ['escrow-data'],
+  pooledEthByShares: ['pooledEthByShares'],
+  stEthTotalSupply: ['stEthTotalSupply'],
+  dgCurrentState: ['dg-current-state'],
+  escrowBalances: ['escrow-balances'],
+};
+
 export const EscrowContext = createContext<EscrowContextValue>({
   totalStEthInEscrow: 0n,
   stEthTotalSupply: 0n,
@@ -45,6 +63,8 @@ export const EscrowContext = createContext<EscrowContextValue>({
   isLoading: true,
   error: null,
   refetch: async () => {},
+  ESCROW_QUERY_KEYS: DEFAULT_QUERY_KEYS,
+  invalidateEscrowQueries: () => {},
 });
 
 export const useEscrowContext = () => {
@@ -69,55 +89,83 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const readEscrowGetter = useReadContractGetter(escrowAbi);
   const stEthContract = useReadContract(StETH);
+  const queryClient = useQueryClient();
+
+  type EscrowData = {
+    lockedAssets: LockedAssets;
+    rageQuitSupport: bigint;
+  };
+
+  const ESCROW_QUERY_KEYS: EscrowQueryKeys = useMemo(() => {
+    return {
+      escrowData: ['escrow-data'],
+      pooledEthByShares: ['pooled-eth-by-shares'],
+      stEthTotalSupply: ['steth-total-supply'],
+      dgCurrentState: ['dg-current-state'],
+      escrowBalances: ['escrow-balances'],
+    };
+  }, []);
+
+  const invalidateEscrowQueries = useCallback(() => {
+    void queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.escrowData,
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.pooledEthByShares,
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.stEthTotalSupply,
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.dgCurrentState,
+    });
+  }, [
+    ESCROW_QUERY_KEYS.dgCurrentState,
+    ESCROW_QUERY_KEYS.escrowData,
+    ESCROW_QUERY_KEYS.pooledEthByShares,
+    ESCROW_QUERY_KEYS.stEthTotalSupply,
+    queryClient,
+  ]);
 
   const {
-    data: lockedAssets,
-    refetch: refetchLockedAssets,
-    error: lockedAssetsError,
-  } = useQuery<LockedAssets, Error>({
-    queryKey: ['lockedAssets', vetoSignallingAddress, chainId],
+    data: escrowData,
+    refetch: refetchEscrowData,
+    error: escrowDataError,
+  } = useQuery<EscrowData>({
+    queryKey: [...ESCROW_QUERY_KEYS.escrowData, vetoSignallingAddress, chainId],
     queryFn: async () => {
       if (!vetoSignallingAddress) {
         throw new Error('vetoSignallingAddress must be defined');
       }
 
       const readVetoSignalling = readEscrowGetter(vetoSignallingAddress);
-      return await readVetoSignalling('getSignallingEscrowDetails');
+
+      const [lockedAssets, rageQuitSupport] = await Promise.all([
+        readVetoSignalling('getSignallingEscrowDetails'),
+        readVetoSignalling('getRageQuitSupport'),
+      ]);
+
+      return {
+        lockedAssets,
+        rageQuitSupport,
+      };
     },
     enabled: !!vetoSignallingAddress,
     staleTime: 0,
     retry: 2,
   });
 
-  const {
-    data: rageQuitSupport,
-    refetch: refetchRageQuitSupport,
-    error: rageQuitSupportError,
-  } = useQuery<bigint, Error>({
-    queryKey: ['rageQuitSupport', vetoSignallingAddress, chainId],
-    queryFn: async () => {
-      if (!vetoSignallingAddress) {
-        throw new Error('vetoSignallingAddress must be defined');
-      }
-      const readVetoSignalling = readEscrowGetter(vetoSignallingAddress);
-      return await readVetoSignalling('getRageQuitSupport');
-    },
-    enabled: !!vetoSignallingAddress,
-    staleTime: 0,
-    retry: 2,
-  });
-
-  const unfinalizedShares = lockedAssets
-    ? lockedAssets?.totalStETHLockedShares +
-      lockedAssets.totalUnstETHUnfinalizedShares
+  const unfinalizedShares = escrowData?.lockedAssets
+    ? escrowData.lockedAssets.totalStETHLockedShares +
+      escrowData.lockedAssets.totalUnstETHUnfinalizedShares
     : undefined;
 
   const {
     data: pooledEthByShares,
     refetch: refetchPooledEth,
     error: pooledEthError,
-  } = useQuery<bigint, Error>({
-    queryKey: ['pooledEthByShares', chainId],
+  } = useQuery<bigint>({
+    queryKey: [...ESCROW_QUERY_KEYS.pooledEthByShares, chainId],
     queryFn: async () => {
       if (!unfinalizedShares) {
         throw new Error('unfinalizedShares must be defined');
@@ -136,8 +184,8 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     data: _stEthTotalSupply,
     refetch: refetchTotalSupply,
     error: totalSupplyError,
-  } = useQuery<bigint, Error>({
-    queryKey: ['stEthTotalSupply', chainId],
+  } = useQuery<bigint>({
+    queryKey: [...ESCROW_QUERY_KEYS.stEthTotalSupply, chainId],
     queryFn: async () => {
       return await stEthContract.readContract('totalSupply');
     },
@@ -146,58 +194,48 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
   });
 
   const stEthTotalSupply = useMemo(() => {
-    if (!lockedAssets || !_stEthTotalSupply) return 0n;
-    return _stEthTotalSupply + lockedAssets.totalUnstETHFinalizedETH;
-  }, [_stEthTotalSupply, lockedAssets]);
+    if (!escrowData?.lockedAssets || !_stEthTotalSupply) return 0n;
+    return _stEthTotalSupply + escrowData.lockedAssets.totalUnstETHFinalizedETH;
+  }, [_stEthTotalSupply, escrowData?.lockedAssets]);
 
   const totalStEthInEscrow = useMemo(() => {
-    if (!pooledEthByShares || !lockedAssets) {
+    if (!pooledEthByShares || !escrowData?.lockedAssets) {
       return 0n;
     }
 
-    return pooledEthByShares + lockedAssets.totalUnstETHFinalizedETH;
-  }, [lockedAssets, pooledEthByShares]);
+    return pooledEthByShares + escrowData.lockedAssets.totalUnstETHFinalizedETH;
+  }, [escrowData?.lockedAssets, pooledEthByShares]);
 
   const error = useMemo(() => {
     return (
       addressDataError ||
-      lockedAssetsError ||
+      escrowDataError ||
       pooledEthError ||
       totalSupplyError ||
-      rageQuitSupportError ||
       null
     );
-  }, [
-    addressDataError,
-    lockedAssetsError,
-    pooledEthError,
-    rageQuitSupportError,
-    totalSupplyError,
-  ]);
+  }, [addressDataError, escrowDataError, pooledEthError, totalSupplyError]);
 
   const isLoading =
     isAddressDataLoading ||
-    (!!vetoSignallingAddress && !lockedAssets) ||
+    (!!vetoSignallingAddress && !escrowData) ||
     (!!unfinalizedShares && !pooledEthByShares) ||
     !_stEthTotalSupply;
 
   const refetchAll = useCallback(async () => {
     await Promise.all([
       refetchAddresses(),
-      refetchLockedAssets(),
+      refetchEscrowData(),
       refetchPooledEth(),
       refetchTotalSupply(),
-      refetchRageQuitSupport(),
     ]);
   }, [
     refetchAddresses,
-    refetchLockedAssets,
+    refetchEscrowData,
     refetchPooledEth,
     refetchTotalSupply,
-    refetchRageQuitSupport,
   ]);
 
-  const queryClient = useQueryClient();
   const isEnabled = !!vetoSignallingAddress;
 
   // Watch for StETHSharesLocked events (when user locks tokens)
@@ -207,11 +245,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     eventName: 'StETHSharesLocked',
     enabled: isEnabled,
     onLogs: () => {
-      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
-      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
-      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
-      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
-      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      invalidateEscrowQueries();
       void refetchAll();
     },
   });
@@ -223,11 +257,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     eventName: 'StETHSharesUnlocked',
     enabled: isEnabled,
     onLogs: () => {
-      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
-      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
-      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
-      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
-      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      invalidateEscrowQueries();
       void refetchAll();
     },
   });
@@ -239,11 +269,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     eventName: 'UnstETHLocked',
     enabled: isEnabled,
     onLogs: () => {
-      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
-      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
-      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
-      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
-      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      invalidateEscrowQueries();
       void refetchAll();
     },
   });
@@ -255,11 +281,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     eventName: 'UnstETHUnlocked',
     enabled: isEnabled,
     onLogs: () => {
-      void queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
-      void queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
-      void queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
-      void queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
-      void queryClient.invalidateQueries({ queryKey: ['dg-current-state'] });
+      invalidateEscrowQueries();
       void refetchAll();
     },
   });
@@ -271,21 +293,25 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
       historicalEscrowAddresses,
       totalStEthInEscrow,
       stEthTotalSupply,
-      rageQuitSupport: rageQuitSupport ?? 0n,
+      rageQuitSupport: escrowData?.rageQuitSupport ?? 0n,
       isLoading,
       error,
       refetch: refetchAll,
+      ESCROW_QUERY_KEYS,
+      invalidateEscrowQueries,
     }),
     [
       vetoSignallingAddress,
       rageQuitAddress,
+      historicalEscrowAddresses,
       totalStEthInEscrow,
       stEthTotalSupply,
-      historicalEscrowAddresses,
-      rageQuitSupport,
+      escrowData?.rageQuitSupport,
       isLoading,
       error,
       refetchAll,
+      ESCROW_QUERY_KEYS,
+      invalidateEscrowQueries,
     ],
   );
 

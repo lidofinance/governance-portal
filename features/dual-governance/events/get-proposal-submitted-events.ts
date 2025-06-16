@@ -1,23 +1,27 @@
 import invariant from 'tiny-invariant';
+import { parseAbiItem } from 'viem';
+import { usePublicClient } from 'wagmi';
+import { Address } from 'viem';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
+import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import { registerDynamicAddress } from 'utils/dynamic-addresses';
+import { getBatchedLogs } from 'utils/batched-logs';
 import { findAbiItem } from 'utils/find-abi-item';
 import {
   DualGovernance,
   EmergencyProtectedTimelock,
 } from 'shared/blockchain/contracts';
-import { usePublicClient } from 'wagmi';
-import { Address, parseAbiItem } from 'viem';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
-import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { BigNumber } from 'ethers';
-import { registerDynamicAddress } from 'utils/dynamic-addresses';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 
 type Props = {
   client: ReturnType<typeof usePublicClient>;
-  EPTContract?: ReturnType<typeof useReadContract>;
+  EPTContract: ReturnType<typeof useReadContract>;
   chainId: CHAINS;
+  proposalId?: number;
+  governanceAddresses?: Address[];
 };
 
 export type MergedProposalSubmittedEvent = {
@@ -47,7 +51,8 @@ const getGovernanceSetAddresses = async ({
     const allLogs: any[] = [];
 
     try {
-      const logs = await client.getLogs({
+      const logs = await getBatchedLogs({
+        publicClient: client,
         address: contractAddress,
         event: eventAbi,
         fromBlock: deploymentBlock,
@@ -88,10 +93,12 @@ const getGovernanceProposalSubmittedEvents = async ({
   client,
   address,
   chainId,
+  proposalId,
 }: {
   client: ReturnType<typeof usePublicClient>;
   address: Address;
   chainId: CHAINS;
+  proposalId?: number;
 }): Promise<DGProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: DualGovernance.abi,
@@ -109,11 +116,22 @@ const getGovernanceProposalSubmittedEvents = async ({
     const allLogs: DGProposalSubmittedEvent[] = [];
 
     try {
-      const logs = await client.getLogs({
+      const filter: any = {
         address,
         event: eventAbi,
         fromBlock: deploymentBlock,
         toBlock: 'latest',
+      };
+
+      if (proposalId !== undefined) {
+        filter.args = {
+          proposalId: BigInt(proposalId),
+        };
+      }
+
+      const logs = await getBatchedLogs({
+        publicClient: client,
+        ...filter,
       });
 
       allLogs.push(...(logs as unknown as DGProposalSubmittedEvent[]));
@@ -132,6 +150,7 @@ const getEPTProposalSubmittedEvents = async ({
   client,
   EPTContract,
   chainId,
+  proposalId,
 }: Props): Promise<EPTProposalSubmittedEvent[]> => {
   const eventAbi = findAbiItem({
     abi: EmergencyProtectedTimelock.abi,
@@ -152,11 +171,28 @@ const getEPTProposalSubmittedEvents = async ({
     const allLogs: any[] = [];
 
     try {
-      const logs = await client.getLogs({
+      const filter: any = {
         address: contractAddress,
         event: eventAbi,
         fromBlock: deploymentBlock,
         toBlock: 'latest',
+      };
+
+      if (proposalId !== undefined) {
+        filter.args = {
+          id: BigInt(proposalId),
+        };
+      }
+
+      const logs = await getBatchedLogs({
+        publicClient: client,
+        ...filter,
+        onProgress: (current, total) => {
+          const percentComplete = Number((current * 100n) / total);
+          console.debug(
+            `Loading EPT ProposalSubmitted logs: ${percentComplete}% complete`,
+          );
+        },
       });
 
       allLogs.push(...logs);
@@ -175,58 +211,105 @@ export const getProposalSubmittedEvents = async ({
   client,
   EPTContract,
   chainId,
+  proposalId,
+  governanceAddresses,
 }: Props): Promise<{
   mergedProposalSubmittedEvents: MergedProposalSubmittedEvent[];
 }> => {
+  const eptEventsPromise = getEPTProposalSubmittedEvents({
+    client,
+    EPTContract,
+    chainId,
+    proposalId,
+  });
+
+  // Start fetching governance addresses in parallel
+  const governanceAddressesPromise = governanceAddresses
+    ? Promise.resolve(governanceAddresses)
+    : getGovernanceSetAddresses({
+        client,
+        EPTContract,
+        chainId,
+      });
+
   try {
-    // Get all governance addresses from GovernanceSet events
-    const governanceAddresses = await getGovernanceSetAddresses({
-      client,
-      EPTContract,
-      chainId,
-    });
+    // Wait for governance addresses to start fetching governance events
+    const governanceAddresses = await governanceAddressesPromise;
 
-    const governanceEventsPromises = governanceAddresses.map((address) =>
-      getGovernanceProposalSubmittedEvents({ client, address, chainId }),
-    );
-    const governanceEventsArrays = await Promise.all(governanceEventsPromises);
+    // Register dynamic addresses if we're using cached governance addresses
+    if (governanceAddresses && chainId) {
+      governanceAddresses.forEach((address: Address) => {
+        registerDynamicAddress(chainId, address, 'governance').catch(
+          (error) => {
+            console.error(
+              `Error registering governance address ${address}:`,
+              error,
+            );
+          },
+        );
+      });
+    }
 
-    const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
-    for (const events of governanceEventsArrays) {
-      for (const event of events) {
-        const proposalId = event.args.proposalId.toString();
-        if (!governanceEventsMap.has(proposalId)) {
-          governanceEventsMap.set(proposalId, event);
+    // Start fetching governance events
+    const governanceEventsPromise = (async () => {
+      const governanceEventsArrays = await Promise.all(
+        governanceAddresses.map((address) =>
+          getGovernanceProposalSubmittedEvents({
+            client,
+            address,
+            chainId,
+            proposalId,
+          }),
+        ),
+      );
+
+      const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
+      for (const events of governanceEventsArrays) {
+        for (const event of events) {
+          const proposalId = event.args.proposalId.toString();
+          if (!governanceEventsMap.has(proposalId)) {
+            governanceEventsMap.set(proposalId, event);
+          }
         }
       }
-    }
-    const governanceEvents = Array.from(governanceEventsMap.values());
+      return Array.from(governanceEventsMap.values());
+    })();
 
-    const EPTEvents = await getEPTProposalSubmittedEvents({
-      client,
-      EPTContract,
-      chainId,
-    });
+    // Wait for both EPT events and governance events to complete
+    const [EPTEvents, governanceEvents] = await Promise.all([
+      eptEventsPromise,
+      governanceEventsPromise,
+    ]);
 
     const mergedEventsMap = new Map<string, MergedProposalSubmittedEvent>();
 
     for (const event of governanceEvents) {
-      const proposalId = event.args.proposalId.toString();
-      mergedEventsMap.set(proposalId, {
-        proposalId: event.args.proposalId,
-        DGEvent: event,
-      });
+      const eventProposalId = event.args.proposalId.toString();
+      if (
+        proposalId === undefined ||
+        eventProposalId === proposalId.toString()
+      ) {
+        mergedEventsMap.set(eventProposalId, {
+          proposalId: event.args.proposalId,
+          DGEvent: event,
+        });
+      }
     }
 
     for (const event of EPTEvents) {
-      const proposalId = event.args.id.toString();
-      const existing = mergedEventsMap.get(proposalId) || {
-        proposalId: event.args.id,
-      };
-      mergedEventsMap.set(proposalId, {
-        ...existing,
-        EPTEvent: event,
-      });
+      const eventProposalId = event.args.id.toString();
+      if (
+        proposalId === undefined ||
+        eventProposalId === proposalId.toString()
+      ) {
+        const existing = mergedEventsMap.get(eventProposalId) || {
+          proposalId: event.args.id,
+        };
+        mergedEventsMap.set(eventProposalId, {
+          ...existing,
+          EPTEvent: event,
+        });
+      }
     }
 
     const mergedProposalSubmittedEvents = Array.from(mergedEventsMap.values());

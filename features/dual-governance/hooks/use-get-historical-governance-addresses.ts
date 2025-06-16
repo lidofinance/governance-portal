@@ -44,7 +44,7 @@ export const useGetHistoricalGovernanceAddresses =
         });
       },
       enabled: !!EPTContract && isSupportedChain,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 300000, // 5 minutes
       retry: 1,
     });
 

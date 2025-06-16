@@ -18,7 +18,7 @@ export const useDualGovernanceConfig = (): UseQueryResult<
 
   return useQuery({
     queryKey: ['dual-governance-config', chainId],
-    staleTime: 5 * 60 * 1000,
+    staleTime: 300000, // 5 minutes
     queryFn: async () => {
       const configAddress =
         await readDualGovernanceContract.readContract('getConfigProvider');

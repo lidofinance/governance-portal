@@ -1,4 +1,10 @@
-import { createContext, FC, PropsWithChildren, useContext } from 'react';
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+} from 'react';
 import invariant from 'tiny-invariant';
 import {
   DualGovernanceDetailedState,
@@ -72,40 +78,40 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
     isEnabled: !isEmergencyModeActive && !isEmergencyModeActiveLoading,
   });
 
-  const isDetailedStateError = detailedState instanceof Error;
+  const actualDetailedState = !detailedState
+    ? defaultDetailedState
+    : detailedState;
 
-  const actualDetailedState =
-    !detailedState || isDetailedStateError
-      ? defaultDetailedState
-      : detailedState;
-
-  const persistedState =
-    !isDetailedStateError && detailedState
-      ? detailedState.persistedState
-      : GovernanceState.Normal;
+  const persistedState = detailedState
+    ? detailedState.persistedState
+    : GovernanceState.Normal;
 
   const isAssetManagementLocked =
     actualDetailedState.persistedState !== GovernanceState.RageQuit &&
     actualDetailedState.effectiveState === GovernanceState.RageQuit;
 
-  const hookVisibleState = useDualGovernanceVisibleState({ persistedState });
+  const hookVisibleState = useDualGovernanceVisibleState({
+    persistedState,
+    isEmergencyModeActive,
+    isEmergencyModeActiveLoading,
+  });
 
-  let visibleState: VisibleGovernanceState;
-
-  if (isDualGovernanceStateLoading) {
-    visibleState = VisibleGovernanceState.Loading;
-  } else if (isEmergencyModeActive) {
-    visibleState = VisibleGovernanceState.Emergency;
-  } else {
-    visibleState = hookVisibleState;
-  }
+  const visibleState = useMemo(() => {
+    if (isDualGovernanceStateLoading) {
+      return VisibleGovernanceState.Loading;
+    }
+    if (isEmergencyModeActive) {
+      return VisibleGovernanceState.Emergency;
+    }
+    return hookVisibleState;
+  }, [isDualGovernanceStateLoading, isEmergencyModeActive, hookVisibleState]);
 
   const value: DualGovernanceStateContextValue = {
     visibleState,
     isAssetManagementLocked,
     detailedState: actualDetailedState,
     isLoading: isDualGovernanceStateLoading,
-    error: isDetailedStateError ? detailedState : dualGovernanceStateError,
+    error: dualGovernanceStateError,
     refetch: async () => {
       try {
         await refetchDualGovernanceState();

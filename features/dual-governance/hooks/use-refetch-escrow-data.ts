@@ -1,27 +1,32 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 /**
  * Hook to refetch all escrow-related data after a transaction
  * This ensures that the UI updates immediately after supporting veto or revoking tokens
  */
 export const useRefetchEscrowData = () => {
-  const queryClient = useQueryClient();
+  const {
+    refetch: refetchEscrowData,
+    ESCROW_QUERY_KEYS,
+    invalidateEscrowQueries,
+  } = useEscrowContext();
   const { refetch: refetchDualGovernanceState } =
     useDualGovernanceStateContext();
-  const { refetch: refetchEscrowData } = useEscrowContext();
+  const queryClient = useQueryClient();
 
   const refetchAll = async () => {
-    await queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
-    await queryClient.invalidateQueries({ queryKey: ['lockedAssets'] });
-    await queryClient.invalidateQueries({ queryKey: ['pooledEthByShares'] });
-    await queryClient.invalidateQueries({ queryKey: ['stEthTotalSupply'] });
-    await queryClient.invalidateQueries({ queryKey: ['rageQuitSupport'] });
+    invalidateEscrowQueries();
+    await queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.escrowBalances,
+    });
 
     await refetchDualGovernanceState();
     await refetchEscrowData();
   };
 
-  return { refetchAll };
+  return {
+    refetchAll,
+  };
 };

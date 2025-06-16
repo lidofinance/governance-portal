@@ -20,7 +20,6 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { Box } from 'shared/components/box';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
@@ -74,7 +73,6 @@ export const StateInfo = () => {
   const { visibleState, detailedState } = useDualGovernanceStateContext();
 
   const { chainId } = useLidoSDK();
-  const isSupportedChain = useIsSupportedChain();
   const emergencyProtectedTimelockContract = useReadContract(
     EmergencyProtectedTimelock,
   );
@@ -112,17 +110,18 @@ export const StateInfo = () => {
     });
   }, [totalStEthInEscrow, stEthTotalSupply, secondSealRageQuitSupport]);
 
+  const nextState = getNextGovernanceState({
+    currentState: detailedState?.persistedState,
+    vetoSignallingThresholdPercent:
+      vetoSignallingThresholdProgress?.thresholdSupportPercent || 0,
+    rageQuitThresholdPercent:
+      rageQuitThresholdProgress?.thresholdSupportPercent || 0,
+  });
+
   const showNextState = useMemo(() => {
     if (!vetoSignallingThresholdProgress || !rageQuitThresholdProgress) {
       return false;
     }
-    const nextState = getNextGovernanceState({
-      currentState: detailedState?.persistedState,
-      vetoSignallingThresholdPercent:
-        vetoSignallingThresholdProgress?.thresholdSupportPercent,
-      rageQuitThresholdPercent:
-        rageQuitThresholdProgress?.thresholdSupportPercent,
-    });
 
     return (
       nextState &&
@@ -136,26 +135,18 @@ export const StateInfo = () => {
     );
   }, [
     detailedState,
+    nextState,
     rageQuitThresholdProgress,
     vetoSignallingThresholdProgress,
   ]);
-
-  const nextState = getNextGovernanceState({
-    currentState: detailedState?.persistedState,
-    vetoSignallingThresholdPercent:
-      vetoSignallingThresholdProgress?.thresholdSupportPercent || 0,
-    rageQuitThresholdPercent:
-      rageQuitThresholdProgress?.thresholdSupportPercent || 0,
-  });
 
   const {
     data: emergencyProtectionDetails,
     isLoading: isLoadingEmergencyDetails,
   } = useQuery({
     queryKey: ['emergencyProtectionDetails', chainId],
-    staleTime: 60 * 1000,
+    staleTime: 60000, // 1 minute
     enabled:
-      isSupportedChain &&
       !!emergencyProtectedTimelockContract &&
       visibleState === VisibleGovernanceState.Emergency,
     queryFn: async () => {

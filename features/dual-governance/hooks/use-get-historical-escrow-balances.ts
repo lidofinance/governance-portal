@@ -100,7 +100,7 @@ export const useGetHistoricalEscrowBalances = () => {
         addresses: allEscrowAddresses,
       };
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 300000, // 5 minutes
   });
 
   return {

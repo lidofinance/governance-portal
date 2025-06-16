@@ -5,9 +5,6 @@ import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useChainId } from 'wagmi';
 import { useLidoSDK } from 'providers/lido-sdk';
 
-const PROPOSAL_AFTER_SUBMIT_DELAY_CONTRACT_METHOD = 'getAfterSubmitDelay';
-const PROPOSAL_AFTER_SCHEDULE_DELAY_CONTRACT_METHOD = 'getAfterScheduleDelay';
-
 export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
@@ -16,10 +13,7 @@ export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
   const chainId = useChainId();
   const { chainId: sdkChainId } = useLidoSDK();
 
-  return useQuery<
-    { afterSubmitDelay: number; afterScheduleDelay: number },
-    Error
-  >({
+  return useQuery<{ afterSubmitDelay: number; afterScheduleDelay: number }>({
     queryKey: ['proposalDelaysQuery', chainId],
     staleTime: Infinity,
     queryFn: async () => {
@@ -31,17 +25,10 @@ export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
           };
         }
 
-        const promises = [
-          emergencyProtectedTimelock.readContract(
-            PROPOSAL_AFTER_SUBMIT_DELAY_CONTRACT_METHOD,
-          ),
-          emergencyProtectedTimelock.readContract(
-            PROPOSAL_AFTER_SCHEDULE_DELAY_CONTRACT_METHOD,
-          ),
-        ];
-
-        const [afterSubmitDelay, afterScheduleDelay] =
-          await Promise.all(promises);
+        const [afterSubmitDelay, afterScheduleDelay] = await Promise.all([
+          emergencyProtectedTimelock.readContract('getAfterSubmitDelay'),
+          emergencyProtectedTimelock.readContract('getAfterScheduleDelay'),
+        ]);
 
         return {
           afterSubmitDelay: afterSubmitDelay === null ? 0 : afterSubmitDelay,

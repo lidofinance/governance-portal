@@ -15,6 +15,9 @@ import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useEscrowUnstethBalance } from '../../hooks/use-escrow-unsteth-balance';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { StETH } from 'shared/blockchain/contracts';
+import { useQuery } from '@tanstack/react-query';
 
 type Props = {
   vetoSignallingBalance: {
@@ -58,6 +61,30 @@ export const VetoSignallingTokens = ({
   const { timeFormatted: assetsLockCountdown, isFinished: isUnlockPossible } =
     useCountdown(assetUnlockTimestamp ?? 0);
 
+  const readStEthContract = useReadContract(StETH);
+
+  const {
+    data: convertedStethLockedShares,
+    isLoading: isConvertStEthLockedSharesLoading,
+  } = useQuery({
+    queryKey: ['converted-steth-locked-shares', chainId],
+    queryFn: async (): Promise<bigint> => {
+      if (!readStEthContract) {
+        throw new Error('readStEthContract must be defined');
+      }
+
+      if (!stETHLockedShares) {
+        throw new Error('stETHLockedShares must be defined');
+      }
+
+      return await readStEthContract.readContract('getPooledEthByShares', [
+        stETHLockedShares,
+      ]);
+    },
+    enabled:
+      !!readStEthContract && !!stETHLockedShares && stETHLockedShares > 0n,
+  });
+
   const handleRevokeTokens = useCallback(
     (token: Token) => async (selectedNftIds?: string[]) => {
       invariant(
@@ -95,7 +122,7 @@ export const VetoSignallingTokens = ({
     ],
   );
 
-  if (!totalLockedShares) {
+  if (!totalLockedShares || isConvertStEthLockedSharesLoading) {
     return null;
   }
 
@@ -130,7 +157,7 @@ export const VetoSignallingTokens = ({
         <RevocableTokenItem
           ref={popupAnchorRef}
           token={Token.stETH}
-          amount={stETHLockedShares}
+          amount={convertedStethLockedShares}
           onClick={() => setIsPopupOpen(true)}
           isLocked={isLocked || !isSupportedChain}
           unlockCountdown={assetsLockCountdown}

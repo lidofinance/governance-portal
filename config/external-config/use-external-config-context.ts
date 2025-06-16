@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
-import { STRATEGY_LAZY } from 'constants/swr-strategies';
 import { getConfig } from '../get-config';
 import { getBackwardCompatibleConfig, useFallbackManifestEntry } from './utils';
 
@@ -13,6 +12,8 @@ const onFetchError = (error: unknown) => {
     error,
   );
 };
+
+const MINUTE_MS = 1000 * 60;
 
 export const useExternalConfigContext = (
   prefetchedManifest?: unknown,
@@ -37,7 +38,8 @@ export const useExternalConfigContext = (
       }
     },
     {
-      ...STRATEGY_LAZY,
+      revalidateIfStale: true,
+      refreshInterval: 5 * MINUTE_MS,
       onError: onFetchError,
       fallbackData,
       revalidateOnFocus: false,

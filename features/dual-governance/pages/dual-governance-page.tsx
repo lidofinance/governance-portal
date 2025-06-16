@@ -1,41 +1,14 @@
-import Head from 'next/head';
 import { BackgroundGradient, Layout } from 'shared/components';
-import styled from 'styled-components';
-import { Block, Link } from '@lidofinance/lido-ui';
+import { Link } from '@lidofinance/lido-ui';
 import { DualGovernanceSummary } from '../summary';
 import { DualGovernanceControlPanel } from '../control-panel';
 import { ProposalsSection } from '../proposals/proposals-section';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { VisibleGovernanceState } from '../types';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
-import { devicesHeaderMedia } from 'styles/global';
 import { Text } from 'shared/components/text';
 import { Box } from 'shared/components/box';
-
-const DashboardWrapper = styled(Block)`
-  border: 1px solid var(--custom-border);
-  background: none;
-  padding: 0;
-  border-radius: 60px;
-  display: flex;
-  min-height: 530px;
-
-  @media ${devicesHeaderMedia.tablet} {
-    flex-direction: column;
-  }
-`;
-
-const WarningReleaseBanner = styled.div`
-  background: rgba(255, 142, 118, 0.8);
-  padding: 20px;
-  margin-bottom: 40px;
-  border-radius: 16px;
-  color: white;
-  font-size: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
+import { DashboardWrapper, WarningReleaseBanner } from './style';
 
 export const DualGovernancePage = () => {
   const { visibleState } = useDualGovernanceStateContext();
@@ -43,9 +16,6 @@ export const DualGovernancePage = () => {
   return (
     <Layout containerSize="full">
       <DualGovernanceProposalsProvider>
-        <Head>
-          <title>Dual Governance | Lido</title>
-        </Head>
         {visibleState !== VisibleGovernanceState.Loading && (
           <BackgroundGradient state={visibleState} width={1700} height={800} />
         )}

@@ -19,7 +19,7 @@ export const useTokenBalance = (token: Token, shouldSubscribe = true) => {
       enabled: !!address,
       // because we update on events we can have high staleTime
       // this prevents loader when changing pages
-      staleTime: 30_000,
+      staleTime: 30000,
     },
   });
 

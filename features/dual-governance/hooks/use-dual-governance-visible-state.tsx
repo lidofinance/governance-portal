@@ -1,5 +1,4 @@
 import { GovernanceState, VisibleGovernanceState } from '../types';
-import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
@@ -12,13 +11,16 @@ const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;
 
 type Props = {
   persistedState: GovernanceState;
+  isEmergencyModeActive: boolean | undefined;
+  isEmergencyModeActiveLoading: boolean;
 };
 
-export const useDualGovernanceVisibleState = ({ persistedState }: Props) => {
+export const useDualGovernanceVisibleState = ({
+  persistedState,
+  isEmergencyModeActive,
+  isEmergencyModeActiveLoading,
+}: Props) => {
   invariant(persistedState !== undefined, 'Persisted state must be provided');
-
-  const { isEmergencyModeActive, isLoading: isEmergencyModeActiveLoading } =
-    useIsEmergencyModeActive();
 
   const { data: currentVetoSignallingAddress } =
     useCurrentVetoSignallingAddress();
