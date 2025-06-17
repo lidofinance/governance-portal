@@ -34,7 +34,7 @@ export const ProposalsList = () => {
   };
 
   const itemsToDisplay = useMemo(() => {
-    const activeItems = [...activeProposals, ...votes];
+    const activeItems = activeProposals;
 
     const completedProposals = combinedData.filter((item) => {
       const inActiveProposals = activeProposals.some((ap) => {
@@ -97,7 +97,7 @@ export const ProposalsList = () => {
         </Link>
       );
     });
-  }, [activeProposals, votes, combinedData, showAll]);
+  }, [activeProposals, combinedData, showAll, votes]);
 
   useEffect(() => {
     if (initialLoading && !isFetching && combinedData) {

@@ -84,7 +84,16 @@ const getCombinedData = ({
     [[], []] as [ProposalCombinedData[], ProposalCombinedData[]],
   );
 
-  return [...activeProposals, ...votes, ...completedProposals];
+  const allProposalIds = new Set([
+    ...activeProposals.map((proposal) => proposal.proposalId),
+    ...completedProposals.map((proposal) => proposal.proposalId),
+  ]);
+
+  const uniqueVotes = votes.filter(
+    (vote) => !allProposalIds.has(vote.proposalId),
+  );
+
+  return [...activeProposals, ...uniqueVotes, ...completedProposals];
 };
 
 export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
@@ -115,7 +124,15 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
 
     const votes = votesData?.votes ?? [];
 
-    return [..._proposals, ...votes];
+    const proposalIds = new Set(
+      _proposals.map((proposal) => proposal.proposalId),
+    );
+
+    const uniqueVotes = votes.filter(
+      (vote) => !proposalIds.has(vote.proposalId),
+    );
+
+    return [..._proposals, ...uniqueVotes];
   }, [proposals, votesData]);
 
   const getProposalById = useCallback(

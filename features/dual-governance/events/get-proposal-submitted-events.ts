@@ -6,7 +6,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
-import { registerDynamicAddress } from 'utils/dynamic-addresses';
+import { registerDynamicAddressesBatch } from 'utils/dynamic-addresses';
 import { getBatchedLogs } from 'utils/batched-logs';
 import { findAbiItem } from 'utils/find-abi-item';
 import {
@@ -70,15 +70,12 @@ const getGovernanceSetAddresses = async ({
 
     // Whitelist governance addresses to bypass RPC validation
     if (chainId) {
-      governanceAddresses.forEach((address: Address) => {
-        registerDynamicAddress(chainId, address, 'governance').catch(
-          (error) => {
-            console.error(
-              `Error registering governance address ${address}:`,
-              error,
-            );
-          },
-        );
+      registerDynamicAddressesBatch(
+        chainId,
+        governanceAddresses,
+        'governance',
+      ).catch((error) => {
+        console.error(`Error batch registering governance addresses:`, error);
       });
     }
 
@@ -238,30 +235,48 @@ export const getProposalSubmittedEvents = async ({
 
     // Register dynamic addresses if we're using cached governance addresses
     if (governanceAddresses && chainId) {
-      governanceAddresses.forEach((address: Address) => {
-        registerDynamicAddress(chainId, address, 'governance').catch(
-          (error) => {
-            console.error(
-              `Error registering governance address ${address}:`,
-              error,
-            );
-          },
-        );
+      // Batch register governance addresses to prevent rate limiting
+      registerDynamicAddressesBatch(
+        chainId,
+        governanceAddresses,
+        'governance',
+      ).catch((error) => {
+        console.error(`Error batch registering governance addresses:`, error);
       });
     }
 
-    // Start fetching governance events
     const governanceEventsPromise = (async () => {
-      const governanceEventsArrays = await Promise.all(
-        governanceAddresses.map((address) =>
+      const governanceEventsArrays: DGProposalSubmittedEvent[][] = [];
+
+      // Process governance addresses in smaller batches to prevent rate limiting
+      const BATCH_SIZE = 3;
+      for (let i = 0; i < governanceAddresses.length; i += BATCH_SIZE) {
+        const batch = governanceAddresses.slice(i, i + BATCH_SIZE);
+
+        const batchPromises = batch.map((address) =>
           getGovernanceProposalSubmittedEvents({
             client,
             address,
             chainId,
             proposalId,
           }),
-        ),
-      );
+        );
+
+        try {
+          const batchResults = await Promise.all(batchPromises);
+          governanceEventsArrays.push(...batchResults);
+
+          // Add delay between batches to prevent rate limiting
+          if (i + BATCH_SIZE < governanceAddresses.length) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+        } catch (error) {
+          console.error(
+            `Error fetching governance events for batch starting at index ${i}:`,
+            error,
+          );
+        }
+      }
 
       const governanceEventsMap = new Map<string, DGProposalSubmittedEvent>();
       for (const events of governanceEventsArrays) {

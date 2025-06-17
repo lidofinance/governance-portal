@@ -6,7 +6,7 @@ import { usePublicClient, useReadContracts } from 'wagmi';
 import { findAbiItem } from 'utils/find-abi-item';
 import { Address } from 'viem';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
-import { registerDynamicAddress } from 'utils/dynamic-addresses';
+import { registerDynamicAddressesBatch } from 'utils/dynamic-addresses';
 import { useQuery } from '@tanstack/react-query';
 import { getBatchedLogs } from 'utils/batched-logs';
 
@@ -93,17 +93,14 @@ export const useEscrowAddresses = () => {
       if (allLogs.length > 0) {
         const _escrowAddresses = allLogs.map((log: any) => log.args.escrow);
 
-        // Whitelist escrow addresses
+        // Batch register escrow addresses to prevent rate limiting
         if (_escrowAddresses.length > 0) {
-          _escrowAddresses.forEach((address) => {
-            registerDynamicAddress(chainId, address, 'escrow').catch(
-              (error) => {
-                console.error(
-                  `Error registering escrow address ${address}:`,
-                  error,
-                );
-              },
-            );
+          registerDynamicAddressesBatch(
+            chainId,
+            _escrowAddresses,
+            'escrow',
+          ).catch((error) => {
+            console.error(`Error batch registering escrow addresses:`, error);
           });
         }
 

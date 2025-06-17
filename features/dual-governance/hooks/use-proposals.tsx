@@ -56,6 +56,9 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
         ]
       : ['getProposals', emergencyProtectedTimelock.address, chainId],
     staleTime: 30000, // 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: 'always',
     queryFn: async (): Promise<ProposalsQueryResult> => {
       if (!publicClient || proposalsCount === undefined) {
         return { proposalsCount: 0n, proposals: [] };
@@ -116,6 +119,5 @@ export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
         throw new Error('Failed to fetch proposals');
       }
     },
-    refetchOnWindowFocus: true,
   });
 };
