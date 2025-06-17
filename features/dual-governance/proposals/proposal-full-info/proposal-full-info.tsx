@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
 import {
   ActionsWrapper,
@@ -13,7 +13,7 @@ import {
   SubmitDate,
 } from './style';
 import { Text } from 'shared/components/text';
-import { useProposal } from 'features/dual-governance/hooks/use-proposal';
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
@@ -37,6 +37,10 @@ import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useDynamicDualGovernance } from '../../hooks';
 import { ProposalStatus } from '../types';
+import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
+import { useProposals } from '../../hooks/use-proposals';
+import { isAragonProposal } from '../../../../utils/proposals/is-aragon-proposal';
+import { Log, PublicClient } from 'viem';
 
 type Props = {
   id: number;
@@ -45,25 +49,70 @@ type Props = {
 export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
 
+  const [proposal, setProposal] = useState<ProposalCombinedData | null>(null);
+  const [voteId, setVoteId] = useState<number | null>(null);
+
   const { isConnected, address } = useAccount();
   const isSupportedChain = useIsSupportedChain();
-
   const { chainId } = useLidoSDK();
-
   const client = usePublicClient();
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const {
-    data: proposal,
-    isLoading,
-    refetch: refetchProposal,
-  } = useProposal({ id });
+    getProposalById,
+    isLoading: isProposalsLoading,
+    refetchProposals,
+  } = useDualGovernanceProposalsContext();
+
+  const cachedProposal = getProposalById(id);
+
+  const { data: queryVoteId, isLoading: isVoteIdLoading } = useQuery({
+    queryKey: ['proposal-vote-id', chainId],
+    queryFn: async () => {
+      return await isAragonProposal({
+        client: client as PublicClient,
+        proposalLog: cachedProposal?.DGEvent as unknown as Log,
+        chainId,
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!proposal?.voteId && !isVoteIdLoading && queryVoteId && !voteId) {
+      setVoteId(Number(queryVoteId));
+    } else if (proposal && proposal.voteId && !voteId) {
+      setVoteId(proposal.voteId);
+    }
+  }, [isVoteIdLoading, proposal, queryVoteId, voteId]);
+
+  const { data: fetchedProposal, isLoading: isFetchLoading } = useProposals({
+    id,
+    enabled: !cachedProposal && !isProposalsLoading,
+  }) as UseQueryResult<ProposalCombinedData>;
+
+  const isLoading = isProposalsLoading || isFetchLoading;
+
+  useEffect(() => {
+    if (!cachedProposal && !fetchedProposal) {
+      setProposal(null);
+      return;
+    }
+
+    if (cachedProposal) {
+      setProposal(cachedProposal);
+      return;
+    }
+
+    if (fetchedProposal) {
+      setProposal(fetchedProposal);
+    }
+  }, [cachedProposal, fetchedProposal, id]);
 
   const proposalStatusInfo = useProposalStatus({
-    proposalStatus: proposal?.proposalDetails.status,
-    submittedAt: proposal?.proposalDetails.submittedAt,
-    scheduledAt: proposal?.proposalDetails.scheduledAt,
+    proposalStatus: proposal?.proposalDetails?.status || 0,
+    submittedAt: proposal?.proposalDetails?.submittedAt || 0,
+    scheduledAt: proposal?.proposalDetails?.scheduledAt || 0,
   });
 
   const { readDynamicContract } = useDynamicDualGovernance();
@@ -108,10 +157,10 @@ export const ProposalFullInfo = ({ id }: Props) => {
   });
 
   const updateProposalState = useCallback(async () => {
-    await refetchProposal();
+    await refetchProposals();
     setIsScheduleLoading(false);
     setIsExecuteLoading(false);
-  }, [refetchProposal]);
+  }, [refetchProposals]);
 
   const scheduleProposal = useScheduleProposalAction({
     onConfirm: updateProposalState,
@@ -175,7 +224,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     queryKey: [
       'proposal-actions',
       id,
-      proposal?.proposalDetails.status,
+      proposal?.proposalDetails?.status,
       isEmergencyModeActive,
       isEmergencyExecutionCommittee,
     ],
@@ -200,7 +249,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         );
 
         const isExecuted =
-          proposal?.proposalDetails.status === ProposalStatus.Executed;
+          proposal?.proposalDetails?.status === ProposalStatus.Executed;
 
         const showExecuteButton =
           !isExecuted &&
@@ -249,7 +298,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     }
 
     const date = getDateFromTimestamp({
-      timestamp: proposal.proposalDetails.submittedAt,
+      timestamp: proposal.proposalDetails?.submittedAt || 0,
       showYear: true,
     });
 
@@ -257,12 +306,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
   }, [proposal]);
 
   const scheduledAt = useMemo(() => {
-    if (!proposal || !proposal.proposalDetails.scheduledAt) {
+    if (!proposal || !proposal.proposalDetails?.scheduledAt) {
       return null;
     }
 
     const date = getDateFromTimestamp({
-      timestamp: proposal.proposalDetails.scheduledAt,
+      timestamp: proposal.proposalDetails?.scheduledAt || 0,
       showYear: true,
     });
 
@@ -280,7 +329,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     );
   }
 
-  const calls = proposal.EPTEvent?.args.calls;
+  const calls = proposal.proposalDetails?.calls || [];
 
   return (
     <ProposalContainer>
@@ -302,19 +351,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
       <ProposalStateLogWrapper>
         {submittedAt && (
           <>
-            {proposal.voteId && (
+            {voteId && (
               <SubmitDate as="span">
                 Submitted from{' '}
                 <ProposalLink
-                  href={`${config.voteOrigin}/vote/${proposal.voteId}`}
+                  href={`${config.voteOrigin}/vote/${voteId}`}
                   target="_blank"
                 >
-                  Aragon {proposal.voteId}
+                  Aragon {voteId}
                 </ProposalLink>{' '}
                 on {submittedAt}
               </SubmitDate>
             )}
-            {!proposal.voteId && (
+            {!voteId && (
               <SubmitDate as="span">Submitted on {submittedAt}</SubmitDate>
             )}
           </>
@@ -327,7 +376,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
       </ProposalStateLogWrapper>
       <Box margin={'30px 0'}>
-        {proposal.voteId && (
+        {voteId && (
           <>
             <Text weight={500} size={28}>
               Description
@@ -345,7 +394,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
             )}
           </>
         )}
-        {!proposal.voteId && (
+        {!voteId && (
           <Text weight={500} size={22}>
             Proposal submitted by {proposal?.DGEvent?.args.proposerAccount}
           </Text>

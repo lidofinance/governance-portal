@@ -3,9 +3,7 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
 } from 'react';
 import {
   ProposalsQueryResult,
@@ -18,7 +16,11 @@ import {
 } from 'features/dual-governance/proposals/types';
 import { useVotes } from 'shared/votes/hooks/use-votes';
 import { VoteData } from 'shared/votes/types';
-import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import { useProposalDelaysQuery } from '../features/dual-governance/hooks/use-proposal-timelock';
 import { sortProposals } from '../utils/proposals/sort-proposals';
 
@@ -29,6 +31,7 @@ type ProposalsContextType = {
   activeProposals: (ProposalCombinedData | VoteData)[];
   isFetching: boolean;
   isLoading: boolean;
+  isError: boolean;
   votes: VoteData[];
   combinedData: (ProposalCombinedData | VoteData)[];
   getProposalById: (id: number) => ProposalCombinedData | null;
@@ -96,14 +99,20 @@ const getCombinedData = ({
   return [...activeProposals, ...uniqueVotes, ...completedProposals];
 };
 
-export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [proposals, setProposals] = useState<ProposalCombinedData[]>([]);
+type DualGovernanceProposalsProviderProps = PropsWithChildren<{
+  id?: number;
+}>;
 
-  const proposalsData = useProposals();
-
-  const { refetch: refetchProposals } = proposalsData;
+export const DualGovernanceProposalsProvider: React.FC<
+  DualGovernanceProposalsProviderProps
+> = ({ children, id }) => {
+  const {
+    data: proposalsData,
+    isLoading: isProposalDataLoading,
+    isFetching: isProposalsDataFetching,
+    refetch: refetchProposals,
+    isError: isProposalDataError,
+  } = useProposals({ id }) as UseQueryResult<ProposalsQueryResult>;
 
   const { data: proposalsDelays } = useProposalDelaysQuery({ enabled: true });
 
@@ -116,7 +125,15 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
   });
 
   const activeProposals = useMemo(() => {
-    const _proposals = proposals.filter((proposal) =>
+    if (!proposalsData || isProposalDataLoading) {
+      return [];
+    }
+
+    if (!('proposals' in proposalsData)) {
+      return [];
+    }
+
+    const _proposals = proposalsData.proposals.filter((proposal) =>
       [ProposalStatus.Submitted, ProposalStatus.Scheduled].includes(
         proposal.proposalDetails.status,
       ),
@@ -133,70 +150,71 @@ export const DualGovernanceProposalsProvider: React.FC<PropsWithChildren> = ({
     );
 
     return [..._proposals, ...uniqueVotes];
-  }, [proposals, votesData]);
+  }, [isProposalDataLoading, proposalsData, votesData?.votes]);
 
   const getProposalById = useCallback(
     (id: number) => {
-      const proposal = proposals.find(
+      if (!proposalsData || isProposalDataLoading) {
+        return null;
+      }
+
+      if (!('proposals' in proposalsData)) {
+        return null;
+      }
+
+      const proposal = proposalsData.proposals.find(
         (proposal) => Number(proposal.proposalId) === id,
       );
 
       return proposal || null;
     },
-    [proposals],
+    [proposalsData, isProposalDataLoading],
   );
-
-  useEffect(() => {
-    if (proposalsData.data?.proposals) {
-      const newProposals = proposalsData.data.proposals;
-
-      setProposals((prevProposals) => {
-        // this is to properly handle the status update on refetch while using lazy loading
-        const updatedIds = new Set(
-          newProposals.map((proposal) => proposal.proposalId),
-        );
-
-        return [
-          ...prevProposals.filter(
-            (proposal) => !updatedIds.has(proposal.proposalId),
-          ), // Keep the old proposals that are not updated
-          ...newProposals,
-        ];
-      });
-    }
-  }, [proposalsData.data?.proposals]);
 
   const value = useMemo(
     () => ({
-      proposals: proposals,
+      proposals:
+        proposalsData && 'proposals' in proposalsData
+          ? proposalsData.proposals
+          : [],
       activeProposals,
       votes: votesData?.votes || [],
       combinedData: getCombinedData({
-        proposals,
+        proposals:
+          proposalsData && 'proposals' in proposalsData
+            ? proposalsData.proposals
+            : [],
         votes: votesData?.votes || [],
         afterSubmitDelay: proposalsDelays?.afterSubmitDelay,
         afterScheduleDelay: proposalsDelays?.afterScheduleDelay,
       }),
-      isFetching: [proposalsData.isFetching || isVotesFetching].some(
+      isFetching: [isProposalsDataFetching || isVotesFetching].some(
         (isFetching) => isFetching,
       ),
-      isLoading: [proposalsData.isLoading || isVotesLoading].some(
+      isLoading: [isProposalDataLoading || isVotesLoading].some(
         (isLoading) => isLoading,
       ),
       getProposalById,
-      refetchProposals: refetchProposals,
+      isError: isProposalDataError,
+      refetchProposals: refetchProposals as unknown as (
+        options?: RefetchOptions | undefined,
+      ) => Promise<
+        QueryObserverResult<ProposalsQueryResult | undefined, Error>
+      >,
     }),
     [
-      proposals,
+      proposalsData,
       activeProposals,
       votesData?.votes,
-      proposalsData.isFetching,
-      proposalsData.isLoading,
+      proposalsDelays?.afterSubmitDelay,
+      proposalsDelays?.afterScheduleDelay,
+      isProposalsDataFetching,
       isVotesFetching,
+      isProposalDataLoading,
       isVotesLoading,
       getProposalById,
+      isProposalDataError,
       refetchProposals,
-      proposalsDelays,
     ],
   );
   return (

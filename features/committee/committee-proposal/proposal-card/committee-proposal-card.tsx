@@ -30,7 +30,7 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
     return null;
   }
 
-  const calls = proposal.EPTEvent?.args.calls;
+  const calls = proposal.proposalDetails.calls;
 
   return (
     <CommitteeCardWrapper>

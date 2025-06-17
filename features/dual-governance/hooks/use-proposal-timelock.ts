@@ -2,7 +2,6 @@ import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
-import { useChainId } from 'wagmi';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
@@ -10,15 +9,14 @@ export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
     EmergencyProtectedTimelock,
   );
   const isSupportedChain = useIsSupportedChain();
-  const chainId = useChainId();
-  const { chainId: sdkChainId } = useLidoSDK();
+  const { chainId } = useLidoSDK();
 
   return useQuery<{ afterSubmitDelay: number; afterScheduleDelay: number }>({
     queryKey: ['proposalDelaysQuery', chainId],
     staleTime: Infinity,
     queryFn: async () => {
       try {
-        if (!isSupportedChain || chainId !== sdkChainId) {
+        if (!isSupportedChain) {
           return {
             afterSubmitDelay: 0,
             afterScheduleDelay: 0,
@@ -44,6 +42,6 @@ export const useProposalDelaysQuery = ({ enabled }: { enabled: boolean }) => {
       }
     },
     throwOnError: false,
-    enabled: enabled && isSupportedChain && chainId === sdkChainId,
+    enabled: enabled && isSupportedChain,
   });
 };
