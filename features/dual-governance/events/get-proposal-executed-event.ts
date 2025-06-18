@@ -3,11 +3,8 @@ import { findAbiItem } from 'utils/find-abi-item';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
 import { Log, PublicClient } from 'viem';
-import { getBatchedLogs } from '../../../utils/batched-logs';
+import { fetchLogsInParallelChunks } from 'utils/fetch-logs-in-parallel';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
-
-const EVENT_NAME = 'ProposalExecuted';
-const MAX_BLOCK_RANGE = 49999n;
 
 type Props = {
   proposalId: number;
@@ -26,7 +23,7 @@ export const getProposalExecutedEvent = async ({
 }: Props): Promise<Log | null> => {
   const eventAbi = findAbiItem({
     abi: EmergencyProtectedTimelock.abi,
-    name: EVENT_NAME,
+    name: 'ProposalExecuted',
     type: 'event',
   });
 
@@ -36,7 +33,7 @@ export const getProposalExecutedEvent = async ({
     `Invalid chainId ${chainId}`,
   );
   invariant(client, 'Client must be provided');
-  invariant(eventAbi, `Event ABI item '${EVENT_NAME}' not found`);
+  invariant(eventAbi, `Event ABI item ProposalExecuted not found`);
 
   const contractAddress = EmergencyProtectedTimelock.chainAddressMap[chainId];
   invariant(
@@ -53,36 +50,19 @@ export const getProposalExecutedEvent = async ({
   try {
     const latestBlockNumber = await client.getBlockNumber();
 
-    for (
-      let currentToBlock = latestBlockNumber;
-      currentToBlock >= deploymentBlock;
-      currentToBlock -= MAX_BLOCK_RANGE
-    ) {
-      const currentFromBlock =
-        currentToBlock - MAX_BLOCK_RANGE + 1n > deploymentBlock
-          ? currentToBlock - MAX_BLOCK_RANGE + 1n
-          : deploymentBlock;
+    const logs = await fetchLogsInParallelChunks<Log>({
+      client,
+      address: contractAddress,
+      event: eventAbi,
+      args: eventArgs,
+      fromBlock: deploymentBlock,
+      toBlock: latestBlockNumber,
+      chainId,
+    });
 
-      if (currentFromBlock > currentToBlock) {
-        break;
-      }
-
-      const logs = await getBatchedLogs({
-        publicClient: client,
-        address: contractAddress,
-        event: eventAbi,
-        args: eventArgs,
-        fromBlock: currentFromBlock,
-        toBlock: currentToBlock,
-      });
-
-      if (logs.length > 0) {
-        return logs[0];
-      }
-    }
-
-    return null;
+    return logs.length > 0 ? logs[0] : null;
   } catch (e) {
-    throw new Error(`Failed to fetch logs for proposal ${proposalId}: ${e}`);
+    console.error(`Failed to fetch logs for proposal ${proposalId}:`, e);
+    return null;
   }
 };

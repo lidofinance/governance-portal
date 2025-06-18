@@ -39,7 +39,7 @@ import { useDynamicDualGovernance } from '../../hooks';
 import { ProposalStatus } from '../types';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { useProposals } from '../../hooks/use-proposals';
-import { isAragonProposal } from '../../../../utils/proposals/is-aragon-proposal';
+import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { Log, PublicClient } from 'viem';
 
 type Props = {
@@ -153,7 +153,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
         return null;
       }
     },
-    enabled: !!proposal?.proposalId && !!client && !!chainId,
+    enabled:
+      !!proposal?.proposalId &&
+      !!client &&
+      !!chainId &&
+      proposal?.proposalDetails.status == ProposalStatus.Executed,
   });
 
   const updateProposalState = useCallback(async () => {
