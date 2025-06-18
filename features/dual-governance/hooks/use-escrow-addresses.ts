@@ -37,7 +37,7 @@ export const useEscrowAddresses = () => {
 
   const historicalEscrowAddresses =
     (historicalAddresses[chainId as keyof typeof historicalAddresses]
-      ?.governanceAddresses as Address[] | undefined) || [];
+      ?.escrowAddresses as Address[] | undefined) || [];
 
   const refetch = async () => {
     await Promise.all([refetchEscrowAddresses()]);

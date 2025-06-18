@@ -7,7 +7,7 @@ import { useReadContractGetter } from './use-read-contract';
 import { usePublicClient } from 'wagmi';
 import { aggregatorEthUsdPriceFeed } from '../../price-feed-addresses';
 
-export const useEthUsd = (amount: bigint | undefined) => {
+export const useEthUsd = (amount: bigint | undefined, enabled = true) => {
   const aggregatorContract = useReadContractGetter(aggregatorAbi);
   const publicClient = usePublicClient();
 
@@ -19,7 +19,7 @@ export const useEthUsd = (amount: bigint | undefined) => {
     isFetching,
   } = useQuery({
     queryKey: ['eth-usd-price', publicClient],
-    enabled: !!publicClient,
+    enabled: !!publicClient && enabled,
     staleTime: 300000, // 5 minutes
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,

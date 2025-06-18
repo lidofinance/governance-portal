@@ -10,7 +10,6 @@ import { useCountdown } from 'shared/hooks/use-countdown';
 import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
 import { Box } from 'shared/components/box';
 import { Address } from 'viem';
-import { RageQuitEscrowUnstETHRecord } from '../../utils';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -20,6 +19,7 @@ import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useQuery } from '@tanstack/react-query';
 import { StETH } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { RageQuitEscrowUnstETHRecord } from '../../hooks/use-rage-quit-escrow-balances';
 
 type RageQuitBalance = {
   rageQuitEscrowAddress: Address;

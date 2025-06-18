@@ -5,9 +5,14 @@ import {
 } from 'features/dual-governance/proposals/types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Address, PublicClient } from 'viem';
-import { fetchProposalDetailsFromMultipleAddresses } from '../events/fetch-proposal-details';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import {
+  calculateAverageBlockTime,
+  estimateBlockRangeFromTimestamp,
+} from 'utils/estimate-block-range';
+import { findAbiItem } from 'utils/find-abi-item';
+import { DualGovernance } from 'shared/blockchain/contracts';
+import { ProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 
 type Props = {
   proposalsCount: bigint;
@@ -24,7 +29,6 @@ export const fetchProposals = async ({
   EPTContract,
   publicClient,
   governanceAddresses,
-  chainId,
 }: Props): Promise<(ProposalCombinedData | null)[]> => {
   const proposalIds = Array.from({ length: Number(proposalsCount) }, (_, i) =>
     BigInt(i + 1),
@@ -65,15 +69,6 @@ export const fetchProposals = async ({
 
   console.debug(`Fetching events for ${timestamps.length} proposals`);
 
-  const latestBlock = await publicClient.getBlockNumber();
-
-  const deploymentBlock =
-    CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
-
-  console.debug(
-    `Using deployment block ${deploymentBlock} and latest block ${latestBlock}`,
-  );
-
   const allProposalIds = proposalsData.map((proposal) => proposal.proposalId);
   console.debug(`Fetching events for proposals: ${allProposalIds.join(', ')}`);
 
@@ -83,33 +78,52 @@ export const fetchProposals = async ({
     proposalsMap.set(proposal.proposalId, proposal);
   });
 
+  const eventAbi = findAbiItem({
+    abi: DualGovernance.abi,
+    name: 'ProposalSubmitted',
+    type: 'event',
+  });
+
+  const averageBlockTime = await calculateAverageBlockTime(publicClient);
+
   try {
-    // Fetch all events in parallel
-    const events = await fetchProposalDetailsFromMultipleAddresses({
-      client: publicClient,
-      addresses: governanceAddresses,
-      fromBlock: deploymentBlock,
-      toBlock: latestBlock,
-      chainId,
-    });
+    for (const proposal of proposalsData) {
+      try {
+        const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
+          proposal.proposalDetails.submittedAt,
+          2499n, // Half of the RPC getLogs limit
+          averageBlockTime,
+          publicClient,
+        );
 
-    console.debug(
-      `Found ${events.length} events in total from block ${deploymentBlock} to ${latestBlock}`,
-    );
+        // Fetch events from all governance addresses
+        const eventPromises = governanceAddresses.map((address) =>
+          publicClient.getLogs({
+            address,
+            event: eventAbi,
+            fromBlock,
+            toBlock,
+            args: {
+              proposalId: BigInt(proposal.proposalId),
+            },
+          }),
+        );
 
-    for (const event of events) {
-      const proposalId = Number(event.args.proposalId);
-      if (allProposalIds.includes(proposalId)) {
-        const proposal = proposalsMap.get(proposalId);
-        if (proposal) {
-          proposalsMap.set(proposalId, {
+        const eventsResults = await Promise.all(eventPromises);
+        const events =
+          eventsResults.flat() as unknown as ProposalSubmittedEvent[];
+
+        if (events.length > 0) {
+          proposalsMap.set(proposal.proposalId, {
             ...proposal,
-            DGEvent: event,
+            DGEvent: events[0],
           });
-          console.debug(
-            `Matched event to proposal ${proposalId} from block ${event.blockNumber}`,
-          );
         }
+      } catch (error) {
+        console.error(
+          `Error fetching events for proposal ${proposal.proposalId}:`,
+          error,
+        );
       }
     }
   } catch (error) {

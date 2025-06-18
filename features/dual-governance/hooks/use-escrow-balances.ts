@@ -6,10 +6,10 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
-import { computeRageQuitEscrowsBalances } from '../utils';
 import { useState } from 'react';
 import { WstETH } from 'shared/blockchain/contracts';
 import { useEscrowContext } from 'providers/escrow';
+import { useRageQuitEscrowBalances } from './use-rage-quit-escrow-balances';
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
@@ -38,6 +38,9 @@ export const useEscrowBalances = () => {
     enabled: isEnabled,
     onLogs: () => {
       void queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+      void queryClient.invalidateQueries({
+        queryKey: ['rage-quit-escrow-balances'],
+      });
     },
   });
 
@@ -48,7 +51,20 @@ export const useEscrowBalances = () => {
     enabled: isEnabled,
     onLogs: () => {
       void queryClient.invalidateQueries({ queryKey: ['escrow-balances'] });
+      void queryClient.invalidateQueries({
+        queryKey: ['rage-quit-escrow-balances'],
+      });
     },
+  });
+
+  const {
+    data: computedRageQuitEscrowsBalances,
+    isLoading: isRageQuitLoading,
+  } = useRageQuitEscrowBalances({
+    historicalEscrowAddresses,
+    vetoSignallingAddress,
+    accountAddress,
+    enabled: isEnabled,
   });
 
   return useQuery({
@@ -83,14 +99,6 @@ export const useEscrowBalances = () => {
       const vetoSignallingSum =
         vetoSignallingBalance.stETHLockedShares +
         vetoSignallingBalance.unstETHLockedShares;
-
-      const computedRageQuitEscrowsBalances =
-        await computeRageQuitEscrowsBalances({
-          readEscrowContract,
-          historicalEscrowAddresses,
-          vetoSignallingAddress,
-          accountAddress,
-        });
 
       setLoadingState(false);
 
@@ -136,7 +144,7 @@ export const useEscrowBalances = () => {
         totalLockedSharesInEscrows:
           vetoSignallingSum + totalLockedSharesInRageQuitEscrows,
         assetUnlockTimestamp,
-        isLoading: loadingState,
+        isLoading: loadingState || isRageQuitLoading,
       };
     },
   });

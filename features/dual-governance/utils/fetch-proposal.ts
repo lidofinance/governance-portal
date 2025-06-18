@@ -3,12 +3,17 @@ import {
   ProposalDetails,
   SubmitProposalCall,
 } from '../proposals/types';
-import { fetchProposalDetailsFromMultipleAddresses } from '../events/fetch-proposal-details';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Address, Log, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import {
+  calculateAverageBlockTime,
+  estimateBlockRangeFromTimestamp,
+} from 'utils/estimate-block-range';
+import { findAbiItem } from 'utils/find-abi-item';
+import { DualGovernance } from 'shared/blockchain/contracts';
+import { ProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 
 type Props = {
   id: number;
@@ -42,22 +47,37 @@ export const fetchProposal = async ({
       },
     };
 
+    const eventAbi = findAbiItem({
+      abi: DualGovernance.abi,
+      name: 'ProposalSubmitted',
+      type: 'event',
+    });
+
+    const averageBlockTime = await calculateAverageBlockTime(publicClient);
+
     try {
-      const latestBlock = await publicClient.getBlockNumber();
+      const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
+        proposalInfo[0].submittedAt,
+        2499n, // Half of the RPC getLogs limit
+        averageBlockTime,
+        publicClient,
+      );
 
-      const deploymentBlock =
-        CONTRACT_DEPLOYMENT_BLOCKS[chainId]?.dualGovernance || 0n;
+      const eventPromises = governanceAddresses.map((address) =>
+        publicClient.getLogs({
+          address,
+          event: eventAbi,
+          fromBlock,
+          toBlock,
+          args: {
+            proposalId: proposalId,
+          },
+        }),
+      );
 
-      const events = await fetchProposalDetailsFromMultipleAddresses({
-        client: publicClient,
-        addresses: governanceAddresses,
-        fromBlock: deploymentBlock,
-        toBlock: latestBlock,
-        proposalId: id,
-        chainId,
-      });
-
-      console.debug(`Found ${events.length} events for proposal ${id}`);
+      const eventsResults = await Promise.all(eventPromises);
+      const events =
+        eventsResults.flat() as unknown as ProposalSubmittedEvent[];
 
       if (events.length > 0) {
         result.DGEvent = events[0];
@@ -71,6 +91,8 @@ export const fetchProposal = async ({
         if (voteId) {
           result.voteId = Number(voteId);
         }
+
+        return result;
       }
     } catch (error) {
       console.error(

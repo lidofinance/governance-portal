@@ -117,9 +117,6 @@ export const fetchLogsInParallelChunks = async <T>({
         if (logs.length > 0) {
           return logs as unknown as T[];
         }
-        console.debug(
-          `✗ No matching logs in range ${chunk.fromBlock}-${chunk.toBlock}`,
-        );
       } catch (error) {
         console.error(
           `Error fetching logs for range ${chunk.fromBlock}-${chunk.toBlock}:`,
@@ -146,11 +143,7 @@ export const fetchLogsInParallelChunks = async <T>({
     }
 
     try {
-      const logs = await client.getLogs(filter);
-      console.debug(
-        `Successfully fetched ${logs.length} logs for range ${chunk.fromBlock}-${chunk.toBlock}`,
-      );
-      return logs;
+      return await client.getLogs(filter);
     } catch (error) {
       console.error(
         `Error fetching logs for range ${chunk.fromBlock}-${chunk.toBlock}:`,
