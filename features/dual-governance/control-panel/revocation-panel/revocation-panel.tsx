@@ -131,11 +131,15 @@ export const RevocationPanel = () => {
           </RevocableTokenItemStyled>
         </Box>
       )}
-      <VetoSignallingTokens
-        vetoSignallingBalance={escrowBalances.vetoSignallingBalance}
-        assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
-        onConfirm={updateDualGovernanceState}
-      />
+      {escrowBalances.vetoSignallingBalances.map((escrowBalance) => (
+        <VetoSignallingTokens
+          key={escrowBalance.escrowAddress}
+          escrowAddress={escrowBalance.escrowAddress}
+          escrowBalance={escrowBalance}
+          assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
+          onConfirm={updateDualGovernanceState}
+        />
+      ))}
       {mappedRageQuitBalances.map((balanceRecord) => (
         <RageQuitTokens
           key={balanceRecord.rageQuitEscrowAddress}

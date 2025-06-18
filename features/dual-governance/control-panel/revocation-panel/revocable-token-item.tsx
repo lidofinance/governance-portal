@@ -5,6 +5,10 @@ import { Text } from 'shared/components/text';
 import { RevokeIcon, SandwatchIcon } from 'shared/components/icons';
 import { Token } from 'shared/blockchain/types';
 import { Box } from 'shared/components/box';
+import { useQuery } from '@tanstack/react-query';
+import { useReadContract } from '../../../../shared/blockchain/hooks/use-read-contract';
+import { StETH } from '../../../../shared/blockchain/contracts';
+import { useLidoSDK } from '../../../../providers/lido-sdk';
 
 type Props = {
   token: Token | 'ETH' | 'unstETH';
@@ -28,13 +32,42 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
       onClick,
     } = props;
 
-    if (!amount) {
+    const { chainId } = useLidoSDK();
+
+    const readStEthContract = useReadContract(StETH);
+
+    const {
+      data: convertedStethLockedShares,
+      isLoading: isConvertStEthLockedSharesLoading,
+    } = useQuery({
+      queryKey: ['converted-steth-locked-shares', Number(amount), chainId],
+      queryFn: async (): Promise<bigint> => {
+        if (!readStEthContract) {
+          throw new Error('readStEthContract must be defined');
+        }
+
+        if (!amount) {
+          throw new Error('amount must be defined');
+        }
+
+        return await readStEthContract.readContract('getPooledEthByShares', [
+          amount,
+        ]);
+      },
+      enabled: !!readStEthContract && !!amount && amount > 0n,
+    });
+
+    if (!amount || isConvertStEthLockedSharesLoading) {
       return null;
     }
 
     return (
       <RevocableTokenItemStyled ref={ref} $disabled={isLocked}>
-        <TokenBalance token={token} balance={amount} addOnText={amountLabel} />
+        <TokenBalance
+          token={token}
+          balance={convertedStethLockedShares}
+          addOnText={amountLabel}
+        />
         {!!onClick && isLocked ? (
           <InQueueInfo>
             <>

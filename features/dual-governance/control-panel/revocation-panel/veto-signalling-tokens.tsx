@@ -15,25 +15,24 @@ import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useEscrowUnstethBalance } from '../../hooks/use-escrow-unsteth-balance';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { StETH } from 'shared/blockchain/contracts';
-import { useQuery } from '@tanstack/react-query';
+import { Address } from 'viem';
 
 type Props = {
-  vetoSignallingBalance: {
+  escrowBalance: {
     unstETHIdsCount: bigint;
     stETHLockedShares: bigint;
     unstETHLockedShares: bigint;
     lastAssetsLockTimestamp: number;
     totalLockedShares: bigint;
-    wstETHLockedShares: bigint;
   };
+  escrowAddress: Address;
   assetUnlockTimestamp: number | undefined;
   onConfirm: () => Promise<void>;
 };
 
 export const VetoSignallingTokens = ({
-  vetoSignallingBalance,
+  escrowBalance,
+  escrowAddress,
   assetUnlockTimestamp,
   onConfirm,
 }: Props) => {
@@ -41,16 +40,15 @@ export const VetoSignallingTokens = ({
   const {
     totalLockedShares,
     stETHLockedShares,
-    wstETHLockedShares,
     unstETHLockedShares,
     unstETHIdsCount,
-  } = vetoSignallingBalance;
+  } = escrowBalance;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupAnchorRef = useRef<HTMLDivElement>(null);
   const { openModal } = useSelectUnstethModal();
 
-  const { data } = useEscrowUnstethBalance();
+  const { data } = useEscrowUnstethBalance(escrowAddress);
 
   const { chainId } = useLidoSDK();
 
@@ -60,30 +58,6 @@ export const VetoSignallingTokens = ({
 
   const { timeFormatted: assetsLockCountdown, isFinished: isUnlockPossible } =
     useCountdown(assetUnlockTimestamp ?? 0);
-
-  const readStEthContract = useReadContract(StETH);
-
-  const {
-    data: convertedStethLockedShares,
-    isLoading: isConvertStEthLockedSharesLoading,
-  } = useQuery({
-    queryKey: ['converted-steth-locked-shares', chainId],
-    queryFn: async (): Promise<bigint> => {
-      if (!readStEthContract) {
-        throw new Error('readStEthContract must be defined');
-      }
-
-      if (!stETHLockedShares) {
-        throw new Error('stETHLockedShares must be defined');
-      }
-
-      return await readStEthContract.readContract('getPooledEthByShares', [
-        stETHLockedShares,
-      ]);
-    },
-    enabled:
-      !!readStEthContract && !!stETHLockedShares && stETHLockedShares > 0n,
-  });
 
   const handleRevokeTokens = useCallback(
     (token: Token) => async (selectedNftIds?: string[]) => {
@@ -103,8 +77,7 @@ export const VetoSignallingTokens = ({
       } else {
         setIsPopupOpen(false);
 
-        const amount =
-          token === Token.stETH ? stETHLockedShares : wstETHLockedShares;
+        const amount = stETHLockedShares;
         invariant(amount, 'Amount is not defined');
 
         await revokeTokens({
@@ -114,15 +87,10 @@ export const VetoSignallingTokens = ({
         });
       }
     },
-    [
-      revokeTokens,
-      stETHLockedShares,
-      vetoSignallingAddress,
-      wstETHLockedShares,
-    ],
+    [revokeTokens, stETHLockedShares, vetoSignallingAddress],
   );
 
-  if (!totalLockedShares || isConvertStEthLockedSharesLoading) {
+  if (!totalLockedShares) {
     return null;
   }
 
@@ -134,17 +102,19 @@ export const VetoSignallingTokens = ({
         anchorRef={popupAnchorRef}
         isOpen={isPopupOpen}
         stEthAmount={stETHLockedShares}
-        wstEthAmount={wstETHLockedShares}
         onClose={() => setIsPopupOpen(false)}
         onRevoke={handleRevokeTokens}
       />
       <Text>
-        Tokens in VetoSignalling{' '}
-        {vetoSignallingAddress ? (
+        Tokens in{' '}
+        {escrowAddress.toLowerCase() === vetoSignallingAddress?.toLowerCase()
+          ? 'VetoSignalling '
+          : 'RageQuit '}
+        {escrowAddress ? (
           <Link
             href={getEtherscanAddressLink(
               chainId, // chains mismatch between @lido-sdk & lido-ethereum-sdk
-              vetoSignallingAddress,
+              escrowAddress,
             )}
           >
             contract <ExternalLinkIcon />
@@ -157,13 +127,13 @@ export const VetoSignallingTokens = ({
         <RevocableTokenItem
           ref={popupAnchorRef}
           token={Token.stETH}
-          amount={convertedStethLockedShares}
+          amount={stETHLockedShares}
           onClick={() => setIsPopupOpen(true)}
           isLocked={isLocked || !isSupportedChain}
           unlockCountdown={assetsLockCountdown}
           actionLabel="Revoke"
         />
-        {data && (
+        {data && data.length > 0 && (
           <RevocableTokenItem
             token={Token.unstETH}
             amount={unstETHLockedShares}

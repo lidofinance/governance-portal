@@ -67,37 +67,47 @@ export const HeaderVaultInfo = () => {
               </Text>
             )}
           </VaultInfoPopupTitle>
-          {data?.vetoSignallingBalance.totalLockedShares ? (
+          {data?.vetoSignallingBalances?.length > 0 ? (
             <>
-              <VaultInfoSubtitle>
-                Tokens in VetoSignalling{' '}
-                {vetoSignallingAddress ? (
-                  <Link
-                    target="_blank"
-                    href={getEtherscanAddressLink(
-                      chainId,
-                      vetoSignallingAddress,
-                    )}
-                  >
-                    {'contract '}
-                    <ExternalLinkIcon />
-                  </Link>
-                ) : (
-                  'contract'
-                )}
-              </VaultInfoSubtitle>
-              <TokensList>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={data.vetoSignallingBalance.stETHLockedShares}
-                  showZeroBalance={false}
-                />
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={data.vetoSignallingBalance.unstETHLockedShares}
-                  showZeroBalance={false}
-                />
-              </TokensList>
+              {data.vetoSignallingBalances.map((balance) => {
+                const hasLockedShares = balance.totalLockedShares > 0n;
+
+                if (!hasLockedShares) return null;
+
+                return (
+                  <div key={balance.escrowAddress}>
+                    <VaultInfoSubtitle>
+                      Tokens in{' '}
+                      {balance.escrowAddress.toLowerCase() ===
+                      vetoSignallingAddress?.toLowerCase()
+                        ? 'VetoSignalling '
+                        : 'RageQuit '}
+                      <Link
+                        target="_blank"
+                        href={getEtherscanAddressLink(
+                          chainId,
+                          balance.escrowAddress,
+                        )}
+                      >
+                        {'contract '}
+                        <ExternalLinkIcon />
+                      </Link>
+                    </VaultInfoSubtitle>
+                    <TokensList>
+                      <TokenBalance
+                        token={Token.stETH}
+                        balance={balance.stETHLockedShares}
+                        showZeroBalance={false}
+                      />
+                      <TokenBalance
+                        token={Token.unstETH}
+                        balance={balance.unstETHLockedShares}
+                        showZeroBalance={false}
+                      />
+                    </TokensList>
+                  </div>
+                );
+              })}
             </>
           ) : null}
           {data.rageQuitsBalance.totalLockedShares ? (

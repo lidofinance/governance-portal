@@ -72,7 +72,11 @@ export const RageQuitTokens = ({
     data: convertedStethLockedShares,
     isLoading: isConvertStEthLockedSharesLoading,
   } = useQuery({
-    queryKey: ['converted-steth-locked-shares', chainId],
+    queryKey: [
+      'converted-steth-locked-shares',
+      Number(totalLockedShares),
+      chainId,
+    ],
     queryFn: async (): Promise<bigint> => {
       if (!readStEthContract) {
         throw new Error('readStEthContract must be defined');
