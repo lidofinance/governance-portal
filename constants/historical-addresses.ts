@@ -22,6 +22,7 @@ export const historicalAddresses = {
       '0xa354B2Ee274DEB2f69213f4f8f2c64BFb4c4ACB2',
       '0x32901A380aaE2Af7711E95aE097E5211b052fE28',
       '0xe580b21bD216aA7b641a3143F496f45360eC41ce',
+      '0x73Aad66701e49042982c5552Bd9D5990154b3e74',
     ],
   },
 };
