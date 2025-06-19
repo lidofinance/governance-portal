@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ExternalLinkIcon, VaultIcon } from 'shared/components/icons';
 import { StyledPopupMenu } from 'shared/styled-components';
@@ -29,6 +29,32 @@ export const HeaderVaultInfo = () => {
   const vaultInfoRef = useRef(null);
 
   const { data, isLoading } = useEscrowBalances();
+
+  // It's always 1 contract ATM
+  const vetoSignallingEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !data) {
+      return [];
+    }
+    return [
+      data.escrowBalances.find(
+        (escrowBalance) =>
+          escrowBalance.escrowAddress.toLowerCase() ===
+          vetoSignallingAddress.toLowerCase(),
+      ),
+    ];
+  }, [data, vetoSignallingAddress]);
+
+  const rageQuitEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !data) {
+      return [];
+    }
+
+    return data.escrowBalances.filter(
+      (escrowBalance) =>
+        escrowBalance.escrowAddress.toLowerCase() !==
+        vetoSignallingAddress.toLowerCase(),
+    );
+  }, [data, vetoSignallingAddress]);
 
   if (!isConnected) {
     return null;
@@ -67,85 +93,74 @@ export const HeaderVaultInfo = () => {
               </Text>
             )}
           </VaultInfoPopupTitle>
-          {data?.vetoSignallingBalances?.length > 0 ? (
-            <>
-              {data.vetoSignallingBalances.map((balance) => {
-                const hasLockedShares = balance.totalLockedShares > 0n;
-
-                if (!hasLockedShares) return null;
-
-                return (
-                  <div key={balance.escrowAddress}>
-                    <VaultInfoSubtitle>
-                      Tokens in{' '}
-                      {balance.escrowAddress.toLowerCase() ===
-                      vetoSignallingAddress?.toLowerCase()
-                        ? 'VetoSignalling '
-                        : 'RageQuit '}
-                      <Link
-                        target="_blank"
-                        href={getEtherscanAddressLink(
-                          chainId,
-                          balance.escrowAddress,
-                        )}
-                      >
-                        {'contract '}
-                        <ExternalLinkIcon />
-                      </Link>
-                    </VaultInfoSubtitle>
-                    <TokensList>
-                      <TokenBalance
-                        token={Token.stETH}
-                        balance={balance.stETHLockedShares}
-                        showZeroBalance={false}
-                      />
-                      <TokenBalance
-                        token={Token.unstETH}
-                        balance={balance.unstETHLockedShares}
-                        showZeroBalance={false}
-                      />
-                    </TokensList>
-                  </div>
-                );
-              })}
-            </>
-          ) : null}
-          {data.rageQuitsBalance.totalLockedShares ? (
-            <>
-              <VaultInfoSubtitle>
-                Tokens in RageQuit contract{' '}
-                {rageQuitAddress ? (
+          {vetoSignallingEscrows[0] &&
+            vetoSignallingEscrows[0].totalLockedShares > 0n && (
+              <>
+                <VaultInfoSubtitle>
+                  Tokens in VetoSignalling
                   <Link
                     target="_blank"
-                    href={getEtherscanAddressLink(chainId, rageQuitAddress)}
+                    href={getEtherscanAddressLink(
+                      chainId,
+                      vetoSignallingEscrows[0].escrowAddress,
+                    )}
                   >
                     {'contract '}
                     <ExternalLinkIcon />
                   </Link>
-                ) : (
-                  'contract'
-                )}
-              </VaultInfoSubtitle>
-              <TokensList>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={
-                    data.rageQuitsBalance
-                      .totalStETHLockedSharesInRageQuitEscrows
-                  }
-                  showZeroBalance={false}
-                />
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={
-                    data.rageQuitsBalance
-                      .totalUnstETHLockedSharesInRageQuitEscrows
-                  }
-                  showZeroBalance={false}
-                />
-              </TokensList>
-            </>
-          ) : null}
+                </VaultInfoSubtitle>
+                <TokensList>
+                  <TokenBalance
+                    token={Token.stETH}
+                    balance={vetoSignallingEscrows[0].stETHLockedShares}
+                    showZeroBalance={false}
+                  />
+                  <TokenBalance
+                    token={Token.unstETH}
+                    balance={vetoSignallingEscrows[0].unstETHLockedShares}
+                    showZeroBalance={false}
+                  />
+                </TokensList>
+              </>
+            )}
+          {rageQuitEscrows.length > 0 &&
+            rageQuitEscrows.map((escrowBalance) => (
+              <>
+                {escrowBalance.totalLockedShares > 0n ? (
+                  <>
+                    <VaultInfoSubtitle>
+                      Tokens in RageQuit contract{' '}
+                      {rageQuitAddress ? (
+                        <Link
+                          target="_blank"
+                          href={getEtherscanAddressLink(
+                            chainId,
+                            escrowBalance.escrowAddress,
+                          )}
+                        >
+                          {'contract '}
+                          <ExternalLinkIcon />
+                        </Link>
+                      ) : (
+                        'contract'
+                      )}
+                    </VaultInfoSubtitle>
+                    <TokensList>
+                      <TokenBalance
+                        token={Token.stETH}
+                        balance={escrowBalance.stETHLockedShares}
+                        showZeroBalance={false}
+                      />
+                      <TokenBalance
+                        token={Token.unstETH}
+                        balance={escrowBalance.unstETHLockedShares}
+                        showZeroBalance={false}
+                      />
+                    </TokensList>
+                  </>
+                ) : null}
+              </>
+            ))}
         </StyledPopupMenu>
       ) : null}
     </>

@@ -19,19 +19,14 @@ import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useQuery } from '@tanstack/react-query';
 import { StETH } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { RageQuitEscrowUnstETHRecord } from '../../hooks/use-rage-quit-escrow-balances';
-
-type RageQuitBalance = {
-  rageQuitEscrowAddress: Address;
-  totalStETHLockedShares?: bigint | undefined;
-  totalUnstETHLockedShares?: bigint | undefined;
-  unstETHRecords: readonly RageQuitEscrowUnstETHRecord[];
-  totalLockedShares: bigint;
-};
+import {
+  EscrowBalance,
+  RageQuitEscrowUnstETHRecord,
+} from '../../hooks/use-escrow-balances';
 
 type Props = {
   onConfirm: () => Promise<void>;
-  rageQuitBalance: RageQuitBalance;
+  escrowBalance: EscrowBalance;
   claimNFTs: (
     selectedNftIds: string[],
     escrowAddress: Address,
@@ -43,7 +38,7 @@ const sumUpUnstETHShares = (records: RageQuitEscrowUnstETHRecord[]) =>
   records.reduce((sum, record) => sum + record.shares, 0n);
 
 export const RageQuitTokens = ({
-  rageQuitBalance,
+  escrowBalance,
   onConfirm,
   claimNFTs,
   withdrawalQueueContract,
@@ -52,11 +47,11 @@ export const RageQuitTokens = ({
   const { chainId } = useLidoSDK();
 
   const {
-    totalStETHLockedShares,
+    stETHLockedShares,
     totalLockedShares,
-    unstETHRecords,
-    rageQuitEscrowAddress,
-  } = rageQuitBalance;
+    escrowAddress,
+    activeUnstethRecords,
+  } = escrowBalance;
 
   const [resolvedRecords, setResolvedRecords] = useState<
     RageQuitEscrowUnstETHRecord[]
@@ -82,29 +77,27 @@ export const RageQuitTokens = ({
         throw new Error('readStEthContract must be defined');
       }
 
-      if (!totalStETHLockedShares) {
+      if (!stETHLockedShares) {
         throw new Error('totalStETHLockedShares must be defined');
       }
 
       return await readStEthContract.readContract('getPooledEthByShares', [
-        totalStETHLockedShares,
+        stETHLockedShares,
       ]);
     },
     enabled:
-      !!readStEthContract &&
-      !!totalStETHLockedShares &&
-      totalStETHLockedShares > 0n,
+      !!readStEthContract && !!stETHLockedShares && totalLockedShares > 0n,
   });
 
   useEffect(() => {
-    if (unstETHRecords.length === 0) {
+    if (activeUnstethRecords.length === 0) {
       setResolvedRecords([]);
       return;
     }
     let cancelled = false;
     const fetchRecords = async () => {
       const records = await Promise.all(
-        unstETHRecords.map(async (record) => {
+        activeUnstethRecords.map(async (record) => {
           try {
             const nftStatus = await withdrawalQueueContract.readContract(
               'getWithdrawalStatus',
@@ -140,7 +133,7 @@ export const RageQuitTokens = ({
     return () => {
       cancelled = true;
     };
-  }, [unstETHRecords, withdrawalQueueContract, refreshTrigger]);
+  }, [activeUnstethRecords, withdrawalQueueContract, refreshTrigger]);
 
   const claimedUnstETHRecords = resolvedRecords.filter(
     (record) => record.status === UnstETHRecordStatus.Claimed,
@@ -186,15 +179,15 @@ export const RageQuitTokens = ({
 
   const handleWithdrawEth = useCallback(
     (token: 'ETH') => async () => {
-      invariant(totalStETHLockedShares, 'Amount is not defined');
+      invariant(stETHLockedShares, 'Amount is not defined');
 
       await withdrawEth({
-        amount: totalStETHLockedShares,
+        amount: stETHLockedShares,
         token,
-        escrowAddress: rageQuitEscrowAddress,
+        escrowAddress: escrowAddress,
       });
     },
-    [totalStETHLockedShares, withdrawEth, rageQuitEscrowAddress],
+    [stETHLockedShares, withdrawEth, escrowAddress],
   );
 
   const handleWithdrawUnstETH = useCallback(
@@ -205,14 +198,14 @@ export const RageQuitTokens = ({
           await withdrawEth({
             token,
             selectedNftIds,
-            escrowAddress: rageQuitEscrowAddress,
+            escrowAddress: escrowAddress,
           });
         },
         actionLabel: 'Withdraw',
         unstETHRecords: [...claimedUnstETHRecords],
       });
     },
-    [claimedUnstETHRecords, openModal, rageQuitEscrowAddress, withdrawEth],
+    [claimedUnstETHRecords, openModal, escrowAddress, withdrawEth],
   );
 
   const handleClaimNFTs = useCallback(
@@ -220,10 +213,7 @@ export const RageQuitTokens = ({
       openModal({
         onConfirm: async (selectedNftIds) => {
           invariant(selectedNftIds?.length, 'ids must be presented');
-          const success = await claimNFTs(
-            selectedNftIds,
-            rageQuitEscrowAddress,
-          );
+          const success = await claimNFTs(selectedNftIds, escrowAddress);
           if (success) {
             refreshNftStatus();
           }
@@ -236,7 +226,7 @@ export const RageQuitTokens = ({
       claimNFTs,
       claimableUnstETHRecords,
       openModal,
-      rageQuitEscrowAddress,
+      escrowAddress,
       refreshNftStatus,
     ],
   );
@@ -256,7 +246,8 @@ export const RageQuitTokens = ({
   if (
     !totalLockedShares ||
     isRageQuitDataLoading ||
-    isConvertStEthLockedSharesLoading
+    isConvertStEthLockedSharesLoading ||
+    (activeUnstethRecords.length === 0 && stETHLockedShares === 0n)
   ) {
     return null;
   }
@@ -266,13 +257,13 @@ export const RageQuitTokens = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Text>
           Tokens in RageQuit{' '}
-          <Link href={getEtherscanAddressLink(chainId, rageQuitEscrowAddress)}>
+          <Link href={getEtherscanAddressLink(chainId, escrowAddress)}>
             contract <ExternalLinkIcon />
           </Link>
         </Text>
       </Box>
       <RevocableTokensList>
-        {totalStETHLockedShares && (
+        {stETHLockedShares && (
           <RevocableTokenItem
             token={
               rageQuitDetails?.isRageQuitExtensionPeriodStarted

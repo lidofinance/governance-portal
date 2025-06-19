@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
-import { Address } from 'viem';
 
 import { NoTokensMessage, RevocableTokenItemStyled } from './style';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
@@ -24,7 +23,8 @@ export const RevocationPanel = () => {
     refetch: refetchDualGovernanceState,
   } = useDualGovernanceStateContext();
 
-  const { historicalEscrowAddresses } = useEscrowContext();
+  const { historicalEscrowAddresses, vetoSignallingAddress } =
+    useEscrowContext();
 
   const isSupportedChain = useIsSupportedChain();
   const {
@@ -46,6 +46,31 @@ export const RevocationPanel = () => {
   }, [refetchDualGovernanceState, refetchEscrowBalances]);
 
   const withdrawalQueueContract = useReadContract(WithdrawalQueue);
+
+  const vetoSignallingEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !escrowBalances) {
+      return [];
+    }
+    return [
+      escrowBalances.escrowBalances.find(
+        (escrowBalance) =>
+          escrowBalance.escrowAddress.toLowerCase() ===
+          vetoSignallingAddress.toLowerCase(),
+      ),
+    ];
+  }, [escrowBalances, vetoSignallingAddress]);
+
+  const rageQuitEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !escrowBalances) {
+      return [];
+    }
+
+    return escrowBalances.escrowBalances.filter(
+      (escrowBalance) =>
+        escrowBalance.escrowAddress.toLowerCase() !==
+        vetoSignallingAddress.toLowerCase(),
+    );
+  }, [escrowBalances, vetoSignallingAddress]);
 
   if (isLoading) {
     return <Loader />;
@@ -89,19 +114,6 @@ export const RevocationPanel = () => {
     );
   }
 
-  const rageQuitBalances = Object.keys(
-    escrowBalances.rageQuitsBalance.historicalBalances,
-  ) as Address[];
-
-  const mappedRageQuitBalances = rageQuitBalances
-    .map((rageQuitEscrowAddress) => ({
-      rageQuitEscrowAddress,
-      ...escrowBalances.rageQuitsBalance.historicalBalances[
-        rageQuitEscrowAddress
-      ],
-    }))
-    .filter((balanceRecord) => balanceRecord.totalLockedShares > 0);
-
   return (
     <>
       {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
@@ -131,19 +143,19 @@ export const RevocationPanel = () => {
           </RevocableTokenItemStyled>
         </Box>
       )}
-      {escrowBalances.vetoSignallingBalances.map((escrowBalance) => (
+      {vetoSignallingEscrows[0] && (
         <VetoSignallingTokens
-          key={escrowBalance.escrowAddress}
-          escrowAddress={escrowBalance.escrowAddress}
-          escrowBalance={escrowBalance}
+          key={vetoSignallingEscrows[0].escrowAddress}
+          escrowAddress={vetoSignallingEscrows[0].escrowAddress}
+          escrowBalance={vetoSignallingEscrows[0]}
           assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
           onConfirm={updateDualGovernanceState}
         />
-      ))}
-      {mappedRageQuitBalances.map((balanceRecord) => (
+      )}
+      {rageQuitEscrows.map((escrowBalance) => (
         <RageQuitTokens
-          key={balanceRecord.rageQuitEscrowAddress}
-          rageQuitBalance={balanceRecord}
+          key={`revoke-item-${escrowBalance.escrowAddress}`}
+          escrowBalance={escrowBalance}
           onConfirm={updateDualGovernanceState}
           claimNFTs={claimNFTs}
           withdrawalQueueContract={withdrawalQueueContract}

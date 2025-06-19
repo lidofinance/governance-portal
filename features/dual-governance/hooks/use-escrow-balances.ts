@@ -2,32 +2,41 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount, useWatchContractEvent } from 'wagmi';
 import { escrowAbi } from 'abi/ts';
-import {
-  useReadContract,
-  useReadContractGetter,
-} from 'shared/blockchain/hooks/use-read-contract';
+import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useState } from 'react';
-import { WstETH } from 'shared/blockchain/contracts';
 import { useEscrowContext } from 'providers/escrow';
-import { useRageQuitEscrowBalances } from './use-rage-quit-escrow-balances';
+import { Address } from 'viem';
+import { UnstETHRecordStatus } from '../types';
+
+export type RageQuitEscrowUnstETHRecord = {
+  id: bigint;
+  status: UnstETHRecordStatus;
+  lockedBy: `0x${string}`;
+  shares: bigint;
+  claimableAmount: bigint;
+};
+
+export type EscrowBalance = {
+  escrowAddress: Address;
+  stETHLockedShares: bigint;
+  unstETHLockedShares: bigint;
+  totalLockedShares: bigint;
+  lastAssetsLockTimestamp: number;
+  unstETHIdsCount: bigint;
+  activeUnstethRecords: RageQuitEscrowUnstETHRecord[];
+};
 
 export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
   const [loadingState, setLoadingState] = useState(true);
   const { chainId } = useLidoSDK();
-  const {
-    vetoSignallingAddress,
-    rageQuitAddress: currentRageQuitEscrowAddress,
-    historicalEscrowAddresses,
-  } = useEscrowContext();
+  const { vetoSignallingAddress, historicalEscrowAddresses } =
+    useEscrowContext();
 
   const readEscrowContract = useReadContractGetter(escrowAbi);
-  const readWstEthContract = useReadContract(WstETH);
 
   const isEnabled =
-    !!vetoSignallingAddress &&
-    !!currentRageQuitEscrowAddress &&
-    !!accountAddress;
+    !!accountAddress && !!readEscrowContract && !!vetoSignallingAddress;
 
   const queryClient = useQueryClient();
 
@@ -57,69 +66,84 @@ export const useEscrowBalances = () => {
     },
   });
 
-  const {
-    data: computedRageQuitEscrowsBalances,
-    isLoading: isRageQuitLoading,
-  } = useRageQuitEscrowBalances({
-    historicalEscrowAddresses,
-    vetoSignallingAddress,
-    accountAddress,
-    enabled: isEnabled,
-  });
-
   return useQuery({
     queryKey: [
       'escrow-balances',
-      chainId,
       accountAddress,
       vetoSignallingAddress,
-      currentRageQuitEscrowAddress,
       historicalEscrowAddresses,
+      chainId,
     ],
     staleTime: 5000, // 5 seconds stale time
     enabled: isEnabled,
     queryFn: async () => {
-      if (!isEnabled) {
-        return null;
+      if (!isEnabled || !vetoSignallingAddress) {
+        return {
+          escrowBalances: [],
+          totalLockedSharesInEscrows: 0n,
+          assetUnlockTimestamp: 0,
+          isLoading: false,
+        };
       }
 
       const readVetoSignallingContract = readEscrowContract(
         vetoSignallingAddress,
       );
 
-      const minAssetLockDuration = await readVetoSignallingContract(
+      const minAssetsLockDuration = await readVetoSignallingContract(
         'getMinAssetsLockDuration',
       );
 
-      const vetoSignallingBalance = await readVetoSignallingContract(
-        'getVetoerDetails',
-        [accountAddress],
-      );
+      // Collect all escrow addresses to process (current veto signalling + historical)
+      const allEscrowAddresses: Address[] = [];
 
-      const vetoSignallingBalances = [
-        {
-          escrowAddress: vetoSignallingAddress,
-          ...vetoSignallingBalance,
-          totalLockedShares:
-            vetoSignallingBalance.stETHLockedShares +
-            vetoSignallingBalance.unstETHLockedShares,
-          unstETHIdsCount: vetoSignallingBalance.unstETHIdsCount || 0n,
-        },
-      ];
+      if (vetoSignallingAddress) {
+        allEscrowAddresses.push(vetoSignallingAddress);
+      }
 
-      const historicalVetoerDetailsWithAddresses = await Promise.all(
-        (historicalEscrowAddresses || []).map(async (address) => {
+      if (historicalEscrowAddresses && historicalEscrowAddresses.length > 0) {
+        allEscrowAddresses.push(...historicalEscrowAddresses);
+      }
+
+      // Process all escrow addresses in a single batch
+      const escrowBalances = await Promise.all(
+        allEscrowAddresses.map(async (address) => {
           try {
             const escrowContract = readEscrowContract(address);
             const details = await escrowContract('getVetoerDetails', [
               accountAddress,
             ]);
+
+            const unstETHIds = await escrowContract('getVetoerUnstETHIds', [
+              accountAddress,
+            ]);
+
+            let unstETHDetails: readonly any[] = [];
+            if (Array.isArray(unstETHIds) && unstETHIds.length > 0) {
+              unstETHDetails = await escrowContract('getLockedUnstETHDetails', [
+                unstETHIds,
+              ]);
+            }
+
+            // Filter out withdrawn records
+            const activeUnstethRecords = Array.isArray(unstETHDetails)
+              ? unstETHDetails.filter(
+                  (record) =>
+                    record && record.status !== UnstETHRecordStatus.Withdrawn,
+                )
+              : [];
+
             return {
               escrowAddress: address,
               ...details,
               totalLockedShares:
-                details.stETHLockedShares + details.unstETHLockedShares,
+                details.stETHLockedShares +
+                activeUnstethRecords.reduce(
+                  (sum, record) => sum + record.shares,
+                  0n,
+                ),
               unstETHIdsCount: details.unstETHIdsCount || 0n,
+              activeUnstethRecords,
             };
           } catch (error) {
             console.warn(`Error getting vetoer details for ${address}:`, error);
@@ -130,69 +154,37 @@ export const useEscrowBalances = () => {
               totalLockedShares: 0n,
               lastAssetsLockTimestamp: 0,
               unstETHIdsCount: 0n,
+              activeUnstethRecords: [],
             };
           }
         }),
       );
 
-      vetoSignallingBalances.push(...historicalVetoerDetailsWithAddresses);
-
-      const vetoSignallingSum = vetoSignallingBalances.reduce(
-        (sum, balance) => sum + balance.totalLockedShares,
+      const escrowSum = escrowBalances.reduce(
+        (sum: bigint, balance) => sum + balance.totalLockedShares,
         0n,
       );
 
       setLoadingState(false);
 
-      // Calculate wstETHLockedShares for the main veto signaling balance
-      const mainVetoBalance = vetoSignallingBalances.find(
-        (balance) => balance.escrowAddress === vetoSignallingAddress,
+      const currentVetoSignallingEscrowBalance = escrowBalances.find(
+        (balance) =>
+          balance.escrowAddress.toLowerCase() ===
+          vetoSignallingAddress.toLowerCase(),
       );
 
-      const wstETHLockedShares = mainVetoBalance
-        ? await readWstEthContract.readContract('getStETHByWstETH', [
-            mainVetoBalance.stETHLockedShares,
-          ])
-        : 0n;
-
-      const totalStETHLockedSharesInRageQuitEscrows =
-        computedRageQuitEscrowsBalances
-          ? Object.values(computedRageQuitEscrowsBalances).reduce(
-              (sum, balance) => sum + balance.totalStETHLockedShares,
-              0n,
-            )
-          : 0n;
-
-      const totalUnstETHLockedSharesInRageQuitEscrows =
-        computedRageQuitEscrowsBalances
-          ? Object.values(computedRageQuitEscrowsBalances).reduce(
-              (sum, balance) => sum + balance.totalUnstETHLockedShares,
-              0n,
-            )
-          : 0n;
-      const totalLockedSharesInRageQuitEscrows =
-        totalStETHLockedSharesInRageQuitEscrows +
-        totalUnstETHLockedSharesInRageQuitEscrows;
-
       const assetUnlockTimestamp =
-        mainVetoBalance && mainVetoBalance.lastAssetsLockTimestamp
-          ? Number(mainVetoBalance.lastAssetsLockTimestamp) +
-            Number(minAssetLockDuration)
+        currentVetoSignallingEscrowBalance &&
+        currentVetoSignallingEscrowBalance.lastAssetsLockTimestamp
+          ? Number(currentVetoSignallingEscrowBalance.lastAssetsLockTimestamp) +
+            Number(minAssetsLockDuration)
           : 0;
 
       return {
-        vetoSignallingBalances,
-        wstETHLockedShares,
-        rageQuitsBalance: {
-          totalLockedShares: totalLockedSharesInRageQuitEscrows,
-          historicalBalances: computedRageQuitEscrowsBalances || {},
-          totalStETHLockedSharesInRageQuitEscrows,
-          totalUnstETHLockedSharesInRageQuitEscrows,
-        },
-        totalLockedSharesInEscrows:
-          vetoSignallingSum + totalLockedSharesInRageQuitEscrows,
+        escrowBalances,
+        totalLockedSharesInEscrows: escrowSum,
         assetUnlockTimestamp,
-        isLoading: loadingState || isRageQuitLoading,
+        isLoading: loadingState,
       };
     },
   });
