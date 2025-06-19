@@ -42,8 +42,15 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         txModalStages.pending(args, txHash);
 
-        await waitForTx(txHash);
+        const response = await waitForTx(txHash);
 
+        if (response.status === 'reverted') {
+          txModalStages.failed(
+            new Error('Failed to revoke, please, try again.'),
+            onRetry,
+          );
+          return false;
+        }
         txModalStages.success(args, txHash);
 
         await refetchAll();

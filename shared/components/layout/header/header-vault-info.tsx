@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ExternalLinkIcon, VaultIcon } from 'shared/components/icons';
 import { StyledPopupMenu } from 'shared/styled-components';
@@ -125,7 +125,7 @@ export const HeaderVaultInfo = () => {
             )}
           {rageQuitEscrows.length > 0 &&
             rageQuitEscrows.map((escrowBalance) => (
-              <>
+              <Fragment key={escrowBalance.escrowAddress}>
                 {escrowBalance.totalLockedShares > 0n ? (
                   <>
                     <VaultInfoSubtitle>
@@ -159,7 +159,7 @@ export const HeaderVaultInfo = () => {
                     </TokensList>
                   </>
                 ) : null}
-              </>
+              </Fragment>
             ))}
         </StyledPopupMenu>
       ) : null}

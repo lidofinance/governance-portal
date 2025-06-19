@@ -41,7 +41,12 @@ export const useExecuteProposalAction = ({
           return true;
         }
 
-        await waitForTx(txHash);
+        const response = await waitForTx(txHash);
+
+        if (response.status === 'reverted') {
+          txModalStages.failureStage();
+          return false;
+        }
 
         await onConfirm();
 
