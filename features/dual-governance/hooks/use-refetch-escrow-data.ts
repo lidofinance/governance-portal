@@ -18,12 +18,43 @@ export const useRefetchEscrowData = () => {
 
   const refetchAll = async () => {
     invalidateEscrowQueries();
+
     await queryClient.invalidateQueries({
-      queryKey: ESCROW_QUERY_KEYS.escrowBalances,
+      queryKey: ['escrow-balances'],
+      refetchType: 'all',
     });
 
-    await refetchDualGovernanceState();
-    await refetchEscrowData();
+    await queryClient.invalidateQueries({
+      queryKey: ['unsteth-balance'],
+      refetchType: 'all',
+    });
+
+    await queryClient.invalidateQueries({
+      queryKey: ['token-balance'],
+      refetchType: 'all',
+    });
+
+    await queryClient.invalidateQueries({
+      queryKey: ESCROW_QUERY_KEYS.escrowBalances,
+      refetchType: 'all',
+    });
+
+    await Promise.all([
+      refetchDualGovernanceState(),
+      refetchEscrowData(),
+      queryClient.refetchQueries({
+        queryKey: ['escrow-balances'],
+        type: 'all',
+      }),
+      queryClient.refetchQueries({
+        queryKey: ['unsteth-balance'],
+        type: 'all',
+      }),
+      queryClient.refetchQueries({
+        queryKey: ['token-balance'],
+        type: 'all',
+      }),
+    ]);
   };
 
   return {

@@ -5,6 +5,8 @@ export const SummaryRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
 `;
 
 export const TokenSelectStyled = styled.div`
@@ -22,6 +24,8 @@ export const TokenSelectStyled = styled.div`
     }
   }
 `;
+
+export const TokenSelectLabel = styled.label``;
 
 export const SupportFormAdditionalInfoStyled = styled.div`
   margin-top: 20px;

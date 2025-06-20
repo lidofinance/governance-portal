@@ -31,6 +31,8 @@ export const DualGovernanceControlPanel = () => {
   useEffect(() => {
     if (data && data.totalLockedSharesInEscrows !== 0n) {
       setIsPreviewVisible(false);
+    } else {
+      setIsPreviewVisible(true);
     }
   }, [data]);
 

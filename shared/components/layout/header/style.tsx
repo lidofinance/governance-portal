@@ -22,6 +22,9 @@ export const HeaderActionsWrapper = styled.div`
   align-items: center;
   flex-shrink: 1;
   gap: 20px;
+  @media ${devicesHeaderMedia.mobile} {
+    gap: 10px;
+  }
 `;
 
 export const LogoTextStyle = styled(Text).attrs({
@@ -44,7 +47,7 @@ export const LogoTextStyle = styled(Text).attrs({
     left: 0;
     top: -25%;
   }
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
     display: none;
   }
 `;
@@ -57,6 +60,7 @@ export const LogoTextStyleMobile = styled(Text).attrs({
   position: relative;
   margin-left: 20px;
   padding-left: 20px;
+  margin-right: 10px;
     
   &:before {
       position: absolute;
@@ -67,7 +71,7 @@ export const LogoTextStyleMobile = styled(Text).attrs({
       left: 0;
       top: -25%;
   }
-  @media ${devicesHeaderMedia.mobile} {
+  @media ${devicesHeaderMedia.tablet} {
       display: block;
   }
 }`;

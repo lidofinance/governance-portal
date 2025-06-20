@@ -15,14 +15,11 @@ import Link from 'next/link';
 import { config } from 'config';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { Address } from 'viem';
-import { useChainId } from 'wagmi';
-import { syncAddressesWithServer } from 'utils/dynamic-addresses';
 
 const INITIAL_DISPLAY_LIMIT = 4;
 
 export const ProposalsList = () => {
   const [initialLoading, setInitialLoading] = useState(true);
-  const chainId = useChainId();
 
   const { combinedData, isFetching, activeProposals, votes } =
     useDualGovernanceProposalsContext();
@@ -34,7 +31,7 @@ export const ProposalsList = () => {
   };
 
   const itemsToDisplay = useMemo(() => {
-    const activeItems = [...activeProposals, ...votes];
+    const activeItems = activeProposals;
 
     const completedProposals = combinedData.filter((item) => {
       const inActiveProposals = activeProposals.some((ap) => {
@@ -90,27 +87,20 @@ export const ProposalsList = () => {
           <ProposalsListItem
             id={dataItem.proposalId}
             description={dataItem.DGEvent?.args.metadata || ''}
-            calls={dataItem.EPTEvent?.args?.calls}
+            calls={dataItem.proposalDetails.calls}
             proposalDetails={dataItem.proposalDetails}
             proposer={dataItem.DGEvent?.args.proposerAccount as Address}
           />
         </Link>
       );
     });
-  }, [activeProposals, votes, combinedData, showAll]);
+  }, [activeProposals, combinedData, showAll, votes]);
 
   useEffect(() => {
     if (initialLoading && !isFetching && combinedData) {
       setInitialLoading(false);
     }
   }, [combinedData, initialLoading, isFetching]);
-
-  // Sync governance addresses with server when the proposals list loads
-  useEffect(() => {
-    syncAddressesWithServer(chainId).catch((error) => {
-      console.error('Failed to sync governance addresses with server:', error);
-    });
-  }, [chainId]);
 
   return (
     <>

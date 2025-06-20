@@ -25,9 +25,12 @@ export const selfOrigin =
 // Fix in the build time (build time don't have env vars)
 
 /** @type string */
-// export const researchOrigin = process.env.RESEARCH_ORIGIN || 'https://research.lido.fi';
 export const voteOrigin =
   process.env.VOTE_ORIGIN || 'https://vote-hoodi.testnet.fi';
+// Fix in the build time (build time don't have env vars)
+
+/** @type string */
+export const stakeOrigin = process.env.STAKE_ORIGIN || 'https://stake.lido.fi';
 // Fix in the build time (build time don't have env vars)
 
 // Parse supported chains from environment or use defaults

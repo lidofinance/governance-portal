@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
 import Link from 'next/link';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const ProposalContainer = styled(Block)`
   color: var(--primary-color-black);
@@ -11,12 +12,19 @@ export const ProposalHeader = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 30px;
+  @media ${devicesHeaderMedia.mobile} {
+    gap: 10px;
+  }
 `;
 
 export const ProposalName = styled.div`
   margin-top: 30px;
   font-size: 76px;
   line-height: 1;
+
+  @media ${devicesHeaderMedia.mobile} {
+    font-size: 36px;
+  }
 `;
 
 export const ProposalStateLogWrapper = styled.section`
@@ -30,6 +38,7 @@ export const ProposalStateLogWrapper = styled.section`
 export const SubmitDate = styled(Text)`
   font-size: 17px;
   color: var(--primary-color-black-50);
+  line-height: 1.5;
 
   &:before {
     content: '\\2022';

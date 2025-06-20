@@ -1,8 +1,11 @@
-import { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
-import { Address } from 'viem';
 
-import { NoTokensMessage, RevocableTokenItemStyled } from './style';
+import {
+  ClaimNftText,
+  NoTokensMessage,
+  RevocableTokenItemStyled,
+} from './style';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { Text } from 'shared/components/text';
 import { VetoSignallingTokens } from './veto-signalling-tokens';
@@ -24,7 +27,8 @@ export const RevocationPanel = () => {
     refetch: refetchDualGovernanceState,
   } = useDualGovernanceStateContext();
 
-  const { historicalEscrowAddresses } = useEscrowContext();
+  const { historicalEscrowAddresses, vetoSignallingAddress } =
+    useEscrowContext();
 
   const isSupportedChain = useIsSupportedChain();
   const {
@@ -47,13 +51,38 @@ export const RevocationPanel = () => {
 
   const withdrawalQueueContract = useReadContract(WithdrawalQueue);
 
+  const vetoSignallingEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !escrowBalances) {
+      return [];
+    }
+    return [
+      escrowBalances.escrowBalances.find(
+        (escrowBalance) =>
+          escrowBalance.escrowAddress.toLowerCase() ===
+          vetoSignallingAddress.toLowerCase(),
+      ),
+    ];
+  }, [escrowBalances, vetoSignallingAddress]);
+
+  const rageQuitEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !escrowBalances) {
+      return [];
+    }
+
+    return escrowBalances.escrowBalances.filter(
+      (escrowBalance) =>
+        escrowBalance.escrowAddress.toLowerCase() !==
+        vetoSignallingAddress.toLowerCase(),
+    );
+  }, [escrowBalances, vetoSignallingAddress]);
+
   if (isLoading) {
     return <Loader />;
   }
   if (!escrowBalances || escrowBalances.totalLockedSharesInEscrows === 0n) {
     return (
       <>
-        {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
+        {historicalEscrowAddresses && historicalEscrowAddresses.length > 1 && (
           <Box marginBottom="20px">
             <RevocableTokenItemStyled>
               <FlexWrapper
@@ -61,9 +90,7 @@ export const RevocationPanel = () => {
                 $justifyContent="space-between"
                 $width="100%"
               >
-                <Text size={22} weight={600}>
-                  Claim Non-Owned NFT by ID
-                </Text>
+                <ClaimNftText>Claim Non-Owned NFT by ID</ClaimNftText>
                 <Button
                   onClick={() =>
                     openCustomNftModal({
@@ -89,22 +116,9 @@ export const RevocationPanel = () => {
     );
   }
 
-  const rageQuitBalances = Object.keys(
-    escrowBalances.rageQuitsBalance.historicalBalances,
-  ) as Address[];
-
-  const mappedRageQuitBalances = rageQuitBalances
-    .map((rageQuitEscrowAddress) => ({
-      rageQuitEscrowAddress,
-      ...escrowBalances.rageQuitsBalance.historicalBalances[
-        rageQuitEscrowAddress
-      ],
-    }))
-    .filter((balanceRecord) => balanceRecord.totalLockedShares > 0);
-
   return (
     <>
-      {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
+      {historicalEscrowAddresses && historicalEscrowAddresses.length > 1 && (
         <Box marginBottom="20px">
           <RevocableTokenItemStyled>
             <FlexWrapper
@@ -112,9 +126,7 @@ export const RevocationPanel = () => {
               $justifyContent="space-between"
               $width="100%"
             >
-              <Text size={22} weight={600}>
-                Claim Non-Owned NFT by ID
-              </Text>
+              <ClaimNftText>Claim Non-Owned NFT by ID</ClaimNftText>
               <Button
                 onClick={() =>
                   openCustomNftModal({
@@ -131,15 +143,19 @@ export const RevocationPanel = () => {
           </RevocableTokenItemStyled>
         </Box>
       )}
-      <VetoSignallingTokens
-        vetoSignallingBalance={escrowBalances.vetoSignallingBalance}
-        assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
-        onConfirm={updateDualGovernanceState}
-      />
-      {mappedRageQuitBalances.map((balanceRecord) => (
+      {vetoSignallingEscrows[0] && (
+        <VetoSignallingTokens
+          key={vetoSignallingEscrows[0].escrowAddress}
+          escrowAddress={vetoSignallingEscrows[0].escrowAddress}
+          escrowBalance={vetoSignallingEscrows[0]}
+          assetUnlockTimestamp={escrowBalances.assetUnlockTimestamp}
+          onConfirm={updateDualGovernanceState}
+        />
+      )}
+      {rageQuitEscrows.map((escrowBalance) => (
         <RageQuitTokens
-          key={balanceRecord.rageQuitEscrowAddress}
-          rageQuitBalance={balanceRecord}
+          key={`revoke-item-${escrowBalance.escrowAddress}`}
+          escrowBalance={escrowBalance}
           onConfirm={updateDualGovernanceState}
           claimNFTs={claimNFTs}
           withdrawalQueueContract={withdrawalQueueContract}

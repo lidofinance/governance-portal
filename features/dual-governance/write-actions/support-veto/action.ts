@@ -107,7 +107,15 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
 
         txModalStages.pending(actionArgs, txHash);
 
-        await waitForTx(txHash);
+        const response = await waitForTx(txHash);
+
+        if (response.status === 'reverted') {
+          txModalStages.failed(
+            new Error('Failed to support, please, try again.'),
+            onRetry,
+          );
+          return false;
+        }
 
         txModalStages.success(actionArgs, txHash);
 

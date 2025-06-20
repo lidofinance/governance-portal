@@ -16,6 +16,7 @@ export const ControlPanelWrapper = styled.div`
     width: 100%;
     border-top-right-radius: 0;
     border-bottom-left-radius: inherit;
+    padding: 20px;
   }
 `;
 
@@ -24,6 +25,8 @@ export const ControlPanelHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 26px;
+  flex-wrap: wrap;
+  gap: 20px;
 
   & > div:first-child {
     display: flex;

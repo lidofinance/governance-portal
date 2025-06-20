@@ -21,7 +21,7 @@ import {
   Voting,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
-import { getDynamicAddresses } from 'utils/dynamic-addresses';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 
 const allowedLogContracts = (chainId: CHAINS) => {
   const hardcodedAddresses = [
@@ -31,10 +31,19 @@ const allowedLogContracts = (chainId: CHAINS) => {
     Voting[chainId],
   ].filter((address): address is Address => address !== undefined);
 
-  // Add all dynamic addresses (governance, escrow, etc.)
-  const dynamicAddresses = getDynamicAddresses(chainId);
+  const historicalGovernanceAddresses: Address[] =
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
+      ?.governanceAddresses as Address[] | undefined) || [];
 
-  return [...hardcodedAddresses, ...dynamicAddresses];
+  const historicalEscrowAddresses: Address[] =
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
+      ?.escrowAddresses as Address[] | undefined) || [];
+
+  return [
+    ...hardcodedAddresses,
+    ...historicalGovernanceAddresses,
+    ...historicalEscrowAddresses,
+  ];
 };
 
 const allowedLogsAddresses = config.supportedChains.reduce(

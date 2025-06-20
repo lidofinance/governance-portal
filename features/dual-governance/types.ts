@@ -119,7 +119,7 @@ export type UseEventWatcherConfig<T> = {
   ) => Promise<QueryObserverResult<T | undefined, Error>>;
 };
 
-export type EscrowActionArgs =
+export type EscrowActionArgs = (
   | {
       token: 'Withdrawal NFT';
       selectedNftIds: string[];
@@ -129,7 +129,10 @@ export type EscrowActionArgs =
       token: 'stETH' | 'wstETH';
       amount: bigint;
       escrowAddress: Address;
-    };
+    }
+) & {
+  showStakeLink?: boolean;
+};
 
 export type EscrowActionWithEthArgs =
   | EscrowActionArgs

@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { escrowAbi } from 'abi/ts';
-import { useEscrowContext } from 'providers/escrow';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
 import {
@@ -8,45 +7,35 @@ import {
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
 import { useAccount } from 'wagmi';
+import { Address } from 'viem';
 
-// type UnstEth = {
-//   amountOfStETH: bigint;
-//   amountOfShares: bigint;
-//   owner: `0x${string}`;
-//   timestamp: bigint;
-//   isFinalized: boolean;
-//   isClaimed: boolean;
-// };
-
-// const getUnstEthStatus = (unstEth: UnstEth) => {
-//   if (unstEth.isFinalized) {
-//     return 'Finalized';
-//   }
-//   if (unstEth.isClaimed) {
-//     return 'Claimed';
-//   }
-//   return 'Not finalized';
-// };
-
-export const useEscrowUnstethBalance = () => {
+export const useEscrowUnstethBalance = (escrowAddress: Address) => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
-  const { vetoSignallingAddress } = useEscrowContext();
   const readEscrowContract = useReadContractGetter(escrowAbi);
   const withdrawalQueue = useReadContract(WithdrawalQueue);
 
-  const isEnabled = !!vetoSignallingAddress && !!address;
+  const isEnabled = !!escrowAddress && !!address;
 
   return useQuery({
-    queryKey: ['locked-unsteth-data', chainId, address],
+    queryKey: [
+      'locked-unsteth-data',
+      chainId,
+      escrowAddress,
+      address?.toString(),
+    ],
     enabled: isEnabled,
     queryFn: async () => {
       if (!isEnabled) return;
 
-      const unstethIds = await readEscrowContract(vetoSignallingAddress)(
+      const unstethIds = await readEscrowContract(escrowAddress)(
         'getVetoerUnstETHIds',
         [address],
       );
+
+      if (!unstethIds || unstethIds.length === 0) {
+        return [];
+      }
 
       const withdrawalRequests = await withdrawalQueue.readContract(
         'getWithdrawalStatus',

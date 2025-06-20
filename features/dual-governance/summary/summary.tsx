@@ -28,6 +28,8 @@ const DualGovernanceSummaryWrapper = styled.div`
     border-right: none;
 
     border-bottom: 1px solid var(--border-color-fog);
+
+    padding: 20px;
   }
 `;
 

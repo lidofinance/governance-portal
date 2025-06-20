@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ExternalLinkIcon, VaultIcon } from 'shared/components/icons';
 import { StyledPopupMenu } from 'shared/styled-components';
@@ -29,6 +29,32 @@ export const HeaderVaultInfo = () => {
   const vaultInfoRef = useRef(null);
 
   const { data, isLoading } = useEscrowBalances();
+
+  // It's always 1 contract ATM
+  const vetoSignallingEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !data) {
+      return [];
+    }
+    return [
+      data.escrowBalances.find(
+        (escrowBalance) =>
+          escrowBalance.escrowAddress.toLowerCase() ===
+          vetoSignallingAddress.toLowerCase(),
+      ),
+    ];
+  }, [data, vetoSignallingAddress]);
+
+  const rageQuitEscrows = useMemo(() => {
+    if (!vetoSignallingAddress || !data) {
+      return [];
+    }
+
+    return data.escrowBalances.filter(
+      (escrowBalance) =>
+        escrowBalance.escrowAddress.toLowerCase() !==
+        vetoSignallingAddress.toLowerCase(),
+    );
+  }, [data, vetoSignallingAddress]);
 
   if (!isConnected) {
     return null;
@@ -67,75 +93,74 @@ export const HeaderVaultInfo = () => {
               </Text>
             )}
           </VaultInfoPopupTitle>
-          {data?.vetoSignallingBalance.totalLockedShares ? (
-            <>
-              <VaultInfoSubtitle>
-                Tokens in VetoSignalling{' '}
-                {vetoSignallingAddress ? (
+          {vetoSignallingEscrows[0] &&
+            vetoSignallingEscrows[0].totalLockedShares > 0n && (
+              <>
+                <VaultInfoSubtitle>
+                  Tokens in VetoSignalling
                   <Link
                     target="_blank"
                     href={getEtherscanAddressLink(
                       chainId,
-                      vetoSignallingAddress,
+                      vetoSignallingEscrows[0].escrowAddress,
                     )}
                   >
                     {'contract '}
                     <ExternalLinkIcon />
                   </Link>
-                ) : (
-                  'contract'
-                )}
-              </VaultInfoSubtitle>
-              <TokensList>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={data.vetoSignallingBalance.stETHLockedShares}
-                  showZeroBalance={false}
-                />
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={data.vetoSignallingBalance.unstETHLockedShares}
-                  showZeroBalance={false}
-                />
-              </TokensList>
-            </>
-          ) : null}
-          {data.rageQuitsBalance.totalLockedShares ? (
-            <>
-              <VaultInfoSubtitle>
-                Tokens in RageQuit contract{' '}
-                {rageQuitAddress ? (
-                  <Link
-                    target="_blank"
-                    href={getEtherscanAddressLink(chainId, rageQuitAddress)}
-                  >
-                    {'contract '}
-                    <ExternalLinkIcon />
-                  </Link>
-                ) : (
-                  'contract'
-                )}
-              </VaultInfoSubtitle>
-              <TokensList>
-                <TokenBalance
-                  token={Token.stETH}
-                  balance={
-                    data.rageQuitsBalance
-                      .totalStETHLockedSharesInRageQuitEscrows
-                  }
-                  showZeroBalance={false}
-                />
-                <TokenBalance
-                  token={Token.unstETH}
-                  balance={
-                    data.rageQuitsBalance
-                      .totalUnstETHLockedSharesInRageQuitEscrows
-                  }
-                  showZeroBalance={false}
-                />
-              </TokensList>
-            </>
-          ) : null}
+                </VaultInfoSubtitle>
+                <TokensList>
+                  <TokenBalance
+                    token={Token.stETH}
+                    balance={vetoSignallingEscrows[0].stETHLockedShares}
+                    showZeroBalance={false}
+                  />
+                  <TokenBalance
+                    token={Token.unstETH}
+                    balance={vetoSignallingEscrows[0].unstETHLockedShares}
+                    showZeroBalance={false}
+                  />
+                </TokensList>
+              </>
+            )}
+          {rageQuitEscrows.length > 0 &&
+            rageQuitEscrows.map((escrowBalance) => (
+              <Fragment key={escrowBalance.escrowAddress}>
+                {escrowBalance.totalLockedShares > 0n ? (
+                  <>
+                    <VaultInfoSubtitle>
+                      Tokens in RageQuit contract{' '}
+                      {rageQuitAddress ? (
+                        <Link
+                          target="_blank"
+                          href={getEtherscanAddressLink(
+                            chainId,
+                            escrowBalance.escrowAddress,
+                          )}
+                        >
+                          {'contract '}
+                          <ExternalLinkIcon />
+                        </Link>
+                      ) : (
+                        'contract'
+                      )}
+                    </VaultInfoSubtitle>
+                    <TokensList>
+                      <TokenBalance
+                        token={Token.stETH}
+                        balance={escrowBalance.stETHLockedShares}
+                        showZeroBalance={false}
+                      />
+                      <TokenBalance
+                        token={Token.unstETH}
+                        balance={escrowBalance.unstETHLockedShares}
+                        showZeroBalance={false}
+                      />
+                    </TokensList>
+                  </>
+                ) : null}
+              </Fragment>
+            ))}
         </StyledPopupMenu>
       ) : null}
     </>

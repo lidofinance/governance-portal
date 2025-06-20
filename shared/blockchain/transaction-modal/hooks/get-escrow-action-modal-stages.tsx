@@ -8,6 +8,7 @@ import { TransactionModalTransitStage } from './use-transaction-modal-stage';
 import { TxStageSignOperationAmount } from '../tx-stages-composed/tx-stage-amount-operation';
 import { SuccessText } from '../tx-stages-parts/success-text';
 import { TxStageSuccess } from '../tx-stages-basic';
+import { Token } from 'shared/blockchain/types';
 
 export const getEscrowActionModalStages = (
   operationText: string,
@@ -30,8 +31,12 @@ export const getEscrowActionModalStages = (
           {...args}
         />,
       ),
-    success: (args: EscrowActionWithEthArgs, txHash?: string) =>
-      transitStage(
+    success: (args: EscrowActionWithEthArgs, txHash?: string) => {
+      // Show stake link only when revoking unstETH tokens
+      const showStakeLink =
+        args.token === Token.unstETH && operationText === 'revoking';
+
+      return transitStage(
         <TxStageSuccess
           txHash={txHash}
           title={successText}
@@ -40,10 +45,12 @@ export const getEscrowActionModalStages = (
           amount={isTokenAmountArgs(args) ? args.amount : null}
           nftIds={isWithdrawalNFTArgs(args) ? args.selectedNftIds : null}
           token={args.token}
+          showStakeLink={showStakeLink}
         />,
         {
           isClosableOnLedger: true,
         },
-      ),
+      );
+    },
   });
 };

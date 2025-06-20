@@ -28,6 +28,7 @@ export const CACHE_CONTROL_PAGES = [
   '/favicon:size*',
   '/public/runtime/window-env.js',
   '/proposals/:id',
+  '/500',
 ];
 export const CACHE_CONTROL_VALUE =
   'public, max-age=15, s-max-age=30, stale-if-error=604800, stale-while-revalidate=172800';

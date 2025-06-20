@@ -10,7 +10,6 @@ import { useRevokeTokensTxSender } from './tx-sender';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
-import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
@@ -18,17 +17,16 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { txModalStages } = useRevokeTokensModalStages();
   const sendRevokeTx = useRevokeTokensTxSender();
   const waitForTx = useTxConfirmation();
-  const { isAssetManagementLocked } = useDualGovernanceStateContext();
   const { refetchAll } = useRefetchEscrowData();
 
   return useCallback(
     async (args: EscrowActionArgs) => {
       try {
         invariant(address, 'address must be presented');
-        invariant(
-          !isAssetManagementLocked,
-          'Cannot support veto signalling in pending RageQuit state',
-        );
+        // invariant(
+        //   !isAssetManagementLocked,
+        //   'Cannot support veto signalling in pending RageQuit state',
+        // );
         if (args.token === Token.unstETH) {
           invariant(args.selectedNftIds.length > 0, 'ids must be presented');
         }
@@ -44,12 +42,17 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         txModalStages.pending(args, txHash);
 
-        await waitForTx(txHash);
+        const response = await waitForTx(txHash);
 
+        if (response.status === 'reverted') {
+          txModalStages.failed(
+            new Error('Failed to revoke, please, try again.'),
+            onRetry,
+          );
+          return false;
+        }
         txModalStages.success(args, txHash);
-
         await refetchAll();
-
         await onConfirm();
 
         return true;
@@ -61,7 +64,6 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
     },
     [
       address,
-      isAssetManagementLocked,
       txModalStages,
       sendRevokeTx,
       isMultisig,
