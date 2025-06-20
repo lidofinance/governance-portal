@@ -10,6 +10,7 @@ import { useRevokeTokensTxSender } from './tx-sender';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();
@@ -18,6 +19,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const sendRevokeTx = useRevokeTokensTxSender();
   const waitForTx = useTxConfirmation();
   const { refetchAll } = useRefetchEscrowData();
+  const queryClient = useQueryClient();
 
   return useCallback(
     async (args: EscrowActionArgs) => {
@@ -55,6 +57,14 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
         await refetchAll();
 
+        await queryClient.invalidateQueries({
+          queryKey: ['unsteth-balance'],
+        });
+
+        await queryClient.invalidateQueries({
+          queryKey: ['token-balance'],
+        });
+
         await onConfirm();
 
         return true;
@@ -71,6 +81,7 @@ export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
       isMultisig,
       waitForTx,
       refetchAll,
+      queryClient,
       onConfirm,
       onRetry,
     ],

@@ -22,6 +22,14 @@ export const useRefetchEscrowData = () => {
       queryKey: ESCROW_QUERY_KEYS.escrowBalances,
     });
 
+    await queryClient.invalidateQueries({
+      queryKey: ['unsteth-balance'],
+    });
+
+    await queryClient.invalidateQueries({
+      queryKey: ['token-balance'],
+    });
+
     await refetchDualGovernanceState();
     await refetchEscrowData();
   };
