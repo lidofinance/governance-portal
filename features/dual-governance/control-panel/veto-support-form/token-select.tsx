@@ -1,5 +1,5 @@
 import { Text } from 'shared/components/text';
-import { TokenSelectStyled } from './style';
+import { TokenSelectLabel, TokenSelectStyled } from './style';
 import { Tabs, Tab } from 'shared/components/tabs';
 import { Token } from 'shared/blockchain/types';
 import { useSupportFormDataContext } from './support-form-context';
@@ -62,14 +62,14 @@ export const TokenSelect = () => {
       <Tabs>
         {VetoSupportedTokens.map((token) => (
           <Tab key={token} isActive={selectedToken === token}>
-            <label>
+            <TokenSelectLabel>
               <input type="radio" {...register('token')} value={token} />
               <TokenBalance
                 token={token}
                 variant="compact"
                 balance={getTokenBalance(token)}
               />
-            </label>
+            </TokenSelectLabel>
           </Tab>
         ))}
       </Tabs>

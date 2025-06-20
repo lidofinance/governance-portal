@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { PopupMenu, PopupMenuProps, Text } from '@lidofinance/lido-ui';
 import { Button } from 'shared/components/button';
+import { devicesHeaderMedia } from '../../../../styles/global';
 
 export const RevokeTokenItemsWrapper = styled.div`
   display: flex;
@@ -58,10 +59,11 @@ export const RevocableTokenItemStyled = styled.div<{ $disabled?: boolean }>`
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--primary-color-white);
   line-height: 0;
-
-  ${({ $disabled }) =>
-    $disabled &&
-    `
+  flex-wrap: wrap;
+  gap: 14px
+    ${({ $disabled }) =>
+      $disabled &&
+      `
     background: rgba(0, 0, 0, 0.04);
 
     & > ${InQueueInfo} {
@@ -70,7 +72,7 @@ export const RevocableTokenItemStyled = styled.div<{ $disabled?: boolean }>`
       background-color: transparent;
     }
       }
-  `}
+  `};
 `;
 
 export const InQueueInfo = styled.button`
@@ -113,4 +115,14 @@ export const NftClaimTrigger = styled(Text)`
   cursor: pointer;
   padding-bottom: 10px;
   text-align: right;
+`;
+
+export const ClaimNftText = styled(Text)`
+  font-weight: 600;
+  font-size: 22px;
+
+  @media ${devicesHeaderMedia.tablet} {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
 `;

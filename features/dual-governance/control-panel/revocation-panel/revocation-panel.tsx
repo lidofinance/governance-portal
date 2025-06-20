@@ -1,7 +1,11 @@
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
 
-import { NoTokensMessage, RevocableTokenItemStyled } from './style';
+import {
+  ClaimNftText,
+  NoTokensMessage,
+  RevocableTokenItemStyled,
+} from './style';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import { Text } from 'shared/components/text';
 import { VetoSignallingTokens } from './veto-signalling-tokens';
@@ -86,9 +90,7 @@ export const RevocationPanel = () => {
                 $justifyContent="space-between"
                 $width="100%"
               >
-                <Text size={22} weight={600}>
-                  Claim Non-Owned NFT by ID
-                </Text>
+                <ClaimNftText>Claim Non-Owned NFT by ID</ClaimNftText>
                 <Button
                   onClick={() =>
                     openCustomNftModal({
@@ -124,9 +126,7 @@ export const RevocationPanel = () => {
               $justifyContent="space-between"
               $width="100%"
             >
-              <Text size={22} weight={600}>
-                Claim Non-Owned NFT by ID
-              </Text>
+              <ClaimNftText>Claim Non-Owned NFT by ID</ClaimNftText>
               <Button
                 onClick={() =>
                   openCustomNftModal({
