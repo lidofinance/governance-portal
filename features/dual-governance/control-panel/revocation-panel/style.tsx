@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { PopupMenu, PopupMenuProps, Text } from '@lidofinance/lido-ui';
 import { Button } from 'shared/components/button';
-import { devicesHeaderMedia } from '../../../../styles/global';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const RevokeTokenItemsWrapper = styled.div`
   display: flex;
