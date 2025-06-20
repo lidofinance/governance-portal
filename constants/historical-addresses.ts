@@ -25,4 +25,11 @@ export const historicalAddresses = {
       '0x73Aad66701e49042982c5552Bd9D5990154b3e74',
     ],
   },
+  [CHAINS.Mainnet]: {
+    governanceAddresses: [
+      '0xcdf49b058d606ad34c5789fd8c3bf8b3e54ba2db',
+      '0x75850938c1aa50b8cc6eb3c00995759dc1425ae6',
+    ],
+    escrowAddresses: ['0xa8f14d033f377779274ae016584a05bf14dccaf8'],
+  },
 };

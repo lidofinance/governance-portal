@@ -133,8 +133,9 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
       clearStorageOnNetworkSwitch();
 
       setTimeout(() => {
-        queryClient.clear();
-        window.location.reload();
+        void queryClient.invalidateQueries();
+        // queryClient.clear();
+        // window.location.reload();
       }, 100);
     }
 
