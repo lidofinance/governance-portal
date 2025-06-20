@@ -134,8 +134,6 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
 
       setTimeout(() => {
         void queryClient.invalidateQueries();
-        // queryClient.clear();
-        // window.location.reload();
       }, 100);
     }
 
