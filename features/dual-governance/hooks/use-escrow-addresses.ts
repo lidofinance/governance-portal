@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { getContractAddress } from 'shared/blockchain/get-contract-address';
 import { useReadContracts } from 'wagmi';
-import { historicalAddresses } from 'constants/historical-addresses';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 import { Address } from 'viem';
 
 export const useEscrowAddresses = () => {
@@ -36,7 +36,7 @@ export const useEscrowAddresses = () => {
   });
 
   const historicalEscrowAddresses =
-    (historicalAddresses[chainId as keyof typeof historicalAddresses]
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
       ?.escrowAddresses as Address[] | undefined) || [];
 
   const refetch = async () => {

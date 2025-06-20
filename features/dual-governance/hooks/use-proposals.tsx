@@ -4,10 +4,10 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
-import { historicalAddresses } from 'constants/historical-addresses';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 import { Address } from 'viem';
 import { fetchProposals } from 'features/dual-governance/utils/fetch-proposals';
-import { fetchProposal } from '../utils/fetch-proposal';
+import { fetchProposal } from '../utils';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 export type ProposalsQueryResult = {
@@ -32,8 +32,8 @@ export const useProposals = ({
     EmergencyProtectedTimelock,
   );
 
-  const governanceAddresses = historicalAddresses[
-    chainId as keyof typeof historicalAddresses
+  const governanceAddresses = HISTORICAL_ADDRESSES[
+    chainId as keyof typeof HISTORICAL_ADDRESSES
   ].governanceAddresses as Address[];
 
   const { data: proposalsCount } = useQuery({

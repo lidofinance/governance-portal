@@ -21,7 +21,7 @@ import {
   Voting,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
-import { historicalAddresses } from 'constants/historical-addresses';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 
 const allowedLogContracts = (chainId: CHAINS) => {
   const hardcodedAddresses = [
@@ -32,11 +32,11 @@ const allowedLogContracts = (chainId: CHAINS) => {
   ].filter((address): address is Address => address !== undefined);
 
   const historicalGovernanceAddresses: Address[] =
-    (historicalAddresses[chainId as keyof typeof historicalAddresses]
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
       ?.governanceAddresses as Address[] | undefined) || [];
 
   const historicalEscrowAddresses: Address[] =
-    (historicalAddresses[chainId as keyof typeof historicalAddresses]
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
       ?.escrowAddresses as Address[] | undefined) || [];
 
   return [

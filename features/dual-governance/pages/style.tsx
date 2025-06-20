@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Block } from '@lidofinance/lido-ui';
-import { devicesHeaderMedia } from '../../../styles/global';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const DashboardWrapper = styled(Block)`
   border: 1px solid var(--custom-border);

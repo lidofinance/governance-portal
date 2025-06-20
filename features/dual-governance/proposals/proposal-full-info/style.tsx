@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
 import Link from 'next/link';
-import { devicesHeaderMedia } from '../../../../styles/global';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const ProposalContainer = styled(Block)`
   color: var(--primary-color-black);

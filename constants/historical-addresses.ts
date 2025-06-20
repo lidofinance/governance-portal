@@ -1,6 +1,6 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
-export const historicalAddresses = {
+export const HISTORICAL_ADDRESSES = {
   [CHAINS.Hoodi]: {
     governanceAddresses: [
       '0x3Dec3C5Ef9C53234B55705DDC892b106A1C47bCa',

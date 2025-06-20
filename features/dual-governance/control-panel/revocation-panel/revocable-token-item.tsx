@@ -6,9 +6,9 @@ import { RevokeIcon, SandwatchIcon } from 'shared/components/icons';
 import { Token } from 'shared/blockchain/types';
 import { Box } from 'shared/components/box';
 import { useQuery } from '@tanstack/react-query';
-import { useReadContract } from '../../../../shared/blockchain/hooks/use-read-contract';
-import { StETH } from '../../../../shared/blockchain/contracts';
-import { useLidoSDK } from '../../../../providers/lido-sdk';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { StETH } from 'shared/blockchain/contracts';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
   token: Token | 'ETH' | 'unstETH';
