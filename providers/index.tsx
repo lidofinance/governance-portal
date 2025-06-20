@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
-import { CookieThemeProvider, ThemeName } from '@lidofinance/lido-ui';
+import { LightThemeProvider } from '@lidofinance/lido-ui';
 import { GlobalStyleOverwrite } from 'styles';
 
 import { ConfigProvider } from 'config';
@@ -20,10 +20,7 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
   prefetchedManifest,
 }) => (
   <ConfigProvider prefetchedManifest={prefetchedManifest}>
-    <CookieThemeProvider
-      initialThemeName={ThemeName.light}
-      overrideThemeName={ThemeName.light}
-    >
+    <LightThemeProvider>
       <Web3Provider>
         <LidoSDKProvider>
           <DualGovernanceStateProvider>
@@ -36,6 +33,6 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
           </DualGovernanceStateProvider>
         </LidoSDKProvider>
       </Web3Provider>
-    </CookieThemeProvider>
+    </LightThemeProvider>
   </ConfigProvider>
 );
