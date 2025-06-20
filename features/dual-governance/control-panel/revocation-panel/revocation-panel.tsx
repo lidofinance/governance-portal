@@ -82,7 +82,7 @@ export const RevocationPanel = () => {
   if (!escrowBalances || escrowBalances.totalLockedSharesInEscrows === 0n) {
     return (
       <>
-        {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
+        {historicalEscrowAddresses && historicalEscrowAddresses.length > 1 && (
           <Box marginBottom="20px">
             <RevocableTokenItemStyled>
               <FlexWrapper
@@ -118,7 +118,7 @@ export const RevocationPanel = () => {
 
   return (
     <>
-      {historicalEscrowAddresses && historicalEscrowAddresses.length > 0 && (
+      {historicalEscrowAddresses && historicalEscrowAddresses.length > 1 && (
         <Box marginBottom="20px">
           <RevocableTokenItemStyled>
             <FlexWrapper
