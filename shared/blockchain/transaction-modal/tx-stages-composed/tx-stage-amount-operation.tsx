@@ -3,6 +3,7 @@ import { TxStagePending } from '../tx-stages-basic';
 import { TxAmount } from '../tx-stages-parts/tx-amount';
 import { Token } from 'shared/blockchain/types';
 import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
+import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
 
 type CommonProps = {
   operationText: string;
@@ -15,6 +16,10 @@ type Props = CommonProps & EscrowActionWithEthArgs;
 export const TxStageSignOperationAmount = (props: Props) => {
   const { token, operationText, isPending, txHash } = props;
   const Component = isPending ? TxStagePending : TxStageSign;
+
+  const { data: convertedStETHLockedShares } = useStETHConversion(
+    token === Token.stETH ? props?.amount : 0n,
+  );
 
   if (token === Token.unstETH) {
     const nftString = Array.isArray(props.selectedNftIds)
@@ -45,7 +50,16 @@ export const TxStageSignOperationAmount = (props: Props) => {
     );
   }
 
-  const amountEl = <TxAmount amount={props.amount} token={token} />;
+  const amountEl = (
+    <TxAmount
+      amount={
+        token == Token.stETH && convertedStETHLockedShares
+          ? convertedStETHLockedShares
+          : props.amount
+      }
+      token={token}
+    />
+  );
 
   const operationTextFormatted = operationText.toLowerCase();
 
