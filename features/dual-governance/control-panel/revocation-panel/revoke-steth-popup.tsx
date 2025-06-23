@@ -55,9 +55,15 @@ export const RevokeStEthPopup = (props: Props) => {
             Revoke in {Token.stETH}
           </Text>
         </div>
-        <Text size={14} color="secondary">
-          {formatEth(stEthAmount)} {Token.stETH}
-        </Text>
+        {convertedStethLockedShares ? (
+          <Text size={14} color="secondary">
+            {formatEth(convertedStethLockedShares)} {Token.wstETH}
+          </Text>
+        ) : (
+          <Text size={14} color="secondary">
+            {formatEth(stEthAmount)} {Token.stETH}
+          </Text>
+        )}
       </RevokeStEthPopupItem>
 
       <RevokeStEthPopupItem onClick={onRevoke(Token.wstETH)}>
@@ -67,11 +73,9 @@ export const RevokeStEthPopup = (props: Props) => {
             Revoke in {Token.wstETH}
           </Text>
         </div>
-        {convertedStethLockedShares && (
-          <Text size={14} color="secondary">
-            {formatEth(convertedStethLockedShares)} {Token.wstETH}
-          </Text>
-        )}
+        <Text size={14} color="secondary">
+          {formatEth(stEthAmount)} {Token.wstETH}
+        </Text>
       </RevokeStEthPopupItem>
     </RevokeStEthPopupStyled>
   );
