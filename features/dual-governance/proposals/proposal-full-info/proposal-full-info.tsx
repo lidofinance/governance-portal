@@ -11,6 +11,7 @@ import {
   ProposalName,
   ProposalStateLogWrapper,
   SubmitDate,
+  SubmittedBy,
 } from './style';
 import { Text } from 'shared/components/text';
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
@@ -27,7 +28,7 @@ import { useRouter } from 'next/router';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
-import { Box } from '@lidofinance/lido-ui';
+import { Box, Link } from '@lidofinance/lido-ui';
 import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
@@ -41,6 +42,13 @@ import { useDualGovernanceProposalsContext } from 'providers/dual-governance-pro
 import { useProposals } from '../../hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { Log, PublicClient } from 'viem';
+import { findAbiItem } from 'utils/find-abi-item';
+import invariant from 'tiny-invariant';
+import { getEtherscanTxLink } from 'utils/etherscan';
+import {
+  calculateAverageBlockTime,
+  estimateBlockRangeFromTimestamp,
+} from 'utils/estimate-block-range';
 
 type Props = {
   id: number;
@@ -309,6 +317,46 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
+  const { data: proposalScheduledLog } = useQuery({
+    queryKey: [
+      proposal?.proposalId,
+      chainId,
+      proposal?.proposalDetails.submittedAt,
+    ],
+    queryFn: async () => {
+      invariant(proposal, 'Proposal must be defined');
+      invariant(client, 'Client must be defined');
+
+      const averageBlockTime = await calculateAverageBlockTime(client);
+
+      const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
+        proposal.proposalDetails.scheduledAt,
+        2499n, // Half of the RPC getLogs limit
+        averageBlockTime,
+        client,
+      );
+
+      const eventAbi = findAbiItem({
+        abi: EmergencyProtectedTimelock.abi,
+        name: 'ProposalScheduled',
+        type: 'event',
+      });
+
+      const proposalScheduledLogs = await client.getLogs({
+        address: EmergencyProtectedTimelock.chainAddressMap[chainId],
+        event: eventAbi,
+        fromBlock,
+        toBlock,
+        args: {
+          id: BigInt(proposal.proposalId),
+        },
+      });
+
+      return proposalScheduledLogs[0] || null;
+    },
+    enabled: !!proposal && !!client && !!proposal.proposalDetails.scheduledAt,
+  });
+
   const scheduledAt = useMemo(() => {
     if (!proposal || !proposal.proposalDetails?.scheduledAt) {
       return null;
@@ -357,7 +405,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
           <>
             {voteId && (
               <SubmitDate as="span">
-                Submitted from{' '}
+                {proposal.DGEvent?.transactionHash ? (
+                  <Link
+                    href={getEtherscanTxLink(
+                      chainId,
+                      proposal.DGEvent?.transactionHash,
+                    )}
+                  >
+                    Submitted
+                  </Link>
+                ) : (
+                  <span>Submitted</span>
+                )}{' '}
+                from{' '}
                 <ProposalLink
                   href={`${config.voteOrigin}/vote/${voteId}`}
                   target="_blank"
@@ -373,13 +433,29 @@ export const ProposalFullInfo = ({ id }: Props) => {
           </>
         )}
         {scheduledAt && (
-          <SubmitDate as="span">Scheduled on {scheduledAt}</SubmitDate>
+          <>
+            {proposalScheduledLog ? (
+              <SubmitDate as="span">
+                <Link
+                  href={getEtherscanTxLink(
+                    chainId,
+                    proposalScheduledLog.transactionHash,
+                  )}
+                >
+                  Scheduled
+                </Link>{' '}
+                on {scheduledAt}
+              </SubmitDate>
+            ) : (
+              <SubmitDate as="span">Scheduled on {scheduledAt}</SubmitDate>
+            )}
+          </>
         )}
         {proposalExecutedAt && (
           <SubmitDate as="span">Executed on {proposalExecutedAt}</SubmitDate>
         )}
       </ProposalStateLogWrapper>
-      <Box margin={'30px 0'}>
+      <Box marginTop={'30px'}>
         {voteId && (
           <>
             <Text weight={500} size={28}>
@@ -387,8 +463,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
             </Text>
             <Box marginTop={12}>
               <Text size={15} color="secondary">
-                <b>Disclaimer:</b> Description provided by the Aragon proposal
-                author; may include items not under Dual Governance
+                <b>Disclaimer:</b> Description provided by the proposal author;
+                may include items not under Dual Governance
               </Text>
             </Box>
             {proposal.DGEvent?.args?.metadata && (
@@ -399,9 +475,14 @@ export const ProposalFullInfo = ({ id }: Props) => {
           </>
         )}
         {!voteId && (
-          <Text weight={500} size={22}>
-            Proposal submitted by {proposal?.DGEvent?.args.proposerAccount}
-          </Text>
+          <SubmittedBy>
+            <Text size={22}>
+              Proposal submitted by{' '}
+              <Text size={22} weight={500}>
+                {proposal?.DGEvent?.args.proposerAccount}
+              </Text>
+            </Text>
+          </SubmittedBy>
         )}
       </Box>
 

@@ -80,6 +80,7 @@ export const ArrowIconWrapper = styled.div`
   }
 `;
 
-export const AuthorDescription = styled.div`
-  margin-top: 12px;
+export const SubmittedBy = styled.div`
+  margin: 30px 0;
+  word-break: break-word;
 `;
