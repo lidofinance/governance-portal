@@ -11,7 +11,7 @@ import {
 import { Button } from 'shared/components/button';
 import { NftMultiselectItem } from '../nft-multiselect';
 import { Text } from 'shared/components/text';
-import { RageQuitEscrowUnstETHRecord } from '../utils';
+import { RageQuitEscrowUnstETHRecord } from '../hooks/use-escrow-balances';
 
 type Props = {
   onConfirm: (selectedNftIds?: string[]) => Promise<void | boolean>;

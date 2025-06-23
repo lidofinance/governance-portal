@@ -1,6 +1,5 @@
 import { Address } from 'viem';
 import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
-import { ProposalSubmittedEvent as EPTProposalSubmittedEvent } from 'generated/EmergencyProtectedTimelockAbi';
 import { BigNumber } from 'ethers';
 
 type TimeStamp = number;
@@ -17,13 +16,13 @@ export type ProposalDetails = {
   scheduledAt: TimeStamp;
   status: ProposalStatus;
   submittedAt: TimeStamp;
+  calls: SubmitProposalCall[];
 };
 
 export type ProposalCombinedData = {
   proposalId: number;
   voteId?: number;
   DGEvent?: DGProposalSubmittedEvent;
-  EPTEvent?: EPTProposalSubmittedEvent;
   proposalDetails: ProposalDetails;
 };
 

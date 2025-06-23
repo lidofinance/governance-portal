@@ -14,7 +14,7 @@ export const ConnectWalletModal = () => {
 
   return (
     <WalletsModalForEth
-      shouldInvertWalletIcon={themeName === 'dark'}
+      shouldInvertWalletIcon={themeName === 'light'}
       walletsPinned={WALLETS_PINNED}
       termsLink={`${config.rootOrigin}/terms-of-use`}
       privacyNoticeLink={`${config.rootOrigin}/privacy-notice`}

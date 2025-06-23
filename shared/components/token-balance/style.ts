@@ -16,8 +16,8 @@ export const TokenLabel = styled(Text)<{ $compact?: boolean }>`
 export const TokenBalanceStyled = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: center;
+  min-width: 64px;
 
   & > svg {
     width: 40px;

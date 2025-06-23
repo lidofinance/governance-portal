@@ -13,7 +13,7 @@ import {
 
 const getVersionInfo = () => {
   const { version, branch } = buildInfo;
-  const repoBaseUrl = 'https://github.com/lidofinance/ethereum-staking-widget';
+  const repoBaseUrl = 'https://github.com/lidofinance/dual-governance-ui';
   if (version === 'REPLACE_WITH_VERSION')
     return {
       label: 'dev',

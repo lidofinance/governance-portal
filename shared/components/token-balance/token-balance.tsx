@@ -10,6 +10,7 @@ import { InlineLoader, Tooltip } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 import { Text } from '../text';
 import { isBigInt } from 'shared/blockchain/isBigInt';
+import { useEffect, useState } from 'react';
 
 type Props = {
   token: Token | 'ETH' | 'unstETH';
@@ -19,8 +20,30 @@ type Props = {
   showZeroBalance?: boolean;
 };
 
+const MAX_SCREEN_WIDTH_NFT_TABLET = 1262;
+
 export const TokenBalance = (props: Props) => {
   const { token, balance, variant, addOnText, showZeroBalance = true } = props;
+  const [isNftShortView, setIsNftShortView] = useState<boolean>(false);
+
+  // This is to replace Withdrawal NFT label with NFT with no affect to types and constants
+  useEffect(() => {
+    const handleResize = () => {
+      setIsNftShortView(window.innerWidth <= MAX_SCREEN_WIDTH_NFT_TABLET);
+    };
+
+    handleResize();
+
+    const observer = new ResizeObserver(() => {
+      handleResize();
+    });
+
+    observer.observe(document.body);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   if (!showZeroBalance && balance === 0n) {
     return null;
@@ -32,11 +55,18 @@ export const TokenBalance = (props: Props) => {
         display="flex"
         alignItems="center"
         justifyContent="flex-start"
+        flexWrap={'wrap'}
         gap={8}
       >
         {getTokenIcon(token)}
         <TokenBalanceStyled>
-          <TokenLabel $compact>{token}</TokenLabel>
+          <TokenLabel $compact>
+            {token === 'Withdrawal NFT'
+              ? isNftShortView
+                ? 'NFT'
+                : token
+              : token}
+          </TokenLabel>
           {isBigInt(balance) ? (
             <Tooltip
               placement="topRight"

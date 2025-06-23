@@ -1,4 +1,4 @@
-import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 import { CommitteePage as CommitteePageComponent } from 'features/committee/pages/committee-page';
 import { BackgroundGradient, Layout } from 'shared/components';
 import Head from 'next/head';

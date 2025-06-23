@@ -1,5 +1,5 @@
 import { Text } from 'shared/components/text';
-import { TokenSelectStyled } from './style';
+import { TokenSelectLabel, TokenSelectStyled } from './style';
 import { Tabs, Tab } from 'shared/components/tabs';
 import { Token } from 'shared/blockchain/types';
 import { useSupportFormDataContext } from './support-form-context';
@@ -7,7 +7,7 @@ import { TokenBalance } from 'shared/components/token-balance';
 import { useFormContext } from 'react-hook-form';
 import { VetoSupportedTokens } from 'features/dual-governance/types';
 import { useCallback } from 'react';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import Link from 'next/link';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -18,7 +18,7 @@ export const TokenSelect = () => {
 
   const { chainId } = useLidoSDK();
 
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
 
   const { register } = useFormContext();
 
@@ -62,14 +62,14 @@ export const TokenSelect = () => {
       <Tabs>
         {VetoSupportedTokens.map((token) => (
           <Tab key={token} isActive={selectedToken === token}>
-            <label>
+            <TokenSelectLabel>
               <input type="radio" {...register('token')} value={token} />
               <TokenBalance
                 token={token}
                 variant="compact"
                 balance={getTokenBalance(token)}
               />
-            </label>
+            </TokenSelectLabel>
           </Tab>
         ))}
       </Tabs>

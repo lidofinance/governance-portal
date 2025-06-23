@@ -1,13 +1,19 @@
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import {
+  GovernanceState,
+  VisibleGovernanceState,
+} from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DeactivationAdditionalSupportInfo } from './deactivation-additional-support-info';
 import { VetoSignallingAdditionalSupportInfo } from './veto-signalling-additional-support-info';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 import { CooldownAdditionalSupportInfo } from './cooldown-additional-support-info';
 import { DGTooltip } from '../../tooltips';
-import { formatEth } from 'shared/blockchain/utils';
+import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import { useThresholdValue } from 'features/dual-governance/hooks';
+import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
+import { useMemo } from 'react';
 
 type Props = {
   amountTillVSPhaseWei: bigint;
@@ -18,13 +24,29 @@ export const AdditionalSupportInfo = ({
   amountTillVSPhaseWei,
   amountTillRQPhaseWei,
 }: Props) => {
-  const {
-    visibleState,
-    amountTillNextPhasePercent,
-    nextPhaseSupportThresholdPercent,
-    firstSealRageQuitSupport,
-    stEthTotalSupply,
-  } = useDualGovernanceContext();
+  const { data: dgConfig } = useDualGovernanceConfig();
+
+  const { stEthTotalSupply, rageQuitSupport } = useEscrowContext();
+  const { visibleState, detailedState } = useDualGovernanceStateContext();
+
+  const firstSealRageQuitSupport = parsePercent16(
+    dgConfig?.firstSealRageQuitSupport,
+  );
+
+  const nextPhaseThreshold = useMemo(() => {
+    return detailedState.persistedState === GovernanceState.VetoSignalling ||
+      detailedState.persistedState ===
+        GovernanceState.VetoSignallingDeactivation
+      ? dgConfig?.secondSealRageQuitSupport
+      : dgConfig?.firstSealRageQuitSupport;
+  }, [detailedState.persistedState, dgConfig]);
+
+  const amountTillNextPhase = nextPhaseThreshold
+    ? nextPhaseThreshold - rageQuitSupport
+    : undefined;
+
+  const amountTillNextPhasePercent = parsePercent16(amountTillNextPhase);
+  const nextPhaseSupportThresholdPercent = parsePercent16(nextPhaseThreshold);
 
   const firstSealThresholdWei = useThresholdValue(
     firstSealRageQuitSupport,

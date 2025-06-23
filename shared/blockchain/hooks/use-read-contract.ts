@@ -1,5 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
+import {
+  Abi,
+  Address,
+  ContractFunctionArgs,
+  ContractFunctionName,
+  ReadContractReturnType,
+} from 'viem';
 import { ContractObject } from '../types';
 import { getContractAddress } from '../get-contract-address';
 import { useChainId } from 'wagmi';
@@ -17,7 +23,7 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
       >(
         functionName: F,
         args?: A,
-      ) => {
+      ): Promise<ReadContractReturnType<T, F>> => {
         try {
           return await readContract(rpcProvider, {
             abi,

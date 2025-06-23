@@ -3,6 +3,10 @@ import { StageIconSuccess } from './icons';
 import { TransactionModalContent } from '../transaction-modal-content';
 import { Token } from '../../types';
 import { TxAmount } from '../tx-stages-parts/tx-amount';
+import { Text } from 'shared/components/text';
+import { Link } from '@lidofinance/lido-ui';
+import { Box } from 'shared/components/box';
+import { config } from 'config';
 
 type TxStageSuccessProps = {
   txHash?: string | null;
@@ -14,6 +18,7 @@ type TxStageSuccessProps = {
   amount?: bigint | null;
   nftIds?: string[] | object | null;
   token?: Token | 'ETH' | null;
+  showStakeLink?: boolean;
 };
 
 export const TxStageSuccess = ({
@@ -22,6 +27,7 @@ export const TxStageSuccess = ({
   title,
   footer,
   showEtherscan = true,
+  showStakeLink = false,
   onClickEtherscan,
   amount,
   nftIds,
@@ -33,12 +39,24 @@ export const TxStageSuccess = ({
       {amount && token ? (
         <TxAmount amount={amount} token={token} />
       ) : nftIds ? (
-        <span>
-          NFTs: #{' '}
-          {Array.isArray(nftIds)
-            ? nftIds.join(', ')
-            : Object.keys(nftIds).join(', ')}
-        </span>
+        <>
+          <span>
+            NFTs: #{' '}
+            {Array.isArray(nftIds)
+              ? nftIds.join(', ')
+              : Object.keys(nftIds).join(', ')}
+          </span>
+          {showStakeLink && (
+            <Box marginTop={10}>
+              <Text size={16}>
+                To claim your ETH, please proceed to{' '}
+                <Link href={`${config.stakeOrigin}/withdrawals/claim`}>
+                  stake.lido.fi/withdrawals/claim
+                </Link>
+              </Text>
+            </Box>
+          )}
+        </>
       ) : (
         ''
       )}

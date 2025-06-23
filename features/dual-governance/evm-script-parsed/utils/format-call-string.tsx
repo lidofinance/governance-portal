@@ -3,7 +3,7 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import React, { useMemo } from 'react';
 import { getContractName } from 'utils/get-contract-name';
-import { LIDO_ROLES } from 'constants/roles';
+import { DEFAULT_ADMIN_ROLE, LIDO_ROLES } from 'constants/roles';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import {
@@ -27,6 +27,9 @@ const formatArg = (arg: unknown, chainId: CHAINS): string => {
     if (arg.startsWith('0x') && arg.length === 42) {
       const contractName = getContractName(chainId, arg) || 'Unknown';
       return `[${contractName}] ${arg}`;
+    }
+    if (arg === DEFAULT_ADMIN_ROLE) {
+      return 'DEFAULT ADMIN ROLE';
     }
     if (arg.startsWith('0x') && arg.length === 66 && LIDO_ROLES[arg]) {
       return `[${LIDO_ROLES[arg]}] ${arg}`;

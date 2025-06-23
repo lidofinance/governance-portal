@@ -21,13 +21,16 @@ export const ipfsMode = toBoolean(process.env.IPFS_MODE);
 /** @type string */
 export const rootOrigin = process.env.ROOT_ORIGIN || 'https://lido.fi';
 export const selfOrigin =
-  process.env.SELF_ORIGIN || 'https://dg-holesky.testnet.fi';
+  process.env.SELF_ORIGIN || 'https://dg-hoodi.testnet.fi';
 // Fix in the build time (build time don't have env vars)
 
 /** @type string */
-// export const researchOrigin = process.env.RESEARCH_ORIGIN || 'https://research.lido.fi';
 export const voteOrigin =
   process.env.VOTE_ORIGIN || 'https://vote-hoodi.testnet.fi';
+// Fix in the build time (build time don't have env vars)
+
+/** @type string */
+export const stakeOrigin = process.env.STAKE_ORIGIN || 'https://stake.lido.fi';
 // Fix in the build time (build time don't have env vars)
 
 // Parse supported chains from environment or use defaults
@@ -53,9 +56,6 @@ export const enableQaHelpers = toBoolean(process.env.ENABLE_QA_HELPERS);
 export const walletconnectProjectId = process.env.WALLETCONNECT_PROJECT_ID;
 
 export const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
-
-/** @type string */
-export const ethAPIBasePath = process.env.ETH_API_BASE_PATH;
 
 // /** @type string */
 // export const widgetApiBasePathForIpfs =

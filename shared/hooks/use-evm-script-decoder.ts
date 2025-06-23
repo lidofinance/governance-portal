@@ -11,7 +11,7 @@ import {
   abiProviders,
 } from '@lidofinance/evm-script-decoder';
 
-import { getStaticRpcBatchProvider } from 'utils/providersRPC';
+import { getStaticRpcBatchProvider } from 'utils/providers-rpc';
 
 import * as abis from 'generated';
 import * as ADDR from 'shared/blockchain/contract-addresses';

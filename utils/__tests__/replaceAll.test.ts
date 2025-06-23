@@ -1,4 +1,4 @@
-import { replaceAll } from 'utils/replaceAll';
+import { replaceAll } from 'utils/replace-all';
 
 describe('replaceAll', () => {
   test('should replace correctly', () => {

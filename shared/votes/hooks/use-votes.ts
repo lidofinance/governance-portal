@@ -7,15 +7,14 @@ import {
   isQuorumReached,
 } from 'shared/votes/utils/get-vote-status';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { usePublicClient, useChainId } from 'wagmi';
+import { usePublicClient } from 'wagmi';
 import { VoteData, VoteStatus } from 'shared/votes/types';
 import { findAbiItem } from 'utils/find-abi-item';
-import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
   limit: number;
-  getActive?: boolean;
+  shouldGetActive?: boolean;
 };
 
 const mapPayload = (
@@ -60,30 +59,15 @@ const filterVotes = (votes: VoteData[]) => {
   });
 };
 
-export const useVotes = ({ limit, getActive = false }: Props) => {
+export const useVotes = ({ limit, shouldGetActive = true }: Props) => {
   const AragonVoting = useReadContract(Voting);
   const client = usePublicClient();
-  const isSupportedChain = useIsSupportedChain();
-  const chainId = useChainId();
-  const { chainId: sdkChainId } = useLidoSDK();
+  const { chainId } = useLidoSDK();
 
   return useQuery({
-    queryKey: ['activeVotes', limit, chainId],
-    enabled: isSupportedChain && chainId === sdkChainId,
+    queryKey: ['active-votes', limit, chainId],
     queryFn: async () => {
       try {
-        if (!isSupportedChain) {
-          console.warn('Votes query skipped - unsupported chain');
-          return { votes: [] };
-        }
-
-        if (chainId !== sdkChainId) {
-          console.warn(
-            `Chain mismatch: Current chain ${chainId}, SDK chain ${sdkChainId}`,
-          );
-          return { votes: [] };
-        }
-
         const votesTotalBn = await AragonVoting.readContract('votesLength');
         const votesTotal = Number(votesTotalBn);
         if (!votesTotal) {
@@ -105,15 +89,22 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
                   AragonVoting.readContract('objectionPhaseTime'),
                 ]);
 
-              const getVoteAbi = Voting.abi.find(
-                (item) => item.type === 'function' && item.name === 'getVote',
-              );
-              if (!getVoteAbi) {
+              // const getVoteAbi = Voting.abi.find(
+              //   (item) => item.type === 'function' && item.name === 'getVote',
+              // );
+
+              const getVoteFunctionAbi = findAbiItem({
+                abi: Voting.abi,
+                name: 'getVote',
+                type: 'function',
+              });
+
+              if (!getVoteFunctionAbi) {
                 console.error('ABI entry for getVote not found.');
                 return null;
               }
 
-              const vote = mapPayload(getVoteAbi, 'getVote', rawVote);
+              const vote = mapPayload(getVoteFunctionAbi, 'getVote', rawVote);
 
               const startVoteEventAbi = findAbiItem({
                 abi: Voting.abi,
@@ -167,7 +158,7 @@ export const useVotes = ({ limit, getActive = false }: Props) => {
         }
 
         return {
-          votes: getActive ? filterVotes(votes) : votes,
+          votes: shouldGetActive ? filterVotes(votes) : votes,
         };
       } catch (e) {
         console.error('Error in useVotes:', e);

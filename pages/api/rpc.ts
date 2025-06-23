@@ -9,9 +9,9 @@ import {
   defaultErrorHandler,
   httpMethodGuard,
   HttpMethod,
-} from 'utilsApi';
-import Metrics from 'utilsApi/metrics';
-import { rpcFactory } from 'utilsApi/rpcFactory';
+} from 'utils-api';
+import Metrics from 'utils-api/metrics';
+import { rpcFactory } from 'utils-api/rpc-factory';
 import { METRICS_PREFIX } from 'constants/metrics';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
@@ -21,14 +21,29 @@ import {
   Voting,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 
 const allowedLogContracts = (chainId: CHAINS) => {
-  return [
+  const hardcodedAddresses = [
     DualGovernance[chainId],
     EmergencyProtectedTimelock[chainId],
     EmergencyGovernance[chainId],
     Voting[chainId],
   ].filter((address): address is Address => address !== undefined);
+
+  const historicalGovernanceAddresses: Address[] =
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
+      ?.governanceAddresses as Address[] | undefined) || [];
+
+  const historicalEscrowAddresses: Address[] =
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
+      ?.escrowAddresses as Address[] | undefined) || [];
+
+  return [
+    ...hardcodedAddresses,
+    ...historicalGovernanceAddresses,
+    ...historicalEscrowAddresses,
+  ];
 };
 
 const allowedLogsAddresses = config.supportedChains.reduce(

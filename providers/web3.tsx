@@ -34,6 +34,20 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: 'always',
+      staleTime: 30000,
+      gcTime: 60000,
+      retry: (failureCount, error: any) => {
+        if (
+          error?.message?.includes('429') ||
+          error?.message?.includes('rate limit')
+        ) {
+          return false;
+        }
+        return failureCount < 2;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     },
   },
 });
@@ -119,8 +133,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
       clearStorageOnNetworkSwitch();
 
       setTimeout(() => {
-        queryClient.clear();
-        window.location.reload();
+        void queryClient.invalidateQueries();
       }, 100);
     }
 

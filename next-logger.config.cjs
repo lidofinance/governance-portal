@@ -9,16 +9,7 @@ const loadEnvConfig = require('@next/env').loadEnvConfig;
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
 
-const patterns = [
-  ...commonPatterns,
-  process.env.INFURA_API_KEY,
-  process.env.ALCHEMY_API_KEY,
-  process.env.ETHPLORER_API_KEY,
-  // TODO: Delete this ENV
-  process.env.CLOUDFLARE_API_TOKEN,
-  process.env.CLOUDFLARE_ACCOUNT_ID,
-  process.env.CLOUDFLARE_KV_NAMESPACE_ID,
-];
+const patterns = [...commonPatterns];
 const mask = satanizer(patterns);
 
 const logger = (defaultConfig) =>

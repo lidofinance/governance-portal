@@ -2,16 +2,21 @@ import { FC } from 'react';
 import { Layout } from 'shared/components';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ProposalPage as ProposalPageComponent } from 'features/dual-governance/pages/proposal-page';
-import { getDefaultStaticProps } from 'utilsApi/get-default-static-props';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 
 interface Props {
   id: string;
 }
 
 const ProposalPage: FC<Props> = ({ id }) => {
+  const numericId = Number(id);
+
   return (
     <Layout containerSize="full">
-      <ProposalPageComponent id={Number(id)} />
+      <DualGovernanceProposalsProvider id={numericId}>
+        <ProposalPageComponent id={numericId} />
+      </DualGovernanceProposalsProvider>
     </Layout>
   );
 };

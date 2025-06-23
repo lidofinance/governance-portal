@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getStaticRpcBatchProvider } from 'utils/providersRPC';
+import { getStaticRpcBatchProvider } from 'utils/providers-rpc';
 import { StaticJsonRpcBatchProvider } from '@lidofinance/eth-providers';
 
 import { useGetRpcUrlByChainId } from 'config/rpc';

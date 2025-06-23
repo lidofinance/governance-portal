@@ -8,29 +8,31 @@ import { RevocableTokensList } from './style';
 import { RevocableTokenItem } from './revocable-token-item';
 import { useCountdown } from 'shared/hooks/use-countdown';
 import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useEscrowContext } from 'providers/escrow';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useEscrowUnstethBalance } from '../../hooks/use-escrow-unsteth-balance';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { Address } from 'viem';
 
 type Props = {
-  vetoSignallingBalance: {
+  escrowBalance: {
     unstETHIdsCount: bigint;
     stETHLockedShares: bigint;
     unstETHLockedShares: bigint;
     lastAssetsLockTimestamp: number;
     totalLockedShares: bigint;
-    wstETHLockedShares: bigint;
   };
+  escrowAddress: Address;
   assetUnlockTimestamp: number | undefined;
   onConfirm: () => Promise<void>;
 };
 
 export const VetoSignallingTokens = ({
-  vetoSignallingBalance,
+  escrowBalance,
+  escrowAddress,
   assetUnlockTimestamp,
   onConfirm,
 }: Props) => {
@@ -38,20 +40,19 @@ export const VetoSignallingTokens = ({
   const {
     totalLockedShares,
     stETHLockedShares,
-    wstETHLockedShares,
     unstETHLockedShares,
     unstETHIdsCount,
-  } = vetoSignallingBalance;
+  } = escrowBalance;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupAnchorRef = useRef<HTMLDivElement>(null);
   const { openModal } = useSelectUnstethModal();
 
-  const { data } = useEscrowUnstethBalance();
+  const { data } = useEscrowUnstethBalance(escrowAddress);
 
   const { chainId } = useLidoSDK();
 
-  const { vetoSignallingAddress } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
 
   const revokeTokens = useRevokeTokensAction({ onConfirm });
 
@@ -76,8 +77,7 @@ export const VetoSignallingTokens = ({
       } else {
         setIsPopupOpen(false);
 
-        const amount =
-          token === Token.stETH ? stETHLockedShares : wstETHLockedShares;
+        const amount = stETHLockedShares;
         invariant(amount, 'Amount is not defined');
 
         await revokeTokens({
@@ -87,12 +87,7 @@ export const VetoSignallingTokens = ({
         });
       }
     },
-    [
-      revokeTokens,
-      stETHLockedShares,
-      vetoSignallingAddress,
-      wstETHLockedShares,
-    ],
+    [revokeTokens, stETHLockedShares, vetoSignallingAddress],
   );
 
   if (!totalLockedShares) {
@@ -107,17 +102,19 @@ export const VetoSignallingTokens = ({
         anchorRef={popupAnchorRef}
         isOpen={isPopupOpen}
         stEthAmount={stETHLockedShares}
-        wstEthAmount={wstETHLockedShares}
         onClose={() => setIsPopupOpen(false)}
         onRevoke={handleRevokeTokens}
       />
       <Text>
-        Tokens in VetoSignalling{' '}
-        {vetoSignallingAddress ? (
+        Tokens in{' '}
+        {escrowAddress.toLowerCase() === vetoSignallingAddress?.toLowerCase()
+          ? 'VetoSignalling '
+          : 'RageQuit '}
+        {escrowAddress ? (
           <Link
             href={getEtherscanAddressLink(
               chainId, // chains mismatch between @lido-sdk & lido-ethereum-sdk
-              vetoSignallingAddress,
+              escrowAddress,
             )}
           >
             contract <ExternalLinkIcon />
@@ -136,7 +133,7 @@ export const VetoSignallingTokens = ({
           unlockCountdown={assetsLockCountdown}
           actionLabel="Revoke"
         />
-        {data && (
+        {data && data.length > 0 && (
           <RevocableTokenItem
             token={Token.unstETH}
             amount={unstETHLockedShares}

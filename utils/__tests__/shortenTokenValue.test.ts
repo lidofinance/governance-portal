@@ -1,4 +1,4 @@
-import { shortenTokenValue } from '../shortenTokenValue';
+import { shortenTokenValue } from '../shorten-token-value';
 
 describe('shortenTokenValue', () => {
   it('should return the correct value for values less than 1000', () => {

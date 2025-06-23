@@ -1,12 +1,14 @@
 import { format, fromUnixTime } from 'date-fns';
 import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
+import { useEscrowContext } from 'providers/escrow';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DGTooltip } from '../../tooltips';
-import { formatEth } from '../../../../shared/blockchain/utils';
+import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import { useThresholdValue } from 'features/dual-governance/hooks';
+import { GovernanceState } from '../../types';
 
 type Props = {
   amountTillVSPhaseWei: bigint;
@@ -16,15 +18,25 @@ export const CooldownAdditionalSupportInfo = ({
   amountTillVSPhaseWei,
 }: Props) => {
   const { data: dgConfig, isLoading } = useDualGovernanceConfig();
-  const {
-    detailedState,
-    amountTillNextPhasePercent,
-    firstSealRageQuitSupport,
-    stEthTotalSupply,
-  } = useDualGovernanceContext();
+  const { stEthTotalSupply, rageQuitSupport } = useEscrowContext();
+  const { detailedState } = useDualGovernanceStateContext();
+
+  const nextPhaseThreshold = useMemo(() => {
+    return detailedState.persistedState === GovernanceState.VetoSignalling ||
+      detailedState.persistedState ===
+        GovernanceState.VetoSignallingDeactivation
+      ? dgConfig?.secondSealRageQuitSupport
+      : dgConfig?.firstSealRageQuitSupport;
+  }, [detailedState.persistedState, dgConfig]);
+
+  const amountTillNextPhase = nextPhaseThreshold
+    ? nextPhaseThreshold - rageQuitSupport
+    : undefined;
+
+  const amountTillNextPhasePercent = parsePercent16(amountTillNextPhase);
 
   const firstSealThresholdWei = useThresholdValue(
-    firstSealRageQuitSupport,
+    parsePercent16(dgConfig?.firstSealRageQuitSupport),
     stEthTotalSupply,
   );
 
@@ -44,7 +56,7 @@ export const CooldownAdditionalSupportInfo = ({
   if (
     isLoading ||
     amountTillNextPhasePercent === undefined ||
-    firstSealRageQuitSupport === undefined
+    parsePercent16(dgConfig?.firstSealRageQuitSupport) === 0
   ) {
     return null;
   }
@@ -58,7 +70,7 @@ export const CooldownAdditionalSupportInfo = ({
         <b>
           {firstSealThresholdWei
             ? `${formatEth(firstSealThresholdWei, 2)} ${Token.stETH}`
-            : `${firstSealRageQuitSupport}%`}
+            : `${parsePercent16(dgConfig?.firstSealRageQuitSupport)}%`}
         </b>
       </Text>
     );

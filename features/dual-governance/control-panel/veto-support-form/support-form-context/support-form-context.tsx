@@ -24,7 +24,6 @@ import {
   UseApproveResponse,
   useApprove,
 } from 'shared/blockchain/hooks/use-approve';
-import { useDualGovernanceContext } from 'providers/dual-governance';
 import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
 import {
   EscrowActionArgs,
@@ -33,6 +32,8 @@ import {
 import { useUnstEthBalance } from 'shared/blockchain/hooks/use-unsteth-balance';
 import { NftMultiselectValuesMap } from 'features/dual-governance/nft-multiselect';
 import { useSupportVetoAction } from 'features/dual-governance/write-actions/support-veto/action';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 export type SupportFormInputType = {
   amount: bigint | null;
@@ -59,11 +60,9 @@ export const useSupportFormDataContext = () => {
 };
 
 const useSupportFormNetworkData = (): SupportFormNetworkData => {
-  const {
-    vetoSignallingAddress,
-    isAssetManagementLocked,
-    refetch: refetchDualGovernanceState,
-  } = useDualGovernanceContext();
+  const { vetoSignallingAddress } = useEscrowContext();
+  const { refetch: refetchDualGovernanceState, isAssetManagementLocked } =
+    useDualGovernanceStateContext();
 
   const { refetch: refetchEscrowBalances } = useEscrowBalances();
 

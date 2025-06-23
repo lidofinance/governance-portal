@@ -1,114 +1,95 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { usePublicClient, useChainId, useAccount } from 'wagmi';
+import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
-import { useLidoSDK } from 'providers/lido-sdk';
-import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
-import { getProposalSubmittedEvents } from 'features/dual-governance/events/get-proposal-submitted-events';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
+import { Address } from 'viem';
+import { fetchProposals } from 'features/dual-governance/utils/fetch-proposals';
+import { fetchProposal } from '../utils';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 export type ProposalsQueryResult = {
   proposalsCount: bigint;
   proposals: ProposalCombinedData[];
 };
 
-export const useProposals = (): UseQueryResult<ProposalsQueryResult> => {
-  const { chainId: sdkChainId } = useLidoSDK();
-  const chainId = useChainId();
-  const { isConnected } = useAccount();
-  const isSupportedChain = useIsSupportedChain();
+type UseProposalsConfig = {
+  id?: number;
+  enabled?: boolean;
+};
+
+export const useProposals = ({
+  id,
+  enabled = true,
+}: UseProposalsConfig = {}): UseQueryResult<
+  ProposalsQueryResult | ProposalCombinedData
+> => {
+  const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
 
-  const _enabled =
-    isSupportedChain && (isConnected ? chainId === sdkChainId : true);
+  const governanceAddresses = HISTORICAL_ADDRESSES[
+    chainId as keyof typeof HISTORICAL_ADDRESSES
+  ].governanceAddresses as Address[];
 
-  const { data: proposalsCount } = useQuery<bigint>({
-    queryKey: ['proposalsCount', chainId],
-    staleTime: Infinity,
-    enabled: _enabled,
+  const { data: proposalsCount } = useQuery({
+    queryKey: ['proposals-count', chainId],
     queryFn: async () => {
-      try {
-        const result =
-          await emergencyProtectedTimelock.readContract('getProposalsCount');
-        return result === null ? 0n : result;
-      } catch (error) {
-        console.debug('Proposals count check skipped:', error);
-        return 0n;
+      if (!emergencyProtectedTimelock) {
+        throw new Error('Emergency Protected Timelock contract not found');
       }
+
+      return await emergencyProtectedTimelock.readContract('getProposalsCount');
     },
+    enabled,
+    staleTime: 30000,
   });
 
-  return useQuery<ProposalsQueryResult, Error>({
-    queryKey: proposalsCount
-      ? [
-          'getProposals',
-          emergencyProtectedTimelock.address,
-          proposalsCount.toString(),
-          chainId,
-        ]
-      : ['getProposals', emergencyProtectedTimelock.address, chainId],
-    queryFn: async (): Promise<ProposalsQueryResult> => {
-      if (!publicClient || proposalsCount === undefined) {
-        return { proposalsCount: 0n, proposals: [] };
+  return useQuery({
+    queryKey: ['get-proposals', chainId, Number(proposalsCount)],
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: 'always',
+    enabled: enabled && !!emergencyProtectedTimelock && !!publicClient,
+    queryFn: async () => {
+      if (!publicClient || !emergencyProtectedTimelock) {
+        return id !== undefined ? null : { proposalsCount: 0n, proposals: [] };
       }
+
       try {
-        const { mergedProposalSubmittedEvents } =
-          await getProposalSubmittedEvents({
-            client: publicClient,
+        if (id !== undefined) {
+          return await fetchProposal({
+            id,
+            publicClient,
             EPTContract: emergencyProtectedTimelock,
+            chainId,
+            governanceAddresses,
           });
+        }
 
-        const mapProposalsData = mergedProposalSubmittedEvents.map(
-          async (mergedProposalSubmittedEvent) => {
-            try {
-              const proposalInfo =
-                await emergencyProtectedTimelock.readContract('getProposal', [
-                  BigInt(mergedProposalSubmittedEvent.proposalId.toString()),
-                ]);
+        if (proposalsCount === undefined) {
+          return { proposalsCount: 0n, proposals: [] };
+        }
 
-              const result: ProposalCombinedData = {
-                ...mergedProposalSubmittedEvent,
-                proposalId: Number(mergedProposalSubmittedEvent.proposalId),
-                proposalDetails: {
-                  ...proposalInfo[0],
-                },
-              };
-
-              const voteId = await isAragonProposal({
-                client: publicClient,
-                proposalLog: mergedProposalSubmittedEvent.DGEvent,
-                chainId,
-              });
-
-              if (voteId) {
-                result.voteId = Number(voteId);
-              }
-
-              return result;
-            } catch (e) {
-              console.error(
-                `Failed to process proposal data for log with ID ${mergedProposalSubmittedEvent.proposalId}:`,
-                e,
-              );
-              throw new Error('Failed to prepare proposals data');
-            }
-          },
-        );
-
-        const proposals = await Promise.all(mapProposalsData);
+        const proposals = await fetchProposals({
+          proposalsCount,
+          publicClient,
+          EPTContract: emergencyProtectedTimelock,
+          governanceAddresses,
+          chainId,
+        });
 
         return { proposalsCount, proposals };
       } catch (error) {
-        console.error('Failed to fetch proposals:', error);
-        throw new Error('Failed to fetch proposals');
+        const errorSuffix = id !== undefined ? ' ' + id : 's';
+        console.error(`Failed to fetch proposal${errorSuffix}:`, error);
+        throw new Error(`Failed to fetch proposal${errorSuffix}`);
       }
     },
-    refetchOnWindowFocus: true,
-    enabled: !!publicClient && proposalsCount !== undefined && _enabled,
   });
 };

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
 import {
   ActionsWrapper,
@@ -12,7 +13,7 @@ import {
   SubmitDate,
 } from './style';
 import { Text } from 'shared/components/text';
-import { useProposal } from 'features/dual-governance/hooks/use-proposal';
+import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
@@ -29,13 +30,17 @@ import { config } from 'config';
 import { Box } from '@lidofinance/lido-ui';
 import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
-import { getProposalExecutedEvent } from 'features/dual-governance/events/getProposalExecutedEvent';
+import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useDynamicDualGovernance } from '../../hooks';
 import { ProposalStatus } from '../types';
+import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
+import { useProposals } from '../../hooks/use-proposals';
+import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
+import { Log, PublicClient } from 'viem';
 
 type Props = {
   id: number;
@@ -44,29 +49,70 @@ type Props = {
 export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
 
+  const [proposal, setProposal] = useState<ProposalCombinedData | null>(null);
+  const [voteId, setVoteId] = useState<number | null>(null);
+
   const { isConnected, address } = useAccount();
   const isSupportedChain = useIsSupportedChain();
-
   const { chainId } = useLidoSDK();
-
   const client = usePublicClient();
-
-  const [proposalExecutedAt, setProposalExecutedAt] = useState<string | null>(
-    null,
-  );
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const {
-    data: proposal,
-    isLoading,
-    refetch: refetchProposal,
-  } = useProposal({ id });
+    getProposalById,
+    isLoading: isProposalsLoading,
+    refetchProposals,
+  } = useDualGovernanceProposalsContext();
+
+  const cachedProposal = getProposalById(id);
+
+  const { data: queryVoteId, isLoading: isVoteIdLoading } = useQuery({
+    queryKey: ['proposal-vote-id', chainId],
+    queryFn: async () => {
+      return await isAragonProposal({
+        client: client as PublicClient,
+        proposalLog: cachedProposal?.DGEvent as unknown as Log,
+        chainId,
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!proposal?.voteId && !isVoteIdLoading && queryVoteId && !voteId) {
+      setVoteId(Number(queryVoteId));
+    } else if (proposal && proposal.voteId && !voteId) {
+      setVoteId(proposal.voteId);
+    }
+  }, [isVoteIdLoading, proposal, queryVoteId, voteId]);
+
+  const { data: fetchedProposal, isLoading: isFetchLoading } = useProposals({
+    id,
+    enabled: !cachedProposal && !isProposalsLoading,
+  }) as UseQueryResult<ProposalCombinedData>;
+
+  const isLoading = isProposalsLoading || isFetchLoading;
+
+  useEffect(() => {
+    if (!cachedProposal && !fetchedProposal) {
+      setProposal(null);
+      return;
+    }
+
+    if (cachedProposal) {
+      setProposal(cachedProposal);
+      return;
+    }
+
+    if (fetchedProposal) {
+      setProposal(fetchedProposal);
+    }
+  }, [cachedProposal, fetchedProposal, id]);
 
   const proposalStatusInfo = useProposalStatus({
-    proposalStatus: proposal?.proposalDetails.status,
-    submittedAt: proposal?.proposalDetails.submittedAt,
-    scheduledAt: proposal?.proposalDetails.scheduledAt,
+    proposalStatus: proposal?.proposalDetails?.status || 0,
+    submittedAt: proposal?.proposalDetails?.submittedAt || 0,
+    scheduledAt: proposal?.proposalDetails?.scheduledAt || 0,
   });
 
   const { readDynamicContract } = useDynamicDualGovernance();
@@ -74,10 +120,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
     EmergencyProtectedTimelock,
   );
 
-  useEffect(() => {
-    const fetchEvent = async () => {
+  const { data: proposalExecutedAt } = useQuery({
+    queryKey: ['proposal-executed-event', proposal?.proposalId, chainId],
+    queryFn: async () => {
       if (!proposal?.proposalId || !client || !chainId) {
-        return;
+        return null;
       }
 
       try {
@@ -97,25 +144,27 @@ export const ProposalFullInfo = ({ id }: Props) => {
               showYear: true,
             });
 
-            setProposalExecutedAt(`${date.date} ${date.tz}`);
+            return `${date.date} ${date.tz}`;
           }
         }
+        return null;
       } catch (error) {
         console.error('Error fetching proposal executed event:', error);
-      } finally {
-        // setLogsLoading(false);
+        return null;
       }
-    };
-
-    void fetchEvent();
-  }, [chainId, client, proposal?.proposalId]);
+    },
+    enabled:
+      !!proposal?.proposalId &&
+      !!client &&
+      !!chainId &&
+      proposal?.proposalDetails.status == ProposalStatus.Executed,
+  });
 
   const updateProposalState = useCallback(async () => {
-    await refetchProposal();
+    await refetchProposals();
     setIsScheduleLoading(false);
     setIsExecuteLoading(false);
-    setShowExecuteButton(false);
-  }, [refetchProposal]);
+  }, [refetchProposals]);
 
   const scheduleProposal = useScheduleProposalAction({
     onConfirm: updateProposalState,
@@ -123,31 +172,26 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const executeProposal = useExecuteProposalAction({
     onConfirm: updateProposalState,
-    isEmergencyMode: isEmergencyModeActive,
   });
-
-  const [showScheduleButton, setShowScheduleButton] = useState(false);
-  const [showExecuteButton, setShowExecuteButton] = useState(false);
-  const [isEmergencyExecutionCommittee, setIsEmergencyExecutionCommittee] =
-    useState(false);
 
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState(false);
 
-  /**
-   *  Check if we can schedule | execute proposals
-   **/
-
-  useEffect(() => {
-    const fetchEmergencyExecutionCommittee = async () => {
+  const { data: isEmergencyExecutionCommittee = false } = useQuery({
+    queryKey: [
+      'emergency-execution-committee',
+      address,
+      isConnected,
+      isSupportedChain,
+    ],
+    queryFn: async () => {
       if (
         !emergencyProtectedTimelock ||
         !address ||
         !isConnected ||
         !isSupportedChain
       ) {
-        setIsEmergencyExecutionCommittee(false);
-        return;
+        return false;
       }
 
       try {
@@ -157,30 +201,45 @@ export const ProposalFullInfo = ({ id }: Props) => {
           );
 
         if (typeof emergencyExecutionCommittee === 'string' && address) {
-          setIsEmergencyExecutionCommittee(
-            emergencyExecutionCommittee.toLowerCase() === address.toLowerCase(),
+          return (
+            emergencyExecutionCommittee.toLowerCase() === address.toLowerCase()
           );
         } else {
-          setIsEmergencyExecutionCommittee(false);
+          return false;
         }
       } catch (error) {
         console.error('Error fetching emergency execution committee:', error);
-        setIsEmergencyExecutionCommittee(false);
+        return false;
       }
-    };
+    },
+    enabled:
+      !!emergencyProtectedTimelock &&
+      !!address &&
+      isConnected &&
+      isSupportedChain,
+  });
 
-    void fetchEmergencyExecutionCommittee();
-  }, [emergencyProtectedTimelock, address, isConnected, isSupportedChain]);
-
-  useEffect(() => {
-    const fetchActions = async () => {
+  const {
+    data: actionButtons = {
+      showScheduleButton: false,
+      showExecuteButton: false,
+    },
+  } = useQuery({
+    queryKey: [
+      'proposal-actions',
+      id,
+      proposal?.proposalDetails?.status,
+      isEmergencyModeActive,
+      isEmergencyExecutionCommittee,
+    ],
+    queryFn: async () => {
       if (
         !emergencyProtectedTimelock ||
         !readDynamicContract ||
         !id ||
         !proposal
       ) {
-        return;
+        return { showScheduleButton: false, showExecuteButton: false };
       }
 
       try {
@@ -193,34 +252,31 @@ export const ProposalFullInfo = ({ id }: Props) => {
           [BigInt(id)],
         );
 
-        setShowScheduleButton(!!canSchedule);
-
         const isExecuted =
-          proposal?.proposalDetails.status === ProposalStatus.Executed;
+          proposal?.proposalDetails?.status === ProposalStatus.Executed;
 
-        if (
+        const showExecuteButton =
           !isExecuted &&
           (canExecute ||
-            (isEmergencyModeActive && isEmergencyExecutionCommittee))
-        ) {
-          setShowExecuteButton(true);
-        } else {
-          setShowExecuteButton(false);
-        }
+            (isEmergencyModeActive && isEmergencyExecutionCommittee));
+
+        return {
+          showScheduleButton: !!canSchedule,
+          showExecuteButton,
+        };
       } catch (e) {
         console.error('Failed to fetch proposal actions', e);
+        return { showScheduleButton: false, showExecuteButton: false };
       }
-    };
+    },
+    enabled:
+      !!emergencyProtectedTimelock &&
+      !!readDynamicContract &&
+      !!id &&
+      !!proposal,
+  });
 
-    void fetchActions();
-  }, [
-    readDynamicContract,
-    emergencyProtectedTimelock,
-    id,
-    proposal,
-    isEmergencyModeActive,
-    isEmergencyExecutionCommittee,
-  ]);
+  const { showScheduleButton, showExecuteButton } = actionButtons;
 
   const handleSchedule = async () => {
     setIsScheduleLoading(true);
@@ -246,7 +302,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     }
 
     const date = getDateFromTimestamp({
-      timestamp: proposal.proposalDetails.submittedAt,
+      timestamp: proposal.proposalDetails?.submittedAt || 0,
       showYear: true,
     });
 
@@ -254,12 +310,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
   }, [proposal]);
 
   const scheduledAt = useMemo(() => {
-    if (!proposal || !proposal.proposalDetails.scheduledAt) {
+    if (!proposal || !proposal.proposalDetails?.scheduledAt) {
       return null;
     }
 
     const date = getDateFromTimestamp({
-      timestamp: proposal.proposalDetails.scheduledAt,
+      timestamp: proposal.proposalDetails?.scheduledAt || 0,
       showYear: true,
     });
 
@@ -277,7 +333,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     );
   }
 
-  const calls = proposal.EPTEvent?.args.calls;
+  const calls = proposal.proposalDetails?.calls || [];
 
   return (
     <ProposalContainer>
@@ -299,19 +355,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
       <ProposalStateLogWrapper>
         {submittedAt && (
           <>
-            {proposal.voteId && (
+            {voteId && (
               <SubmitDate as="span">
                 Submitted from{' '}
                 <ProposalLink
-                  href={`${config.voteOrigin}/vote/${proposal.voteId}`}
+                  href={`${config.voteOrigin}/vote/${voteId}`}
                   target="_blank"
                 >
-                  Aragon {proposal.voteId}
+                  Aragon {voteId}
                 </ProposalLink>{' '}
                 on {submittedAt}
               </SubmitDate>
             )}
-            {!proposal.voteId && (
+            {!voteId && (
               <SubmitDate as="span">Submitted on {submittedAt}</SubmitDate>
             )}
           </>
@@ -324,7 +380,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
       </ProposalStateLogWrapper>
       <Box margin={'30px 0'}>
-        {proposal.voteId && (
+        {voteId && (
           <>
             <Text weight={500} size={28}>
               Description
@@ -342,7 +398,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
             )}
           </>
         )}
-        {!proposal.voteId && (
+        {!voteId && (
           <Text weight={500} size={22}>
             Proposal submitted by {proposal?.DGEvent?.args.proposerAccount}
           </Text>

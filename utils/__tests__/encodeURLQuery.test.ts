@@ -1,4 +1,4 @@
-import { encodeURLQuery } from '../encodeURLQuery';
+import { encodeURLQuery } from '../encode-url-query';
 
 describe('encodeURLQuery', () => {
   it('should encode query params correctly', () => {

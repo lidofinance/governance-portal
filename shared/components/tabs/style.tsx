@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const FormWrapper = styled.div`
   margin-top: 24px;
@@ -32,12 +33,18 @@ export const StyledTab = styled.div<TabProps>`
     css`
       opacity: 0.5;
     `}
+
+  @media ${devicesHeaderMedia.tablet} {
+    label {
+      padding: 10px;
+    }
+  }
 `;
 
 export const TabsWrapper = styled.section`
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: stretch;
 
   & > ${StyledTab} {
     flex: 1;

@@ -2,10 +2,10 @@ import { ProposalFullInfo } from 'features/dual-governance/proposals/proposal-fu
 import { VisibleGovernanceState } from '../types';
 import { BackgroundGradient } from 'shared/components';
 import Head from 'next/head';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 export const ProposalPage = ({ id }: { id: number }) => {
-  const { visibleState } = useDualGovernanceContext();
+  const { visibleState } = useDualGovernanceStateContext();
 
   return (
     <>

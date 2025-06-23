@@ -254,13 +254,14 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 export const StETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
   [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
-  [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a',
+  // [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a',
+  [CHAINS.Hoodi]: '0x7853038c89a91752de79094db32fede15b5c6a4b',
 };
 
 export const WstETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
   [CHAINS.Holesky]: '0x67b3c1e122ff0b778c9dedc1de2fb0f451aa12c8',
-  [CHAINS.Hoodi]: '0x7E99eE3C66636DE415D2d7C880938F2f40f94De4',
+  [CHAINS.Hoodi]: '0xccdc9c43eaa165edeb1fc0c98d781b9fe318582a',
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
@@ -272,13 +273,15 @@ export const WithdrawalQueue: ChainAddressMap = {
 export const Voting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x2e59A20f205bB85a89C53f1936454680651E618e',
   [CHAINS.Holesky]: '0xdA7d2573Df555002503F29aA4003e398d28cc00f',
-  [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
+  // [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
+  [CHAINS.Hoodi]: '0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636',
 };
 
 export const DualGovernance: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xcdF49b058D606AD34c5789FD8c3BF8B3E54bA2db',
   [CHAINS.Holesky]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199',
-  [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F',
+  // [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F',
+  [CHAINS.Hoodi]: '0x3Dec3C5Ef9C53234B55705DDC892b106A1C47bCa',
 };
 
 export const AdminExecutor: ChainAddressMap = {
@@ -290,7 +293,8 @@ export const AdminExecutor: ChainAddressMap = {
 export const EmergencyProtectedTimelock: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316',
   [CHAINS.Holesky]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
-  [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
+  // [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
+  [CHAINS.Hoodi]: '0xbcdD50FEAE9584308c12321b8A0f68Fe81EC04a8',
 };
 
 export const EmergencyExecutionCommitteeProposed: ChainAddressMap = {
@@ -304,8 +308,7 @@ export const EmergencyActivationCommitteeProposed: ChainAddressMap = {
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
-  // [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE', // actual
-  [CHAINS.Mainnet]: '0x75850938C1Aa50B8cC6eb3c00995759dc1425ae6', // temporary emergency for smoke test
+  [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
   [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
   [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
 };
@@ -348,16 +351,23 @@ export const EVMScriptExecutor: ChainAddressMap = {
 };
 
 export const DualGovernanceLaunchVerifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xd48c2fc419569537bb069bad2165dc0ceb160cec',
   [CHAINS.Hoodi]: '0x98FC7b149767302647D8e1dA1463F0051978826B',
 };
 
 export const DualGovernanceRolesValidator: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x31534e3aFE219B609da3715a00a1479D2A2d7981',
   [CHAINS.Hoodi]: '0x9CCe5BfAcDcf80DAd2287106b57197284DacaE3F',
 };
 
 export const DualGovernanceTimeConstraints: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xB26Fd3b50280AbC55c572EE73071778A51088408',
   [CHAINS.Mainnet]: '0x2a30F5aC03187674553024296bed35Aa49749DDa',
+};
+
+export const DualGovernanceEscrow: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xA8F14D033f377779274Ae016584a05bF14Dccaf8',
+  [CHAINS.Hoodi]: '0x5e2EE9DCBE8C9433F22Dd3c5EFDe0Af6DC293405',
 };
 
 export const EscrowMasterCopy: ChainAddressMap = {
@@ -373,4 +383,16 @@ export const DualGovernanceResealManager: ChainAddressMap = {
 export const DualGovernanceTieBreakerCore: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x175742c3DDD88B0192df3EcF98f180A79cb259D0',
   [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
+};
+
+export const EVMScriptRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x853cc0D5917f49B57B8e9F89e491F5E18919093A',
+};
+
+export const AllowedTokensRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x4ac40c34f8992bb1e5e856a448792158022551ca',
+};
+
+export const InsuranceFund: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x8B3f33234ABD88493c0Cd28De33D583B70beDe35',
 };

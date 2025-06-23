@@ -11,10 +11,10 @@ import { RevocationPanel } from './revocation-panel';
 import { DualGovernanceControlPanelPreview } from './preview';
 import { useEscrowBalances } from '../hooks/use-escrow-balances';
 import { VisibleGovernanceState } from '../types';
-import { useDualGovernanceContext } from 'providers/dual-governance';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
 export const DualGovernanceControlPanel = () => {
-  const { visibleState } = useDualGovernanceContext();
+  const { visibleState } = useDualGovernanceStateContext();
   const [activeTab, setActiveTab] = useState('support');
 
   useEffect(() => {
@@ -31,6 +31,8 @@ export const DualGovernanceControlPanel = () => {
   useEffect(() => {
     if (data && data.totalLockedSharesInEscrows !== 0n) {
       setIsPreviewVisible(false);
+    } else {
+      setIsPreviewVisible(true);
     }
   }, [data]);
 
