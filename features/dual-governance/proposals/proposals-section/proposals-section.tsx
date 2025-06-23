@@ -52,8 +52,8 @@ export const ProposalsSection = () => {
             <ProposalsTitle>Proposals</ProposalsTitle>
 
             <ProposalsDisclaimer>
-              <b>Disclaimer:</b> Description provided by the Aragon proposal
-              author; <br />
+              <b>Disclaimer:</b> Description provided by the proposal author;{' '}
+              <br />
               may include items not under Dual Governance
             </ProposalsDisclaimer>
           </FlexWrapper>
