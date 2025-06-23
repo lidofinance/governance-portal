@@ -351,16 +351,23 @@ export const EVMScriptExecutor: ChainAddressMap = {
 };
 
 export const DualGovernanceLaunchVerifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xd48c2fc419569537bb069bad2165dc0ceb160cec',
   [CHAINS.Hoodi]: '0x98FC7b149767302647D8e1dA1463F0051978826B',
 };
 
 export const DualGovernanceRolesValidator: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x31534e3aFE219B609da3715a00a1479D2A2d7981',
   [CHAINS.Hoodi]: '0x9CCe5BfAcDcf80DAd2287106b57197284DacaE3F',
 };
 
 export const DualGovernanceTimeConstraints: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xB26Fd3b50280AbC55c572EE73071778A51088408',
   [CHAINS.Mainnet]: '0x2a30F5aC03187674553024296bed35Aa49749DDa',
+};
+
+export const DualGovernanceEscrow: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xA8F14D033f377779274Ae016584a05bF14Dccaf8',
+  [CHAINS.Hoodi]: '0x5e2EE9DCBE8C9433F22Dd3c5EFDe0Af6DC293405',
 };
 
 export const EscrowMasterCopy: ChainAddressMap = {
@@ -376,4 +383,16 @@ export const DualGovernanceResealManager: ChainAddressMap = {
 export const DualGovernanceTieBreakerCore: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x175742c3DDD88B0192df3EcF98f180A79cb259D0',
   [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
+};
+
+export const EVMScriptRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x853cc0D5917f49B57B8e9F89e491F5E18919093A',
+};
+
+export const AllowedTokensRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x4ac40c34f8992bb1e5e856a448792158022551ca',
+};
+
+export const InsuranceFund: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x8B3f33234ABD88493c0Cd28De33D583B70beDe35',
 };
