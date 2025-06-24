@@ -53,7 +53,7 @@ export const TxStageSignOperationAmount = (props: Props) => {
   const amountEl = (
     <TxAmount
       amount={
-        token == Token.stETH && convertedStETHLockedShares
+        token === Token.stETH && convertedStETHLockedShares
           ? convertedStETHLockedShares
           : props.amount
       }

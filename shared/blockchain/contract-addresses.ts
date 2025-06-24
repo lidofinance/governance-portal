@@ -254,8 +254,8 @@ export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
 export const StETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
   [CHAINS.Holesky]: '0x7a955618ff2ad00d58e5c38205bc1f0b33bc5494',
-  // [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a',
-  [CHAINS.Hoodi]: '0x7853038c89a91752de79094db32fede15b5c6a4b',
+  [CHAINS.Hoodi]: '0x3508A952176b3c15387C97BE809eaffB1982176a',
+  // [CHAINS.Hoodi]: '0x7853038c89a91752de79094db32fede15b5c6a4b',
 };
 
 export const WstETH: ChainAddressMap = {
@@ -280,8 +280,8 @@ export const Voting: ChainAddressMap = {
 export const DualGovernance: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xcdF49b058D606AD34c5789FD8c3BF8B3E54bA2db',
   [CHAINS.Holesky]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199',
-  // [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F',
-  [CHAINS.Hoodi]: '0x3Dec3C5Ef9C53234B55705DDC892b106A1C47bCa',
+  [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F',
+  // [CHAINS.Hoodi]: '0x3Dec3C5Ef9C53234B55705DDC892b106A1C47bCa',
 };
 
 export const AdminExecutor: ChainAddressMap = {
@@ -293,8 +293,8 @@ export const AdminExecutor: ChainAddressMap = {
 export const EmergencyProtectedTimelock: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316',
   [CHAINS.Holesky]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
-  // [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
-  [CHAINS.Hoodi]: '0xbcdD50FEAE9584308c12321b8A0f68Fe81EC04a8',
+  [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
+  // [CHAINS.Hoodi]: '0xbcdD50FEAE9584308c12321b8A0f68Fe81EC04a8',
 };
 
 export const EmergencyExecutionCommitteeProposed: ChainAddressMap = {
