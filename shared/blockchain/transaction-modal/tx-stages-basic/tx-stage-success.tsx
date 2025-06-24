@@ -20,6 +20,7 @@ type TxStageSuccessProps = {
   nftIds?: string[] | object | null;
   token?: Token | 'ETH' | null;
   showStakeLink?: boolean;
+  convertShares?: boolean;
 };
 
 export const TxStageSuccess = ({
@@ -33,6 +34,7 @@ export const TxStageSuccess = ({
   amount,
   nftIds,
   token,
+  convertShares = true,
 }: TxStageSuccessProps) => {
   const { data: convertedStETHLockedShares } = useStETHConversion(
     token === Token.stETH && amount ? amount : 0n,
@@ -44,7 +46,7 @@ export const TxStageSuccess = ({
       {amount && token ? (
         <TxAmount
           amount={
-            token === Token.stETH && convertedStETHLockedShares
+            token === Token.stETH && convertShares && convertedStETHLockedShares
               ? convertedStETHLockedShares
               : amount
           }

@@ -31,7 +31,11 @@ export const getEscrowActionModalStages = (
           {...args}
         />,
       ),
-    success: (args: EscrowActionWithEthArgs, txHash?: string) => {
+    success: (
+      args: EscrowActionWithEthArgs,
+      txHash?: string,
+      convertShares?: boolean,
+    ) => {
       // Show stake link only when revoking unstETH tokens
       const showStakeLink =
         args.token === Token.unstETH && operationText === 'revoking';
@@ -46,6 +50,7 @@ export const getEscrowActionModalStages = (
           nftIds={isWithdrawalNFTArgs(args) ? args.selectedNftIds : null}
           token={args.token}
           showStakeLink={showStakeLink}
+          convertShares={convertShares}
         />,
         {
           isClosableOnLedger: true,

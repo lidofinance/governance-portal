@@ -11,10 +11,19 @@ type CommonProps = {
   txHash?: string;
 };
 
-type Props = CommonProps & EscrowActionWithEthArgs;
+type Props = CommonProps &
+  EscrowActionWithEthArgs & {
+    convertShares?: boolean;
+  };
 
 export const TxStageSignOperationAmount = (props: Props) => {
-  const { token, operationText, isPending, txHash } = props;
+  const {
+    token,
+    operationText,
+    isPending,
+    txHash,
+    convertShares = true,
+  } = props;
   const Component = isPending ? TxStagePending : TxStageSign;
 
   const { data: convertedStETHLockedShares } = useStETHConversion(
@@ -53,7 +62,7 @@ export const TxStageSignOperationAmount = (props: Props) => {
   const amountEl = (
     <TxAmount
       amount={
-        token === Token.stETH && convertedStETHLockedShares
+        token === Token.stETH && convertShares && convertedStETHLockedShares
           ? convertedStETHLockedShares
           : props.amount
       }

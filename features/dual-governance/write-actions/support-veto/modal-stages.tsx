@@ -20,6 +20,7 @@ const getTxModalStagesSupport = (
     return transitStage(
       <TxStageSignOperationAmount
         operationText={STAGE_APPROVE_TEXT}
+        convertShares={false}
         {...args}
       />,
     );
@@ -31,6 +32,7 @@ const getTxModalStagesSupport = (
         operationText={STAGE_APPROVE_TEXT}
         isPending
         txHash={txHash}
+        convertShares={false}
         {...args}
       />,
     );

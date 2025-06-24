@@ -261,7 +261,8 @@ export const StETH: ChainAddressMap = {
 export const WstETH: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
   [CHAINS.Holesky]: '0x67b3c1e122ff0b778c9dedc1de2fb0f451aa12c8',
-  [CHAINS.Hoodi]: '0xccdc9c43eaa165edeb1fc0c98d781b9fe318582a',
+  // [CHAINS.Hoodi]: '0xccdc9c43eaa165edeb1fc0c98d781b9fe318582a',
+  [CHAINS.Hoodi]: '0x7E99eE3C66636DE415D2d7C880938F2f40f94De4',
 };
 
 export const WithdrawalQueue: ChainAddressMap = {
