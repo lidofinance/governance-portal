@@ -35,6 +35,7 @@ export const TokenBalance = (props: Props) => {
   } = props;
   const [isNftShortView, setIsNftShortView] = useState<boolean>(false);
 
+  // convert stETH shares
   const { data: convertedStETHLockedShares } = useStETHConversion(
     token === Token.stETH && balance ? balance : 0n,
   );
