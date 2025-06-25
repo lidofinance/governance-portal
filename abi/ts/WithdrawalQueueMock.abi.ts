@@ -16,11 +16,21 @@ export const withdrawalQueueMockAbi = [
     type: 'constructor',
   },
   {
-    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
     name: 'AddressInsufficientBalance',
     type: 'error',
   },
-  { inputs: [], name: 'ApprovalToOwner', type: 'error' },
+  {
+    inputs: [],
+    name: 'ApprovalToOwner',
+    type: 'error',
+  },
   {
     inputs: [],
     name: 'ApproveToCaller',
@@ -33,12 +43,20 @@ export const withdrawalQueueMockAbi = [
         name: '_firstArrayLength',
         type: 'uint256',
       },
-      { internalType: 'uint256', name: '_secondArrayLength', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: '_secondArrayLength',
+        type: 'uint256',
+      },
     ],
     name: 'ArraysLengthMismatch',
     type: 'error',
   },
-  { inputs: [], name: 'FailedInnerCall', type: 'error' },
+  {
+    inputs: [],
+    name: 'FailedInnerCall',
+    type: 'error',
+  },
   {
     inputs: [
       {
@@ -51,13 +69,23 @@ export const withdrawalQueueMockAbi = [
     type: 'error',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_requestId', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_requestId',
+        type: 'uint256',
+      },
+    ],
     name: 'InvalidRequestId',
     type: 'error',
   },
   {
     inputs: [
-      { internalType: 'uint256', name: 'startId', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: 'startId',
+        type: 'uint256',
+      },
       {
         internalType: 'uint256',
         name: 'endId',
@@ -69,7 +97,11 @@ export const withdrawalQueueMockAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: '_sender', type: 'address' },
+      {
+        internalType: 'address',
+        name: '_sender',
+        type: 'address',
+      },
       {
         internalType: 'address',
         name: '_owner',
@@ -80,16 +112,32 @@ export const withdrawalQueueMockAbi = [
     type: 'error',
   },
   {
-    inputs: [{ internalType: 'address', name: 'sender', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+    ],
     name: 'NotOwnerOrApproved',
     type: 'error',
   },
   {
-    inputs: [{ internalType: 'address', name: 'sender', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+    ],
     name: 'NotOwnerOrApprovedForAll',
     type: 'error',
   },
-  { inputs: [], name: 'PausedExpected', type: 'error' },
+  {
+    inputs: [],
+    name: 'PausedExpected',
+    type: 'error',
+  },
   {
     inputs: [
       {
@@ -101,7 +149,11 @@ export const withdrawalQueueMockAbi = [
     name: 'RequestAlreadyClaimed',
     type: 'error',
   },
-  { inputs: [], name: 'RequestIdsNotSorted', type: 'error' },
+  {
+    inputs: [],
+    name: 'RequestIdsNotSorted',
+    type: 'error',
+  },
   {
     inputs: [
       {
@@ -113,13 +165,21 @@ export const withdrawalQueueMockAbi = [
     name: 'RequestNotFoundOrNotFinalized',
     type: 'error',
   },
-  { inputs: [], name: 'ResumedExpected', type: 'error' },
+  {
+    inputs: [],
+    name: 'ResumedExpected',
+    type: 'error',
+  },
   {
     inputs: [],
     name: 'TransferToThemselves',
     type: 'error',
   },
-  { inputs: [], name: 'TransferToZeroAddress', type: 'error' },
+  {
+    inputs: [],
+    name: 'TransferToZeroAddress',
+    type: 'error',
+  },
   {
     anonymous: false,
     inputs: [
@@ -160,7 +220,12 @@ export const withdrawalQueueMockAbi = [
         name: 'operator',
         type: 'address',
       },
-      { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'approved',
+        type: 'bool',
+      },
     ],
     name: 'ApprovalForAll',
     type: 'event',
@@ -168,7 +233,12 @@ export const withdrawalQueueMockAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'from', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
       {
         indexed: true,
         internalType: 'address',
@@ -188,48 +258,62 @@ export const withdrawalQueueMockAbi = [
   {
     inputs: [],
     name: 'MAX_STETH_WITHDRAWAL_AMOUNT',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'MIN_STETH_WITHDRAWAL_AMOUNT',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'PAUSE_INFINITELY',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'PAUSE_ROLE',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'RESUME_ROLE',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
-    stateMutability: 'pure',
     type: 'function',
   },
   {
     inputs: [],
     name: 'ST_ETH',
-    outputs: [{ internalType: 'contract IStETH', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'contract IStETH',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: '_to', type: 'address' },
+      {
+        internalType: 'address',
+        name: '_to',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: '_requestId',
@@ -242,9 +326,21 @@ export const withdrawalQueueMockAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_owner',
+        type: 'address',
+      },
+    ],
     name: 'balanceOf',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -255,7 +351,11 @@ export const withdrawalQueueMockAbi = [
         name: '_requestIds',
         type: 'uint256[]',
       },
-      { internalType: 'uint256[]', name: '_hints', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: '_hints',
+        type: 'uint256[]',
+      },
     ],
     name: 'claimWithdrawals',
     outputs: [],
@@ -269,7 +369,11 @@ export const withdrawalQueueMockAbi = [
         name: '_lastRequestIdToBeFinalized',
         type: 'uint256',
       },
-      { internalType: 'uint256', name: '_maxShareRate', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: '_maxShareRate',
+        type: 'uint256',
+      },
     ],
     name: 'finalize',
     outputs: [],
@@ -283,7 +387,11 @@ export const withdrawalQueueMockAbi = [
         name: '_requestIds',
         type: 'uint256[]',
       },
-      { internalType: 'uint256', name: '_firstIndex', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: '_firstIndex',
+        type: 'uint256',
+      },
       {
         internalType: 'uint256',
         name: '_lastIndex',
@@ -292,15 +400,31 @@ export const withdrawalQueueMockAbi = [
     ],
     name: 'findCheckpointHints',
     outputs: [
-      { internalType: 'uint256[]', name: 'hintIds', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: 'hintIds',
+        type: 'uint256[]',
+      },
     ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_requestId', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_requestId',
+        type: 'uint256',
+      },
+    ],
     name: 'getApproved',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -311,7 +435,11 @@ export const withdrawalQueueMockAbi = [
         name: '_requestIds',
         type: 'uint256[]',
       },
-      { internalType: 'uint256[]', name: '_hints', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: '_hints',
+        type: 'uint256[]',
+      },
     ],
     name: 'getClaimableEther',
     outputs: [
@@ -327,34 +455,62 @@ export const withdrawalQueueMockAbi = [
   {
     inputs: [],
     name: 'getLastCheckpointIndex',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getLastFinalizedRequestId',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getLastRequestId',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getResumeSinceTimestamp',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'uint256[]', name: '_requestIds', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: '_requestIds',
+        type: 'uint256[]',
+      },
     ],
     name: 'getWithdrawalStatus',
     outputs: [
@@ -365,19 +521,31 @@ export const withdrawalQueueMockAbi = [
             name: 'amountOfStETH',
             type: 'uint256',
           },
-          { internalType: 'uint256', name: 'amountOfShares', type: 'uint256' },
+          {
+            internalType: 'uint256',
+            name: 'amountOfShares',
+            type: 'uint256',
+          },
           {
             internalType: 'address',
             name: 'owner',
             type: 'address',
           },
-          { internalType: 'uint256', name: 'timestamp', type: 'uint256' },
+          {
+            internalType: 'uint256',
+            name: 'timestamp',
+            type: 'uint256',
+          },
           {
             internalType: 'bool',
             name: 'isFinalized',
             type: 'bool',
           },
-          { internalType: 'bool', name: 'isClaimed', type: 'bool' },
+          {
+            internalType: 'bool',
+            name: 'isClaimed',
+            type: 'bool',
+          },
         ],
         internalType: 'struct IWithdrawalQueue.WithdrawalRequestStatus[]',
         name: 'statuses',
@@ -389,7 +557,11 @@ export const withdrawalQueueMockAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: '_owner', type: 'address' },
+      {
+        internalType: 'address',
+        name: '_owner',
+        type: 'address',
+      },
       {
         internalType: 'address',
         name: '_operator',
@@ -397,20 +569,36 @@ export const withdrawalQueueMockAbi = [
       },
     ],
     name: 'isApprovedForAll',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'isPaused',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'uint256[]', name: '_requestIds', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: '_requestIds',
+        type: 'uint256[]',
+      },
     ],
     name: 'markClaimed',
     outputs: [],
@@ -420,26 +608,56 @@ export const withdrawalQueueMockAbi = [
   {
     inputs: [],
     name: 'name',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
     stateMutability: 'pure',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_requestId', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_requestId',
+        type: 'uint256',
+      },
+    ],
     name: 'ownerOf',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_duration', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_duration',
+        type: 'uint256',
+      },
+    ],
     name: 'pauseFor',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'amountOfETH', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountOfETH',
+        type: 'uint256',
+      },
+    ],
     name: 'refundEth',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -447,7 +665,11 @@ export const withdrawalQueueMockAbi = [
   },
   {
     inputs: [
-      { internalType: 'uint256[]', name: '_amounts', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: '_amounts',
+        type: 'uint256[]',
+      },
       {
         internalType: 'address',
         name: '_owner',
@@ -456,7 +678,11 @@ export const withdrawalQueueMockAbi = [
     ],
     name: 'requestWithdrawals',
     outputs: [
-      { internalType: 'uint256[]', name: 'requestIds', type: 'uint256[]' },
+      {
+        internalType: 'uint256[]',
+        name: 'requestIds',
+        type: 'uint256[]',
+      },
     ],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -470,13 +696,21 @@ export const withdrawalQueueMockAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: '_from', type: 'address' },
+      {
+        internalType: 'address',
+        name: '_from',
+        type: 'address',
+      },
       {
         internalType: 'address',
         name: '_to',
         type: 'address',
       },
-      { internalType: 'uint256', name: '_requestId', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: '_requestId',
+        type: 'uint256',
+      },
     ],
     name: 'safeTransferFrom',
     outputs: [],
@@ -485,13 +719,21 @@ export const withdrawalQueueMockAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: '', type: 'address' },
       {
         internalType: 'address',
         name: '',
         type: 'address',
       },
-      { internalType: 'uint256', name: '', type: 'uint256' },
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
       {
         internalType: 'bytes',
         name: '',
@@ -505,7 +747,11 @@ export const withdrawalQueueMockAbi = [
   },
   {
     inputs: [
-      { internalType: 'address', name: '_operator', type: 'address' },
+      {
+        internalType: 'address',
+        name: '_operator',
+        type: 'address',
+      },
       {
         internalType: 'bool',
         name: '_approved',
@@ -518,35 +764,73 @@ export const withdrawalQueueMockAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'bytes4', name: 'interfaceId', type: 'bytes4' }],
+    inputs: [
+      {
+        internalType: 'bytes4',
+        name: 'interfaceId',
+        type: 'bytes4',
+      },
+    ],
     name: 'supportsInterface',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'symbol',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
     stateMutability: 'pure',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     name: 'tokenURI',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'address', name: '_from', type: 'address' },
+      {
+        internalType: 'address',
+        name: '_from',
+        type: 'address',
+      },
       {
         internalType: 'address',
         name: '_to',
         type: 'address',
       },
-      { internalType: 'uint256', name: '_requestId', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: '_requestId',
+        type: 'uint256',
+      },
     ],
     name: 'transferFrom',
     outputs: [],

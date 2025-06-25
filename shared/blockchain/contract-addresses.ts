@@ -268,14 +268,13 @@ export const WstETH: ChainAddressMap = {
 export const WithdrawalQueue: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1',
   [CHAINS.Holesky]: '0x27f793CE9306341a8F4Fd6cDadb0c9785D46978a',
-  [CHAINS.Hoodi]: '0x7cc545e36c7571782922b075c2976e938a0cda05',
+  [CHAINS.Hoodi]: '0xfe56573178f1bcdf53F01A6E9977670dcBBD9186',
 };
 
 export const Voting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x2e59A20f205bB85a89C53f1936454680651E618e',
   [CHAINS.Holesky]: '0xdA7d2573Df555002503F29aA4003e398d28cc00f',
-  // [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
-  [CHAINS.Hoodi]: '0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636',
+  [CHAINS.Hoodi]: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
 };
 
 export const DualGovernance: ChainAddressMap = {
