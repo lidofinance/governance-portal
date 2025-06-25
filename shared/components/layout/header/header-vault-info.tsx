@@ -150,6 +150,7 @@ export const HeaderVaultInfo = () => {
                         token={Token.stETH}
                         balance={escrowBalance.stETHLockedShares}
                         showZeroBalance={false}
+                        shouldConvertShares={true}
                       />
                       <TokenBalance
                         token={Token.unstETH}
