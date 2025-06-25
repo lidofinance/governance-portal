@@ -4,6 +4,7 @@ import { TxAmount } from '../tx-stages-parts/tx-amount';
 import { Token } from 'shared/blockchain/types';
 import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
+import { InlineLoader } from '@lidofinance/lido-ui';
 
 type CommonProps = {
   operationText: string;
@@ -13,7 +14,7 @@ type CommonProps = {
 
 type Props = CommonProps &
   EscrowActionWithEthArgs & {
-    convertShares?: boolean;
+    shouldConvertShares?: boolean;
   };
 
 export const TxStageSignOperationAmount = (props: Props) => {
@@ -22,11 +23,11 @@ export const TxStageSignOperationAmount = (props: Props) => {
     operationText,
     isPending,
     txHash,
-    convertShares = true,
+    shouldConvertShares = true,
   } = props;
   const Component = isPending ? TxStagePending : TxStageSign;
 
-  const { data: convertedStETHLockedShares } = useStETHConversion(
+  const { data: convertedStETHLockedShares, isLoading } = useStETHConversion(
     token === Token.stETH ? props?.amount : 0n,
   );
 
@@ -59,10 +60,14 @@ export const TxStageSignOperationAmount = (props: Props) => {
     );
   }
 
-  const amountEl = (
+  const amountEl = isLoading ? (
+    <InlineLoader />
+  ) : (
     <TxAmount
       amount={
-        token === Token.stETH && convertShares && convertedStETHLockedShares
+        token === Token.stETH &&
+        shouldConvertShares &&
+        convertedStETHLockedShares
           ? convertedStETHLockedShares
           : props.amount
       }
