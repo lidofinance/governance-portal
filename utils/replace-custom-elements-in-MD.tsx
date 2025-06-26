@@ -34,7 +34,6 @@ type LinkType = Components['a'];
 
 export const replaceLinksInMD: LinkType = ({ children, href }) => {
   if (href?.match(REGEX_URL_ONLY)) {
-    // Using ExternalLink component to handle external links with modal
     return <ExternalLink href={href}>{children}</ExternalLink>;
   }
   // not supporting internal links

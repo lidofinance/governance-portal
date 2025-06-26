@@ -9,6 +9,7 @@ import { Text } from 'shared/components/text';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
 import { parsePercent16 } from 'shared/blockchain/utils';
+import { Link } from '@lidofinance/lido-ui';
 
 const statusText = {
   loading: 'Loading...',
@@ -36,10 +37,15 @@ type UseProposalStatusReturnType = {
   info: React.JSX.Element | null;
 } | null;
 
-// TODO: add link
 const emergencyCommitteeLinkText = (
   <span>
-    Only <b>Emergency Committee</b> may stop the execution for
+    Only{' '}
+    <b>
+      <Link href="https://docs.lido.fi/multisigs/committees/#2152-proposed-dual-governance-emergency-execution-committee-ethereum">
+        Emergency Committee
+      </Link>
+    </b>{' '}
+    may stop the execution for
   </span>
 );
 

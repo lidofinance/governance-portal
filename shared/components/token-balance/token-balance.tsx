@@ -39,6 +39,7 @@ export const TokenBalance = (props: Props) => {
   const { data: convertedStETHLockedShares } = useStETHConversion(
     token === Token.stETH && balance ? balance : 0n,
   );
+
   // This is to replace Withdrawal NFT label with NFT with no affect to types and constants
   useEffect(() => {
     const handleResize = () => {
@@ -122,7 +123,12 @@ export const TokenBalance = (props: Props) => {
             title={<span>{formatEthFull(balance)}</span>}
           >
             <TokenLabel size={22}>
-              {formatEth(balance)} {token}
+              {formatEth(
+                shouldConvertShares && convertedStETHLockedShares
+                  ? convertedStETHLockedShares
+                  : balance,
+              )}{' '}
+              {token}
               {addOnText ? (
                 <Text as="span" weight={600} size={22} color="secondary">
                   {addOnText}
