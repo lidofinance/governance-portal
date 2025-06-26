@@ -82,7 +82,8 @@ export const CooldownAdditionalSupportInfo = ({
       <b>
         {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
       </b>{' '}
-      is added; Otherwise, Normal begins on <b>{cooldownEndDate?.date}</b>
+      is added to the escrow; Otherwise, Normal begins on{' '}
+      <b>{cooldownEndDate?.date}</b>
     </Text>
   );
 };

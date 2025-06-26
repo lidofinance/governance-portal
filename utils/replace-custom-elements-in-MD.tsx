@@ -6,6 +6,7 @@ import { getIpfsUrl } from './get-ipfs-url';
 import { REGEX_ETH_ADDRESS_ONLY } from './regex-eth-address';
 import { AddressBadge } from '../shared/wallet/address-badge/address-badge';
 import { REGEX_URL_ONLY } from './regex-url';
+import { ExternalLink } from '../shared/components/external-link/external-link';
 
 type CodeType = Components['code'];
 export const replaceAddressAndCIDInMD: CodeType = ({
@@ -33,8 +34,8 @@ type LinkType = Components['a'];
 
 export const replaceLinksInMD: LinkType = ({ children, href }) => {
   if (href?.match(REGEX_URL_ONLY)) {
-    // TODO: We don't want to let click on vote description links until we implement the ExternalLink modal
-    return <Link href="#">{children}</Link>;
+    // Using ExternalLink component to handle external links with modal
+    return <ExternalLink href={href}>{children}</ExternalLink>;
   }
   // not supporting internal links
   return (

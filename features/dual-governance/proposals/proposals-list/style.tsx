@@ -73,6 +73,7 @@ export const MarkdownWrap = styled.div`
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   width: 100%;
+  line-height: 1.6;
 
   & p {
     white-space: pre-wrap;
