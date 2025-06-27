@@ -266,7 +266,7 @@ export const RageQuitTokens = ({
         )}
         {claimedUnstETHRecords.length > 0 && (
           <RevocableTokenItem
-            token={Token.stETH} // NFT becomes stETH after claiming
+            token={'ETH'} // NFT becomes ETH after claiming
             amount={sumUpUnstETHShares(claimedUnstETHRecords)}
             amountLabel={`${claimedUnstETHRecords.length} NFT`}
             isLocked={isWithdrawalLocked}
