@@ -64,12 +64,13 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       )}
       {!isEmergencyModeActive && (
         <Description>
-          If your intent is to delay or prevent execution, you can support veto
-          using your stETH, wstETH, or withdrawal NFTs. <br />
+          If your intent is to delay or prevent proposal execution, you can
+          support veto by escrowing your stETH, wstETH, or withdrawal NFTs.{' '}
+          <br />
           If <b>VetoSignalling</b> <DGTooltip topic="vetoSignalling" /> is
-          triggered, execution is paused for 5–45 days, depending on support. If{' '}
-          <b>RageQuit </b>
-          <DGTooltip topic="rageQuit" /> starts, all escrowed assets are
+          triggered, execution is paused for 5–45 days, depending on the
+          support. If <b>RageQuit </b>
+          <DGTooltip topic="rageQuit" /> starts, all escrowed tokens are
           withdrawn to ETH before any proposal can be executed.
         </Description>
       )}

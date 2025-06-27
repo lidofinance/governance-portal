@@ -1,6 +1,7 @@
 export * from './StETH.abi';
 export * from './WstETH.abi';
 export * from './WithdrawalQueue.abi';
+export * from './WithdrawalQueueMock.abi';
 export * from './Voting.abi';
 export * from './DualGovernance.abi';
 export * from './Escrow.abi';

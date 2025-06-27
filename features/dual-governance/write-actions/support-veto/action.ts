@@ -16,6 +16,8 @@ import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
 import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
 
+const SHOULD_CONVERT_SHARES = false;
+
 type Args = {
   approveData: UseApproveResponse;
 } & ActionArgs;
@@ -81,12 +83,16 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
         }
 
         if (needsApprove) {
-          txModalStages.signApproval(actionArgs);
+          txModalStages.signApproval(actionArgs, SHOULD_CONVERT_SHARES);
 
           await approve({
             onTxSent: (txHash) => {
               if (!isMultisig) {
-                txModalStages.pendingApproval(actionArgs, txHash);
+                txModalStages.pendingApproval(
+                  actionArgs,
+                  txHash,
+                  SHOULD_CONVERT_SHARES,
+                );
               }
             },
           });
@@ -96,7 +102,7 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
           }
         }
 
-        txModalStages.sign(actionArgs);
+        txModalStages.sign(actionArgs, SHOULD_CONVERT_SHARES);
 
         const txHash = await sendSupportVetoTx(actionArgs);
 
@@ -105,7 +111,7 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
           return true;
         }
 
-        txModalStages.pending(actionArgs, txHash);
+        txModalStages.pending(actionArgs, txHash, SHOULD_CONVERT_SHARES);
 
         const response = await waitForTx(txHash);
 
@@ -117,7 +123,7 @@ export const useSupportVetoAction = ({ approveData, onRetry }: Args) => {
           return false;
         }
 
-        txModalStages.success(actionArgs, txHash);
+        txModalStages.success(actionArgs, txHash, SHOULD_CONVERT_SHARES);
 
         await refetchAll();
 

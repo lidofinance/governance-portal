@@ -3,21 +3,21 @@ import { useEscrowContext } from 'providers/escrow';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { zeroAddress } from 'viem';
 
 export const useRageQuitEscrowDetails = () => {
   const { chainId } = useLidoSDK();
   const { rageQuitAddress } = useEscrowContext();
-
   const readEscrowContract = useReadContractGetter(escrowAbi);
 
   const isEnabled = !!rageQuitAddress;
 
   return useQuery({
-    queryKey: ['rage-quit-details', chainId],
-    enabled: isEnabled,
+    queryKey: ['rage-quit-details', chainId, rageQuitAddress],
+    enabled: isEnabled && rageQuitAddress !== zeroAddress,
     staleTime: 300000, // 5 minutes
     queryFn: async () => {
-      if (!isEnabled) return;
+      if (!isEnabled || rageQuitAddress === zeroAddress) return;
 
       const rageQuitDetails = await readEscrowContract(rageQuitAddress)(
         'getRageQuitEscrowDetails',

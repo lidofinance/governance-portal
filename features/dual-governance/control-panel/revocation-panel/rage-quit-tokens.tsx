@@ -16,9 +16,6 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
 import { UnstETHRecordStatus } from '../../types';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
-import { useQuery } from '@tanstack/react-query';
-import { StETH } from 'shared/blockchain/contracts';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import {
   EscrowBalance,
   RageQuitEscrowUnstETHRecord,
@@ -60,34 +57,6 @@ export const RageQuitTokens = ({
   const refreshNftStatus = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
   }, []);
-
-  const readStEthContract = useReadContract(StETH);
-
-  const {
-    data: convertedStethLockedShares,
-    isLoading: isConvertStEthLockedSharesLoading,
-  } = useQuery({
-    queryKey: [
-      'converted-steth-locked-shares',
-      Number(totalLockedShares),
-      chainId,
-    ],
-    queryFn: async (): Promise<bigint> => {
-      if (!readStEthContract) {
-        throw new Error('readStEthContract must be defined');
-      }
-
-      if (!stETHLockedShares) {
-        throw new Error('totalStETHLockedShares must be defined');
-      }
-
-      return await readStEthContract.readContract('getPooledEthByShares', [
-        stETHLockedShares,
-      ]);
-    },
-    enabled:
-      !!readStEthContract && !!stETHLockedShares && totalLockedShares > 0n,
-  });
 
   useEffect(() => {
     if (activeUnstethRecords.length === 0) {
@@ -246,7 +215,7 @@ export const RageQuitTokens = ({
   if (
     !totalLockedShares ||
     isRageQuitDataLoading ||
-    isConvertStEthLockedSharesLoading ||
+    !stETHLockedShares ||
     (activeUnstethRecords.length === 0 && stETHLockedShares === 0n)
   ) {
     return null;
@@ -270,7 +239,7 @@ export const RageQuitTokens = ({
                 ? 'ETH'
                 : Token.stETH
             }
-            amount={convertedStethLockedShares}
+            amount={stETHLockedShares}
             isLocked={isWithdrawalLocked}
             actionLabel={tokenActionLabel}
             onClick={handleWithdrawEth('ETH')}
@@ -297,7 +266,7 @@ export const RageQuitTokens = ({
         )}
         {claimedUnstETHRecords.length > 0 && (
           <RevocableTokenItem
-            token={Token.unstETH}
+            token={'ETH'} // NFT becomes ETH after claiming
             amount={sumUpUnstETHShares(claimedUnstETHRecords)}
             amountLabel={`${claimedUnstETHRecords.length} NFT`}
             isLocked={isWithdrawalLocked}

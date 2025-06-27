@@ -16,21 +16,27 @@ const getTxModalStagesSupport = (
     'You have supported veto with',
   )(transitStage),
 
-  signApproval: (args: EscrowActionArgs) => {
+  signApproval: (args: EscrowActionArgs, shouldConvertShares?: boolean) => {
     return transitStage(
       <TxStageSignOperationAmount
         operationText={STAGE_APPROVE_TEXT}
+        shouldConvertShares={shouldConvertShares}
         {...args}
       />,
     );
   },
 
-  pendingApproval: (args: EscrowActionArgs, txHash?: string) => {
+  pendingApproval: (
+    args: EscrowActionArgs,
+    txHash?: string,
+    shouldConvertShares?: boolean,
+  ) => {
     return transitStage(
       <TxStageSignOperationAmount
         operationText={STAGE_APPROVE_TEXT}
         isPending
         txHash={txHash}
+        shouldConvertShares={shouldConvertShares}
         {...args}
       />,
     );

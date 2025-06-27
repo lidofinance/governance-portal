@@ -8,4 +8,4 @@ export const PROVIDER_MAX_BATCH = 20;
 // account for gas estimation
 // will always have >=0.001 ether, >=0.001 stETH, >=0.001 wstETH
 // on Mainnet, Holesky, Hoodi
-export const ESTIMATE_ACCOUNT = '0xe9517CD51Cf798dB729840D2E8B38Ac20CBd224e';
+export const ESTIMATE_ACCOUNT = '0x87c0e047F4e4D3e289A56a36570D4CB957A37Ef1';

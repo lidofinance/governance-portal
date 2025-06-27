@@ -97,7 +97,13 @@ export const useEscrowBalances = () => {
       // Collect all escrow addresses to process (current veto signalling + historical)
       const allEscrowAddresses: Address[] = [];
 
-      if (vetoSignallingAddress) {
+      if (
+        vetoSignallingAddress &&
+        !historicalEscrowAddresses?.some(
+          (address) =>
+            address.toLowerCase() === vetoSignallingAddress.toLowerCase(),
+        )
+      ) {
         allEscrowAddresses.push(vetoSignallingAddress);
       }
 
