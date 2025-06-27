@@ -37,7 +37,7 @@ export const TokenBalance = (props: Props) => {
 
   // convert stETH shares
   const { data: convertedStETHLockedShares } = useStETHConversion(
-    token === Token.stETH && balance ? balance : 0n,
+    shouldConvertShares && balance ? balance : 0n,
   );
 
   // This is to replace Withdrawal NFT label with NFT with no affect to types and constants
