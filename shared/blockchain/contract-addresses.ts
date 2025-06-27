@@ -294,8 +294,8 @@ export const AdminExecutor: ChainAddressMap = {
 export const EmergencyProtectedTimelock: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316',
   [CHAINS.Holesky]: '0xd70D836D60622D48648AA1dE759361D6B9a4Baa0',
-  [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
-  // [CHAINS.Hoodi]: '0xbcdD50FEAE9584308c12321b8A0f68Fe81EC04a8',
+  // [CHAINS.Hoodi]: '0x0A5E22782C0Bd4AddF10D771f0bF0406B038282d',
+  [CHAINS.Hoodi]: '0xbcdD50FEAE9584308c12321b8A0f68Fe81EC04a8',
 };
 
 export const EmergencyExecutionCommitteeProposed: ChainAddressMap = {
