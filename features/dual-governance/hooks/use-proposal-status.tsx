@@ -45,7 +45,7 @@ const emergencyCommitteeLinkText = (
         Emergency Committee
       </Link>
     </b>{' '}
-    may stop the execution for
+    may stop the execution
   </span>
 );
 
@@ -224,11 +224,7 @@ export const useProposalStatus = ({
           text: statusText.blocked,
           variant: 'danger',
         },
-        info: (
-          <Text color="primary">
-            Only Emergency committee can execute blocked proposals
-          </Text>
-        ),
+        info: <Text color="primary">{emergencyCommitteeLinkText}</Text>,
       };
     }
     return {
@@ -242,8 +238,9 @@ export const useProposalStatus = ({
         VisibleGovernanceState.BlockedDeactivation ? (
         <Text>Executable in {deactivationTimeFormatted}</Text>
       ) : (
-        <Text color="primary">
-          {emergencyCommitteeLinkText}{' '}
+        <Text color="primary" onClick={(e) => e.stopPropagation()}>
+          {emergencyCommitteeLinkText}
+          {' for '}
           <Text as="span">
             <b>{targetCountdown}</b>
           </Text>
