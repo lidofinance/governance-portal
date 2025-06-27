@@ -215,7 +215,7 @@ export const RageQuitTokens = ({
   if (
     !totalLockedShares ||
     isRageQuitDataLoading ||
-    stETHLockedShares ||
+    !stETHLockedShares ||
     (activeUnstethRecords.length === 0 && stETHLockedShares === 0n)
   ) {
     return null;
