@@ -41,7 +41,7 @@ const emergencyCommitteeLinkText = (
   <span>
     Only{' '}
     <b>
-      <Link href="https://docs.lido.fi/multisigs/committees/#2152-proposed-dual-governance-emergency-execution-committee-ethereum">
+      <Link href="https://docs.lido.fi/multisigs/committees/#2151-proposed-dual-governance-emergency-activation-committee-ethereum">
         Emergency Committee
       </Link>
     </b>{' '}
