@@ -136,7 +136,7 @@ export const HeaderVaultInfo = () => {
                 {escrowBalance.totalLockedShares > 0n ? (
                   <>
                     <VaultInfoSubtitle>
-                      Tokens in RageQuit contract{' '}
+                      Tokens in RageQuit
                       {rageQuitAddress ? (
                         <Link
                           target="_blank"
@@ -145,7 +145,7 @@ export const HeaderVaultInfo = () => {
                             escrowBalance.escrowAddress,
                           )}
                         >
-                          {'contract '}
+                          {' contract '}
                           <ExternalLinkIcon />
                         </Link>
                       ) : (
