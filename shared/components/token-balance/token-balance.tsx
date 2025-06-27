@@ -120,7 +120,15 @@ export const TokenBalance = (props: Props) => {
         {isBigInt(balance) ? (
           <Tooltip
             placement="topLeft"
-            title={<span>{formatEthFull(balance)}</span>}
+            title={
+              <span>
+                {formatEthFull(
+                  shouldConvertShares && convertedStETHLockedShares
+                    ? convertedStETHLockedShares
+                    : balance,
+                )}
+              </span>
+            }
           >
             <TokenLabel size={22}>
               {formatEth(
