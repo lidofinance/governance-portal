@@ -8,7 +8,7 @@ import { VisibleGovernanceState } from '../types';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 import { Text } from 'shared/components/text';
 import { Box } from 'shared/components/box';
-import { DashboardWrapper, WarningReleaseBanner } from './style';
+import { DashboardWrapper } from './style';
 
 export const DualGovernancePage = () => {
   const { visibleState } = useDualGovernanceStateContext();
@@ -33,31 +33,6 @@ export const DualGovernancePage = () => {
             </Text>
           </Box>
         )}
-        <WarningReleaseBanner>
-          <Box display="flex" gap={20} alignItems="center">
-            <Text size={24}>⚠️</Text>
-            <p>
-              This interface is not yet connected to the Lido Protocol.
-              <br />
-              Aragon deployment is planned in June — once live, this app will
-              serve as the UI interface for Dual Governance.
-            </p>
-          </Box>
-          <Box marginLeft="44px">
-            Stay tuned:{' '}
-            <a
-              style={{
-                color: 'white',
-                textDecoration: 'underline',
-              }}
-              href="https://research.lido.fi/t/lip-28-dual-governance/10032/12"
-              target="_blank"
-              rel="noreferrer"
-            >
-              https://research.lido.fi/t/lip-28-dual-governance/10032/12
-            </a>
-          </Box>
-        </WarningReleaseBanner>
         {visibleState !== VisibleGovernanceState.Unset && (
           <DashboardWrapper>
             <DualGovernanceSummary />

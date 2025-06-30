@@ -14,15 +14,3 @@ export const DashboardWrapper = styled(Block)`
     flex-direction: column;
   }
 `;
-
-export const WarningReleaseBanner = styled.div`
-  background: rgba(255, 142, 118, 0.8);
-  padding: 20px;
-  margin-bottom: 40px;
-  border-radius: 16px;
-  color: white;
-  font-size: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
