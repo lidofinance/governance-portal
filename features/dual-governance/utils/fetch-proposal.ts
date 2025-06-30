@@ -14,6 +14,7 @@ import {
 import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { ProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;
@@ -63,16 +64,21 @@ export const fetchProposal = async ({
         publicClient,
       );
 
-      const eventPromises = governanceAddresses.map((address) =>
-        publicClient.getLogs({
-          address,
-          event: eventAbi,
-          fromBlock,
-          toBlock,
-          args: {
-            proposalId: proposalId,
-          },
-        }),
+      // Three ranges for log fetching to expand the search window up to ~15000 blocks
+      const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
+
+      const eventPromises = governanceAddresses.flatMap((address) =>
+        ranges.map((range) =>
+          publicClient.getLogs({
+            address,
+            event: eventAbi,
+            fromBlock: range.fromBlock,
+            toBlock: range.toBlock,
+            args: {
+              proposalId: proposalId,
+            },
+          }),
+        ),
       );
 
       const eventsResults = await Promise.all(eventPromises);

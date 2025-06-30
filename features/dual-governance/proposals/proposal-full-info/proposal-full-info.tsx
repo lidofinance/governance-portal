@@ -49,6 +49,7 @@ import {
   calculateAverageBlockTime,
   estimateBlockRangeFromTimestamp,
 } from 'utils/estimate-block-range';
+import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;
@@ -342,15 +343,24 @@ export const ProposalFullInfo = ({ id }: Props) => {
         type: 'event',
       });
 
-      const proposalScheduledLogs = await client.getLogs({
-        address: EmergencyProtectedTimelock.chainAddressMap[chainId],
-        event: eventAbi,
-        fromBlock,
-        toBlock,
-        args: {
-          id: BigInt(proposal.proposalId),
-        },
-      });
+      // Three ranges for log fetching to expand the search window up to ~15000 blocks
+      const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
+
+      // Fetch logs for each block range
+      const logsPromises = ranges.map((range) =>
+        client.getLogs({
+          address: EmergencyProtectedTimelock.chainAddressMap[chainId],
+          event: eventAbi,
+          fromBlock: range.fromBlock,
+          toBlock: range.toBlock,
+          args: {
+            id: BigInt(proposal.proposalId),
+          },
+        }),
+      );
+
+      const allLogsResults = await Promise.all(logsPromises);
+      const proposalScheduledLogs = allLogsResults.flat();
 
       return proposalScheduledLogs[0] || null;
     },
@@ -486,7 +496,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
       </Box>
 
-      {calls && calls.length > 0 && <Script rawCalls={calls} />}
+      {calls && calls.length > 0 && (
+        <Box marginTop={30}>
+          <Script rawCalls={calls} />
+        </Box>
+      )}
 
       {showScheduleButton && (
         <ActionsWrapper>
