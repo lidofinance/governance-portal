@@ -49,7 +49,7 @@ import {
   calculateAverageBlockTime,
   estimateBlockRangeFromTimestamp,
 } from 'utils/estimate-block-range';
-import { expandGetLogsSearchWindow } from '../../../../utils/expand-get-logs-search-window';
+import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;

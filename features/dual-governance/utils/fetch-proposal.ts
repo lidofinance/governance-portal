@@ -14,7 +14,7 @@ import {
 import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { ProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
-import { expandGetLogsSearchWindow } from '../../../utils/expand-get-logs-search-window';
+import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;
