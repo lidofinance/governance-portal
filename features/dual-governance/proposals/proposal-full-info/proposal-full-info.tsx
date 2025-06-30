@@ -49,6 +49,7 @@ import {
   calculateAverageBlockTime,
   estimateBlockRangeFromTimestamp,
 } from 'utils/estimate-block-range';
+import { expandGetLogsSearchWindow } from '../../../../utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;
@@ -343,11 +344,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
       });
 
       // Three ranges for log fetching to expand the search window up to ~15000 blocks
-      const ranges = [
-        { fromBlock, toBlock },
-        { fromBlock: fromBlock - 5000n, toBlock: fromBlock - 1n },
-        { fromBlock: toBlock + 1n, toBlock: toBlock + 5000n },
-      ];
+      const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
 
       // Fetch logs for each block range
       const logsPromises = ranges.map((range) =>
