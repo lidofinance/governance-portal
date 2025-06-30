@@ -31,7 +31,10 @@ export const HeaderVaultInfo = () => {
 
   const { data, isLoading } = useEscrowBalances();
 
-  const { data: totalConvertedStETHLockedShares } = useStETHConversion(
+  const {
+    data: totalConvertedStETHLockedShares,
+    isLoading: isTotalConvertedStETHLockedSharesLoading,
+  } = useStETHConversion(
     data?.totalLockedSharesInEscrows ? data.totalLockedSharesInEscrows : 0n,
   );
 
@@ -72,10 +75,10 @@ export const HeaderVaultInfo = () => {
         onClick={() => setVaultInfoMenuOpen(true)}
       >
         <VaultIcon />
-        {isLoading || !totalConvertedStETHLockedShares ? (
+        {isLoading || isTotalConvertedStETHLockedSharesLoading ? (
           <VaultInfoLoader />
         ) : (
-          `${formatEth(totalConvertedStETHLockedShares)} stETH`
+          `${formatEth(totalConvertedStETHLockedShares || data?.totalLockedSharesInEscrows || 0n)} stETH`
         )}
       </VaultInfoButton>
       {data ? (
