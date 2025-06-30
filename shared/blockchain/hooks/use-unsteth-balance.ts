@@ -42,12 +42,6 @@ export const useUnstEthBalance = () => {
               Array.isArray(withdrawalRequests) &&
               withdrawalRequests.length > 0
             ) {
-              withdrawalRequests.forEach((requestId: bigint) => {
-                if (requestId && typeof requestId === 'bigint') {
-                  eligibleRequests[requestId.toString()] = 0n;
-                }
-              });
-
               const requestDetails = await mainnetWithdrawalQueue.readContract(
                 'getWithdrawalStatus',
                 [withdrawalRequests],
@@ -56,10 +50,17 @@ export const useUnstEthBalance = () => {
               if (Array.isArray(requestDetails)) {
                 requestDetails.forEach((request: any, index: number) => {
                   if (request && typeof request === 'object') {
-                    const { amountOfStETH } = request;
-                    const requestId = withdrawalRequests[index];
-                    eligibleRequests[requestId.toString()] = amountOfStETH;
-                    requestsTotalStEthAmount += amountOfStETH;
+                    const { isClaimed, isFinalized, owner, amountOfStETH } =
+                      request;
+                    if (
+                      owner.toLowerCase() === accountAddress.toLowerCase() &&
+                      !isClaimed &&
+                      !isFinalized
+                    ) {
+                      const requestId = withdrawalRequests[index];
+                      eligibleRequests[requestId.toString()] = amountOfStETH;
+                      requestsTotalStEthAmount += amountOfStETH;
+                    }
                   }
                 });
               }
@@ -98,7 +99,11 @@ export const useUnstEthBalance = () => {
           withdrawalRequests.forEach((request: any, id: number) => {
             if (request && typeof request === 'object') {
               const { isClaimed, isFinalized, owner, amountOfStETH } = request;
-              if (owner === accountAddress && !isClaimed && !isFinalized) {
+              if (
+                owner.toLowerCase() === accountAddress.toLowerCase() &&
+                !isClaimed &&
+                !isFinalized
+              ) {
                 eligibleRequests[(id + 1).toString()] = amountOfStETH;
                 requestsTotalStEthAmount += amountOfStETH;
               }
