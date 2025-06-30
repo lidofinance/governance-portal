@@ -1,4 +1,5 @@
 import { ReactNode, FC, PropsWithChildren } from 'react';
+import Head from 'next/head';
 
 import { ContainerProps } from '@lidofinance/lido-ui';
 
@@ -11,14 +12,23 @@ type Props = {
   title?: ReactNode;
   subtitle?: ReactNode;
   containerSize?: ContainerProps['size'];
+  pageTitle?: string;
 };
 
 export const Layout: FC<PropsWithChildren<Props>> = (props) => {
-  const { title, subtitle, containerSize } = props;
+  const {
+    title,
+    subtitle,
+    containerSize,
+    pageTitle = 'Dual Governance | Lido',
+  } = props;
   const { children } = props;
 
   return (
     <>
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <Header />
       <Main size={containerSize}>
         <LayoutTitleStyle>{title}</LayoutTitleStyle>
