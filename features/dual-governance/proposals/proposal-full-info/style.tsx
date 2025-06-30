@@ -14,6 +14,7 @@ export const ProposalHeader = styled.div`
   gap: 30px;
   @media ${devicesHeaderMedia.mobile} {
     gap: 10px;
+    flex-wrap: wrap;
   }
 `;
 
