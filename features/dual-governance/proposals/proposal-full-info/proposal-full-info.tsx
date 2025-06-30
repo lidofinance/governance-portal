@@ -342,15 +342,28 @@ export const ProposalFullInfo = ({ id }: Props) => {
         type: 'event',
       });
 
-      const proposalScheduledLogs = await client.getLogs({
-        address: EmergencyProtectedTimelock.chainAddressMap[chainId],
-        event: eventAbi,
-        fromBlock,
-        toBlock,
-        args: {
-          id: BigInt(proposal.proposalId),
-        },
-      });
+      // Three ranges for log fetching to expand the search window up to ~15000 blocks
+      const ranges = [
+        { fromBlock, toBlock },
+        { fromBlock: fromBlock - 5000n, toBlock: fromBlock - 1n },
+        { fromBlock: toBlock + 1n, toBlock: toBlock + 5000n },
+      ];
+
+      // Fetch logs for each block range
+      const logsPromises = ranges.map((range) =>
+        client.getLogs({
+          address: EmergencyProtectedTimelock.chainAddressMap[chainId],
+          event: eventAbi,
+          fromBlock: range.fromBlock,
+          toBlock: range.toBlock,
+          args: {
+            id: BigInt(proposal.proposalId),
+          },
+        }),
+      );
+
+      const allLogsResults = await Promise.all(logsPromises);
+      const proposalScheduledLogs = allLogsResults.flat();
 
       return proposalScheduledLogs[0] || null;
     },
