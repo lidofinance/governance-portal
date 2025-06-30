@@ -486,7 +486,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
       </Box>
 
-      {calls && calls.length > 0 && <Script rawCalls={calls} />}
+      {calls && calls.length > 0 && (
+        <Box marginTop={30}>
+          <Script rawCalls={calls} />
+        </Box>
+      )}
 
       {showScheduleButton && (
         <ActionsWrapper>

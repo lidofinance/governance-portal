@@ -96,17 +96,26 @@ export const fetchProposals = async ({
           publicClient,
         );
 
+        // Three ranges for log fetching to expand the search window up to ~15000 blocks
+        const ranges = [
+          { fromBlock, toBlock },
+          { fromBlock: fromBlock - 5000n, toBlock: fromBlock - 1n },
+          { fromBlock: toBlock + 1n, toBlock: toBlock + 5000n },
+        ];
+
         // Fetch events from all governance addresses
-        const eventPromises = governanceAddresses.map((address) =>
-          publicClient.getLogs({
-            address,
-            event: eventAbi,
-            fromBlock,
-            toBlock,
-            args: {
-              proposalId: BigInt(proposal.proposalId),
-            },
-          }),
+        const eventPromises = governanceAddresses.flatMap((address) =>
+          ranges.map((range) =>
+            publicClient.getLogs({
+              address,
+              event: eventAbi,
+              fromBlock: range.fromBlock,
+              toBlock: range.toBlock,
+              args: {
+                proposalId: BigInt(proposal.proposalId),
+              },
+            }),
+          ),
         );
 
         const eventsResults = await Promise.all(eventPromises);
