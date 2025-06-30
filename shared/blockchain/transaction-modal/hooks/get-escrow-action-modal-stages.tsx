@@ -17,21 +17,34 @@ export const getEscrowActionModalStages = (
   return (transitStage: TransactionModalTransitStage) => ({
     ...getGeneralTransactionModalStages(transitStage),
 
-    sign: (args: EscrowActionWithEthArgs) =>
+    sign: (args: EscrowActionWithEthArgs, shouldConvertShares?: boolean) =>
       transitStage(
-        <TxStageSignOperationAmount operationText={operationText} {...args} />,
+        <TxStageSignOperationAmount
+          operationText={operationText}
+          {...args}
+          shouldConvertShares={shouldConvertShares}
+        />,
       ),
 
-    pending: (args: EscrowActionWithEthArgs, txHash?: string) =>
+    pending: (
+      args: EscrowActionWithEthArgs,
+      txHash?: string,
+      shouldConvertShares?: boolean,
+    ) =>
       transitStage(
         <TxStageSignOperationAmount
           operationText={operationText}
           isPending
           txHash={txHash}
+          shouldConvertShares={shouldConvertShares}
           {...args}
         />,
       ),
-    success: (args: EscrowActionWithEthArgs, txHash?: string) => {
+    success: (
+      args: EscrowActionWithEthArgs,
+      txHash?: string,
+      shouldConvertShares?: boolean,
+    ) => {
       // Show stake link only when revoking unstETH tokens
       const showStakeLink =
         args.token === Token.unstETH && operationText === 'revoking';
@@ -46,6 +59,7 @@ export const getEscrowActionModalStages = (
           nftIds={isWithdrawalNFTArgs(args) ? args.selectedNftIds : null}
           token={args.token}
           showStakeLink={showStakeLink}
+          shouldConvertShares={shouldConvertShares}
         />,
         {
           isClosableOnLedger: true,

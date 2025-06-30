@@ -21,6 +21,14 @@ export const WithdrawalQueue: ContractObject<typeof abi.withdrawalQueueAbi> = {
   chainAddressMap: addr.WithdrawalQueue,
 };
 
+export const WithdrawalQueueMock: ContractObject<
+  typeof abi.withdrawalQueueMockAbi
+> = {
+  name: 'WithdrawalQueueMock',
+  abi: abi.withdrawalQueueMockAbi,
+  chainAddressMap: addr.WithdrawalQueue,
+};
+
 export const Voting: ContractObject<typeof abi.votingAbi> = {
   name: 'AragonVoting',
   abi: abi.votingAbi,

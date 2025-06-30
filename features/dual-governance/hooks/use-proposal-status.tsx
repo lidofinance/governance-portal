@@ -9,6 +9,7 @@ import { Text } from 'shared/components/text';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
 import { parsePercent16 } from 'shared/blockchain/utils';
+import { Link } from '@lidofinance/lido-ui';
 
 const statusText = {
   loading: 'Loading...',
@@ -36,10 +37,15 @@ type UseProposalStatusReturnType = {
   info: React.JSX.Element | null;
 } | null;
 
-// TODO: add link
 const emergencyCommitteeLinkText = (
   <span>
-    Only <b>Emergency Committee</b> may stop the execution for
+    Only{' '}
+    <b>
+      <Link href="https://docs.lido.fi/multisigs/committees/#2151-proposed-dual-governance-emergency-activation-committee-ethereum">
+        Emergency Committee
+      </Link>
+    </b>{' '}
+    may stop the execution
   </span>
 );
 
@@ -218,11 +224,7 @@ export const useProposalStatus = ({
           text: statusText.blocked,
           variant: 'danger',
         },
-        info: (
-          <Text color="primary">
-            Only Emergency committee can execute blocked proposals
-          </Text>
-        ),
+        info: <Text color="primary">{emergencyCommitteeLinkText}</Text>,
       };
     }
     return {
@@ -236,8 +238,9 @@ export const useProposalStatus = ({
         VisibleGovernanceState.BlockedDeactivation ? (
         <Text>Executable in {deactivationTimeFormatted}</Text>
       ) : (
-        <Text color="primary">
-          {emergencyCommitteeLinkText}{' '}
+        <Text color="primary" onClick={(e) => e.stopPropagation()}>
+          {emergencyCommitteeLinkText}
+          {' for '}
           <Text as="span">
             <b>{targetCountdown}</b>
           </Text>

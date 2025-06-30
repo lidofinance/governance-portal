@@ -18,6 +18,7 @@ import { useEscrowContext } from 'providers/escrow';
 import Link from 'next/link';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
 
 export const HeaderVaultInfo = () => {
   const [isVaultInfoMenuOpen, setVaultInfoMenuOpen] = useState(false);
@@ -29,6 +30,13 @@ export const HeaderVaultInfo = () => {
   const vaultInfoRef = useRef(null);
 
   const { data, isLoading } = useEscrowBalances();
+
+  const {
+    data: totalConvertedStETHLockedShares,
+    isLoading: isTotalConvertedStETHLockedSharesLoading,
+  } = useStETHConversion(
+    data?.totalLockedSharesInEscrows ? data.totalLockedSharesInEscrows : 0n,
+  );
 
   // It's always 1 contract ATM
   const vetoSignallingEscrows = useMemo(() => {
@@ -67,10 +75,10 @@ export const HeaderVaultInfo = () => {
         onClick={() => setVaultInfoMenuOpen(true)}
       >
         <VaultIcon />
-        {isLoading || !data ? (
+        {isLoading || isTotalConvertedStETHLockedSharesLoading ? (
           <VaultInfoLoader />
         ) : (
-          `${formatEth(data.totalLockedSharesInEscrows)} stETH`
+          `${formatEth(totalConvertedStETHLockedShares || data?.totalLockedSharesInEscrows || 0n)} stETH`
         )}
       </VaultInfoButton>
       {data ? (
@@ -105,7 +113,7 @@ export const HeaderVaultInfo = () => {
                       vetoSignallingEscrows[0].escrowAddress,
                     )}
                   >
-                    {'contract '}
+                    {' contract '}
                     <ExternalLinkIcon />
                   </Link>
                 </VaultInfoSubtitle>
@@ -114,11 +122,13 @@ export const HeaderVaultInfo = () => {
                     token={Token.stETH}
                     balance={vetoSignallingEscrows[0].stETHLockedShares}
                     showZeroBalance={false}
+                    shouldConvertShares={true}
                   />
                   <TokenBalance
                     token={Token.unstETH}
                     balance={vetoSignallingEscrows[0].unstETHLockedShares}
                     showZeroBalance={false}
+                    shouldConvertShares={true}
                   />
                 </TokensList>
               </>
@@ -129,7 +139,7 @@ export const HeaderVaultInfo = () => {
                 {escrowBalance.totalLockedShares > 0n ? (
                   <>
                     <VaultInfoSubtitle>
-                      Tokens in RageQuit contract{' '}
+                      Tokens in RageQuit
                       {rageQuitAddress ? (
                         <Link
                           target="_blank"
@@ -138,7 +148,7 @@ export const HeaderVaultInfo = () => {
                             escrowBalance.escrowAddress,
                           )}
                         >
-                          {'contract '}
+                          {' contract '}
                           <ExternalLinkIcon />
                         </Link>
                       ) : (
@@ -150,11 +160,13 @@ export const HeaderVaultInfo = () => {
                         token={Token.stETH}
                         balance={escrowBalance.stETHLockedShares}
                         showZeroBalance={false}
+                        shouldConvertShares={true}
                       />
                       <TokenBalance
                         token={Token.unstETH}
                         balance={escrowBalance.unstETHLockedShares}
                         showZeroBalance={false}
+                        shouldConvertShares={true}
                       />
                     </TokensList>
                   </>

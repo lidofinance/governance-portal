@@ -3,25 +3,25 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { StETH } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
-export const useStETHConversion = (stEthAmount: bigint) => {
+export const useStETHConversion = (sharesAmount: bigint) => {
   const { chainId } = useLidoSDK();
   const readStEthContract = useReadContract(StETH);
 
   return useQuery({
-    queryKey: ['converted-steth-locked-shares', Number(stEthAmount), chainId],
+    queryKey: ['converted-steth-locked-shares', Number(sharesAmount), chainId],
     queryFn: async (): Promise<bigint> => {
       if (!readStEthContract) {
         throw new Error('readStEthContract must be defined');
       }
 
-      if (!stEthAmount) {
-        throw new Error('stEthAmount must be defined');
+      if (!sharesAmount) {
+        throw new Error('sharesAmount must be defined');
       }
 
       return await readStEthContract.readContract('getPooledEthByShares', [
-        stEthAmount,
+        sharesAmount,
       ]);
     },
-    enabled: !!readStEthContract && !!stEthAmount && stEthAmount > 0n,
+    enabled: !!readStEthContract && !!sharesAmount && sharesAmount > 0n,
   });
 };

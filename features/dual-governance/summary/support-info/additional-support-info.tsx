@@ -109,7 +109,7 @@ export const AdditionalSupportInfo = ({
           <b>
             {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
           </b>{' '}
-          is added; Otherwise, Cooldown begins
+          is added to the escrow; Otherwise, Cooldown begins
         </Text>
       );
     }
@@ -127,7 +127,7 @@ export const AdditionalSupportInfo = ({
       <b>
         {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
       </b>{' '}
-      is added
+      is added to the escrow
     </Text>
   );
 };

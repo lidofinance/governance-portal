@@ -10,6 +10,7 @@ type ContractName = keyof typeof ADDR;
 
 const ABI_EXCEPTIONS = {
   StETH: abis.StethAbi__factory.abi,
+  WithdrawalQueue: abis.WithdrawalQueueERC721Abi__factory.abi,
 } as const;
 
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;

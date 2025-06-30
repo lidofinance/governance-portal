@@ -11,6 +11,7 @@ import { Box } from 'shared/components/box';
 import { Text } from '../text';
 import { isBigInt } from 'shared/blockchain/isBigInt';
 import { useEffect, useState } from 'react';
+import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
 
 type Props = {
   token: Token | 'ETH' | 'unstETH';
@@ -18,13 +19,26 @@ type Props = {
   variant?: 'default' | 'compact';
   addOnText?: string;
   showZeroBalance?: boolean;
+  shouldConvertShares?: boolean;
 };
 
 const MAX_SCREEN_WIDTH_NFT_TABLET = 1262;
 
 export const TokenBalance = (props: Props) => {
-  const { token, balance, variant, addOnText, showZeroBalance = true } = props;
+  const {
+    token,
+    balance,
+    variant,
+    addOnText,
+    showZeroBalance = true,
+    shouldConvertShares,
+  } = props;
   const [isNftShortView, setIsNftShortView] = useState<boolean>(false);
+
+  // convert stETH shares
+  const { data: convertedStETHLockedShares } = useStETHConversion(
+    shouldConvertShares && balance ? balance : 0n,
+  );
 
   // This is to replace Withdrawal NFT label with NFT with no affect to types and constants
   useEffect(() => {
@@ -70,10 +84,25 @@ export const TokenBalance = (props: Props) => {
           {isBigInt(balance) ? (
             <Tooltip
               placement="topRight"
-              title={<span>{formatEthFull(balance)}</span>}
+              title={
+                <span>
+                  {formatEthFull(
+                    shouldConvertShares && convertedStETHLockedShares
+                      ? convertedStETHLockedShares
+                      : balance,
+                  )}
+                </span>
+              }
             >
               <Text size={14} color="secondary">
-                {balance === 0n ? '\u2014' : formatEthCompact(balance, 4)}
+                {balance === 0n
+                  ? '\u2014'
+                  : formatEthCompact(
+                      shouldConvertShares && convertedStETHLockedShares
+                        ? convertedStETHLockedShares
+                        : balance,
+                      4,
+                    )}
               </Text>
             </Tooltip>
           ) : (
@@ -91,10 +120,23 @@ export const TokenBalance = (props: Props) => {
         {isBigInt(balance) ? (
           <Tooltip
             placement="topLeft"
-            title={<span>{formatEthFull(balance)}</span>}
+            title={
+              <span>
+                {formatEthFull(
+                  shouldConvertShares && convertedStETHLockedShares
+                    ? convertedStETHLockedShares
+                    : balance,
+                )}
+              </span>
+            }
           >
             <TokenLabel size={22}>
-              {formatEth(balance)} {token}
+              {formatEth(
+                shouldConvertShares && convertedStETHLockedShares
+                  ? convertedStETHLockedShares
+                  : balance,
+              )}{' '}
+              {token}
               {addOnText ? (
                 <Text as="span" weight={600} size={22} color="secondary">
                   {addOnText}

@@ -85,7 +85,7 @@ export const VetoSignallingAdditionalSupportInfo = ({
       <b>
         {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
       </b>{' '}
-      is added by{' '}
+      is added to the escrow by{' '}
       <b>
         {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}
       </b>
