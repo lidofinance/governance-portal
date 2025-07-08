@@ -55,8 +55,6 @@ export const enableQaHelpers = toBoolean(process.env.ENABLE_QA_HELPERS);
 
 export const walletconnectProjectId = process.env.WALLETCONNECT_PROJECT_ID;
 
-export const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
-
 // /** @type string */
 // export const widgetApiBasePathForIpfs =
 //   process.env.WIDGET_API_BASE_PATH_FOR_IPFS;

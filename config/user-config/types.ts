@@ -5,5 +5,4 @@ export type UserConfigDefaultType = {
   supportedChainIds: number[];
   prefillUnsafeElRpcUrls: Partial<Record<CHAINS, string[]>>;
   walletconnectProjectId: string | undefined;
-  etherscanApiKey: string | undefined;
 };

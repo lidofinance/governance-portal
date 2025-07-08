@@ -1,6 +1,5 @@
 import { useGlobalMemo } from 'shared/hooks';
 
-import { Contract } from 'ethers';
 import {
   ABIProvider,
   ABIElement as ABIElementImported,
@@ -11,14 +10,10 @@ import {
   abiProviders,
 } from '@lidofinance/evm-script-decoder';
 
-import { getStaticRpcBatchProvider } from 'utils/providers-rpc';
-
 import * as abis from 'generated';
 import * as ADDR from 'shared/blockchain/contract-addresses';
 import { useGetRpcUrlByChainId } from 'config/rpc';
-import { useUserConfig } from 'config/user-config';
 import { useSDK } from '@lido-sdk/react';
-import { ABIProviderEtherscan } from '@lidofinance/evm-script-decoder/lib/ABIProviderEtherscan';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 type ContractName = keyof typeof ADDR;
@@ -52,9 +47,7 @@ type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
 export const useEVMScriptDecoder = (): EVMScriptDecoder => {
   const { chainId } = useSDK();
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
-  const userConfig = useUserConfig();
   const rpcUrl = getRpcUrlByChainId(chainId as unknown as CHAINS);
-  const { etherscanApiKey } = userConfig;
 
   return useGlobalMemo(() => {
     // Map of contract addresses to their ABIs on the current chain
@@ -91,36 +84,8 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
       abiMap as Record<string, ABIElementImported[]>,
     );
 
-    let etherscanDecoder: ABIProviderEtherscan | undefined;
-    if (etherscanApiKey) {
-      etherscanDecoder = new abiProviders.Etherscan({
-        // TODO: add network label
-        // network: chainName,
-        apiKey: etherscanApiKey,
-        fetch,
-        middlewares: [
-          abiProviders.middlewares.ProxyABIMiddleware({
-            implMethodNames: [
-              ...abiProviders.middlewares.ProxyABIMiddleware
-                .DefaultImplMethodNames,
-              '__Proxy_implementation',
-              'proxy__getImplementation',
-            ],
-            loadImplAddress(proxyAddress, abiElement) {
-              const contract = new Contract(
-                proxyAddress,
-                [abiElement],
-                getStaticRpcBatchProvider(chainId, rpcUrl),
-              );
-              return contract[abiElement.name]();
-            },
-          }),
-        ],
-      });
-    }
-
     return new EVMScriptDecoder(
-      ...([localDecoder, etherscanDecoder].filter(Boolean) as ABIProvider[]),
+      ...([localDecoder].filter(Boolean) as ABIProvider[]),
     );
-  }, `evm-script-decoder-${chainId}-${rpcUrl}-${etherscanApiKey}`);
+  }, `evm-script-decoder-${chainId}-${rpcUrl}}`);
 };
