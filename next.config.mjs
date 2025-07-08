@@ -146,7 +146,6 @@ export default withBundleAnalyzer({
     rpcUrls_1: process.env.EL_RPC_URLS_1,
     rpcUrls_17000: process.env.EL_RPC_URLS_17000,
     rpcUrls_560048: process.env.EL_RPC_URLS_560048,
-    etherscanApiKey: process.env.ETHERSCAN_API_KEY,
 
     cspTrustedHosts: process.env.CSP_TRUSTED_HOSTS,
     cspReportUri: process.env.CSP_REPORT_URI,
