@@ -34,6 +34,7 @@ const ABI_EXCEPTIONS = {
   NodeOperatorsRegistryRepo: abis.RepoAbi__factory.abi,
   OracleRepo: abis.RepoAbi__factory.abi,
   SimpleDVT: abis.NodeOperatorsRegistryAbi__factory.abi,
+  CSVerifierProposed: abis.CSVerifierAbi__factory.abi,
 } as const;
 
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;

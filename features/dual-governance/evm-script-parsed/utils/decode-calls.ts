@@ -9,8 +9,11 @@ import { getContractName } from 'utils/get-contract-name';
 type ContractName = keyof typeof ADDR;
 
 const ABI_EXCEPTIONS = {
+  HashConsensusAccountingOracle: abis.HashConsensusAbi__factory.abi,
+  HashConsensusValidatorsExitBus: abis.HashConsensusAbi__factory.abi,
   StETH: abis.StethAbi__factory.abi,
   WithdrawalQueue: abis.WithdrawalQueueERC721Abi__factory.abi,
+  CSVerifierProposed: abis.CSVerifierAbi__factory.abi,
 } as const;
 
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
