@@ -50,6 +50,14 @@ import {
   estimateBlockRangeFromTimestamp,
 } from 'utils/estimate-block-range';
 import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import {
+  replaceAddressAndCIDInMD,
+  replaceImagesInMD,
+  replaceLinksInMD,
+} from 'utils/replace-custom-elements-in-MD';
+import { MarkdownWrap } from '../proposals-list/style';
 
 type Props = {
   id: number;
@@ -185,7 +193,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState(false);
-
   const { data: isEmergencyExecutionCommittee = false } = useQuery({
     queryKey: [
       'emergency-execution-committee',
@@ -479,7 +486,18 @@ export const ProposalFullInfo = ({ id }: Props) => {
             </Box>
             {proposal.DGEvent?.args?.metadata && (
               <Box marginTop={30}>
-                <Text size={22}>{proposal?.DGEvent.args?.metadata}</Text>
+                <MarkdownWrap>
+                  <ReactMarkdown
+                    remarkPlugins={[[remarkGfm, {}]]}
+                    components={{
+                      a: replaceLinksInMD,
+                      img: replaceImagesInMD,
+                      code: replaceAddressAndCIDInMD,
+                    }}
+                  >
+                    {proposal?.DGEvent.args?.metadata}
+                  </ReactMarkdown>
+                </MarkdownWrap>
               </Box>
             )}
           </>
