@@ -123,6 +123,7 @@ export const LIDO_ROLES: Partial<Record<string, string>> = {
     'ADD TOKEN TO ALLOWED LIST ROLE',
   [keccakRole('REMOVE_TOKEN_FROM_ALLOWED_LIST_ROLE')]:
     'REMOVE TOKEN FROM ALLOWED LIST ROLE',
+  [keccakRole('MODULE_MANAGER_ROLE')]: 'MODULE MANAGER ROLE',
 };
 
 export const DEFAULT_ADMIN_ROLE =
