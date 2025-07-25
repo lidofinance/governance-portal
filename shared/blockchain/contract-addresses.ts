@@ -282,13 +282,13 @@ export const Voting: ChainAddressMap = {
 export const DualGovernance: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xcdF49b058D606AD34c5789FD8c3BF8B3E54bA2db',
   [CHAINS.Holesky]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199',
-  [CHAINS.Hoodi]: '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F',
+  [CHAINS.Hoodi]: '0x9CAaCCc62c66d817CC59c44780D1b722359795bF',
 };
 
 export const AdminExecutor: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x23E0B465633FF5178808F4A75186E2F2F9537021',
   [CHAINS.Holesky]: '0x06a0256B6D9F913F342a2aeFfc6395949fEfE1C6',
-  [CHAINS.Hoodi]: '0x8ef12c8bB0f544e4741cC594d07739e670c37959',
+  [CHAINS.Hoodi]: '0x0eCc17597D292271836691358B22340b78F3035B',
 };
 
 export const EmergencyProtectedTimelock: ChainAddressMap = {
@@ -332,17 +332,17 @@ export const TiebreakerCoreCommittee: ChainAddressMap = {
 
 export const TieBreakerSubCommittee1: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x74836470337Ba5d2a92fe16E44AD862E28fcf9B3',
-  [CHAINS.Hoodi]: '0x32F9CA8B1621E5AC2E38e1b8715633DE237F58Db',
+  [CHAINS.Hoodi]: '0xEd27F0d08630685A0cEFb1040596Cb264cf79f14',
 };
 
 export const TieBreakerSubCommittee2: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xb9d82E1A49f6a66E8a07260BA05Cf9Ac8a938B1C',
-  [CHAINS.Hoodi]: '0x2Dd5D6216843D456dc33CAF241031e37eA3C9c5f',
+  [CHAINS.Hoodi]: '0xE3e3c67997A4Db7d47ac7fa8ef81B677daBe5794',
 };
 
 export const TieBreakerSubCommittee3: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x7dAdae4e1a0DB43F6bcfA75295666fc044605679',
-  [CHAINS.Hoodi]: '0x7aDD2cFf6D61D0496d1E2Aa3C4089e126ef88D74',
+  [CHAINS.Hoodi]: '0xF4F16CB3B9E7a076E55c508035f25E606913Cc9d',
 };
 
 export const EVMScriptExecutor: ChainAddressMap = {
@@ -372,7 +372,7 @@ export const DualGovernanceEscrow: ChainAddressMap = {
 
 export const EscrowMasterCopy: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xb84317C0E142D8911A0d69Dc32c48d87753B8d1C',
-  [CHAINS.Hoodi]: '0xD82Ea63b6196dbd100a1067341EEC8aec9eEd4Af',
+  [CHAINS.Hoodi]: '0x61b7C2351F63b7f9840736D020eE65D2803A00fb',
 };
 
 export const DualGovernanceResealManager: ChainAddressMap = {
@@ -382,7 +382,7 @@ export const DualGovernanceResealManager: ChainAddressMap = {
 
 export const DualGovernanceTieBreakerCore: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x175742c3DDD88B0192df3EcF98f180A79cb259D0',
-  [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
+  [CHAINS.Hoodi]: '0x9Ce4bA766C87cC87e507307163eA54C5003A3563',
 };
 
 export const EVMScriptRegistry: ChainAddressMap = {
