@@ -1,0 +1,147 @@
+import Router from 'next/router';
+import { useEffect } from 'react';
+import { Container, Pagination } from '@lidofinance/lido-ui';
+import { VOTE_DASHBOARD_INDEX_PATH, voteDashboardPage } from 'constants/urls';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { Voting } from 'shared/blockchain/contracts';
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
+import { usePublicClient, useWatchContractEvent } from 'wagmi';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { votingAbi } from 'abi/ts';
+import { AttentionBanner } from 'shared/components/attention-banner';
+import { GridWrap, PaginationWrap } from './style';
+import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
+import { DashboardVote } from '../dashboard-vote';
+
+const PAGE_SIZE = 12;
+
+const PAGE_RANGE = Array.from({ length: PAGE_SIZE }, (_, i) => i);
+
+const handleChangePage = (nextPage: number) => {
+  void Router.push(voteDashboardPage(nextPage));
+};
+
+const getPageKey = (chainId: CHAINS, page: number) => [
+  'dashboard-votes',
+  chainId,
+  page,
+];
+
+type Props = {
+  currentPage: number;
+};
+
+export const DashboardGrid = ({ currentPage }: Props) => {
+  const { chainId } = useLidoSDK();
+  const votingContract = useReadContract(Voting);
+  const client = usePublicClient();
+  const queryClient = useQueryClient();
+
+  const votingInfo = useQuery({
+    queryKey: ['vote-dashboard-general-info', chainId, votingContract.address],
+    queryFn: async () => {
+      const [votesLength, voteTime, objectionPhaseTime] = await Promise.all([
+        votingContract.readContract('votesLength'),
+        votingContract.readContract('voteTime'),
+        votingContract.readContract('objectionPhaseTime'),
+      ]);
+
+      return {
+        voteTime: Number(voteTime),
+        objectionPhaseTime: Number(objectionPhaseTime),
+        votesLength: Number(votesLength),
+      };
+    },
+    staleTime: Infinity,
+  });
+
+  const votes = useQuery({
+    queryKey: getPageKey(chainId, currentPage),
+    queryFn: () =>
+      fetchAragonVotes({
+        votingContract,
+        limit: PAGE_SIZE,
+        offset: (currentPage - 1) * PAGE_SIZE,
+        client,
+        onlyActive: false,
+      }),
+    placeholderData: keepPreviousData,
+    staleTime: currentPage === 1 ? 600 * 1000 : Infinity, // 10 minutes for the first page
+  });
+
+  const isLoading = votingInfo.isLoading || votes.isFetching;
+  const votesList = votes.data;
+  const pagesCount = votingInfo.data?.votesLength
+    ? Math.ceil(votingInfo.data.votesLength / PAGE_SIZE)
+    : 1;
+
+  const isOutOfPageBounds =
+    (!votingInfo.isLoading && currentPage > pagesCount) || currentPage < 1;
+
+  useEffect(() => {
+    if (isOutOfPageBounds) {
+      void Router.replace(VOTE_DASHBOARD_INDEX_PATH);
+    }
+  }, [isOutOfPageBounds]);
+
+  useWatchContractEvent({
+    address: votingContract.address,
+    abi: votingAbi,
+    eventName: 'StartVote',
+    onLogs: () => {
+      void queryClient.invalidateQueries({
+        queryKey: getPageKey(chainId, 1),
+      });
+    },
+  });
+
+  if (isOutOfPageBounds) {
+    return null;
+  }
+
+  if (votes.error || votingInfo.error) {
+    console.error('Error fetching votes:', votes.error || votingInfo.error);
+    return (
+      <Container as="main" size="tight">
+        <AttentionBanner>Error fetching voting data</AttentionBanner>
+      </Container>
+    );
+  }
+
+  if (!votingInfo.data) {
+    return null;
+  }
+
+  return (
+    <Container as="main" size="full">
+      <GridWrap>
+        {isLoading
+          ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)
+          : votesList?.map((voteData) => (
+              <DashboardVote
+                key={voteData.id}
+                vote={voteData}
+                startEvent={voteData.startEvent}
+                voteTime={votingInfo.data.voteTime}
+                objectionPhaseTime={votingInfo.data.objectionPhaseTime}
+                onPass={votes.refetch}
+              />
+            ))}
+      </GridWrap>
+      <PaginationWrap>
+        <Pagination
+          pagesCount={pagesCount}
+          activePage={currentPage}
+          onItemClick={(idx: number) => handleChangePage(idx)}
+          siblingCount={1}
+        />
+      </PaginationWrap>
+    </Container>
+  );
+};

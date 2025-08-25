@@ -1,35 +1,41 @@
 import { getLogs } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
+import { findAbiItem } from 'utils/find-abi-item';
+import { votingAbi } from 'abi/ts';
 
-type Props = {
+type Args = {
   address: Address | undefined;
   client: PublicClient;
-  eventAbi: any;
   voteId: bigint;
   block: bigint;
 };
 
-type VoteEventArgs = {
+export type StartVoteEventArgs = {
   voteId: bigint;
   creator: Address;
   metadata: string;
 };
 
 type ReturnType = Log & {
-  args: VoteEventArgs;
+  args: StartVoteEventArgs;
 };
 
 export const getEventStartVote = async ({
   address,
   client,
-  eventAbi,
   voteId,
   block,
-}: Props): Promise<VoteEventArgs | null> => {
+}: Args): Promise<StartVoteEventArgs | null> => {
   try {
+    const startVoteEventAbi = findAbiItem({
+      abi: votingAbi,
+      name: 'StartVote',
+      type: 'event',
+    });
+
     const events = (await getLogs(client, {
       address,
-      event: eventAbi,
+      event: startVoteEventAbi,
       args: {
         voteId,
       },
@@ -46,6 +52,6 @@ export const getEventStartVote = async ({
     return event.args;
   } catch (e) {
     console.error(e);
+    return null;
   }
-  return null;
 };

@@ -2280,10 +2280,24 @@
     graphql "^16.8.1"
     graphql-request "^6.1.0"
 
-"@lidofinance/lido-ui@^3.18.0", "@lidofinance/lido-ui@^3.26.0":
+"@lidofinance/lido-ui@^3.18.0":
   version "3.28.1"
   resolved "https://registry.yarnpkg.com/@lidofinance/lido-ui/-/lido-ui-3.28.1.tgz#9de11afa6f1b3a070781e9f055b56c0d959ef316"
   integrity sha512-nQmJPLKhdSzfqeq+9kmVTjK0FFPuBcFN1XN26a5wURlcLDsDryjgxTyNM4uZgyaR/bqKl3XfgF6JNsUNvktVKQ==
+  dependencies:
+    "@styled-system/should-forward-prop" "5.1.5"
+    react-collapsed "3.0.2"
+    react-jazzicon "^1.0.4"
+    react-toastify "7.0.4"
+    react-transition-group "4"
+    styled-system "5.1.5"
+    ua-parser-js "^1.0.35"
+    use-callback-ref "1.2.5"
+
+"@lidofinance/lido-ui@^3.31.0":
+  version "3.34.0"
+  resolved "https://registry.yarnpkg.com/@lidofinance/lido-ui/-/lido-ui-3.34.0.tgz#f8bafe410cdc6a82d1e85815a08cd1f914ba4d52"
+  integrity sha512-dhPEcY7NyNOkfWGxfijJ6G37NlpRp6NPSHBdmBnQ0+EjirjlhTA2VnBf/XkR1SP2fJw7fXlESftNJ6oImgRttA==
   dependencies:
     "@styled-system/should-forward-prop" "5.1.5"
     react-collapsed "3.0.2"
@@ -3861,6 +3875,11 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
+
+"@types/remove-markdown@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@types/remove-markdown/-/remove-markdown-0.3.1.tgz#82bc3664c313f50f7c77f1bb59935f567689dc63"
+  integrity sha512-JpJNEJEsmmltyL2LdE8KRjJ0L2ad5vgLibqNj85clohT9AyTrfN6jvHxStPshDkmtcL/ShFu0p2tbY7DBS1mqQ==
 
 "@types/scheduler@*":
   version "0.26.0"
@@ -5686,6 +5705,11 @@ date-fns@^2.29.3:
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
   dependencies:
     "@babel/runtime" "^7.21.0"
+
+dayjs@1.11.13:
+  version "1.11.13"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
+  integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
 
 debug@^3.2.7:
   version "3.2.7"
@@ -10842,6 +10866,11 @@ remark@^13.0.0:
     remark-parse "^9.0.0"
     remark-stringify "^9.0.0"
     unified "^9.1.0"
+
+remove-markdown@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/remove-markdown/-/remove-markdown-0.5.0.tgz#a596264bbd60b9ceab2e2ae86e5789eee91aee32"
+  integrity sha512-x917M80K97K5IN1L8lUvFehsfhR8cYjGQ/yAMRI9E7JIKivtl5Emo5iD13DhMr+VojzMCiYk8V2byNPwT/oapg==
 
 repeat-string@^1.0.0:
   version "1.6.1"

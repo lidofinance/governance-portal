@@ -1,8 +1,40 @@
-import { UnwrapPromise } from 'next/dist/lib/coalesced-function';
-import { AragonVotingAbi } from 'generated';
 import { Address } from 'viem';
+import { votingAbi } from 'abi/ts';
+import { ContractReadFunctionReturnType } from 'shared/types';
 
-export type Vote = UnwrapPromise<ReturnType<AragonVotingAbi['getVote']>>;
+/**
+ * VotePhase.Main if one can vote 'yes' or 'no',
+ * VotePhase.Objection if one can vote only 'no' or
+ * VotePhase.Closed if no votes are accepted
+ */
+
+export enum VotePhase {
+  Main,
+  Objection,
+  Closed,
+}
+
+export type RawVote = ContractReadFunctionReturnType<
+  typeof votingAbi,
+  'getVote'
+>;
+
+export type Vote = {
+  id: number;
+  open: boolean;
+  executed: boolean;
+  startDate: bigint;
+  snapshotBlock: bigint;
+  supportRequired: bigint;
+  minAcceptQuorum: bigint;
+  yea: bigint;
+  nay: bigint;
+  votingPower: bigint;
+  script: string;
+  phase: VotePhase;
+  state: { status: VoteStatus; isQuorumReached: boolean };
+  canExecute: boolean;
+};
 
 export enum VoteStatus {
   ActiveMain,
@@ -22,7 +54,7 @@ export type VoteData = {
     creator: Address;
     metadata: string;
     voteId: bigint;
-  };
+  } | null;
   state: {
     status: VoteStatus;
     isQuorumReached: boolean;

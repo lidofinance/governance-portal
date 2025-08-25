@@ -32,50 +32,40 @@ const createStageIcon = (
 
 export const StageIconSuccess = createStageIcon(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <SuccessIcon />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <LedgerSuccess fill="transparent" />,
 );
 
 export const StageIconFail = createStageIcon(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <FailIcon />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <LedgerFail fill="transparent" />,
 );
 
 export const StageIconSign = createStageIcon(
   <TxLoader size="large" />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <LedgerConfirm fill="transparent" />,
 );
 
 export const StageIconLoader = createStageIcon(
   <TxLoader size="large" />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <LedgerLoading fill="transparent" />,
 );
 
 export const StageIconLimit = createStageIcon(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <Warning />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <LedgerFail fill="transparent" />,
 );
 
 export const StageIconDialog = createStageIcon(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <WarningIcon />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   <WarningIcon />,
 );

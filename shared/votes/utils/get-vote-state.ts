@@ -1,13 +1,15 @@
 import { Vote, VoteStatus } from 'shared/votes/types';
 import { formatUnits } from 'viem';
 
+type VoteWithoutState = Omit<Vote, 'state'>;
+
 const EMPTY_SCRIPT = '0x00000001';
 
-const isVoteEnactable = (vote: Vote): boolean | string => {
+const isVoteEnactable = (vote: VoteWithoutState): boolean | string => {
   return vote.script && vote.script !== EMPTY_SCRIPT;
 };
 
-export const isQuorumReached = (vote: Vote): boolean => {
+export const isQuorumReached = (vote: VoteWithoutState): boolean => {
   const totalSupply = Number(
     formatUnits(vote.votingPower as unknown as bigint, 18),
   );
@@ -23,12 +25,10 @@ export const isQuorumReached = (vote: Vote): boolean => {
   return yeaQuorum > minAcceptQuorum || nayQuorum > minAcceptQuorum;
 };
 
-export const getVoteStatus = (
-  vote: Vote | undefined | null,
+export const getVoteState = (
+  vote: VoteWithoutState,
   canExecute: boolean | undefined | null,
-): { status: VoteStatus; isQuorumReached: boolean } | null => {
-  if (!vote) return null;
-
+): { status: VoteStatus; isQuorumReached: boolean } => {
   const { open, executed, phase } = vote;
 
   if (!open) {
