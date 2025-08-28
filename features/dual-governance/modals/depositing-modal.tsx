@@ -28,25 +28,9 @@ export const DepositingModal = ({ amount, state, ...modalProps }: Props) => {
       case TransactionState.PENDING:
         return <Loader size="large" />;
       case TransactionState.SUCCESS:
-        return (
-          <Success
-            color="green"
-            height={64}
-            width={64}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          />
-        );
+        return <Success color="green" height={64} width={64} />;
       case TransactionState.ERROR:
-        return (
-          <Error
-            color="red"
-            height={64}
-            width={64}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          />
-        );
+        return <Error color="red" height={64} width={64} />;
     }
   };
   return (

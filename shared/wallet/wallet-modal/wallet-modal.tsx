@@ -87,12 +87,7 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
           <ButtonIcon
             data-testid="copyAddressBtn"
             onClick={handleCopy}
-            icon={
-              <Copy
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
-            }
+            icon={<Copy />}
             size="xs"
             variant="ghost"
           >
@@ -101,12 +96,7 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
           <ButtonIcon
             data-testid="etherscanBtn"
             onClick={handleEtherscan}
-            icon={
-              <External
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
-            }
+            icon={<External />}
             size="xs"
             variant="ghost"
           >

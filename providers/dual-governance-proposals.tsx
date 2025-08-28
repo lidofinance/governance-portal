@@ -14,7 +14,7 @@ import {
   ProposalCombinedData,
   ProposalStatus,
 } from 'features/dual-governance/proposals/types';
-import { useVotes } from 'shared/votes/hooks/use-votes';
+import { useActiveVotes } from 'shared/votes/hooks/use-active-votes';
 import { VoteData } from 'shared/votes/types';
 import {
   QueryObserverResult,
@@ -120,7 +120,7 @@ export const DualGovernanceProposalsProvider: React.FC<
     data: votesData,
     isFetching: isVotesFetching,
     isLoading: isVotesLoading,
-  } = useVotes({
+  } = useActiveVotes({
     limit: VOTES_LIMIT,
   });
 

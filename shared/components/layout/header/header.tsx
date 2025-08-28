@@ -7,9 +7,9 @@ export const Header = () => (
   <HeaderContainer size="full" forwardedAs="header">
     <LogoLido />
     <Link href="/" target="_self">
-      <LogoTextStyle>Dual Governance</LogoTextStyle>
+      <LogoTextStyle>Governance</LogoTextStyle>
     </Link>
-    <LogoTextStyleMobile>DG</LogoTextStyleMobile>
+    <LogoTextStyleMobile>DAO</LogoTextStyleMobile>
     <HeaderActions />
   </HeaderContainer>
 );
