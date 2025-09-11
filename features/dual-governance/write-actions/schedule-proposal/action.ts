@@ -4,7 +4,7 @@ import { useScheduleProposalTxModal } from './modal-stages';
 import { useScheduleProposalTxSend } from './tx-sender';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
-import { ActionArgs } from '../types';
+import { ActionArgs } from 'shared/types';
 
 export const useScheduleProposalAction = ({ onConfirm }: ActionArgs) => {
   const { data: isMultisig } = useIsContract();

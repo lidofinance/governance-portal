@@ -1,0 +1,43 @@
+import { UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { Address } from 'viem';
+
+export type DelegationInfo = {
+  aragonDelegateAddress: string | null | undefined;
+  aragonPublicDelegate: PublicDelegate | null | undefined;
+  snapshotDelegateAddress: string | null | undefined;
+  snapshotPublicDelegate: PublicDelegate | null | undefined;
+};
+
+export type DelegationFormInput = {
+  delegateAddress: Address | null;
+};
+
+export type DelegationFormLoading = {
+  isDaoTokenBalanceLoading: boolean;
+  isDelegationInfoLoading: boolean;
+};
+
+export type DelegationFormNetworkData = {
+  daoTokenBalance: number | undefined;
+  loading: DelegationFormLoading;
+  refetch: () => Promise<void>;
+} & DelegationInfo;
+
+export type DelegationType = 'aragon' | 'snapshot';
+
+export type DelegationFormMode = 'simple' | DelegationType;
+
+export type DelegationFormContextValue = DelegationFormNetworkData & {
+  mode: DelegationFormMode;
+  onRevoke: (type: DelegationType) => Promise<boolean>;
+  register: UseFormRegister<DelegationFormInput>;
+  watch: UseFormWatch<DelegationFormInput>;
+};
+
+export type PublicDelegate = {
+  name: string;
+  avatar: string;
+  address: Address;
+  lido: string;
+  twitter: string;
+};

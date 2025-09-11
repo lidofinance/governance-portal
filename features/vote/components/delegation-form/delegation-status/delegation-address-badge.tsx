@@ -1,0 +1,46 @@
+import { Identicon, Text, trimAddress } from '@lidofinance/lido-ui';
+import {
+  AddressBadgeWrap,
+  RevokeDelegationButton,
+  DelegationAddressBadgeStyled,
+} from './style';
+import { DelegationType, PublicDelegate } from 'features/vote/types';
+import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
+import { AddressPop } from 'shared/components/address-pop';
+import { PublicDelegateAvatar } from '../../public-delegate-avatar';
+
+type Props = {
+  address: string;
+  publicDelegate: PublicDelegate | null | undefined;
+  type: DelegationType;
+};
+
+export const DelegationAddressBadge = ({
+  address,
+  publicDelegate,
+  type,
+}: Props) => {
+  const { onRevoke } = useDelegationFormData();
+
+  return (
+    <DelegationAddressBadgeStyled>
+      <AddressPop address={address}>
+        <AddressBadgeWrap>
+          {publicDelegate ? (
+            <PublicDelegateAvatar avatarSrc={publicDelegate.avatar} size={20} />
+          ) : (
+            <Identicon address={address} diameter={20} />
+          )}
+          <Text
+            as="span"
+            size="xxs"
+            color={publicDelegate ? 'default' : 'secondary'}
+          >
+            {publicDelegate?.name ?? trimAddress(address, 4)}
+          </Text>
+        </AddressBadgeWrap>
+      </AddressPop>
+      <RevokeDelegationButton onClick={() => onRevoke(type)} />
+    </DelegationAddressBadgeStyled>
+  );
+};

@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useAccount } from 'wagmi';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
-import { ActionArgs } from '../types';
+import { ActionArgs } from 'shared/types';
 import { useRevokeTokensModalStages } from './modal-stages';
 import { useRevokeTokensTxSender } from './tx-sender';
 import { EscrowActionArgs } from 'features/dual-governance/types';

@@ -10,3 +10,5 @@ export * from './EmergencyProtectedTimelock.abi';
 export * from './EmergencyGovernance.abi';
 export * from './ERC20.abi';
 export * from './ERC721.abi';
+export * from './DaoToken.abi';
+export * from './Snapshot.abi';

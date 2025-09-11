@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
-  const AragonVoting = useReadContract(Voting);
+  const votingContract = useReadContract(Voting);
   const client = usePublicClient();
   const { chainId } = useLidoSDK();
 
@@ -20,7 +20,7 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
     queryFn: async () => {
       try {
         const votes = await fetchAragonVotes({
-          votingContract: AragonVoting,
+          votingContract,
           limit,
           client,
           onlyActive: shouldGetActive,
@@ -31,8 +31,8 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
         }
 
         const [voteTime, objectionPhaseTime] = await Promise.all([
-          AragonVoting.readContract('voteTime'),
-          AragonVoting.readContract('objectionPhaseTime'),
+          votingContract.readContract('voteTime'),
+          votingContract.readContract('objectionPhaseTime'),
         ]);
 
         const parsedVotes = votes.map((vote) => {

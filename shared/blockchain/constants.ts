@@ -6,3 +6,5 @@ export const TOKEN_CONTRACT_MAP = {
   [Token.wstETH]: WstETH,
   [Token.unstETH]: WithdrawalQueue,
 };
+
+export const ETH_DECIMALS = 18;

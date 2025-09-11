@@ -56,3 +56,15 @@ export const EmergencyGovernance: ContractObject<
   abi: abi.emergencyGovernanceAbi,
   chainAddressMap: addr.EmergencyGovernance,
 };
+
+export const DaoToken: ContractObject<typeof abi.daoTokenAbi> = {
+  name: 'DaoToken',
+  abi: abi.daoTokenAbi,
+  chainAddressMap: addr.DaoToken,
+};
+
+export const Snapshot: ContractObject<typeof abi.snapshotAbi> = {
+  name: 'Snapshot',
+  abi: abi.snapshotAbi,
+  chainAddressMap: addr.Snapshot,
+};

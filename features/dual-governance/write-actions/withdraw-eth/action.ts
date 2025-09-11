@@ -7,7 +7,7 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useWithdrawEthModalStages } from './modal-stages';
 import { useWithdrawEthTxSender } from './tx-sender';
 import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
-import { ActionArgs } from '../types';
+import { ActionArgs } from 'shared/types';
 
 export const useWithdrawEthAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();

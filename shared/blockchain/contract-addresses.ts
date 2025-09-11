@@ -1,7 +1,7 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { ChainAddressMap } from './types';
 
-export const GovernanceToken: ChainAddressMap = {
+export const DaoToken: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
   [CHAINS.Holesky]: '0x14ae7daeecdf57034f3E9db8564e46Dba8D97344',
   [CHAINS.Hoodi]: '0xEf2573966D009CcEA0Fc74451dee2193564198dc',
