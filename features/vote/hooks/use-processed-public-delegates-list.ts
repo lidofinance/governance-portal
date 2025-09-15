@@ -5,10 +5,13 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { DELEGATORS_FETCH_TOTAL } from '../constants';
+import { getDaoTokenMetadata } from 'shared/blockchain/utils/get-dao-token-metadata';
+import { formatToken } from 'shared/blockchain/utils';
 
 export type ProcessedDelegate = PublicDelegate & {
-  delegatorsCount: bigint;
+  delegatorsCount: number;
   delegatedVotingPower: bigint;
+  delegatedVotingPowerFormatted: string;
 };
 
 export const useProcessedPublicDelegatesList = () => {
@@ -22,6 +25,7 @@ export const useProcessedPublicDelegatesList = () => {
       votingContract.address,
     ],
     queryFn: async () => {
+      const daoTokenMetadata = getDaoTokenMetadata(chainId);
       const parsedList: ProcessedDelegate[] = await Promise.all(
         PUBLIC_DELEGATES.map(async (delegate) => {
           const delegatorsCount = await votingContract.readContract(
@@ -32,8 +36,9 @@ export const useProcessedPublicDelegatesList = () => {
           if (delegatorsCount === 0n) {
             return {
               ...delegate,
-              delegatorsCount: 0n,
+              delegatorsCount: 0,
               delegatedVotingPower: 0n,
+              delegatedVotingPowerFormatted: '0',
             };
           }
 
@@ -54,8 +59,14 @@ export const useProcessedPublicDelegatesList = () => {
 
           return {
             ...delegate,
-            delegatorsCount,
+            delegatorsCount: Number(delegatorsCount),
             delegatedVotingPower,
+            delegatedVotingPowerFormatted: formatToken({
+              amount: delegatedVotingPower,
+              notation: 'compact',
+              maxFractionDigits: 2,
+              decimals: daoTokenMetadata.decimals,
+            }),
           };
         }),
       );
@@ -71,5 +82,6 @@ export const useProcessedPublicDelegatesList = () => {
         return a.name.localeCompare(b.name);
       });
     },
+    staleTime: Infinity,
   });
 };

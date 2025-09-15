@@ -1,8 +1,14 @@
 import styled, { css, keyframes } from 'styled-components';
 
-export const Wrap = styled.span`
+export const Wrap = styled.div`
   position: relative;
   cursor: pointer;
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+  }
 `;
 
 const popIn = keyframes`

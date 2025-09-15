@@ -7,9 +7,7 @@ import {
   ListItem,
   SocialButtons,
 } from './style';
-import { Button, Text } from '@lidofinance/lido-ui';
-import { useDelegateFromPublicList } from 'features/vote/providers/delegate-form-public-list-context';
-import { formatNumber } from 'shared/blockchain/utils';
+import { Button, Text, trimAddress } from '@lidofinance/lido-ui';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { AddressPop } from 'shared/components/address-pop';
 import { ExternalLink } from 'shared/components/external-link/external-link';
@@ -23,17 +21,15 @@ type Props = {
   delegate: ProcessedDelegate;
   isWalletConnected: boolean;
   isMobile: boolean;
+  onSelect: () => void;
 };
 
 export const PublicDelegateListItem = ({
   delegate,
   isWalletConnected,
   isMobile,
+  onSelect,
 }: Props) => {
-  const { onPublicDelegateSelect } = useDelegateFromPublicList();
-
-  const balanceToShow = formatNumber({ value: delegate.delegatedVotingPower });
-
   if (isMobile) {
     return (
       <ListItem>
@@ -45,7 +41,7 @@ export const PublicDelegateListItem = ({
             </Text>
             <AddressPop address={delegate.address}>
               <Text size="xxs" color="secondary">
-                {delegate.address}
+                {trimAddress(delegate.address, 6)}
               </Text>
             </AddressPop>
           </DelegateNameAndAddress>
@@ -63,7 +59,7 @@ export const PublicDelegateListItem = ({
         <DelegateNumbersMobile>
           <HeaderTitleWithIcon>
             VP <AragonSmallLogo />
-            {balanceToShow}
+            {delegate.delegatedVotingPowerFormatted}
           </HeaderTitleWithIcon>
           <Text size="xxs" weight={700}>
             From {delegate.delegatorsCount.toString()}
@@ -74,7 +70,7 @@ export const PublicDelegateListItem = ({
             size="xs"
             variant="outlined"
             disabled={!delegate.address}
-            onClick={onPublicDelegateSelect(delegate.address)}
+            onClick={onSelect}
           >
             Select
           </Button>
@@ -93,12 +89,12 @@ export const PublicDelegateListItem = ({
           </Text>
           <AddressPop address={delegate.address}>
             <Text size="xxs" color="secondary">
-              {delegate.address}
+              {trimAddress(delegate.address, 6)}
             </Text>
           </AddressPop>
         </DelegateNameAndAddress>
       </DelegateInfo>
-      <Text size="xxs">{balanceToShow}</Text>
+      <Text size="xxs">{delegate.delegatedVotingPowerFormatted}</Text>
       <Text size="xxs">{delegate.delegatorsCount.toString()}</Text>
       <SocialButtons>
         <ExternalLink href={delegate.lido}>
@@ -115,7 +111,7 @@ export const PublicDelegateListItem = ({
           size="xs"
           variant="outlined"
           disabled={!delegate.address}
-          onClick={onPublicDelegateSelect(delegate.address)}
+          onClick={onSelect}
         >
           Select
         </Button>

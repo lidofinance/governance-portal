@@ -139,6 +139,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   *:before,
   *:after {
     box-sizing: border-box;
+    font-family: 'Manrope', sans-serif;
   }
   svg {
     box-sizing: content-box;

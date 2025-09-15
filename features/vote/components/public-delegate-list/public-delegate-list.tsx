@@ -4,12 +4,14 @@ import { PublicDelegateListItem } from './public-delegate-list-item';
 import { useAccount } from 'wagmi';
 import { AragonSmallLogo } from 'shared/components/icons';
 import { useProcessedPublicDelegatesList } from 'features/vote/hooks/use-processed-public-delegates-list';
+import { useDelegateFromPublicList } from 'features/vote/providers/delegate-form-public-list-context';
 
 export const PublicDelegateList = () => {
   const { isConnected } = useAccount();
   const isMobile = useBreakpoint('md');
 
   const { data, isLoading } = useProcessedPublicDelegatesList();
+  const { onPublicDelegateSelect } = useDelegateFromPublicList();
 
   if (!data || isLoading) {
     return (
@@ -53,6 +55,7 @@ export const PublicDelegateList = () => {
             delegate={delegate}
             isWalletConnected={isConnected}
             isMobile={isMobile}
+            onSelect={onPublicDelegateSelect(delegate.address)}
           />
         ))}
       </InnerWrap>

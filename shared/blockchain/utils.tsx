@@ -77,6 +77,28 @@ export const formatEthCompact = (amount: bigint, maxFractionDigits = 2) => {
   });
 };
 
+type FormatTokenArgs = {
+  amount: bigint;
+  decimals: number;
+  symbol?: string;
+  maxFractionDigits?: FormatNumberArgs['maxFractionDigits'];
+  notation?: FormatNumberArgs['notation'];
+};
+
+export const formatToken = ({
+  amount,
+  decimals,
+  symbol,
+  ...rest
+}: FormatTokenArgs) => {
+  const formattedString = formatNumber({
+    value: formatUnits(amount, decimals),
+    ...rest,
+  });
+
+  return symbol ? `${formattedString} ${symbol}` : formattedString;
+};
+
 export const parsePercent16 = (value: bigint | null | undefined) => {
   if (!value) return 0;
 
