@@ -11,7 +11,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
-import { usePublicClient, useWatchContractEvent } from 'wagmi';
+import { useWatchContractEvent } from 'wagmi';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { votingAbi } from 'abi/ts';
 import { AttentionBanner } from 'shared/components/attention-banner';
@@ -38,9 +38,8 @@ type Props = {
 };
 
 export const DashboardGrid = ({ currentPage }: Props) => {
-  const { chainId } = useLidoSDK();
+  const { chainId, rpcProvider } = useLidoSDK();
   const votingContract = useReadContract(Voting);
-  const client = usePublicClient();
   const queryClient = useQueryClient();
 
   const votingInfo = useQuery({
@@ -68,7 +67,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
         votingContract,
         limit: PAGE_SIZE,
         offset: (currentPage - 1) * PAGE_SIZE,
-        client,
+        client: rpcProvider,
         onlyActive: false,
       }),
     placeholderData: keepPreviousData,

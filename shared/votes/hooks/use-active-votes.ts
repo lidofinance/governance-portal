@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
-import { usePublicClient } from 'wagmi';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { fetchAragonVotes } from '../utils/fetch-aragon-votes';
 
@@ -12,8 +11,7 @@ type Props = {
 
 export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
   const votingContract = useReadContract(Voting);
-  const client = usePublicClient();
-  const { chainId } = useLidoSDK();
+  const { chainId, rpcProvider } = useLidoSDK();
 
   return useQuery({
     queryKey: ['active-votes', limit, chainId],
@@ -22,7 +20,7 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
         const votes = await fetchAragonVotes({
           votingContract,
           limit,
-          client,
+          client: rpcProvider,
           onlyActive: shouldGetActive,
         });
 
