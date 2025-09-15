@@ -1,19 +1,20 @@
-import { EVMScriptDecoder } from '@lidofinance/evm-script-decoder';
 import { useEVMScriptDecoder } from './use-evm-script-decoder';
-import { useLidoSWR, useSDK } from '@lido-sdk/react';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useQuery } from '@tanstack/react-query';
 
 export const useDecodedScript = (script: string) => {
-  const { chainId } = useSDK();
+  const { chainId } = useLidoSDK();
   const decoder = useEVMScriptDecoder();
 
-  const { data, initialLoading } = useLidoSWR(
-    ['swr:decode-script', chainId, decoder, script],
-    (_, __, _decoder, _script) =>
-      (_decoder as EVMScriptDecoder).decodeEVMScript(_script as string),
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['useDecodedScript', chainId, decoder, script],
+    queryFn: async () => await decoder.decodeEVMScript(script),
+    enabled: !!script,
+    staleTime: Infinity,
+  });
 
   return {
-    initialLoading,
+    initialLoading: isLoading,
     binary: script,
     decoded: data,
   };

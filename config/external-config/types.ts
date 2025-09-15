@@ -1,4 +1,4 @@
-import { SWRResponse } from 'swr';
+import { UseQueryResult } from '@tanstack/react-query';
 
 export type Manifest = Record<string, ManifestEntry>;
 
@@ -15,7 +15,7 @@ export type ManifestConfig = {
 
 export type ExternalConfig = Omit<ManifestEntry, 'config'> &
   ManifestConfig & {
-    fetchMeta: SWRResponse<ManifestEntry>;
+    fetchMeta: UseQueryResult<ManifestEntry>;
   };
 
 export enum ManifestConfigPageEnum {

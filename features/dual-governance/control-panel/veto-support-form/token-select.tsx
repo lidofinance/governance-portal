@@ -47,10 +47,7 @@ export const TokenSelect = () => {
         {vetoSignallingAddress ? (
           <Link
             target="_blank"
-            href={getEtherscanAddressLink(
-              chainId, // chains mismatch between @lido-sdk & lido-ethereum-sdk
-              vetoSignallingAddress,
-            )}
+            href={getEtherscanAddressLink(chainId, vetoSignallingAddress)}
           >
             {'contract '}
             <ExternalLinkIcon />

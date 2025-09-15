@@ -1,56 +1,40 @@
-import {
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider, createConfig, useConnections } from 'wagmi';
+import { FC, PropsWithChildren, useEffect, useMemo } from 'react';
+import { WagmiProvider, useConnections } from 'wagmi';
 import * as wagmiChains from 'wagmi/chains';
-import {
-  AutoConnect,
-  ReefKnot,
-  getWalletsDataList,
-} from 'reef-knot/core-react';
-import { WalletsListEthereum } from 'reef-knot/wallets';
+import { ReefKnotProvider, getDefaultConfig } from 'reef-knot/core-react';
+import { WalletIdsEthereum, WalletsListEthereum } from 'reef-knot/wallets';
 
 import { config } from 'config';
 import { useUserConfig } from 'config/user-config';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { ConnectWalletModal } from 'shared/wallet/connect-wallet-modal';
 
-import { SDKLegacyProvider } from './sdk-legacy';
 import { useWeb3Transport } from 'utils/use-web3-transport';
-import { clearStorageOnNetworkSwitch } from 'utils/clear-storage';
+import {
+  getDefaultWalletsModalConfig,
+  ReefKnotWalletsModal,
+} from 'reef-knot/connect-wallet-modal';
 
 type ChainsList = [wagmiChains.Chain, ...wagmiChains.Chain[]];
 
-const wagmiChainsArray = Object.values(wagmiChains) as any as ChainsList;
+const WALLETS_PINNED: WalletIdsEthereum[] = ['browserExtension'];
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: 'always',
-      staleTime: 30000,
-      gcTime: 60000,
-      retry: (failureCount, error: any) => {
-        if (
-          error?.message?.includes('429') ||
-          error?.message?.includes('rate limit')
-        ) {
-          return false;
-        }
-        return failureCount < 2;
-      },
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    },
-  },
-});
+const WALLETS_SHOWN: WalletIdsEthereum[] = [
+  'browserExtension',
+  'metaMask',
+  'okx',
+  'ledgerHID',
+  'ledgerLive',
+  'walletConnect',
+  'bitget',
+  'imToken',
+  'ambire',
+  'safe',
+  'dappBrowserInjected',
+  'coinbaseSmartWallet',
+];
+
+const wagmiChainsArray = Object.values(wagmiChains) as any as ChainsList;
 
 const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
   const {
@@ -88,79 +72,59 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
     [supportedChainIds, getRpcUrlByChainId],
   );
 
-  const { walletsDataList } = useMemo(() => {
-    return getWalletsDataList({
-      walletsList: WalletsListEthereum,
-      rpc: backendRPC,
-      walletconnectProjectId,
-      defaultChain,
-    });
-  }, [backendRPC, defaultChain, walletconnectProjectId]);
-
   const { transportMap, onActiveConnection } = useWeb3Transport(
     supportedChains,
     backendRPC,
   );
 
-  const wagmiConfig = useMemo(() => {
-    return createConfig({
+  const { wagmiConfig, reefKnotConfig, walletsModalConfig } = useMemo(() => {
+    return getDefaultConfig({
+      // Reef-Knot config args
+      rpc: backendRPC,
+      defaultChain: defaultChain,
+      walletconnectProjectId,
+      walletsList: WalletsListEthereum,
+
+      // Wagmi config args
+      transports: transportMap,
       chains: supportedChains,
+      autoConnect: isWalletConnectionAllowed,
       ssr: true,
-      connectors: [],
+      pollingInterval: config.PROVIDER_POLLING_INTERVAL,
       batch: {
         multicall: false,
       },
-      multiInjectedProviderDiscovery: false,
-      pollingInterval: config.PROVIDER_POLLING_INTERVAL,
-      transports: transportMap,
+
+      // Wallets config args
+      ...getDefaultWalletsModalConfig(),
+      walletsPinned: WALLETS_PINNED,
+      walletsShown: WALLETS_SHOWN,
     });
-  }, [supportedChains, transportMap]);
+  }, [
+    backendRPC,
+    supportedChains,
+    defaultChain,
+    walletconnectProjectId,
+    isWalletConnectionAllowed,
+    transportMap,
+  ]);
 
   const [activeConnection] = useConnections({ config: wagmiConfig });
-  const previousChainIdRef = useRef<number | null>(null);
-  const [isNetworkSwitching, setIsNetworkSwitching] = useState(false);
 
   useEffect(() => {
     void onActiveConnection(activeConnection ?? null);
-
-    if (
-      activeConnection?.chainId &&
-      previousChainIdRef.current !== null &&
-      previousChainIdRef.current !== activeConnection.chainId
-    ) {
-      setIsNetworkSwitching(true);
-
-      clearStorageOnNetworkSwitch();
-
-      setTimeout(() => {
-        void queryClient.invalidateQueries();
-      }, 100);
-    }
-
-    if (activeConnection?.chainId && !isNetworkSwitching) {
-      previousChainIdRef.current = activeConnection.chainId;
-    }
-  }, [activeConnection, onActiveConnection, isNetworkSwitching]);
+  }, [activeConnection, onActiveConnection]);
 
   return (
     // default wagmi autoConnect, MUST be false in our case, because we use custom autoConnect from Reef Knot
     <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-      <QueryClientProvider client={queryClient}>
-        <ReefKnot
-          rpc={backendRPC}
-          chains={supportedChains}
-          walletDataList={walletsDataList}
-        >
-          {isWalletConnectionAllowed && <AutoConnect autoConnect />}
-          <SDKLegacyProvider
-            defaultChainId={defaultChain.id}
-            pollingInterval={config.PROVIDER_POLLING_INTERVAL}
-          >
-            {children}
-            <ConnectWalletModal />
-          </SDKLegacyProvider>
-        </ReefKnot>
-      </QueryClientProvider>
+      <ReefKnotProvider config={reefKnotConfig}>
+        <ReefKnotWalletsModal
+          config={walletsModalConfig}
+          darkThemeEnabled={false}
+        />
+        {children}
+      </ReefKnotProvider>
     </WagmiProvider>
   );
 };
