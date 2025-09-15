@@ -48,10 +48,9 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
   const { data: walletClient } = useConnectorClient();
 
   const sdk = useMemo(() => {
-    const currentChainId = chainId;
     // @ts-expect-error: typing (viem + LidoSDK)
     const core = new LidoSDKCore({
-      chainId: currentChainId,
+      chainId,
       logMode: 'none',
       rpcProvider: publicClient,
       web3Provider: walletClient as any,
@@ -59,15 +58,16 @@ export const LidoSDKProvider = ({ children }: React.PropsWithChildren) => {
       rpcUrls: !publicClient && fallbackRpcUrl ? [fallbackRpcUrl] : undefined,
     });
 
-    console.debug(`LidoSDK initialized with chainId: ${currentChainId}`);
+    console.debug(`LidoSDK initialized with chainId: ${chainId}`);
 
     return {
       rpcProvider: core.rpcProvider,
       web3Provider: core.web3Provider as WalletClient,
-      chainId: currentChainId as CHAINS,
+      chainId,
       subscribeToTokenUpdates: subscribe,
     };
   }, [chainId, fallbackRpcUrl, publicClient, walletClient, subscribe]);
+
   return (
     <LidoSDKContext.Provider value={sdk}>{children}</LidoSDKContext.Provider>
   );
