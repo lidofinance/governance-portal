@@ -16,16 +16,23 @@ export type StartVoteEventArgs = {
   metadata: string;
 };
 
-type ReturnType = Log & {
+export type EventStartVote = {
+  event: Log;
   args: StartVoteEventArgs;
 };
+
+type LogReturnType = Log & {
+  args: StartVoteEventArgs;
+};
+
+type GetEventStartVoteReturnType = Promise<EventStartVote | null>;
 
 export const getEventStartVote = async ({
   address,
   client,
   voteId,
   block,
-}: Args): Promise<StartVoteEventArgs | null> => {
+}: Args): Promise<GetEventStartVoteReturnType | null> => {
   try {
     const startVoteEventAbi = findAbiItem({
       abi: votingAbi,
@@ -41,7 +48,7 @@ export const getEventStartVote = async ({
       },
       fromBlock: block,
       toBlock: block + 1n,
-    })) as ReturnType[];
+    })) as LogReturnType[];
 
     if (events.length === 0) {
       return null;
@@ -49,7 +56,7 @@ export const getEventStartVote = async ({
 
     const event = events[0];
 
-    return event.args;
+    return { event, args: event.args };
   } catch (e) {
     console.error(e);
     return null;

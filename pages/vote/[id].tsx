@@ -1,4 +1,7 @@
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
+import { Layout } from 'shared/components';
+import { VoteCard } from 'features/vote/components/vote-card';
+import React from 'react';
 import { GetServerSideProps } from 'next';
 
 type Props = {
@@ -6,15 +9,16 @@ type Props = {
 };
 
 export default function VotePage({ voteId }: Props) {
-  // eslint-disable-next-line no-console
-  console.log(voteId);
-  return null; // VoteCard
+  return (
+    <Layout containerSize="full">
+      <VoteCard voteId={voteId} />
+    </Layout>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id;
 
-  // Check if id is a number
   if (typeof id === 'string' && !/^\d+$/.test(id)) {
     return {
       redirect: {

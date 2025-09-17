@@ -7,10 +7,9 @@ import {
 import { ScriptBody } from 'features/dual-governance/evm-script-parsed/script-body';
 import { decodeCalls } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { SubmitProposalCall } from 'features/dual-governance/proposals/types';
 
 type Props = {
-  rawCalls: SubmitProposalCall[];
+  rawCalls: any;
   description?: string;
 };
 

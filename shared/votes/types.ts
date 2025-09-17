@@ -62,3 +62,28 @@ export type VoteData = {
   voteTime: number;
   objectionPhaseTime: number;
 };
+
+export type VoteInfo = {
+  stake: bigint;
+  voter: string;
+  supports: boolean;
+};
+
+export type VoteMetadata = {
+  blockNumber: number;
+  transactionIndex: number;
+};
+
+export type VoteEvent = VoteInfo & {
+  delegatedVotes?: VoteInfo[];
+};
+
+// TODO: define types
+type ExecuteVoteEvent = any;
+type ExecuteVoteEventObject = any;
+
+export type EventExecuteVote = {
+  event: ExecuteVoteEvent;
+  decoded: ExecuteVoteEventObject;
+  executedAt: number | undefined;
+} | null;
