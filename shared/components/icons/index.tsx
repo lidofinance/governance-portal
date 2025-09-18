@@ -17,6 +17,12 @@ import { ReactComponent as SandwatchIcon } from 'assets/sandwatch-icon.svg';
 import { ReactComponent as WarningIconTransparent } from 'assets/warning-icon-transparent.svg';
 import { ReactComponent as InfoIcon } from 'assets/info-icon.svg';
 import { ReactComponent as EthIcon } from 'assets/tokens/eth.svg';
+import { ReactComponent as AragonSmallLogo } from 'assets/aragon-small-logo.svg';
+import { ReactComponent as SnapshotLogo } from 'assets/snapshot-logo.svg';
+import { ReactComponent as AvatarPlaceholder } from 'assets/avatar-placeholder.svg';
+import { ReactComponent as RetryIcon } from 'assets/retry-icon.svg';
+import { ReactComponent as LidoSocialIcon } from 'assets/lido-social-icon.svg';
+import { ReactComponent as XSocialIcon } from 'assets/x-social-icon.svg';
 
 export {
   RevokeIcon,
@@ -38,4 +44,10 @@ export {
   WarningIconTransparent,
   InfoIcon,
   EthIcon,
+  AragonSmallLogo,
+  SnapshotLogo,
+  RetryIcon,
+  AvatarPlaceholder,
+  LidoSocialIcon,
+  XSocialIcon,
 };

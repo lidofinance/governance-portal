@@ -111,12 +111,7 @@ export const VetoSignallingTokens = ({
           ? 'VetoSignalling '
           : 'RageQuit '}
         {escrowAddress ? (
-          <Link
-            href={getEtherscanAddressLink(
-              chainId, // chains mismatch between @lido-sdk & lido-ethereum-sdk
-              escrowAddress,
-            )}
-          >
+          <Link href={getEtherscanAddressLink(chainId, escrowAddress)}>
             contract <ExternalLinkIcon />
           </Link>
         ) : (

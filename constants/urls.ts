@@ -10,3 +10,6 @@ export const voteDashboardPage = (page: string | number) =>
   `${VOTE_DASHBOARD_INDEX_PATH}/${page}`;
 
 export const votePage = (voteId: string | number) => `${VOTE_PATH}/${voteId}`;
+
+export const VOTE_DELEGATION_PATH = `${VOTE_PATH}/delegation`;
+export const VOTE_DELEGATORS_PATH = `${VOTE_DELEGATION_PATH}/delegators`;

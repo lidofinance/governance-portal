@@ -29,7 +29,7 @@ import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-s
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
 import { Box, Link } from '@lidofinance/lido-ui';
-import { useAccount, usePublicClient } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -41,7 +41,7 @@ import { ProposalStatus } from '../types';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { useProposals } from '../../hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { Log, PublicClient } from 'viem';
+import { Log } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
 import invariant from 'tiny-invariant';
 import { getEtherscanTxLink } from 'utils/etherscan';
@@ -71,8 +71,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const { isConnected, address } = useAccount();
   const isSupportedChain = useIsSupportedChain();
-  const { chainId } = useLidoSDK();
-  const client = usePublicClient();
+  const { chainId, rpcProvider } = useLidoSDK();
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
@@ -88,7 +87,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     queryKey: ['proposal-vote-id', chainId],
     queryFn: async () => {
       return await isAragonProposal({
-        client: client as PublicClient,
+        client: rpcProvider,
         proposalLog: cachedProposal?.DGEvent as unknown as Log,
         chainId,
       });
@@ -140,19 +139,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const { data: proposalExecutedAt } = useQuery({
     queryKey: ['proposal-executed-event', proposal?.proposalId, chainId],
     queryFn: async () => {
-      if (!proposal?.proposalId || !client || !chainId) {
+      if (!proposal?.proposalId || !rpcProvider || !chainId) {
         return null;
       }
 
       try {
         const proposalExecutedEvent = await getProposalExecutedEvent({
           proposalId: proposal.proposalId,
-          client,
+          client: rpcProvider,
           chainId: chainId,
         });
 
         if (proposalExecutedEvent && proposalExecutedEvent.blockNumber) {
-          const block = await client.getBlock({
+          const block = await rpcProvider.getBlock({
             blockNumber: proposalExecutedEvent.blockNumber,
           });
           if (block) {
@@ -172,7 +171,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     },
     enabled:
       !!proposal?.proposalId &&
-      !!client &&
+      !!rpcProvider &&
       !!chainId &&
       proposal?.proposalDetails.status == ProposalStatus.Executed,
   });
@@ -333,15 +332,15 @@ export const ProposalFullInfo = ({ id }: Props) => {
     ],
     queryFn: async () => {
       invariant(proposal, 'Proposal must be defined');
-      invariant(client, 'Client must be defined');
+      invariant(rpcProvider, 'Client must be defined');
 
-      const averageBlockTime = await calculateAverageBlockTime(client);
+      const averageBlockTime = await calculateAverageBlockTime(rpcProvider);
 
       const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
         proposal.proposalDetails.scheduledAt,
         2499n, // Half of the RPC getLogs limit
         averageBlockTime,
-        client,
+        rpcProvider,
       );
 
       const eventAbi = findAbiItem({
@@ -355,7 +354,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
       // Fetch logs for each block range
       const logsPromises = ranges.map((range) =>
-        client.getLogs({
+        rpcProvider.getLogs({
           address: EmergencyProtectedTimelock.chainAddressMap[chainId],
           event: eventAbi,
           fromBlock: range.fromBlock,
@@ -371,7 +370,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
       return proposalScheduledLogs[0] || null;
     },
-    enabled: !!proposal && !!client && !!proposal.proposalDetails.scheduledAt,
+    enabled:
+      !!proposal && !!rpcProvider && !!proposal.proposalDetails.scheduledAt,
   });
 
   const scheduledAt = useMemo(() => {

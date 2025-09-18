@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { usePublicClient } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 
@@ -26,8 +25,7 @@ export const useProposals = ({
 }: UseProposalsConfig = {}): UseQueryResult<
   ProposalsQueryResult | ProposalCombinedData
 > => {
-  const { chainId } = useLidoSDK();
-  const publicClient = usePublicClient();
+  const { chainId, rpcProvider } = useLidoSDK();
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
@@ -55,9 +53,9 @@ export const useProposals = ({
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: 'always',
-    enabled: enabled && !!emergencyProtectedTimelock && !!publicClient,
+    enabled: enabled && !!emergencyProtectedTimelock && !!rpcProvider,
     queryFn: async () => {
-      if (!publicClient || !emergencyProtectedTimelock) {
+      if (!rpcProvider || !emergencyProtectedTimelock) {
         return id !== undefined ? null : { proposalsCount: 0n, proposals: [] };
       }
 
@@ -65,7 +63,7 @@ export const useProposals = ({
         if (id !== undefined) {
           return await fetchProposal({
             id,
-            publicClient,
+            publicClient: rpcProvider,
             EPTContract: emergencyProtectedTimelock,
             chainId,
             governanceAddresses,
@@ -78,7 +76,7 @@ export const useProposals = ({
 
         const proposals = await fetchProposals({
           proposalsCount,
-          publicClient,
+          publicClient: rpcProvider,
           EPTContract: emergencyProtectedTimelock,
           governanceAddresses,
           chainId,

@@ -8,7 +8,6 @@ import {
 } from 'viem';
 import { ContractObject } from '../types';
 import { getContractAddress } from '../get-contract-address';
-import { useChainId } from 'wagmi';
 import { readContract } from 'viem/actions';
 import { useLidoSDK } from 'providers/lido-sdk';
 
@@ -43,8 +42,7 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
 };
 
 export const useReadContract = <T extends Abi>(contract: ContractObject<T>) => {
-  const chainId = useChainId();
-
+  const { chainId } = useLidoSDK();
   const contractAddress = useMemo(
     () => getContractAddress(contract, chainId),
     [chainId, contract],

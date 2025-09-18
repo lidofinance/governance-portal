@@ -7,6 +7,10 @@ import {
 } from './constants';
 import { ThemeName } from '@lidofinance/lido-ui';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { themeDefault } from '@lidofinance/lido-ui';
+
+export const BREAKPOINT_MOBILE = '960px';
+export const BREAKPOINT_MD = themeDefault.breakpointsMap.md.width;
 
 export const devicesHeaderMedia = {
   tablet: `screen and (max-width: ${NAV_TABLET_MAX_WIDTH}px)`,
@@ -135,6 +139,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   *:before,
   *:after {
     box-sizing: border-box;
+    font-family: 'Manrope', sans-serif;
   }
   svg {
     box-sizing: content-box;

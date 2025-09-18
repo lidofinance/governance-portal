@@ -13,7 +13,7 @@ import {
 import * as abis from 'generated';
 import * as ADDR from 'shared/blockchain/contract-addresses';
 import { useGetRpcUrlByChainId } from 'config/rpc';
-import { useSDK } from '@lido-sdk/react';
+import { useLidoSDK } from 'providers/lido-sdk';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 type ContractName = keyof typeof ADDR;
@@ -46,7 +46,7 @@ type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
 */
 
 export const useEVMScriptDecoder = (): EVMScriptDecoder => {
-  const { chainId } = useSDK();
+  const { chainId } = useLidoSDK();
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
   const rpcUrl = getRpcUrlByChainId(chainId as unknown as CHAINS);
 

@@ -10,7 +10,7 @@ import { useEscrowContext } from 'providers/escrow';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { EscrowActionArgs } from 'features/dual-governance/types';
 import { Token } from 'shared/blockchain/types';
-import { ActionArgs } from '../types';
+import { ActionArgs } from 'shared/types';
 import { useSupportVetoTxSender } from './tx-sender';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';

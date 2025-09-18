@@ -1,10 +1,6 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import invariant from 'tiny-invariant';
 
-/**
- *  Local copy of the same util form the "@lido-sdk/helpers"
- */
-
 enum ETHERSCAN_ENTITIES {
   Tx = 'tx',
   Token = 'token',

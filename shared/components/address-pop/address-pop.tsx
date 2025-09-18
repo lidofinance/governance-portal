@@ -1,0 +1,69 @@
+import { useCallback, useEffect, useRef } from 'react';
+
+import { IdenticonBadge } from '@lidofinance/lido-ui';
+import { Wrap, Pop, BadgeWrap } from './style';
+
+import { calcPopoverPosition } from './calc-popover-position';
+import { useSimpleReducer } from 'shared/hooks/use-simple-reducer';
+import { useClickOutside } from 'shared/hooks/use-click-outside';
+import { CopyOpenActions } from '../copy-open-actions';
+
+type Props = React.ComponentProps<typeof IdenticonBadge>;
+
+export const AddressPop = ({ children, ...badgeProps }: Props) => {
+  const { address } = badgeProps;
+
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const popRef = useRef<HTMLDivElement | null>(null);
+
+  const [{ isOpened, position }, setState] = useSimpleReducer<{
+    isOpened: boolean;
+    position?: { left: number; top: number };
+  }>({
+    isOpened: false,
+    position: undefined,
+  });
+
+  const handleOpen = useCallback(
+    (event: React.MouseEvent) => {
+      // To avoid opening a vote when clicking on the pop from the dashboard
+      event.preventDefault();
+      event.stopPropagation();
+      setState({ isOpened: true });
+    },
+    [setState],
+  );
+
+  useEffect(() => {
+    const wrapEl = wrapRef.current;
+    const popEl = popRef.current;
+
+    if (!wrapEl || !popEl || !isOpened || position) return;
+
+    setState({ position: calcPopoverPosition(wrapEl, popEl) });
+  }, [isOpened, position, setState]);
+
+  useClickOutside(popRef, null, () =>
+    setState({ isOpened: false, position: undefined }),
+  );
+
+  return (
+    <Wrap ref={wrapRef}>
+      <button onClick={handleOpen}>{children}</button>
+      {isOpened && (
+        <Pop ref={popRef} isVisible={Boolean(position)} style={position}>
+          <BadgeWrap>
+            <IdenticonBadge
+              {...badgeProps}
+              style={{ margin: 0 }}
+              diameter={30}
+              symbols={80}
+              onClick={handleOpen}
+            />
+          </BadgeWrap>
+          <CopyOpenActions value={address} entity="address" />
+        </Pop>
+      )}
+    </Wrap>
+  );
+};

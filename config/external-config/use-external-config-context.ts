@@ -1,19 +1,10 @@
 import { useMemo } from 'react';
-import useSWR from 'swr';
 
 import { getConfig } from '../get-config';
 import { getBackwardCompatibleConfig, useFallbackManifestEntry } from './utils';
 
 import type { ExternalConfig, ManifestEntry } from './types';
-
-const onFetchError = (error: unknown) => {
-  console.warn(
-    '[useExternalConfigContext] while fetching external config:',
-    error,
-  );
-};
-
-const MINUTE_MS = 1000 * 60;
+import { useQuery } from '@tanstack/react-query';
 
 export const useExternalConfigContext = (
   prefetchedManifest?: unknown,
@@ -24,9 +15,13 @@ export const useExternalConfigContext = (
     defaultChain,
   );
 
-  const swr = useSWR<ManifestEntry>(
-    ['swr:external-config', defaultChain],
-    async () => {
+  const queryResult = useQuery<ManifestEntry>({
+    queryKey: ['external-config', defaultChain],
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    enabled: !!defaultChain,
+    queryFn: async () => {
       try {
         return fallbackData;
       } catch (error) {
@@ -37,19 +32,11 @@ export const useExternalConfigContext = (
         return fallbackData;
       }
     },
-    {
-      revalidateIfStale: true,
-      refreshInterval: 5 * MINUTE_MS,
-      onError: onFetchError,
-      fallbackData,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    },
-  );
+  });
 
   return useMemo(() => {
-    const { config, ...rest } = swr.data ?? fallbackData;
+    const { config, ...rest } = queryResult.data ?? fallbackData;
     const cleanConfig = getBackwardCompatibleConfig(config);
-    return { ...cleanConfig, ...rest, fetchMeta: swr };
-  }, [swr, fallbackData]);
+    return { ...cleanConfig, ...rest, fetchMeta: queryResult };
+  }, [queryResult, fallbackData]);
 };

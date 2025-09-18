@@ -4,12 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { aggregatorAbi } from 'abi/ts/Aggregator.abi';
 import { useReadContractGetter } from './use-read-contract';
-import { usePublicClient } from 'wagmi';
+import { useLidoSDK } from 'providers/lido-sdk';
 import { aggregatorEthUsdPriceFeed } from '../../price-feed-addresses';
 
 export const useEthUsd = (amount: bigint | undefined, enabled = true) => {
   const aggregatorContract = useReadContractGetter(aggregatorAbi);
-  const publicClient = usePublicClient();
+  const { rpcProvider } = useLidoSDK();
 
   const {
     data: price,
@@ -18,13 +18,13 @@ export const useEthUsd = (amount: bigint | undefined, enabled = true) => {
     refetch,
     isFetching,
   } = useQuery({
-    queryKey: ['eth-usd-price', publicClient],
-    enabled: !!publicClient && enabled,
+    queryKey: ['eth-usd-price', rpcProvider],
+    enabled: !!rpcProvider && enabled,
     staleTime: 300000, // 5 minutes
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
     queryFn: async () => {
-      invariant(publicClient, '[useEthUsd] The "publicClient" must be defined');
+      invariant(rpcProvider, '[useEthUsd] The "rpcProvider" must be defined');
 
       const [latestAnswer, decimals] = await Promise.all([
         aggregatorContract(aggregatorEthUsdPriceFeed)('latestAnswer'),
