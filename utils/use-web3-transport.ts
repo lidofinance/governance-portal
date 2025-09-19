@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-shadow */
+import { config } from 'config';
 import { useMemo, useCallback } from 'react';
 import {
   type Transport,
@@ -14,7 +14,7 @@ import {
 import type { OnResponseFn } from 'viem/_types/clients/transports/fallback';
 import type { Connection } from 'wagmi';
 
-// We disable those methods so wagmi uses getLogs instead to watch events
+// We disable those methods so wagmi uses getLogs intestead to watch events
 // Filters are not suitable for public rpc and break between fallbacks
 const DISABLED_METHODS = new Set([
   'eth_newFilter',
@@ -22,8 +22,7 @@ const DISABLED_METHODS = new Set([
   'eth_uninstallFilter',
 ]);
 
-export const PROVIDER_BATCH_TIME = 150;
-export const PROVIDER_MAX_BATCH = 20;
+const NOOP = () => {};
 
 // Viem transport wrapper that allows runtime changes via setter
 const runtimeMutableTransport = (
@@ -33,18 +32,7 @@ const runtimeMutableTransport = (
   return [
     (params) => {
       const defaultTransport = fallback(mainTransports)(params);
-      let externalOnResponse: OnResponseFn;
-
-      const onResponse: OnResponseFn = (params) => {
-        if (params.status === 'error' && !(params as any).skipLog) {
-          console.warn(
-            `[runtimeMutableTransport] error in RuntimeMutableTransport(using injected: ${!!withInjectedTransport})`,
-            params,
-          );
-        }
-        externalOnResponse(params);
-      };
-
+      let responseFn: OnResponseFn = NOOP;
       return createTransport(
         {
           key: 'RuntimeMutableTransport',
@@ -55,32 +43,14 @@ const runtimeMutableTransport = (
               ? withInjectedTransport(params)
               : defaultTransport;
 
-            if (DISABLED_METHODS.has(requestParams.method)) {
+            if (
+              DISABLED_METHODS &&
+              DISABLED_METHODS.has(requestParams.method)
+            ) {
               const error = new UnsupportedProviderMethodError(
                 new Error(`Method ${requestParams.method} is not supported`),
               );
-              onResponse({
-                error,
-                method: requestParams.method,
-                params: params as unknown[],
-                transport,
-                status: 'error',
-                // skip logging because we expect wagmi to try those
-                skipLog: true,
-              } as any);
-              throw error;
-            }
-
-            if (
-              requestParams.method === 'eth_getLogs' &&
-              Array.isArray(requestParams.params) &&
-              // works for empty array, empty string and all falsish values
-              !requestParams.params[0]?.address?.length
-            ) {
-              const error = new InvalidParamsRpcError(
-                new Error(`Empty address for eth_getLogs is not supported`),
-              );
-              onResponse({
+              responseFn({
                 error,
                 method: requestParams.method,
                 params: params as unknown[],
@@ -90,19 +60,64 @@ const runtimeMutableTransport = (
               throw error;
             }
 
-            transport.value?.onResponse(onResponse);
-            return transport.request(requestParams, options);
+            if (
+              requestParams.method === 'eth_getLogs' &&
+              Array.isArray(requestParams?.params) &&
+              // works for empty array, empty string and all falsish values
+              !requestParams.params[0]?.address?.length
+            ) {
+              console.warn(
+                '[runtimeMutableTransport] Invalid empty getLogs',
+                requestParams,
+              );
+              const error = new InvalidParamsRpcError(
+                new Error(`Empty address for eth_getLogs is not supported`),
+              );
+              responseFn({
+                error,
+                method: requestParams.method,
+                params: params as unknown[],
+                transport,
+                status: 'error',
+              });
+              throw error;
+            }
+
+            transport.value?.onResponse(responseFn);
+            if (
+              ['eth_call', 'eth_estimateGas'].includes(requestParams.method)
+            ) {
+              try {
+                return await transport.request(requestParams, options);
+              } catch (error: any) {
+                if (
+                  error?.message?.includes('execution reverted') ||
+                  error?.code === 3
+                ) {
+                  return null;
+                }
+                throw error;
+              }
+            }
+
+            try {
+              return await transport.request(requestParams, options);
+            } catch (error: any) {
+              if (
+                error?.message?.includes('execution reverted') ||
+                error?.code === 3
+              ) {
+                return null;
+              }
+
+              throw error;
+            }
           },
-          // crucial cause we quack like a fallback transport and some connectors(WC) rely on this
           type: 'fallback',
         },
-        // transport.value contents
         {
-          // this is fallbackTransport specific field, used by WC connectors to extract rpc Urls
-          // we can use defaultTransport because no injected transport
           transports: defaultTransport.value?.transports,
-          // providers that use this transport, use this to set onResponse callback for transport,
-          onResponse: (fn: OnResponseFn) => (externalOnResponse = fn),
+          onResponse: (fn: OnResponseFn) => (responseFn = fn),
         },
       );
     },
@@ -119,24 +134,32 @@ const runtimeMutableTransport = (
   ];
 };
 
-// returns Viem transport map that uses browser wallet RPC provider when available fallbacked by our RPC and default RPCs
+// returns Viem transport map that uses browser wallet RPC provider when avaliable fallbacked by our RPC
 export const useWeb3Transport = (
   supportedChains: Chain[],
   backendRpcMap: Record<number, string>,
 ) => {
   const { transportMap, setTransportMap } = useMemo(() => {
-    const batchConfig = {
-      wait: PROVIDER_BATCH_TIME,
-      batchSize: PROVIDER_MAX_BATCH,
-    };
-
     return supportedChains.reduce(
       ({ transportMap, setTransportMap }, chain) => {
         const [transport, setTransport] = runtimeMutableTransport([
-          // api/rpc
           http(backendRpcMap[chain.id], {
-            batch: batchConfig,
+            batch: {
+              wait: config.PROVIDER_BATCH_TIME,
+              batchSize: config.PROVIDER_MAX_BATCH,
+            },
             name: backendRpcMap[chain.id],
+            retryCount: 0,
+            timeout: 10000,
+          }),
+          http(undefined, {
+            batch: {
+              wait: config.PROVIDER_BATCH_TIME,
+              batchSize: config.PROVIDER_MAX_BATCH,
+            },
+            name: 'default HTTP RPC',
+            retryCount: 0,
+            timeout: 10000,
           }),
         ]);
         return {
@@ -155,7 +178,7 @@ export const useWeb3Transport = (
         setTransportMap: {} as Record<number, (t: Transport | null) => void>,
       },
     );
-  }, [backendRpcMap, supportedChains]);
+  }, [supportedChains, backendRpcMap]);
 
   const onActiveConnection = useCallback(
     async (activeConnection: Connection | null) => {
@@ -164,10 +187,9 @@ export const useWeb3Transport = (
         if (
           activeConnection &&
           chain.id === activeConnection.chainId &&
-          (activeConnection.connector.type === 'injected' ||
-            activeConnection.connector.type === 'metaMask')
+          activeConnection.connector.type === 'injected'
         ) {
-          const provider = (await activeConnection.connector.getProvider({
+          const provider = (await activeConnection.connector?.getProvider?.({
             chainId: chain.id,
           })) as EIP1193Provider | undefined;
 

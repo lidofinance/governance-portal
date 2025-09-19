@@ -9,10 +9,12 @@ import { usePublicClient } from 'wagmi';
 import invariant from 'tiny-invariant';
 import { parseVote } from 'shared/votes/utils/parse-vote';
 import { getEventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
+import { getVoteEvents } from '../utils/get-vote-events';
 
 type Args = {
   voteId: string;
 };
+
 export const useVote = ({ voteId }: Args) => {
   const { chainId } = useLidoSDK();
   const client = usePublicClient();
@@ -36,10 +38,12 @@ export const useVote = ({ voteId }: Args) => {
 
       const parsedVote = parseVote(Number(voteId), vote, canExecute);
 
+      const snapshotBlock = parsedVote.snapshotBlock;
+
       const [
         eventStart,
         eventExecute,
-        // voteEvents,
+        voteEvents,
         // canVote,
         // voterState,
         // votePowerWei,
@@ -56,7 +60,7 @@ export const useVote = ({ voteId }: Args) => {
           voteId: BigInt(voteId),
           block: parsedVote.snapshotBlock,
         }),
-        // getVoteEvents(voting, _voteId, snapshotBlock),
+        getVoteEvents(votingContractAddress, client, voteIdBn, snapshotBlock),
         // _walletAddress ? voting.canVote(_voteId, _walletAddress) : false,
         // _walletAddress ? voting.getVoterState(_voteId, _walletAddress) : null,
         // _walletAddress
@@ -69,6 +73,7 @@ export const useVote = ({ voteId }: Args) => {
         objectionPhaseTime,
         eventStart,
         eventExecute,
+        voteEvents,
         canExecute,
         vote: parsedVote,
       };
@@ -81,6 +86,7 @@ export const useVote = ({ voteId }: Args) => {
       objectionPhaseTime,
       eventStart,
       eventExecute,
+      voteEvents,
       canExecute,
       vote: {
         open,
@@ -102,6 +108,7 @@ export const useVote = ({ voteId }: Args) => {
       objectionPhaseTime,
       eventStart,
       eventExecute,
+      voteEvents,
       canExecute,
       open,
       executed,

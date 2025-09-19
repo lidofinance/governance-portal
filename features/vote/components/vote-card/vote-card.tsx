@@ -21,6 +21,7 @@ import { getEtherscanTxLink } from 'utils/etherscan';
 import { useMemo } from 'react';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { VoteDescription } from '../vote-description';
+import { VotersList } from '../voters-list';
 
 type Props = {
   voteId: string;
@@ -149,6 +150,9 @@ export const VoteCard = ({ voteId }: Props) => {
               />
             </DescriptionWrap>
           </DetailsBoxWrap>
+        )}
+        {voteData.voteEvents.length > 0 && (
+          <VotersList voteEvents={voteData.voteEvents} />
         )}
         <DetailsBoxWrap data-testid="voteScript">
           {/*<VoteScript script={decoded[0].args[0]} />*/}
