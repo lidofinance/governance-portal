@@ -4,7 +4,7 @@ import {
   ScriptBox,
 } from 'features/dual-governance/evm-script-parsed/style';
 import { useFormatDecodedCallString } from 'features/dual-governance/evm-script-parsed/utils';
-import { DecodedCall } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
+import { DecodedCall } from 'utils/decode-evm-script-calls';
 
 type Props = {
   binary?: string;

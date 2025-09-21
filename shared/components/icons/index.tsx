@@ -35,6 +35,7 @@ import { ReactComponent as CalendarIcon } from 'assets/main-page/calendar-icon.s
 import { ReactComponent as BranchIcon } from 'assets/main-page/branch-icon.svg';
 import { ReactComponent as DocumentIcon } from 'assets/main-page/document-icon.svg';
 import { ReactComponent as DocumentUnknownIcon } from 'assets/main-page/document-unknown-icon.svg';
+import { ReactComponent as UnionIcon } from 'assets/union-icon.svg';
 
 export {
   RevokeIcon,
@@ -74,4 +75,5 @@ export {
   BranchIcon,
   DocumentIcon,
   DocumentUnknownIcon,
+  UnionIcon,
 };

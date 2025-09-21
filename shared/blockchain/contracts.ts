@@ -62,3 +62,9 @@ export const DaoToken: ContractObject<typeof abi.daoTokenAbi> = {
   abi: abi.daoTokenAbi,
   chainAddressMap: addr.DaoToken,
 };
+
+export const Snapshot: ContractObject<typeof abi.snapshotAbi> = {
+  name: 'Snapshot',
+  abi: abi.snapshotAbi,
+  chainAddressMap: addr.Snapshot,
+};

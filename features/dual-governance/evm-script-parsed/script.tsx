@@ -5,21 +5,14 @@ import {
   VoteScriptBodyWrap,
 } from 'features/dual-governance/evm-script-parsed/style';
 import { ScriptBody } from 'features/dual-governance/evm-script-parsed/script-body';
-import { decodeCalls } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
-import { useLidoSDK } from 'providers/lido-sdk';
+import { DecodedCall } from 'utils/decode-evm-script-calls';
 
 type Props = {
-  rawCalls: any;
+  decodedCalls: DecodedCall[];
   description?: string;
 };
 
-export const Script = ({ rawCalls, description }: Props) => {
-  const { chainId } = useLidoSDK();
-  const decodedCalls = decodeCalls({
-    calls: rawCalls,
-    chainId,
-  });
-
+export const Script = ({ decodedCalls, description }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = useMemo(() => {
     const tabMap = {

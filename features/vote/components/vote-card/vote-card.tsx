@@ -14,7 +14,7 @@ import { Container, Link } from '@lidofinance/lido-ui';
 import { VoteStatusChips } from '../vote-status-chips';
 import { getVoteDetailsFormatted } from '../../utils/get-vote-details-formatted';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { formatEther } from 'viem';
+import { formatEther, Hex } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { Text } from 'shared/components/text';
 import { getEtherscanTxLink } from 'utils/etherscan';
@@ -22,6 +22,7 @@ import { useMemo } from 'react';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { VoteDescription } from '../vote-description';
 import { VotersList } from '../voters-list';
+import { VoteScript } from '../vote-script/vote-script';
 
 type Props = {
   voteId: string;
@@ -155,7 +156,7 @@ export const VoteCard = ({ voteId }: Props) => {
           <VotersList voteEvents={voteData.voteEvents} />
         )}
         <DetailsBoxWrap data-testid="voteScript">
-          {/*<VoteScript script={decoded[0].args[0]} />*/}
+          <VoteScript script={voteData.script as Hex} />
         </DetailsBoxWrap>
       </Card>
     </Container>

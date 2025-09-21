@@ -1,10 +1,18 @@
-import { useDecodedScript } from 'shared/hooks';
 import { Script } from 'features/dual-governance/evm-script-parsed';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { Hex } from 'viem';
+import { decodeCalls, decodeEvmScript } from 'utils/decode-evm-script-calls';
 
 type Props = {
-  script: string;
+  script: Hex;
 };
 export const VoteScript = ({ script }: Props) => {
-  const { decoded } = useDecodedScript(script);
-  return <Script rawCalls={decoded?.calls || []} />;
+  const { chainId } = useLidoSDK();
+  const decodedEvmScript = decodeEvmScript(script);
+  const decodedEvmScriptCalls = decodeCalls({
+    calls: decodedEvmScript,
+    chainId,
+  });
+
+  return <Script decodedCalls={decodedEvmScriptCalls || []} />;
 };

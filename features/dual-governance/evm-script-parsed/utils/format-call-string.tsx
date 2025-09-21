@@ -1,4 +1,3 @@
-import { DecodedCall } from 'features/dual-governance/evm-script-parsed/utils/decode-calls';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import React, { useMemo } from 'react';
@@ -14,6 +13,7 @@ import {
   CallDataItem,
   NestedCallWrapper,
 } from 'features/dual-governance/evm-script-parsed/style';
+import { DecodedCall } from 'utils/decode-evm-script-calls';
 
 interface FormatOptions {
   chainId: CHAINS;
@@ -43,26 +43,34 @@ const FormatSingleCall: React.FC<{
   options: FormatOptions;
 }> = ({ decodedCall, options }) => {
   const { chainId, parentId, index, depth = 0 } = options;
-  const { decoded, contractAddress } = decodedCall;
   const id =
-    parentId !== undefined ? `${parentId}.${(index ?? 0) + 1}` : decodedCall.id;
+    parentId !== undefined
+      ? `${parentId}.${(index ?? 0) + 1}`
+      : decodedCall?.id;
 
-  if (!decoded) {
+  if (!decodedCall || !decodedCall.functionName) {
     return (
       <CallWrapper style={{ paddingLeft: `${depth * 20}px` }}>
         <CallTitle>
-          {id}. On [{decodedCall.contractName || 'Unknown'}]
+          {id}. On [{decodedCall?.contractName || 'Unknown'}]
           <br />
-          <Link href={getEtherscanAddressLink(chainId, contractAddress)}>
-            {contractAddress}
-          </Link>
+          {decodedCall?.contractAddress && (
+            <Link
+              href={getEtherscanAddressLink(
+                chainId,
+                decodedCall.contractAddress,
+              )}
+            >
+              {decodedCall?.contractAddress}
+            </Link>
+          )}
         </CallTitle>
         <CallFunction>Unknown function</CallFunction>
       </CallWrapper>
     );
   }
 
-  const { functionName, args, nestedCalls } = decoded;
+  const { functionName, args, nestedCalls } = decodedCall;
 
   const paramNames = args
     ? Object.keys(args).filter((key) => isNaN(Number(key)))
@@ -96,8 +104,10 @@ const FormatSingleCall: React.FC<{
       <CallTitle>
         {id}. On [{decodedCall.contractName || 'Unknown'}]
         <br />
-        <Link href={getEtherscanAddressLink(chainId, contractAddress)}>
-          {contractAddress}
+        <Link
+          href={getEtherscanAddressLink(chainId, decodedCall.contractAddress)}
+        >
+          {decodedCall.contractAddress}
         </Link>
       </CallTitle>
       <CallFunction>

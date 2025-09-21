@@ -8,9 +8,12 @@ import {
   trimAddress,
 } from '@lidofinance/lido-ui';
 import { VoteEvent } from 'shared/votes/types';
-import { getPublicDelegate } from 'utils/get-public-delegate-name';
 import { AddressPop } from 'shared/components/address-pop/address-pop';
-import { formatEther, parseEther } from 'viem';
+import { parseEther } from 'viem';
+import { formatEth } from 'shared/blockchain/utils';
+import { PublicDelegateAvatar } from '../public-delegate-avatar';
+import { TurnArrow, UnionIcon } from 'shared/components/icons';
+import { getPublicDelegate } from '../../utils/get-public-delegate';
 
 type Props = {
   voteEvent: VoteEvent;
@@ -45,7 +48,7 @@ export const VoterItem = ({
 
   const vpElement = (
     <Text weight={isDelegate ? 700 : 400} size="xxs" data-testid="votingPower">
-      {formatEther(stake)} {isMobile ? '' : governanceTokenSymbol}
+      {formatEth(stake)} {isMobile ? '' : governanceTokenSymbol}
     </Text>
   );
 
@@ -61,13 +64,13 @@ export const VoterItem = ({
         <ListRowCell>
           <AddressPop address={voter}>
             <AddressWrap data-testid="voterAddress">
-              {/*{isDelegated && <DelegatorArrowIcon />}*/}
+              {isDelegated && <TurnArrow />}
               {publicDelegate ? (
                 <>
-                  {/*<PublicDelegateAvatar*/}
-                  {/*  avatarSrc={publicDelegate.avatar}*/}
-                  {/*  size={20}*/}
-                  {/*/>*/}
+                  <PublicDelegateAvatar
+                    avatarSrc={publicDelegate.avatar}
+                    size={20}
+                  />
                   {publicDelegate.name}
                 </>
               ) : (
@@ -78,7 +81,7 @@ export const VoterItem = ({
                   </AddressLabel>
                 </>
               )}
-              {/*{(isDelegate || isDelegated) && <UnionIcon />}*/}
+              {(isDelegate || isDelegated) && <UnionIcon />}
             </AddressWrap>
           </AddressPop>
         </ListRowCell>
@@ -87,7 +90,7 @@ export const VoterItem = ({
         </ListRowCell>
         <ListRowCell>
           {Number(stake) > parseEther('1000') ? (
-            <Tooltip placement="top" title={formatEther(stake)}>
+            <Tooltip placement="top" title={formatEth(stake)}>
               {vpElement}
             </Tooltip>
           ) : (
