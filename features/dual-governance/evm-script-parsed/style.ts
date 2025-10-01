@@ -24,7 +24,7 @@ export const Tab = styled.div<TabProps>`
     $variant &&
     $variant === 'voting' &&
     css`
-      padding: 16px;
+      padding: 10px 24px;
       font-size: 14px;
       width: auto;
     `};
