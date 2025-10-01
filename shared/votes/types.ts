@@ -150,3 +150,11 @@ export type PublicDelegate = {
   lido: string;
   twitter: string;
 };
+
+export enum VoterState {
+  Absent,
+  Yea,
+  Nay,
+  DelegateYea,
+  DelegateNay,
+}

@@ -1,72 +1,116 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
-import { Voting } from 'shared/blockchain/contracts';
+import { DaoToken, Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { getVoteStatus } from '../utils/get-vote-status';
-import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
+import {
+  EventStartVote,
+  getEventStartVote,
+} from 'shared/votes/utils/get-event-start-vote';
 import { getContractAddress } from 'shared/blockchain/get-contract-address';
-import { usePublicClient } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 import invariant from 'tiny-invariant';
 import { parseVote } from 'shared/votes/utils/parse-vote';
-import { getEventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
+import {
+  EventExecuteVote,
+  getEventExecuteVote,
+} from 'shared/votes/utils/get-event-execute-vote';
 import { getVoteEvents } from '../utils/get-vote-events';
+import {
+  VoteEvent,
+  VotePhase,
+  VoterState,
+  VoteStatus,
+} from 'shared/votes/types';
 
 type Args = {
-  voteId: string;
+  voteId: bigint;
 };
 
-export const useVote = ({ voteId }: Args) => {
+export type UseVoteReturnType = {
+  voteTime: bigint;
+  objectionPhaseTime: bigint;
+  eventStart: EventStartVote | null;
+  eventExecute: EventExecuteVote | null;
+  voteEvents: VoteEvent[];
+  canExecute: boolean;
+  voterState: VoterState | null;
+  votePowerWei: bigint | null;
+  open: boolean;
+  executed: boolean;
+  startDate: bigint;
+  snapshotBlock: number;
+  supportRequired: bigint;
+  minAcceptQuorum: bigint;
+  yea: bigint;
+  nay: bigint;
+  votingPower: bigint;
+  script: string;
+  phase: VotePhase;
+  status: VoteStatus;
+  isLoading: boolean;
+  voteId: bigint;
+  refetch: () => Promise<any>;
+} | null;
+
+export const useVote = ({ voteId }: Args): UseVoteReturnType => {
   const { chainId } = useLidoSDK();
   const client = usePublicClient();
+  const { address: accountAddress } = useAccount();
 
   const votingContract = useReadContract(Voting);
+  const daoTokenContract = useReadContract(DaoToken);
   const votingContractAddress = getContractAddress(Voting, chainId);
 
-  const { data: voteData, isLoading } = useQuery({
-    queryKey: ['vote', voteId, chainId],
+  const {
+    data: voteData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['vote', String(voteId), chainId, accountAddress],
     queryFn: async () => {
       invariant(client, 'Client must be defined');
-      const voteIdBn = BigInt(voteId);
 
       const [voteTime, objectionPhaseTime, vote, canExecute] =
         await Promise.all([
           votingContract.readContract('voteTime'),
           votingContract.readContract('objectionPhaseTime'),
-          votingContract.readContract('getVote', [voteIdBn]),
-          votingContract.readContract('canExecute', [voteIdBn]),
+          votingContract.readContract('getVote', [voteId]),
+          votingContract.readContract('canExecute', [voteId]),
         ]);
 
       const parsedVote = parseVote(Number(voteId), vote, canExecute);
 
       const snapshotBlock = parsedVote.snapshotBlock;
 
-      const [
-        eventStart,
-        eventExecute,
-        voteEvents,
-        // canVote,
-        // voterState,
-        // votePowerWei,
-      ] = await Promise.all([
-        getEventStartVote({
-          address: votingContractAddress,
-          client,
-          voteId: BigInt(voteId),
-          block: parsedVote.snapshotBlock,
-        }),
-        getEventExecuteVote({
-          address: votingContractAddress,
-          client,
-          voteId: BigInt(voteId),
-          block: parsedVote.snapshotBlock,
-        }),
-        getVoteEvents(votingContractAddress, client, voteIdBn, snapshotBlock),
-        // _walletAddress ? voting.canVote(_voteId, _walletAddress) : false,
-        // _walletAddress ? voting.getVoterState(_voteId, _walletAddress) : null,
-        // _walletAddress
-        //   ? ldo.balanceOfAt(_walletAddress, vote.snapshotBlock)
-        //   : null,
-      ]);
+      const [eventStart, eventExecute, voteEvents, voterState, votePowerWei] =
+        await Promise.all([
+          getEventStartVote({
+            address: votingContractAddress,
+            client,
+            voteId: voteId,
+            block: parsedVote.snapshotBlock,
+          }),
+          getEventExecuteVote({
+            address: votingContractAddress,
+            client,
+            voteId: voteId,
+            block: parsedVote.snapshotBlock,
+          }),
+          getVoteEvents(votingContractAddress, client, voteId, snapshotBlock),
+          accountAddress
+            ? votingContract.readContract('getVoterState', [
+                voteId,
+                accountAddress,
+              ])
+            : null,
+          accountAddress
+            ? daoTokenContract.readContract('balanceOfAt', [
+                accountAddress,
+                snapshotBlock,
+              ])
+            : null,
+        ]);
 
       return {
         voteTime,
@@ -75,6 +119,8 @@ export const useVote = ({ voteId }: Args) => {
         eventExecute,
         voteEvents,
         canExecute,
+        voterState,
+        votePowerWei,
         vote: parsedVote,
       };
     },
@@ -88,6 +134,8 @@ export const useVote = ({ voteId }: Args) => {
       eventExecute,
       voteEvents,
       canExecute,
+      voterState,
+      votePowerWei,
       vote: {
         open,
         executed,
@@ -110,6 +158,8 @@ export const useVote = ({ voteId }: Args) => {
       eventExecute,
       voteEvents,
       canExecute,
+      voterState,
+      votePowerWei,
       open,
       executed,
       startDate,
@@ -123,6 +173,9 @@ export const useVote = ({ voteId }: Args) => {
       phase,
       status: getVoteStatus({ open, executed, phase, canExecute, script }),
       isLoading,
+      voteId,
+      refetch,
     };
   }
+  return null;
 };

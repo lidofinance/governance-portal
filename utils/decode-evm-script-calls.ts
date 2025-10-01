@@ -18,7 +18,7 @@ type DecodeCallArgs<TCall extends BaseCall> = {
 
 type SubmitProposalCall = {
   target: Address;
-  value: bigint;
+  value: string;
   payload: Hex;
 };
 
@@ -39,6 +39,7 @@ const ABI_EXCEPTIONS = {
   OracleRepo: abis.RepoAbi__factory.abi,
   SimpleDVT: abis.NodeOperatorsRegistryAbi__factory.abi,
   CSVerifierProposed: abis.CSVerifierAbi__factory.abi,
+  DualGovernanceLegacy: abis.DualGovernanceAbi__factory.abi,
 };
 
 const EVM_SCRIPT_VERSION = '00000001';
@@ -131,8 +132,12 @@ export const decodeCalls = <TCall extends BaseCall>({
         };
 
         if (decodedData.functionName === 'submitProposal' && decodedData.args) {
-          const submitProposalCalls = decodedData
-            .args[0] as SubmitProposalCall[];
+          const submitProposalCalls = (
+            decodedData.args[0] as SubmitProposalCall[]
+          ).map((call) => ({
+            ...call,
+            value: String(call.value),
+          })) as SubmitProposalCall[];
           const nestedCalls = decodeCalls({
             calls: submitProposalCalls,
             chainId,

@@ -20,6 +20,7 @@ import { VoteStatusBanner } from '../vote-status-banner';
 import { VoteDescription } from '../vote-description';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { StartVoteEventArgs } from 'shared/votes/utils/get-event-start-vote';
+import { formatEther } from 'viem';
 
 type Props = {
   vote: Vote;
@@ -71,7 +72,8 @@ export const DashboardVote = ({
     onPass: handlePass,
   });
 
-  const neededToQuorum = Number(vote.minAcceptQuorum) - yeaPctOfTotalSupply;
+  const neededToQuorum =
+    Number(formatEther(vote.minAcceptQuorum)) - yeaPctOfTotalSupply;
   const neededToQuorumFormatted = formatFloatPct(neededToQuorum, {
     floor: true,
   }).toFixed(2);
@@ -94,6 +96,7 @@ export const DashboardVote = ({
           totalSupply={totalSupply}
           fontSize="xxs"
           minAcceptQuorum={Number(vote.minAcceptQuorum)}
+          startDate={startDate}
           // TODO: add!!!
           voteDualGovernanceStatus={null}
         />

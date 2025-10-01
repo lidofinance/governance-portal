@@ -22,6 +22,7 @@ type Props = {
   executedAt: number | undefined;
   voteTime: number;
   objectionPhaseTime: number;
+  startDate: number;
   isEnded: boolean;
   fontSize: VoteStatusFontSize;
   status: VoteStatus;
@@ -44,6 +45,7 @@ export const VoteStatusBanner = ({
   totalSupply,
   minAcceptQuorum,
   voteDualGovernanceStatus,
+  startDate,
 }: Props) => {
   const variant = convertStatusToStyledVariant(status);
 
@@ -57,6 +59,9 @@ export const VoteStatusBanner = ({
 
     return yeaQuorum > minAcceptQuorum || nayQuorum > minAcceptQuorum;
   }, [totalSupply, yeaNum, nayNum, minAcceptQuorum]);
+
+  const mainPhaseEndTimestamp = startDate + (voteTime - objectionPhaseTime);
+  const objectionPhaseEndTimestamp = startDate + voteTime;
 
   const endDateEl = executedAt ? (
     <InfoText variant={variant}>
@@ -72,7 +77,7 @@ export const VoteStatusBanner = ({
           <BannerText variant={variant}>Main phase ends in</BannerText>
           <InfoText variant={variant}>
             <VoteDetailsCountdown
-              voteTime={voteTime - objectionPhaseTime}
+              voteTime={mainPhaseEndTimestamp}
               isEndedBeforeTime={isEnded}
             />
           </InfoText>
@@ -85,7 +90,7 @@ export const VoteStatusBanner = ({
           <BannerText variant={variant}>Objection phase ends in</BannerText>
           <InfoText variant={variant}>
             <VoteDetailsCountdown
-              voteTime={voteTime}
+              voteTime={objectionPhaseEndTimestamp}
               isEndedBeforeTime={isEnded}
             />
           </InfoText>

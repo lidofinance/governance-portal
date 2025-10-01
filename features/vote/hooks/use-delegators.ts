@@ -4,9 +4,10 @@ import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useAccount } from 'wagmi';
 import { DELEGATORS_FETCH_SIZE, DELEGATORS_FETCH_TOTAL } from '../constants';
+import { Address } from 'viem';
 
 type DelegatorData = {
-  address: string;
+  address: Address;
   balance: bigint;
   ensName?: string | null;
 };

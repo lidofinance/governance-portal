@@ -14,5 +14,11 @@ export const VoteScript = ({ script }: Props) => {
     chainId,
   });
 
-  return <Script decodedCalls={decodedEvmScriptCalls || []} />;
+  return (
+    <Script
+      rawScript={script}
+      decodedCalls={decodedEvmScriptCalls || []}
+      tabVariant="voting"
+    />
+  );
 };

@@ -1,4 +1,3 @@
-import { useVote } from '../../hooks/use-vote';
 import {
   BlockWrap,
   BoxVotes,
@@ -18,11 +17,21 @@ import { formatEther, Hex } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { Text } from 'shared/components/text';
 import { getEtherscanTxLink } from 'utils/etherscan';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { VoteDescription } from '../vote-description';
 import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
+import { useAccount } from 'wagmi';
+import { VotePhase, VoteStatus } from 'shared/votes/types';
+import { Button } from 'shared/components/button';
+import { useUserConfig } from 'config/user-config';
+import { useConnect } from 'reef-knot/core-react';
+import { VoteInfoDelegated } from '../vote-info-delegated';
+import { VotePowerInfo } from '../vote-power-info';
+import { VoteActions } from '../vote-actions';
+import { useVoteContext } from '../../providers/vote-context';
+import { VoteProgressBar } from '../vote-progress-bar';
 
 type Props = {
   voteId: string;
@@ -46,7 +55,15 @@ const formatDate = (date: number) =>
 
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
-  const voteData = useVote({ voteId });
+  const { voteData } = useVoteContext();
+  const { isConnected: isWalletConnected, address: walletAddress } =
+    useAccount();
+  const { isWalletConnectionAllowed } = useUserConfig();
+  const { connect } = useConnect();
+
+  const openConnectWalletModal = useCallback(async () => {
+    await connect();
+  }, [connect]);
 
   const {
     data: voteDualGovernanceStatus,
@@ -55,6 +72,13 @@ export const VoteCard = ({ voteId }: Props) => {
     voteId,
     eventExecuteVote: voteData?.eventExecute,
   });
+
+  const isEnded = useMemo(
+    () =>
+      voteData?.status === VoteStatus.Rejected ||
+      voteData?.status === VoteStatus.Executed,
+    [voteData],
+  );
 
   const formattedDate = useMemo(() => {
     if (!voteData || (!voteData.eventExecute && !voteData.startDate)) {
@@ -141,6 +165,18 @@ export const VoteCard = ({ voteId }: Props) => {
             />
           </BoxVotes>
         </DetailsBoxWrap>
+        {(voteData.phase === VotePhase.Main ||
+          voteData.phase === VotePhase.Objection) && (
+          <>
+            <VoteProgressBar
+              startDate={Number(voteData.startDate)}
+              voteTime={Number(voteData.voteTime)}
+              objectionPhaseTime={Number(voteData.objectionPhaseTime)}
+              isEnded={isEnded}
+              votePhase={voteData.phase}
+            />
+          </>
+        )}
         <SectionHeading>Proposal</SectionHeading>
         {voteData.eventStart?.args.metadata && (
           <DetailsBoxWrap>
@@ -158,6 +194,27 @@ export const VoteCard = ({ voteId }: Props) => {
         <DetailsBoxWrap data-testid="voteScript">
           <VoteScript script={voteData.script as Hex} />
         </DetailsBoxWrap>
+        {!isWalletConnected &&
+          isWalletConnectionAllowed &&
+          voteData.phase !== VotePhase.Closed && (
+            <Button fullwidth onClick={openConnectWalletModal}>
+              Connect wallet
+            </Button>
+          )}
+        {isWalletConnected && (
+          <>
+            <VoteInfoDelegated
+              voteEvents={voteData.voteEvents}
+              walletAddress={walletAddress}
+            />
+            {voteData.phase !== VotePhase.Closed && (
+              <>
+                <VotePowerInfo votePowerWei={voteData.votePowerWei} />
+                <VoteActions />
+              </>
+            )}
+          </>
+        )}
       </Card>
     </Container>
   );

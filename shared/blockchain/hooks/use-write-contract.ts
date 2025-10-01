@@ -2,7 +2,6 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useCallback } from 'react';
 import { Abi, Address } from 'viem';
 import { WriteFunctionArgs, WriteFunctionName } from '../types';
-import invariant from 'tiny-invariant';
 import { useAccount } from 'wagmi';
 import { simulateContract, writeContract } from 'viem/actions';
 
@@ -26,9 +25,6 @@ export const useWriteContract = <T extends Abi>(abi: T) => {
       functionName,
       args,
     }: Args<T, F, A>) => {
-      invariant(web3Provider != null, 'Web3 provider is required');
-      invariant(account.status === 'connected', 'Account is required');
-
       const { request } = await simulateContract(rpcProvider, {
         address,
         abi,
@@ -40,6 +36,6 @@ export const useWriteContract = <T extends Abi>(abi: T) => {
 
       return writeContract(web3Provider, request as any);
     },
-    [abi, account.address, account.status, rpcProvider, web3Provider],
+    [abi, account.address, rpcProvider, web3Provider],
   );
 };

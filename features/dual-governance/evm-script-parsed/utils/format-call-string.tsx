@@ -2,6 +2,7 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import React, { useMemo } from 'react';
 import { getContractName } from 'utils/get-contract-name';
+import { getContractAbi } from 'utils/decode-evm-script-calls';
 import { DEFAULT_ADMIN_ROLE, LIDO_ROLES } from 'constants/roles';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
@@ -22,7 +23,11 @@ interface FormatOptions {
   depth?: number;
 }
 
-const formatArg = (arg: unknown, chainId: CHAINS): string => {
+const formatArg = (
+  arg: unknown,
+  chainId: CHAINS,
+  parentId?: string | number,
+): string => {
   if (typeof arg === 'string') {
     if (arg.startsWith('0x') && arg.length === 42) {
       const contractName = getContractName(chainId, arg) || 'Unknown';
@@ -35,7 +40,33 @@ const formatArg = (arg: unknown, chainId: CHAINS): string => {
       return `[${LIDO_ROLES[arg]}] ${arg}`;
     }
   }
+  if (Array.isArray(arg)) {
+    // Check if it's an array of call objects (nested calls)
+    if (arg.length > 0 && typeof arg[0] === 'object' && arg[0] !== null) {
+      const callIndices = arg.map((_, i) => `${parentId}.${i + 1}`).join(' — ');
+      return `See ${arg.length} parsed calls at ${callIndices}`;
+    }
+    return `[${arg.join(', ')}]`;
+  }
+  if (typeof arg === 'object' && arg !== null) {
+    return '[object Object]';
+  }
   return String(arg);
+};
+
+const getFunctionInputs = (
+  functionName: string,
+  contractAddress: string,
+  chainId: CHAINS,
+) => {
+  const abi = getContractAbi(contractAddress as any, chainId);
+  if (!abi) return null;
+
+  const functionAbi = abi.find(
+    (item: any) => item.type === 'function' && item.name === functionName,
+  );
+
+  return functionAbi?.inputs || null;
 };
 
 const FormatSingleCall: React.FC<{
@@ -52,7 +83,7 @@ const FormatSingleCall: React.FC<{
     return (
       <CallWrapper style={{ paddingLeft: `${depth * 20}px` }}>
         <CallTitle>
-          {id}. On [{decodedCall?.contractName || 'Unknown'}]
+          {id}. On <b>[{decodedCall?.contractName || 'Unknown'}]</b>
           <br />
           {decodedCall?.contractAddress && (
             <Link
@@ -72,17 +103,20 @@ const FormatSingleCall: React.FC<{
 
   const { functionName, args, nestedCalls } = decodedCall;
 
-  const paramNames = args
-    ? Object.keys(args).filter((key) => isNaN(Number(key)))
-    : [];
+  const functionInputs = getFunctionInputs(
+    functionName,
+    decodedCall.contractAddress,
+    chainId,
+  );
 
-  const formattedArgs =
-    paramNames.length > 0 ? paramNames : args?.map((_, i) => `arg${i}`);
+  const formattedArgs = functionInputs
+    ? functionInputs.map((input: any) => `${input.type} ${input.name}`)
+    : args?.map((_, i) => `arg${i}`);
 
   const callData = args?.length ? (
     args
       .map((arg, i) => {
-        const formatted = formatArg(arg, chainId);
+        const formatted = formatArg(arg, chainId, id);
         return formatted ? (
           <CallDataItem key={`${id}-arg-${i}`}>
             [{i + 1}] {formatted}
@@ -97,12 +131,12 @@ const FormatSingleCall: React.FC<{
   return (
     <CallWrapper
       style={{
-        paddingLeft: `${depth * 20}px`,
+        paddingLeft: `${depth * 40}px`,
         marginBottom: '40px',
       }}
     >
       <CallTitle>
-        {id}. On [{decodedCall.contractName || 'Unknown'}]
+        {id}. On <b>[{decodedCall.contractName || 'Unknown'}]</b>
         <br />
         <Link
           href={getEtherscanAddressLink(chainId, decodedCall.contractAddress)}
@@ -111,26 +145,23 @@ const FormatSingleCall: React.FC<{
         </Link>
       </CallTitle>
       <CallFunction>
-        function{' '}
-        <b>
-          {functionName}
-          {formattedArgs?.length ? (
-            <>
-              (
-              {formattedArgs.map((param, i) => (
-                <React.Fragment key={`${id}-param-${i}`}>
-                  <br />
-                  <span>{` ${param}`}</span>
-                  {i < formattedArgs.length - 1 && ','}
-                  {i === formattedArgs.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-              )
-            </>
-          ) : (
-            '()'
-          )}
-        </b>
+        function <b>{functionName}</b>
+        {formattedArgs?.length ? (
+          <>
+            (
+            {formattedArgs.map((param, i) => (
+              <React.Fragment key={`${id}-param-${i}`}>
+                <br />
+                <span>{` ${param}`}</span>
+                {i < formattedArgs.length - 1 && ','}
+                {i === formattedArgs.length - 1 && <br />}
+              </React.Fragment>
+            ))}
+            )
+          </>
+        ) : (
+          '()'
+        )}
       </CallFunction>
       <CallData>
         Call data:
