@@ -15,6 +15,8 @@ import * as ADDR from 'shared/blockchain/contract-addresses';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { fetcherEtherscan } from '../../utils/fetcherEtherscan';
+import { useConfig } from '../../config';
 
 type ContractName = keyof typeof ADDR;
 
@@ -41,12 +43,15 @@ type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
 type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
 
 /**
-  The only reason we still keep EVMScriptDecoder is to check whether the ongoing Aragon vote item has Unknown contracts.
-  We need later to move on to Viem parsing as we do for the parsed calls of the DG Items
-*/
+ The only reason we still keep EVMScriptDecoder is to check whether the ongoing Aragon vote item has Unknown contracts.
+ We need later to move on to Viem parsing as we do for the parsed calls of the DG Items
+ */
 
 export const useEVMScriptDecoder = (): EVMScriptDecoder => {
   const { chainId } = useLidoSDK();
+  const { userConfig } = useConfig();
+  const { etherscanApiKey, useBundledAbi } = userConfig.savedUserConfig;
+
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
   const rpcUrl = getRpcUrlByChainId(chainId as unknown as CHAINS);
 
@@ -55,11 +60,24 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
     // needed to initialize the localDecoder
     const abiMap = Object.keys(ADDR).reduce(
       (result, contractName: string) => {
-        const address =
+        const addressConfig =
           ADDR[contractName as ContractName][chainId as unknown as CHAINS];
-        if (!address) {
+        if (!addressConfig) {
           return result;
         }
+
+        let addresses: string[];
+        if (typeof addressConfig === 'object' && 'actual' in addressConfig) {
+          const useTestContracts = userConfig.savedUserConfig.useTestContracts;
+          if (useTestContracts) {
+            addresses = [addressConfig.test, addressConfig.actual];
+          } else {
+            addresses = [addressConfig.actual];
+          }
+        } else {
+          addresses = [addressConfig as string];
+        }
+
         let abi: ABIElement[] | undefined;
         if (contractName in ABI_EXCEPTIONS) {
           abi = ABI_EXCEPTIONS[contractName as ExceptionContractName];
@@ -74,7 +92,9 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
         }
 
         if (abi) {
-          result[address] = abi;
+          addresses.forEach((address) => {
+            result[address] = abi;
+          });
         }
         return result;
       },
@@ -85,8 +105,43 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
       abiMap as Record<string, ABIElementImported[]>,
     );
 
+    const etherscanDecoder = new abiProviders.Base({
+      fetcher: async (address) => {
+        const res = await fetcherEtherscan<string>({
+          chainId,
+          address,
+          module: 'contract',
+          action: 'getabi',
+          apiKey: etherscanApiKey,
+        });
+        return JSON.parse(res);
+      },
+      middlewares: [
+        abiProviders.middlewares.ProxyABIMiddleware({
+          implMethodNames: [
+            ...abiProviders.middlewares.ProxyABIMiddleware
+              .DefaultImplMethodNames,
+            '__Proxy_implementation',
+            'proxy__getImplementation',
+          ],
+          loadImplAddress(_proxyAddress, _abiElement) {
+            // TODO: Implement proxy resolution
+            return Promise.resolve('');
+            // const contract = new Contract(
+            //   proxyAddress,
+            //   [abiElement],
+            //   rpcProvider,
+            // );
+            // return contract[abiElement.name]();
+          },
+        }),
+      ],
+    });
+
     return new EVMScriptDecoder(
-      ...([localDecoder].filter(Boolean) as ABIProvider[]),
+      ...([useBundledAbi && localDecoder, etherscanDecoder].filter(
+        Boolean,
+      ) as ABIProvider[]),
     );
   }, `evm-script-decoder-${chainId}-${rpcUrl}}`);
 };

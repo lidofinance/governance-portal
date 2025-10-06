@@ -58,6 +58,7 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
+import { getContractAddress } from 'utils/get-contract-address';
 
 type Props = {
   id: number;
@@ -353,17 +354,21 @@ export const ProposalFullInfo = ({ id }: Props) => {
       const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
 
       // Fetch logs for each block range
-      const logsPromises = ranges.map((range) =>
-        rpcProvider.getLogs({
-          address: EmergencyProtectedTimelock.chainAddressMap[chainId],
+      const logsPromises = ranges.map((range) => {
+        const contractAddress = getContractAddress(
+          EmergencyProtectedTimelock.chainAddressMap[chainId],
+          chainId,
+        );
+        return rpcProvider.getLogs({
+          address: contractAddress,
           event: eventAbi,
           fromBlock: range.fromBlock,
           toBlock: range.toBlock,
           args: {
             id: BigInt(proposal.proposalId),
           },
-        }),
-      );
+        });
+      });
 
       const allLogsResults = await Promise.all(logsPromises);
       const proposalScheduledLogs = allLogsResults.flat();

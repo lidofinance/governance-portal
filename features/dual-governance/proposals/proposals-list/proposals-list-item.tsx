@@ -20,6 +20,7 @@ import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
 import { DGTooltip } from '../../tooltips';
 import { Address } from 'viem';
+import { getContractAddressLowerCase } from 'utils/get-contract-address';
 
 type Props = {
   id: number;
@@ -50,10 +51,13 @@ export const ProposalsListItem = ({
 
   const isUnknownContractCalled = calls
     ? calls.some((call) => {
-        return !Object.values(contractAddresses).some(
-          (contract) =>
-            contract[chainId]?.toLowerCase() === call.target.toLowerCase(),
-        );
+        return !Object.values(contractAddresses).some((contract) => {
+          const contractAddress = getContractAddressLowerCase(
+            contract[chainId],
+            chainId,
+          );
+          return contractAddress === call.target.toLowerCase();
+        });
       })
     : false;
 

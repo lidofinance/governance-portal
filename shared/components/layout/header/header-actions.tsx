@@ -7,6 +7,7 @@ import { HeaderVaultInfo } from './header-vault-info';
 import { ConnectWalletButton, WalletButton } from 'shared/wallet';
 import { UnsupportedChainBanner } from './unsupported-chain-banner';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { HeaderSettingsButton } from './header-settings-button';
 
 export const HeaderActions = () => {
   const { isConnected } = useAccount();
@@ -20,6 +21,7 @@ export const HeaderActions = () => {
           {isConnected ? <WalletButton /> : <ConnectWalletButton />}
           {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
         </WalletInfo>
+        <HeaderSettingsButton />
       </HeaderActionsWrapper>
     </NoSSRWrapper>
   );

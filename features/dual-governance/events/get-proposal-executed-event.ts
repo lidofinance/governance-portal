@@ -5,6 +5,7 @@ import invariant from 'tiny-invariant';
 import { Log, PublicClient } from 'viem';
 import { fetchLogsInParallelChunks } from 'utils/fetch-logs-in-parallel';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
+import { getContractAddress } from 'utils/get-contract-address';
 
 type Props = {
   proposalId: number;
@@ -35,7 +36,9 @@ export const getProposalExecutedEvent = async ({
   invariant(client, 'Client must be provided');
   invariant(eventAbi, `Event ABI item ProposalExecuted not found`);
 
-  const contractAddress = EmergencyProtectedTimelock.chainAddressMap[chainId];
+  const contractAddressConfig =
+    EmergencyProtectedTimelock.chainAddressMap[chainId];
+  const contractAddress = getContractAddress(contractAddressConfig, chainId);
   invariant(
     contractAddress,
     `Contract address not found for chainId ${chainId}`,

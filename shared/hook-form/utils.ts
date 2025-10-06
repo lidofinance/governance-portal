@@ -1,5 +1,5 @@
 export enum DefaultValidationErrorTypes {
-  VALIDATE = 'VALIDATE',
+  VALIDATE = 'validate',
   UNHANDLED = 'UNHANDLED',
 }
 

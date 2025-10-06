@@ -6,6 +6,7 @@ import { Address } from 'viem';
 export const getContractAddress = (
   contract: ContractObject,
   chainId: CHAINS,
+  isInTestMode?: boolean,
 ): Address => {
   const address = contract.chainAddressMap[chainId];
 
@@ -15,10 +16,18 @@ export const getContractAddress = (
     );
   }
 
-  return address;
+  if (typeof address === 'string') {
+    return address;
+  }
+
+  return isInTestMode ? address.test : address.actual;
 };
 
-export const getTokenAddress = (token: Token, chainId: CHAINS) => {
+export const getTokenAddress = (
+  token: Token,
+  chainId: CHAINS,
+  useTestContracts?: boolean,
+) => {
   const contract = TOKEN_CONTRACT_MAP[token];
 
   if (!contract) {
@@ -27,5 +36,5 @@ export const getTokenAddress = (token: Token, chainId: CHAINS) => {
     );
   }
 
-  return getContractAddress(contract, chainId);
+  return getContractAddress(contract, chainId, useTestContracts);
 };

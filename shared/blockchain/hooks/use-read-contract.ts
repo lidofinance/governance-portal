@@ -10,6 +10,8 @@ import { ContractObject } from '../types';
 import { getContractAddress } from '../get-contract-address';
 import { readContract } from 'viem/actions';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useConfig } from '../../../config';
+import { isTestnet as getIsTestnet } from '../utils/is-testnet';
 
 export const useReadContractGetter = <T extends Abi>(abi: T) => {
   const { rpcProvider } = useLidoSDK();
@@ -43,9 +45,13 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
 
 export const useReadContract = <T extends Abi>(contract: ContractObject<T>) => {
   const { chainId } = useLidoSDK();
+  const { userConfig } = useConfig();
+  const isTestnet = getIsTestnet(chainId);
+  const isInTestMode = userConfig.savedUserConfig.useTestContracts && isTestnet;
+
   const contractAddress = useMemo(
-    () => getContractAddress(contract, chainId),
-    [chainId, contract],
+    () => getContractAddress(contract, chainId, isInTestMode),
+    [chainId, contract, isInTestMode],
   );
 
   const readContractGetter = useReadContractGetter(contract.abi);

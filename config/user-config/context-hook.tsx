@@ -11,6 +11,9 @@ const STORAGE_USER_CONFIG = 'lido-user-config';
 
 type SavedUserConfig = {
   rpcUrls: Partial<Record<CHAINS, string>>;
+  etherscanApiKey: string;
+  useBundledAbi: boolean;
+  useTestContracts: boolean;
 };
 
 export type UserConfigContextType = UserConfigDefaultType & {
@@ -22,6 +25,9 @@ export type UserConfigContextType = UserConfigDefaultType & {
 
 const DEFAULT_STATE: SavedUserConfig = {
   rpcUrls: {},
+  etherscanApiKey: '',
+  useBundledAbi: true,
+  useTestContracts: false,
 };
 
 export const useUserConfigContext = () => {

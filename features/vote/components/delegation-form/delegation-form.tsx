@@ -1,4 +1,4 @@
-import { DelegationStatus } from './delegation-status/delegation-status';
+import { DelegationStatus } from './delegation-status';
 import { DelegationFormSubtitle } from './delegation-form-subtitle';
 import { DelegationAddressInput } from './delegation-address-input';
 import { DelegationFormBalance } from './delegation-form-balance';

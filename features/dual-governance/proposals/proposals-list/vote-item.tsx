@@ -26,6 +26,7 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { WarningIconTransparent } from 'shared/components/icons';
+import { getContractAddressLowerCase } from 'utils/get-contract-address';
 
 type Props = {
   script: string;
@@ -69,10 +70,13 @@ export const VoteItem = ({
   useEffect(() => {
     if (decoded && decoded.calls.length > 0) {
       const isUnknownContractCalled = decoded.calls.some((call) => {
-        return !Object.values(contractAddresses).some(
-          (contract) =>
-            contract[chainId]?.toLowerCase() === call.address.toLowerCase(),
-        );
+        return !Object.values(contractAddresses).some((contract) => {
+          const contractAddress = getContractAddressLowerCase(
+            contract[chainId],
+            chainId,
+          );
+          return contractAddress === call.address.toLowerCase();
+        });
       });
       setIsUnknownContractCalled(isUnknownContractCalled);
     }
