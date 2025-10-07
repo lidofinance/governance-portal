@@ -23,6 +23,13 @@ import { ReactComponent as AvatarPlaceholder } from 'assets/avatar-placeholder.s
 import { ReactComponent as RetryIcon } from 'assets/retry-icon.svg';
 import { ReactComponent as LidoSocialIcon } from 'assets/lido-social-icon.svg';
 import { ReactComponent as XSocialIcon } from 'assets/x-social-icon.svg';
+import { ReactComponent as LidoIcon } from 'assets/main-page/lido-icon.svg';
+import { ReactComponent as SnapshotIcon } from 'assets/main-page/snapshot-icon.svg';
+import { ReactComponent as AragonIcon } from 'assets/main-page/aragon-icon.svg';
+import { ReactComponent as DualGovernanceIcon } from 'assets/main-page/dg-icon.svg';
+import { ReactComponent as LidoBlueIcon } from 'assets/main-page/lido-blue-icon.svg';
+import { ReactComponent as DiscordIcon } from 'assets/main-page/discord-icon.svg';
+import { ReactComponent as TelegramIcon } from 'assets/main-page/tg-icon.svg';
 
 export {
   RevokeIcon,
@@ -50,4 +57,11 @@ export {
   AvatarPlaceholder,
   LidoSocialIcon,
   XSocialIcon,
+  LidoIcon,
+  SnapshotIcon,
+  AragonIcon,
+  DualGovernanceIcon,
+  LidoBlueIcon,
+  DiscordIcon,
+  TelegramIcon,
 };
