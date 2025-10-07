@@ -5,6 +5,7 @@ import styled from 'styled-components';
 export const ActionCardWrapper = styled(Block)`
   display: flex;
   flex-direction: column;
+  border-radius: 40px;
 `;
 
 export const ActionCardHeader = styled.div`

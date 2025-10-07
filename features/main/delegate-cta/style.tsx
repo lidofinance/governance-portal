@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import { Block } from '@lidofinance/lido-ui';
 
-export const DelegateCtaWrapper = styled.div`
+export const DelegateCtaWrapper = styled(Block)`
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   box-shadow: 0 0 0 1px #1312171a;
