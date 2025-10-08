@@ -1,4 +1,3 @@
-import { Chip } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { Layout } from 'shared/components';
 import {
@@ -9,23 +8,27 @@ import {
   SnapshotIcon,
   DiscordIcon,
   TelegramIcon,
+  ChatIcon,
+  BranchIcon,
+  CalendarIcon,
+  DocumentIcon,
+  DocumentUnknownIcon,
 } from 'shared/components/icons';
 
 import { DelegateCta } from './delegate-cta';
 import { ActionCard } from './action-card';
 import { AppsWrapper, ProposalsWrapper, ResourcesWrapper } from './style';
-import { Box } from '../../shared/components/box';
 import { ResourceCard } from './resource-card';
 
-const InDgReviewAddon = ({ proposalId }: { proposalId: number }) => {
-  return (
-    <Box border="1px solid #1312171A" padding="4px 8px" borderRadius="60px">
-      <Text size={16} strong color="secondary">
-        # {proposalId} in review
-      </Text>
-    </Box>
-  );
-};
+// const InDgReviewAddon = ({ proposalId }: { proposalId: number }) => {
+//   return (
+//     <Box border="1px solid #1312171A" padding="4px 8px" borderRadius="60px">
+//       <Text size={16} strong color="secondary">
+//         # {proposalId} in review
+//       </Text>
+//     </Box>
+//   );
+// };
 
 export const MainPage = () => {
   return (
@@ -35,7 +38,7 @@ export const MainPage = () => {
       <AppsWrapper>
         <ActionCard
           icon={<SnapshotIcon />}
-          addon={<Chip variant="positive">Live</Chip>}
+          // addon={<Chip variant="positive">Live</Chip>}
           title={
             <Text size={28}>
               Offchain <ExternalLinkIcon />
@@ -49,7 +52,7 @@ export const MainPage = () => {
         />
         <ActionCard
           icon={<AragonIcon />}
-          addon={<Chip variant="positive">Live</Chip>}
+          // addon={<Chip variant="positive">Live</Chip>}
           title={<Text size={28}>Onchain</Text>}
           description={
             <Text size={16} color="secondary">
@@ -59,7 +62,7 @@ export const MainPage = () => {
         />
         <ActionCard
           icon={<DualGovernanceIcon />}
-          addon={<InDgReviewAddon proposalId={12} />}
+          // addon={<InDgReviewAddon proposalId={12} />}
           title={<Text size={28}>Dual Governance</Text>}
           description={
             <Text size={16} color="secondary">
@@ -69,7 +72,7 @@ export const MainPage = () => {
         />
         <ActionCard
           icon={<LidoBlueIcon />}
-          addon={<Chip variant="positive">Live</Chip>}
+          // addon={<Chip variant="positive">Live</Chip>}
           title={<Text size={28}>Easy Tracks</Text>}
           description={
             <Text size={16} color="secondary">
@@ -126,11 +129,11 @@ export const MainPage = () => {
         Resources
       </Text>
       <ResourcesWrapper>
-        <ResourceCard title="Lido DAO Bot" />
-        <ResourceCard title="Governance stack" />
-        <ResourceCard title="Governance calendar" />
-        <ResourceCard title="Documentation" />
-        <ResourceCard title="Guides" />
+        <ResourceCard icon={<ChatIcon />} title="Lido DAO Bot" />
+        <ResourceCard icon={<BranchIcon />} title="Governance stack" />
+        <ResourceCard icon={<CalendarIcon />} title="Governance calendar" />
+        <ResourceCard icon={<DocumentIcon />} title="Documentation" />
+        <ResourceCard icon={<DocumentUnknownIcon />} title="Guides" />
       </ResourcesWrapper>
     </Layout>
   );

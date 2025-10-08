@@ -30,6 +30,11 @@ import { ReactComponent as DualGovernanceIcon } from 'assets/main-page/dg-icon.s
 import { ReactComponent as LidoBlueIcon } from 'assets/main-page/lido-blue-icon.svg';
 import { ReactComponent as DiscordIcon } from 'assets/main-page/discord-icon.svg';
 import { ReactComponent as TelegramIcon } from 'assets/main-page/tg-icon.svg';
+import { ReactComponent as ChatIcon } from 'assets/main-page/chat-icon.svg';
+import { ReactComponent as CalendarIcon } from 'assets/main-page/calendar-icon.svg';
+import { ReactComponent as BranchIcon } from 'assets/main-page/branch-icon.svg';
+import { ReactComponent as DocumentIcon } from 'assets/main-page/document-icon.svg';
+import { ReactComponent as DocumentUnknownIcon } from 'assets/main-page/document-unknown-icon.svg';
 
 export {
   RevokeIcon,
@@ -64,4 +69,9 @@ export {
   LidoBlueIcon,
   DiscordIcon,
   TelegramIcon,
+  ChatIcon,
+  CalendarIcon,
+  BranchIcon,
+  DocumentIcon,
+  DocumentUnknownIcon,
 };

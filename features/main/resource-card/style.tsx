@@ -16,8 +16,4 @@ export const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background: #0085ff33;
-
-  svg {
-    fill: #0085ff;
-  }
 `;
