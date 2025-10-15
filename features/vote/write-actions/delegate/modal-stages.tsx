@@ -12,7 +12,7 @@ import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts
 import { DelegateTxArgs } from './types';
 
 const getInProgressText = (args: DelegateTxArgs) => {
-  return `You are delegating your voting power to ${args.delegateAddress} on ${args.type === 'aragon' ? 'Aragon' : 'Snapshot'}`;
+  return `You are delegating your voting power on ${args.type}`;
 };
 
 const getTxModalStagesDelegate = (

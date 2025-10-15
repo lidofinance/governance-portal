@@ -7,7 +7,7 @@ export const DelegationFormSubtitle = () => {
   const { mode } = useDelegationFormData();
   const isMobile = useBreakpoint('md');
 
-  if (mode === 'aragon') {
+  if (mode === 'Aragon') {
     return (
       <DelegationSubtitleStyled>
         <AragonSmallLogo />
@@ -18,7 +18,7 @@ export const DelegationFormSubtitle = () => {
     );
   }
 
-  if (mode === 'snapshot') {
+  if (mode === 'Snapshot') {
     return (
       <DelegationSubtitleStyled>
         <SnapshotLogo />

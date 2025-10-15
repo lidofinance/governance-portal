@@ -23,7 +23,7 @@ export type DelegationFormNetworkData = {
   refetch: () => Promise<void>;
 } & DelegationInfo;
 
-export type DelegationType = 'aragon' | 'snapshot';
+export type DelegationType = 'Aragon' | 'Snapshot';
 
 export type DelegationFormMode = 'simple' | DelegationType;
 
@@ -40,4 +40,22 @@ export type PublicDelegate = {
   address: Address;
   lido: string;
   twitter: string;
+};
+
+export type DelegationFormAsyncValidationContext = {
+  mode: DelegationFormMode;
+} & (
+  | {
+      isWalletActive: true;
+      walletAddress: string;
+      aragonDelegateAddress: string | null | undefined;
+      snapshotDelegateAddress: string | null | undefined;
+    }
+  | {
+      isWalletActive: false;
+    }
+);
+
+export type DelegationFormValidationContext = {
+  asyncContext: Promise<DelegationFormAsyncValidationContext>;
 };

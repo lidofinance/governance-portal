@@ -17,6 +17,9 @@ import {
   FormControllerContext,
   FormControllerContextValueType,
 } from 'shared/hook-form/form-controller-context';
+import { useDelegateFormPublicListUpdate } from '../hooks/use-delegate-form-public-list-update';
+import { useDelegationFormValidationContext } from '../hooks/use-delegation-form-validation-context';
+import { DelegationFormValidationResolver } from '../components/delegation-form/delegation-form-validators';
 
 const DelegationFormContext = createContext<
   DelegationFormContextValue | undefined
@@ -76,23 +79,28 @@ export const DelegationFormProvider: FC<DelegationFormProviderProps> = ({
   mode,
 }) => {
   const networkData = useDelegationFormNetworkData();
-  // const validationContextPromise = useSupportFormValidationContext({
-  //   networkData,
-  // });
+  const validationContextPromise = useDelegationFormValidationContext({
+    networkData,
+    mode,
+  });
   const { retryEvent, retryFire } = useFormControllerRetry();
 
   const formObject = useForm<DelegationFormInput>({
     defaultValues: { delegateAddress: null },
-    // context: validationContextPromise,
+    context: validationContextPromise,
     criteriaMode: 'firstError',
     mode: 'onChange',
-    // resolver: SupportFormValidationResolver,
+    resolver: DelegationFormValidationResolver,
   });
+
+  useDelegateFormPublicListUpdate(formObject);
 
   const { watch, reset, register } = formObject;
 
   const processDelegation = useDelegateAction({
     mode,
+    aragonDelegateAddress: networkData.aragonDelegateAddress,
+    snapshotDelegateAddress: networkData.snapshotDelegateAddress,
     onConfirm: networkData.refetch,
     onRetry: retryFire,
   });
@@ -116,8 +124,8 @@ export const DelegationFormProvider: FC<DelegationFormProviderProps> = ({
   const formControllerValue = useMemo(
     (): FormControllerContextValueType<DelegationFormInput> => ({
       onSubmit: processDelegation,
-      onReset: ({ delegateAddress }: DelegationFormInput) => {
-        reset({ delegateAddress });
+      onReset: () => {
+        reset({ delegateAddress: null });
       },
       retryEvent,
     }),

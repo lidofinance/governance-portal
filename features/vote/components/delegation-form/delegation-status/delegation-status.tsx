@@ -37,7 +37,7 @@ export const DelegationStatus = () => {
             <DelegationAddressBadge
               publicDelegate={aragonPublicDelegate}
               address={aragonDelegateAddress}
-              type="aragon"
+              type="Aragon"
             />
           ) : (
             <StatusValue>
@@ -54,7 +54,7 @@ export const DelegationStatus = () => {
             <DelegationAddressBadge
               address={snapshotDelegateAddress}
               publicDelegate={snapshotPublicDelegate}
-              type="snapshot"
+              type="Snapshot"
             />
           ) : (
             <StatusValue>
@@ -67,9 +67,9 @@ export const DelegationStatus = () => {
   }
 
   const delegateAddress =
-    mode === 'aragon' ? aragonDelegateAddress : snapshotDelegateAddress;
+    mode === 'Aragon' ? aragonDelegateAddress : snapshotDelegateAddress;
   const publicDelegate =
-    mode === 'aragon' ? aragonPublicDelegate : snapshotPublicDelegate;
+    mode === 'Aragon' ? aragonPublicDelegate : snapshotPublicDelegate;
 
   return (
     <DelegationStatusStyled>

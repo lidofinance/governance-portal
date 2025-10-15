@@ -12,7 +12,7 @@ import {
 import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts/success-text';
 
 const getInProgressText = (type: DelegationType) => {
-  return `You are revoking your delegation on ${type === 'aragon' ? 'Aragon' : 'Snapshot'}`;
+  return `You are revoking your delegation on ${type}`;
 };
 
 const getTxModalStagesRevokeDelegation = (
@@ -34,7 +34,7 @@ const getTxModalStagesRevokeDelegation = (
     return transitStage(
       <TxStageSuccess
         txHash={txHash}
-        title="Delegate set successfully!"
+        title="Delegation revoked successfully!"
         description={<SuccessText txHash={txHash} />}
         showEtherscan={false}
       />,
