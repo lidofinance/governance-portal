@@ -174,7 +174,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
     await Promise.allSettled([networkData.refetch(), approveData.refetch()]);
   }, [networkData, approveData]);
 
-  const processWrapFormFlow = useSupportVetoAction({
+  const processVetoFormFlow = useSupportVetoAction({
     approveData,
     onConfirm,
     onRetry: retryFire,
@@ -202,7 +202,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const formControllerValue = useMemo(
     (): FormControllerContextValueType<EscrowActionArgs> => ({
-      onSubmit: processWrapFormFlow,
+      onSubmit: processVetoFormFlow,
       onReset: ({ token }: EscrowActionArgs) => {
         reset({
           ...defaultValues,
@@ -211,7 +211,7 @@ export const SupportFormProvider: FC<PropsWithChildren> = ({ children }) => {
       },
       retryEvent,
     }),
-    [processWrapFormFlow, retryEvent, reset, defaultValues],
+    [processVetoFormFlow, retryEvent, reset, defaultValues],
   );
 
   return (

@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 import { Button, Text } from '@lidofinance/lido-ui';
+import { FormController } from 'shared/hook-form/form-controller';
 
-export const DelegationFormControllerStyled = styled.form<{
+export const DelegationFormControllerStyled = styled(FormController)<{
   $customMode: boolean;
 }>`
   display: flex;

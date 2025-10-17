@@ -6,6 +6,7 @@ import { ActionArgs } from 'shared/types';
 import { useTxModalRevokeDelegation } from './modal-stages';
 import { useRevokeDelegationTxSender } from './tx-sender';
 import { DelegationType } from 'features/vote/types';
+import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
 
 export const useRevokeDelegationAction = ({
   onConfirm,
@@ -15,10 +16,21 @@ export const useRevokeDelegationAction = ({
   const { txModalStages } = useTxModalRevokeDelegation();
   const sendRevokeDelegationTx = useRevokeDelegationTxSender();
   const waitForTx = useTxConfirmation();
+  const { confirm } = useConfirmModal();
 
   return useCallback(
     async (type: DelegationType) => {
       try {
+        const hasApprove = await confirm({
+          title: `Revoke ${type} delegation?`,
+          confirmText: 'Revoke',
+          cancelText: 'Cancel',
+        });
+
+        if (!hasApprove) {
+          return false;
+        }
+
         txModalStages.sign(type);
 
         const txHash = await sendRevokeDelegationTx(type);
@@ -59,6 +71,7 @@ export const useRevokeDelegationAction = ({
       waitForTx,
       onConfirm,
       onRetry,
+      confirm,
     ],
   );
 };

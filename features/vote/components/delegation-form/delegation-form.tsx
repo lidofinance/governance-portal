@@ -28,7 +28,7 @@ export const DelegationForm = ({
         <DelegationAddressInput />
         <DelegationFormPublicDelegateTooltip />
         <DelegationFormBalance onCustomizeClick={onCustomizeClick} />
-        <DelegationFormSubmitButton onCustomizeClick={onCustomizeClick} />
+        <DelegationFormSubmitButton />
         <DelegationFormFootNote />
         <DelegationTxStatus />
       </DelegationFormController>

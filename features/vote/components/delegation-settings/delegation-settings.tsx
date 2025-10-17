@@ -39,8 +39,8 @@ export const DelegationSettings = ({ customizeMode }: Props) => {
             />
           ) : (
             <>
-              <DelegationForm mode="aragon" />
-              <DelegationForm mode="snapshot" />
+              <DelegationForm mode="Aragon" />
+              <DelegationForm mode="Snapshot" />
             </>
           )}
         </FormWrap>

@@ -16,9 +16,9 @@ export const useDelegateTxSender = () => {
   return useCallback(
     async ({ delegateAddress, type }: DelegateTxArgs) => {
       invariant(delegateAddress, 'delegateAddress must be presented');
-      invariant(type === 'aragon' || type === 'snapshot', 'type must be valid');
+      invariant(type === 'Aragon' || type === 'Snapshot', 'type must be valid');
 
-      if (type === 'snapshot') {
+      if (type === 'Snapshot') {
         return writeSnapshotContract({
           address: snapshotContractAddress,
           functionName: 'setDelegate',

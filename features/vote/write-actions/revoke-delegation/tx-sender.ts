@@ -15,9 +15,9 @@ export const useRevokeDelegationTxSender = () => {
 
   return useCallback(
     async (type: DelegationType) => {
-      invariant(type === 'aragon' || type === 'snapshot', 'type must be valid');
+      invariant(type === 'Aragon' || type === 'Snapshot', 'type must be valid');
 
-      if (type === 'snapshot') {
+      if (type === 'Snapshot') {
         return writeSnapshotContract({
           address: snapshotContractAddress,
           functionName: 'clearDelegate',
