@@ -13,7 +13,6 @@ import Web3Provider from './web3';
 import { LidoSDKProvider } from './lido-sdk';
 import { DualGovernanceStateProvider } from './dual-governance-state';
 import { EscrowProvider } from './escrow';
-import { DualGovernanceProposalsProvider } from './dual-governance-proposals';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 type ProvidersProps = {
@@ -53,12 +52,10 @@ export const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
           <Web3Provider>
             <LidoSDKProvider>
               <DualGovernanceStateProvider>
-                <DualGovernanceProposalsProvider>
-                  <EscrowProvider>
-                    <GlobalStyleOverwrite />
-                    <ModalProvider>{children}</ModalProvider>
-                  </EscrowProvider>
-                </DualGovernanceProposalsProvider>
+                <EscrowProvider>
+                  <GlobalStyleOverwrite />
+                  <ModalProvider>{children}</ModalProvider>
+                </EscrowProvider>
               </DualGovernanceStateProvider>
             </LidoSDKProvider>
           </Web3Provider>
