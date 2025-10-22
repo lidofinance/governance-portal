@@ -21,18 +21,20 @@ interface Props {
   votePhase: VotePhase;
 }
 
+const formatterOptions: Intl.DateTimeFormatOptions = {
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  timeZoneName: 'short',
+};
+
 const formatDate = (timestamp: number): string => {
   const date = new Date(timestamp * 1000);
-  const options: Intl.DateTimeFormatOptions = {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    timeZoneName: 'short',
-  };
-  return date.toLocaleString('en-US', options);
+
+  return date.toLocaleString('en-US', formatterOptions);
 };
 
 export const VoteProgressBar = ({
