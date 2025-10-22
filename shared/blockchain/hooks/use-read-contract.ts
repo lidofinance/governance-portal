@@ -46,13 +46,15 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
 export const useReadContract = <T extends Abi>(contract: ContractObject<T>) => {
   const { chainId } = useLidoSDK();
   const { userConfig } = useConfig();
-  const isTestnet = getIsTestnet(chainId);
-  const isInTestMode = userConfig.savedUserConfig.useTestContracts && isTestnet;
 
-  const contractAddress = useMemo(
-    () => getContractAddress(contract, chainId, isInTestMode),
-    [chainId, contract, isInTestMode],
-  );
+  const contractAddress = useMemo(() => {
+    const isTestnet = getIsTestnet(chainId);
+
+    const isInTestMode =
+      userConfig.savedUserConfig.useTestContracts && isTestnet;
+
+    return getContractAddress(contract, chainId, isInTestMode);
+  }, [chainId, contract, userConfig.savedUserConfig.useTestContracts]);
 
   const readContractGetter = useReadContractGetter(contract.abi);
 
