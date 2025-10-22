@@ -11,8 +11,7 @@ export const HeaderSettingsButton = () => {
 
   return (
     <HeaderControlButton
-      disabled
-      isActive={route === SETTINGS_PATH}
+      disabled={route === SETTINGS_PATH}
       onClick={() => push(SETTINGS_PATH)}
     >
       <GearIcon />

@@ -9,7 +9,18 @@ export const getContractName = (chainId: CHAINS, address: string) => {
       if (!foundAddress) {
         return false;
       }
-      return foundAddress.toLowerCase() === lowerAddress;
+
+      if (typeof foundAddress === 'object' && 'actual' in foundAddress) {
+        const actualAddress = foundAddress.actual?.toLowerCase();
+        const testAddress = foundAddress.test?.toLowerCase();
+        return actualAddress === lowerAddress || testAddress === lowerAddress;
+      }
+
+      if (typeof foundAddress === 'string') {
+        return foundAddress.toLowerCase() === lowerAddress;
+      }
+
+      return false;
     },
   );
 

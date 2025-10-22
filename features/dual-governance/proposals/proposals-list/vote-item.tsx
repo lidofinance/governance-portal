@@ -26,6 +26,7 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { WarningIconTransparent } from 'shared/components/icons';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
 
 type Props = {
   script: string;
@@ -68,12 +69,23 @@ export const VoteItem = ({
 
   useEffect(() => {
     if (decoded && decoded.calls.length > 0) {
-      const isUnknownContractCalled = decoded.calls.some((call) => {
-        return !Object.values(contractAddresses).some(
-          (contract) =>
-            contract[chainId]?.toLowerCase() === call.address.toLowerCase(),
-        );
-      });
+      const isUnknownContractCalled = decoded.calls
+        ? decoded.calls.some((call) => {
+            const contractNames = Object.keys(contractAddresses);
+
+            return !contractNames.some((contractName) => {
+              try {
+                const address = getContractAddress(
+                  contractName as any,
+                  chainId,
+                );
+                return address?.toLowerCase() === call.address.toLowerCase();
+              } catch {
+                return false;
+              }
+            });
+          })
+        : false;
       setIsUnknownContractCalled(isUnknownContractCalled);
     }
   }, [chainId, decoded]);

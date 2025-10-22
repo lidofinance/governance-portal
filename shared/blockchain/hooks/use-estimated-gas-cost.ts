@@ -22,8 +22,7 @@ export const useEstimateContractGas = <
     if ('address' in contract) {
       return contract.address;
     }
-
-    return getContractAddress(contract, chainId);
+    return getContractAddress(contract, chainId, false);
   }, [chainId, contract]);
 
   return useQuery({

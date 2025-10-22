@@ -1,6 +1,7 @@
 import { Address, PublicClient, parseAbiItem } from 'viem';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Voting } from 'shared/blockchain/contracts';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
 
 const EVENT_ABI = parseAbiItem(
   'event StartVote(uint256 indexed voteId, address indexed creator, string metadata)',
@@ -11,8 +12,6 @@ type Props = {
   chainId: CHAINS;
   voteId: bigint;
 };
-
-const addressCache = new Map<CHAINS, Address>();
 
 const withRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
   for (let i = 0; i < retries; i++) {
@@ -31,11 +30,7 @@ export const getAragonProposer = async ({
   chainId,
   voteId,
 }: Props): Promise<Address | null> => {
-  let aragonAddress = addressCache.get(chainId);
-  if (!aragonAddress) {
-    aragonAddress = Voting.chainAddressMap[chainId]?.toLowerCase() as Address;
-    if (aragonAddress) addressCache.set(chainId, aragonAddress);
-  }
+  const aragonAddress = getContractAddress(Voting, chainId);
 
   if (!aragonAddress) {
     console.error(`No Aragon voting contract address for chainId: ${chainId}`);

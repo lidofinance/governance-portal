@@ -82,11 +82,24 @@ export const decodeCalls = <TCall extends BaseCall>({
     const contractName = getContractName(chainId, contractAddress) ?? undefined;
 
     let abi: ABI | undefined;
-    const matchingContractName = Object.keys(ADDR).find(
-      (name: string) =>
-        ADDR[name as ContractName][chainId]?.toLowerCase() ===
-        contractAddress.toLowerCase(),
-    ) as ContractName | undefined;
+    const matchingContractName = Object.keys(ADDR).find((name: string) => {
+      const addressConfig = ADDR[name as ContractName][chainId];
+      if (!addressConfig) return false;
+
+      if (typeof addressConfig === 'object' && 'actual' in addressConfig) {
+        return (
+          addressConfig.actual?.toLowerCase() ===
+            contractAddress.toLowerCase() ||
+          addressConfig.test?.toLowerCase() === contractAddress.toLowerCase()
+        );
+      }
+
+      if (typeof addressConfig === 'string') {
+        return addressConfig.toLowerCase() === contractAddress.toLowerCase();
+      }
+
+      return false;
+    }) as ContractName | undefined;
 
     if (matchingContractName) {
       try {
@@ -110,6 +123,7 @@ export const decodeCalls = <TCall extends BaseCall>({
       args: readonly unknown[] | undefined;
       nestedCalls?: DecodedCall[];
     } | null = null;
+
     if (abi && call.payload.startsWith('0x')) {
       try {
         const iface = new utils.Interface(abi);
@@ -132,11 +146,26 @@ export const decodeCalls = <TCall extends BaseCall>({
           })) as unknown as DecodedCall[];
         }
       } catch (error) {
-        console.warn(
-          `Failed to decode calldata for contract at ${contractAddress}:`,
-          error,
-        );
+        const signature = call.payload.startsWith('0x')
+          ? call.payload.slice(0, 10)
+          : 'unknown';
+
+        if (
+          error instanceof Error &&
+          error.message.includes('no matching function')
+        ) {
+          console.debug(
+            `Unknown function signature ${signature} for contract ${contractName || contractAddress}. This may be a new or custom function.`,
+          );
+        } else {
+          console.warn(
+            `Failed to decode calldata for contract at ${contractAddress} (signature: ${signature}):`,
+            error,
+          );
+        }
       }
+    } else if (!abi) {
+      console.debug(`No ABI available for contract at ${contractAddress}`);
     }
 
     return {

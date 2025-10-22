@@ -1,7 +1,7 @@
 import { Container, InlineLoader } from '@lidofinance/lido-ui';
 import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
 export const HeaderContainer = styled((props) => <Container {...props} />)`
@@ -113,39 +113,31 @@ export const VaultInfoPopupTitle = styled.div`
     text-align: center;
   }
 `;
-
-type HeaderControlButtonProps = {
-  isActive?: boolean;
-};
 export const HeaderControlButton = styled(Button).attrs({
-  variant: 'text',
+  variant: 'outlined',
   size: 'xs',
-})<HeaderControlButtonProps>`
+})`
   border-radius: 50%;
   flex-shrink: 0;
   min-width: 0;
   margin-left: ${({ theme }) => theme.spaceMap.sm}px;
   padding-left: 10px;
   padding-right: 10px;
+  cursor: pointer;
   line-height: 0;
   font-size: 0;
-  background: transparent;
   border: 1px solid var(--custom-border);
   fill: var(--lido-color-secondary);
+
+  &:hover {
+    background-color: transparent !important;
+  }
 
   svg {
     width: 24px;
     height: 24px;
     fill: var(--lido-color-secondary);
   }
-
-  ${({ isActive }) =>
-    isActive &&
-    css`
-      & svg {
-        fill: var(--lido-color-primary);
-      }
-    `}
 `;
 
 export const VaultInfoLoader = styled((props) => <InlineLoader {...props} />)`

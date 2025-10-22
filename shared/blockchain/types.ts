@@ -10,7 +10,9 @@ export const Token = {
 
 export type Token = (typeof Token)[keyof typeof Token];
 
-export type ChainAddressMap = Partial<Record<CHAINS, Address>>;
+export type ChainAddressMap = Partial<
+  Record<CHAINS, Address | { test: Address; actual: Address }>
+>;
 
 // TODO: maybe a better name?
 export type ContractObject<T = Abi> = {
