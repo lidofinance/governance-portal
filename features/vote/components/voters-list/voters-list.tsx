@@ -6,6 +6,7 @@ import { Text, useBreakpoint } from '@lidofinance/lido-ui';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VoteEvent } from 'shared/votes/types';
 import { VoterItem } from './voter-item';
+import { useEnsNames } from 'shared/hooks/use-ens-names';
 
 type Props = {
   voteEvents: VoteEvent[];
@@ -17,20 +18,18 @@ export const VotersList = ({ voteEvents }: Props) => {
   const { data: tokenData } = useGovernanceToken();
   const isMobile = useBreakpoint('md');
 
-  // const votersAddresses = useMemo(() => {
-  //   const result = new Set<string>();
-  //   voteEvents.forEach(({ voter, delegatedVotes }) => {
-  //     result.add(voter);
-  //     delegatedVotes?.forEach(({ voter: delegatedVoter }) => {
-  //       result.add(delegatedVoter);
-  //     });
-  //   });
-  //   return Array.from(result);
-  // }, [voteEvents]);
+  const votersAddresses = useMemo(() => {
+    const result = new Set<string>();
+    voteEvents.forEach(({ voter, delegatedVotes }) => {
+      result.add(voter);
+      delegatedVotes?.forEach(({ voter: delegatedVoter }) => {
+        result.add(delegatedVoter);
+      });
+    });
+    return Array.from(result);
+  }, [voteEvents]);
 
-  // TODO: refactor ENS names hook for using new web3 connector
-  // const { data: ensMap } = useEnsNames(votersAddresses);
-  const ensMap = undefined;
+  const { data: ensMap } = useEnsNames(votersAddresses);
 
   const [limit, setLimit] = useState(INITIAL_PAGE_SIZE);
 

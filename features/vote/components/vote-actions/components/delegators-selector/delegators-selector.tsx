@@ -5,8 +5,8 @@ import { Address, formatEther } from 'viem';
 import { AddressPop } from 'shared/components/address-pop';
 import { Text } from 'shared/components/text';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
-import { useDelegators } from '../../../../hooks/use-delegators';
-import { useVote } from '../../../../hooks/use-vote';
+import { useDelegators } from 'features/vote/hooks/use-delegators';
+import { useVote } from 'features/vote/hooks/use-vote';
 import { VoteEvent } from 'shared/votes/types';
 
 import {

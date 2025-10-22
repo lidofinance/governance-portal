@@ -8,10 +8,10 @@ import {
   Wrap,
 } from './style';
 import { useMemo } from 'react';
-import { VotePhase } from '../../../../shared/votes/types';
+import { VotePhase } from 'shared/votes/types';
 import { useVoteTimeCountdown } from '../../hooks/use-vote-time-countdown';
 import { VoteDetailsCountdown } from '../vote-details-countdown';
-import { ProgressBar } from '../../../../shared/components/progress-bar';
+import { ProgressBar } from 'shared/components/progress-bar';
 
 interface Props {
   startDate: number;

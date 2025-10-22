@@ -1,54 +1,76 @@
-// import { CHAINS } from '@lido-sdk/constants'
-// import { useWeb3 } from '../../blockChain/hooks/useWeb3'
-// import { useConfig } from '../../config/hooks/useConfig'
-//
-// const ENS_NAME_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
-//
-// const IGNORE_GAIANETWORK_PATTERN = /https?:\/\/api\.gaianet\.ai(?=[:/?#]|$)/i
-//
-// export function useEnsNames(addresses: string[]) {
-//   const { chainId } = useWeb3()
-//   const { getRpcUrl } = useConfig()
-//
-//   const { data: ensNameList, initialLoading } = useSWR(
-//     [...addresses, chainId],
-//     async () => {
-//       const rpcUrl = getRpcUrl(chainId)
-//       const provider = getStaticRpcBatchProvider(chainId, rpcUrl)
-//       if (chainId === CHAINS.Holesky || chainId === CHAINS.Hoodi) {
-//         provider.network.ensAddress = ENS_NAME_ADDRESS
-//       }
-//
-//       const result: Record<string, string | null> = {}
-//       await Promise.all(
-//         addresses.map(address =>
-//           provider
-//             .lookupAddress(address)
-//             .then(ens => {
-//               result[address] = ens
-//             })
-//             .catch(error => {
-//               const _error = error as Error
-//
-//               // TODO: add GNS support
-//               if (IGNORE_GAIANETWORK_PATTERN.test(_error.message)) {
-//                 console.log(
-//                   'Ignoring CSP error for api.gaianet.ai -> request api.gaianet.ai blocked by CSP, GNS not supported',
-//                 )
-//                 return null
-//               }
-//               throw error
-//             }),
-//         ),
-//       )
-//
-//       return result
-//     },
-//   )
-//   return {
-//     data: ensNameList,
-//     initialLoading,
-//   }
-// }
+import { useLidoSDK } from '../../providers/lido-sdk';
+import { useQuery } from '@tanstack/react-query';
+import { Address, createPublicClient, http } from 'viem';
+import { mainnet, hoodi } from 'viem/chains';
+import { useGetRpcUrlByChainId } from '../../config/rpc';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
-export const useEnNames = () => {};
+const IGNORE_GAIANETWORK_PATTERN = /https?:\/\/api\.gaianet\.ai(?=[:/?#]|$)/i;
+
+const ENS_NAME_ADDRESS: Address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e';
+
+const getChainWithCustomEns = (chainId: number) => {
+  switch (chainId) {
+    case CHAINS.Mainnet:
+      return mainnet;
+    case CHAINS.Hoodi:
+      return {
+        ...hoodi,
+        contracts: {
+          ...hoodi.contracts,
+          ensRegistry: {
+            address: ENS_NAME_ADDRESS,
+          },
+        },
+      };
+    default:
+      return mainnet;
+  }
+};
+
+export const useEnsNames = (addresses: string[]) => {
+  const { chainId } = useLidoSDK();
+  const getRpcUrl = useGetRpcUrlByChainId();
+
+  const { data: ensNameList, isLoading: initialLoading } = useQuery({
+    queryKey: ['ensNames', addresses, chainId],
+    queryFn: async () => {
+      const publicClient = createPublicClient({
+        chain: getChainWithCustomEns(chainId || CHAINS.Mainnet),
+        transport: http(getRpcUrl(chainId || CHAINS.Mainnet)),
+      });
+
+      const result: Record<string, string | null> = {};
+
+      await Promise.all(
+        addresses.map(async (address) => {
+          try {
+            const ensName = await publicClient.getEnsName({
+              address: address as `0x${string}`,
+            });
+            result[address] = ensName;
+          } catch (error) {
+            const _error = error as Error;
+
+            if (IGNORE_GAIANETWORK_PATTERN.test(_error.message)) {
+              console.debug(
+                'Ignoring CSP error for api.gaianet.ai -> request api.gaianet.ai blocked by CSP, GNS not supported',
+              );
+              result[address] = null;
+              return;
+            }
+            throw error;
+          }
+        }),
+      );
+
+      return result;
+    },
+    enabled: addresses.length > 0,
+  });
+
+  return {
+    data: ensNameList,
+    initialLoading,
+  };
+};

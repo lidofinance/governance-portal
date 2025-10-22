@@ -43,8 +43,9 @@ const formatArg = (
   if (Array.isArray(arg)) {
     // Check if it's an array of call objects (nested calls)
     if (arg.length > 0 && typeof arg[0] === 'object' && arg[0] !== null) {
-      const callIndices = arg.map((_, i) => `${parentId}.${i + 1}`).join(' — ');
-      return `See ${arg.length} parsed calls at ${callIndices}`;
+      const firstIndex = `${parentId}.1`;
+      const lastIndex = `${parentId}.${arg.length}`;
+      return `See ${arg.length} parsed calls at ${firstIndex} — ${lastIndex}`;
     }
     return `[${arg.join(', ')}]`;
   }
@@ -131,7 +132,7 @@ const FormatSingleCall: React.FC<{
   return (
     <CallWrapper
       style={{
-        paddingLeft: `${depth * 40}px`,
+        paddingLeft: `${depth * 20}px`,
         marginBottom: '40px',
       }}
     >

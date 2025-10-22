@@ -14,10 +14,10 @@ import { VoteMode, voteModeDict } from '../types';
 import { useTxModalVote } from '../write-actions/vote/modal-stages';
 import { useVoteTxSender } from '../write-actions/vote/tx-sender';
 import { Address } from 'viem';
-import { useIsContract } from '../../../shared/blockchain/hooks/use-is-contract';
-import { useTxConfirmation } from '../../../shared/hooks/use-tx-conformation';
+import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
+import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useQueryClient } from '@tanstack/react-query';
-import { useLidoSDK } from '../../../providers/lido-sdk';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 type Value = {
   voteId: bigint;

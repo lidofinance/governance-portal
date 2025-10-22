@@ -14,6 +14,7 @@ import { formatEth } from 'shared/blockchain/utils';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { TurnArrow, UnionIcon } from 'shared/components/icons';
 import { getPublicDelegate } from '../../utils/get-public-delegate';
+import { formatBalance } from 'utils/format-balance';
 
 type Props = {
   voteEvent: VoteEvent;
@@ -48,7 +49,7 @@ export const VoterItem = ({
 
   const vpElement = (
     <Text weight={isDelegate ? 700 : 400} size="xxs" data-testid="votingPower">
-      {formatEth(stake)} {isMobile ? '' : governanceTokenSymbol}
+      {formatBalance(stake, 1)} {isMobile ? '' : governanceTokenSymbol}
     </Text>
   );
 

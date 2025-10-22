@@ -1,6 +1,6 @@
 import { TxStageSuccess } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts/success-text';
-import { VoteMode, voteModeDict } from '../../../../types';
+import { VoteMode, voteModeDict } from 'features/vote/types';
 import { Text } from 'shared/components/text';
 import { Button } from '@lidofinance/lido-ui';
 import { VoteEvent, VotePhase } from 'shared/votes/types';
@@ -10,7 +10,7 @@ import { AddonSection } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatEther, Address } from 'viem';
 import { DelegatorsSelector } from '../../components/delegators-selector';
-import { useDelegators } from '../../../../hooks/use-delegators';
+import { useDelegators } from 'features/vote/hooks/use-delegators';
 import { Box } from 'shared/components/box';
 
 type Props = {
