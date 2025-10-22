@@ -295,7 +295,7 @@ export const Voting: ChainAddressMap = {
 };
 
 export const DualGovernance: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xcdF49b058D606AD34c5789FD8c3BF8B3E54bA2db',
+  [CHAINS.Mainnet]: '0xc1db28b3301331277e307fdcff8de28242a4486e',
   [CHAINS.Holesky]: '0x5A2958dC9532bAaCdF8481C8278735B1b05FB199',
   [CHAINS.Hoodi]: {
     test: '0x3Dec3C5Ef9C53234B55705DDC892b106A1C47bCa',

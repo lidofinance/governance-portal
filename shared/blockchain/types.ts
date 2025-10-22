@@ -1,6 +1,7 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
 import { ABIElement as ABIElementImported } from '@lidofinance/evm-script-decoder/lib/types';
+import { ContractTransaction } from 'ethers';
 
 export const Token = {
   stETH: 'stETH',
@@ -37,3 +38,17 @@ export type ABIElement = Omit<ABIElementImported, 'name' | 'type'> & {
 };
 
 export type ABI = ABIElement[];
+
+export type SafeTx = {
+  safeTxHash: string;
+};
+
+export type ResultTx =
+  | {
+      type: 'safe';
+      tx: SafeTx;
+    }
+  | {
+      type: 'regular';
+      tx: ContractTransaction;
+    };

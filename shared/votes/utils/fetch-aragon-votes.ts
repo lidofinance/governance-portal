@@ -66,7 +66,11 @@ export const fetchAragonVotes = async ({
     ),
   );
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   return votes.filter(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     (vote): vote is VoteResult =>
       !!vote && (onlyActive ? isVoteActive(vote) : true),
   );
@@ -93,7 +97,8 @@ export const fetchAragonVote = async ({
 
     const vote = parseVote(voteId, rawVote, canExecute);
 
-    let startEvent: StartVoteEventArgs | null = null;
+    // let startEvent: StartVoteEventArgs | null = null;
+    let startEvent;
 
     if (client && vote.snapshotBlock) {
       startEvent = await getEventStartVote({

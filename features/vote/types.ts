@@ -59,3 +59,12 @@ export type DelegationFormAsyncValidationContext = {
 export type DelegationFormValidationContext = {
   asyncContext: Promise<DelegationFormAsyncValidationContext>;
 };
+
+export type VoteMode = 'yay' | 'nay' | 'enact';
+export type VoteType = 'own' | 'delegated';
+
+export const voteModeDict = {
+  yay: 'Yes',
+  nay: 'No',
+  enact: 'Enact',
+};

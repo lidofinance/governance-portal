@@ -59,6 +59,7 @@ import {
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
 import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
 
 type Props = {
   id: number;
@@ -404,7 +405,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
     );
   }
 
-  const calls = proposal.proposalDetails?.calls || [];
+  const calls = (proposal.proposalDetails?.calls as BaseCall[]) || [];
+  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
 
   return (
     <ProposalContainer>
@@ -522,7 +524,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
       {calls && calls.length > 0 && (
         <Box marginTop={30}>
-          <Script rawCalls={calls} />
+          <Script decodedCalls={decodedEvmScriptCalls} />
         </Box>
       )}
 

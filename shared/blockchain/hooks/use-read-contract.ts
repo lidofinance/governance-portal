@@ -33,8 +33,9 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
             args,
           });
         } catch (error) {
+          console.error(error);
           console.debug(
-            `Error reading contract ${address}.${String(functionName)}`,
+            `Error reading contract ${address}.${String(functionName)}, args: ${args}`,
           );
           return null as any;
         }
