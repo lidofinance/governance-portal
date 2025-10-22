@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { DaoToken } from 'shared/blockchain/contract-addresses';
 import { createPublicClient, http } from 'viem';
-import * as wagmiChains from 'viem/chains';
 import {
   Block,
   Container,
@@ -24,14 +23,7 @@ import { CheckboxWrapper, DescriptionText, DescriptionTitle } from './style';
 import { useTestContractsInfo } from './use-test-contracts-info';
 import { Text } from 'shared/components/text';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-
-const wagmiChainMap = Object.values(wagmiChains).reduce(
-  (acc, chain) => {
-    acc[chain.id] = chain;
-    return acc;
-  },
-  {} as Record<number, wagmiChains.Chain>,
-);
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const Actions = ({ children }: { children: React.ReactNode }) => (
   <Box display="flex" gap={12} marginTop="24px">
@@ -119,19 +111,13 @@ export const SettingsForm = () => {
       if (!isUrl(rpcUrl)) return 'Given string is not valid url';
 
       try {
-        const chain = wagmiChainMap[chainId];
-        if (!chain) {
-          return `Unsupported chain ID: ${chainId}`;
-        }
-
         const testClient = createPublicClient({
           transport: http(rpcUrl),
-          chain,
         });
 
         const networkChainId = await testClient.getChainId();
         if (networkChainId !== chainId) {
-          return `URL is working, but network does not match to ${chain.name}`;
+          return `URL is working, but network does not match to ${CHAINS[chainId]}`;
         }
 
         await testClient.getBlockNumber();
@@ -164,12 +150,8 @@ export const SettingsForm = () => {
               typeof daoTokenAddress === 'object' &&
               daoTokenAddress !== null
             ) {
-              // Use current form value for useTestContracts, not saved config
-              const currentUseTestContracts = isTestnet
-                ? useTestContracts
-                : false;
               daoTokenAddress =
-                daoTokenAddress[currentUseTestContracts ? 'test' : 'actual'];
+                daoTokenAddress[useTestContracts ? 'test' : 'actual'];
             }
 
             const addressToUse =
@@ -191,7 +173,7 @@ export const SettingsForm = () => {
         }, 500);
       });
     },
-    [chainId, isTestnet, useTestContracts],
+    [chainId, useTestContracts],
   );
 
   const saveSettings = useCallback(
@@ -224,9 +206,8 @@ export const SettingsForm = () => {
     ToastSuccess('Settings have been reset');
   }, [setValue, saveSettings, getValues]);
 
-  const disableButton = useMemo(() => {
-    return formState.isSubmitting || !hasChanges || !formState.isValid;
-  }, [formState.isSubmitting, hasChanges, formState.isValid]);
+  const disableButton =
+    formState.isSubmitting || !hasChanges || !formState.isValid;
 
   return (
     <Container as="main" size="tight">

@@ -58,7 +58,7 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
-import { getContractAddress } from 'utils/get-contract-address';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
 
 type Props = {
   id: number;
@@ -353,14 +353,15 @@ export const ProposalFullInfo = ({ id }: Props) => {
       // Three ranges for log fetching to expand the search window up to ~15000 blocks
       const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
 
+      const emergencyProtectedTimelockAddress = getContractAddress(
+        EmergencyProtectedTimelock,
+        chainId,
+      );
+
       // Fetch logs for each block range
       const logsPromises = ranges.map((range) => {
-        const contractAddress = getContractAddress(
-          EmergencyProtectedTimelock.chainAddressMap[chainId],
-          chainId,
-        );
         return rpcProvider.getLogs({
-          address: contractAddress,
+          address: emergencyProtectedTimelockAddress,
           event: eventAbi,
           fromBlock: range.fromBlock,
           toBlock: range.toBlock,

@@ -9,7 +9,7 @@ import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { findAbiItem } from '../find-abi-item';
 import invariant from 'tiny-invariant';
-import { getContractAddressLowerCase } from '../get-contract-address';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
 
 type Props = {
   client: PublicClient;
@@ -29,11 +29,7 @@ export const isAragonProposal = async ({
     hash: proposalLog.transactionHash,
   });
 
-  const contractAddressConfig = Voting.chainAddressMap[chainId];
-  const aragonAddress = getContractAddressLowerCase(
-    contractAddressConfig,
-    chainId,
-  );
+  const aragonAddress = getContractAddress(Voting, chainId);
 
   if (!aragonAddress) {
     console.warn(`No Aragon voting contract address for chainId: ${chainId}`);

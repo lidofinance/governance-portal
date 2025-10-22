@@ -10,7 +10,7 @@ import { ContractObject } from '../types';
 import { getContractAddress } from '../get-contract-address';
 import { readContract } from 'viem/actions';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useConfig } from '../../../config';
+import { useConfig } from 'config';
 import { isTestnet as getIsTestnet } from '../utils/is-testnet';
 
 export const useReadContractGetter = <T extends Abi>(abi: T) => {
