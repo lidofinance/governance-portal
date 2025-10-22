@@ -15,8 +15,9 @@ import * as ADDR from 'shared/blockchain/contract-addresses';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { fetcherEtherscan } from '../../utils/fetcherEtherscan';
-import { useConfig } from '../../config';
+import { fetcherEtherscan } from 'utils/fetcherEtherscan';
+import { useConfig } from 'config';
+import { Address, createPublicClient, getContract, http } from 'viem';
 
 type ContractName = keyof typeof ADDR;
 
@@ -124,15 +125,23 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
             '__Proxy_implementation',
             'proxy__getImplementation',
           ],
-          loadImplAddress(_proxyAddress, _abiElement) {
-            // TODO: Implement proxy resolution
-            return Promise.resolve('');
-            // const contract = new Contract(
-            //   proxyAddress,
-            //   [abiElement],
-            //   rpcProvider,
-            // );
-            // return contract[abiElement.name]();
+          loadImplAddress: async (_proxyAddress, _abiElement) => {
+            try {
+              const publicClient = createPublicClient({
+                transport: http(rpcUrl),
+              });
+
+              const contract = getContract({
+                address: _proxyAddress as Address,
+                abi: [_abiElement],
+                client: publicClient,
+              });
+
+              const result = await contract.read[_abiElement.name]();
+              return typeof result === 'string' ? result : undefined;
+            } catch (error) {
+              return undefined;
+            }
           },
         }),
       ],

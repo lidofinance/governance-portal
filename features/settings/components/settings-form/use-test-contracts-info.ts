@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useLidoSDK } from '../../../../providers/lido-sdk';
+import { useLidoSDK } from 'providers/lido-sdk';
 import * as ADDR from 'shared/blockchain/contract-addresses';
 
 type ContractName = keyof typeof ADDR;
