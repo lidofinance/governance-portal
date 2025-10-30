@@ -39,9 +39,14 @@ const allowedLogContracts = (chainId: CHAINS) => {
     if (
       contractAddress &&
       typeof contractAddress === 'object' &&
-      'actual' in contractAddress
+      ('actual' in contractAddress || 'test' in contractAddress)
     ) {
-      hardcodedAddresses.push(contractAddress.actual);
+      if ('actual' in contractAddress && contractAddress.actual) {
+        hardcodedAddresses.push(contractAddress.actual);
+      }
+      if ('test' in contractAddress && contractAddress.test) {
+        hardcodedAddresses.push(contractAddress.test);
+      }
     } else {
       hardcodedAddresses.push(contractAddress);
     }

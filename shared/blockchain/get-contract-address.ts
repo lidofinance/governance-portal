@@ -8,7 +8,7 @@ export const getContractAddress = (
   chainId: CHAINS,
   isInTestMode?: boolean,
 ): Address => {
-  const address = contract.chainAddressMap[chainId];
+  const address = contract?.chainAddressMap?.[chainId];
 
   if (!address) {
     throw new Error(

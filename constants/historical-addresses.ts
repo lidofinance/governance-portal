@@ -16,6 +16,7 @@ export const HISTORICAL_ADDRESSES = {
     escrowAddresses: [
       '0x0ab2ebf304e41bcc5db37bf0a3fdb83faa19324e',
       '0x781afe6c8d768ceaa9a97f2a75714e80ae0e83b9',
+      '0xf41BF095A14b18ec6213586D9Fa91c0aB9825B89', // test VS address
     ],
   },
   [CHAINS.Mainnet]: {

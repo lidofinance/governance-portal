@@ -20,6 +20,7 @@ import {
 import { useDelegateFormPublicListUpdate } from '../hooks/use-delegate-form-public-list-update';
 import { useDelegationFormValidationContext } from '../hooks/use-delegation-form-validation-context';
 import { DelegationFormValidationResolver } from '../components/delegation-form/delegation-form-validators';
+import { Address } from 'viem';
 
 const DelegationFormContext = createContext<
   DelegationFormContextValue | undefined
@@ -125,7 +126,7 @@ export const DelegationFormProvider: FC<DelegationFormProviderProps> = ({
     (): FormControllerContextValueType<DelegationFormInput> => ({
       onSubmit: processDelegation,
       onReset: () => {
-        reset({ delegateAddress: null });
+        reset({ delegateAddress: '' as Address });
       },
       retryEvent,
     }),

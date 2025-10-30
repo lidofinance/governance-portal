@@ -1,12 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  FC,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import { createContext, FC, useCallback, useContext } from 'react';
 import invariant from 'tiny-invariant';
 import { useAccount } from 'wagmi';
 import { useVote } from '../hooks/use-vote';
@@ -23,8 +15,6 @@ type Value = {
   voteId: bigint;
   handleDelegatedVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
   handleOwnVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
-  currentMode: VoteMode;
-  setCurrentMode: Dispatch<SetStateAction<VoteMode>>;
 } | null;
 
 type VoteActionsProviderProps = {
@@ -56,8 +46,6 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   const { isConnected, address: accountAddress } = useAccount();
   const { chainId } = useLidoSDK();
 
-  const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
-
   const onOwnVoteSubmit = useCallback(
     async (mode: VoteMode) => {
       try {
@@ -71,7 +59,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           return true;
         }
 
-        txModalStages.pending(currentMode, txHash);
+        txModalStages.pending(mode, txHash);
 
         const response = await waitForTx(txHash);
 
@@ -80,23 +68,29 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           return;
         }
 
+        let updatedVoteData = voteData;
         if (voteData?.refetch) {
-          await voteData.refetch();
+          const refetchResult = await voteData.refetch();
+          updatedVoteData = refetchResult.data || voteData;
+
           await queryClient.invalidateQueries({
             queryKey: ['vote', String(voteId), chainId, accountAddress],
           });
         }
 
         txModalStages.success({
-          mode: currentMode,
+          mode,
           txHash,
           onVoteWithOwnTokens: onOwnVoteSubmit,
-          onVoteWithRemainingDelegated: onDelegateVoteSubmit,
-          voteEvents: voteData?.voteEvents,
-          votePhase: voteData?.phase,
-          votePower: voteData?.votePowerWei || 0n,
+          onVoteWithRemainingDelegated: (
+            selectedVoters: Address[],
+            voteMode: VoteMode,
+          ) => onDelegateVoteSubmit(voteMode, selectedVoters),
+          voteEvents: updatedVoteData?.voteEvents,
+          votePhase: updatedVoteData?.phase,
+          votePower: updatedVoteData?.votePowerWei || 0n,
           voteId: BigInt(voteId),
-          title: `You voted "${voteModeDict[currentMode]}"`,
+          title: `You voted "${voteModeDict[mode]}"`,
         });
       } catch (error) {
         console.error('Error during vote:', error);
@@ -105,11 +99,10 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         );
       }
     },
-    //eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       accountAddress,
       chainId,
-      currentMode,
       isMultisig,
       queryClient,
       txModalStages,
@@ -121,7 +114,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   );
 
   const onDelegateVoteSubmit = useCallback(
-    async (voters: Address[]) => {
+    async (mode: VoteMode, voters: Address[]) => {
       if (!isConnected) {
         txModalStages.failed(new Error('Please connect your wallet to vote'));
         return;
@@ -129,7 +122,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
 
       try {
         const txHash = await voteDelegatedTxSender({
-          mode: currentMode,
+          mode,
           voteId: BigInt(voteId),
           voters,
         });
@@ -139,7 +132,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           return true;
         }
 
-        txModalStages.pending(currentMode, txHash);
+        txModalStages.pending(mode, txHash);
 
         const response = await waitForTx(txHash);
 
@@ -148,23 +141,29 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           return;
         }
 
+        let updatedVoteData = voteData;
         if (voteData?.refetch) {
-          await voteData.refetch();
+          const refetchResult = await voteData.refetch();
+          updatedVoteData = refetchResult.data || voteData;
+
           await queryClient.invalidateQueries({
             queryKey: ['vote', String(voteId), chainId, accountAddress],
           });
         }
 
         txModalStages.success({
-          mode: currentMode,
+          mode,
           txHash,
           onVoteWithOwnTokens: onOwnVoteSubmit,
-          onVoteWithRemainingDelegated: onDelegateVoteSubmit,
-          voteEvents: voteData?.voteEvents,
-          votePhase: voteData?.phase,
-          votePower: voteData?.votePowerWei || 0n,
+          onVoteWithRemainingDelegated: (
+            selectedVoters: Address[],
+            voteMode: VoteMode,
+          ) => onDelegateVoteSubmit(voteMode, selectedVoters),
+          voteEvents: updatedVoteData?.voteEvents,
+          votePhase: updatedVoteData?.phase,
+          votePower: updatedVoteData?.votePowerWei || 0n,
           voteId: BigInt(voteId),
-          title: `You voted "${voteModeDict[currentMode]}" as a Delegate`,
+          title: `You voted "${voteModeDict[mode]}" as a Delegate`,
         });
       } catch (error) {
         console.error('Error during delegated vote:', error);
@@ -177,7 +176,6 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
       isConnected,
       txModalStages,
       voteDelegatedTxSender,
-      currentMode,
       voteId,
       isMultisig,
       waitForTx,
@@ -196,12 +194,10 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         return;
       }
 
-      setCurrentMode(mode);
-
       txModalStages.confirm({
         mode,
         voteId: BigInt(voteId),
-        onSubmit: onDelegateVoteSubmit,
+        onSubmit: (voters: Address[]) => onDelegateVoteSubmit(mode, voters),
       });
     },
     [isConnected, txModalStages, voteId, onDelegateVoteSubmit],
@@ -213,8 +209,6 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         txModalStages.failed(new Error('Please connect your wallet to vote'));
         return;
       }
-
-      setCurrentMode(mode);
 
       txModalStages.sign({
         mode,
@@ -231,8 +225,6 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         voteId: BigInt(voteId),
         handleDelegatedVote,
         handleOwnVote,
-        currentMode,
-        setCurrentMode,
       }}
     >
       {children}

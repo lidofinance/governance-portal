@@ -41,7 +41,7 @@ const LayoutVariants = {
     background-color: var(--layout-background-cooldown);
   `,
   [VisibleGovernanceState.Loading]: css`
-    background-color: var(--layout-background-default);
+    background-color: var(--layout-background-normal);
   `,
   [VisibleGovernanceState.Emergency]: css`
     background-color: var(--layout-background-blocked);
