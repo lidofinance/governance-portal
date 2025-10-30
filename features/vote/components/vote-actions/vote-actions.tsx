@@ -16,8 +16,9 @@ export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { voteData } = useVoteContext();
 
-  const { handleDelegatedVote, handleOwnVote, currentMode, setCurrentMode } =
-    useVoteActionsContext();
+  const { handleDelegatedVote, handleOwnVote } = useVoteActionsContext();
+
+  const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 
   const nayButtonRef = useRef(null);
   const yayButtonRef = useRef(null);

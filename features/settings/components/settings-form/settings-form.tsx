@@ -207,7 +207,7 @@ export const SettingsForm = () => {
   }, [setValue, saveSettings, getValues]);
 
   const disableButton =
-    formState.isSubmitting || !hasChanges || !formState.isValid;
+    !hasChanges || formState.isSubmitting || !formState.isValid;
 
   return (
     <Container as="main" size="tight">

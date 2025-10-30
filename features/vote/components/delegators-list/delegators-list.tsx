@@ -104,14 +104,18 @@ export const DelegatorsList = () => {
           {data.notFetchedDelegatorsCount} more delegator
           {data.notFetchedDelegatorsCount > 1 ? 's' : ''} who were not included
           in the list. To see all your delegators, use the{' '}
-          <Link
-            href={
-              getEtherscanAddressLink(chainId, votingContractAddress) +
-              '#readProxyContract'
-            }
-          >
-            Voting contract
-          </Link>
+          {votingContractAddress ? (
+            <Link
+              href={
+                getEtherscanAddressLink(chainId, votingContractAddress) +
+                '#readProxyContract'
+              }
+            >
+              Voting contract
+            </Link>
+          ) : (
+            'Voting contract'
+          )}
           . If needed, contact the{' '}
           <ExternalLink href={DAO_OPS_FORUM_LINK}>DAO Ops </ExternalLink> on the
           forum for assistance.

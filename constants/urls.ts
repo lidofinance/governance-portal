@@ -1,7 +1,8 @@
 // TODO: path + basePath
 export const HOME_PATH = '/';
 export const SETTINGS_PATH = '/settings';
-export const PROPOSALS_PATH = '/proposals';
+export const PROPOSALS_PATH = '/governance/proposals';
+export const GOVERNANCE = '/governance';
 
 // Vote paths
 export const VOTE_PATH = '/vote';

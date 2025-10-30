@@ -7,7 +7,6 @@ import {
   EventStartVote,
   getEventStartVote,
 } from 'shared/votes/utils/get-event-start-vote';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
 import { useAccount, usePublicClient } from 'wagmi';
 import invariant from 'tiny-invariant';
 import { parseVote } from 'shared/votes/utils/parse-vote';
@@ -22,6 +21,7 @@ import {
   VoterState,
   VoteStatus,
 } from 'shared/votes/types';
+import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 
 type Args = {
   voteId: bigint;
@@ -55,12 +55,12 @@ export type UseVoteReturnType = {
 
 export const useVote = ({ voteId }: Args): UseVoteReturnType => {
   const { chainId } = useLidoSDK();
-  const client = usePublicClient();
+  const client = usePublicClient({ chainId });
   const { address: accountAddress } = useAccount();
 
   const votingContract = useReadContract(Voting);
   const daoTokenContract = useReadContract(DaoToken);
-  const votingContractAddress = getContractAddress(Voting, chainId);
+  const votingContractAddress = useContractAddress(Voting);
 
   const {
     data: voteData,

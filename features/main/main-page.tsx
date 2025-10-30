@@ -19,6 +19,8 @@ import { DelegateCta } from './delegate-cta';
 import { ActionCard } from './action-card';
 import { AppsWrapper, ProposalsWrapper, ResourcesWrapper } from './style';
 import { ResourceCard } from './resource-card';
+import { VOTE_DASHBOARD_INDEX_PATH, GOVERNANCE } from 'constants/urls';
+import { Link } from '@lidofinance/lido-ui';
 
 // const InDgReviewAddon = ({ proposalId }: { proposalId: number }) => {
 //   return (
@@ -50,26 +52,30 @@ export const MainPage = () => {
             </Text>
           }
         />
-        <ActionCard
-          icon={<AragonIcon />}
-          // addon={<Chip variant="positive">Live</Chip>}
-          title={<Text size={28}>Onchain</Text>}
-          description={
-            <Text size={16} color="secondary">
-              Approve or reject execution of the protocol changes
-            </Text>
-          }
-        />
-        <ActionCard
-          icon={<DualGovernanceIcon />}
-          // addon={<InDgReviewAddon proposalId={12} />}
-          title={<Text size={28}>Dual Governance</Text>}
-          description={
-            <Text size={16} color="secondary">
-              Review and oppose LDO-governance decisions as a stETH holder
-            </Text>
-          }
-        />
+        <Link href={VOTE_DASHBOARD_INDEX_PATH}>
+          <ActionCard
+            icon={<AragonIcon />}
+            // addon={<Chip variant="positive">Live</Chip>}
+            title={<Text size={28}>Onchain</Text>}
+            description={
+              <Text size={16} color="secondary">
+                Approve or reject execution of the protocol changes
+              </Text>
+            }
+          />
+        </Link>
+        <Link href={GOVERNANCE}>
+          <ActionCard
+            icon={<DualGovernanceIcon />}
+            // addon={<InDgReviewAddon proposalId={12} />}
+            title={<Text size={28}>Dual Governance</Text>}
+            description={
+              <Text size={16} color="secondary">
+                Review and oppose LDO-governance decisions as a stETH holder
+              </Text>
+            }
+          />
+        </Link>
         <ActionCard
           icon={<LidoBlueIcon />}
           // addon={<Chip variant="positive">Live</Chip>}

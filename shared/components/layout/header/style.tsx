@@ -128,6 +128,8 @@ export const HeaderControlButton = styled(Button).attrs({
   font-size: 0;
   border: 1px solid var(--custom-border);
   fill: var(--lido-color-secondary);
+  width: 48px;
+  height: 48px;
 
   &:hover {
     background-color: transparent !important;

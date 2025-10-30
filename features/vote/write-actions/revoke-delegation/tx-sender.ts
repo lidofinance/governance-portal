@@ -15,6 +15,14 @@ export const useRevokeDelegationTxSender = () => {
 
   return useCallback(
     async (type: DelegationType) => {
+      invariant(
+        snapshotContractAddress,
+        'snapshotContractAddress must be presented',
+      );
+      invariant(
+        votingContractAddress,
+        'snapshotContractAddress must be presented',
+      );
       invariant(type === 'Aragon' || type === 'Snapshot', 'type must be valid');
 
       if (type === 'Snapshot') {
