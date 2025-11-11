@@ -5,7 +5,7 @@ import { useTokenContractObject } from 'shared/blockchain/hooks/use-token-contra
 import { zeroAddress } from 'viem';
 import { useEscrowContext } from 'providers/escrow';
 import { Token } from 'shared/blockchain/types';
-import { escrowAbi } from 'abi/ts';
+import { escrowAbi } from 'abi/generated';
 
 // Fallbacks
 const GAS_ESTIMATES = {

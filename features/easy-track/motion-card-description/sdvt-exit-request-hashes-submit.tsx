@@ -1,18 +1,16 @@
 import { SubmitExitRequestHashesAbi } from 'generated';
-import { useNodeOperatorsList } from 'modules/motions/hooks';
+import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 import { NestProps } from './types';
 
-// SDVTSubmitExitRequestHashes
-export function SdvtExitRequestHashesSubmit({
+export const SdvtExitRequestHashesSubmit = ({
   callData,
-}: NestProps<SubmitExitRequestHashesAbi['decodeEVMScriptCallData']>) {
+}: NestProps<SubmitExitRequestHashesAbi['decodeEVMScriptCallData']>) => {
   const { data: nodeOperators } = useNodeOperatorsList('sdvt');
 
   const groupedCallDataMap = callData.reduce(
     (acc, item) => {
       const nodeOperatorId = item.nodeOpId.toNumber();
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[nodeOperatorId]) {
         acc[nodeOperatorId] = [];
       }
@@ -56,4 +54,4 @@ export function SdvtExitRequestHashesSubmit({
       })}
     </div>
   );
-}
+};

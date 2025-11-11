@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount, useWatchContractEvent } from 'wagmi';
-import { escrowAbi } from 'abi/ts';
+import { escrowAbi } from 'abi/generated';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useState } from 'react';
 import { useEscrowContext } from 'providers/escrow';

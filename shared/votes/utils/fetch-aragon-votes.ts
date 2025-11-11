@@ -1,4 +1,4 @@
-import { votingAbi } from 'abi/ts';
+import { votingAbi } from 'abi/generated';
 import { Vote, VoteStatus } from '../types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { PublicClient } from 'viem';

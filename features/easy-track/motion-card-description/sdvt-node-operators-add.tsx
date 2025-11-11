@@ -1,11 +1,10 @@
 import { AddNodeOperatorsAbi } from 'generated';
 import { NestProps } from './types';
-import { AddressInlineWithPop } from 'modules/shared/ui/Common/AddressInlineWithPop';
+import { AddressInlineWithPop } from 'shared/components/address-pop';
 
-// AddNodeOperators
-export function SdvtNodeOperatorsAdd({
+export const SdvtNodeOperatorsAdd = ({
   callData,
-}: NestProps<AddNodeOperatorsAbi['decodeEVMScriptCallData']>) {
+}: NestProps<AddNodeOperatorsAbi['decodeEVMScriptCallData']>) => {
   const { nodeOperators, nodeOperatorsCount } = callData;
   return (
     <>
@@ -23,4 +22,4 @@ export function SdvtNodeOperatorsAdd({
       })}
     </>
   );
-}
+};

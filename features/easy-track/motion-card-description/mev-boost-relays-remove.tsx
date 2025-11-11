@@ -1,12 +1,11 @@
-import { RemoveMEVBoostRelaysAbi } from 'generated';
-import { useMEVBoostRelays } from 'modules/motions/hooks/useMEVBoostRelays';
-import { NestProps } from './types';
+import { removeMevBoostRelaysAbi } from 'abi/generated/RemoveMEVBoostRelays';
+import { useMEVBoostRelays } from '../hooks/use-mev-boost-relays';
+import { MotionDescriptionProps } from './types';
 
-// RemoveMEVBoostRelays
-export function MevBoostRelaysRemove({
+export const MEVBoostRelaysRemove = ({
   callData,
   isOnChain,
-}: NestProps<RemoveMEVBoostRelaysAbi['decodeEVMScriptCallData']>) {
+}: MotionDescriptionProps<typeof removeMevBoostRelaysAbi>) => {
   const { relaysMap, isRelaysDataLoading } = useMEVBoostRelays();
 
   if (isRelaysDataLoading) {
@@ -32,4 +31,4 @@ export function MevBoostRelaysRemove({
       </ul>
     </>
   );
-}
+};

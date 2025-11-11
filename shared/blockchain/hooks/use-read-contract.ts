@@ -44,7 +44,20 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
   );
 };
 
-export const useReadContract = <T extends Abi>(contract: ContractObject<T>) => {
+type ReadContractFunction<T extends Abi> = <
+  F extends ContractFunctionName<T, 'pure' | 'view'>,
+  A extends ContractFunctionArgs<T, 'pure' | 'view', F>,
+>(
+  functionName: F,
+  args?: A,
+) => Promise<ReadContractReturnType<T, F>>;
+
+export const useReadContract = <T extends Abi>(
+  contract: ContractObject<T>,
+): {
+  address: Address;
+  readContract: ReadContractFunction<T>;
+} => {
   const { chainId } = useLidoSDK();
   const { userConfig } = useConfig();
 

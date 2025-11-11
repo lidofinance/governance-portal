@@ -1,12 +1,11 @@
 import { SetNodeOperatorNamesAbi } from 'generated';
 import { NestProps } from './types';
-import { useNodeOperatorsList } from 'modules/motions/hooks';
+import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
-// SetNodeOperatorNames
-export function SdvtNodeOperatorNamesSet({
+export const SdvtNodeOperatorNamesSet = ({
   callData,
   isOnChain,
-}: NestProps<SetNodeOperatorNamesAbi['decodeEVMScriptCallData']>) {
+}: NestProps<SetNodeOperatorNamesAbi['decodeEVMScriptCallData']>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
@@ -24,4 +23,4 @@ export function SdvtNodeOperatorNamesSet({
       })}
     </>
   );
-}
+};

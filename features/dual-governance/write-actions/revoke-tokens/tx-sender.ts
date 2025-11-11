@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
-import { escrowAbi } from 'abi/ts';
+import { escrowAbi } from 'abi/generated';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useEscrowContext } from 'providers/escrow';
 import { EscrowActionArgs } from 'features/dual-governance/types';

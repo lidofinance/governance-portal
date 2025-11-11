@@ -1,97 +1,97 @@
 import { useMemo } from 'react';
+
+import { MotionType } from 'features/easy-track/motion-types';
 import {
-  ContractLegoLDORegistry,
-  ContractLegoStablesRegistry,
-  ContractPmlStablesRegistry,
-  ContractAtcStablesRegistry,
-  ContractGasFunderETHRegistry,
-  ContractAllowedRecipientRegistry,
-  ContractAllowedRecipientReferralDaiRegistry,
-  ContractAllowedRecipientTrpLdoRegistry,
-  ContractStethRewardProgramRegistry,
-  ContractStethGasSupplyRegistry,
-  ContractRewardsShareProgramRegistry,
-  ContractRccStablesRegistry,
-  ContractSandboxStablesAllowedRecipientRegistry,
-  ContractRccStethAllowedRecipientsRegistry,
-  ContractPmlStethAllowedRecipientsRegistry,
-  ContractAtcStethAllowedRecipientsRegistry,
-  ContractStonksStethAllowedRecipientsRegistry,
-  ContractStonksStablesAllowedRecipientsRegistry,
-  ContractAllianceOpsStablesAllowedRecipientsRegistry,
-  ContractEcosystemOpsStablesAllowedRecipientsRegistry,
-  ContractEcosystemOpsStethAllowedRecipientsRegistry,
-  ContractLabsOpsStablesAllowedRecipientsRegistry,
-  ContractLabsOpsStethAllowedRecipientsRegistry,
-} from 'modules/blockChain/contracts';
-import { MotionType } from 'modules/motions/types';
+  AllianceOpsStablesAllowedRecipientsRegistry,
+  AllowedRecipientReferralDaiRegistry,
+  AllowedRecipientRegistry,
+  AllowedRecipientTrpLdoRegistry,
+  AtcStablesRegistry,
+  AtcStethAllowedRecipientsRegistry,
+  EcosystemOpsStablesAllowedRecipientsRegistry,
+  EcosystemOpsStethAllowedRecipientsRegistry,
+  GasFunderETHRegistry,
+  LabsOpsStablesAllowedRecipientsRegistry,
+  LabsOpsStethAllowedRecipientsRegistry,
+  LegoLDORegistry,
+  LegoStablesRegistry,
+  PmlStablesRegistry,
+  PmlStethAllowedRecipientsRegistry,
+  RccStablesRegistry,
+  RccStethAllowedRecipientsRegistry,
+  RewardsShareProgramRegistry,
+  SandboxStablesAllowedRecipientRegistry,
+  StethGasSupplyRegistry,
+  StethRewardProgramRegistry,
+  StonksStablesAllowedRecipientsRegistry,
+  StonksStethAllowedRecipientsRegistry,
+} from 'shared/blockchain/contracts';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { Address } from 'viem';
+import { usePeriodLimitsInfo } from './use-period-limits-info';
 
-import { usePeriodLimitsInfo } from './usePeriodLimitsInfo';
-
-type AllowedRecipient = {
+export type AllowedRecipient = {
   title: string;
   address: string;
 };
 
 export const REGISTRY_WITH_LIMITS_BY_MOTION_TYPE = {
-  [MotionType.LegoLDOTopUp]: ContractLegoLDORegistry,
-  [MotionType.LegoDAITopUp]: ContractLegoStablesRegistry,
-  [MotionType.RccDAITopUp]: ContractRccStablesRegistry,
-  [MotionType.PmlDAITopUp]: ContractPmlStablesRegistry,
-  [MotionType.AtcDAITopUp]: ContractAtcStablesRegistry,
-  [MotionType.GasFunderETHTopUp]: ContractGasFunderETHRegistry,
-  [MotionType.AllowedRecipientTopUp]: ContractAllowedRecipientRegistry,
-  [MotionType.AllowedRecipientRemove]: ContractAllowedRecipientRegistry,
-  [MotionType.AllowedRecipientAdd]: ContractAllowedRecipientRegistry,
+  [MotionType.LegoLDOTopUp]: LegoLDORegistry,
+  [MotionType.LegoDAITopUp]: LegoStablesRegistry,
+  [MotionType.RccDAITopUp]: RccStablesRegistry,
+  [MotionType.PmlDAITopUp]: PmlStablesRegistry,
+  [MotionType.AtcDAITopUp]: AtcStablesRegistry,
+  [MotionType.GasFunderETHTopUp]: GasFunderETHRegistry,
+  [MotionType.AllowedRecipientTopUp]: AllowedRecipientRegistry,
+  [MotionType.AllowedRecipientRemove]: AllowedRecipientRegistry,
+  [MotionType.AllowedRecipientAdd]: AllowedRecipientRegistry,
   [MotionType.AllowedRecipientTopUpReferralDai]:
-    ContractAllowedRecipientReferralDaiRegistry,
+    AllowedRecipientReferralDaiRegistry,
   [MotionType.AllowedRecipientRemoveReferralDai]:
-    ContractAllowedRecipientReferralDaiRegistry,
+    AllowedRecipientReferralDaiRegistry,
   [MotionType.AllowedRecipientAddReferralDai]:
-    ContractAllowedRecipientReferralDaiRegistry,
-  [MotionType.AllowedRecipientTopUpTrpLdo]:
-    ContractAllowedRecipientTrpLdoRegistry,
-  [MotionType.StethRewardProgramAdd]: ContractStethRewardProgramRegistry,
-  [MotionType.StethRewardProgramRemove]: ContractStethRewardProgramRegistry,
-  [MotionType.StethRewardProgramTopUp]: ContractStethRewardProgramRegistry,
-  [MotionType.StethGasSupplyAdd]: ContractStethGasSupplyRegistry,
-  [MotionType.StethGasSupplyRemove]: ContractStethGasSupplyRegistry,
-  [MotionType.StethGasSupplyTopUp]: ContractStethGasSupplyRegistry,
-  [MotionType.RewardsShareProgramAdd]: ContractRewardsShareProgramRegistry,
-  [MotionType.RewardsShareProgramRemove]: ContractRewardsShareProgramRegistry,
-  [MotionType.RewardsShareProgramTopUp]: ContractRewardsShareProgramRegistry,
-  [MotionType.RccStablesTopUp]: ContractRccStablesRegistry,
-  [MotionType.PmlStablesTopUp]: ContractPmlStablesRegistry,
-  [MotionType.AtcStablesTopUp]: ContractAtcStablesRegistry,
-  [MotionType.SandboxStablesAdd]:
-    ContractSandboxStablesAllowedRecipientRegistry,
-  [MotionType.SandboxStablesRemove]:
-    ContractSandboxStablesAllowedRecipientRegistry,
-  [MotionType.SandboxStablesTopUp]:
-    ContractSandboxStablesAllowedRecipientRegistry,
-  [MotionType.RccStethTopUp]: ContractRccStethAllowedRecipientsRegistry,
-  [MotionType.PmlStethTopUp]: ContractPmlStethAllowedRecipientsRegistry,
-  [MotionType.AtcStethTopUp]: ContractAtcStethAllowedRecipientsRegistry,
-  [MotionType.LegoStablesTopUp]: ContractLegoStablesRegistry,
-  [MotionType.StonksStethTopUp]: ContractStonksStethAllowedRecipientsRegistry,
-  [MotionType.StonksStablesTopUp]:
-    ContractStonksStablesAllowedRecipientsRegistry,
+    AllowedRecipientReferralDaiRegistry,
+  [MotionType.AllowedRecipientTopUpTrpLdo]: AllowedRecipientTrpLdoRegistry,
+  [MotionType.StethRewardProgramAdd]: StethRewardProgramRegistry,
+  [MotionType.StethRewardProgramRemove]: StethRewardProgramRegistry,
+  [MotionType.StethRewardProgramTopUp]: StethRewardProgramRegistry,
+  [MotionType.StethGasSupplyAdd]: StethGasSupplyRegistry,
+  [MotionType.StethGasSupplyRemove]: StethGasSupplyRegistry,
+  [MotionType.StethGasSupplyTopUp]: StethGasSupplyRegistry,
+  [MotionType.RewardsShareProgramAdd]: RewardsShareProgramRegistry,
+  [MotionType.RewardsShareProgramRemove]: RewardsShareProgramRegistry,
+  [MotionType.RewardsShareProgramTopUp]: RewardsShareProgramRegistry,
+  [MotionType.RccStablesTopUp]: RccStablesRegistry,
+  [MotionType.PmlStablesTopUp]: PmlStablesRegistry,
+  [MotionType.AtcStablesTopUp]: AtcStablesRegistry,
+  [MotionType.SandboxStablesAdd]: SandboxStablesAllowedRecipientRegistry,
+  [MotionType.SandboxStablesRemove]: SandboxStablesAllowedRecipientRegistry,
+  [MotionType.SandboxStablesTopUp]: SandboxStablesAllowedRecipientRegistry,
+  [MotionType.RccStethTopUp]: RccStethAllowedRecipientsRegistry,
+  [MotionType.PmlStethTopUp]: PmlStethAllowedRecipientsRegistry,
+  [MotionType.AtcStethTopUp]: AtcStethAllowedRecipientsRegistry,
+  [MotionType.LegoStablesTopUp]: LegoStablesRegistry,
+  [MotionType.StonksStethTopUp]: StonksStethAllowedRecipientsRegistry,
+  [MotionType.StonksStablesTopUp]: StonksStablesAllowedRecipientsRegistry,
   [MotionType.AllianceOpsStablesTopUp]:
-    ContractAllianceOpsStablesAllowedRecipientsRegistry,
+    AllianceOpsStablesAllowedRecipientsRegistry,
   [MotionType.EcosystemOpsStablesTopUp]:
-    ContractEcosystemOpsStablesAllowedRecipientsRegistry,
+    EcosystemOpsStablesAllowedRecipientsRegistry,
   [MotionType.EcosystemOpsStethTopUp]:
-    ContractEcosystemOpsStethAllowedRecipientsRegistry,
-  [MotionType.LabsOpsStablesTopUp]:
-    ContractLabsOpsStablesAllowedRecipientsRegistry,
-  [MotionType.LabsOpsStethTopUp]: ContractLabsOpsStethAllowedRecipientsRegistry,
+    EcosystemOpsStethAllowedRecipientsRegistry,
+  [MotionType.LabsOpsStablesTopUp]: LabsOpsStablesAllowedRecipientsRegistry,
+  [MotionType.LabsOpsStethTopUp]: LabsOpsStethAllowedRecipientsRegistry,
 } as const;
 
 type HookArgs = {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
 };
 
-function useRecipientMap(programs: SWRResponse<AllowedRecipient[] | null>) {
+const useRecipientMap = (
+  programs: UseQueryResult<AllowedRecipient[] | null>,
+) => {
   const result = useMemo(() => {
     if (!programs.data) return null;
     return programs.data.reduce(
@@ -104,31 +104,82 @@ function useRecipientMap(programs: SWRResponse<AllowedRecipient[] | null>) {
     ...programs,
     data: result,
   };
-}
+};
 
-export function useAllowedRecipients({ registryType }: HookArgs) {
-  const { chainId } = useWeb3();
-
-  const registry = REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType].useRpc();
-  return useSWR(
-    `allowed-recipients-${chainId}-${registry.address}`,
-    async () => {
-      const addresses = await registry.getAllowedRecipients();
-
-      return addresses.map((address) => ({ title: address, address }));
-    },
+export const useAllowedRecipients = ({ registryType }: HookArgs) => {
+  const { chainId } = useLidoSDK();
+  const registry = useReadContract(
+    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType],
   );
-}
 
-export function useRecipientMapAll({ registryType }: HookArgs) {
+  return useQuery({
+    queryKey: ['allowed-recipients', chainId, registry.address],
+    queryFn: async () => {
+      const addresses = await registry.readContract('getAllowedRecipients');
+      return addresses.map((address: Address) => ({ title: address, address }));
+    },
+  });
+};
+
+export const useRecipientMapAll = ({ registryType }: HookArgs) => {
   const partners = useAllowedRecipients({ registryType });
   return useRecipientMap(partners);
-}
+};
 
-export function usePeriodLimitsData({ registryType }: HookArgs) {
-  const registry = REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType].useRpc();
-
+export const usePeriodLimitsData = ({ registryType }: HookArgs) => {
+  const registry = useReadContract(
+    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType],
+  );
   return usePeriodLimitsInfo({
     contract: registry,
   });
-}
+};
+
+const TOKEN_BY_MOTION_TYPE: Record<
+  keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
+  { label: string; decimals: number }
+> = {
+  [MotionType.LegoLDOTopUp]: { label: 'LDO', decimals: 18 },
+  [MotionType.LegoDAITopUp]: { label: 'DAI', decimals: 18 },
+  [MotionType.RccDAITopUp]: { label: 'DAI', decimals: 18 },
+  [MotionType.PmlDAITopUp]: { label: 'DAI', decimals: 18 },
+  [MotionType.AtcDAITopUp]: { label: 'DAI', decimals: 18 },
+  [MotionType.GasFunderETHTopUp]: { label: 'ETH', decimals: 18 },
+  [MotionType.AllowedRecipientTopUp]: { label: 'LDO', decimals: 18 },
+  [MotionType.AllowedRecipientRemove]: { label: 'LDO', decimals: 18 },
+  [MotionType.AllowedRecipientAdd]: { label: 'LDO', decimals: 18 },
+  [MotionType.AllowedRecipientTopUpReferralDai]: { label: 'DAI', decimals: 18 },
+  [MotionType.AllowedRecipientRemoveReferralDai]: { label: 'DAI', decimals: 18 },
+  [MotionType.AllowedRecipientAddReferralDai]: { label: 'DAI', decimals: 18 },
+  [MotionType.AllowedRecipientTopUpTrpLdo]: { label: 'LDO', decimals: 18 },
+  [MotionType.StethRewardProgramAdd]: { label: 'stETH', decimals: 18 },
+  [MotionType.StethRewardProgramRemove]: { label: 'stETH', decimals: 18 },
+  [MotionType.StethRewardProgramTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.StethGasSupplyAdd]: { label: 'stETH', decimals: 18 },
+  [MotionType.StethGasSupplyRemove]: { label: 'stETH', decimals: 18 },
+  [MotionType.StethGasSupplyTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.RewardsShareProgramAdd]: { label: 'stETH', decimals: 18 },
+  [MotionType.RewardsShareProgramRemove]: { label: 'stETH', decimals: 18 },
+  [MotionType.RewardsShareProgramTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.RccStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.PmlStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.AtcStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.SandboxStablesAdd]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.SandboxStablesRemove]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.SandboxStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.RccStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.PmlStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.AtcStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.LegoStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.StonksStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.StonksStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.AllianceOpsStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.EcosystemOpsStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.EcosystemOpsStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.LabsOpsStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.LabsOpsStethTopUp]: { label: 'stETH', decimals: 18 },
+};
+
+export const useTokenByTopUpType = ({ registryType }: HookArgs) => {
+  return TOKEN_BY_MOTION_TYPE[registryType] || { label: 'Token', decimals: 18 };
+};

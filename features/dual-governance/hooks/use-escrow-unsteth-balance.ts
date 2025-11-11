@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { escrowAbi } from 'abi/ts';
+import { escrowAbi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
 import {

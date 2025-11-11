@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
-import { escrowAbi } from 'abi/ts';
+import { escrowAbi } from 'abi/generated';
 import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
 
 export const useWithdrawEthTxSender = () => {

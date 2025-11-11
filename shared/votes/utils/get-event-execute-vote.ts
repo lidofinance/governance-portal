@@ -1,5 +1,5 @@
 import { findAbiItem } from 'utils/find-abi-item';
-import { votingAbi } from 'abi/ts';
+import { votingAbi } from 'abi/generated';
 import { getBlock, getLogs } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
 

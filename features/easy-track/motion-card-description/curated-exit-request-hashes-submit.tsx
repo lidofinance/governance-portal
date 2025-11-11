@@ -1,12 +1,12 @@
-import { SubmitExitRequestHashesAbi } from 'generated';
-import { useNodeOperatorsList } from 'modules/motions/hooks';
-import { NestProps } from './types';
+import { Fragment } from 'react';
+import { submitExitRequestHashesAbi } from 'abi/generated/SubmitExitRequestHashes';
+import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
+import { MotionDescriptionProps } from './types';
 
-// CuratedSubmitExitRequestHashes
-export function CuratedExitRequestHashesSubmit({
+export const CuratedExitRequestHashesSubmit = ({
   callData,
-}: NestProps<SubmitExitRequestHashesAbi['decodeEVMScriptCallData']>) {
-  const nodeOperatorId = callData[0].nodeOpId.toNumber();
+}: MotionDescriptionProps<typeof submitExitRequestHashesAbi>) => {
+  const nodeOperatorId = Number(callData[0].nodeOpId);
   const { data: nodeOperators } = useNodeOperatorsList('curated');
   const nodeOperatorName = nodeOperators?.[nodeOperatorId]?.name ?? '';
 
@@ -17,11 +17,11 @@ export function CuratedExitRequestHashesSubmit({
         {nodeOperatorName} (id: {nodeOperatorId})
       </b>
       <br />
-      {callData.map((item) => {
+      {callData.map((item, index) => {
         return (
-          <>
+          <Fragment key={index}>
             <br />
-            <ul key={item.valPubKeyIndex.toString()}>
+            <ul>
               <li>
                 <b>Validator Index:</b> {item.valIndex.toString()};
               </li>
@@ -32,9 +32,9 @@ export function CuratedExitRequestHashesSubmit({
                 <b>Validator Public Key:</b> {item.valPubkey}.
               </li>
             </ul>
-          </>
+          </Fragment>
         );
       })}
     </div>
   );
-}
+};

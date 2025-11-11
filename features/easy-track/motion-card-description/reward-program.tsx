@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import {
   useRewardProgramsAll,
   useRewardProgramsMapAll,
-} from 'modules/motions/hooks/useRewardPrograms';
-import { useGovernanceSymbol } from 'modules/tokens/hooks/useGovernanceSymbol';
+} from '../hooks/use-reward-programs';
+import { useGovernanceSymbol } from '../hooks/use-governance-symbol';
 
-import { AddressInlineWithPop } from 'modules/shared/ui/Common/AddressInlineWithPop';
+import { AddressInlineWithPop } from 'shared/components/address-pop';
 
 import { formatEther } from 'ethers/lib/utils';
 import {
@@ -15,25 +15,17 @@ import {
 } from 'generated';
 import { NestProps } from './types';
 
-// RewardProgramAdd
-/**
- * @deprecated
- */
 export const DescRewardProgramAdd = ({
   callData,
 }: NestProps<EvmAddRewardProgramAbi['decodeEVMScriptCallData']>) => {
   return (
     <div>
-      Add reward program <b>“{callData[1]}”</b> with address{' '}
+      Add reward program <b>"{callData[1]}"</b> with address{' '}
       <AddressInlineWithPop address={callData[0]} />
     </div>
   );
 };
 
-// RewardProgramTopUp
-/**
- * @deprecated
- */
 export const DescRewardProgramTopUp = ({
   callData,
 }: NestProps<EvmTopUpRewardProgramsAbi['decodeEVMScriptCallData']>) => {
@@ -59,13 +51,9 @@ export const DescRewardProgramTopUp = ({
   );
 };
 
-// RewardProgramRemove
-/**
- * @deprecated
- */
-export function DescRewardProgramRemove({
+export const DescRewardProgramRemove = ({
   callData,
-}: NestProps<EvmRemoveRewardProgramAbi['decodeEVMScriptCallData']>) {
+}: NestProps<EvmRemoveRewardProgramAbi['decodeEVMScriptCallData']>) => {
   const { data: rewardPrograms } = useRewardProgramsAll();
 
   const program = useMemo(() => {
@@ -79,4 +67,4 @@ export function DescRewardProgramRemove({
       <AddressInlineWithPop address={callData} />
     </div>
   );
-}
+};

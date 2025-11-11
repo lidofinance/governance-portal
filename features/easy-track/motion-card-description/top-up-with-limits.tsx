@@ -3,20 +3,20 @@ import {
   useRecipientMapAll,
   REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
   useTokenByTopUpType,
-} from 'modules/motions/hooks';
+} from '../hooks/use-registry-with-limits';
 
-import { AddressInlineWithPop } from 'modules/shared/ui/Common/AddressInlineWithPop';
+import { AddressInlineWithPop } from 'shared/components/address-pop';
 
 import { formatEther, isAddress } from 'ethers/lib/utils';
 import { TopUpWithLimitsAbi } from 'generated';
 import { NestProps } from './types';
 
-export function TopUpWithLimits({
+export const TopUpWithLimits = ({
   callData,
   registryType,
 }: NestProps<TopUpWithLimitsAbi['decodeEVMScriptCallData']> & {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
-}) {
+}) => {
   const { data: allowedRecipientMap } = useRecipientMapAll({ registryType });
   const token = useTokenByTopUpType({ registryType });
 
@@ -47,4 +47,4 @@ export function TopUpWithLimits({
       })}
     </div>
   );
-}
+};

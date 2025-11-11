@@ -1,12 +1,11 @@
 import { SetVettedValidatorsLimitsAbi } from 'generated';
 import { NestProps } from './types';
-import { useNodeOperatorsList } from 'modules/motions/hooks';
+import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
-// SetVettedValidatorsLimits
-export function SdvtVettedValidatorsLimitsSet({
+export const SdvtVettedValidatorsLimitsSet = ({
   callData,
   isOnChain,
-}: NestProps<SetVettedValidatorsLimitsAbi['decodeEVMScriptCallData']>) {
+}: NestProps<SetVettedValidatorsLimitsAbi['decodeEVMScriptCallData']>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
@@ -26,4 +25,4 @@ export function SdvtVettedValidatorsLimitsSet({
       })}
     </>
   );
-}
+};

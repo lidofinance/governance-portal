@@ -1,76 +1,88 @@
-import { useMemo } from 'react'
-import { useSWR, SWRResponse } from 'modules/network/hooks/useSwr'
-import { useWeb3 } from 'modules/blockChain/hooks/useWeb3'
-import { ContractReferralPartnersRegistry } from 'modules/blockChain/contracts'
+import { useMemo } from 'react';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { ReferralPartnersRegistry } from 'shared/blockchain/contracts';
+import { Address } from 'viem';
 
 type ReferralPartner = {
-  title: string
-  address: string
-}
+  title: string;
+  address: string;
+};
 
-function useReferralPartnersMap(
-  partners: SWRResponse<ReferralPartner[] | null>,
-) {
+const useReferralPartnersMap = (
+  partners: UseQueryResult<ReferralPartner[] | null>,
+) => {
   const result = useMemo(() => {
-    if (!partners.data) return null
+    if (!partners.data) return null;
     return partners.data.reduce(
       (res, p) => ({ [p.address]: p.title, ...res }),
       {} as Record<string, string>,
-    )
-  }, [partners.data])
+    );
+  }, [partners.data]);
   return {
     ...partners,
     data: result,
-  }
-}
+  };
+};
 
-export function useReferralPartnersAll() {
-  const { chainId } = useWeb3()
-  const referralPartnersRegistry = ContractReferralPartnersRegistry.useRpc()
+export const useReferralPartnersAll = () => {
+  const { chainId } = useLidoSDK();
+  const referralPartnersRegistry = useReadContract(ReferralPartnersRegistry);
 
-  return useSWR(
-    `referral-partners-all-${chainId}-${referralPartnersRegistry.address}`,
-    async () => {
-      const programs = await referralPartnersRegistry.getRewardPrograms()
-      return programs.map(address => ({
+  return useQuery({
+    queryKey: [
+      'referral-partners-all',
+      chainId,
+      referralPartnersRegistry?.address,
+    ],
+    queryFn: async () => {
+      if (!referralPartnersRegistry) return [];
+      const programs =
+        await referralPartnersRegistry.readContract('getRewardPrograms');
+      return programs.map((address: string) => ({
         title: address,
         address,
-      }))
+      }));
     },
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 5000,
-    },
-  )
-}
+    enabled: !!referralPartnersRegistry,
+    retry: true,
+    retryDelay: 5000,
+  });
+};
 
-export function useReferralPartnersActual() {
-  const { chainId } = useWeb3()
-  const partnersAll = useReferralPartnersAll()
-  const referalPartnersRegistry = ContractReferralPartnersRegistry.useRpc()
+export const useReferralPartnersActual = () => {
+  const { chainId } = useLidoSDK();
+  const partnersAll = useReferralPartnersAll();
+  const referalPartnersRegistry = useReadContract(ReferralPartnersRegistry);
 
-  return useSWR(
-    `referral-partners-actual-${chainId}-${referalPartnersRegistry.address}-${
-      partnersAll.data ? 'named' : 'not_named'
-    }`,
-    async () => {
-      const addresses = await referalPartnersRegistry.getRewardPrograms()
+  return useQuery({
+    queryKey: [
+      'referral-partners-actual',
+      referalPartnersRegistry?.address,
+      chainId,
+    ],
+    queryFn: async () => {
+      if (!referalPartnersRegistry) return [];
+      const addresses =
+        await referalPartnersRegistry.readContract('getRewardPrograms');
       if (partnersAll.data) {
         return partnersAll.data.filter(
-          p => addresses.findIndex(addr => addr === p.address) !== -1,
-        )
+          (p) => addresses.indexOf(p.address as Address) !== -1,
+        );
       }
-      return addresses.map(address => ({ title: address, address }))
+      return addresses.map((address) => ({ title: address, address }));
     },
-  )
-}
+    enabled: !!referalPartnersRegistry,
+  });
+};
 
-export function useReferralPartnersMapAll() {
-  const partners = useReferralPartnersAll()
-  return useReferralPartnersMap(partners)
-}
+export const useReferralPartnersMapAll = () => {
+  const partners = useReferralPartnersAll();
+  return useReferralPartnersMap(partners);
+};
 
-export function useReferralPartnersMapActual() {
-  const partners = useReferralPartnersActual()
-  return useReferralPartnersMap(partners)
-}
+export const useReferralPartnersMapActual = () => {
+  const partners = useReferralPartnersActual();
+  return useReferralPartnersMap(partners);
+};

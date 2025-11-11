@@ -1,20 +1,19 @@
-import { CSMSettleElStealingPenaltyAbi } from 'generated';
-import { pluralize } from 'modules/shared/utils/pluralize';
-import { NestProps } from './types';
+import { csmSettleElStealingPenaltyAbi } from 'abi/generated/CSMSettleElStealingPenalty';
+import { pluralize } from 'utils/pluralize';
+import { MotionDescriptionProps } from './types';
 
-// CSMSettleElStealingPenalty
-export function CsmSettleElStealingPenalty({
+export const CsmSettleElStealingPenalty = ({
   callData,
-}: NestProps<CSMSettleElStealingPenaltyAbi['decodeEVMScriptCallData']>) {
+}: MotionDescriptionProps<typeof csmSettleElStealingPenaltyAbi>) => {
   return (
     <>
       Settle (confirm) EL Rewards Stealing penalty for the following CSM{' '}
       {pluralize(callData.length, 'operator')}:
       {callData.map((item, index) => {
-        const nodeOperatorId = item.toNumber();
+        const nodeOperatorId = Number(item);
 
         return <div key={index}>NO #{nodeOperatorId}</div>;
       })}
     </>
   );
-}
+};

@@ -1,91 +1,92 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
+
 import {
   useRecipientMapAll,
-  REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
-  useTokenByTopUpType,
   useAllowedRecipients,
-} from 'modules/motions/hooks'
+  useTokenByTopUpType,
+  type AllowedRecipient,
+} from '../hooks/use-registry-with-limits';
 
-import { AddressInlineWithPop } from 'modules/shared/ui/Common/AddressInlineWithPop'
-import { MotionTypeDisplayNames } from 'modules/motions/utils'
+import { formatEther } from 'ethers/lib/utils';
 
-import { formatEther } from 'ethers/lib/utils'
+import { AddressPop } from 'shared/components/address-pop';
+
 import {
-  AddAllowedRecipientAbi,
-  RemoveAllowedRecipientAbi,
-  TopUpAllowedRecipientsAbi,
-} from 'generated'
-import { NestProps } from './types'
+  MotionDescriptionWithRegistryProps,
+  DecodeCallData,
+  RegistryType,
+} from './types';
+import { MotionTypeDisplayNames } from '../utils/get-motion-type-display-name';
+import { addAllowedRecipientAbi } from 'abi/generated/AddAllowedRecipient';
+import { topUpAllowedRecipientsAbi } from 'abi/generated/TopUpAllowedRecipients';
+import { removeAllowedRecipientAbi } from 'abi/generated/RemoveAllowedRecipient';
 
-export function DescAllowedRecipientAdd({
+export const AllowedRecipientAdd = ({
   callData,
   registryType,
-}: NestProps<AddAllowedRecipientAbi['decodeEVMScriptCallData']> & {
-  registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE
-}) {
-  const name = MotionTypeDisplayNames[registryType]
+}: MotionDescriptionWithRegistryProps<typeof addAllowedRecipientAbi>) => {
+  const name = MotionTypeDisplayNames[registryType];
 
   return (
     <div>
-      {name} <b>“{callData[1]}”</b> with address{' '}
-      <AddressInlineWithPop address={callData[0]} />
+      {name} <b>&#34;{callData[1]}&#34;</b> with address{' '}
+      <AddressPop address={callData[0]} />
     </div>
-  )
-}
+  );
+};
 
-export function DescAllowedRecipientTopUp({
+export const DescAllowedRecipientTopUp = ({
   callData,
   registryType,
-}: NestProps<TopUpAllowedRecipientsAbi['decodeEVMScriptCallData']> & {
-  registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE
-}) {
-  const token = useTokenByTopUpType({ registryType })
+}: MotionDescriptionWithRegistryProps<typeof topUpAllowedRecipientsAbi>) => {
+  const token = useTokenByTopUpType({ registryType });
   const { data: allowedRecipientMap } = useRecipientMapAll({
     registryType,
-  })
+  });
 
   const recipients = useMemo(() => {
-    if (!allowedRecipientMap) return null
-    return callData[0].map(address => allowedRecipientMap[address])
-  }, [callData, allowedRecipientMap])
+    if (!allowedRecipientMap) return null;
+    return callData[0].map((address) => allowedRecipientMap[address]);
+  }, [callData, allowedRecipientMap]);
 
-  const name = MotionTypeDisplayNames[registryType]
+  const name = MotionTypeDisplayNames[registryType];
 
   return (
     <div>
       {name}:
       {callData[0].map((address, i) => (
         <div key={i}>
-          <b>{recipients?.[i]}</b> <AddressInlineWithPop address={address} />{' '}
-          with {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
+          <b>{recipients?.[i]}</b> <AddressPop address={address} /> with{' '}
+          {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
           {token.label}
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export function DescAllowedRecipientRemove({
+export const DescAllowedRecipientRemove = ({
   callData,
   registryType,
-}: NestProps<RemoveAllowedRecipientAbi['decodeEVMScriptCallData']> & {
-  registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE
-}) {
+}: {
+  callData: DecodeCallData<typeof removeAllowedRecipientAbi>;
+  registryType: RegistryType;
+}) => {
   const { data: allowedRecipients } = useAllowedRecipients({
     registryType,
-  })
+  });
 
   const program = useMemo(() => {
-    if (!allowedRecipients) return null
-    return allowedRecipients.find(p => p.address === callData)
-  }, [callData, allowedRecipients])
+    if (!allowedRecipients) return null;
+    return allowedRecipients.find((p: AllowedRecipient) => p.address === callData);
+  }, [callData, allowedRecipients]);
 
-  const name = MotionTypeDisplayNames[registryType]
+  const name = MotionTypeDisplayNames[registryType];
 
   return (
     <div>
       {name} <b>{program?.title}</b> with address{' '}
-      <AddressInlineWithPop address={callData} />
+      <AddressPop address={callData} />
     </div>
-  )
-}
+  );
+};

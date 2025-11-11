@@ -1,12 +1,11 @@
 import { ChangeNodeOperatorManagersAbi } from 'generated';
 import { NestProps } from './types';
-import { AddressInlineWithPop } from 'modules/shared/ui/Common/AddressInlineWithPop';
-import { useNodeOperatorsList } from 'modules/motions/hooks';
+import { AddressInlineWithPop } from 'shared/components/address-pop';
+import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
-// ChangeNodeOperatorManagers
-export function SdvtNodeOperatorManagersChange({
+export const SdvtNodeOperatorManagersChange = ({
   callData,
-}: NestProps<ChangeNodeOperatorManagersAbi['decodeEVMScriptCallData']>) {
+}: NestProps<ChangeNodeOperatorManagersAbi['decodeEVMScriptCallData']>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
@@ -26,4 +25,4 @@ export function SdvtNodeOperatorManagersChange({
       })}
     </>
   );
-}
+};

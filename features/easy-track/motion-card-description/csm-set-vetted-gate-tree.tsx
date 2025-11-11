@@ -1,13 +1,13 @@
-import { CSMSetVettedGateTreeAbi } from 'generated';
-import { useCSMVettedGateInfo } from 'modules/motions/hooks/useCSMVettedGateInfo';
-import { NestProps } from './types';
+import { csmSetVettedGateTreeAbi } from 'abi/generated/CSMSetVettedGateTree';
+import { useCSMVettedGateInfo } from '../hooks/use-csm-vetted-gate-info';
+import { MotionDescriptionProps } from './types';
 
-// CSMSetVettedGateTree
-export function CsmSetVettedGateTree({
+export const CsmSetVettedGateTree = ({
   callData,
   isOnChain,
-}: NestProps<CSMSetVettedGateTreeAbi['decodeEVMScriptCallData']>) {
+}: MotionDescriptionProps<typeof csmSetVettedGateTreeAbi>) => {
   const { data: vettedGateInfo } = useCSMVettedGateInfo();
+
   const [newRoot, newCid] = callData;
 
   const showCurrentGateInfo = vettedGateInfo && isOnChain;
@@ -47,4 +47,4 @@ export function CsmSetVettedGateTree({
       </div>
     </>
   );
-}
+};

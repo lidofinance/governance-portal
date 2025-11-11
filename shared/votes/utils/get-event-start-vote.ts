@@ -1,7 +1,7 @@
 import { getLogs } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
-import { votingAbi } from 'abi/ts';
+import { votingAbi } from 'abi/generated';
 
 type Args = {
   address: Address | undefined;

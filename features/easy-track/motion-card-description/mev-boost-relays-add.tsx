@@ -1,10 +1,9 @@
-import { AddMEVBoostRelaysAbi } from 'generated';
-import { NestProps } from './types';
+import { addMevBoostRelaysAbi } from 'abi/generated/AddMEVBoostRelays';
+import { MotionDescriptionProps } from './types';
 
-// AddMEVBoostRelays
-export function MevBoostRelaysAdd({
+export const MEVBoostRelaysAdd = ({
   callData,
-}: NestProps<AddMEVBoostRelaysAbi['decodeEVMScriptCallData']>) {
+}: MotionDescriptionProps<typeof addMevBoostRelaysAbi>) => {
   return (
     <>
       {callData.map((item) => {
@@ -27,4 +26,4 @@ export function MevBoostRelaysAdd({
       })}
     </>
   );
-}
+};

@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { Token } from '../types';
 import { useWriteContract } from './use-write-contract';
 import { getTokenAddress } from '../get-contract-address';
-import { erc20Abi, erc721Abi } from 'abi/ts';
+import { erc20Abi, erc721Abi } from 'abi/generated';
 import { useIsContract } from './use-is-contract';
 
 type ApproveOptions =

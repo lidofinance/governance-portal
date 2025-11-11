@@ -1,11 +1,17 @@
-import { EditMEVBoostRelaysAbi } from 'generated';
-import { IMEVBoostRelayAllowedList } from 'generated/AddMEVBoostRelaysAbi';
-import { useMEVBoostRelays } from 'modules/motions/hooks/useMEVBoostRelays';
-import { MEVBoostRelay } from 'modules/motions/types';
-import { NestProps } from './types';
+import { editMevBoostRelaysAbi } from 'abi/generated/EditMEVBoostRelays';
+import { MotionDescriptionProps } from './types';
+import { MEVBoostRelay } from './types-mev';
+import { useMEVBoostRelays } from '../hooks/use-mev-boost-relays';
+
+type RelayChange = {
+  uri: string;
+  operator: string;
+  is_mandatory: boolean;
+  description: string;
+};
 
 type RowProps = {
-  change: IMEVBoostRelayAllowedList.RelayStructOutput;
+  change: RelayChange;
   relayInfo: (MEVBoostRelay & { uriHost: string }) | undefined;
 };
 
@@ -55,11 +61,10 @@ const RelayDescriptionRow = ({ change, relayInfo }: RowProps) => {
   );
 };
 
-// EditMEVBoostRelays
-export function MevBoostRelaysEdit({
+export const MEVBoostRelaysEdit = ({
   callData,
   isOnChain,
-}: NestProps<EditMEVBoostRelaysAbi['decodeEVMScriptCallData']>) {
+}: MotionDescriptionProps<typeof editMevBoostRelaysAbi>) => {
   const { relaysMap, isRelaysDataLoading } = useMEVBoostRelays();
 
   if (isRelaysDataLoading) {
@@ -77,4 +82,4 @@ export function MevBoostRelaysEdit({
       ))}
     </>
   );
-}
+};

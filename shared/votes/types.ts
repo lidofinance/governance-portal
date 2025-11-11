@@ -1,5 +1,5 @@
 import type { Address, Log } from 'viem';
-import { votingAbi } from 'abi/ts';
+import { votingAbi } from 'abi/generated';
 import { ContractReadFunctionReturnType } from 'shared/types';
 import { UseFormRegister, UseFormWatch } from 'react-hook-form';
 

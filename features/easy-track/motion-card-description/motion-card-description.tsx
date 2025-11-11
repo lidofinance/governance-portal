@@ -1,6 +1,6 @@
-import { useSWR } from 'modules/network/hooks/useSwr';
-import { useWeb3 } from 'modules/blockChain/hooks/useWeb3';
-import { useContractEvmScript } from 'modules/motions/hooks/useContractEvmScript';
+import { useQuery } from '@tanstack/react-query';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useDecodeEvmScriptCallData } from '../hooks/use-decode-evm-script-call-data';
 
 import { DescLEGOTopUp } from './lego';
 import {
@@ -22,17 +22,10 @@ import {
 import { TopUpWithLimits } from './top-up-with-limits';
 import { TopUpWithLimitsAndCustomToken } from './top-up-with-limits-and-custom-token';
 
-import {
-  TopUpWithLimitsAbi,
-  RemoveAllowedRecipientAbi,
-  AddAllowedRecipientAbi,
-  EvmIncreaseNodeOperatorStakingLimitAbi,
-} from 'generated';
-import { Motion, MotionType } from 'modules/motions/types';
-import { EvmUnrecognized } from 'modules/motions/evmAddresses';
-import { getMotionTypeByScriptFactory } from 'modules/motions/utils/getMotionType';
-import { NestProps } from './types';
-import { DescWrap } from './MotionDescriptionStyle';
+import { Motion, MotionType } from '../motion-types';
+import { EvmUnrecognized } from '../evm-addresses';
+import { getMotionTypeByScriptFactory } from '../utils/get-motion-type-by-script-factory';
+import { DescWrap } from './motion-description-style';
 import { SdvtNodeOperatorsDeactivate } from './sdvt-node-operators-deactivate';
 import { SdvtNodeOperatorsActivate } from './sdvt-node-operators-activate';
 import { SdvtVettedValidatorsLimitsSet } from './sdvt-vetted-validators-limits-set';
@@ -51,19 +44,42 @@ import { CsmSetVettedGateTree } from './csm-set-vetted-gate-tree';
 import { CuratedExitRequestHashesSubmit } from './curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './sdvt-exit-request-hashes-submit';
 
-type DescWithLimitsProps = NestProps<
-  TopUpWithLimitsAbi['decodeEVMScriptCallData']
->;
-type DescAllowedRecipientRemoveProps = NestProps<
-  RemoveAllowedRecipientAbi['decodeEVMScriptCallData']
->;
-type DescAllowedRecipientAddProps = NestProps<
-  AddAllowedRecipientAbi['decodeEVMScriptCallData']
->;
+// Type definitions based on ABI structures
+type AllowedRecipientData = {
+  recipient: `0x${string}`;
+  title: string;
+};
 
-type DescNodeOperatorIncreaseLimitProps = NestProps<
-  EvmIncreaseNodeOperatorStakingLimitAbi['decodeEVMScriptCallData']
->;
+type TopUpWithLimitsData = {
+  recipient: `0x${string}`;
+  token: `0x${string}`;
+  amount: bigint;
+};
+
+type NodeOperatorIncreaseLimitData = {
+  nodeOperatorId: bigint;
+  stakingLimit: bigint;
+};
+
+type DescWithLimitsProps = {
+  callData: TopUpWithLimitsData[];
+  isOnChain?: boolean;
+};
+
+type DescAllowedRecipientRemoveProps = {
+  callData: [`0x${string}`];
+  isOnChain?: boolean;
+};
+
+type DescAllowedRecipientAddProps = {
+  callData: AllowedRecipientData;
+  isOnChain?: boolean;
+};
+
+type DescNodeOperatorIncreaseLimitProps = {
+  callData: NodeOperatorIncreaseLimitData;
+  isOnChain?: boolean;
+};
 
 type GenericDescProps = {
   isOnChain?: boolean;
@@ -338,29 +354,29 @@ type Props = {
 };
 
 export const MotionDescription = ({ motion }: Props) => {
-  const { chainId } = useWeb3();
+  const { chainId } = useLidoSDK();
   const motionType = getMotionTypeByScriptFactory(
     chainId,
     motion.evmScriptFactory,
   );
-  const contract = useContractEvmScript(motionType);
   const callDataRaw = motion.evmScriptCalldata;
 
-  const { data: callData, initialLoading } = useSWR(
-    `call-data-${chainId}-${motion.id}`,
-    () => {
-      if (motionType === EvmUnrecognized || !contract || !callDataRaw) {
+  const { data: callData, isLoading } = useQuery({
+    queryKey: ['call-data', chainId, motion.id],
+    queryFn: () => {
+      if (motionType === EvmUnrecognized || !callDataRaw) {
         return null;
       }
-      return contract.decodeEVMScriptCallData(callDataRaw);
+      return useDecodeEvmScriptCallData(motionType, callDataRaw);
     },
-  );
+    enabled: motionType !== EvmUnrecognized && !!callDataRaw,
+  });
 
   if (motionType === EvmUnrecognized) {
     return <>Unrecognized motion type</>;
   }
 
-  if (!callData || initialLoading) {
+  if (!callData || isLoading) {
     return <>Loading...</>;
   }
 

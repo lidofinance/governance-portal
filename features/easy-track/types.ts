@@ -23,3 +23,15 @@ export const MotionStatus = {
 } as const;
 
 export type MotionStatus = (typeof MotionStatus)[keyof typeof MotionStatus];
+
+export type NodeOperator = {
+  id: number;
+  active: boolean;
+  name: string;
+  rewardAddress: string;
+  totalVettedValidators: bigint;
+  totalExitedValidators: bigint;
+  totalAddedValidators: bigint;
+  totalDepositedValidators: bigint;
+  managerAddress?: string; // Only for SDVT
+};

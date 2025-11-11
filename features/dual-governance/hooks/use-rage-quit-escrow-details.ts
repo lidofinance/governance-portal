@@ -1,4 +1,4 @@
-import { escrowAbi } from 'abi/ts';
+import { escrowAbi } from 'abi/generated';
 import { useEscrowContext } from 'providers/escrow';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';

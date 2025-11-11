@@ -20,6 +20,7 @@ import {
   SummaryWrap,
   VotedByHolderWrap,
 } from './style';
+import { pluralize } from 'utils/pluralize';
 
 const TRANSACTION_LIMIT = 100;
 
@@ -31,9 +32,6 @@ type Delegator = {
 };
 
 type CheckedItems = Record<string, boolean>;
-
-const pluralize = (count: number, noun: string, suffix = 's') =>
-  `${count} ${noun}${count !== 1 ? suffix : ''}`;
 
 const DelegatorsSummary = ({
   selectedBalance,

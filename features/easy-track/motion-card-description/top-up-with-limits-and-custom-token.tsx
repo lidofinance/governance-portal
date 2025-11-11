@@ -1,14 +1,14 @@
 import {
   useRecipientMapAll,
   REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
-} from 'modules/motions/hooks';
+} from '../hooks/use-registry-with-limits';
 
-import { AddressInlineWithPop } from 'modules/shared/ui/Common/AddressInlineWithPop';
+import { AddressInlineWithPop } from 'shared/components/address-pop';
 
 import { formatUnits, isAddress } from 'ethers/lib/utils';
 import { TopUpWithLimitsStablesAbi } from 'generated';
 import { NestProps } from './types';
-import { useMotionTokenData } from 'modules/motions/hooks/useMotionTokenData';
+import { useMotionTokenData } from '../hooks/use-motion-token-data';
 
 type Props = NestProps<TopUpWithLimitsStablesAbi['decodeEVMScriptCallData']> & {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
