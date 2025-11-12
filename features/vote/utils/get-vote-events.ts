@@ -1,4 +1,4 @@
-import { votingAbi } from 'abi/ts/Voting.abi';
+import { aragonVotingAbi } from 'abi/generated';
 import {
   VoteEvent,
   VoteCastEventLog,
@@ -52,13 +52,13 @@ const isVoteMoreRecentThan = (
 };
 
 const castVoteEventAbi = findAbiItem({
-  abi: votingAbi,
+  abi: aragonVotingAbi,
   name: 'CastVote',
   type: 'event',
 });
 
 const attemptCastVoteAsDelegateAbi = findAbiItem({
-  abi: votingAbi,
+  abi: aragonVotingAbi,
   name: 'AttemptCastVoteAsDelegate',
   type: 'event',
 });

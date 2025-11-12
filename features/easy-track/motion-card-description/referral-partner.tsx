@@ -4,25 +4,29 @@ import {
   useReferralPartnersMapAll,
 } from '../hooks/use-referral-partners';
 
-import { NestProps } from './types';
+import { MotionDescriptionProps } from './types';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { AddressPop } from 'shared/components/address-pop';
 
-export const DescReferralPartnerAdd = ({
+import { evmAddReferralPartnerAbi } from 'abi/generated/EvmAddReferralPartner';
+import { evmTopUpReferralPartnersAbi } from 'abi/generated/EvmTopUpReferralPartners';
+import { evmRemoveReferralPartnerAbi } from 'abi/generated/EvmRemoveReferralPartner';
+
+export const ReferralPartnerAdd = ({
   callData,
-}: NestProps<EvmAddReferralPartnerAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof evmAddReferralPartnerAbi>) => {
   return (
     <div>
-      Add LDO referral partner <b>"{callData[1]}"</b> with address{' '}
+      Add LDO referral partner <b>&#34;{callData[1]}&#34;</b> with address{' '}
       <AddressPop address={callData[0]} />
     </div>
   );
 };
 
-export const DescReferralPartnerTopUp = ({
+export const ReferralPartnerTopUp = ({
   callData,
-}: NestProps<EvmTopUpReferralPartnersAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof evmTopUpReferralPartnersAbi>) => {
   const { data: governanceToken } = useGovernanceToken();
   const { data: referralPartnersMap } = useReferralPartnersMapAll();
 
@@ -37,16 +41,16 @@ export const DescReferralPartnerTopUp = ({
       {callData[0].map((address, i) => (
         <div key={i}>
           <b>{programs?.[i]}</b> <AddressPop address={address} /> with{' '}
-          {formatBalance(callData[1][i])} {governanceToken?.symbol}
+          {formatBalance(callData[1][i])} <>{governanceToken?.symbol}</>
         </div>
       ))}
     </div>
   );
 };
 
-export const DescReferralPartnerRemove = ({
+export const ReferralPartnerRemove = ({
   callData,
-}: NestProps<EvmRemoveReferralPartnerAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof evmRemoveReferralPartnerAbi>) => {
   const { data: referralPartners } = useReferralPartnersAll();
 
   const partner = useMemo(() => {
@@ -57,7 +61,7 @@ export const DescReferralPartnerRemove = ({
   return (
     <div>
       Remove LDO referral partner <b>{partner?.title}</b> with address{' '}
-      <AddressInlineWithPop address={callData} />
+      <AddressPop address={callData} />
     </div>
   );
 };

@@ -20,8 +20,18 @@ const MOTION_TYPE_ABI_MAP = {
   [MotionType.AllowedRecipientRemoveReferralDai]: abi.removeAllowedRecipientAbi,
   [MotionType.AllowedRecipientTopUpReferralDai]: abi.topUpAllowedRecipientsAbi,
   [MotionType.AllowedRecipientTopUpTrpLdo]: abi.topUpAllowedRecipientsAbi,
-  [MotionType.LegoLDOTopUp]: abi.topUpAllowedRecipientsAbi,
-  [MotionType.LegoDAITopUp]: abi.topUpAllowedRecipientsAbi,
+  [MotionType.LegoLDOTopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.LegoDAITopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.RccDAITopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.PmlDAITopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.AtcDAITopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.GasFunderETHTopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.StethRewardProgramAdd]: abi.addAllowedRecipientAbi,
+  [MotionType.StethRewardProgramRemove]: abi.removeAllowedRecipientAbi,
+  [MotionType.StethRewardProgramTopUp]: abi.topUpWithLimitsAbi,
+  [MotionType.StethGasSupplyAdd]: abi.addAllowedRecipientAbi,
+  [MotionType.StethGasSupplyRemove]: abi.removeAllowedRecipientAbi,
+  [MotionType.StethGasSupplyTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.SDVTNodeOperatorsAdd]: abi.addNodeOperatorsAbi,
   [MotionType.SDVTNodeOperatorsActivate]: abi.activateNodeOperatorsAbi,
   [MotionType.SDVTNodeOperatorsDeactivate]: abi.deactivateNodeOperatorsAbi,
@@ -57,9 +67,9 @@ const MOTION_TYPE_ABI_MAP = {
   [MotionType.LabsOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.EcosystemOpsStethTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.LabsOpsStethTopUp]: abi.topUpWithLimitsAbi,
-  [MotionType.MEVBoostRelaysAdd]: abi.addMEVBoostRelaysAbi,
-  [MotionType.MEVBoostRelaysEdit]: abi.editMEVBoostRelaysAbi,
-  [MotionType.MEVBoostRelaysRemove]: abi.removeMEVBoostRelaysAbi,
+  [MotionType.MEVBoostRelaysAdd]: abi.addMevBoostRelaysAbi,
+  [MotionType.MEVBoostRelaysEdit]: abi.editMevBoostRelaysAbi,
+  [MotionType.MEVBoostRelaysRemove]: abi.removeMevBoostRelaysAbi,
   [MotionType.CSMSetVettedGateTree]: abi.csmSetVettedGateTreeAbi,
   [MotionType.CuratedExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
   [MotionType.SDVTExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
@@ -69,7 +79,7 @@ const MOTION_TYPE_ABI_MAP = {
  * Decodes EVM script call data for a given motion type
  * Uses viem's decodeFunctionResult instead of typechain contracts
  */
-export const useDecodeEvmScriptCallData = (
+export const decodeEvmScriptCallData = (
   motionType: MotionType,
   callDataRaw: `0x${string}` | undefined,
 ) => {
@@ -82,13 +92,11 @@ export const useDecodeEvmScriptCallData = (
   }
 
   try {
-    const decoded = decodeFunctionResult({
+    return decodeFunctionResult({
       abi: factoryAbi,
       functionName: 'decodeEVMScriptCallData',
       data: callDataRaw,
     });
-
-    return decoded;
   } catch (error) {
     console.error(`Failed to decode call data for ${motionType}:`, error);
     return null;

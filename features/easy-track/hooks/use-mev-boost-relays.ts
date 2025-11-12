@@ -11,7 +11,9 @@ export const useMEVBoostRelays = () => {
   const query = useQuery({
     queryKey: ['mev-boost-relays', chainId, mevBoostRelayList.address],
     queryFn: async () => {
-      const relays = (await mevBoostRelayList.readContract('get_relays')) as [
+      const relays = (await mevBoostRelayList.readContract(
+        'get_relays',
+      )) as unknown as [
         string, // uri
         string, // operator/name
         boolean, // is_mandatory
@@ -19,10 +21,7 @@ export const useMEVBoostRelays = () => {
       ][];
 
       // Create a map for quick lookups
-      const relaysMap = new Map<
-        string,
-        MEVBoostRelay & { uriHost: string }
-      >();
+      const relaysMap = new Map<string, MEVBoostRelay & { uriHost: string }>();
 
       relays.forEach((relay) => {
         const [uri, name, isMandatory, description] = relay;

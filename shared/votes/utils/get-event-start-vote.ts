@@ -1,7 +1,7 @@
 import { getLogs } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
-import { votingAbi } from 'abi/generated';
+import { aragonVotingAbi } from 'abi/generated';
 
 type Args = {
   address: Address | undefined;
@@ -35,7 +35,7 @@ export const getEventStartVote = async ({
 }: Args): Promise<GetEventStartVoteReturnType | null> => {
   try {
     const startVoteEventAbi = findAbiItem({
-      abi: votingAbi,
+      abi: aragonVotingAbi,
       name: 'StartVote',
       type: 'event',
     });

@@ -1,16 +1,16 @@
-import { SetNodeOperatorNamesAbi } from 'generated';
-import { NestProps } from './types';
+import { setNodeOperatorNamesAbi } from 'abi/generated/SetNodeOperatorNames';
+import { MotionDescriptionProps } from './types';
 import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
 export const SdvtNodeOperatorNamesSet = ({
   callData,
   isOnChain,
-}: NestProps<SetNodeOperatorNamesAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof setNodeOperatorNamesAbi>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
       {callData.map((item, index) => {
-        const nodeOperatorId = item.nodeOperatorId.toNumber();
+        const nodeOperatorId = Number(item.nodeOperatorId);
         const nodeOperator = nodeOperatorsList?.[nodeOperatorId];
         return (
           <div key={nodeOperatorId}>

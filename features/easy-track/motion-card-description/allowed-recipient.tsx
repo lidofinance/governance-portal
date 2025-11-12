@@ -35,7 +35,7 @@ export const AllowedRecipientAdd = ({
   );
 };
 
-export const DescAllowedRecipientTopUp = ({
+export const AllowedRecipientTopUp = ({
   callData,
   registryType,
 }: MotionDescriptionWithRegistryProps<typeof topUpAllowedRecipientsAbi>) => {
@@ -65,7 +65,7 @@ export const DescAllowedRecipientTopUp = ({
   );
 };
 
-export const DescAllowedRecipientRemove = ({
+export const AllowedRecipientRemove = ({
   callData,
   registryType,
 }: {
@@ -78,7 +78,9 @@ export const DescAllowedRecipientRemove = ({
 
   const program = useMemo(() => {
     if (!allowedRecipients) return null;
-    return allowedRecipients.find((p: AllowedRecipient) => p.address === callData);
+    return allowedRecipients.find(
+      (p: AllowedRecipient) => p.address === callData,
+    );
   }, [callData, allowedRecipients]);
 
   const name = MotionTypeDisplayNames[registryType];

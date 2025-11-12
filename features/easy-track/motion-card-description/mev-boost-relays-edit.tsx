@@ -61,7 +61,7 @@ const RelayDescriptionRow = ({ change, relayInfo }: RowProps) => {
   );
 };
 
-export const MEVBoostRelaysEdit = ({
+export const MevBoostRelaysEdit = ({
   callData,
   isOnChain,
 }: MotionDescriptionProps<typeof editMevBoostRelaysAbi>) => {

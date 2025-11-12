@@ -3,14 +3,14 @@ import {
   REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
 } from '../hooks/use-registry-with-limits';
 
-import { AddressInlineWithPop } from 'shared/components/address-pop';
+import { AddressPop } from 'shared/components/address-pop';
 
 import { formatUnits, isAddress } from 'ethers/lib/utils';
-import { TopUpWithLimitsStablesAbi } from 'generated';
-import { NestProps } from './types';
+import { topUpWithLimitsStablesAbi } from 'abi/generated/TopUpWithLimitsStables';
+import { MotionDescriptionProps } from './types';
 import { useMotionTokenData } from '../hooks/use-motion-token-data';
 
-type Props = NestProps<TopUpWithLimitsStablesAbi['decodeEVMScriptCallData']> & {
+type Props = MotionDescriptionProps<typeof topUpWithLimitsStablesAbi> & {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
 };
 
@@ -18,10 +18,13 @@ export const TopUpWithLimitsAndCustomToken = ({
   callData,
   registryType,
 }: Props) => {
-  const { data: allowedRecipientMap, initialLoading: isRecipientDataLoading } =
+  const [token, recipients, amounts] = callData;
+
+  const { data: allowedRecipientMap, isPending: isRecipientDataLoading } =
     useRecipientMapAll({ registryType });
 
-  const { tokenData, isTokenDataLoading } = useMotionTokenData(callData.token);
+  const { data: tokenData, isLoading: isTokenDataLoading } =
+    useMotionTokenData(token);
 
   if (isRecipientDataLoading || !allowedRecipientMap || isTokenDataLoading) {
     return <div>Loading...</div>;
@@ -30,10 +33,10 @@ export const TopUpWithLimitsAndCustomToken = ({
   return (
     <div>
       Top up single allowed recipient:
-      {callData.recipients.map((address, i) => {
+      {recipients.map((address, i) => {
         const recipientName = allowedRecipientMap[address];
         const formattedAmount = Number(
-          formatUnits(callData.amounts[i], tokenData?.decimals),
+          formatUnits(amounts[i], tokenData?.decimals),
         ).toLocaleString('en-EN');
 
         const shouldShowName =
@@ -43,7 +46,7 @@ export const TopUpWithLimitsAndCustomToken = ({
         return (
           <div key={i}>
             {shouldShowName ? <b>{recipientName} </b> : null}
-            <AddressInlineWithPop address={address} /> with {formattedAmount}{' '}
+            <AddressPop address={address} /> with {formattedAmount}{' '}
             {tokenData ? <b>{tokenData.label}</b> : null}
           </div>
         );

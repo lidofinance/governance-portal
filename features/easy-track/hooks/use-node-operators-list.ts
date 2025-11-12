@@ -19,9 +19,7 @@ export const useNodeOperatorsList = (
     queryKey: ['node-operators-list', chainId, registryType, registry.address],
     queryFn: async () => {
       try {
-        const count = (await registry.readContract(
-          'getNodeOperatorsCount',
-        )) as bigint;
+        const count = await registry.readContract('getNodeOperatorsCount');
         const totalCount = Number(count);
 
         if (totalCount === 0) {
@@ -37,43 +35,34 @@ export const useNodeOperatorsList = (
           const batchResults = await Promise.allSettled(
             batch.map(async (operatorId) => {
               const result = (await registry.readContract('getNodeOperator', [
-                operatorId,
+                BigInt(operatorId),
                 true, // fullInfo
-              ])) as [
-                boolean, // active
-                string, // name
-                string, // rewardAddress
-                bigint, // totalVettedValidators
-                bigint, // totalExitedValidators
-                bigint, // totalAddedValidators
-                bigint, // totalDepositedValidators
-              ];
+              ])) as any;
 
-              const nodeOperator: NodeOperator = {
-                id: operatorId,
-                active: result[0],
-                name: result[1],
-                rewardAddress: result[2],
-                totalVettedValidators: result[3],
-                totalExitedValidators: result[4],
-                totalAddedValidators: result[5],
-                totalDepositedValidators: result[6],
-              };
-
-              // For SDVT, fetch manager address if needed
-              if (registryType === 'sdvt') {
-                try {
-                  nodeOperator.managerAddress = (await registry.readContract(
-                    'getNodeOperatorManager',
-                    [operatorId],
-                  )) as string;
-                } catch (error) {
-                  console.warn(
-                    `Failed to fetch manager for operator ${operatorId}:`,
-                    error,
-                  );
-                }
-              }
+              // Handle different return types between registries
+              const nodeOperator: NodeOperator =
+                registryType === 'sdvt'
+                  ? {
+                      id: operatorId,
+                      active: result.active,
+                      name: result.name,
+                      rewardAddress: result.rewardAddress,
+                      totalVettedValidators: result.totalVettedKeys,
+                      totalExitedValidators: result.totalExitedKeys,
+                      totalAddedValidators: result.totalAddedKeys,
+                      totalDepositedValidators: result.totalDepositedKeys,
+                      managerAddress: result.managerAddress,
+                    }
+                  : {
+                      id: operatorId,
+                      active: result[0],
+                      name: result[1],
+                      rewardAddress: result[2],
+                      totalVettedValidators: result[3],
+                      totalExitedValidators: result[4],
+                      totalAddedValidators: result[5],
+                      totalDepositedValidators: result[6],
+                    };
 
               return nodeOperator;
             }),

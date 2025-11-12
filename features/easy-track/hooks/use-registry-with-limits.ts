@@ -109,13 +109,15 @@ const useRecipientMap = (
 export const useAllowedRecipients = ({ registryType }: HookArgs) => {
   const { chainId } = useLidoSDK();
   const registry = useReadContract(
-    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType],
+    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType] as any,
   );
 
   return useQuery({
     queryKey: ['allowed-recipients', chainId, registry.address],
     queryFn: async () => {
-      const addresses = await registry.readContract('getAllowedRecipients');
+      const addresses = (await (registry.readContract as any)(
+        'getAllowedRecipients',
+      )) as Address[];
       return addresses.map((address: Address) => ({ title: address, address }));
     },
   });
@@ -128,10 +130,10 @@ export const useRecipientMapAll = ({ registryType }: HookArgs) => {
 
 export const usePeriodLimitsData = ({ registryType }: HookArgs) => {
   const registry = useReadContract(
-    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType],
+    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType] as any,
   );
   return usePeriodLimitsInfo({
-    contract: registry,
+    contract: registry as any,
   });
 };
 
@@ -149,7 +151,10 @@ const TOKEN_BY_MOTION_TYPE: Record<
   [MotionType.AllowedRecipientRemove]: { label: 'LDO', decimals: 18 },
   [MotionType.AllowedRecipientAdd]: { label: 'LDO', decimals: 18 },
   [MotionType.AllowedRecipientTopUpReferralDai]: { label: 'DAI', decimals: 18 },
-  [MotionType.AllowedRecipientRemoveReferralDai]: { label: 'DAI', decimals: 18 },
+  [MotionType.AllowedRecipientRemoveReferralDai]: {
+    label: 'DAI',
+    decimals: 18,
+  },
   [MotionType.AllowedRecipientAddReferralDai]: { label: 'DAI', decimals: 18 },
   [MotionType.AllowedRecipientTopUpTrpLdo]: { label: 'LDO', decimals: 18 },
   [MotionType.StethRewardProgramAdd]: { label: 'stETH', decimals: 18 },

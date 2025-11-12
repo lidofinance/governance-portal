@@ -10,17 +10,17 @@ export const StETH: ContractObject<typeof abi.stethAbi> = {
   chainAddressMap: addr.StETH,
 };
 
-export const WstETH: ContractObject<typeof abi.wstETHAbi> = {
+export const WstETH: ContractObject<typeof abi.wstEthAbi> = {
   name: 'wstETH',
-  abi: abi.wstETHAbi,
+  abi: abi.wstEthAbi,
   chainAddressMap: addr.WstETH,
 };
 
 export const WithdrawalQueue: ContractObject<
-  typeof abi.withdrawalQueueERC721Abi
+  typeof abi.withdrawalQueueErc721Abi
 > = {
   name: 'WithdrawalQueue',
-  abi: abi.withdrawalQueueERC721Abi,
+  abi: abi.withdrawalQueueErc721Abi,
   chainAddressMap: addr.WithdrawalQueue,
 };
 
@@ -32,9 +32,9 @@ export const WithdrawalQueue: ContractObject<
 //   chainAddressMap: addr.WithdrawalQueue,
 // };
 
-export const Voting: ContractObject<typeof abi.votingAbi> = {
+export const Voting: ContractObject<typeof abi.aragonVotingAbi> = {
   name: 'AragonVoting',
-  abi: abi.votingAbi,
+  abi: abi.aragonVotingAbi,
   chainAddressMap: addr.Voting,
 };
 
@@ -60,9 +60,9 @@ export const EmergencyGovernance: ContractObject<
   chainAddressMap: addr.EmergencyGovernance,
 };
 
-export const DaoToken: ContractObject<typeof abi.lidoDAOAbi> = {
+export const DaoToken: ContractObject<typeof abi.miniMeTokenAbi> = {
   name: 'DaoToken',
-  abi: abi.lidoDAOAbi,
+  abi: abi.miniMeTokenAbi,
   chainAddressMap: addr.DaoToken,
 };
 
@@ -86,9 +86,9 @@ export const NodeOperatorsRegistry: ContractObject<
   chainAddressMap: addr.NodeOperatorsRegistry,
 };
 
-export const AragonAcl: ContractObject<typeof abi.aragonACLAbi> = {
+export const AragonAcl: ContractObject<typeof abi.aragonAclAbi> = {
   name: 'AragonAcl',
-  abi: abi.aragonACLAbi,
+  abi: abi.aragonAclAbi,
   chainAddressMap: addr.AragonACL,
 };
 
@@ -808,26 +808,26 @@ export const MEVBoostRelayList: ContractObject<
 };
 
 export const MEVBoostRelaysAdd: ContractObject<
-  typeof abi.addMEVBoostRelaysAbi
+  typeof abi.addMevBoostRelaysAbi
 > = {
   name: 'MEVBoostRelaysAdd',
-  abi: abi.addMEVBoostRelaysAbi,
+  abi: abi.addMevBoostRelaysAbi,
   chainAddressMap: EvmAddressesByType[MotionType.MEVBoostRelaysAdd],
 };
 
 export const MEVBoostRelaysEdit: ContractObject<
-  typeof abi.editMEVBoostRelaysAbi
+  typeof abi.editMevBoostRelaysAbi
 > = {
   name: 'MEVBoostRelaysEdit',
-  abi: abi.editMEVBoostRelaysAbi,
+  abi: abi.editMevBoostRelaysAbi,
   chainAddressMap: EvmAddressesByType[MotionType.MEVBoostRelaysEdit],
 };
 
 export const MEVBoostRelaysRemove: ContractObject<
-  typeof abi.removeMEVBoostRelaysAbi
+  typeof abi.removeMevBoostRelaysAbi
 > = {
   name: 'MEVBoostRelaysRemove',
-  abi: abi.removeMEVBoostRelaysAbi,
+  abi: abi.removeMevBoostRelaysAbi,
   chainAddressMap: EvmAddressesByType[MotionType.MEVBoostRelaysRemove],
 };
 

@@ -35,3 +35,20 @@ export type NodeOperator = {
   totalDepositedValidators: bigint;
   managerAddress?: string; // Only for SDVT
 };
+
+export type RawMotionSubgraph = {
+  id: string;
+  evmScriptFactory: string;
+  creator: string;
+  duration: string;
+  startDate: string;
+  snapshotBlock: string;
+  objectionsThreshold: string;
+  objectionsAmount: string;
+  evmScriptHash: string;
+  evmScriptCalldata?: string;
+  status: MotionStatus;
+  enacted_at?: string;
+  canceled_at?: string;
+  rejected_at?: string;
+};

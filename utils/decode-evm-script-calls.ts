@@ -1,6 +1,6 @@
 import { Address, decodeFunctionData, Hex } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import * as abis from '../generated';
+import * as abis from 'abi/generated';
 import { ABIElement } from '../shared/blockchain/types';
 import { getContractName } from './get-contract-name';
 
@@ -32,17 +32,27 @@ export type DecodedCall = {
 } | null;
 
 const ABI_EXCEPTIONS = {
-  HashConsensusAccountingOracle: abis.HashConsensusAbi__factory.abi,
-  HashConsensusValidatorsExitBus: abis.HashConsensusAbi__factory.abi,
-  LidoAppRepo: abis.RepoAbi__factory.abi,
-  NodeOperatorsRegistryRepo: abis.RepoAbi__factory.abi,
-  OracleRepo: abis.RepoAbi__factory.abi,
-  SimpleDVT: abis.NodeOperatorsRegistryAbi__factory.abi,
-  CSVerifierProposed: abis.CSVerifierAbi__factory.abi,
-  DualGovernanceLegacy: abis.DualGovernanceAbi__factory.abi,
+  HashConsensusAccountingOracle: abis.hashConsensusAbi,
+  HashConsensusValidatorsExitBus: abis.hashConsensusAbi,
+  LidoAppRepo: abis.repoAbi,
+  NodeOperatorsRegistryRepo: abis.repoAbi,
+  OracleRepo: abis.repoAbi,
+  SimpleDVT: abis.nodeOperatorsRegistryAbi,
+  CSVerifierProposed: abis.csVerifierProposedAbi,
+  DualGovernanceLegacy: abis.dualGovernanceAbi,
 };
 
 const EVM_SCRIPT_VERSION = '00000001';
+
+/**
+ * Converts PascalCase contract name to camelCase ABI key
+ * e.g., AccountingOracle → accountingOracleAbi
+ */
+const getAbiKey = (contractName: string): string => {
+  const camelCase =
+    contractName.charAt(0).toLowerCase() + contractName.slice(1);
+  return `${camelCase}Abi`;
+};
 
 export const getContractAbi = (
   contractAddress: Address,
@@ -56,10 +66,12 @@ export const getContractAbi = (
 
   try {
     if (contractName in ABI_EXCEPTIONS) {
-      return ABI_EXCEPTIONS[contractName as ExceptionContractName];
+      return ABI_EXCEPTIONS[
+        contractName as ExceptionContractName
+      ] as unknown as ABIElement[];
     } else {
-      const abiFactoryKey = `${contractName}Abi__factory` as keyof typeof abis;
-      return abis[abiFactoryKey]?.abi;
+      const abiKey = getAbiKey(contractName) as keyof typeof abis;
+      return abis[abiKey] as unknown as ABIElement[];
     }
   } catch (error) {
     console.warn(`Failed to load ABI for contract ${contractName}:`, error);

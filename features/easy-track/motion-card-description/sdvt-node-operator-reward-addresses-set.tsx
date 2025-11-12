@@ -1,17 +1,17 @@
-import { SetNodeOperatorRewardAddressesAbi } from 'generated';
-import { NestProps } from './types';
-import { AddressInlineWithPop } from 'shared/components/address-pop';
+import { setNodeOperatorRewardAddressesAbi } from 'abi/generated/SetNodeOperatorRewardAddresses';
+import { MotionDescriptionProps } from './types';
+import { AddressPop } from 'shared/components/address-pop';
 import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
 export const SdvtNodeOperatorRewardAddressesSet = ({
   callData,
   isOnChain,
-}: NestProps<SetNodeOperatorRewardAddressesAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof setNodeOperatorRewardAddressesAbi>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
       {callData.map((item, index) => {
-        const nodeOperatorId = item.nodeOperatorId.toNumber();
+        const nodeOperatorId = Number(item.nodeOperatorId);
         const nodeOperator = nodeOperatorsList?.[nodeOperatorId];
         return (
           <div key={nodeOperatorId}>
@@ -21,11 +21,10 @@ export const SdvtNodeOperatorRewardAddressesSet = ({
             {nodeOperator?.rewardAddress && isOnChain ? (
               <>
                 {' '}
-                from{' '}
-                <AddressInlineWithPop address={nodeOperator.rewardAddress} />
+                from <AddressPop address={nodeOperator.rewardAddress} />
               </>
             ) : null}{' '}
-            to <AddressInlineWithPop address={item.rewardAddress} />
+            to <AddressPop address={item.rewardAddress} />
             {index === callData.length - 1 ? '.' : '; '}
           </div>
         );

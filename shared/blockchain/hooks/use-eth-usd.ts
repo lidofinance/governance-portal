@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import invariant from 'tiny-invariant';
 import { useQuery } from '@tanstack/react-query';
 
-import { aggregatorAbi } from 'abi/ts/Aggregator.abi';
+import { aggregatorAbi } from 'abi/generated';
 import { useReadContractGetter } from './use-read-contract';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { aggregatorEthUsdPriceFeed } from '../../price-feed-addresses';

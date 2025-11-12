@@ -1,20 +1,20 @@
-import { UpdateTargetValidatorLimitsV2Abi } from 'generated';
-import { NestProps } from './types';
+import { updateTargetValidatorLimitsV2Abi } from 'abi/generated/UpdateTargetValidatorLimitsV2';
+import { MotionDescriptionProps } from './types';
 import { useSDVTNodeOperatorsSummaryMap } from '../hooks/use-sdvt-node-operators-summary';
 import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
 export const SdvtTargetValidatorLimitsUpdateV2 = ({
   callData,
   isOnChain,
-}: NestProps<UpdateTargetValidatorLimitsV2Abi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof updateTargetValidatorLimitsV2Abi>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   const { data: operatorsSummaryMap } = useSDVTNodeOperatorsSummaryMap();
   return (
     <>
       {callData.map((item, index) => {
-        const nodeOperatorId = item.nodeOperatorId.toNumber();
+        const nodeOperatorId = Number(item.nodeOperatorId);
         const nodeOperator = nodeOperatorsList?.[nodeOperatorId];
-        const targetLimitMode = item.targetLimitMode.toNumber();
+        const targetLimitMode = Number(item.targetLimitMode);
 
         let targetLimitModeDesc = 'disabled';
         if (targetLimitMode == 1) targetLimitModeDesc = 'soft';

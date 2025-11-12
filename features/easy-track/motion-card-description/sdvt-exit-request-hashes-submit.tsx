@@ -1,15 +1,15 @@
-import { SubmitExitRequestHashesAbi } from 'generated';
+import { submitExitRequestHashesAbi } from 'abi/generated/SubmitExitRequestHashes';
 import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
-import { NestProps } from './types';
+import { MotionDescriptionProps } from './types';
 
 export const SdvtExitRequestHashesSubmit = ({
   callData,
-}: NestProps<SubmitExitRequestHashesAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof submitExitRequestHashesAbi>) => {
   const { data: nodeOperators } = useNodeOperatorsList('sdvt');
 
-  const groupedCallDataMap = callData.reduce(
+  const groupedCallDataMap = [...callData].reduce(
     (acc, item) => {
-      const nodeOperatorId = item.nodeOpId.toNumber();
+      const nodeOperatorId = Number(item.nodeOpId);
 
       if (!acc[nodeOperatorId]) {
         acc[nodeOperatorId] = [];
@@ -17,7 +17,7 @@ export const SdvtExitRequestHashesSubmit = ({
       acc[nodeOperatorId].push(item);
       return acc;
     },
-    {} as Record<number, typeof callData>,
+    {} as Record<number, (typeof callData)[number][]>,
   );
 
   const groupedCalldata = Object.values(groupedCallDataMap);
@@ -28,7 +28,7 @@ export const SdvtExitRequestHashesSubmit = ({
       {groupedCalldata.length > 1 ? 's' : ''}
       <br />
       {groupedCalldata.map((items, index) => {
-        const nodeOpId = items[0].nodeOpId.toNumber();
+        const nodeOpId = Number(items[0].nodeOpId);
         const nodeOperatorName = nodeOperators?.[nodeOpId].name;
         return (
           <div key={index}>

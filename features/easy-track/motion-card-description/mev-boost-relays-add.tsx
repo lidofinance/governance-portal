@@ -1,7 +1,7 @@
 import { addMevBoostRelaysAbi } from 'abi/generated/AddMEVBoostRelays';
 import { MotionDescriptionProps } from './types';
 
-export const MEVBoostRelaysAdd = ({
+export const MevBoostRelaysAdd = ({
   callData,
 }: MotionDescriptionProps<typeof addMevBoostRelaysAbi>) => {
   return (

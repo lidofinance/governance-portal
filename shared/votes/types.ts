@@ -1,5 +1,5 @@
 import type { Address, Log } from 'viem';
-import { votingAbi } from 'abi/generated';
+import { aragonVotingAbi } from 'abi/generated';
 import { ContractReadFunctionReturnType } from 'shared/types';
 import { UseFormRegister, UseFormWatch } from 'react-hook-form';
 
@@ -16,7 +16,7 @@ export enum VotePhase {
 }
 
 export type RawVote = ContractReadFunctionReturnType<
-  typeof votingAbi,
+  typeof aragonVotingAbi,
   'getVote'
 >;
 

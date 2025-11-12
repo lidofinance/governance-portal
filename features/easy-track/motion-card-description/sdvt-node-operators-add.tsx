@@ -1,11 +1,11 @@
-import { AddNodeOperatorsAbi } from 'generated';
-import { NestProps } from './types';
-import { AddressInlineWithPop } from 'shared/components/address-pop';
+import { addNodeOperatorsAbi } from 'abi/generated/AddNodeOperators';
+import { MotionDescriptionProps } from './types';
+import { AddressPop } from 'shared/components/address-pop';
 
 export const SdvtNodeOperatorsAdd = ({
   callData,
-}: NestProps<AddNodeOperatorsAbi['decodeEVMScriptCallData']>) => {
-  const { nodeOperators, nodeOperatorsCount } = callData;
+}: MotionDescriptionProps<typeof addNodeOperatorsAbi>) => {
+  const [nodeOperatorsCount, nodeOperators] = callData;
   return (
     <>
       {nodeOperators.map((nodeOperator, index) => {
@@ -13,9 +13,9 @@ export const SdvtNodeOperatorsAdd = ({
           <div key={nodeOperator.managerAddress}>
             Add Node Operator <b>{nodeOperator.name}</b>(id:{' '}
             {Number(nodeOperatorsCount) + index}){' '}
-            <AddressInlineWithPop address={nodeOperator.rewardAddress} /> and
-            add <b>MANAGE_SIGNING_KEYS</b> role to{' '}
-            <AddressInlineWithPop address={nodeOperator.managerAddress} />
+            <AddressPop address={nodeOperator.rewardAddress} /> and add{' '}
+            <b>MANAGE_SIGNING_KEYS</b> role to{' '}
+            <AddressPop address={nodeOperator.managerAddress} />
             {index === nodeOperators.length - 1 ? '.' : '; '}
           </div>
         );

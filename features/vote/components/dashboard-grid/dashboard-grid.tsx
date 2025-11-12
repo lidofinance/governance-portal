@@ -13,7 +13,7 @@ import {
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
 import { useWatchContractEvent } from 'wagmi';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { votingAbi } from 'abi/generated';
+import { aragonVotingAbi } from 'abi/generated';
 import { AttentionBanner } from 'shared/components/attention-banner';
 import { GridWrap, PaginationWrap } from './style';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
@@ -91,7 +91,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
 
   useWatchContractEvent({
     address: votingContract.address,
-    abi: votingAbi,
+    abi: aragonVotingAbi,
     eventName: 'StartVote',
     onLogs: () => {
       void queryClient.invalidateQueries({

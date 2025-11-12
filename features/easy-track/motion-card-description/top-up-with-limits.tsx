@@ -5,16 +5,16 @@ import {
   useTokenByTopUpType,
 } from '../hooks/use-registry-with-limits';
 
-import { AddressInlineWithPop } from 'shared/components/address-pop';
+import { AddressPop } from 'shared/components/address-pop';
 
 import { formatEther, isAddress } from 'ethers/lib/utils';
-import { TopUpWithLimitsAbi } from 'generated';
-import { NestProps } from './types';
+import { topUpWithLimitsAbi } from 'abi/generated/TopUpWithLimits';
+import { MotionDescriptionProps } from './types';
 
 export const TopUpWithLimits = ({
   callData,
   registryType,
-}: NestProps<TopUpWithLimitsAbi['decodeEVMScriptCallData']> & {
+}: MotionDescriptionProps<typeof topUpWithLimitsAbi> & {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
 }) => {
   const { data: allowedRecipientMap } = useRecipientMapAll({ registryType });
@@ -39,7 +39,7 @@ export const TopUpWithLimits = ({
         return (
           <div key={i}>
             {shouldShowName ? <b>{recipientName} </b> : null}
-            <AddressInlineWithPop address={address} /> with{' '}
+            <AddressPop address={address} /> with{' '}
             {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
             {token.label}
           </div>

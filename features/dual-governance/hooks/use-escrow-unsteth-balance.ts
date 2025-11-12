@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { escrowAbi } from 'abi/generated';
+import { dgEscrowAbi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
 import {
@@ -12,7 +12,7 @@ import { Address } from 'viem';
 export const useEscrowUnstethBalance = (escrowAddress: Address) => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
-  const readEscrowContract = useReadContractGetter(escrowAbi);
+  const readEscrowContract = useReadContractGetter(dgEscrowAbi);
   const withdrawalQueue = useReadContract(WithdrawalQueue);
 
   const isEnabled = !!escrowAddress && !!address;

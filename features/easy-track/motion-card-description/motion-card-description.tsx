@@ -1,22 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useDecodeEvmScriptCallData } from '../hooks/use-decode-evm-script-call-data';
+import { decodeEvmScriptCallData } from '../hooks/use-decode-evm-script-call-data';
 
-import { DescLEGOTopUp } from './lego';
+import { LEGOTopUp } from './lego';
 import {
-  DescReferralPartnerAdd,
-  DescReferralPartnerTopUp,
-  DescReferralPartnerRemove,
+  ReferralPartnerRemove,
+  ReferralPartnerTopUp,
+  ReferralPartnerAdd,
 } from './referral-partner';
 import {
-  DescRewardProgramAdd,
-  DescRewardProgramTopUp,
-  DescRewardProgramRemove,
+  RewardProgramRemove,
+  RewardProgramTopUp,
+  RewardProgramAdd,
 } from './reward-program';
 import {
-  DescAllowedRecipientAdd,
-  DescAllowedRecipientTopUp,
-  DescAllowedRecipientRemove,
+  AllowedRecipientAdd,
+  AllowedRecipientTopUp,
+  AllowedRecipientRemove,
 } from './allowed-recipient';
 
 import { TopUpWithLimits } from './top-up-with-limits';
@@ -24,12 +24,12 @@ import { TopUpWithLimitsAndCustomToken } from './top-up-with-limits-and-custom-t
 
 import { Motion, MotionType } from '../motion-types';
 import { EvmUnrecognized } from '../evm-addresses';
-import { getMotionTypeByScriptFactory } from '../utils/get-motion-type-by-script-factory';
+import { getMotionTypeByScriptFactory } from '../utils/get-motion-type';
 import { DescWrap } from './motion-description-style';
 import { SdvtNodeOperatorsDeactivate } from './sdvt-node-operators-deactivate';
 import { SdvtNodeOperatorsActivate } from './sdvt-node-operators-activate';
 import { SdvtVettedValidatorsLimitsSet } from './sdvt-vetted-validators-limits-set';
-import { SdvtTargetValidatorLimitsUpdateV1 } from './sdvt-target-validator-limits-updateV1';
+import { SdvtTargetValidatorLimitsUpdateV1 } from './sdvt-target-validator-limits-update-v1';
 import { SdvtTargetValidatorLimitsUpdateV2 } from './sdvt-target-validator-limits-update-v2';
 import { SdvtNodeOperatorRewardAddressesSet } from './sdvt-node-operator-reward-addresses-set';
 import { SdvtNodeOperatorNamesSet } from './sdvt-node-operator-names-set';
@@ -43,209 +43,181 @@ import { MevBoostRelaysRemove } from './mev-boost-relays-remove';
 import { CsmSetVettedGateTree } from './csm-set-vetted-gate-tree';
 import { CuratedExitRequestHashesSubmit } from './curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './sdvt-exit-request-hashes-submit';
+import { Address } from 'viem';
 
-// Type definitions based on ABI structures
-type AllowedRecipientData = {
-  recipient: `0x${string}`;
-  title: string;
-};
-
-type TopUpWithLimitsData = {
-  recipient: `0x${string}`;
-  token: `0x${string}`;
-  amount: bigint;
-};
-
-type NodeOperatorIncreaseLimitData = {
-  nodeOperatorId: bigint;
-  stakingLimit: bigint;
-};
-
-type DescWithLimitsProps = {
-  callData: TopUpWithLimitsData[];
-  isOnChain?: boolean;
-};
-
-type DescAllowedRecipientRemoveProps = {
-  callData: [`0x${string}`];
-  isOnChain?: boolean;
-};
-
-type DescAllowedRecipientAddProps = {
-  callData: AllowedRecipientData;
-  isOnChain?: boolean;
-};
-
-type DescNodeOperatorIncreaseLimitProps = {
-  callData: NodeOperatorIncreaseLimitData;
-  isOnChain?: boolean;
-};
-
+// Generic props type for all motion descriptions
 type GenericDescProps = {
   isOnChain?: boolean;
   callData: any;
 };
 
 const MOTION_DESCRIPTIONS = {
-  [MotionType.NodeOperatorIncreaseLimit]: (
-    props: DescNodeOperatorIncreaseLimitProps,
-  ) => (
+  [MotionType.NodeOperatorIncreaseLimit]: (props: GenericDescProps) => (
     <DescNodeOperatorIncreaseLimit
       {...props}
       motionType={MotionType.NodeOperatorIncreaseLimit}
     />
   ),
-  [MotionType.LEGOTopUp]: DescLEGOTopUp,
-  [MotionType.RewardProgramAdd]: DescRewardProgramAdd,
-  [MotionType.RewardProgramTopUp]: DescRewardProgramTopUp,
-  [MotionType.RewardProgramRemove]: DescRewardProgramRemove,
-  [MotionType.ReferralPartnerAdd]: DescReferralPartnerAdd,
-  [MotionType.ReferralPartnerTopUp]: DescReferralPartnerTopUp,
-  [MotionType.ReferralPartnerRemove]: DescReferralPartnerRemove,
+  [MotionType.LEGOTopUp]: (props: GenericDescProps) => <LEGOTopUp {...props} />,
+  [MotionType.RewardProgramAdd]: (props: GenericDescProps) => (
+    <RewardProgramAdd {...props} />
+  ),
+  [MotionType.RewardProgramTopUp]: (props: GenericDescProps) => (
+    <RewardProgramTopUp {...props} />
+  ),
+  [MotionType.RewardProgramRemove]: (props: GenericDescProps) => (
+    <RewardProgramRemove {...props} />
+  ),
+  [MotionType.ReferralPartnerAdd]: (props: GenericDescProps) => (
+    <ReferralPartnerAdd {...props} />
+  ),
+  [MotionType.ReferralPartnerTopUp]: (props: GenericDescProps) => (
+    <ReferralPartnerTopUp {...props} />
+  ),
+  [MotionType.ReferralPartnerRemove]: (props: GenericDescProps) => (
+    <ReferralPartnerRemove {...props} />
+  ),
   [MotionType.AllowedRecipientAdd]: (props: GenericDescProps) => (
-    <DescAllowedRecipientAdd
+    <AllowedRecipientAdd
       {...props}
       registryType={MotionType.AllowedRecipientAdd}
     />
   ),
-  [MotionType.AllowedRecipientRemove]: (
-    props: DescAllowedRecipientRemoveProps,
-  ) => (
-    <DescAllowedRecipientRemove
+  [MotionType.AllowedRecipientRemove]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
       {...props}
       registryType={MotionType.AllowedRecipientRemove}
     />
   ),
-  [MotionType.AllowedRecipientTopUp]: (props: DescWithLimitsProps) => (
-    <DescAllowedRecipientTopUp
+  [MotionType.AllowedRecipientTopUp]: (props: GenericDescProps) => (
+    <AllowedRecipientTopUp
       {...props}
       registryType={MotionType.AllowedRecipientTopUp}
     />
   ),
-  [MotionType.AllowedRecipientAddReferralDai]: (
-    props: DescAllowedRecipientAddProps,
-  ) => (
-    <DescAllowedRecipientAdd
+  [MotionType.AllowedRecipientAddReferralDai]: (props: GenericDescProps) => (
+    <AllowedRecipientAdd
       {...props}
       registryType={MotionType.AllowedRecipientAddReferralDai}
     />
   ),
-  [MotionType.AllowedRecipientRemoveReferralDai]: (
-    props: DescAllowedRecipientRemoveProps,
-  ) => (
-    <DescAllowedRecipientRemove
+  [MotionType.AllowedRecipientRemoveReferralDai]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
       {...props}
       registryType={MotionType.AllowedRecipientRemoveReferralDai}
     />
   ),
-  [MotionType.AllowedRecipientTopUpReferralDai]: (
-    props: DescWithLimitsProps,
-  ) => (
-    <DescAllowedRecipientTopUp
+  [MotionType.AllowedRecipientTopUpReferralDai]: (props: GenericDescProps) => (
+    <AllowedRecipientTopUp
       {...props}
       registryType={MotionType.AllowedRecipientTopUpReferralDai}
     />
   ),
-  [MotionType.AllowedRecipientTopUpTrpLdo]: (props: DescWithLimitsProps) => (
-    <DescAllowedRecipientTopUp
+  [MotionType.AllowedRecipientTopUpTrpLdo]: (props: GenericDescProps) => (
+    <AllowedRecipientTopUp
       {...props}
       registryType={MotionType.AllowedRecipientTopUpTrpLdo}
     />
   ),
-  [MotionType.LegoLDOTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.LegoLDOTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.LegoLDOTopUp} />
   ),
-  [MotionType.LegoDAITopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.LegoDAITopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.LegoDAITopUp} />
   ),
-  [MotionType.RccDAITopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.RccDAITopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.RccDAITopUp} />
   ),
-  [MotionType.PmlDAITopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.PmlDAITopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.PmlDAITopUp} />
   ),
-  [MotionType.AtcDAITopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.AtcDAITopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.AtcDAITopUp} />
   ),
-  [MotionType.GasFunderETHTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.GasFunderETHTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.GasFunderETHTopUp} />
   ),
-  [MotionType.StethRewardProgramAdd]: (props: DescAllowedRecipientAddProps) => (
-    <DescAllowedRecipientAdd
+  [MotionType.StethRewardProgramAdd]: (props: GenericDescProps) => (
+    <AllowedRecipientAdd
       {...props}
       registryType={MotionType.StethRewardProgramAdd}
     />
   ),
-  [MotionType.StethRewardProgramRemove]: (
-    props: DescAllowedRecipientRemoveProps,
-  ) => (
-    <DescAllowedRecipientRemove
+  [MotionType.StethRewardProgramRemove]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
       {...props}
       registryType={MotionType.StethRewardProgramRemove}
     />
   ),
-  [MotionType.StethRewardProgramTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.StethRewardProgramTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits
       {...props}
       registryType={MotionType.StethRewardProgramTopUp}
     />
   ),
 
-  [MotionType.StethGasSupplyAdd]: (props: DescAllowedRecipientAddProps) => (
-    <DescAllowedRecipientAdd
+  [MotionType.StethGasSupplyAdd]: (props: GenericDescProps) => (
+    <AllowedRecipientAdd
       {...props}
       registryType={MotionType.StethGasSupplyAdd}
     />
   ),
-  [MotionType.StethGasSupplyRemove]: (
-    props: DescAllowedRecipientRemoveProps,
-  ) => (
-    <DescAllowedRecipientRemove
+  [MotionType.StethGasSupplyRemove]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
       {...props}
       registryType={MotionType.StethGasSupplyRemove}
     />
   ),
-  [MotionType.StethGasSupplyTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.StethGasSupplyTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.StethGasSupplyTopUp} />
   ),
 
-  [MotionType.RewardsShareProgramAdd]: (
-    props: DescAllowedRecipientAddProps,
-  ) => (
-    <DescAllowedRecipientAdd
+  [MotionType.RewardsShareProgramAdd]: (props: GenericDescProps) => (
+    <AllowedRecipientAdd
       {...props}
       registryType={MotionType.RewardsShareProgramAdd}
     />
   ),
-  [MotionType.RewardsShareProgramRemove]: (
-    props: DescAllowedRecipientRemoveProps,
-  ) => (
-    <DescAllowedRecipientRemove
+  [MotionType.RewardsShareProgramRemove]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
       {...props}
       registryType={MotionType.RewardsShareProgramRemove}
     />
   ),
-  [MotionType.RewardsShareProgramTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.RewardsShareProgramTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits
       {...props}
       registryType={MotionType.RewardsShareProgramTopUp}
     />
   ),
-  [MotionType.SDVTNodeOperatorsAdd]: SdvtNodeOperatorsAdd,
-  [MotionType.SDVTNodeOperatorsActivate]: SdvtNodeOperatorsActivate,
-  [MotionType.SDVTNodeOperatorsDeactivate]: SdvtNodeOperatorsDeactivate,
-  [MotionType.SDVTVettedValidatorsLimitsSet]: SdvtVettedValidatorsLimitsSet,
-  [MotionType.SDVTNodeOperatorRewardAddressesSet]:
-    SdvtNodeOperatorRewardAddressesSet,
-  [MotionType.SDVTNodeOperatorNamesSet]: SdvtNodeOperatorNamesSet,
-  [MotionType.SDVTTargetValidatorLimitsUpdateV2]:
-    SdvtTargetValidatorLimitsUpdateV2,
-  [MotionType.SDVTTargetValidatorLimitsUpdateV1]:
-    SdvtTargetValidatorLimitsUpdateV1,
-  [MotionType.SDVTNodeOperatorManagerChange]: SdvtNodeOperatorManagersChange,
-  [MotionType.SandboxNodeOperatorIncreaseLimit]: (
-    props: DescNodeOperatorIncreaseLimitProps,
-  ) => (
+  [MotionType.SDVTNodeOperatorsAdd]: (props: GenericDescProps) => (
+    <SdvtNodeOperatorsAdd {...props} />
+  ),
+  [MotionType.SDVTNodeOperatorsActivate]: (props: GenericDescProps) => (
+    <SdvtNodeOperatorsActivate {...props} />
+  ),
+  [MotionType.SDVTNodeOperatorsDeactivate]: (props: GenericDescProps) => (
+    <SdvtNodeOperatorsDeactivate {...props} />
+  ),
+  [MotionType.SDVTVettedValidatorsLimitsSet]: (props: GenericDescProps) => (
+    <SdvtVettedValidatorsLimitsSet {...props} />
+  ),
+  [MotionType.SDVTNodeOperatorRewardAddressesSet]: (
+    props: GenericDescProps,
+  ) => <SdvtNodeOperatorRewardAddressesSet {...props} />,
+  [MotionType.SDVTNodeOperatorNamesSet]: (props: GenericDescProps) => (
+    <SdvtNodeOperatorNamesSet {...props} />
+  ),
+  [MotionType.SDVTTargetValidatorLimitsUpdateV2]: (props: GenericDescProps) => (
+    <SdvtTargetValidatorLimitsUpdateV2 {...props} />
+  ),
+  [MotionType.SDVTTargetValidatorLimitsUpdateV1]: (props: GenericDescProps) => (
+    <SdvtTargetValidatorLimitsUpdateV1 {...props} />
+  ),
+  [MotionType.SDVTNodeOperatorManagerChange]: (props: GenericDescProps) => (
+    <SdvtNodeOperatorManagersChange {...props} />
+  ),
+  [MotionType.SandboxNodeOperatorIncreaseLimit]: (props: GenericDescProps) => (
     <DescNodeOperatorIncreaseLimit
       {...props}
       motionType={MotionType.SandboxNodeOperatorIncreaseLimit}
@@ -269,16 +241,14 @@ const MOTION_DESCRIPTIONS = {
       registryType={MotionType.AtcStablesTopUp}
     />
   ),
-  [MotionType.SandboxStablesAdd]: (props: DescAllowedRecipientAddProps) => (
-    <DescAllowedRecipientAdd
+  [MotionType.SandboxStablesAdd]: (props: GenericDescProps) => (
+    <AllowedRecipientAdd
       {...props}
       registryType={MotionType.SandboxStablesAdd}
     />
   ),
-  [MotionType.SandboxStablesRemove]: (
-    props: DescAllowedRecipientRemoveProps,
-  ) => (
-    <DescAllowedRecipientRemove
+  [MotionType.SandboxStablesRemove]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
       {...props}
       registryType={MotionType.SandboxStablesRemove}
     />
@@ -289,13 +259,13 @@ const MOTION_DESCRIPTIONS = {
       registryType={MotionType.SandboxStablesTopUp}
     />
   ),
-  [MotionType.RccStethTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.RccStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.RccStethTopUp} />
   ),
-  [MotionType.PmlStethTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.PmlStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.PmlStethTopUp} />
   ),
-  [MotionType.AtcStethTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.AtcStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.AtcStethTopUp} />
   ),
   [MotionType.LegoStablesTopUp]: (props: GenericDescProps) => (
@@ -310,10 +280,12 @@ const MOTION_DESCRIPTIONS = {
       registryType={MotionType.StonksStablesTopUp}
     />
   ),
-  [MotionType.StonksStethTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.StonksStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.StonksStethTopUp} />
   ),
-  [MotionType.CSMSettleElStealingPenalty]: CsmSettleElStealingPenalty,
+  [MotionType.CSMSettleElStealingPenalty]: (props: GenericDescProps) => (
+    <CsmSettleElStealingPenalty {...props} />
+  ),
   [MotionType.AllianceOpsStablesTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
@@ -332,21 +304,33 @@ const MOTION_DESCRIPTIONS = {
       registryType={MotionType.LabsOpsStablesTopUp}
     />
   ),
-  [MotionType.EcosystemOpsStethTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.EcosystemOpsStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits
       {...props}
       registryType={MotionType.EcosystemOpsStethTopUp}
     />
   ),
-  [MotionType.LabsOpsStethTopUp]: (props: DescWithLimitsProps) => (
+  [MotionType.LabsOpsStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.LabsOpsStethTopUp} />
   ),
-  [MotionType.MEVBoostRelaysAdd]: MevBoostRelaysAdd,
-  [MotionType.MEVBoostRelaysEdit]: MevBoostRelaysEdit,
-  [MotionType.MEVBoostRelaysRemove]: MevBoostRelaysRemove,
-  [MotionType.CSMSetVettedGateTree]: CsmSetVettedGateTree,
-  [MotionType.CuratedExitRequestHashesSubmit]: CuratedExitRequestHashesSubmit,
-  [MotionType.SDVTExitRequestHashesSubmit]: SdvtExitRequestHashesSubmit,
+  [MotionType.MEVBoostRelaysAdd]: (props: GenericDescProps) => (
+    <MevBoostRelaysAdd {...props} />
+  ),
+  [MotionType.MEVBoostRelaysEdit]: (props: GenericDescProps) => (
+    <MevBoostRelaysEdit {...props} />
+  ),
+  [MotionType.MEVBoostRelaysRemove]: (props: GenericDescProps) => (
+    <MevBoostRelaysRemove {...props} />
+  ),
+  [MotionType.CSMSetVettedGateTree]: (props: GenericDescProps) => (
+    <CsmSetVettedGateTree {...props} />
+  ),
+  [MotionType.CuratedExitRequestHashesSubmit]: (props: GenericDescProps) => (
+    <CuratedExitRequestHashesSubmit {...props} />
+  ),
+  [MotionType.SDVTExitRequestHashesSubmit]: (props: GenericDescProps) => (
+    <SdvtExitRequestHashesSubmit {...props} />
+  ),
 } as const;
 
 type Props = {
@@ -367,7 +351,7 @@ export const MotionDescription = ({ motion }: Props) => {
       if (motionType === EvmUnrecognized || !callDataRaw) {
         return null;
       }
-      return useDecodeEvmScriptCallData(motionType, callDataRaw);
+      return decodeEvmScriptCallData(motionType, callDataRaw as Address);
     },
     enabled: motionType !== EvmUnrecognized && !!callDataRaw,
   });
@@ -381,7 +365,7 @@ export const MotionDescription = ({ motion }: Props) => {
   }
 
   const Desc: React.FunctionComponent<GenericDescProps> =
-    MOTION_DESCRIPTIONS[motionType];
+    MOTION_DESCRIPTIONS[motionType as MotionType];
 
   return (
     <DescWrap>

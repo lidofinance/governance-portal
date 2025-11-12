@@ -13,7 +13,7 @@ import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { CheckboxHookForm } from 'shared/hook-form/checkbox-hook-form';
 import { Box } from 'shared/components/box';
 
-import { fetcherEtherscan } from 'utils/fetcherEtherscan';
+import { fetcherEtherscan } from 'utils/fetcher-etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useConfig } from 'config';
 import { isUrl } from 'utils/is-url';

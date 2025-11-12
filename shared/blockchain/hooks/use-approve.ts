@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { Token } from '../types';
 import { useWriteContract } from './use-write-contract';
 import { getTokenAddress } from '../get-contract-address';
-import { erc20Abi, erc721Abi } from 'abi/generated';
+import { erc20Abi, withdrawalQueueErc721Abi } from 'abi/generated';
 import { useIsContract } from './use-is-contract';
 
 type ApproveOptions =
@@ -37,7 +37,9 @@ export const useApprove = (
   const { chainId } = useLidoSDK();
   const waitForTx = useTxConfirmation();
   const { data: isMultisig } = useIsContract();
-  const writeTokenContract = useWriteContract(isERC721 ? erc721Abi : erc20Abi);
+  const writeTokenContract = useWriteContract(
+    isERC721 ? withdrawalQueueErc721Abi : erc20Abi,
+  );
 
   const allowanceQuery = useAllowance({
     token,

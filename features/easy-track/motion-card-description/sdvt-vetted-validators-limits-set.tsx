@@ -1,16 +1,16 @@
-import { SetVettedValidatorsLimitsAbi } from 'generated';
-import { NestProps } from './types';
+import { setVettedValidatorsLimitsAbi } from 'abi/generated/SetVettedValidatorsLimits';
+import { MotionDescriptionProps } from './types';
 import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
 
 export const SdvtVettedValidatorsLimitsSet = ({
   callData,
   isOnChain,
-}: NestProps<SetVettedValidatorsLimitsAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof setVettedValidatorsLimitsAbi>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
       {callData.map((item) => {
-        const nodeOperatorId = item.nodeOperatorId.toNumber();
+        const nodeOperatorId = Number(item.nodeOperatorId);
         const nodeOperator = nodeOperatorsList?.[nodeOperatorId];
         return (
           <div key={nodeOperatorId}>

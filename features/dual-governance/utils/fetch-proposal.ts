@@ -4,7 +4,6 @@ import {
   SubmitProposalCall,
 } from '../proposals/types';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Address, Log, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
@@ -19,7 +18,7 @@ import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;
-  EPTContract: ReturnType<typeof useReadContract>;
+  EPTContract: any;
   publicClient: PublicClient;
   governanceAddresses: Address[];
   chainId: CHAINS;

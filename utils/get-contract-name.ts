@@ -1,11 +1,13 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import * as addressMaps from 'shared/blockchain/contract-addresses';
+import { ChainAddressMap } from 'shared/blockchain/types';
 
 export const getContractName = (chainId: CHAINS, address: string) => {
   const lowerAddress = address.toLowerCase();
   const name = (Object.keys(addressMaps) as (keyof typeof addressMaps)[]).find(
     (contractName) => {
-      const foundAddress = addressMaps[contractName][chainId];
+      const chainAddressMap = addressMaps[contractName] as ChainAddressMap;
+      const foundAddress = chainAddressMap?.[chainId];
       if (!foundAddress) {
         return false;
       }

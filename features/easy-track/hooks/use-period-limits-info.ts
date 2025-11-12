@@ -44,7 +44,7 @@ type UsePeriodLimitInfo = <T extends ContractLimitsMethods>(
 ) => ReturnType<typeof useQuery<UsePeriodLimitsInfoResultData>>;
 
 const getPeriodLimitsInfo = async <T extends ContractLimitsMethods>(
-  easyTrack: ReturnType<typeof useReadContract>,
+  easyTrack: any,
   contract: T,
   isPending?: boolean,
 ) => {
@@ -82,7 +82,10 @@ const isContractWithLimits = (
   contract: unknown,
 ): contract is ContractLimitsMethods => {
   if (typeof contract !== 'object' || contract === null) return false;
-  return 'readContract' in contract && typeof (contract as any).readContract === 'function';
+  return (
+    'readContract' in contract &&
+    typeof (contract as any).readContract === 'function'
+  );
 };
 
 const registryByMotionType: {

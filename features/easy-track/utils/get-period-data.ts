@@ -31,7 +31,7 @@ export const getPeriodData = async <
   return {
     alreadySpentAmount: formatBalance(alreadySpentAmount),
     spendableBalanceInPeriod: formatBalance(spendableBalanceInPeriod),
-    periodStartTimestamp: +periodStartTimestamp,
-    periodEndTimestamp: +periodEndTimestamp,
+    periodStartTimestamp: Number(periodStartTimestamp),
+    periodEndTimestamp: Number(periodEndTimestamp),
   };
 };

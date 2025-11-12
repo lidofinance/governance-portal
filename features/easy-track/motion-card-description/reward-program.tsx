@@ -3,33 +3,31 @@ import {
   useRewardProgramsAll,
   useRewardProgramsMapAll,
 } from '../hooks/use-reward-programs';
-import { useGovernanceSymbol } from '../hooks/use-governance-symbol';
 
-import { AddressInlineWithPop } from 'shared/components/address-pop';
+import { AddressPop } from 'shared/components/address-pop';
 
 import { formatEther } from 'ethers/lib/utils';
-import {
-  EvmAddRewardProgramAbi,
-  EvmRemoveRewardProgramAbi,
-  EvmTopUpRewardProgramsAbi,
-} from 'generated';
-import { NestProps } from './types';
+import { evmAddRewardProgramAbi } from 'abi/generated/EvmAddRewardProgram';
+import { evmRemoveRewardProgramAbi } from 'abi/generated/EvmRemoveRewardProgram';
+import { evmTopUpRewardProgramsAbi } from 'abi/generated/EvmTopUpRewardPrograms';
+import { MotionDescriptionProps } from './types';
+import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 
-export const DescRewardProgramAdd = ({
+export const RewardProgramAdd = ({
   callData,
-}: NestProps<EvmAddRewardProgramAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof evmAddRewardProgramAbi>) => {
   return (
     <div>
-      Add reward program <b>"{callData[1]}"</b> with address{' '}
-      <AddressInlineWithPop address={callData[0]} />
+      Add reward program <b>&#34;{callData[1]}&#34;</b> with address{' '}
+      <AddressPop address={callData[0]} />
     </div>
   );
 };
 
-export const DescRewardProgramTopUp = ({
+export const RewardProgramTopUp = ({
   callData,
-}: NestProps<EvmTopUpRewardProgramsAbi['decodeEVMScriptCallData']>) => {
-  const governanceSymbol = useGovernanceSymbol();
+}: MotionDescriptionProps<typeof evmTopUpRewardProgramsAbi>) => {
+  const { data: governanceToken } = useGovernanceToken();
   const { data: rewardProgramsMap } = useRewardProgramsMapAll();
 
   const programs = useMemo(() => {
@@ -42,18 +40,18 @@ export const DescRewardProgramTopUp = ({
       Top up reward programs:
       {callData[0].map((address, i) => (
         <div key={i}>
-          <b>{programs?.[i]}</b> <AddressInlineWithPop address={address} /> with{' '}
+          <b>{programs?.[i]}</b> <AddressPop address={address} /> with{' '}
           {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
-          {governanceSymbol.data}
+          {governanceToken?.symbol}
         </div>
       ))}
     </div>
   );
 };
 
-export const DescRewardProgramRemove = ({
+export const RewardProgramRemove = ({
   callData,
-}: NestProps<EvmRemoveRewardProgramAbi['decodeEVMScriptCallData']>) => {
+}: MotionDescriptionProps<typeof evmRemoveRewardProgramAbi>) => {
   const { data: rewardPrograms } = useRewardProgramsAll();
 
   const program = useMemo(() => {
@@ -64,7 +62,7 @@ export const DescRewardProgramRemove = ({
   return (
     <div>
       Remove reward program <b>{program?.title}</b> with address{' '}
-      <AddressInlineWithPop address={callData} />
+      <AddressPop address={callData} />
     </div>
   );
 };
