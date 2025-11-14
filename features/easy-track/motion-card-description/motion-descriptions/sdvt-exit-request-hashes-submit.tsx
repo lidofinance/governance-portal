@@ -1,6 +1,6 @@
 import { submitExitRequestHashesAbi } from 'abi/generated/SubmitExitRequestHashes';
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
-import { MotionDescriptionProps } from './types';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
+import { MotionDescriptionProps } from '../types';
 
 export const SdvtExitRequestHashesSubmit = ({
   callData,

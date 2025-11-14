@@ -2,47 +2,49 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { decodeEvmScriptCallData } from '../hooks/use-decode-evm-script-call-data';
 
-import { LEGOTopUp } from './lego';
+import { Text } from 'shared/components/text';
+
+import { LEGOTopUp } from './motion-descriptions/lego';
 import {
   ReferralPartnerRemove,
   ReferralPartnerTopUp,
   ReferralPartnerAdd,
-} from './referral-partner';
+} from './motion-descriptions/referral-partner';
 import {
   RewardProgramRemove,
   RewardProgramTopUp,
   RewardProgramAdd,
-} from './reward-program';
+} from './motion-descriptions/reward-program';
 import {
   AllowedRecipientAdd,
   AllowedRecipientTopUp,
   AllowedRecipientRemove,
-} from './allowed-recipient';
+} from './motion-descriptions/allowed-recipient';
 
-import { TopUpWithLimits } from './top-up-with-limits';
-import { TopUpWithLimitsAndCustomToken } from './top-up-with-limits-and-custom-token';
+import { TopUpWithLimits } from './motion-descriptions/top-up-with-limits';
+import { TopUpWithLimitsAndCustomToken } from './motion-descriptions/top-up-with-limits-and-custom-token';
 
-import { Motion, MotionType } from '../motion-types';
+import { Motion } from '../types';
+import { MotionType } from '../motion-types';
 import { EvmUnrecognized } from '../evm-addresses';
 import { getMotionTypeByScriptFactory } from '../utils/get-motion-type';
-import { DescWrap } from './motion-description-style';
-import { SdvtNodeOperatorsDeactivate } from './sdvt-node-operators-deactivate';
-import { SdvtNodeOperatorsActivate } from './sdvt-node-operators-activate';
-import { SdvtVettedValidatorsLimitsSet } from './sdvt-vetted-validators-limits-set';
-import { SdvtTargetValidatorLimitsUpdateV1 } from './sdvt-target-validator-limits-update-v1';
-import { SdvtTargetValidatorLimitsUpdateV2 } from './sdvt-target-validator-limits-update-v2';
-import { SdvtNodeOperatorRewardAddressesSet } from './sdvt-node-operator-reward-addresses-set';
-import { SdvtNodeOperatorNamesSet } from './sdvt-node-operator-names-set';
-import { SdvtNodeOperatorsAdd } from './sdvt-node-operators-add';
-import { SdvtNodeOperatorManagersChange } from './sdvt-node-operator-managers-change';
-import { DescNodeOperatorIncreaseLimit } from './node-operator-limit-increase';
-import { CsmSettleElStealingPenalty } from './csm-settle-el-stealing-penalty';
-import { MevBoostRelaysAdd } from './mev-boost-relays-add';
-import { MevBoostRelaysEdit } from './mev-boost-relays-edit';
-import { MevBoostRelaysRemove } from './mev-boost-relays-remove';
-import { CsmSetVettedGateTree } from './csm-set-vetted-gate-tree';
-import { CuratedExitRequestHashesSubmit } from './curated-exit-request-hashes-submit';
-import { SdvtExitRequestHashesSubmit } from './sdvt-exit-request-hashes-submit';
+import { SdvtNodeOperatorsDeactivate } from './motion-descriptions/sdvt-node-operators-deactivate';
+import { SdvtNodeOperatorsActivate } from './motion-descriptions/sdvt-node-operators-activate';
+import { SdvtVettedValidatorsLimitsSet } from './motion-descriptions/sdvt-vetted-validators-limits-set';
+import { SdvtTargetValidatorLimitsUpdateV1 } from './motion-descriptions/sdvt-target-validator-limits-update-v1';
+import { SdvtTargetValidatorLimitsUpdateV2 } from './motion-descriptions/sdvt-target-validator-limits-update-v2';
+import { SdvtNodeOperatorRewardAddressesSet } from './motion-descriptions/sdvt-node-operator-reward-addresses-set';
+import { SdvtNodeOperatorNamesSet } from './motion-descriptions/sdvt-node-operator-names-set';
+import { SdvtNodeOperatorsAdd } from './motion-descriptions/sdvt-node-operators-add';
+import { SdvtNodeOperatorManagersChange } from './motion-descriptions/sdvt-node-operator-managers-change';
+import { DescNodeOperatorIncreaseLimit } from './motion-descriptions/node-operator-limit-increase';
+import { CsmSettleElStealingPenalty } from './motion-descriptions/csm-settle-el-stealing-penalty';
+import { MevBoostRelaysAdd } from './motion-descriptions/mev-boost-relays-add';
+import { MevBoostRelaysEdit } from './motion-descriptions/mev-boost-relays-edit';
+import { MevBoostRelaysRemove } from './motion-descriptions/mev-boost-relays-remove';
+import { CsmSetVettedGateTree } from './motion-descriptions/csm-set-vetted-gate-tree';
+import { CuratedExitRequestHashesSubmit } from './motion-descriptions/curated-exit-request-hashes-submit';
+import { SdvtExitRequestHashesSubmit } from './motion-descriptions/sdvt-exit-request-hashes-submit';
 import { Address } from 'viem';
 
 // Generic props type for all motion descriptions
@@ -259,6 +261,9 @@ const MOTION_DESCRIPTIONS = {
       registryType={MotionType.SandboxStablesTopUp}
     />
   ),
+  [MotionType.SandboxStethTopUp]: (props: GenericDescProps) => (
+    <TopUpWithLimits {...props} registryType={MotionType.SandboxStethTopUp} />
+  ),
   [MotionType.RccStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.RccStethTopUp} />
   ),
@@ -346,7 +351,7 @@ export const MotionDescription = ({ motion }: Props) => {
   const callDataRaw = motion.evmScriptCalldata;
 
   const { data: callData, isLoading } = useQuery({
-    queryKey: ['call-data', chainId, motion.id],
+    queryKey: ['call-data', chainId, Number(motion.id)],
     queryFn: () => {
       if (motionType === EvmUnrecognized || !callDataRaw) {
         return null;
@@ -368,8 +373,8 @@ export const MotionDescription = ({ motion }: Props) => {
     MOTION_DESCRIPTIONS[motionType as MotionType];
 
   return (
-    <DescWrap>
+    <Text size={12} weight={400} color="secondary">
       <Desc callData={callData} isOnChain={motion.isOnChain} />
-    </DescWrap>
+    </Text>
   );
 };

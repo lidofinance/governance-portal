@@ -3,18 +3,24 @@ import { MotionDisplayStatus, MotionStatus } from '../motion-types';
 import { MotionProgress } from './get-motion-progress';
 
 export const getMotionStatus = (motion: Motion) => {
+  // If motion already has a final status (from subgraph), return it
+  if (
+    motion.status &&
+    motion.status !== MotionStatus.ACTIVE &&
+    motion.status !== MotionStatus.PENDING
+  ) {
+    return motion.status;
+  }
+
+  // Otherwise, calculate status based on time (for on-chain active motions)
   const now = Date.now();
   const destination = (motion.startDate + motion.duration) * 1000n;
 
-  if (now < destination) {
+  if (now < Number(destination)) {
     return MotionStatus.ACTIVE;
   }
 
-  if (destination <= now) {
-    return MotionStatus.PENDING;
-  }
-
-  return motion.status ? motion.status : null;
+  return MotionStatus.PENDING;
 };
 
 export const getMotionDisplayStatus = ({

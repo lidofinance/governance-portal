@@ -1,6 +1,6 @@
 import { csmSetVettedGateTreeAbi } from 'abi/generated/CSMSetVettedGateTree';
-import { useCSMVettedGateInfo } from '../hooks/use-csm-vetted-gate-info';
-import { MotionDescriptionProps } from './types';
+import { useCSMVettedGateInfo } from '../../hooks/use-csm-vetted-gate-info';
+import { MotionDescriptionProps } from '../types';
 
 export const CsmSetVettedGateTree = ({
   callData,

@@ -1,4 +1,3 @@
-import { utils } from 'ethers';
 import {
   EvmAddressesByChain,
   EvmTypesByAddress,
@@ -9,7 +8,7 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { MotionType } from '../motion-types';
 
 export const parseScriptFactory = (chainId: CHAINS, scriptFactory: string) => {
-  const address = utils.getAddress(scriptFactory);
+  const address = scriptFactory.toLowerCase();
   if (
     !Object.prototype.hasOwnProperty.call(
       EvmTypesByAddress[parseEvmSupportedChainId(chainId)],
@@ -26,12 +25,20 @@ export const getMotionTypeByScriptFactory = (
   scriptFactory: string,
 ): MotionType | EvmUnrecognized => {
   try {
-    return (
-      EvmTypesByAddress[parseEvmSupportedChainId(chainId)][
-        parseScriptFactory(chainId, scriptFactory)
-      ] ?? EvmUnrecognized
-    );
-  } catch {
+    const lowercaseAddress = scriptFactory.toLowerCase();
+    const result =
+      EvmTypesByAddress[parseEvmSupportedChainId(chainId)][lowercaseAddress];
+
+    if (!result) {
+      console.debug(
+        `Motion type not found for address: ${lowercaseAddress} on chain ${chainId}`,
+      );
+      return EvmUnrecognized;
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error in getMotionTypeByScriptFactory:', error);
     return EvmUnrecognized;
   }
 };

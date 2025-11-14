@@ -1,6 +1,6 @@
 import { setVettedValidatorsLimitsAbi } from 'abi/generated/SetVettedValidatorsLimits';
-import { MotionDescriptionProps } from './types';
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
+import { MotionDescriptionProps } from '../types';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 
 export const SdvtVettedValidatorsLimitsSet = ({
   callData,

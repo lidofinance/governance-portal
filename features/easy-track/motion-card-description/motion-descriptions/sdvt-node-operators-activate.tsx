@@ -1,11 +1,11 @@
-import { deactivateNodeOperatorsAbi } from 'abi/generated/DeactivateNodeOperators';
-import { MotionDescriptionProps } from './types';
+import { activateNodeOperatorsAbi } from 'abi/generated/ActivateNodeOperators';
+import { MotionDescriptionProps } from '../types';
 import { AddressPop } from 'shared/components/address-pop';
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 
-export const SdvtNodeOperatorsDeactivate = ({
+export const SdvtNodeOperatorsActivate = ({
   callData,
-}: MotionDescriptionProps<typeof deactivateNodeOperatorsAbi>) => {
+}: MotionDescriptionProps<typeof activateNodeOperatorsAbi>) => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
   return (
     <>
@@ -14,9 +14,9 @@ export const SdvtNodeOperatorsDeactivate = ({
         const nodeOperator = nodeOperatorsList?.[nodeOperatorId];
         return (
           <div key={nodeOperatorId}>
-            Deactivate Node Operator{' '}
+            Activate Node Operator{' '}
             <b>{nodeOperator ? nodeOperator.name : ''}</b> (id: {nodeOperatorId}
-            ) and revoke <b>MANAGE_SIGNING_KEYS</b> role from{' '}
+            ) and add <b>MANAGE_SIGNING_KEYS</b> role to{' '}
             <AddressPop address={item.managerAddress} />
             {index === callData.length - 1 ? '.' : '; '}
           </div>

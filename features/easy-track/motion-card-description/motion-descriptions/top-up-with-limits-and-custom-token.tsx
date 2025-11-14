@@ -1,14 +1,14 @@
 import {
   useRecipientMapAll,
   REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
-} from '../hooks/use-registry-with-limits';
+} from '../../hooks/use-registry-with-limits';
 
 import { AddressPop } from 'shared/components/address-pop';
 
 import { formatUnits, isAddress } from 'ethers/lib/utils';
 import { topUpWithLimitsStablesAbi } from 'abi/generated/TopUpWithLimitsStables';
-import { MotionDescriptionProps } from './types';
-import { useMotionTokenData } from '../hooks/use-motion-token-data';
+import { MotionDescriptionProps } from '../types';
+import { useMotionTokenData } from '../../hooks/use-motion-token-data';
 
 type Props = MotionDescriptionProps<typeof topUpWithLimitsStablesAbi> & {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;

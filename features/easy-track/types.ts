@@ -12,6 +12,8 @@ export type Motion = {
   startDate: bigint;
   status?: MotionStatus;
   enacted_at?: number;
+  evmScriptCalldata?: string;
+  isOnChain?: boolean;
 };
 
 export const MotionStatus = {

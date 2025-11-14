@@ -1,5 +1,5 @@
 import { addNodeOperatorsAbi } from 'abi/generated/AddNodeOperators';
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 import { AddressPop } from 'shared/components/address-pop';
 
 export const SdvtNodeOperatorsAdd = ({

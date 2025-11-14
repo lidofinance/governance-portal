@@ -1,4 +1,5 @@
 import type { BigNumber } from 'ethers';
+import { Address } from 'viem';
 // import { EasyTrack } from 'generated/EasyTrackAbi'
 
 // Only motions currently supported to start
@@ -32,6 +33,7 @@ export const MotionTypeForms = {
   SandboxNodeOperatorIncreaseLimit: 'SandboxNodeOperatorIncreaseLimit',
 
   SandboxStablesTopUp: 'SandboxStablesTopUp',
+  SandboxStethTopUp: 'SandboxStethTopUp',
   SandboxStablesAdd: 'SandboxStablesAdd',
   SandboxStablesRemove: 'SandboxStablesRemove',
   LegoStablesTopUp: 'LegoStablesTopUp',
@@ -122,9 +124,9 @@ export type MotionDisplayStatus =
   (typeof MotionDisplayStatus)[keyof typeof MotionDisplayStatus];
 
 export type Motion = {
-  id: number;
-  evmScriptFactory: string;
-  creator: string;
+  id: bigint;
+  evmScriptFactory: Address;
+  creator: Address;
   duration: number;
   startDate: number;
   snapshotBlock: number;
@@ -138,7 +140,7 @@ export type Motion = {
   canceled_at?: number;
   rejected_at?: number;
 
-  isOnChain: boolean;
+  isOnChain?: boolean;
 };
 
 // export type RawMotionOnchain = EasyTrack.MotionStructOutput

@@ -3,13 +3,13 @@ import {
   useRecipientMapAll,
   REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
   useTokenByTopUpType,
-} from '../hooks/use-registry-with-limits';
+} from '../../hooks/use-registry-with-limits';
 
 import { AddressPop } from 'shared/components/address-pop';
 
 import { formatEther, isAddress } from 'ethers/lib/utils';
 import { topUpWithLimitsAbi } from 'abi/generated/TopUpWithLimits';
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 
 export const TopUpWithLimits = ({
   callData,

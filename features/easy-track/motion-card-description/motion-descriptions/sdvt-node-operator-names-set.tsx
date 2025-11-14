@@ -1,6 +1,6 @@
 import { setNodeOperatorNamesAbi } from 'abi/generated/SetNodeOperatorNames';
-import { MotionDescriptionProps } from './types';
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
+import { MotionDescriptionProps } from '../types';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 
 export const SdvtNodeOperatorNamesSet = ({
   callData,

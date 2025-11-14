@@ -5,7 +5,7 @@ import {
   useAllowedRecipients,
   useTokenByTopUpType,
   type AllowedRecipient,
-} from '../hooks/use-registry-with-limits';
+} from '../../hooks/use-registry-with-limits';
 
 import { formatEther } from 'ethers/lib/utils';
 
@@ -15,8 +15,8 @@ import {
   MotionDescriptionWithRegistryProps,
   DecodeCallData,
   RegistryType,
-} from './types';
-import { MotionTypeDisplayNames } from '../utils/get-motion-type-display-name';
+} from '../types';
+import { MotionTypeDisplayNames } from '../../utils/get-motion-type-display-name';
 import { addAllowedRecipientAbi } from 'abi/generated/AddAllowedRecipient';
 import { topUpAllowedRecipientsAbi } from 'abi/generated/TopUpAllowedRecipients';
 import { removeAllowedRecipientAbi } from 'abi/generated/RemoveAllowedRecipient';

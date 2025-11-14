@@ -1,14 +1,14 @@
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { findAbiItem } from 'utils/find-abi-item';
 import { EasyTrack } from 'shared/blockchain/contracts';
-import { getLogs } from 'viem/actions';
 import { PublicClient } from 'viem';
+import { easyTrackAbi } from 'abi/generated';
 
 const GET_LOGS_RANGE = 2499n;
 
 type Args = {
   client: PublicClient;
-  easyTrackContract: ReturnType<typeof useReadContract>;
+  easyTrackContract: ReturnType<typeof useReadContract<typeof easyTrackAbi>>;
   motionId: bigint;
   motionSnapshotBlock: bigint;
 };

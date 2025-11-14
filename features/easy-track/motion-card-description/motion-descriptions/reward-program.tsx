@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import {
   useRewardProgramsAll,
   useRewardProgramsMapAll,
-} from '../hooks/use-reward-programs';
+} from '../../hooks/use-reward-programs';
 
 import { AddressPop } from 'shared/components/address-pop';
 
@@ -10,7 +10,7 @@ import { formatEther } from 'ethers/lib/utils';
 import { evmAddRewardProgramAbi } from 'abi/generated/EvmAddRewardProgram';
 import { evmRemoveRewardProgramAbi } from 'abi/generated/EvmRemoveRewardProgram';
 import { evmTopUpRewardProgramsAbi } from 'abi/generated/EvmTopUpRewardPrograms';
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 
 export const RewardProgramAdd = ({

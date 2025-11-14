@@ -153,6 +153,8 @@ export default withBundleAnalyzer({
 
     rateLimit: process.env.RATE_LIMIT,
     rateLimitTimeFrame: process.env.RATE_LIMIT_TIME_FRAME,
+    subgraphHoodi: process.env.SUBGRAPH_HOODI,
+    subgraphMainnet: process.env.SUBGRAPH_MAINNET,
   },
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`

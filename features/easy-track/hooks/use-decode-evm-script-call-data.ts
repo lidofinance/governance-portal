@@ -52,6 +52,7 @@ const MOTION_TYPE_ABI_MAP = {
   [MotionType.SandboxStablesAdd]: abi.addAllowedRecipientAbi,
   [MotionType.SandboxStablesRemove]: abi.removeAllowedRecipientAbi,
   [MotionType.SandboxStablesTopUp]: abi.topUpWithLimitsStablesAbi,
+  [MotionType.SandboxStethTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.RccStethTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.PmlStethTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.AtcStethTopUp]: abi.topUpWithLimitsAbi,

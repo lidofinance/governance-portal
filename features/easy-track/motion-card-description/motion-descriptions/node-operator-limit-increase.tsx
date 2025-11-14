@@ -1,8 +1,8 @@
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
-import { MotionDescriptionProps } from './types';
-import { getNodeOperatorRegistryType } from '../utils/get-node-operator-registry-type';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
+import { MotionDescriptionProps } from '../types';
+import { getNodeOperatorRegistryType } from '../../utils/get-node-operator-registry-type';
 import { evmIncreaseNodeOperatorStakingLimitAbi } from 'abi/generated/EvmIncreaseNodeOperatorStakingLimit';
-import { IncreaseLimitMotionType } from '../constants';
+import { IncreaseLimitMotionType } from '../../constants';
 
 export const DescNodeOperatorIncreaseLimit = ({
   callData,

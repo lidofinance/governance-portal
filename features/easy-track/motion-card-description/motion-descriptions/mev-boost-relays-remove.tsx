@@ -1,6 +1,6 @@
 import { removeMevBoostRelaysAbi } from 'abi/generated/RemoveMEVBoostRelays';
-import { useMEVBoostRelays } from '../hooks/use-mev-boost-relays';
-import { MotionDescriptionProps } from './types';
+import { useMEVBoostRelays } from '../../hooks/use-mev-boost-relays';
+import { MotionDescriptionProps } from '../types';
 
 export const MevBoostRelaysRemove = ({
   callData,

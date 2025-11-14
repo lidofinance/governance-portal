@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { getAddress, formatEther } from 'viem';
 import { evmTopUpLegoProgramAbi } from 'abi/generated/EvmTopUpLegoProgram';
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 import { AddressPop } from 'shared/components/address-pop';
-import { useLegoTokenOptions } from '../hooks/use-lego-token-options';
+import { useLegoTokenOptions } from '../../hooks/use-lego-token-options';
 
 export const LEGOTopUp = ({
   callData,

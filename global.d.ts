@@ -35,6 +35,8 @@ declare module 'next/config' {
 
       rateLimit: string;
       rateLimitTimeFrame: string;
+      subgraphMainnet: string;
+      subgraphHoodi: string;
     };
     publicRuntimeConfig: {
       basePath: string | undefined;

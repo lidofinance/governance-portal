@@ -1,6 +1,6 @@
 import { csmSettleElStealingPenaltyAbi } from 'abi/generated/CSMSettleElStealingPenalty';
 import { pluralize } from 'utils/pluralize';
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 
 export const CsmSettleElStealingPenalty = ({
   callData,

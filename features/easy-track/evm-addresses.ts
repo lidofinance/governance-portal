@@ -278,15 +278,18 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x056561d0F1314CB3932180b3f0B3C03174F2642B',
     [MotionType.SandboxStablesRemove]:
       '0xc84251D2959E976AfE95201E1e2B88dB56Bc0a69',
-    [MotionType.SandboxStablesTopUp]:
-      '0x4A7B898981182c42ecC9444Cd40Cf42CEB6b71Ab',
-
     [MotionType.MEVBoostRelaysAdd]:
       '0xF02DbeaA1Bbc90226CaB995db4C190DbE25983af',
     [MotionType.MEVBoostRelaysEdit]:
       '0x27A99a7104190DdA297B222104A6C70A4Ca5A17e',
     [MotionType.MEVBoostRelaysRemove]:
       '0x7FCc2901C6C3D62784cB178B14d44445B038f736',
+
+    [MotionType.SandboxStablesTopUp]:
+      '0x9D735eeDfa96F53BF9d31DbE81B51a5d333198dB',
+
+    [MotionType.SandboxStethTopUp]:
+      '0xE5aE943A3AEFA44AD16438Bc3D2cA7654103F985',
 
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',
@@ -343,7 +346,7 @@ export type EvmUnrecognized = typeof EvmUnrecognized;
 export const EvmTypesByAddress = mapValues(
   flow(
     toPairs,
-    map(([type, address]) => [address, type]),
+    map(([type, address]) => [address.toLowerCase(), type]),
     fromPairs,
   ),
   EvmAddressesByChain,

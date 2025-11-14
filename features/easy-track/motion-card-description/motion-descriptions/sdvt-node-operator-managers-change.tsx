@@ -1,7 +1,7 @@
 import { changeNodeOperatorManagersAbi } from 'abi/generated/ChangeNodeOperatorManagers';
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 import { AddressPop } from 'shared/components/address-pop';
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 
 export const SdvtNodeOperatorManagersChange = ({
   callData,

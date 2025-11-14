@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import {
   useReferralPartnersAll,
   useReferralPartnersMapAll,
-} from '../hooks/use-referral-partners';
+} from '../../hooks/use-referral-partners';
 
-import { MotionDescriptionProps } from './types';
+import { MotionDescriptionProps } from '../types';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { AddressPop } from 'shared/components/address-pop';

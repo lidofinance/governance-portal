@@ -1,7 +1,7 @@
 import { updateTargetValidatorLimitsV1Abi } from 'abi/generated/UpdateTargetValidatorLimitsV1';
-import { MotionDescriptionProps } from './types';
-import { useSDVTNodeOperatorsSummaryMap } from '../hooks/use-sdvt-node-operators-summary';
-import { useNodeOperatorsList } from '../hooks/use-node-operators-list';
+import { MotionDescriptionProps } from '../types';
+import { useSDVTNodeOperatorsSummaryMap } from '../../hooks/use-sdvt-node-operators-summary';
+import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 
 export const SdvtTargetValidatorLimitsUpdateV1 = ({
   callData,

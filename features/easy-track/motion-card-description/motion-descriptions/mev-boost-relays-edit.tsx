@@ -1,7 +1,7 @@
 import { editMevBoostRelaysAbi } from 'abi/generated/EditMEVBoostRelays';
-import { MotionDescriptionProps } from './types';
-import { MEVBoostRelay } from './types-mev';
-import { useMEVBoostRelays } from '../hooks/use-mev-boost-relays';
+import { MotionDescriptionProps } from '../types';
+import { MEVBoostRelay } from '../types-mev';
+import { useMEVBoostRelays } from '../../hooks/use-mev-boost-relays';
 
 type RelayChange = {
   uri: string;
