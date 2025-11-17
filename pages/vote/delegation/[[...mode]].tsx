@@ -5,12 +5,16 @@ import {
   DelegationTabsLayoutProps,
 } from 'features/vote/components/delegation-tabs';
 import { Layout } from 'shared/components';
+import { VoteMeta } from '../Meta';
 
 const DelegationPage: FC<DelegationTabsLayoutProps> = ({ mode }) => {
   return (
-    <Layout containerSize="full">
-      <DelegationTabs mode={mode} />
-    </Layout>
+    <>
+      <VoteMeta />
+      <Layout containerSize="full">
+        <DelegationTabs mode={mode} />
+      </Layout>
+    </>
   );
 };
 
