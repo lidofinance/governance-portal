@@ -4,8 +4,8 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { PublicClient } from 'viem';
 import { parseVote } from './parse-vote';
 import {
+  EventStartVote,
   getEventStartVote,
-  StartVoteEventArgs,
 } from 'shared/votes/utils/get-event-start-vote';
 
 type VotingContract = ReturnType<
@@ -20,7 +20,7 @@ type FetchArgs = {
   onlyActive?: boolean;
 };
 
-type VoteResult = Vote & { startEvent: StartVoteEventArgs | null };
+type VoteResult = Vote & { startEvent: EventStartVote | null };
 
 const isVoteActive = (vote: Vote) => {
   if (
@@ -68,11 +68,7 @@ export const fetchAragonVotes = async ({
     ),
   );
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   return votes.filter(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     (vote): vote is VoteResult =>
       !!vote && (onlyActive ? isVoteActive(vote) : true),
   );

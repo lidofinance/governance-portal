@@ -10,6 +10,9 @@ export const ProposalListItemWrapper = styled(Block)`
   cursor: pointer;
   padding: 30px;
   height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   @media ${devicesHeaderMedia.tablet} {
     flex-direction: column;
   }
@@ -37,6 +40,7 @@ export const ProposalDescription = styled.div`
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  min-width: 0;
 
   @media ${devicesHeaderMedia.tablet} {
     width: 100%;
@@ -62,6 +66,14 @@ export const DescriptionText = styled(Text)`
   text-overflow: ellipsis;
 `;
 
+export const DescriptionContent = styled.div`
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+`;
+
 export const MarkdownWrap = styled.div`
   hyphens: auto;
   overflow-wrap: anywhere;
@@ -73,6 +85,7 @@ export const MarkdownWrap = styled.div`
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   width: 100%;
+  min-width: 0;
   line-height: 1.6;
 
   & p {
@@ -96,7 +109,6 @@ export const MarkdownWrap = styled.div`
   & table {
     display: block;
     width: 100%;
-    width: max-content;
     max-width: 100%;
     overflow: auto;
     border-spacing: 0;

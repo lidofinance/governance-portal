@@ -9,6 +9,7 @@ import {
   VoteStatusWrapper,
   MarkdownWrap,
   DescriptionText,
+  DescriptionContent,
   UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
@@ -122,7 +123,7 @@ export const VoteItem = ({
           </MarkdownWrap>
         )}
         {descriptionLines.length > 0 && !trimmedData && !isIPFSLoading && (
-          <div>
+          <DescriptionContent>
             {descriptionLines.map((line, index) => (
               <DescriptionText key={index}>{line}</DescriptionText>
             ))}
@@ -132,7 +133,7 @@ export const VoteItem = ({
                 <span>Unknown Contract Called</span>
               </UnknownContract>
             )}
-          </div>
+          </DescriptionContent>
         )}
       </ProposalDescription>
     </ProposalListItemWrapper>

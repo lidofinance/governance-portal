@@ -69,7 +69,7 @@ export const ProposalsList = () => {
         >
           <VoteItem
             proposalId={dataItem.proposalId}
-            description={dataItem.event?.metadata}
+            description={dataItem.event?.args.metadata}
             script={dataItem.vote.script}
             state={dataItem.state}
             voteTime={dataItem.voteTime}

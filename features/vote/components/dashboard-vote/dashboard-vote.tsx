@@ -19,12 +19,12 @@ import { votePage } from 'constants/urls';
 import { VoteStatusBanner } from '../vote-status-banner';
 import { VoteDescription } from '../vote-description';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
-import { StartVoteEventArgs } from 'shared/votes/utils/get-event-start-vote';
+import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { formatEther } from 'viem';
 
 type Props = {
   vote: Vote;
-  startEvent: StartVoteEventArgs | null;
+  startEvent: EventStartVote | null;
   voteTime: number;
   objectionPhaseTime: number;
   executedAt?: number;
@@ -103,7 +103,7 @@ export const DashboardVote = ({
         <VoteBody>
           <VoteTitle>Vote #{vote.id}</VoteTitle>
           <VoteDescriptionWrap data-testid="voteDescription">
-            <VoteDescription metadata={startEvent?.metadata} />
+            <VoteDescription metadata={startEvent?.args.metadata} />
           </VoteDescriptionWrap>
         </VoteBody>
         <Footer>

@@ -2,6 +2,7 @@ import type { Address, Log } from 'viem';
 import { aragonVotingAbi } from 'abi/generated';
 import { ContractReadFunctionReturnType } from 'shared/types';
 import { UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { EventStartVote } from './utils/get-event-start-vote';
 
 /**
  * VotePhase.Main if one can vote 'yes' or 'no',
@@ -51,11 +52,7 @@ export type VoteData = {
   proposalId: number;
   vote: any;
   canExecute: boolean;
-  event?: {
-    creator: Address;
-    metadata: string;
-    voteId: bigint;
-  } | null;
+  event: EventStartVote | null;
   state: {
     status: VoteStatus;
     isQuorumReached: boolean;
