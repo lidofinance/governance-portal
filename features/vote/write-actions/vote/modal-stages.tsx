@@ -6,10 +6,11 @@ import {
 import {
   TxStagePending,
   TxStageSign,
+  TxStageSuccess,
 } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 import { VoteMode, voteModeDict } from '../../types';
 import { VoteEvent, VotePhase } from 'shared/votes/types';
-import { Address } from 'viem';
+import { Address, Hex } from 'viem';
 import { VoteSuccessModal } from '../../components/vote-actions/modals/vote-success-modal/vote-success-modal';
 import { VoteConfirmDelegatedModal } from '../../components/vote-actions/modals/vote-delegated-confirm-modal';
 
@@ -42,9 +43,31 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
       <TxStageSign title={getInProgressText(mode)} description="" />,
     ),
 
-  pending: (mode: VoteMode, txHash?: string) =>
+  signEnact: ({ voteId }: { voteId: string }) =>
+    transitStage(
+      <TxStageSign title={`You are enacting vote #${voteId}`} description="" />,
+    ),
+
+  pendingEnact: ({ voteId, txHash }: { voteId: string; txHash?: Hex }) =>
+    transitStage(
+      <TxStagePending
+        title={`You are enacting vote #${voteId}`}
+        txHash={txHash}
+      />,
+    ),
+
+  pending: (mode: VoteMode, txHash?: Hex) =>
     transitStage(
       <TxStagePending title={getInProgressText(mode)} txHash={txHash} />,
+    ),
+
+  successEnact: ({ voteId, txHash }: { voteId: string; txHash?: Hex }) =>
+    transitStage(
+      <TxStageSuccess
+        title={`Vote #${voteId} is enacted`}
+        txHash={txHash}
+        description=""
+      />,
     ),
 
   success: ({

@@ -2,7 +2,7 @@ import { Text } from '@lidofinance/lido-ui';
 import { InfoWrap, VotingPower, Amount } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { useDelegators } from '../../hooks/use-delegators';
-import { formatEther } from 'viem';
+import { formatBalance } from 'utils/format-balance';
 
 interface Props {
   votePowerWei: bigint | null | undefined;
@@ -21,7 +21,7 @@ export const VotePowerInfo = ({ votePowerWei }: Props) => {
           My voting power
         </Text>
         <Amount data-testid="myVPAmount">
-          {formatEther(votePowerWei || 0n)} {tokenData?.symbol}
+          {formatBalance(votePowerWei || 0n)} {tokenData?.symbol}
         </Amount>
       </VotingPower>
       {nonZeroDelegators.length > 0 && (
@@ -30,7 +30,7 @@ export const VotePowerInfo = ({ votePowerWei }: Props) => {
             Delegated voting power
           </Text>
           <Amount data-testid="delegatedVPAmount">
-            {formatEther(totalVotingPower)} {tokenData?.symbol}
+            {formatBalance(totalVotingPower)} {tokenData?.symbol}
           </Amount>
         </VotingPower>
       )}

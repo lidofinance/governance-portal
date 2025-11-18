@@ -9,8 +9,8 @@ import { useDelegators } from '../../hooks/use-delegators';
 import { BasicActions } from './basic-actions';
 import { Box } from 'shared/components/box';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
-import { useVoteContext } from '../../providers/vote-context';
-import { useVoteActionsContext } from '../../providers/vote-actions-context';
+import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

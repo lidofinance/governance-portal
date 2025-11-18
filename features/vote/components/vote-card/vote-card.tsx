@@ -9,7 +9,7 @@ import {
   VoteTimestamps,
   VoteTitle,
 } from './style';
-import { Container, Link } from '@lidofinance/lido-ui';
+import { Button, Container, Link } from '@lidofinance/lido-ui';
 import { VoteStatusChips } from '../vote-status-chips';
 import { getVoteDetailsFormatted } from '../../utils/get-vote-details-formatted';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -17,21 +17,21 @@ import { formatEther, Hex } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { Text } from 'shared/components/text';
 import { getEtherscanTxLink } from 'utils/etherscan';
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { VoteDescription } from '../vote-description';
 import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { Button } from 'shared/components/button';
 import { useUserConfig } from 'config/user-config';
 import { useConnect } from 'reef-knot/core-react';
 import { VoteInfoDelegated } from '../vote-info-delegated';
 import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
-import { useVoteContext } from '../../providers/vote-context';
+import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
+import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 
 type Props = {
   voteId: string;
@@ -56,11 +56,14 @@ const formatDate = (date: number) =>
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
   const { voteData } = useVoteContext();
+
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
 
   const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
+
+  const { handleEnact } = useVoteActionsContext();
 
   const openConnectWalletModal = useCallback(async () => {
     await connect();
@@ -179,6 +182,9 @@ export const VoteCard = ({ voteId }: Props) => {
           </>
         )}
         <SectionHeading>Proposal</SectionHeading>
+        {voteData.voteEvents.length > 0 && (
+          <VotersList voteEvents={voteData.voteEvents} />
+        )}
         {voteData.eventStart?.args.metadata && (
           <DetailsBoxWrap>
             <DescriptionWrap data-testid="voteDescription">
@@ -188,9 +194,6 @@ export const VoteCard = ({ voteId }: Props) => {
               />
             </DescriptionWrap>
           </DetailsBoxWrap>
-        )}
-        {voteData.voteEvents.length > 0 && (
-          <VotersList voteEvents={voteData.voteEvents} />
         )}
         <DetailsBoxWrap data-testid="voteScript">
           <VoteScript script={voteData.script as Hex} />
@@ -213,6 +216,11 @@ export const VoteCard = ({ voteId }: Props) => {
                 <VotePowerInfo votePowerWei={voteData.votePowerWei} />
                 <VoteActions />
               </>
+            )}
+            {voteData.canExecute && (
+              <Button fullwidth color="success" onClick={handleEnact}>
+                Enact
+              </Button>
             )}
           </>
         )}
