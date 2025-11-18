@@ -5,7 +5,7 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
 import { VoteActionsProvider } from '../../features/vote/providers/vote-actions-context';
-import { VoteMeta } from './Meta';
+import { VoteMeta } from '../../features/vote/meta';
 
 type Props = {
   voteId: string;
