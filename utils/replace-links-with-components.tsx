@@ -7,12 +7,13 @@ import { replaceRegexWithJSX } from './replace-regex-with-JSX';
 import { getIpfsUrl } from './get-ipfs-url';
 import { AddressPop } from '../shared/components/address-pop';
 import { Box } from '../shared/components/box';
+import { ExternalLink } from '../shared/components/external-link/external-link';
 
 export const replaceJsxElements = (text: string) => {
   return replaceRegexWithJSX(text, [
     {
       regex: REGEX_URL,
-      replace: (link) => <Link href={link}>{link}</Link>,
+      replace: (link) => <ExternalLink href={link}>{link}</ExternalLink>,
     },
     {
       regex: REGEX_ETH_ADDRESS,
@@ -20,7 +21,7 @@ export const replaceJsxElements = (text: string) => {
         <AddressPop address={address}>
           <Box display="flex" alignItems="flex-end" gap={4}>
             <Identicon address={address} diameter={20} />
-            <Text strong size="xxs" color="secondary">
+            <Text strong size="xxs">
               {trimAddress(address, 4)}
             </Text>
           </Box>
