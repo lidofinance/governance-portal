@@ -1,11 +1,12 @@
-import { Link } from '@lidofinance/lido-ui';
+import { Identicon, Link, Text, trimAddress } from '@lidofinance/lido-ui';
 
-import { AddressBadge } from '../shared/wallet/address-badge/address-badge';
 import { REGEX_URL } from './regex-url';
 import { REGEX_ETH_ADDRESS } from './regex-eth-address';
 import { REGEX_CID, REGEX_CID_CUTER } from './regex-cid';
 import { replaceRegexWithJSX } from './replace-regex-with-JSX';
 import { getIpfsUrl } from './get-ipfs-url';
+import { AddressPop } from '../shared/components/address-pop';
+import { Box } from '../shared/components/box';
 
 export const replaceJsxElements = (text: string) => {
   return replaceRegexWithJSX(text, [
@@ -15,7 +16,16 @@ export const replaceJsxElements = (text: string) => {
     },
     {
       regex: REGEX_ETH_ADDRESS,
-      replace: (address) => <AddressBadge address={address} />,
+      replace: (address) => (
+        <AddressPop address={address}>
+          <Box display="flex" alignItems="flex-end" gap={4}>
+            <Identicon address={address} diameter={20} />
+            <Text strong size="xxs" color="secondary">
+              {trimAddress(address, 4)}
+            </Text>
+          </Box>
+        </AddressPop>
+      ),
     },
     {
       regex: REGEX_CID,

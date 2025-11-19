@@ -13,7 +13,7 @@ type Props = React.ComponentProps<typeof IdenticonBadge>;
 export const AddressPop = ({ children, ...badgeProps }: Props) => {
   const { address } = badgeProps;
 
-  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const wrapRef = useRef<HTMLSpanElement | null>(null);
   const popRef = useRef<HTMLDivElement | null>(null);
 
   const [{ isOpened, position }, setState] = useSimpleReducer<{
