@@ -22,6 +22,10 @@ export const Wrap = styled.div`
   }
 `;
 
+export const LoaderWrap = styled(Wrap)`
+  align-items: center;
+`;
+
 export const InnerWrap = styled.div<{ $connected: boolean }>`
   border-radius: inherit;
   border: 1px solid var(--lido-color-border);

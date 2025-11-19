@@ -1,5 +1,11 @@
 import { Loader, Text, Tooltip, useBreakpoint } from '@lidofinance/lido-ui';
-import { Header, HeaderTitleWithIcon, InnerWrap, Wrap } from './style';
+import {
+  Header,
+  HeaderTitleWithIcon,
+  InnerWrap,
+  LoaderWrap,
+  Wrap,
+} from './style';
 import { PublicDelegateListItem } from './public-delegate-list-item';
 import { useAccount } from 'wagmi';
 import { AragonSmallLogo } from 'shared/components/icons';
@@ -15,9 +21,9 @@ export const PublicDelegateList = () => {
 
   if (!data || isLoading) {
     return (
-      <Wrap>
+      <LoaderWrap>
         <Loader />
-      </Wrap>
+      </LoaderWrap>
     );
   }
 
