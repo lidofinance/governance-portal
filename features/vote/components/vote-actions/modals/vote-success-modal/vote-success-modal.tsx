@@ -8,10 +8,11 @@ import { useAccount } from 'wagmi';
 import React, { useMemo, useState } from 'react';
 import { AddonSection } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
-import { formatEther, Address } from 'viem';
+import { Address } from 'viem';
 import { DelegatorsSelector } from '../../components/delegators-selector';
 import { useDelegators } from 'features/vote/hooks/use-delegators';
 import { Box } from 'shared/components/box';
+import { formatBalance } from 'utils/format-balance';
 
 type Props = {
   mode: VoteMode;
@@ -124,7 +125,7 @@ export const VoteSuccessModal = ({
                   onClick={() => onVoteWithOwnTokens(mode)}
                   style={{ flex: 1 }}
                 >
-                  My own ({formatEther(votePower)} {tokenData?.symbol})
+                  My own ({formatBalance(votePower)} {tokenData?.symbol})
                 </Button>
 
                 <Button
@@ -146,7 +147,8 @@ export const VoteSuccessModal = ({
           {canVoteWithOwnTokens && !hasRemainingDelegatedPower && (
             <AddonSection>
               <Text strong>
-                Vote with your own {formatEther(votePower)} {tokenData?.symbol}
+                Vote with your own {formatBalance(votePower)}{' '}
+                {tokenData?.symbol}
               </Text>
               <DelegatorsSelector
                 voteId={voteId}

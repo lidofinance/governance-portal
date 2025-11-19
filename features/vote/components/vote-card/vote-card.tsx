@@ -8,6 +8,7 @@ import {
   VoteHeader,
   VoteTimestamps,
   VoteTitle,
+  InlineLoaderStyled,
 } from './style';
 import { Button, Container, Link } from '@lidofinance/lido-ui';
 import { VoteStatusChips } from '../vote-status-chips';
@@ -32,6 +33,7 @@ import { VoteActions } from '../vote-actions';
 import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
 import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
+import { Box } from 'shared/components/box';
 
 type Props = {
   voteId: string;
@@ -55,7 +57,7 @@ const formatDate = (date: number) =>
 
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
-  const { voteData } = useVoteContext();
+  const { voteData, isLoading } = useVoteContext();
 
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
@@ -97,7 +99,27 @@ export const VoteCard = ({ voteId }: Props) => {
     }
   }, [voteData]);
 
-  if (!voteData) return null;
+  if (isLoading)
+    return (
+      <Container as="main" size="tight" key={voteId}>
+        <InlineLoaderStyled />
+      </Container>
+    );
+
+  if (!voteData)
+    return (
+      <Container as="main" size="tight" key={voteId}>
+        <Box textAlign="center">
+          <Text size={18} strong>
+            No results found for vote #{voteId}
+          </Text>
+          <Text size={14} color="secondary">
+            Sorry, we weren&#39;t able to find any votes for your search. Try
+            another search.
+          </Text>
+        </Box>
+      </Container>
+    );
 
   const {
     totalSupply,
@@ -119,9 +141,9 @@ export const VoteCard = ({ voteId }: Props) => {
               totalSupply={totalSupply}
               nayNum={nayNum}
               yeaNum={yeaNum}
-              minAcceptQuorum={Number(formatEther(voteData.minAcceptQuorum))}
-              status={voteData.status}
-              executedTxHash={voteData.eventExecute?.event.transactionHash}
+              minAcceptQuorum={Number(formatEther(voteData?.minAcceptQuorum))}
+              status={voteData?.status}
+              executedTxHash={voteData?.eventExecute?.event.transactionHash}
               votePhase={voteData.phase}
               chainId={chainId}
               proposalId={voteDualGovernanceStatus?.proposalId || null}

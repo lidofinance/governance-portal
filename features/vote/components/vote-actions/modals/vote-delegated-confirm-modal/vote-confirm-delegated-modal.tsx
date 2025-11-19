@@ -3,8 +3,9 @@ import { VoteMode, voteModeDict } from 'features/vote/types';
 import { DelegatorsSelector } from '../../components/delegators-selector';
 import { Text } from 'shared/components/text';
 import { useState } from 'react';
-import { Address, formatEther } from 'viem';
+import { Address } from 'viem';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
+import { formatBalance } from 'utils/format-balance';
 
 type Props = {
   mode: VoteMode;
@@ -42,7 +43,7 @@ export const VoteConfirmDelegatedModal = ({
         onSelectionChange={handleSelectionChange}
       />
       <Button color="secondary" onClick={handleSubmit} fullwidth>
-        {`"${voteModeDict[mode]}" (${formatEther(selectedBalance)} ${tokenData?.symbol})`}
+        {`"${voteModeDict[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
       </Button>
     </>
   );

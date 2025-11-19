@@ -1,9 +1,10 @@
 import { createContext, FC, useContext } from 'react';
 import invariant from 'tiny-invariant';
-import { useVote, UseVoteReturnType } from '../hooks/use-vote';
+import { useVote, UseVoteData } from '../hooks/use-vote';
 
 type Value = {
-  voteData: UseVoteReturnType;
+  voteData?: UseVoteData;
+  isLoading: boolean;
 };
 
 type VoteProviderProps = {
@@ -11,7 +12,10 @@ type VoteProviderProps = {
   children?: React.ReactNode;
 };
 
-const VoteContext = createContext<Value>({ voteData: null });
+const VoteContext = createContext<Value>({
+  voteData: {} as UseVoteData,
+  isLoading: false,
+});
 
 export const useVoteContext = () => {
   const value = useContext(VoteContext);
@@ -20,8 +24,10 @@ export const useVoteContext = () => {
 };
 
 export const VoteProvider: FC<VoteProviderProps> = ({ voteId, children }) => {
-  const voteData = useVote({ voteId: BigInt(voteId) });
+  const { data: voteData, isLoading } = useVote({ voteId: BigInt(voteId) });
   return (
-    <VoteContext.Provider value={{ voteData }}>{children}</VoteContext.Provider>
+    <VoteContext.Provider value={{ voteData, isLoading }}>
+      {children}
+    </VoteContext.Provider>
   );
 };
