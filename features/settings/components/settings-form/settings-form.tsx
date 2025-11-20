@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { DaoToken } from 'shared/blockchain/contract-addresses';
 import { createPublicClient, http } from 'viem';
 import {
@@ -38,26 +38,13 @@ export const SettingsForm = () => {
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const defaultValues = useMemo(
-    () => ({
-      rpcUrl: userConfig.savedUserConfig.rpcUrls[chainId] || '',
-      etherscanApiKey: userConfig.savedUserConfig.etherscanApiKey || '',
-      useBundledAbi: userConfig.savedUserConfig.useBundledAbi || true,
-      useTestContracts: userConfig.savedUserConfig.useTestContracts || false,
-    }),
-    [
-      chainId,
-      userConfig.savedUserConfig.etherscanApiKey,
-      userConfig.savedUserConfig.rpcUrls,
-      userConfig.savedUserConfig.useBundledAbi,
-      userConfig.savedUserConfig.useTestContracts,
-    ],
-  );
-
   const formMethods = useForm<SettingsFormData>({
     mode: 'onChange',
     defaultValues: {
-      ...defaultValues,
+      rpcUrl: userConfig.savedUserConfig.rpcUrls[chainId],
+      etherscanApiKey: userConfig.savedUserConfig.etherscanApiKey,
+      useBundledAbi: userConfig.savedUserConfig.useBundledAbi,
+      useTestContracts: userConfig.savedUserConfig.useTestContracts,
     },
   });
 
@@ -69,39 +56,8 @@ export const SettingsForm = () => {
     watch,
   } = formMethods;
 
-  const watchedValues = watch([
-    'rpcUrl',
-    'etherscanApiKey',
-    'useBundledAbi',
-    'useTestContracts',
-  ]);
-  const [rpcUrl, etherscanApiKey, useBundledAbi, useTestContracts] =
-    watchedValues;
-
-  const initialValues = useMemo(
-    () => ({
-      ...defaultValues,
-    }),
-    [defaultValues],
-  );
-
-  const hasChanges = useMemo(() => {
-    return (
-      rpcUrl !== initialValues.rpcUrl ||
-      etherscanApiKey !== initialValues.etherscanApiKey ||
-      useBundledAbi !== initialValues.useBundledAbi ||
-      useTestContracts !== initialValues.useTestContracts
-    );
-  }, [
-    rpcUrl,
-    initialValues.rpcUrl,
-    initialValues.etherscanApiKey,
-    initialValues.useBundledAbi,
-    initialValues.useTestContracts,
-    etherscanApiKey,
-    useBundledAbi,
-    useTestContracts,
-  ]);
+  const watchedValues = watch(['useTestContracts']);
+  const [useTestContracts] = watchedValues;
 
   const isTestnet = getIsTestnet(chainId);
 
@@ -180,6 +136,7 @@ export const SettingsForm = () => {
     (formValues: SettingsFormValues) => {
       userConfig.setSavedUserConfig({
         rpcUrls: {
+          ...userConfig.savedUserConfig.rpcUrls,
           [chainId]: formValues.rpcUrl,
         },
         etherscanApiKey: formValues.etherscanApiKey,
@@ -206,8 +163,7 @@ export const SettingsForm = () => {
     ToastSuccess('Settings have been reset');
   }, [setValue, saveSettings, getValues]);
 
-  const disableButton =
-    !hasChanges || formState.isSubmitting || !formState.isValid;
+  const disableButton = formState.isSubmitting || !formState.isValid;
 
   return (
     <Container as="main" size="tight">
