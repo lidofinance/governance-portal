@@ -27,6 +27,7 @@ type Props = {
   votePower?: bigint;
   voteId: bigint;
   title: string;
+  justVotedDelegators?: Address[];
 };
 
 export const VoteSuccessModal = ({
@@ -38,6 +39,7 @@ export const VoteSuccessModal = ({
   votePower,
   voteId,
   title,
+  justVotedDelegators,
 }: Props) => {
   const { address } = useAccount();
   const { data: tokenData } = useGovernanceToken();
@@ -74,13 +76,19 @@ export const VoteSuccessModal = ({
         : [],
     );
 
+    if (justVotedDelegators) {
+      justVotedDelegators.forEach((address) => {
+        votedDelegatorAddresses.add(address.toLowerCase());
+      });
+    }
+
     const remainingDelegators = nonZeroDelegators.filter(
       (delegator) =>
         !votedDelegatorAddresses.has(delegator.address.toLowerCase()),
     );
 
     return remainingDelegators.length > 0;
-  }, [address, delegatorsData, voteEvents]);
+  }, [address, delegatorsData, voteEvents, justVotedDelegators]);
 
   const handleDelegatedVoteClick = () => {
     if (onVoteWithRemainingDelegated && selectedDelegators.length > 0) {

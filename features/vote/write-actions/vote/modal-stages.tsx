@@ -80,6 +80,7 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
     votePower,
     voteId,
     title,
+    justVotedDelegators,
   }: {
     mode: VoteMode;
     txHash: string | undefined;
@@ -93,6 +94,7 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
     votePower?: bigint;
     voteId: bigint;
     title: string;
+    justVotedDelegators?: Address[];
   }) => {
     return transitStage(
       <VoteSuccessModal
@@ -105,6 +107,7 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
         votePower={votePower}
         voteId={voteId}
         title={title}
+        justVotedDelegators={justVotedDelegators}
       />,
       {
         isClosableOnLedger: true,

@@ -170,6 +170,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           votePower: updatedVoteData?.votePowerWei || 0n,
           voteId: BigInt(voteId),
           title: `You voted "${voteModeDict[mode]}" as a Delegate`,
+          justVotedDelegators: voters,
         });
       } catch (error) {
         console.error('Error during delegated vote:', error);
