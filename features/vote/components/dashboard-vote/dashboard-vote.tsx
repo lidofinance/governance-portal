@@ -21,6 +21,14 @@ import { VoteDescription } from '../vote-description';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { formatEther } from 'viem';
+import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
+import { useQuery } from '@tanstack/react-query';
+import { getEventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
+import { usePublicClient } from 'wagmi';
+import { useLidoSDK } from 'providers/lido-sdk';
+import invariant from 'tiny-invariant';
+import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
+import { Voting } from 'shared/blockchain/contracts';
 
 type Props = {
   vote: Vote;
@@ -50,6 +58,31 @@ export const DashboardVote = ({
     startDate,
     totalSupply,
   } = getVoteDetailsFormatted(vote);
+  const { chainId } = useLidoSDK();
+  const client = usePublicClient({ chainId });
+
+  const votingContractAddress = useContractAddress(Voting);
+
+  const { data: voteExecuteEvent } = useQuery({
+    queryKey: ['voteExecuteEvent', vote.id],
+    queryFn: async () => {
+      invariant(client, 'Client must be defined');
+
+      return await getEventExecuteVote({
+        address: votingContractAddress,
+        client,
+        voteId: BigInt(vote.id),
+        block: vote.snapshotBlock,
+      });
+    },
+  });
+  const {
+    data: voteDualGovernanceStatus,
+    isLoading: voteDualGovernanceStatusLoading,
+  } = useVoteDualGovernanceStatus({
+    voteId: vote.id,
+    eventExecuteVote: voteExecuteEvent,
+  });
 
   const handlePass = useCallback(() => {
     // TODO:
@@ -85,21 +118,25 @@ export const DashboardVote = ({
   return (
     <Link passHref href={votePage(vote.id)}>
       <Wrap data-testid={`voteCardPreview-${vote.id}`}>
-        <VoteStatusBanner
-          executedAt={executedAt}
-          voteTime={voteTime}
-          objectionPhaseTime={objectionPhaseTime}
-          status={vote.state.status}
-          isEnded={isEnded}
-          yeaNum={yeaNum}
-          nayNum={nayNum}
-          totalSupply={totalSupply}
-          fontSize="xxs"
-          minAcceptQuorum={Number(vote.minAcceptQuorum)}
-          startDate={startDate}
-          // TODO: add!!!
-          voteDualGovernanceStatus={null}
-        />
+        {!voteDualGovernanceStatusLoading && (
+          <VoteStatusBanner
+            executedAt={executedAt}
+            voteTime={voteTime}
+            objectionPhaseTime={objectionPhaseTime}
+            status={vote.state.status}
+            isEnded={isEnded}
+            yeaNum={yeaNum}
+            nayNum={nayNum}
+            totalSupply={totalSupply}
+            fontSize="xxs"
+            minAcceptQuorum={Number(vote.minAcceptQuorum)}
+            startDate={startDate}
+            voteDualGovernanceStatus={
+              voteDualGovernanceStatus?.proposalStatus || null
+            }
+          />
+        )}
+
         <VoteBody>
           <VoteTitle>Vote #{vote.id}</VoteTitle>
           <VoteDescriptionWrap data-testid="voteDescription">

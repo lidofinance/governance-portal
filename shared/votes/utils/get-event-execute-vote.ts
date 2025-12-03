@@ -23,7 +23,7 @@ export type EventExecuteVote = {
 
 type GetEventExecuteVoteReturnType = Promise<EventExecuteVote | null>;
 
-const GET_LOGS_RANGE = 2000n;
+const GET_LOGS_RANGE = 4999n;
 
 export const getEventExecuteVote = async ({
   client,
@@ -44,7 +44,7 @@ export const getEventExecuteVote = async ({
       args: {
         voteId,
       },
-      fromBlock: block - GET_LOGS_RANGE,
+      fromBlock: block,
       toBlock: block + GET_LOGS_RANGE,
     })) as LogReturnType[];
 

@@ -21,7 +21,7 @@ export const replaceJsxElements = (text: string) => {
         <AddressPop address={address}>
           <Box display="flex" alignItems="flex-end" gap={4}>
             <Identicon address={address} diameter={20} />
-            <Text strong size="xxs">
+            <Text style={{ background: '#EFF2F6' }} size="xxs">
               {trimAddress(address, 4)}
             </Text>
           </Box>

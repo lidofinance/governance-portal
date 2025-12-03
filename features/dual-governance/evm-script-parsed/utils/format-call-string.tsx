@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { getContractName } from 'utils/get-contract-name';
 import { getContractAbi } from 'utils/decode-evm-script-calls';
 import { DEFAULT_ADMIN_ROLE, LIDO_ROLES } from 'constants/roles';
-import { Link } from '@lidofinance/lido-ui';
+import { Link, Text } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import {
   CallWrapper,
@@ -13,8 +13,12 @@ import {
   CallData,
   CallDataItem,
   NestedCallWrapper,
+  DGBadge,
 } from 'features/dual-governance/evm-script-parsed/style';
 import { DecodedCall } from 'utils/decode-evm-script-calls';
+import { DualGovernancePlainIcon } from 'shared/components/icons';
+import { DualGovernance } from 'shared/blockchain/contract-addresses';
+import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 
 interface FormatOptions {
   chainId: CHAINS;
@@ -30,8 +34,8 @@ const formatArg = (
 ): string => {
   if (typeof arg === 'string') {
     if (arg.startsWith('0x') && arg.length === 42) {
-      const contractName = getContractName(chainId, arg) || 'Unknown';
-      return `[${contractName}] ${arg}`;
+      const contractName = getContractName(chainId, arg);
+      return contractName ? `[${contractName}] ${arg}` : arg;
     }
     if (arg === DEFAULT_ADMIN_ROLE) {
       return 'DEFAULT ADMIN ROLE';
@@ -79,6 +83,30 @@ const FormatSingleCall: React.FC<{
     parentId !== undefined
       ? `${parentId}.${(index ?? 0) + 1}`
       : decodedCall?.id;
+
+  // Check if this is a Dual Governance call
+  const dualGovernanceAddress = DualGovernance[chainId];
+  const historicalGovernanceAddresses =
+    (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]
+      ?.governanceAddresses as string[] | undefined) || [];
+
+  const isDualGovernanceCall =
+    decodedCall?.functionName === 'submitProposal' &&
+    decodedCall?.contractAddress &&
+    (decodedCall.contractAddress.toLowerCase() ===
+      (typeof dualGovernanceAddress === 'object' &&
+      'actual' in dualGovernanceAddress
+        ? dualGovernanceAddress.actual?.toLowerCase()
+        : dualGovernanceAddress?.toLowerCase()) ||
+      decodedCall.contractAddress.toLowerCase() ===
+        (typeof dualGovernanceAddress === 'object' &&
+        'test' in dualGovernanceAddress
+          ? dualGovernanceAddress.test?.toLowerCase()
+          : undefined) ||
+      historicalGovernanceAddresses.some(
+        (addr) =>
+          addr.toLowerCase() === decodedCall.contractAddress.toLowerCase(),
+      ));
 
   if (!decodedCall || !decodedCall.functionName) {
     return (
@@ -136,6 +164,14 @@ const FormatSingleCall: React.FC<{
         marginBottom: '40px',
       }}
     >
+      {isDualGovernanceCall && (
+        <DGBadge>
+          <DualGovernancePlainIcon />{' '}
+          <Text weight={700} size="xxs" color="primary">
+            Under Dual Governance
+          </Text>
+        </DGBadge>
+      )}
       <CallTitle>
         {id}. On <b>[{decodedCall.contractName || 'Unknown'}]</b>
         <br />
@@ -153,7 +189,7 @@ const FormatSingleCall: React.FC<{
             {formattedArgs.map((param, i) => (
               <React.Fragment key={`${id}-param-${i}`}>
                 <br />
-                <span>{` ${param}`}</span>
+                <span style={{ paddingLeft: '20px' }}>{param}</span>
                 {i < formattedArgs.length - 1 && ','}
                 {i === formattedArgs.length - 1 && <br />}
               </React.Fragment>

@@ -11,8 +11,8 @@ import { Hex } from 'viem';
 type Props = {
   decodedCalls: DecodedCall[];
   rawScript?: Hex;
-  description?: string;
   tabVariant?: 'voting' | 'dg';
+  metadata?: string;
 };
 
 const sanitizeForJSON = (obj: any): any => {
@@ -48,9 +48,9 @@ const sanitizeForJSON = (obj: any): any => {
 
 export const Script = ({
   decodedCalls,
-  description,
   tabVariant,
   rawScript,
+  metadata,
 }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = useMemo(() => {
@@ -58,11 +58,11 @@ export const Script = ({
       Parsed: decodedCalls.length,
       JSON: decodedCalls.length,
       Raw: rawScript?.length,
-      ...(description ? { Description: description } : {}),
+      ...(metadata ? { Description: metadata } : {}),
     };
     const TabNames = Object.keys(tabMap) as (keyof typeof tabMap)[];
     return TabNames.filter((key) => tabMap[key]);
-  }, [decodedCalls.length, description, rawScript?.length]);
+  }, [decodedCalls.length, metadata, rawScript?.length]);
 
   const sanitizedCalls = useMemo(() => {
     try {
@@ -98,7 +98,7 @@ export const Script = ({
         {tabs[activeTab] === 'Parsed' && <ScriptBody calls={decodedCalls} />}
         {tabs[activeTab] === 'Raw' && <ScriptBody binary={rawScript} />}
         {tabs[activeTab] === 'Description' && (
-          <ScriptBody>{description}</ScriptBody>
+          <ScriptBody>{metadata}</ScriptBody>
         )}
       </VoteScriptBodyWrap>
     </>

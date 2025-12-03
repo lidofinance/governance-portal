@@ -27,6 +27,7 @@ import { ReactComponent as LidoIcon } from 'assets/main-page/lido-icon.svg';
 import { ReactComponent as SnapshotIcon } from 'assets/main-page/snapshot-icon.svg';
 import { ReactComponent as AragonIcon } from 'assets/main-page/aragon-icon.svg';
 import { ReactComponent as DualGovernanceIcon } from 'assets/main-page/dg-icon.svg';
+import { ReactComponent as DualGovernancePlainIcon } from 'assets/dual-governance-icon.svg';
 import { ReactComponent as LidoBlueIcon } from 'assets/main-page/lido-blue-icon.svg';
 import { ReactComponent as DiscordIcon } from 'assets/main-page/discord-icon.svg';
 import { ReactComponent as TelegramIcon } from 'assets/main-page/tg-icon.svg';
@@ -82,4 +83,5 @@ export {
   CrossIcon,
   CheckIcon,
   TrashIcon,
+  DualGovernancePlainIcon,
 };

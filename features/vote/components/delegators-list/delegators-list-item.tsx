@@ -1,6 +1,7 @@
 import { Identicon, Text, trimAddress } from '@lidofinance/lido-ui';
 import { AddressBadgeWrap, DelegatorsListItemStyled } from './style';
-import { formatNumber } from 'shared/blockchain/utils';
+import { formatBalance } from 'utils/format-balance';
+import { AddressPop } from 'shared/components/address-pop';
 
 type Props = {
   address: string;
@@ -17,14 +18,16 @@ export const DelegatorsListItem = ({
 }: Props) => {
   return (
     <DelegatorsListItemStyled key={address}>
-      <AddressBadgeWrap>
-        <Identicon address={address} diameter={20} />
-        <Text as="span" size="xxs">
-          {ensName ?? trimAddress(address, 6)}
-        </Text>
-      </AddressBadgeWrap>
+      <AddressPop address={address}>
+        <AddressBadgeWrap>
+          <Identicon address={address} diameter={20} />
+          <Text as="span" size="xxs">
+            {ensName ?? trimAddress(address, 6)}
+          </Text>
+        </AddressBadgeWrap>
+      </AddressPop>
       <Text size="xs">
-        {formatNumber({ value: balance })} {governanceSymbol ?? ''}
+        {formatBalance(balance)} {governanceSymbol ?? ''}
       </Text>
     </DelegatorsListItemStyled>
   );

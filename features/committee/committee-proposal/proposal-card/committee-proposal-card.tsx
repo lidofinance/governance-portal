@@ -79,7 +79,7 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
           {calls && calls.length > 0 && (
             <Script
               decodedCalls={decodedEvmScriptCalls}
-              description={proposal?.DGEvent?.args.metadata}
+              metadata={proposal?.DGEvent?.args.metadata}
             />
           )}
         </Box>

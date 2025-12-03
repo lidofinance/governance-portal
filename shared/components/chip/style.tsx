@@ -26,7 +26,7 @@ const ChipStatusStyle = {
 
 export const ChipWrap = styled.div<InjectedPropsTr>`
   ${({ $variant }) => ChipStatusStyle[$variant]};
-  padding: 6px 12px;
+  padding: 6px 8px;
   border-radius: 12px;
   font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;
   font-weight: 700;

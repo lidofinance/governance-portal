@@ -20,6 +20,10 @@ export const Wrap = styled.div<{ $empty?: boolean }>`
   `}
 `;
 
+export const LoadingWrap = styled(Wrap)`
+  align-items: center;
+`;
+
 export const DelegatorsListStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -42,6 +46,7 @@ export const AddressBadgeWrap = styled.span`
   vertical-align: middle;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   & > div:nth-child(1) {
     margin-right: 8px;
   }
@@ -53,6 +58,7 @@ export const DelegatorsListItemStyled = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 16px;
+  cursor: pointer;
   &:not(:last-child) {
     border-bottom: 1px solid var(--lido-color-border);
   }

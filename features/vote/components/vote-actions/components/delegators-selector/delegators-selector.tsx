@@ -271,7 +271,7 @@ export const DelegatorsSelector = ({
 
   return (
     <AccordionWrap
-      defaultExpanded
+      defaultExpanded={false}
       summary={
         <DelegatorsSummary
           selectedBalance={selectionData.selectedBalance}

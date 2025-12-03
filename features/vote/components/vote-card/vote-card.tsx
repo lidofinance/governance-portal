@@ -203,10 +203,10 @@ export const VoteCard = ({ voteId }: Props) => {
             />
           </>
         )}
-        <SectionHeading>Proposal</SectionHeading>
         {voteData.voteEvents.length > 0 && (
           <VotersList voteEvents={voteData.voteEvents} />
         )}
+        <SectionHeading>Proposal</SectionHeading>
         {voteData.eventStart?.args.metadata && (
           <DetailsBoxWrap>
             <DescriptionWrap data-testid="voteDescription">
@@ -218,7 +218,10 @@ export const VoteCard = ({ voteId }: Props) => {
           </DetailsBoxWrap>
         )}
         <DetailsBoxWrap data-testid="voteScript">
-          <VoteScript script={voteData.script as Hex} />
+          <VoteScript
+            script={voteData.script as Hex}
+            metadata={voteData.eventStart?.args.metadata || ''}
+          />
         </DetailsBoxWrap>
         {!isWalletConnected &&
           isWalletConnectionAllowed &&

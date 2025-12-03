@@ -114,4 +114,27 @@ export const CallDataItem = styled.div`
 `;
 export const NestedCallWrapper = styled.div`
   margin-top: 8px;
+  border-left: 1px solid var(--lido-color-border);
+`;
+
+export const DGBadge = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  background-color: rgba(0, 163, 255, 0.1);
+  border-radius: 5px;
+  gap: 4px;
+  width: fit-content;
+  margin-left: auto;
+  user-select: none;
+  margin-bottom: 12px;
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+
+    path {
+      fill: var(--lido-color-primary);
+    }
+  }
 `;

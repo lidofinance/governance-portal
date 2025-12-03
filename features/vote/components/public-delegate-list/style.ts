@@ -146,6 +146,10 @@ export const SocialButtons = styled.div`
 export const DelegateNameAndAddress = styled.div`
   max-width: calc(100% - 36px);
 
+  button {
+    cursor: pointer;
+  }
+
   & > p,
   & > span {
     white-space: nowrap;
