@@ -67,6 +67,24 @@ export const VoteSuccessModal = ({
 
     const { nonZeroDelegators = [] } = delegatorsData;
 
+    const delegatorAddresses = new Set(
+      nonZeroDelegators.map((d) => d.address.toLowerCase()),
+    );
+
+    // Get delegators who voted themselves (by holder)
+    const votedByHolderAddresses = new Set(
+      voteEvents
+        ? voteEvents
+            .filter(
+              (event) =>
+                !event.delegatedVotes?.length &&
+                delegatorAddresses.has(event.voter.toLowerCase()),
+            )
+            .map((event) => event.voter.toLowerCase())
+        : [],
+    );
+
+    // Get delegators voted for by delegates
     const votedDelegatorAddresses = new Set(
       voteEvents
         ? voteEvents
@@ -84,6 +102,7 @@ export const VoteSuccessModal = ({
 
     const remainingDelegators = nonZeroDelegators.filter(
       (delegator) =>
+        !votedByHolderAddresses.has(delegator.address.toLowerCase()) &&
         !votedDelegatorAddresses.has(delegator.address.toLowerCase()),
     );
 
@@ -158,11 +177,7 @@ export const VoteSuccessModal = ({
                 Vote with your own {formatBalance(votePower)}{' '}
                 {tokenData?.symbol}
               </Text>
-              <DelegatorsSelector
-                voteId={voteId}
-                onSelectionChange={handleSelectionChange}
-              />
-              <Button onClick={handleDelegatedVoteClick} fullwidth>
+              <Button onClick={() => onVoteWithOwnTokens(mode)} fullwidth>
                 {voteModeDict[mode]}
               </Button>
             </AddonSection>
