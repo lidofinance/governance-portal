@@ -1,7 +1,8 @@
 import { useActiveMotions } from '../hooks/use-motions';
 import { MotionCard } from '../motion-card';
 import { MotionsGrid } from './style';
-import { InlineLoader } from '@lidofinance/lido-ui';
+import { InlineLoader, Link } from '@lidofinance/lido-ui';
+import { motionPage } from 'constants/urls';
 
 export const Motions = () => {
   const { data: motions, isLoading } = useActiveMotions();
@@ -17,7 +18,13 @@ export const Motions = () => {
   return (
     <MotionsGrid>
       {motions.map((motion) => (
-        <MotionCard key={motion.id} motion={motion} />
+        <Link
+          target="_self"
+          href={motionPage(motion.id.toString())}
+          key={motion.id.toString()}
+        >
+          <MotionCard key={motion.id} motion={motion} />
+        </Link>
       ))}
     </MotionsGrid>
   );
