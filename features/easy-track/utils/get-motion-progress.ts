@@ -1,7 +1,10 @@
 import { formatEther } from '@ethersproject/units';
-import type { Motion } from '../types';
+import type { Motion, RawMotionSubgraph } from '../types';
 
-export const getMotionProgress = (motion: Motion, totalSupply: bigint) => {
+export const getMotionProgress = (
+  motion: Motion | RawMotionSubgraph,
+  totalSupply: bigint,
+) => {
   const thresholdPct = Number(motion.objectionsThreshold) / 100;
   const totalSupplyNumber = Number(formatEther(totalSupply));
   const objectionsAmount = Number(formatEther(motion.objectionsAmount));

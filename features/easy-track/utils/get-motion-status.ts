@@ -1,4 +1,4 @@
-import { Motion } from '../types';
+import { Motion, RawMotionSubgraph } from '../types';
 import { MotionDisplayStatus, MotionStatus } from '../motion-types';
 import { MotionProgress } from './get-motion-progress';
 
@@ -28,7 +28,7 @@ export const getMotionDisplayStatus = ({
   progress,
   isAttentionTime,
 }: {
-  motion: Motion;
+  motion: Motion | RawMotionSubgraph;
   progress: MotionProgress | null;
   isAttentionTime: boolean;
 }) => {

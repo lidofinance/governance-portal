@@ -122,7 +122,6 @@ export const decodeCalls = <TCall extends BaseCall>({
 
     let abi: ABIElement[] | undefined;
     const id = index + 1;
-
     if (contractName) {
       abi = getContractAbi(contractAddress, chainId);
     }

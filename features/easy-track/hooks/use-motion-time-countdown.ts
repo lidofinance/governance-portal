@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Motion } from '../types';
+import { Motion, RawMotionSubgraph } from '../types';
 
 export type MotionTimeData = {
   isPassed: boolean;
@@ -7,8 +7,20 @@ export type MotionTimeData = {
   diffFormatted: string;
 };
 
-export const useMotionTimeCountdown = (motion: Motion) => {
+const DEFAULT_TIME_DATA: MotionTimeData = {
+  isPassed: false,
+  diff: 0,
+  diffFormatted: '0\u00A0min',
+};
+
+export const useMotionTimeCountdown = (
+  motion: Motion | RawMotionSubgraph | null,
+) => {
   const getTimeLeft = useCallback((): MotionTimeData => {
+    if (!motion) {
+      return DEFAULT_TIME_DATA;
+    }
+
     const now = Date.now() / 1000;
     const diff = Number(motion.startDate) + Number(motion.duration) - now;
     return {
@@ -40,12 +52,12 @@ export const useMotionTimeCountdown = (motion: Motion) => {
   );
 
   useEffect(() => {
-    if (isPassed) return;
+    if (!motion || isPassed) return;
     const interval = setInterval(() => setTimeLeft(getTimeLeft()), 10000);
     return () => {
       clearInterval(interval);
     };
-  }, [isPassed, getTimeLeft, setTimeLeft]);
+  }, [motion, isPassed, getTimeLeft, setTimeLeft]);
 
   return timeData;
 };
