@@ -34,7 +34,7 @@ export const FormController: FC<PropsWithChildren<FormControllerProps>> = ({
     return retryEvent.subscribe(doSubmit);
   }, [retryEvent, doSubmit]);
 
-  // Reset form amount after disconnect wallet
+  // Reset start-motion-form amount after disconnect wallet
   useEffect(() => {
     if (!isDappActive) resetDefault();
     // reset will be captured when active changes

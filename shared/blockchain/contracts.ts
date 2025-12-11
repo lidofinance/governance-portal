@@ -122,26 +122,26 @@ export const AllowedRecipientRegistry: ContractObject<
   chainAddressMap: addr.AllowedRecipientRegistry,
 };
 
-export const EvmAllowedRecipientAdd: ContractObject<
+export const AllowedRecipientAdd: ContractObject<
   typeof abi.addAllowedRecipientAbi
 > = {
-  name: 'EvmAllowedRecipientAdd',
+  name: 'AllowedRecipientAdd',
   abi: abi.addAllowedRecipientAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AllowedRecipientAdd],
 };
 
-export const EvmAllowedRecipientRemove: ContractObject<
+export const AllowedRecipientRemove: ContractObject<
   typeof abi.removeAllowedRecipientAbi
 > = {
-  name: 'EvmAllowedRecipientRemove',
+  name: 'AllowedRecipientRemove',
   abi: abi.removeAllowedRecipientAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AllowedRecipientRemove],
 };
 
-export const EvmAllowedRecipientTopUp: ContractObject<
+export const AllowedRecipientTopUp: ContractObject<
   typeof abi.topUpAllowedRecipientsAbi
 > = {
-  name: 'EvmAllowedRecipientTopUp',
+  name: 'AllowedRecipientTopUp',
   abi: abi.topUpAllowedRecipientsAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AllowedRecipientTopUp],
 };
@@ -155,7 +155,7 @@ export const AllowedRecipientReferralDaiRegistry: ContractObject<
   chainAddressMap: addr.AllowedRecipientReferralDaiRegistry,
 };
 
-export const EvmAllowedRecipientAddReferralDai: ContractObject<
+export const AllowedRecipientAddReferralDai: ContractObject<
   typeof abi.addAllowedRecipientAbi
 > = {
   name: 'EvmAllowedRecipientAddReferralDai',
@@ -191,7 +191,7 @@ export const AllowedRecipientTrpLdoRegistry: ContractObject<
   chainAddressMap: addr.AllowedRecipientTrpLdoRegistry,
 };
 
-export const EvmAllowedRecipientTopUpTrpLdo: ContractObject<
+export const AllowedRecipientTopUpTrpLdo: ContractObject<
   typeof abi.topUpAllowedRecipientsAbi
 > = {
   name: 'EvmAllowedRecipientTopUpTrpLdo',
@@ -264,16 +264,16 @@ export const GovernanceToken: ContractObject<typeof abi.miniMeTokenAbi> = {
   chainAddressMap: addr.DaoToken,
 };
 
-export const EvmNodeOperatorIncreaseLimit: ContractObject<
+export const NodeOperatorIncreaseLimit: ContractObject<
   typeof abi.evmIncreaseNodeOperatorStakingLimitAbi
 > = {
-  name: 'EvmNodeOperatorIncreaseLimit',
+  name: 'NodeOperatorIncreaseLimit',
   abi: abi.evmIncreaseNodeOperatorStakingLimitAbi,
   chainAddressMap: EvmAddressesByType[MotionType.NodeOperatorIncreaseLimit],
 };
 
-export const EvmLEGOTopUp: ContractObject<typeof abi.evmTopUpLegoProgramAbi> = {
-  name: 'EvmLEGOTopUp',
+export const LEGOTopUp: ContractObject<typeof abi.evmTopUpLegoProgramAbi> = {
+  name: 'LEGOTopUp',
   abi: abi.evmTopUpLegoProgramAbi,
   chainAddressMap: EvmAddressesByType[MotionType.LEGOTopUp],
 };
@@ -281,10 +281,10 @@ export const EvmLEGOTopUp: ContractObject<typeof abi.evmTopUpLegoProgramAbi> = {
 /**
  * @deprecated
  */
-export const EvmRewardProgramAdd: ContractObject<
+export const RewardProgramAdd: ContractObject<
   typeof abi.evmAddRewardProgramAbi
 > = {
-  name: 'EvmRewardProgramAdd',
+  name: 'RewardProgramAdd',
   abi: abi.evmAddRewardProgramAbi,
   chainAddressMap: EvmAddressesByType[MotionType.RewardProgramAdd],
 };
@@ -292,10 +292,10 @@ export const EvmRewardProgramAdd: ContractObject<
 /**
  * @deprecated
  */
-export const EvmRewardProgramRemove: ContractObject<
+export const RewardProgramRemove: ContractObject<
   typeof abi.evmRemoveRewardProgramAbi
 > = {
-  name: 'EvmRewardProgramRemove',
+  name: 'RewardProgramRemove',
   abi: abi.evmRemoveRewardProgramAbi,
   chainAddressMap: EvmAddressesByType[MotionType.RewardProgramRemove],
 };
@@ -303,34 +303,34 @@ export const EvmRewardProgramRemove: ContractObject<
 /**
  * @deprecated
  */
-export const EvmRewardProgramTopUp: ContractObject<
+export const RewardProgramTopUp: ContractObject<
   typeof abi.evmTopUpRewardProgramsAbi
 > = {
-  name: 'EvmRewardProgramTopUp',
+  name: 'RewardProgramTopUp',
   abi: abi.evmTopUpRewardProgramsAbi,
   chainAddressMap: EvmAddressesByType[MotionType.RewardProgramTopUp],
 };
 
-export const EvmReferralPartnerAdd: ContractObject<
+export const ReferralPartnerAdd: ContractObject<
   typeof abi.evmAddReferralPartnerAbi
 > = {
-  name: 'EvmReferralPartnerAdd',
+  name: 'ReferralPartnerAdd',
   abi: abi.evmAddReferralPartnerAbi,
   chainAddressMap: EvmAddressesByType[MotionType.ReferralPartnerAdd],
 };
 
-export const EvmReferralPartnerRemove: ContractObject<
+export const ReferralPartnerRemove: ContractObject<
   typeof abi.evmRemoveReferralPartnerAbi
 > = {
-  name: 'EvmReferralPartnerRemove',
+  name: 'ReferralPartnerRemove',
   abi: abi.evmRemoveReferralPartnerAbi,
   chainAddressMap: EvmAddressesByType[MotionType.ReferralPartnerRemove],
 };
 
-export const EvmReferralPartnerTopUp: ContractObject<
+export const ReferralPartnerTopUp: ContractObject<
   typeof abi.evmTopUpReferralPartnersAbi
 > = {
-  name: 'EvmReferralPartnerTopUp',
+  name: 'ReferralPartnerTopUp',
   abi: abi.evmTopUpReferralPartnersAbi,
   chainAddressMap: EvmAddressesByType[MotionType.ReferralPartnerTopUp],
 };
@@ -520,10 +520,10 @@ export const SandboxNodeOperatorsRegistry: ContractObject<
   chainAddressMap: addr.SandboxNodeOperatorsRegistry,
 };
 
-export const EvmSandboxNodeOperatorIncreaseLimit: ContractObject<
+export const SandboxNodeOperatorIncreaseLimit: ContractObject<
   typeof abi.evmIncreaseNodeOperatorStakingLimitAbi
 > = {
-  name: 'EvmSandboxNodeOperatorIncreaseLimit',
+  name: 'SandboxNodeOperatorIncreaseLimit',
   abi: abi.evmIncreaseNodeOperatorStakingLimitAbi,
   chainAddressMap:
     EvmAddressesByType[MotionType.SandboxNodeOperatorIncreaseLimit],
@@ -545,10 +545,10 @@ export const RccStablesRegistry: ContractObject<
   chainAddressMap: addr.RccStablesRegistry,
 };
 
-export const EvmRccStablesTopUp: ContractObject<
+export const RccStablesTopUp: ContractObject<
   typeof abi.topUpWithLimitsStablesAbi
 > = {
-  name: 'EvmRccStablesTopUp',
+  name: 'RccStablesTopUp',
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.RccStablesTopUp],
 };
@@ -561,10 +561,10 @@ export const PmlStablesRegistry: ContractObject<
   chainAddressMap: addr.PmlStablesRegistry,
 };
 
-export const EvmPmlStablesTopUp: ContractObject<
+export const PmlStablesTopUp: ContractObject<
   typeof abi.topUpWithLimitsStablesAbi
 > = {
-  name: 'EvmPmlStablesTopUp',
+  name: 'PmlStablesTopUp',
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.PmlStablesTopUp],
 };
@@ -577,10 +577,10 @@ export const AtcStablesRegistry: ContractObject<
   chainAddressMap: addr.AtcStablesRegistry,
 };
 
-export const EvmAtcStablesTopUp: ContractObject<
+export const AtcStablesTopUp: ContractObject<
   typeof abi.topUpWithLimitsStablesAbi
 > = {
-  name: 'EvmAtcStablesTopUp',
+  name: 'AtcStablesTopUp',
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AtcStablesTopUp],
 };
@@ -593,26 +593,26 @@ export const SandboxStablesAllowedRecipientRegistry: ContractObject<
   chainAddressMap: addr.SandboxStablesAllowedRecipientRegistry,
 };
 
-export const EvmSandboxStablesAdd: ContractObject<
+export const SandboxStablesAdd: ContractObject<
   typeof abi.addAllowedRecipientAbi
 > = {
-  name: 'EvmSandboxStablesAdd',
+  name: 'SandboxStablesAdd',
   abi: abi.addAllowedRecipientAbi,
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStablesAdd],
 };
 
-export const EvmSandboxStablesRemove: ContractObject<
+export const SandboxStablesRemove: ContractObject<
   typeof abi.removeAllowedRecipientAbi
 > = {
-  name: 'EvmSandboxStablesRemove',
+  name: 'SandboxStablesRemove',
   abi: abi.removeAllowedRecipientAbi,
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStablesRemove],
 };
 
-export const EvmSandboxStablesTopUp: ContractObject<
+export const SandboxStablesTopUp: ContractObject<
   typeof abi.topUpWithLimitsStablesAbi
 > = {
-  name: 'EvmSandboxStablesTopUp',
+  name: 'SandboxStablesTopUp',
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStablesTopUp],
 };
@@ -719,10 +719,10 @@ export const AllianceOpsStablesAllowedRecipientsRegistry: ContractObject<
   chainAddressMap: addr.AllianceOpsAllowedRecipientsRegistry,
 };
 
-export const EvmAllianceOpsStablesTopUp: ContractObject<
+export const AllianceOpsStablesTopUp: ContractObject<
   typeof abi.topUpWithLimitsStablesAbi
 > = {
-  name: 'EvmAllianceOpsStablesTopUp',
+  name: 'AllianceOpsStablesTopUp',
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AllianceOpsStablesTopUp],
 };
