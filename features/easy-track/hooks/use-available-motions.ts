@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 import {
   EvmAddressesByChain,
   parseEvmSupportedChainId,
-} from 'shared/blockchain/evm-addresses';
+} from 'features/easy-track/evm-addresses';
 import { getIsTrustedCaller } from 'shared/blockchain/utils/get-is-trusted-caller';
 import { Address } from 'viem';
 import { processInBatches } from 'utils/process-in-batches';

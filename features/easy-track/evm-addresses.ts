@@ -1,6 +1,7 @@
 import { flow, map, toPairs, fromPairs, mapValues } from 'lodash/fp';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { MotionType } from './motion-types';
+import { Address } from 'viem';
 
 const EvmSupportedChains = [
   CHAINS.Mainnet,
@@ -12,7 +13,7 @@ export type EvmSupportedChain = (typeof EvmSupportedChains)[number];
 
 type EvmAddresses = Record<
   EvmSupportedChain,
-  Partial<Record<MotionType, string>>
+  Partial<Record<MotionType, Address | ''>>
 >;
 
 export type KeyFromValue<V, T extends Record<PropertyKey, PropertyKey>> = {

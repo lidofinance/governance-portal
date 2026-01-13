@@ -412,6 +412,7 @@ export const EVMScriptRegistry: ChainAddressMap = {
 
 export const AllowedTokensRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x4ac40c34f8992bb1e5e856a448792158022551ca',
+  [CHAINS.Hoodi]: '0x40Db7E8047C487bD8359289272c717eA3C34D1D3',
 };
 
 export const InsuranceFund: ChainAddressMap = {

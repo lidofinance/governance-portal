@@ -1,8 +1,8 @@
 import * as abi from 'abi/generated';
 import * as addr from 'shared/blockchain/contract-addresses';
 import { ContractObject } from './types';
-import { EvmAddressesByType } from './evm-addresses';
 import { MotionType } from '../../features/easy-track/motion-types';
+import { EvmAddressesByType } from '../../features/easy-track/evm-addresses';
 
 export const StETH: ContractObject<typeof abi.stethAbi> = {
   name: 'stETH',
