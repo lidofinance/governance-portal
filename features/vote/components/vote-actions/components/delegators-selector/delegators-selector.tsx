@@ -1,6 +1,6 @@
 import { Checkbox, ToastInfo, trimAddress } from '@lidofinance/lido-ui';
 import { useMemo, useCallback, useEffect, useState } from 'react';
-import { Address, formatEther } from 'viem';
+import { Address } from 'viem';
 
 import { AddressPop } from 'shared/components/address-pop';
 import { Text } from 'shared/components/text';
@@ -20,7 +20,7 @@ import {
   SummaryWrap,
   VotedByHolderWrap,
 } from './style';
-import { pluralize } from 'utils/pluralize';
+import { formatBalance } from 'utils/format-balance';
 
 const TRANSACTION_LIMIT = 100;
 
@@ -32,6 +32,9 @@ type Delegator = {
 };
 
 type CheckedItems = Record<string, boolean>;
+
+const pluralize = (count: number, noun: string, suffix = 's') =>
+  `${count} ${noun}${count !== 1 ? suffix : ''}`;
 
 const DelegatorsSummary = ({
   selectedBalance,
@@ -48,10 +51,10 @@ const DelegatorsSummary = ({
     <Text size={12}>Selected</Text>
     <SummaryAmount data-testid="delegatorsVPAmount">
       <Text size={12} strong>
-        {formatEther(selectedBalance)} {tokenSymbol}
+        {formatBalance(selectedBalance)} {tokenSymbol}
       </Text>
       <Text size={12}>
-        {` / ${formatEther(totalVotingPower)} ${tokenSymbol}`}
+        {` / ${formatBalance(totalVotingPower)} ${tokenSymbol}`}
       </Text>
     </SummaryAmount>
     <Text size={12} data-testid="delegatorsNumber">
@@ -95,7 +98,7 @@ const VotableDelegatorItem = ({
       </Text>
     )}
     <DelegatorsVotingPower data-testid="delegatorVP">
-      {formatEther(BigInt(delegator.balance))} {tokenSymbol}
+      {formatBalance(BigInt(delegator.balance))} {tokenSymbol}
     </DelegatorsVotingPower>
   </DelegatorsListItem>
 );
@@ -117,7 +120,7 @@ const VotedDelegatorItem = ({
     </AddressPop>
     <span>{voteEvent.supports ? 'Yes' : 'No'}</span>
     <Text size={14}>
-      {formatEther(voteEvent.stake)} {tokenSymbol}
+      {formatBalance(voteEvent.stake)} {tokenSymbol}
     </Text>
   </DelegatorsListItem>
 );
@@ -134,7 +137,7 @@ export const DelegatorsSelector = ({
   voteId,
   onSelectionChange,
 }: DelegatorsSelectorProps) => {
-  const voteData = useVote({ voteId: voteId });
+  const { data: voteData } = useVote({ voteId: voteId });
   const { data: delegatorsData, isLoading: isDelegatorsLoading } =
     useDelegators();
   const { data: governanceTokenData } = useGovernanceToken();
@@ -268,7 +271,7 @@ export const DelegatorsSelector = ({
 
   return (
     <AccordionWrap
-      defaultExpanded
+      defaultExpanded={false}
       summary={
         <DelegatorsSummary
           selectedBalance={selectionData.selectedBalance}

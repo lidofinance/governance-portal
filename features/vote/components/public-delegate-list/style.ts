@@ -22,6 +22,10 @@ export const Wrap = styled.div`
   }
 `;
 
+export const LoaderWrap = styled(Wrap)`
+  align-items: center;
+`;
+
 export const InnerWrap = styled.div<{ $connected: boolean }>`
   border-radius: inherit;
   border: 1px solid var(--lido-color-border);
@@ -141,6 +145,10 @@ export const SocialButtons = styled.div`
 
 export const DelegateNameAndAddress = styled.div`
   max-width: calc(100% - 36px);
+
+  button {
+    cursor: pointer;
+  }
 
   & > p,
   & > span {

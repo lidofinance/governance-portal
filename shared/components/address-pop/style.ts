@@ -1,8 +1,10 @@
 import styled, { css, keyframes } from 'styled-components';
 
-export const Wrap = styled.div`
+export const Wrap = styled.span`
   position: relative;
   cursor: pointer;
+  padding: 4px;
+  vertical-align: middle;
   button {
     background: none;
     border: none;

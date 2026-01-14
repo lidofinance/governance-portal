@@ -15,6 +15,7 @@ type Value = {
   voteId: bigint;
   handleDelegatedVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
   handleOwnVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
+  handleEnact: () => Promise<void>;
 } | null;
 
 type VoteActionsProviderProps = {
@@ -37,10 +38,11 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   voteId,
   children,
 }) => {
-  const voteData = useVote({ voteId: BigInt(voteId) });
+  const { data: voteData, refetch } = useVote({ voteId: BigInt(voteId) });
   const { txModalStages } = useTxModalVote();
   const { data: isMultisig } = useIsContract();
-  const { voteOwnTxSender, voteDelegatedTxSender } = useVoteTxSender();
+  const { voteOwnTxSender, voteDelegatedTxSender, voteEnactTxSender } =
+    useVoteTxSender();
   const waitForTx = useTxConfirmation();
   const queryClient = useQueryClient();
   const { isConnected, address: accountAddress } = useAccount();
@@ -48,6 +50,9 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
 
   const onOwnVoteSubmit = useCallback(
     async (mode: VoteMode) => {
+      if (!voteData) {
+        return;
+      }
       try {
         const txHash = await voteOwnTxSender({
           mode,
@@ -69,8 +74,8 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         }
 
         let updatedVoteData = voteData;
-        if (voteData?.refetch) {
-          const refetchResult = await voteData.refetch();
+        if (refetch) {
+          const refetchResult = await refetch();
           updatedVoteData = refetchResult.data || voteData;
 
           await queryClient.invalidateQueries({
@@ -105,6 +110,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
       chainId,
       isMultisig,
       queryClient,
+      refetch,
       txModalStages,
       voteData,
       voteId,
@@ -142,8 +148,8 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         }
 
         let updatedVoteData = voteData;
-        if (voteData?.refetch) {
-          const refetchResult = await voteData.refetch();
+        if (refetch) {
+          const refetchResult = await refetch();
           updatedVoteData = refetchResult.data || voteData;
 
           await queryClient.invalidateQueries({
@@ -164,6 +170,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           votePower: updatedVoteData?.votePowerWei || 0n,
           voteId: BigInt(voteId),
           title: `You voted "${voteModeDict[mode]}" as a Delegate`,
+          justVotedDelegators: voters,
         });
       } catch (error) {
         console.error('Error during delegated vote:', error);
@@ -173,19 +180,59 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
       }
     },
     [
+      accountAddress,
+      chainId,
       isConnected,
-      txModalStages,
-      voteDelegatedTxSender,
-      voteId,
       isMultisig,
-      waitForTx,
-      voteData,
       onOwnVoteSubmit,
       queryClient,
-      chainId,
-      accountAddress,
+      refetch,
+      txModalStages,
+      voteData,
+      voteDelegatedTxSender,
+      voteId,
+      waitForTx,
     ],
   );
+
+  const onVoteEnact = useCallback(async () => {
+    try {
+      const txHash = await voteEnactTxSender({
+        voteId: BigInt(voteId),
+      });
+
+      if (isMultisig) {
+        txModalStages.successMultisig();
+        return true;
+      }
+
+      txModalStages.pendingEnact({ voteId, txHash });
+
+      const response = await waitForTx(txHash);
+
+      if (response.status === 'reverted') {
+        txModalStages.failed(new Error('Transaction was reverted'));
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ['vote', String(voteId), chainId, accountAddress],
+      });
+
+      txModalStages.successEnact({ voteId, txHash });
+    } catch (e) {
+      console.error('Error during enacting vote:', e);
+    }
+  }, [
+    accountAddress,
+    chainId,
+    isMultisig,
+    queryClient,
+    txModalStages,
+    voteEnactTxSender,
+    voteId,
+    waitForTx,
+  ]);
 
   const handleDelegatedVote = useCallback(
     async ({ mode }: { mode: VoteMode }) => {
@@ -219,12 +266,24 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
     [isConnected, onOwnVoteSubmit, txModalStages],
   );
 
+  const handleEnact = useCallback(async () => {
+    if (!isConnected) {
+      txModalStages.failed(new Error('Please connect your wallet to enact'));
+      return;
+    }
+
+    txModalStages.signEnact({ voteId });
+
+    await onVoteEnact();
+  }, [isConnected, onVoteEnact, txModalStages, voteId]);
+
   return (
     <VoteActionsContext.Provider
       value={{
         voteId: BigInt(voteId),
         handleDelegatedVote,
         handleOwnVote,
+        handleEnact,
       }}
     >
       {children}

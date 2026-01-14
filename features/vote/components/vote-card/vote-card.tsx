@@ -8,8 +8,9 @@ import {
   VoteHeader,
   VoteTimestamps,
   VoteTitle,
+  InlineLoaderStyled,
 } from './style';
-import { Container, Link } from '@lidofinance/lido-ui';
+import { Button, Container, Link } from '@lidofinance/lido-ui';
 import { VoteStatusChips } from '../vote-status-chips';
 import { getVoteDetailsFormatted } from '../../utils/get-vote-details-formatted';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -17,21 +18,22 @@ import { formatEther, Hex } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { Text } from 'shared/components/text';
 import { getEtherscanTxLink } from 'utils/etherscan';
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { VoteDescription } from '../vote-description';
 import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { Button } from 'shared/components/button';
 import { useUserConfig } from 'config/user-config';
 import { useConnect } from 'reef-knot/core-react';
 import { VoteInfoDelegated } from '../vote-info-delegated';
 import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
-import { useVoteContext } from '../../providers/vote-context';
+import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
+import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
+import { Box } from 'shared/components/box';
 
 type Props = {
   voteId: string;
@@ -55,12 +57,15 @@ const formatDate = (date: number) =>
 
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
-  const { voteData } = useVoteContext();
+  const { voteData, isLoading } = useVoteContext();
+
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
 
   const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
+
+  const { handleEnact } = useVoteActionsContext();
 
   const openConnectWalletModal = useCallback(async () => {
     await connect();
@@ -94,7 +99,27 @@ export const VoteCard = ({ voteId }: Props) => {
     }
   }, [voteData]);
 
-  if (!voteData) return null;
+  if (isLoading)
+    return (
+      <Container as="main" size="tight" key={voteId}>
+        <InlineLoaderStyled />
+      </Container>
+    );
+
+  if (!voteData)
+    return (
+      <Container as="main" size="tight" key={voteId}>
+        <Box textAlign="center">
+          <Text size={18} strong>
+            No results found for vote #{voteId}
+          </Text>
+          <Text size={14} color="secondary">
+            Sorry, we weren&#39;t able to find any votes for your search. Try
+            another search.
+          </Text>
+        </Box>
+      </Container>
+    );
 
   const {
     totalSupply,
@@ -116,9 +141,9 @@ export const VoteCard = ({ voteId }: Props) => {
               totalSupply={totalSupply}
               nayNum={nayNum}
               yeaNum={yeaNum}
-              minAcceptQuorum={Number(formatEther(voteData.minAcceptQuorum))}
-              status={voteData.status}
-              executedTxHash={voteData.eventExecute?.event.transactionHash}
+              minAcceptQuorum={Number(formatEther(voteData?.minAcceptQuorum))}
+              status={voteData?.status}
+              executedTxHash={voteData?.eventExecute?.event.transactionHash}
               votePhase={voteData.phase}
               chainId={chainId}
               proposalId={voteDualGovernanceStatus?.proposalId || null}
@@ -178,6 +203,9 @@ export const VoteCard = ({ voteId }: Props) => {
             />
           </>
         )}
+        {voteData.voteEvents.length > 0 && (
+          <VotersList voteEvents={voteData.voteEvents} />
+        )}
         <SectionHeading>Proposal</SectionHeading>
         {voteData.eventStart?.args.metadata && (
           <DetailsBoxWrap>
@@ -189,11 +217,11 @@ export const VoteCard = ({ voteId }: Props) => {
             </DescriptionWrap>
           </DetailsBoxWrap>
         )}
-        {voteData.voteEvents.length > 0 && (
-          <VotersList voteEvents={voteData.voteEvents} />
-        )}
         <DetailsBoxWrap data-testid="voteScript">
-          <VoteScript script={voteData.script as Hex} />
+          <VoteScript
+            script={voteData.script as Hex}
+            metadata={voteData.eventStart?.args.metadata || ''}
+          />
         </DetailsBoxWrap>
         {!isWalletConnected &&
           isWalletConnectionAllowed &&
@@ -213,6 +241,11 @@ export const VoteCard = ({ voteId }: Props) => {
                 <VotePowerInfo votePowerWei={voteData.votePowerWei} />
                 <VoteActions />
               </>
+            )}
+            {voteData.canExecute && (
+              <Button fullwidth color="success" onClick={handleEnact}>
+                Enact
+              </Button>
             )}
           </>
         )}

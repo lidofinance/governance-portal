@@ -8,10 +8,11 @@ import { useAccount } from 'wagmi';
 import React, { useMemo, useState } from 'react';
 import { AddonSection } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
-import { formatEther, Address } from 'viem';
+import { Address } from 'viem';
 import { DelegatorsSelector } from '../../components/delegators-selector';
 import { useDelegators } from 'features/vote/hooks/use-delegators';
 import { Box } from 'shared/components/box';
+import { formatBalance } from 'utils/format-balance';
 
 type Props = {
   mode: VoteMode;
@@ -26,6 +27,7 @@ type Props = {
   votePower?: bigint;
   voteId: bigint;
   title: string;
+  justVotedDelegators?: Address[];
 };
 
 export const VoteSuccessModal = ({
@@ -37,6 +39,7 @@ export const VoteSuccessModal = ({
   votePower,
   voteId,
   title,
+  justVotedDelegators,
 }: Props) => {
   const { address } = useAccount();
   const { data: tokenData } = useGovernanceToken();
@@ -64,6 +67,24 @@ export const VoteSuccessModal = ({
 
     const { nonZeroDelegators = [] } = delegatorsData;
 
+    const delegatorAddresses = new Set(
+      nonZeroDelegators.map((d) => d.address.toLowerCase()),
+    );
+
+    // Get delegators who voted themselves (by holder)
+    const votedByHolderAddresses = new Set(
+      voteEvents
+        ? voteEvents
+            .filter(
+              (event) =>
+                !event.delegatedVotes?.length &&
+                delegatorAddresses.has(event.voter.toLowerCase()),
+            )
+            .map((event) => event.voter.toLowerCase())
+        : [],
+    );
+
+    // Get delegators voted for by delegates
     const votedDelegatorAddresses = new Set(
       voteEvents
         ? voteEvents
@@ -73,13 +94,20 @@ export const VoteSuccessModal = ({
         : [],
     );
 
+    if (justVotedDelegators) {
+      justVotedDelegators.forEach((address) => {
+        votedDelegatorAddresses.add(address.toLowerCase());
+      });
+    }
+
     const remainingDelegators = nonZeroDelegators.filter(
       (delegator) =>
+        !votedByHolderAddresses.has(delegator.address.toLowerCase()) &&
         !votedDelegatorAddresses.has(delegator.address.toLowerCase()),
     );
 
     return remainingDelegators.length > 0;
-  }, [address, delegatorsData, voteEvents]);
+  }, [address, delegatorsData, voteEvents, justVotedDelegators]);
 
   const handleDelegatedVoteClick = () => {
     if (onVoteWithRemainingDelegated && selectedDelegators.length > 0) {
@@ -124,7 +152,7 @@ export const VoteSuccessModal = ({
                   onClick={() => onVoteWithOwnTokens(mode)}
                   style={{ flex: 1 }}
                 >
-                  My own ({formatEther(votePower)} {tokenData?.symbol})
+                  My own ({formatBalance(votePower)} {tokenData?.symbol})
                 </Button>
 
                 <Button
@@ -146,13 +174,10 @@ export const VoteSuccessModal = ({
           {canVoteWithOwnTokens && !hasRemainingDelegatedPower && (
             <AddonSection>
               <Text strong>
-                Vote with your own {formatEther(votePower)} {tokenData?.symbol}
+                Vote with your own {formatBalance(votePower)}{' '}
+                {tokenData?.symbol}
               </Text>
-              <DelegatorsSelector
-                voteId={voteId}
-                onSelectionChange={handleSelectionChange}
-              />
-              <Button onClick={handleDelegatedVoteClick} fullwidth>
+              <Button onClick={() => onVoteWithOwnTokens(mode)} fullwidth>
                 {voteModeDict[mode]}
               </Button>
             </AddonSection>

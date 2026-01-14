@@ -5,6 +5,7 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
 import { VoteActionsProvider } from '../../features/vote/providers/vote-actions-context';
+import { VoteMeta } from '../../features/vote/meta';
 
 type Props = {
   voteId: string;
@@ -12,13 +13,16 @@ type Props = {
 
 export default function VotePage({ voteId }: Props) {
   return (
-    <Layout containerSize="full">
-      <VoteProvider voteId={voteId}>
-        <VoteActionsProvider voteId={voteId}>
-          <VoteCard voteId={voteId} />
-        </VoteActionsProvider>
-      </VoteProvider>
-    </Layout>
+    <>
+      <VoteMeta />
+      <Layout containerSize="full">
+        <VoteProvider voteId={voteId}>
+          <VoteActionsProvider voteId={voteId}>
+            <VoteCard voteId={voteId} />
+          </VoteActionsProvider>
+        </VoteProvider>
+      </Layout>
+    </>
   );
 }
 

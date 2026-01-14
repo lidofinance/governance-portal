@@ -14,7 +14,7 @@ import { convertStatusToStyledVariant, VoteStatusFontSize } from './types';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 import { VoteStatus } from 'shared/votes/types';
 
-import { VaultIcon } from 'shared/components/icons';
+import { DualGovernancePlainIcon } from 'shared/components/icons';
 import { FormattedDate } from '../formatted-date';
 import { Check, Close } from '@lidofinance/lido-ui';
 
@@ -121,7 +121,7 @@ export const VoteStatusBanner = ({
           {voteDualGovernanceStatus === ProposalStatus.Cancelled && (
             <>
               <BadgeFailed>
-                <VaultIcon />
+                <DualGovernancePlainIcon />
               </BadgeFailed>
               <BannerText variant={variant}>
                 Cancelled in Dual Governance
@@ -133,7 +133,7 @@ export const VoteStatusBanner = ({
             voteDualGovernanceStatus !== ProposalStatus.Executed && (
               <>
                 <BadgeNoQuorum>
-                  <VaultIcon />
+                  <DualGovernancePlainIcon />
                 </BadgeNoQuorum>
                 <BannerText variant={variant}>
                   In Dual Governance review

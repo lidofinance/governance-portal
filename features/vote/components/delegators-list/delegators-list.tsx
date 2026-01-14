@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import {
   CounterBadge,
   DelegatorsListStyled,
+  LoadingWrap,
   ShowMoreButton,
   TitleWrap,
   Wrap,
@@ -17,12 +18,12 @@ import {
   DELEGATORS_PAGE_SIZE,
 } from 'features/vote/constants';
 import { InfoLabel } from '../info-row';
-import { formatNumber } from 'shared/blockchain/utils';
 import { ExternalLink } from 'shared/components/external-link/external-link';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
 import { getDaoTokenMetadata } from 'shared/blockchain/utils/get-dao-token-metadata';
+import { formatBalance } from 'utils/format-balance';
 
 export const DelegatorsList = () => {
   const { chainId } = useLidoSDK();
@@ -52,7 +53,11 @@ export const DelegatorsList = () => {
   }
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <LoadingWrap>
+        <Loader />
+      </LoadingWrap>
+    );
   }
 
   const nonZeroDelegatorsCount = data.nonZeroDelegators.length;
@@ -74,7 +79,7 @@ export const DelegatorsList = () => {
       <TitleWrap>
         <InfoLabel>Delegated</InfoLabel>
         <CounterBadge>
-          {formatNumber({ value: data.totalVotingPower })} {daoToken}
+          {formatBalance(data.totalVotingPower)} {daoToken}
         </CounterBadge>
         <InfoLabel>
           from {nonZeroDelegatorsCount} address

@@ -5,8 +5,9 @@ import { decodeCalls, decodeEvmScript } from 'utils/decode-evm-script-calls';
 
 type Props = {
   script: Hex;
+  metadata: string;
 };
-export const VoteScript = ({ script }: Props) => {
+export const VoteScript = ({ script, metadata }: Props) => {
   const { chainId } = useLidoSDK();
   const decodedEvmScript = decodeEvmScript(script);
   const decodedEvmScriptCalls = decodeCalls({
@@ -18,6 +19,7 @@ export const VoteScript = ({ script }: Props) => {
     <Script
       rawScript={script}
       decodedCalls={decodedEvmScriptCalls || []}
+      metadata={metadata}
       tabVariant="voting"
     />
   );

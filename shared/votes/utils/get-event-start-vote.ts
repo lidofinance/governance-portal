@@ -25,7 +25,7 @@ type LogReturnType = Log & {
   args: StartVoteEventArgs;
 };
 
-type GetEventStartVoteReturnType = Promise<EventStartVote | null>;
+type GetEventStartVoteReturnType = Promise<EventStartVote>;
 
 export const getEventStartVote = async ({
   address,

@@ -27,7 +27,7 @@ type Args = {
   voteId: bigint;
 };
 
-export type UseVoteReturnType = {
+export type UseVoteData = {
   voteTime: bigint;
   objectionPhaseTime: bigint;
   eventStart: EventStartVote | null;
@@ -48,12 +48,10 @@ export type UseVoteReturnType = {
   script: string;
   phase: VotePhase;
   status: VoteStatus;
-  isLoading: boolean;
   voteId: bigint;
-  refetch: () => Promise<any>;
-} | null;
+};
 
-export const useVote = ({ voteId }: Args): UseVoteReturnType => {
+export const useVote = ({ voteId }: Args) => {
   const { chainId } = useLidoSDK();
   const client = usePublicClient({ chainId });
   const { address: accountAddress } = useAccount();
@@ -62,11 +60,7 @@ export const useVote = ({ voteId }: Args): UseVoteReturnType => {
   const daoTokenContract = useReadContract(DaoToken);
   const votingContractAddress = useContractAddress(Voting);
 
-  const {
-    data: voteData,
-    isLoading,
-    refetch,
-  } = useQuery({
+  return useQuery({
     queryKey: ['vote', String(voteId), chainId, accountAddress],
     queryFn: async () => {
       invariant(client, 'Client must be defined');
@@ -124,23 +118,44 @@ export const useVote = ({ voteId }: Args): UseVoteReturnType => {
         vote: parsedVote,
       };
     },
-  });
+    select: (data) => {
+      const {
+        voteTime,
+        objectionPhaseTime,
+        eventStart,
+        eventExecute,
+        voteEvents,
+        canExecute,
+        voterState,
+        votePowerWei,
+        vote: {
+          open,
+          executed,
+          startDate,
+          snapshotBlock,
+          supportRequired,
+          minAcceptQuorum,
+          yea,
+          nay,
+          votingPower,
+          script,
+          phase,
+        },
+      } = data;
 
-  if (voteData) {
-    const {
-      voteTime,
-      objectionPhaseTime,
-      eventStart,
-      eventExecute,
-      voteEvents,
-      canExecute,
-      voterState,
-      votePowerWei,
-      vote: {
+      return {
+        voteTime,
+        objectionPhaseTime,
+        eventStart,
+        eventExecute,
+        voteEvents,
+        canExecute,
+        voterState,
+        votePowerWei,
         open,
         executed,
         startDate,
-        snapshotBlock,
+        snapshotBlock: Number(snapshotBlock),
         supportRequired,
         minAcceptQuorum,
         yea,
@@ -148,34 +163,9 @@ export const useVote = ({ voteId }: Args): UseVoteReturnType => {
         votingPower,
         script,
         phase,
-      },
-    } = voteData;
-
-    return {
-      voteTime,
-      objectionPhaseTime,
-      eventStart,
-      eventExecute,
-      voteEvents,
-      canExecute,
-      voterState,
-      votePowerWei,
-      open,
-      executed,
-      startDate,
-      snapshotBlock: Number(snapshotBlock),
-      supportRequired,
-      minAcceptQuorum,
-      yea,
-      nay,
-      votingPower,
-      script,
-      phase,
-      status: getVoteStatus({ open, executed, phase, canExecute, script }),
-      isLoading,
-      voteId,
-      refetch,
-    };
-  }
-  return null;
+        status: getVoteStatus({ open, executed, phase, canExecute, script }),
+        voteId,
+      };
+    },
+  });
 };

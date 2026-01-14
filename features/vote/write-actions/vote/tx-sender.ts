@@ -39,5 +39,18 @@ export const useVoteTxSender = () => {
     [votingContractAddress, writeVotingContract],
   );
 
-  return { voteOwnTxSender, voteDelegatedTxSender };
+  const voteEnactTxSender = useCallback(
+    ({ voteId }: { voteId: bigint }) => {
+      invariant(voteId, 'vote id must be provided');
+
+      return writeVotingContract({
+        address: votingContractAddress,
+        functionName: 'executeVote',
+        args: [voteId],
+      });
+    },
+    [votingContractAddress, writeVotingContract],
+  );
+
+  return { voteOwnTxSender, voteDelegatedTxSender, voteEnactTxSender };
 };

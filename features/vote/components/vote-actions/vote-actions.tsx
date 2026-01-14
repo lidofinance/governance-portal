@@ -2,15 +2,15 @@ import { PopupMenu, PopupMenuItem, Tooltip } from '@lidofinance/lido-ui';
 import { Actions, VoteButton } from './style';
 import { VoteMode, VoteType } from '../../types';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { formatEther } from 'viem';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VotePhase } from 'shared/votes/types';
 import { useDelegators } from '../../hooks/use-delegators';
 import { BasicActions } from './basic-actions';
 import { Box } from 'shared/components/box';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
-import { useVoteContext } from '../../providers/vote-context';
-import { useVoteActionsContext } from '../../providers/vote-actions-context';
+import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
+import { formatBalance } from 'utils/format-balance';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,13 +37,13 @@ export const VoteActions = () => {
   }, [isDelegatorsLoading, delegatorsData.totalVotingPower]);
 
   const formattedOwnVP = useMemo(
-    () => `${formatEther(voteData?.votePowerWei || 0n)} ${tokenData?.symbol}`,
+    () => `${formatBalance(voteData?.votePowerWei || 0n)} ${tokenData?.symbol}`,
     [tokenData?.symbol, voteData?.votePowerWei],
   );
 
   const formattedDelegatedVP = useMemo(
     () =>
-      `${formatEther(delegatorsData.totalVotingPower || 0n)} ${tokenData?.symbol}`,
+      `${formatBalance(delegatorsData.totalVotingPower || 0n)} ${tokenData?.symbol}`,
     [tokenData?.symbol, delegatorsData.totalVotingPower],
   );
 

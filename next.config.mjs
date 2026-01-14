@@ -28,6 +28,9 @@ export const CACHE_CONTROL_PAGES = [
   '/favicon:size*',
   '/public/runtime/window-env.js',
   '/proposals/:id',
+  '/vote/dashboard',
+  '/vote/:id',
+  '/vote/delegation',
   '/500',
 ];
 export const CACHE_CONTROL_VALUE =
