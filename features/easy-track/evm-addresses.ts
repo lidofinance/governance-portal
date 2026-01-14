@@ -183,7 +183,7 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.SandboxStablesAdd]:
       '0xB238fB1e7c8da5da022140dA956Fc3052808fC56',
     [MotionType.SandboxStablesRemove]:
-      '0x51c730af05777c4D3CcC8c8B80558F4D155bb7BF',
+      '0x1dd16B520380d60405732a65453FEEAc7911144a',
     [MotionType.SandboxStablesTopUp]:
       '0x71bcEf1f4E4945005e1D22d68F02085D5167ab43',
     [MotionType.RccStethTopUp]: '0xe3bCa174A8b031C61a58aa56a0f622D4FFCA47d7',
@@ -276,7 +276,7 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xAa3D6A8B52447F272c1E8FAaA06EA06658bd95E2',
 
     [MotionType.SandboxStablesAdd]:
-      '0x056561d0F1314CB3932180b3f0B3C03174F2642B',
+      '0x8C89b58F1B71C9B2Dc76AF0c99Ed31Bac23E0B88',
     [MotionType.SandboxStablesRemove]:
       '0xc84251D2959E976AfE95201E1e2B88dB56Bc0a69',
     [MotionType.MEVBoostRelaysAdd]:
