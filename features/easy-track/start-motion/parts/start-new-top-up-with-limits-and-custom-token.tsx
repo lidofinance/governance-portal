@@ -2,11 +2,11 @@ import { utils } from 'ethers';
 
 import { Fragment, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader, Option } from '@lidofinance/lido-ui';
+import { ButtonIcon, Loader, Option, Plus } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import {
-  usePeriodLimitsData,
   useAllowedRecipients,
+  usePeriodLimitsData,
 } from 'features/easy-track/hooks/use-registry-with-limits';
 
 import { useTransitionLimits } from 'features/easy-track/hooks/use-transition-limits';
@@ -14,6 +14,7 @@ import { MotionType } from '../../motion-types';
 import {
   AllianceOpsStablesTopUp,
   AtcStablesTopUp,
+  EasyTrack,
   EcosystemOpsStablesTopUp,
   LabsOpsStablesTopUp,
   LegoStablesTopUp,
@@ -25,17 +26,19 @@ import {
 import { createMotionFormPart } from './create-motion-form-part';
 import { Address, Hex } from 'viem';
 import { useWeb3 } from 'reef-knot/web3-react';
+import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 
 import { useAllowedTokens } from 'features/easy-track/hooks/use-allowed-tokens-registry';
+import { getScriptFactoryByMotionType } from '../../utils/get-motion-type';
 
 import {
   Fieldset,
-  MessageBox,
-  RemoveItemButton,
-  FieldsWrapper,
   FieldsHeader,
   FieldsHeaderDesc,
+  FieldsWrapper,
+  MessageBox,
   MotionInfoBox,
+  RemoveItemButton,
 } from './style';
 import {
   MotionLimitProgress,
@@ -51,6 +54,7 @@ import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-th
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { easyTrackAbi } from 'abi/generated';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
@@ -207,6 +211,28 @@ export const formParts = ({
 
       const { data: limits, isLoading: isTransitionLimitsDataLoading } =
         useTransitionLimits();
+
+      // Get EasyTrack contract instance for validation
+      const easyTrackInstance = useReadContract(EasyTrack);
+
+      // Validate EVM script factory
+      const { data: isValidFactory, isLoading: isFactoryValidationLoading } =
+        useQuery({
+          queryKey: ['evmScriptFactoryValidation', motionType, chainId],
+          queryFn: async () => {
+            const scriptFactory = getScriptFactoryByMotionType(
+              chainId,
+              motionType,
+            );
+            if (!scriptFactory) return false;
+
+            return await easyTrackInstance.readContract('isEVMScriptFactory', [
+              scriptFactory,
+            ]);
+          },
+          enabled: !!chainId,
+        });
+
       const transitionLimit =
         selectedTokenAddress && limits
           ? limits[utils.getAddress(selectedTokenAddress)]
@@ -217,7 +243,8 @@ export const formParts = ({
         isRecipientsDataLoading ||
         isPeriodLimitsDataLoading ||
         isTransitionLimitsDataLoading ||
-        isTokensDataLoading
+        isTokensDataLoading ||
+        isFactoryValidationLoading
       ) {
         return <Loader />;
       }
@@ -225,6 +252,15 @@ export const formParts = ({
       if (!isTrustedCallerConnected) {
         return (
           <MessageBox>You should be connected as trusted caller</MessageBox>
+        );
+      }
+
+      if (isValidFactory === false) {
+        return (
+          <MessageBox>
+            EVM Script Factory for this motion type is not registered in Easy
+            Track. Please contact the administrator.
+          </MessageBox>
         );
       }
 
@@ -390,7 +426,10 @@ export const formParts = ({
         tokenDecimals: number;
         programs: Program[];
       };
-      contract: any;
+      contract: {
+        instance: ReturnType<typeof useWriteContract<typeof easyTrackAbi>>;
+        address: Address;
+      };
     }) => {
       const encodedCallData = new utils.AbiCoder().encode(
         ['address', 'address[]', 'uint256[]'],
@@ -402,10 +441,16 @@ export const formParts = ({
           ),
         ],
       );
-      return contract.createMotion(
-        evmScriptFactory as Address,
-        encodedCallData as Hex,
-      );
+
+      if (encodedCallData.length < 10) {
+        throw new Error('Encoded call data is too short');
+      }
+
+      return await contract.instance({
+        address: contract.address,
+        functionName: 'createMotion',
+        args: [evmScriptFactory as Address, encodedCallData as Hex],
+      });
     },
   });
 };

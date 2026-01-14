@@ -12,7 +12,7 @@ import {
   EVMScriptExecutor,
 } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { Address } from 'viem';
+import { toHex } from 'viem';
 
 // Data structure reference
 // https://github.com/lidofinance/scripts/blob/bda3568d1291bdc7ba422fb20150313f2d1778c3/scripts/vote_2024_01_16.py#L106
@@ -41,14 +41,12 @@ export const useTransitionLimits = () => {
   return useQuery({
     queryKey: [`permission-param-${chainId}`],
     queryFn: async () => {
-      const evmScriptExecutorAddress = EVMScriptExecutorContract.address[
-        chainId
-      ] as Address;
+      const evmScriptExecutorAddress = EVMScriptExecutorContract.address;
 
       if (!evmScriptExecutorAddress) {
-        throw new Error(
-          `EVMScriptExecutor address not found for chainId ${chainId}`,
-        );
+        const error = `EVMScriptExecutor address not found for chainId ${chainId}`;
+        console.error(error);
+        throw new Error(error);
       }
 
       const role = await finance.readContract('CREATE_PAYMENTS_ROLE');
@@ -74,7 +72,6 @@ export const useTransitionLimits = () => {
 
       // Build the params map directly from fulfilled results
       const params: Record<number, any> = {};
-
       const paramsArr: [number, number, bigint][] = [];
 
       batchResults.forEach((res, i) => {
@@ -96,7 +93,7 @@ export const useTransitionLimits = () => {
         const [argIndex, , value] = paramsArr[i];
 
         if (argIndex === TOKEN_ARG_INDEX) {
-          const tokenAddress: string = value.toString();
+          const tokenAddress = toHex(value);
 
           const limitParam = paramsArr[i + 1];
 
@@ -113,7 +110,7 @@ export const useTransitionLimits = () => {
           if (tokenAddress === constants.AddressZero) {
             decimals = DEFAULT_DECIMALS;
           } else {
-            const tokenContract = connectErc20Contract(tokenAddress as Address);
+            const tokenContract = connectErc20Contract(tokenAddress);
             try {
               decimals = await tokenContract('decimals');
             } catch {
@@ -128,6 +125,7 @@ export const useTransitionLimits = () => {
           i += 1; // Skip the next param as it's already processed
         }
       }
+
       return limits;
     },
   });
