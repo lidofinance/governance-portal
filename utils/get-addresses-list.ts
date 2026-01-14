@@ -8,14 +8,20 @@ export const getAddressesList = (
   address: string;
 }[] => {
   const contractNames = Object.keys(addressMaps);
-  return contractNames.map((contractName) => {
-    const address = (addressMaps as Record<string, Record<number, string>>)[
-      contractName
-    ][chainId];
+  return contractNames
+    .map((contractName) => {
+      const addressMap = (addressMaps as any)[contractName];
+      const entry = addressMap?.[chainId];
 
-    return {
-      contractName,
-      address,
-    };
-  });
+      if (!entry) return null;
+      if (Array.isArray(entry)) return null; // Skip arrays
+
+      const address = typeof entry === 'string' ? entry : entry.actual;
+
+      return {
+        contractName,
+        address,
+      };
+    })
+    .filter(Boolean) as { contractName: string; address: string }[];
 };

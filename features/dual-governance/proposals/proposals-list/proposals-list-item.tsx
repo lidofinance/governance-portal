@@ -32,11 +32,12 @@ type Props = {
 };
 
 const getAddressFromMap = (
-  addressMap: ChainAddressMap,
+  addressMap: ChainAddressMap | Record<number, string | string[]>,
   chainId: CHAINS,
 ): Address | undefined => {
-  const entry = addressMap[chainId];
+  const entry = (addressMap as any)[chainId];
   if (!entry) return undefined;
+  if (Array.isArray(entry)) return undefined; // Skip arrays
   return typeof entry === 'string' ? entry : entry.actual;
 };
 
