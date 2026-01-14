@@ -368,6 +368,7 @@ export const TieBreakerSubCommittee3: ChainAddressMap = {
 
 export const EVMScriptExecutor: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xFE5986E06210aC1eCC1aDCafc0cc7f8D63B3F977',
+  [CHAINS.Holesky]: '0x2819B65021E13CEEB9AC33E77DB32c7e64e7520D',
   [CHAINS.Hoodi]: '0x79a20FD0FA36453B2F45eAbab19bfef43575Ba9E',
 };
 
@@ -412,6 +413,7 @@ export const EVMScriptRegistry: ChainAddressMap = {
 
 export const AllowedTokensRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x4ac40c34f8992bb1e5e856a448792158022551ca',
+  [CHAINS.Hoodi]: '0x40Db7E8047C487bD8359289272c717eA3C34D1D3',
 };
 
 export const InsuranceFund: ChainAddressMap = {

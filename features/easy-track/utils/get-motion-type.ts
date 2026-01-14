@@ -26,8 +26,12 @@ export const getMotionTypeByScriptFactory = (
 ): MotionType | EvmUnrecognized => {
   try {
     const lowercaseAddress = scriptFactory.toLowerCase();
-    const result =
-      EvmTypesByAddress[parseEvmSupportedChainId(chainId)][lowercaseAddress];
+    const result = (
+      EvmTypesByAddress[parseEvmSupportedChainId(chainId)] as unknown as Record<
+        string,
+        MotionType | undefined
+      >
+    )[lowercaseAddress];
 
     if (!result) {
       console.debug(
