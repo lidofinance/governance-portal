@@ -19,6 +19,7 @@ import {
   EmergencyGovernance,
   EmergencyProtectedTimelock,
   Voting,
+  EasyTrack,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
 import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
@@ -29,6 +30,7 @@ const allowedLogContracts = (chainId: CHAINS) => {
     EmergencyProtectedTimelock[chainId],
     EmergencyGovernance[chainId],
     Voting[chainId],
+    EasyTrack[chainId],
   ];
 
   const hardcodedAddresses: Address[] = [];

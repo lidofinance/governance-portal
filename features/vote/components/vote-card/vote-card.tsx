@@ -58,6 +58,7 @@ export const VoteCard = ({ voteId }: Props) => {
   const { voteData } = useVoteContext();
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
+
   const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
 

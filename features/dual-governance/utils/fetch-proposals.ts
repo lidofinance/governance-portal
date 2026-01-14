@@ -3,7 +3,6 @@ import {
   ProposalDetails,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Address, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
@@ -12,12 +11,13 @@ import {
 } from 'utils/estimate-block-range';
 import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernance } from 'shared/blockchain/contracts';
-import { ProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+// TODO: Generate proper event types from ABI
+type ProposalSubmittedEvent = any;
 import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   proposalsCount: bigint;
-  EPTContract: ReturnType<typeof useReadContract>;
+  EPTContract: any;
   publicClient: PublicClient;
   governanceAddresses: Address[];
   chainId: CHAINS;

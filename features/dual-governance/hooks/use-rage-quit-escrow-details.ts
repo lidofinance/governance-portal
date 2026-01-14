@@ -1,4 +1,4 @@
-import { escrowAbi } from 'abi/ts';
+import { dgEscrowAbi } from 'abi/generated';
 import { useEscrowContext } from 'providers/escrow';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +8,7 @@ import { zeroAddress } from 'viem';
 export const useRageQuitEscrowDetails = () => {
   const { chainId } = useLidoSDK();
   const { rageQuitAddress } = useEscrowContext();
-  const readEscrowContract = useReadContractGetter(escrowAbi);
+  const readEscrowContract = useReadContractGetter(dgEscrowAbi);
 
   const isEnabled = !!rageQuitAddress;
 

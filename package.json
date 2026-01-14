@@ -14,7 +14,7 @@
     "lint": "eslint --ext ts,tsx,js,mjs .",
     "lint:fix": "yarn lint --fix",
     "types": "tsc --noEmit",
-    "typechain": "typechain --target=ethers-v5 --out-dir ./generated ./abi/*.json",
+    "generate:ts-abi": "npx wagmi generate",
     "postinstall": "husky install && yarn typechain || true",
     "test:unit": "jest",
     "prepare": "husky"
@@ -41,6 +41,7 @@
     "@lidofinance/rpc": "^0.45.1",
     "@lidofinance/satanizer": "^0.45.1",
     "@tanstack/react-query": "^5.51.21",
+    "@wagmi/cli": "^2.7.1",
     "bignumber.js": "9.1.0",
     "copy-to-clipboard": "^3.3.1",
     "cors": "^2.8.5",

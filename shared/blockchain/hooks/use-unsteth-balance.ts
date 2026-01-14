@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { useReadContract } from './use-read-contract';
 import { WithdrawalsMap } from 'features/dual-governance/types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { WithdrawalQueue, WithdrawalQueueMock } from '../contracts';
+import { WithdrawalQueue } from '../contracts';
 
 /**
  *  For the Mainnet network we use the getWithdrawalRequests method directly, for the rest we have unoptimized workaround,
@@ -14,10 +14,9 @@ export const useUnstEthBalance = () => {
   const { chainId } = useLidoSDK();
   const { address: accountAddress } = useAccount();
 
-  // Use separate contract instances with their proper types
+  // Use same contract instance for all chains
   const isMainnet = chainId === CHAINS.Mainnet;
-  const mainnetWithdrawalQueue = useReadContract(WithdrawalQueue);
-  const mockWithdrawalQueue = useReadContract(WithdrawalQueueMock);
+  const withdrawalQueue = useReadContract(WithdrawalQueue);
 
   return useQuery({
     queryKey: ['unsteth-balance', chainId, accountAddress],
@@ -29,11 +28,10 @@ export const useUnstEthBalance = () => {
       try {
         if (isMainnet) {
           try {
-            const withdrawalRequests =
-              await mainnetWithdrawalQueue.readContract(
-                'getWithdrawalRequests',
-                [accountAddress],
-              );
+            const withdrawalRequests = await withdrawalQueue.readContract(
+              'getWithdrawalRequests',
+              [accountAddress],
+            );
 
             const eligibleRequests: WithdrawalsMap = {};
             let requestsTotalStEthAmount = 0n;
@@ -42,7 +40,7 @@ export const useUnstEthBalance = () => {
               Array.isArray(withdrawalRequests) &&
               withdrawalRequests.length > 0
             ) {
-              const requestDetails = await mainnetWithdrawalQueue.readContract(
+              const requestDetails = await withdrawalQueue.readContract(
                 'getWithdrawalStatus',
                 [withdrawalRequests],
               );
@@ -76,7 +74,7 @@ export const useUnstEthBalance = () => {
         }
 
         const lastRequestId = Number(
-          await mockWithdrawalQueue.readContract('getLastRequestId'),
+          await withdrawalQueue.readContract('getLastRequestId'),
         );
 
         if (lastRequestId === 0) {
@@ -90,7 +88,7 @@ export const useUnstEthBalance = () => {
         const eligibleRequests: WithdrawalsMap = {};
         let requestsTotalStEthAmount = 0n;
 
-        const withdrawalRequests = await mockWithdrawalQueue.readContract(
+        const withdrawalRequests = await withdrawalQueue.readContract(
           'getWithdrawalStatus',
           [requestIds],
         );

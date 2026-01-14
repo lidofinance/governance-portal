@@ -20,7 +20,7 @@ import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
 import { DGTooltip } from '../../tooltips';
 import { Address } from 'viem';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { ChainAddressMap } from 'shared/blockchain/types';
 
 type Props = {
   id: number;
@@ -54,7 +54,18 @@ export const ProposalsListItem = ({
         const contractNames = Object.keys(contractAddresses);
 
         return !contractNames.some((contractName) => {
-          const address = getContractAddress(contractName as any, chainId);
+          const chainAddressMap = contractAddresses[
+            contractName as keyof typeof contractAddresses
+          ] as ChainAddressMap;
+
+          const addressConfig = chainAddressMap?.[chainId];
+          if (!addressConfig) return false;
+
+          const address =
+            typeof addressConfig === 'string'
+              ? addressConfig
+              : addressConfig.actual;
+
           return address?.toLowerCase() === call.target.toLowerCase();
         });
       })

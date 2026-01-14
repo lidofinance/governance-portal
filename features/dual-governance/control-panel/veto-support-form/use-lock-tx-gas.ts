@@ -5,7 +5,7 @@ import { useTokenContractObject } from 'shared/blockchain/hooks/use-token-contra
 import { zeroAddress } from 'viem';
 import { useEscrowContext } from 'providers/escrow';
 import { Token } from 'shared/blockchain/types';
-import { escrowAbi } from 'abi/ts';
+import { dgEscrowAbi } from 'abi/generated';
 
 // Fallbacks
 const GAS_ESTIMATES = {
@@ -44,7 +44,7 @@ export const useLockTxGas = () => {
   const { data: lockGas, isLoading: isLockGasLoading } = useEstimateContractGas(
     {
       address: networkData.vetoSignallingAddress,
-      abi: escrowAbi,
+      abi: dgEscrowAbi,
     },
     functionName,
     [formAmount],

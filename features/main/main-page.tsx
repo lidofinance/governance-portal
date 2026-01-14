@@ -19,7 +19,11 @@ import { DelegateCta } from './delegate-cta';
 import { ActionCard } from './action-card';
 import { AppsWrapper, ProposalsWrapper, ResourcesWrapper } from './style';
 import { ResourceCard } from './resource-card';
-import { VOTE_DASHBOARD_INDEX_PATH, GOVERNANCE } from 'constants/urls';
+import {
+  VOTE_DASHBOARD_INDEX_PATH,
+  GOVERNANCE_PATH,
+  EASY_TRACK_PATH,
+} from 'constants/urls';
 import { Link } from '@lidofinance/lido-ui';
 
 // const InDgReviewAddon = ({ proposalId }: { proposalId: number }) => {
@@ -64,7 +68,7 @@ export const MainPage = () => {
             }
           />
         </Link>
-        <Link href={GOVERNANCE}>
+        <Link href={GOVERNANCE_PATH}>
           <ActionCard
             icon={<DualGovernanceIcon />}
             // addon={<InDgReviewAddon proposalId={12} />}
@@ -76,16 +80,18 @@ export const MainPage = () => {
             }
           />
         </Link>
-        <ActionCard
-          icon={<LidoBlueIcon />}
-          // addon={<Chip variant="positive">Live</Chip>}
-          title={<Text size={28}>Easy Tracks</Text>}
-          description={
-            <Text size={16} color="secondary">
-              Initiate and review optimistic governance motions
-            </Text>
-          }
-        />
+        <Link href={EASY_TRACK_PATH}>
+          <ActionCard
+            icon={<LidoBlueIcon />}
+            // addon={<Chip variant="positive">Live</Chip>}
+            title={<Text size={28}>Easy Tracks</Text>}
+            description={
+              <Text size={16} color="secondary">
+                Initiate and review optimistic governance motions
+              </Text>
+            }
+          />
+        </Link>
       </AppsWrapper>
       <Text size={40} weight={500}>
         Proposals & Discussion

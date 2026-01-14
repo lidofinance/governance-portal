@@ -4,7 +4,6 @@ import {
   SubmitProposalCall,
 } from '../proposals/types';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Address, Log, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
@@ -13,12 +12,13 @@ import {
 } from 'utils/estimate-block-range';
 import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernance } from 'shared/blockchain/contracts';
-import { ProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+// TODO: Generate proper event types from ABI
+type ProposalSubmittedEvent = any;
 import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
   id: number;
-  EPTContract: ReturnType<typeof useReadContract>;
+  EPTContract: any;
   publicClient: PublicClient;
   governanceAddresses: Address[];
   chainId: CHAINS;

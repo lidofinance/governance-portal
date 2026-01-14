@@ -4,7 +4,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { escrowAbi } from 'abi/ts';
+import { dgEscrowAbi } from 'abi/generated';
 import { useCurrentVetoSignallingAddress } from './use-current-veto-signalling-address';
 
 const NORMAL_WARNING_STATE_THRESHOLD_PERCENT = 33n;
@@ -29,7 +29,7 @@ export const useDualGovernanceVisibleState = ({
 
   const { chainId } = useLidoSDK();
 
-  const readEscrowGetter = useReadContractGetter(escrowAbi);
+  const readEscrowGetter = useReadContractGetter(dgEscrowAbi);
   const readVetoSignalling = currentVetoSignallingAddress
     ? readEscrowGetter(currentVetoSignallingAddress)
     : null;

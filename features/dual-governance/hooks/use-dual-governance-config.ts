@@ -6,7 +6,7 @@ import {
 } from 'shared/blockchain/hooks/use-read-contract';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { DualGovernanceConfig } from '../types';
-import { dgConfigProviderAbi } from 'abi/ts';
+import { dgConfigProviderAbi } from 'abi/generated';
 
 export const useDualGovernanceConfig = (): UseQueryResult<
   DualGovernanceConfig,

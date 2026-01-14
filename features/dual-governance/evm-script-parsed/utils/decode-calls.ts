@@ -1,19 +1,19 @@
 import * as ADDR from 'shared/blockchain/contract-addresses';
-import * as abis from 'generated';
+import * as abis from 'abi/generated';
 import { Address, Hex } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { ABI } from 'shared/blockchain/types';
+import { ABI, ChainAddressMap } from 'shared/blockchain/types';
 import { utils } from 'ethers';
 import { getContractName } from 'utils/get-contract-name';
 
 type ContractName = keyof typeof ADDR;
 
 const ABI_EXCEPTIONS = {
-  HashConsensusAccountingOracle: abis.HashConsensusAbi__factory.abi,
-  HashConsensusValidatorsExitBus: abis.HashConsensusAbi__factory.abi,
-  StETH: abis.StethAbi__factory.abi,
-  WithdrawalQueue: abis.WithdrawalQueueERC721Abi__factory.abi,
-  CSVerifierProposed: abis.CSVerifierAbi__factory.abi,
+  HashConsensusAccountingOracle: abis.hashConsensusAbi,
+  HashConsensusValidatorsExitBus: abis.hashConsensusAbi,
+  StETH: abis.stethAbi,
+  WithdrawalQueue: abis.withdrawalQueueErc721Abi,
+  CSVerifierProposed: abis.csVerifierAbi,
 } as const;
 
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
@@ -83,7 +83,8 @@ export const decodeCalls = <TCall extends BaseCall>({
 
     let abi: ABI | undefined;
     const matchingContractName = Object.keys(ADDR).find((name: string) => {
-      const addressConfig = ADDR[name as ContractName][chainId];
+      const chainAddressMap = ADDR[name as ContractName] as ChainAddressMap;
+      const addressConfig = chainAddressMap?.[chainId];
       if (!addressConfig) return false;
 
       if (typeof addressConfig === 'object' && 'actual' in addressConfig) {
@@ -104,11 +105,15 @@ export const decodeCalls = <TCall extends BaseCall>({
     if (matchingContractName) {
       try {
         if (matchingContractName in ABI_EXCEPTIONS) {
-          abi = ABI_EXCEPTIONS[matchingContractName as ExceptionContractName];
+          abi = ABI_EXCEPTIONS[
+            matchingContractName as ExceptionContractName
+          ] as unknown as ABI;
         } else {
-          const abiFactoryKey =
-            `${matchingContractName}Abi__factory` as keyof typeof abis;
-          abi = abis[abiFactoryKey]?.abi;
+          const camelCase =
+            matchingContractName.charAt(0).toLowerCase() +
+            matchingContractName.slice(1);
+          const abiKey = `${camelCase}Abi` as keyof typeof abis;
+          abi = abis[abiKey] as unknown as ABI;
         }
       } catch (error) {
         console.warn(

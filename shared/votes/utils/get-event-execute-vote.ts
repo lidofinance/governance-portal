@@ -1,5 +1,5 @@
 import { findAbiItem } from 'utils/find-abi-item';
-import { votingAbi } from 'abi/ts';
+import { aragonVotingAbi } from 'abi/generated';
 import { getBlock, getLogs } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
 
@@ -33,7 +33,7 @@ export const getEventExecuteVote = async ({
 }: Args): GetEventExecuteVoteReturnType => {
   try {
     const executeVoteEventAbi = findAbiItem({
-      abi: votingAbi,
+      abi: aragonVotingAbi,
       name: 'ExecuteVote',
       type: 'event',
     });

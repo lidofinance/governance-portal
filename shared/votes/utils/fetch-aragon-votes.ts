@@ -1,4 +1,4 @@
-import { votingAbi } from 'abi/ts';
+import { aragonVotingAbi } from 'abi/generated';
 import { Vote, VoteStatus } from '../types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { PublicClient } from 'viem';
@@ -8,7 +8,9 @@ import {
   StartVoteEventArgs,
 } from 'shared/votes/utils/get-event-start-vote';
 
-type VotingContract = ReturnType<typeof useReadContract<typeof votingAbi>>;
+type VotingContract = ReturnType<
+  typeof useReadContract<typeof aragonVotingAbi>
+>;
 
 type FetchArgs = {
   votingContract: VotingContract;
