@@ -14,9 +14,12 @@ import { convertStatusToStyledVariant, VoteStatusFontSize } from './types';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 import { VoteStatus } from 'shared/votes/types';
 
-import { DualGovernancePlainIcon } from 'shared/components/icons';
+import {
+  DualGovernancePlainIcon,
+  VoteDoneIcon,
+  VoteFailIcon,
+} from 'shared/components/icons';
 import { FormattedDate } from '../formatted-date';
-import { Check, Close } from '@lidofinance/lido-ui';
 
 type Props = {
   executedAt: number | undefined;
@@ -100,7 +103,7 @@ export const VoteStatusBanner = ({
       {status === VoteStatus.Pending && (
         <>
           <BadgePassed>
-            <Check />
+            <VoteDoneIcon />
           </BadgePassed>
           <BannerText variant={variant}>Passed (pending)</BannerText>
         </>
@@ -109,7 +112,7 @@ export const VoteStatusBanner = ({
       {status === VoteStatus.Passed && (
         <>
           <BadgePassed>
-            <Check />
+            <VoteDoneIcon />
           </BadgePassed>
           <BannerText variant={variant}>Passed</BannerText>
           {endDateEl}
@@ -144,7 +147,7 @@ export const VoteStatusBanner = ({
             voteDualGovernanceStatus === null) && (
             <>
               <BadgePassed>
-                <Check />
+                <VoteDoneIcon />
               </BadgePassed>
               <BannerText variant={variant}>Passed (enacted)</BannerText>
             </>
@@ -156,7 +159,7 @@ export const VoteStatusBanner = ({
       {status === VoteStatus.Rejected && quorumIsReached && (
         <>
           <BadgeFailed>
-            <Close />
+            <VoteFailIcon />
           </BadgeFailed>
           <BannerText variant={variant}>Rejected</BannerText>
         </>
@@ -165,7 +168,7 @@ export const VoteStatusBanner = ({
       {status === VoteStatus.Rejected && !quorumIsReached && (
         <>
           <BadgeNoQuorum>
-            <Close />
+            <VoteFailIcon />
           </BadgeNoQuorum>
           <BannerText variant={variant}>No quorum</BannerText>
         </>
