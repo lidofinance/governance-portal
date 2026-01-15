@@ -58,7 +58,7 @@ export const Script = ({
       Parsed: decodedCalls.length,
       JSON: decodedCalls.length,
       Raw: rawScript?.length,
-      ...(metadata ? { Description: metadata } : {}),
+      ...(metadata ? { Items: metadata } : {}),
     };
     const TabNames = Object.keys(tabMap) as (keyof typeof tabMap)[];
     return TabNames.filter((key) => tabMap[key]);
@@ -97,9 +97,7 @@ export const Script = ({
 
         {tabs[activeTab] === 'Parsed' && <ScriptBody calls={decodedCalls} />}
         {tabs[activeTab] === 'Raw' && <ScriptBody binary={rawScript} />}
-        {tabs[activeTab] === 'Description' && (
-          <ScriptBody>{metadata}</ScriptBody>
-        )}
+        {tabs[activeTab] === 'Items' && <ScriptBody>{metadata}</ScriptBody>}
       </VoteScriptBodyWrap>
     </>
   );

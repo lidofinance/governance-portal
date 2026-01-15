@@ -66,6 +66,7 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
     $variant &&
     $variant === 'voting' &&
     css`
+      border-top-right-radius: 20px;
       color: white;
       background: rgba(0, 163, 255, 0.08);
     `};
