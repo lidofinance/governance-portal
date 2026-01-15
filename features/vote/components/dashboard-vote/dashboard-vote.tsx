@@ -75,6 +75,7 @@ export const DashboardVote = ({
           client,
           voteId: BigInt(vote.id),
           block: vote.snapshotBlock,
+          chainId,
         });
       },
     });
