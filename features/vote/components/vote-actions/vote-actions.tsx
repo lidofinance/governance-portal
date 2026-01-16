@@ -6,17 +6,29 @@ import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VotePhase } from 'shared/votes/types';
 import { useDelegators } from '../../hooks/use-delegators';
 import { BasicActions } from './basic-actions';
-import { Box } from 'shared/components/box';
-import { CheckIcon, CrossIcon } from 'shared/components/icons';
 import { useVoteContext } from 'features/vote/providers/vote-context';
 import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 import { formatBalance } from 'utils/format-balance';
+import { useEligibleDelegators } from '../../hooks/use-eligible-delegators';
+import { DelegatorsSelector } from './components/delegators-selector';
+import { FlexWrapper } from 'shared/styled-components';
+import { Address } from 'viem';
+import { Box } from 'shared/components/box';
+import { CheckIcon, CrossIcon } from 'shared/components/icons';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { voteData } = useVoteContext();
 
+  const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
+
   const { handleDelegatedVote, handleOwnVote } = useVoteActionsContext();
+
+  const {
+    data: { eligibleDelegatedVoters },
+    isLoading: isEligibleLoading,
+    refetch: refetchEligibleDelegators,
+  } = useEligibleDelegators({ voteId: voteData?.voteId });
 
   const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 
@@ -46,6 +58,9 @@ export const VoteActions = () => {
       `${formatBalance(delegatorsData.totalVotingPower || 0n)} ${tokenData?.symbol}`,
     [tokenData?.symbol, delegatorsData.totalVotingPower],
   );
+  const handleSelectionChange = useCallback((selectedAddresses: Address[]) => {
+    setSelectedDelegators(selectedAddresses);
+  }, []);
 
   const handleMenu = (mode: VoteMode) => {
     setCurrentMode(mode);
@@ -69,10 +84,19 @@ export const VoteActions = () => {
       if (type === 'delegated') {
         await handleDelegatedVote({
           mode,
+          voters: selectedDelegators,
         });
       }
+
+      await refetchEligibleDelegators();
     },
-    [voteData, handleOwnVote, handleDelegatedVote],
+    [
+      voteData,
+      handleOwnVote,
+      handleDelegatedVote,
+      selectedDelegators,
+      refetchEligibleDelegators,
+    ],
   );
 
   if (!voteData) {
@@ -87,12 +111,26 @@ export const VoteActions = () => {
           onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
         />
       )}
-      {canVoteWithDelegatedVotePower && !canVoteWithOwnPower && (
-        <BasicActions
-          votePhase={voteData.phase}
-          onVote={(mode: VoteMode) => handleVote({ mode, type: 'delegated' })}
-        />
-      )}
+      {canVoteWithDelegatedVotePower &&
+        !canVoteWithOwnPower &&
+        voteData.phase !== VotePhase.Closed && (
+          <FlexWrapper $flexDirection="column">
+            {!isEligibleLoading && eligibleDelegatedVoters.length > 0 && (
+              <DelegatorsSelector
+                delegators={eligibleDelegatedVoters}
+                voteEvents={voteData.voteEvents}
+                onSelectionChange={handleSelectionChange}
+              />
+            )}
+            <BasicActions
+              votePhase={voteData.phase}
+              onVote={(mode: VoteMode) =>
+                handleVote({ mode, type: 'delegated' })
+              }
+            />
+          </FlexWrapper>
+        )}
+
       {canVoteWithOwnPower && canVoteWithDelegatedVotePower && (
         <>
           <VoteButton onClick={() => handleMenu('nay')} ref={nayButtonRef}>
@@ -142,6 +180,7 @@ export const VoteActions = () => {
           </VoteButton>
         </>
       )}
+
       <PopupMenu
         anchorRef={currentMode === 'nay' ? nayButtonRef : yayButtonRef}
         onClose={handleMenuClose}

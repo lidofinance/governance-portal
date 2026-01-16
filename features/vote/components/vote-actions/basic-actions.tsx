@@ -3,7 +3,7 @@ import { Tooltip } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
 import { VotePhase } from 'shared/votes/types';
-import { VoteButton } from './style';
+import { BasicActionsWrapper, VoteButton } from './style';
 import { VoteMode } from '../../types';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 
 export const BasicActions = ({ onVote, votePhase }: Props) => {
   return (
-    <>
+    <BasicActionsWrapper>
       <VoteButton onClick={() => onVote('nay')}>
         <Box
           display="flex"
@@ -63,6 +63,6 @@ export const BasicActions = ({ onVote, votePhase }: Props) => {
           )}
         </Box>
       </VoteButton>
-    </>
+    </BasicActionsWrapper>
   );
 };

@@ -31,3 +31,10 @@ export const VoteButton = styled(Button).attrs({
     fill: currentColor;
   }
 `;
+
+export const BasicActionsWrapper = styled.section`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 12px;
+`;
