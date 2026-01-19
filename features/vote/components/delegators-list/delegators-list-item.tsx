@@ -22,7 +22,7 @@ export const DelegatorsListItem = ({
         <AddressBadgeWrap>
           <Identicon address={address} diameter={20} />
           <Text as="span" size="xxs">
-            {ensName ?? trimAddress(address, 6)}
+            {ensName ?? trimAddress(address, 4)}
           </Text>
         </AddressBadgeWrap>
       </AddressPop>

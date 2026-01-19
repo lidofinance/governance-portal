@@ -41,7 +41,7 @@ export const PublicDelegateListItem = ({
             </Text>
             <AddressPop address={delegate.address}>
               <Text size="xxs" color="secondary">
-                {trimAddress(delegate.address, 6)}
+                {trimAddress(delegate.address, 4)}
               </Text>
             </AddressPop>
           </DelegateNameAndAddress>
@@ -89,7 +89,7 @@ export const PublicDelegateListItem = ({
           </Text>
           <AddressPop address={delegate.address}>
             <Text size="xxs" color="secondary">
-              {trimAddress(delegate.address, 6)}
+              {trimAddress(delegate.address, 4)}
             </Text>
           </AddressPop>
         </DelegateNameAndAddress>

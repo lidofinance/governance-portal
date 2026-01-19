@@ -29,6 +29,11 @@ export const Tab = styled.div<TabProps>`
       width: auto;
     `};
 
+  ${({ theme }) => theme.mediaQueries.md} {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
   background-color: ${({ $isActive }) =>
     $isActive ? 'transparent' : '#1312170A'};
 

@@ -18,13 +18,13 @@ export interface EligibleDelegator {
   votedByDelegate: boolean;
 }
 
-export interface EligibleDelegatorsData {
-  delegatedVotersAddresses: string[];
-  eligibleDelegatedVotingPower: bigint;
-  delegatedVotersState: VoterState[];
-  eligibleDelegatedVoters: EligibleDelegator[];
-  eligibleDelegatedVotersAddresses: string[];
-}
+// export interface EligibleDelegatorsData {
+//   delegatedVotersAddresses: string[];
+//   eligibleDelegatedVotingPower: bigint;
+//   delegatedVotersState: VoterState[];
+//   eligibleDelegatedVoters: EligibleDelegator[];
+//   eligibleDelegatedVotersAddresses: string[];
+// }
 
 const processEligibleDelegators = (
   addresses: string[],

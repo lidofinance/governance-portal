@@ -16,6 +16,7 @@ import {
   ListWrap,
   SummaryAmount,
   SummaryWrap,
+  VotedByHolderWrap,
 } from './style';
 import { formatBalance } from 'utils/format-balance';
 import { EligibleDelegator } from 'features/vote/hooks/use-eligible-delegators';
@@ -103,6 +104,7 @@ const VotableDelegatorItem = ({
 interface DelegatorsSelectorProps {
   delegators: EligibleDelegator[];
   voteEvents: VoteEvent[];
+  delegatorsVotedThemselves?: VoteEvent[];
   onSelectionChange?: (
     selectedAddresses: Address[],
     selectedBalance: bigint,
@@ -113,6 +115,7 @@ export const DelegatorsSelector = ({
   onSelectionChange,
   voteEvents,
   delegators,
+  delegatorsVotedThemselves,
 }: DelegatorsSelectorProps) => {
   const { data: governanceTokenData } = useGovernanceToken();
 
@@ -223,7 +226,7 @@ export const DelegatorsSelector = ({
   }, [selectionData, onSelectionChange]);
 
   // Don't render until we have complete data AND votableDelegators are processed
-  if (votableDelegators.length === 0) {
+  if (votableDelegators.length === 0 && !delegatorsVotedThemselves?.length) {
     return null;
   }
 
@@ -251,6 +254,34 @@ export const DelegatorsSelector = ({
           />
         ))}
       </ListWrap>
+      {delegatorsVotedThemselves && delegatorsVotedThemselves.length > 0 && (
+        <>
+          <VotedByHolderWrap>
+            <Text size={12} color="secondary">
+              Voted by holder
+            </Text>
+          </VotedByHolderWrap>
+          <ListWrap>
+            {delegatorsVotedThemselves.map((voteEvent) => (
+              <DelegatorsListItem key={voteEvent.voter}>
+                <AddressPop address={voteEvent.voter as Address}>
+                  <AddressBadgeWrap>
+                    <Text as="span" size={12}>
+                      {trimAddress(voteEvent.voter, 4)}
+                    </Text>
+                  </AddressBadgeWrap>
+                </AddressPop>
+                <Text as="span" size={12} color="secondary">
+                  {voteEvent.supports ? 'Yes' : 'No'}
+                </Text>
+                <DelegatorsVotingPower>
+                  {formatBalance(voteEvent.stake)} {tokenSymbol}
+                </DelegatorsVotingPower>
+              </DelegatorsListItem>
+            ))}
+          </ListWrap>
+        </>
+      )}
     </AccordionWrap>
   );
 };

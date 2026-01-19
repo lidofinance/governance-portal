@@ -21,7 +21,10 @@ export const CopyOpenActions = ({ value, entity }: Props) => {
   return (
     <Wrap>
       <ButtonIcon
-        onClick={handleCopy}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCopy();
+        }}
         icon={<Copy />}
         size="xs"
         variant="ghost"

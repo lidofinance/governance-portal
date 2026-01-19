@@ -82,6 +82,7 @@ export const AddressWrap = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spaceMap.sm}px;
+  cursor: pointer;
 `;
 
 export const ShowMoreBtn = styled(Button).attrs({

@@ -58,7 +58,6 @@ export const DelegatorsListItemStyled = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 16px;
-  cursor: pointer;
   &:not(:last-child) {
     border-bottom: 1px solid var(--lido-color-border);
   }

@@ -25,10 +25,31 @@ export const VoteActions = () => {
   const { handleDelegatedVote, handleOwnVote } = useVoteActionsContext();
 
   const {
-    data: { eligibleDelegatedVoters },
+    data: { eligibleDelegatedVoters, delegatedVotersAddresses },
     isLoading: isEligibleLoading,
     refetch: refetchEligibleDelegators,
   } = useEligibleDelegators({ voteId: voteData?.voteId });
+
+  const delegatorsVotedThemselves = useMemo(() => {
+    if (!voteData?.voteEvents) return [];
+
+    const delegatorSet = new Set(
+      delegatedVotersAddresses.map((addr) => addr.toLowerCase()),
+    );
+    const votedThroughDelegateSet = new Set(
+      voteData.voteEvents.flatMap(
+        (event) =>
+          event.delegatedVotes?.map((e) => e.voter.toLowerCase()) ?? [],
+      ),
+    );
+
+    return voteData.voteEvents.filter(
+      (event) =>
+        !event.delegatedVotes?.length &&
+        delegatorSet.has(event.voter.toLowerCase()) &&
+        !votedThroughDelegateSet.has(event.voter.toLowerCase()),
+    );
+  }, [delegatedVotersAddresses, voteData?.voteEvents]);
 
   const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 
@@ -38,6 +59,11 @@ export const VoteActions = () => {
   const { data: tokenData } = useGovernanceToken();
   const { data: delegatorsData, isLoading: isDelegatorsLoading } =
     useDelegators();
+
+  const canVoteForDelegators = useMemo(
+    () => !isEligibleLoading && eligibleDelegatedVoters.length > 0,
+    [isEligibleLoading, eligibleDelegatedVoters.length],
+  );
 
   const canVoteWithOwnPower = useMemo(
     () => !!voteData?.votePowerWei && voteData?.votePowerWei > 0,
@@ -105,56 +131,75 @@ export const VoteActions = () => {
 
   return (
     <Actions>
-      {canVoteWithOwnPower && !canVoteWithDelegatedVotePower && (
-        <BasicActions
-          votePhase={voteData.phase}
-          onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
-        />
-      )}
+      {canVoteWithOwnPower &&
+        (!canVoteWithDelegatedVotePower || !canVoteForDelegators) && (
+          <BasicActions
+            votePhase={voteData.phase}
+            onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
+          />
+        )}
       {canVoteWithDelegatedVotePower &&
         !canVoteWithOwnPower &&
         voteData.phase !== VotePhase.Closed && (
           <FlexWrapper $flexDirection="column">
-            {!isEligibleLoading && eligibleDelegatedVoters.length > 0 && (
-              <DelegatorsSelector
-                delegators={eligibleDelegatedVoters}
-                voteEvents={voteData.voteEvents}
-                onSelectionChange={handleSelectionChange}
+            {!isEligibleLoading &&
+              (eligibleDelegatedVoters.length > 0 ||
+                delegatorsVotedThemselves.length > 0) && (
+                <DelegatorsSelector
+                  delegators={eligibleDelegatedVoters}
+                  voteEvents={voteData.voteEvents}
+                  onSelectionChange={handleSelectionChange}
+                  delegatorsVotedThemselves={delegatorsVotedThemselves}
+                />
+              )}
+            {canVoteForDelegators && (
+              <BasicActions
+                votePhase={voteData.phase}
+                onVote={(mode: VoteMode) =>
+                  handleVote({ mode, type: 'delegated' })
+                }
               />
             )}
-            <BasicActions
-              votePhase={voteData.phase}
-              onVote={(mode: VoteMode) =>
-                handleVote({ mode, type: 'delegated' })
-              }
-            />
           </FlexWrapper>
         )}
 
-      {canVoteWithOwnPower && canVoteWithDelegatedVotePower && (
-        <>
-          <VoteButton onClick={() => handleMenu('nay')} ref={nayButtonRef}>
-            <Box
-              display="flex"
-              gap={12}
-              width={'100%'}
-              justifyContent="center"
-              alignItems="center"
+      {canVoteWithOwnPower &&
+        canVoteWithDelegatedVotePower &&
+        canVoteForDelegators && (
+          <>
+            <VoteButton onClick={() => handleMenu('nay')} ref={nayButtonRef}>
+              <Box
+                display="flex"
+                gap={12}
+                width={'100%'}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CrossIcon /> No
+              </Box>
+            </VoteButton>
+            <VoteButton
+              onClick={() => handleMenu('yay')}
+              disabled={voteData.phase === VotePhase.Objection}
+              ref={yayButtonRef}
             >
-              <CrossIcon /> No
-            </Box>
-          </VoteButton>
-          <VoteButton
-            onClick={() => handleMenu('yay')}
-            disabled={voteData.phase === VotePhase.Objection}
-            ref={yayButtonRef}
-          >
-            <Box display="flex" alignItems="center">
-              {voteData.phase === VotePhase.Objection ? (
-                <Tooltip
-                  placement="bottomLeft"
-                  title="You can only vote “No” in the Objection phase."
-                >
+              <Box display="flex" alignItems="center">
+                {voteData.phase === VotePhase.Objection ? (
+                  <Tooltip
+                    placement="bottomLeft"
+                    title="You can only vote “No” in the Objection phase."
+                  >
+                    <Box
+                      display="flex"
+                      gap={12}
+                      width={'100%'}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <CheckIcon /> Yes
+                    </Box>
+                  </Tooltip>
+                ) : (
                   <Box
                     display="flex"
                     gap={12}
@@ -164,22 +209,11 @@ export const VoteActions = () => {
                   >
                     <CheckIcon /> Yes
                   </Box>
-                </Tooltip>
-              ) : (
-                <Box
-                  display="flex"
-                  gap={12}
-                  width={'100%'}
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <CheckIcon /> Yes
-                </Box>
-              )}
-            </Box>
-          </VoteButton>
-        </>
-      )}
+                )}
+              </Box>
+            </VoteButton>
+          </>
+        )}
 
       <PopupMenu
         anchorRef={currentMode === 'nay' ? nayButtonRef : yayButtonRef}
