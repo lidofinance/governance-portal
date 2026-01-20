@@ -55,6 +55,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { easyTrackAbi } from 'abi/generated';
+import { ETH_DECIMALS } from '../../../../shared/blockchain/constants';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
@@ -100,7 +101,6 @@ type Program = {
   amount: string;
 };
 
-const DEFAULT_DECIMALS = 18;
 export const periodLimitError = () =>
   'The top-up is higher than the remaining current period limit';
 
@@ -116,7 +116,7 @@ export const formParts = ({
     motionType,
     getDefaultFormData: () => ({
       tokenAddress: '',
-      tokenDecimals: DEFAULT_DECIMALS,
+      tokenDecimals: ETH_DECIMALS,
       programs: [{ address: '', amount: '' }] as Program[],
     }),
     Component: function StartNewMotionMotionFormLego({

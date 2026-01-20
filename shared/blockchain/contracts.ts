@@ -272,11 +272,18 @@ export const NodeOperatorIncreaseLimit: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.NodeOperatorIncreaseLimit],
 };
 
-export const LEGOTopUp: ContractObject<typeof abi.evmTopUpLegoProgramAbi> = {
-  name: 'LEGOTopUp',
-  abi: abi.evmTopUpLegoProgramAbi,
-  chainAddressMap: EvmAddressesByType[MotionType.LEGOTopUp],
+export const LegoLDOTopUp: ContractObject<typeof abi.topUpWithLimitsAbi> = {
+  name: 'LegoLDOTopUp',
+  abi: abi.topUpWithLimitsAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.LegoLDOTopUp],
 };
+
+export const GasFunderETHTopUp: ContractObject<typeof abi.topUpWithLimitsAbi> =
+  {
+    name: 'GasFunderETHTopUp',
+    abi: abi.topUpWithLimitsAbi,
+    chainAddressMap: EvmAddressesByType[MotionType.GasFunderETHTopUp],
+  };
 
 /**
  * @deprecated

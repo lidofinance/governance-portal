@@ -12,7 +12,7 @@ import {
   EVMScriptExecutor,
 } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { toHex } from 'viem';
+import { toHex, pad, Address } from 'viem';
 
 // Data structure reference
 // https://github.com/lidofinance/scripts/blob/bda3568d1291bdc7ba422fb20150313f2d1778c3/scripts/vote_2024_01_16.py#L106
@@ -93,7 +93,9 @@ export const useTransitionLimits = () => {
         const [argIndex, , value] = paramsArr[i];
 
         if (argIndex === TOKEN_ARG_INDEX) {
-          const tokenAddress = toHex(value);
+          const tokenAddress = utils.getAddress(
+            pad(toHex(value), { size: 20 }),
+          ) as Address;
 
           const limitParam = paramsArr[i + 1];
 
