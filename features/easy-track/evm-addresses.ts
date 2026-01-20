@@ -285,6 +285,7 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x27A99a7104190DdA297B222104A6C70A4Ca5A17e',
     [MotionType.MEVBoostRelaysRemove]:
       '0x7FCc2901C6C3D62784cB178B14d44445B038f736',
+    [MotionType.SandboxStethAdd]: '0x8f05Cc4cC42745E9723E105D38638683f162e1d9',
 
     [MotionType.SandboxStablesTopUp]:
       '0x9D735eeDfa96F53BF9d31DbE81B51a5d333198dB',

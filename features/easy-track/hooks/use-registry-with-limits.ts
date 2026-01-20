@@ -21,6 +21,7 @@ import {
   RccStethAllowedRecipientsRegistry,
   RewardsShareProgramRegistry,
   SandboxStablesAllowedRecipientRegistry,
+  SandboxStethAllowedRecipientsRegistry,
   StethGasSupplyRegistry,
   StethRewardProgramRegistry,
   StonksStablesAllowedRecipientsRegistry,
@@ -84,6 +85,7 @@ export const REGISTRY_WITH_LIMITS_BY_MOTION_TYPE = {
     EcosystemOpsStethAllowedRecipientsRegistry,
   [MotionType.LabsOpsStablesTopUp]: LabsOpsStablesAllowedRecipientsRegistry,
   [MotionType.LabsOpsStethTopUp]: LabsOpsStethAllowedRecipientsRegistry,
+  [MotionType.SandboxStethAdd]: SandboxStethAllowedRecipientsRegistry,
 } as const;
 
 type HookArgs = {
@@ -185,6 +187,7 @@ const TOKEN_BY_MOTION_TYPE: Record<
   [MotionType.EcosystemOpsStethTopUp]: { label: 'stETH', decimals: 18 },
   [MotionType.LabsOpsStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
   [MotionType.LabsOpsStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.SandboxStethAdd]: { label: 'stETH', decimals: 18 },
 };
 
 export const useTokenByTopUpType = ({ registryType }: HookArgs) => {

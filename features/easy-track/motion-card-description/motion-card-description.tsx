@@ -243,6 +243,9 @@ const MOTION_DESCRIPTIONS = {
       registryType={MotionType.AtcStablesTopUp}
     />
   ),
+  [MotionType.SandboxStethAdd]: (props: GenericDescProps) => (
+    <AllowedRecipientAdd {...props} registryType={MotionType.SandboxStethAdd} />
+  ),
   [MotionType.SandboxStablesAdd]: (props: GenericDescProps) => (
     <AllowedRecipientAdd
       {...props}
