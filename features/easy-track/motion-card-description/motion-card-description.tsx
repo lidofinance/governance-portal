@@ -267,6 +267,12 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.SandboxStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.SandboxStethTopUp} />
   ),
+  [MotionType.SandboxStethRemove]: (props: GenericDescProps) => (
+    <AllowedRecipientRemove
+      {...props}
+      registryType={MotionType.SandboxStethRemove}
+    />
+  ),
   [MotionType.RccStethTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.RccStethTopUp} />
   ),

@@ -4,6 +4,7 @@ import * as formAllowedRecipientAdd from './start-new-allowed-recipient-add';
 import * as formAllowedRecipientTopUp from './start-new-allowed-recipient-top-up';
 
 import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
+import * as formAllowedRecipientRemove from './start-new-allowed-recipient-remove';
 import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
 
 export const formParts = {
@@ -44,6 +45,20 @@ export const formParts = {
   }),
   [MotionTypeForms.SandboxStethAdd]: formAllowedRecipientAdd.formParts({
     registryType: MotionTypeForms.SandboxStethAdd,
+  }),
+  [MotionTypeForms.StethRewardProgramRemove]:
+    formAllowedRecipientRemove.formParts({
+      registryType: MotionTypeForms.StethRewardProgramRemove,
+    }),
+  [MotionTypeForms.StethGasSupplyRemove]: formAllowedRecipientRemove.formParts({
+    registryType: MotionTypeForms.StethGasSupplyRemove,
+  }),
+  [MotionTypeForms.RewardsShareProgramRemove]:
+    formAllowedRecipientRemove.formParts({
+      registryType: MotionTypeForms.RewardsShareProgramRemove,
+    }),
+  [MotionTypeForms.SandboxStethRemove]: formAllowedRecipientRemove.formParts({
+    registryType: MotionTypeForms.SandboxStethRemove,
   }),
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,
