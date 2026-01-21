@@ -17,9 +17,6 @@ import {
 import { Address, Hex } from 'viem';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
 import { useAccount } from 'wagmi';
-import { useQuery } from '@tanstack/react-query';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { useLidoSDK } from 'providers/lido-sdk';
 import {
   useAllowedRecipients,
   usePeriodLimitsData,
@@ -45,6 +42,7 @@ import { validateToken } from '../../utils/validate-token';
 import { validateTransitionLimit } from '../../utils/validate-transition-limit';
 import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-than-limit';
 import { periodLimitError } from './start-new-top-up-with-limits-and-custom-token';
+import { useTrustedCaller } from '../../hooks/use-trusted-caller';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.LegoLDOTopUp]: {
@@ -108,18 +106,11 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
-      const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
-
-      const { chainId } = useLidoSDK();
       const { address: walletAddress } = useAccount();
 
-      const evmContractInstance = useReadContract(evmContract);
-
       const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
-        useQuery({
-          queryKey: ['trustedCaller', evmContractInstance.address, chainId],
-          queryFn: () => evmContractInstance.readContract('trustedCaller'),
-          enabled: !!walletAddress,
+        useTrustedCaller({
+          evmContract: TOP_UP_WITH_LIMITS_MAP[registryType].evmContract,
         });
 
       const isTrustedCallerConnected = trustedCaller === walletAddress;

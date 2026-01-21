@@ -11,15 +11,16 @@ import {
   StethRewardProgramTopUp,
   SandboxStethTopUp,
 } from 'shared/blockchain/contracts';
-import { createMotionFormPart } from './create-motion-form-part';
+import {
+  createMotionFormPart,
+  PopulateTxArgs,
+} from './create-motion-form-part';
 import { useAccount } from 'wagmi';
 import {
   useAllowedRecipients,
   usePeriodLimitsData,
 } from '../../hooks/use-registry-with-limits';
 import { useTokenByTopUpType } from '../../hooks/use-token-by-top-up-type';
-import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
-import { easyTrackAbi } from 'abi/generated';
 import { Address, Hex } from 'viem';
 import { useTransitionLimits } from '../../hooks/use-transition-limits';
 import {
@@ -41,6 +42,7 @@ import { validateToken } from '../../utils/validate-token';
 import { validateTransitionLimit } from '../../utils/validate-transition-limit';
 import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-than-limit';
 import { periodLimitError } from './start-new-top-up-with-limits-and-custom-token';
+import { useTrustedCaller } from '../../hooks/use-trusted-caller';
 
 type Program = {
   address: string;
@@ -81,17 +83,10 @@ export const formParts = ({
       evmScriptFactory,
       formData,
       contract,
-    }: {
-      evmScriptFactory: string;
-      formData: {
-        tokenAddress: string;
-        programs: Program[];
-      };
-      contract: {
-        instance: ReturnType<typeof useWriteContract<typeof easyTrackAbi>>;
-        address: Address;
-      };
-    }) => {
+    }: PopulateTxArgs<{
+      tokenAddress: string;
+      programs: Program[];
+    }>) => {
       const encodedCallData = new utils.AbiCoder().encode(
         ['address[]', 'uint256[]'],
         [
@@ -99,7 +94,7 @@ export const formParts = ({
           formData.programs.map((p) => utils.parseEther(p.amount)),
         ],
       );
-      return await contract.instance({
+      return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
         args: [evmScriptFactory as Address, encodedCallData as Hex],
@@ -114,10 +109,13 @@ export const formParts = ({
       submitAction,
     }) {
       const { address: walletAddress } = useAccount();
-      const trustedCaller = ALLOWED_RECIPIENT_TOPUP_MAP[
-        registryType
-      ].evmContract.useSwrWeb3('trustedCaller', []);
-      const isTrustedCallerConnected = trustedCaller.data === walletAddress;
+
+      const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
+        useTrustedCaller({
+          evmContract: ALLOWED_RECIPIENT_TOPUP_MAP[registryType].evmContract,
+        });
+
+      const isTrustedCallerConnected = trustedCaller === walletAddress;
 
       const { data: periodLimitsData, isLoading: periodLimitsLoading } =
         usePeriodLimitsData({ registryType });
@@ -170,11 +168,17 @@ export const formParts = ({
 
       const { data: limits, isLoading: isTransitionLimitsDataLoading } =
         useTransitionLimits();
+
+      const tokenAddress =
+        typeof token.address === 'object'
+          ? token.address.actual
+          : token.address;
+
       const transitionLimit =
-        token.address && limits?.[utils.getAddress(token.address)];
+        tokenAddress && limits?.[utils.getAddress(tokenAddress)];
 
       if (
-        trustedCaller.initialLoading ||
+        isTrustedCallerLoading ||
         allowedRecipients.isLoading ||
         isTransitionLimitsDataLoading ||
         periodLimitsLoading

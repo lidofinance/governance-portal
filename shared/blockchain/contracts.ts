@@ -351,10 +351,10 @@ export const ReferralPartnersRegistry: ContractObject<
 };
 
 export const StethRewardProgramRegistry: ContractObject<
-  typeof abi.rewardProgramRegistryAbi
+  typeof abi.allowedRecipientsRegistryAbi
 > = {
   name: 'StethRewardProgramRegistry',
-  abi: abi.rewardProgramRegistryAbi,
+  abi: abi.allowedRecipientsRegistryAbi,
   chainAddressMap: addr.StethRewardProgramRegistry,
 };
 

@@ -57,6 +57,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
+import { useTrustedCaller } from '../../hooks/use-trusted-caller';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
@@ -121,18 +122,14 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
-      const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
-
       const { account: walletAddress } = useWeb3();
       const { chainId } = useLidoSDK();
-      const evmContractInstance = useReadContract(evmContract);
 
       const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
-        useQuery({
-          queryKey: ['trustedCaller', evmContractInstance.address, chainId],
-          queryFn: () => evmContractInstance.readContract('trustedCaller'),
-          enabled: !!walletAddress,
+        useTrustedCaller({
+          evmContract: TOP_UP_WITH_LIMITS_MAP[registryType].evmContract,
         });
+
       const isTrustedCallerConnected = trustedCaller === walletAddress;
 
       const {
