@@ -623,6 +623,13 @@ export const SandboxStablesTopUp: ContractObject<
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStablesTopUp],
 };
+export const SandboxStethTopUp: ContractObject<
+  typeof abi.topUpAllowedRecipientsAbi
+> = {
+  name: 'SandboxStethTopUp',
+  abi: abi.topUpAllowedRecipientsAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.SandboxStethTopUp],
+};
 
 export const SandboxStethAdd: ContractObject<
   typeof abi.addAllowedRecipientAbi
