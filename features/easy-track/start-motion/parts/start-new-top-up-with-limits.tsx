@@ -9,7 +9,6 @@ import {
   LabsOpsStethTopUp,
   StonksStethTopUp,
   LegoLDOTopUp,
-  GasFunderETHTopUp,
 } from 'shared/blockchain/contracts';
 import { createMotionFormPart } from './create-motion-form-part';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
@@ -40,7 +39,7 @@ import {
   MotionLimitProgressWrapper,
 } from '../../motion-limit-progress';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
-import { InputHookForm } from '../../../../shared/hook-form/input-hook-form';
+import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateToken } from '../../utils/validate-token';
 import { validateTransitionLimit } from '../../utils/validate-transition-limit';
 import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-than-limit';
@@ -50,10 +49,6 @@ export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.LegoLDOTopUp]: {
     evmContract: LegoLDOTopUp,
     motionType: MotionType.LegoLDOTopUp,
-  },
-  [MotionType.GasFunderETHTopUp]: {
-    evmContract: GasFunderETHTopUp,
-    motionType: MotionType.GasFunderETHTopUp,
   },
   [MotionType.StonksStethTopUp]: {
     evmContract: StonksStethTopUp,
@@ -78,10 +73,8 @@ export const formParts = ({
   registryType,
 }: {
   registryType: keyof typeof TOP_UP_WITH_LIMITS_MAP;
-}) => {
-  const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
-
-  return createMotionFormPart({
+}) =>
+  createMotionFormPart({
     motionType: TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
     populateTx: async ({
       evmScriptFactory,
@@ -121,6 +114,8 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
+      const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
+
       const { chainId } = useLidoSDK();
       const { address: walletAddress } = useAccount();
 
@@ -326,4 +321,3 @@ export const formParts = ({
       );
     },
   });
-};

@@ -55,7 +55,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { easyTrackAbi } from 'abi/generated';
-import { ETH_DECIMALS } from '../../../../shared/blockchain/constants';
+import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
@@ -108,12 +108,9 @@ export const formParts = ({
   registryType,
 }: {
   registryType: keyof typeof TOP_UP_WITH_LIMITS_MAP;
-}) => {
-  const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
-  const motionType = TOP_UP_WITH_LIMITS_MAP[registryType].motionType;
-
-  return createMotionFormPart({
-    motionType,
+}) =>
+  createMotionFormPart({
+    motionType: TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
     getDefaultFormData: () => ({
       tokenAddress: '',
       tokenDecimals: ETH_DECIMALS,
@@ -123,6 +120,8 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
+      const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
+
       const { account: walletAddress } = useWeb3();
       const { chainId } = useLidoSDK();
       const evmContractInstance = useReadContract(evmContract);
@@ -218,11 +217,15 @@ export const formParts = ({
       // Validate EVM script factory
       const { data: isValidFactory, isLoading: isFactoryValidationLoading } =
         useQuery({
-          queryKey: ['evmScriptFactoryValidation', motionType, chainId],
+          queryKey: [
+            'evmScriptFactoryValidation',
+            TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
+            chainId,
+          ],
           queryFn: async () => {
             const scriptFactory = getScriptFactoryByMotionType(
               chainId,
-              motionType,
+              TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
             );
             if (!scriptFactory) return false;
 
@@ -453,4 +456,3 @@ export const formParts = ({
       });
     },
   });
-};

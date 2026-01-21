@@ -1,4 +1,4 @@
-import { formatBalance } from 'utils/format-balance';
+import { formatRawBalance } from 'utils/format-balance';
 import { DecodeFunctionResultReturnType } from 'viem';
 import { limitCheckerAbi } from 'abi/generated/LimitChecker';
 
@@ -24,7 +24,7 @@ export const getLimits = async <
   )) as GetLimitParameters;
 
   return {
-    limit: formatBalance(limit),
+    limit: formatRawBalance(limit),
     periodDurationMonths: Number(periodDurationMonths),
   };
 };
