@@ -1,14 +1,24 @@
 import type { PopulatedTransaction } from 'ethers';
 import { MotionType } from '../../motion-types';
+import { Address } from 'viem';
+import { easyTrackAbi } from 'abi/generated';
+import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
+
+export type PopulateTxArgs<FormData> = {
+  evmScriptFactory: string;
+  formData: FormData;
+  contract: {
+    write: ReturnType<typeof useWriteContract<typeof easyTrackAbi>>;
+    address: Address;
+  };
+};
 
 type Args<FormData> = {
   motionType: MotionType;
 
-  populateTx: (args: {
-    formData: FormData;
-    evmScriptFactory: string;
-    contract: any;
-  }) => Promise<PopulatedTransaction | `0x${string}`>;
+  populateTx: (
+    args: PopulateTxArgs<FormData>,
+  ) => Promise<PopulatedTransaction | `0x${string}`>;
 
   getDefaultFormData: () => FormData;
 

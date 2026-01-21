@@ -75,7 +75,7 @@ export const StartMotion = () => {
           evmScriptFactory,
           formData: formData[validMotionType],
           contract: {
-            instance: contractEasyTrack,
+            write: contractEasyTrack,
             address: easyTrackAddress,
           },
         });

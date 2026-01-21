@@ -10,9 +10,10 @@ import {
   StonksStethTopUp,
   LegoLDOTopUp,
 } from 'shared/blockchain/contracts';
-import { createMotionFormPart } from './create-motion-form-part';
-import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
-import { easyTrackAbi } from 'abi/generated';
+import {
+  createMotionFormPart,
+  PopulateTxArgs,
+} from './create-motion-form-part';
 import { Address, Hex } from 'viem';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
 import { useAccount } from 'wagmi';
@@ -80,18 +81,11 @@ export const formParts = ({
       evmScriptFactory,
       formData,
       contract,
-    }: {
-      evmScriptFactory: string;
-      formData: {
-        tokenAddress: string;
-        tokenDecimals: number;
-        programs: Program[];
-      };
-      contract: {
-        instance: ReturnType<typeof useWriteContract<typeof easyTrackAbi>>;
-        address: Address;
-      };
-    }) => {
+    }: PopulateTxArgs<{
+      tokenAddress: string;
+      tokenDecimals: number;
+      programs: Program[];
+    }>) => {
       const encodedCallData = new utils.AbiCoder().encode(
         ['address[]', 'uint256[]'],
         [
@@ -99,7 +93,7 @@ export const formParts = ({
           formData.programs.map((p) => utils.parseEther(p.amount)),
         ],
       );
-      return await contract.instance({
+      return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
         args: [evmScriptFactory as Address, encodedCallData as Hex],

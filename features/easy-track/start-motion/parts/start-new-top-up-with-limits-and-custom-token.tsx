@@ -23,10 +23,12 @@ import {
   SandboxStablesTopUp,
   StonksStablesTopUp,
 } from 'shared/blockchain/contracts';
-import { createMotionFormPart } from './create-motion-form-part';
+import {
+  createMotionFormPart,
+  PopulateTxArgs,
+} from './create-motion-form-part';
 import { Address, Hex } from 'viem';
 import { useWeb3 } from 'reef-knot/web3-react';
-import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 
 import { useAllowedTokens } from 'features/easy-track/hooks/use-allowed-tokens-registry';
 import { getScriptFactoryByMotionType } from '../../utils/get-motion-type';
@@ -54,7 +56,6 @@ import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-th
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { easyTrackAbi } from 'abi/generated';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
@@ -422,18 +423,11 @@ export const formParts = ({
       evmScriptFactory,
       formData,
       contract,
-    }: {
-      evmScriptFactory: string;
-      formData: {
-        tokenAddress: string;
-        tokenDecimals: number;
-        programs: Program[];
-      };
-      contract: {
-        instance: ReturnType<typeof useWriteContract<typeof easyTrackAbi>>;
-        address: Address;
-      };
-    }) => {
+    }: PopulateTxArgs<{
+      tokenAddress: string;
+      tokenDecimals: number;
+      programs: Program[];
+    }>) => {
       const encodedCallData = new utils.AbiCoder().encode(
         ['address', 'address[]', 'uint256[]'],
         [
@@ -449,7 +443,7 @@ export const formParts = ({
         throw new Error('Encoded call data is too short');
       }
 
-      return await contract.instance({
+      return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
         args: [evmScriptFactory as Address, encodedCallData as Hex],
