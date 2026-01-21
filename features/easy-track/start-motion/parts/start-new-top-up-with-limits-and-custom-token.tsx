@@ -439,10 +439,6 @@ export const formParts = ({
         ],
       );
 
-      if (encodedCallData.length < 10) {
-        throw new Error('Encoded call data is too short');
-      }
-
       return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
