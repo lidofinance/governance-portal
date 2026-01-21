@@ -1,5 +1,6 @@
 import { MotionTypeForms } from '../../motion-types';
 import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
+import * as formAllowedRecipientAdd from './start-new-allowed-recipient-add';
 import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
 
 export const formParts = {
@@ -11,6 +12,18 @@ export const formParts = {
     StartNewTopUpWithLimitsAndCustomToken.formParts({
       registryType: MotionTypeForms.LegoStablesTopUp,
     }),
+  [MotionTypeForms.StethRewardProgramAdd]: formAllowedRecipientAdd.formParts({
+    registryType: MotionTypeForms.StethRewardProgramAdd,
+  }),
+  [MotionTypeForms.StethGasSupplyAdd]: formAllowedRecipientAdd.formParts({
+    registryType: MotionTypeForms.StethGasSupplyAdd,
+  }),
+  [MotionTypeForms.RewardsShareProgramAdd]: formAllowedRecipientAdd.formParts({
+    registryType: MotionTypeForms.RewardsShareProgramAdd,
+  }),
+  [MotionTypeForms.SandboxStethAdd]: formAllowedRecipientAdd.formParts({
+    registryType: MotionTypeForms.SandboxStethAdd,
+  }),
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,
   }),

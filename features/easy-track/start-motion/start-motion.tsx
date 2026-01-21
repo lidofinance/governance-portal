@@ -71,7 +71,7 @@ export const StartMotion = () => {
           return;
         }
 
-        const txHash = await formParts[validMotionType].populateTx({
+        const txHash = await (formParts[validMotionType] as any).populateTx({
           evmScriptFactory,
           formData: formData[validMotionType],
           contract: {
@@ -104,7 +104,7 @@ export const StartMotion = () => {
 
   const CurrentFormPart =
     motionType && motionType in formParts
-      ? formParts[motionType as keyof typeof formParts].Component
+      ? (formParts[motionType as keyof typeof formParts].Component as any)
       : null;
 
   // Filter available motions to only show supported ones

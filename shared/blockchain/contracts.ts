@@ -624,6 +624,22 @@ export const SandboxStablesTopUp: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStablesTopUp],
 };
 
+export const SandboxStethAdd: ContractObject<
+  typeof abi.addAllowedRecipientAbi
+> = {
+  name: 'SandboxStethAdd',
+  abi: abi.addAllowedRecipientAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.SandboxStethAdd],
+};
+
+export const SandboxStethAllowedRecipientsRegistry: ContractObject<
+  typeof abi.registryWithLimitsAbi
+> = {
+  name: 'SandboxStethAllowedRecipientsRegistry',
+  abi: abi.registryWithLimitsAbi,
+  chainAddressMap: addr.SandboxAllowedRecipientsRegistry,
+};
+
 export const RccStethAllowedRecipientsRegistry: ContractObject<
   typeof abi.registryWithLimitsAbi
 > = {

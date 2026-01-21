@@ -75,6 +75,7 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.SandboxStethTopUp]: 'Top up sandbox stETH',
   [MotionType.SandboxStablesAdd]: 'Add sandbox stables recipient',
   [MotionType.SandboxStablesRemove]: 'Remove sandbox stables recipient',
+  [MotionType.SandboxStethAdd]: 'Add sandbox stETH recipient',
   [MotionType.LegoDAITopUp]: 'Top up LEGO DAI',
   [MotionType.SDVTTargetValidatorLimitsUpdateV1]:
     'Update target validator limits [deprecated]',
