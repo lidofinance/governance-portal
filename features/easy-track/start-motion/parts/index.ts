@@ -1,5 +1,6 @@
 import { MotionTypeForms } from '../../motion-types';
 import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
+import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
 
 export const formParts = {
   [MotionTypeForms.SandboxStablesTopUp]:
@@ -10,6 +11,9 @@ export const formParts = {
     StartNewTopUpWithLimitsAndCustomToken.formParts({
       registryType: MotionTypeForms.LegoStablesTopUp,
     }),
+  [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
+    registryType: MotionTypeForms.LegoLDOTopUp,
+  }),
 } as const;
 
 export type FormData = {

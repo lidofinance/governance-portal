@@ -23,10 +23,12 @@ import {
   SandboxStablesTopUp,
   StonksStablesTopUp,
 } from 'shared/blockchain/contracts';
-import { createMotionFormPart } from './create-motion-form-part';
+import {
+  createMotionFormPart,
+  PopulateTxArgs,
+} from './create-motion-form-part';
 import { Address, Hex } from 'viem';
 import { useWeb3 } from 'reef-knot/web3-react';
-import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 
 import { useAllowedTokens } from 'features/easy-track/hooks/use-allowed-tokens-registry';
 import { getScriptFactoryByMotionType } from '../../utils/get-motion-type';
@@ -54,7 +56,7 @@ import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-th
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { easyTrackAbi } from 'abi/generated';
+import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
@@ -100,7 +102,6 @@ type Program = {
   amount: string;
 };
 
-const DEFAULT_DECIMALS = 18;
 export const periodLimitError = () =>
   'The top-up is higher than the remaining current period limit';
 
@@ -108,21 +109,20 @@ export const formParts = ({
   registryType,
 }: {
   registryType: keyof typeof TOP_UP_WITH_LIMITS_MAP;
-}) => {
-  const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
-  const motionType = TOP_UP_WITH_LIMITS_MAP[registryType].motionType;
-
-  return createMotionFormPart({
-    motionType,
+}) =>
+  createMotionFormPart({
+    motionType: TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
     getDefaultFormData: () => ({
       tokenAddress: '',
-      tokenDecimals: DEFAULT_DECIMALS,
+      tokenDecimals: ETH_DECIMALS,
       programs: [{ address: '', amount: '' }] as Program[],
     }),
     Component: function StartNewMotionMotionFormLego({
       fieldNames,
       submitAction,
     }) {
+      const evmContract = TOP_UP_WITH_LIMITS_MAP[registryType].evmContract;
+
       const { account: walletAddress } = useWeb3();
       const { chainId } = useLidoSDK();
       const evmContractInstance = useReadContract(evmContract);
@@ -218,11 +218,15 @@ export const formParts = ({
       // Validate EVM script factory
       const { data: isValidFactory, isLoading: isFactoryValidationLoading } =
         useQuery({
-          queryKey: ['evmScriptFactoryValidation', motionType, chainId],
+          queryKey: [
+            'evmScriptFactoryValidation',
+            TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
+            chainId,
+          ],
           queryFn: async () => {
             const scriptFactory = getScriptFactoryByMotionType(
               chainId,
-              motionType,
+              TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
             );
             if (!scriptFactory) return false;
 
@@ -419,18 +423,11 @@ export const formParts = ({
       evmScriptFactory,
       formData,
       contract,
-    }: {
-      evmScriptFactory: string;
-      formData: {
-        tokenAddress: string;
-        tokenDecimals: number;
-        programs: Program[];
-      };
-      contract: {
-        instance: ReturnType<typeof useWriteContract<typeof easyTrackAbi>>;
-        address: Address;
-      };
-    }) => {
+    }: PopulateTxArgs<{
+      tokenAddress: string;
+      tokenDecimals: number;
+      programs: Program[];
+    }>) => {
       const encodedCallData = new utils.AbiCoder().encode(
         ['address', 'address[]', 'uint256[]'],
         [
@@ -442,15 +439,10 @@ export const formParts = ({
         ],
       );
 
-      if (encodedCallData.length < 10) {
-        throw new Error('Encoded call data is too short');
-      }
-
-      return await contract.instance({
+      return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
         args: [evmScriptFactory as Address, encodedCallData as Hex],
       });
     },
   });
-};

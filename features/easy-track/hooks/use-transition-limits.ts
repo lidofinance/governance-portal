@@ -91,10 +91,12 @@ export const useTransitionLimits = () => {
       let decimals: number | null = null;
       for (let i = 0; i < paramsArr.length; i += 1) {
         const [argIndex, , value] = paramsArr[i];
-
         if (argIndex === TOKEN_ARG_INDEX) {
-          const tokenAddress = toHex(value);
-
+          let tokenAddress = toHex(value);
+          // Handle special case for zero address representation
+          if (value === 0n) {
+            tokenAddress = constants.AddressZero;
+          }
           const limitParam = paramsArr[i + 1];
 
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
