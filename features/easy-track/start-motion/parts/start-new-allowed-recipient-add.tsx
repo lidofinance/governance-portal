@@ -11,13 +11,12 @@ import {
 } from './create-motion-form-part';
 import { Address, Hex } from 'viem';
 import { utils } from 'ethers';
-import { useAccount } from 'wagmi';
 import { useAllowedRecipients } from '../../hooks/use-registry-with-limits';
 import { useMemo } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
 import { Fieldset, MessageBox } from './style';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
-import { useTrustedCaller } from '../../hooks/use-trusted-caller';
+import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
 export const ALLOWED_RECIPIENT_ADD_MAP = {
   [MotionType.StethRewardProgramAdd]: {
@@ -72,15 +71,10 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
-      const { address: walletAddress } = useAccount();
       const allowedRecipients = useAllowedRecipients({ registryType });
 
-      const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
-        useTrustedCaller({
-          evmContract: ALLOWED_RECIPIENT_ADD_MAP[registryType].evmContract,
-        });
-
-      const isTrustedCallerConnected = trustedCaller === walletAddress;
+      const { isTrustedCallerConnected, isTrustedCallerLoading } =
+        useIsTrustedCaller(ALLOWED_RECIPIENT_ADD_MAP[registryType].evmContract);
 
       const existedAddresses = useMemo(() => {
         return (allowedRecipients.data || []).map(({ address }) => address);

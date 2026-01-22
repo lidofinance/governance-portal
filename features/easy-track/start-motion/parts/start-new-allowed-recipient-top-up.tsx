@@ -15,7 +15,6 @@ import {
   createMotionFormPart,
   PopulateTxArgs,
 } from './create-motion-form-part';
-import { useAccount } from 'wagmi';
 import {
   useAllowedRecipients,
   usePeriodLimitsData,
@@ -42,7 +41,7 @@ import { validateToken } from '../../utils/validate-token';
 import { validateTransitionLimit } from '../../utils/validate-transition-limit';
 import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-than-limit';
 import { periodLimitError } from './start-new-top-up-with-limits-and-custom-token';
-import { useTrustedCaller } from '../../hooks/use-trusted-caller';
+import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
 type Program = {
   address: string;
@@ -108,14 +107,10 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
-      const { address: walletAddress } = useAccount();
-
-      const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
-        useTrustedCaller({
-          evmContract: ALLOWED_RECIPIENT_TOPUP_MAP[registryType].evmContract,
-        });
-
-      const isTrustedCallerConnected = trustedCaller === walletAddress;
+      const { isTrustedCallerConnected, isTrustedCallerLoading } =
+        useIsTrustedCaller(
+          ALLOWED_RECIPIENT_TOPUP_MAP[registryType].evmContract,
+        );
 
       const { data: periodLimitsData, isLoading: periodLimitsLoading } =
         usePeriodLimitsData({ registryType });

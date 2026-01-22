@@ -28,8 +28,6 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { Address, Hex } from 'viem';
-import { useWeb3 } from 'reef-knot/web3-react';
-
 import { useAllowedTokens } from 'features/easy-track/hooks/use-allowed-tokens-registry';
 import { getScriptFactoryByMotionType } from '../../utils/get-motion-type';
 
@@ -57,7 +55,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
-import { useTrustedCaller } from '../../hooks/use-trusted-caller';
+import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
@@ -122,15 +120,10 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
-      const { account: walletAddress } = useWeb3();
       const { chainId } = useLidoSDK();
 
-      const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
-        useTrustedCaller({
-          evmContract: TOP_UP_WITH_LIMITS_MAP[registryType].evmContract,
-        });
-
-      const isTrustedCallerConnected = trustedCaller === walletAddress;
+      const { isTrustedCallerConnected, isTrustedCallerLoading } =
+        useIsTrustedCaller(TOP_UP_WITH_LIMITS_MAP[registryType].evmContract);
 
       const {
         allowedTokens,
