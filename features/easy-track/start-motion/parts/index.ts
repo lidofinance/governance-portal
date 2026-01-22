@@ -1,9 +1,30 @@
 import { MotionTypeForms } from '../../motion-types';
-import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
+
 import * as formAllowedRecipientAdd from './start-new-allowed-recipient-add';
+import * as formAllowedRecipientTopUp from './start-new-allowed-recipient-top-up';
+
+import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
 import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
 
 export const formParts = {
+  [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
+    formAllowedRecipientTopUp.formParts({
+      registryType: MotionTypeForms.AllowedRecipientTopUpTrpLdo,
+    }),
+  [MotionTypeForms.StethRewardProgramTopUp]:
+    formAllowedRecipientTopUp.formParts({
+      registryType: MotionTypeForms.StethRewardProgramTopUp,
+    }),
+  [MotionTypeForms.StethGasSupplyTopUp]: formAllowedRecipientTopUp.formParts({
+    registryType: MotionTypeForms.StethGasSupplyTopUp,
+  }),
+  [MotionTypeForms.RewardsShareProgramTopUp]:
+    formAllowedRecipientTopUp.formParts({
+      registryType: MotionTypeForms.RewardsShareProgramTopUp,
+    }),
+  [MotionTypeForms.SandboxStethTopUp]: formAllowedRecipientTopUp.formParts({
+    registryType: MotionTypeForms.SandboxStethTopUp,
+  }),
   [MotionTypeForms.SandboxStablesTopUp]:
     StartNewTopUpWithLimitsAndCustomToken.formParts({
       registryType: MotionTypeForms.SandboxStablesTopUp,

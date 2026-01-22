@@ -11,15 +11,12 @@ import {
 } from './create-motion-form-part';
 import { Address, Hex } from 'viem';
 import { utils } from 'ethers';
-import { useAccount } from 'wagmi';
 import { useAllowedRecipients } from '../../hooks/use-registry-with-limits';
-import { useQuery } from '@tanstack/react-query';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { useLidoSDK } from 'providers/lido-sdk';
 import { useMemo } from 'react';
 import { Loader } from '@lidofinance/lido-ui';
 import { Fieldset, MessageBox } from './style';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
+import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
 export const ALLOWED_RECIPIENT_ADD_MAP = {
   [MotionType.StethRewardProgramAdd]: {
@@ -44,10 +41,8 @@ export const formParts = ({
   registryType,
 }: {
   registryType: keyof typeof ALLOWED_RECIPIENT_ADD_MAP;
-}) => {
-  const evmContract = ALLOWED_RECIPIENT_ADD_MAP[registryType].evmContract;
-
-  return createMotionFormPart({
+}) =>
+  createMotionFormPart({
     motionType: ALLOWED_RECIPIENT_ADD_MAP[registryType].motionType,
     populateTx: async ({
       evmScriptFactory,
@@ -76,18 +71,10 @@ export const formParts = ({
       fieldNames,
       submitAction,
     }) {
-      const { chainId } = useLidoSDK();
-      const { address: walletAddress } = useAccount();
       const allowedRecipients = useAllowedRecipients({ registryType });
-      const evmContractInstance = useReadContract(evmContract);
 
-      const { data: trustedCaller, isLoading: isTrustedCallerLoading } =
-        useQuery({
-          queryKey: ['trustedCaller', evmContractInstance.address, chainId],
-          queryFn: () => evmContractInstance.readContract('trustedCaller'),
-          enabled: !!walletAddress,
-        });
-      const isTrustedCallerConnected = trustedCaller === walletAddress;
+      const { isTrustedCallerConnected, isTrustedCallerLoading } =
+        useIsTrustedCaller(ALLOWED_RECIPIENT_ADD_MAP[registryType].evmContract);
 
       const existedAddresses = useMemo(() => {
         return (allowedRecipients.data || []).map(({ address }) => address);
@@ -135,4 +122,3 @@ export const formParts = ({
       );
     },
   });
-};

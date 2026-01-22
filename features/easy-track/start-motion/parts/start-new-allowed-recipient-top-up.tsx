@@ -5,23 +5,27 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, ButtonIcon, Loader, Option } from '@lidofinance/lido-ui';
 import { MotionType } from '../../motion-types';
 import {
-  EcosystemOpsStethTopUp,
-  LabsOpsStethTopUp,
-  StonksStethTopUp,
-  LegoLDOTopUp,
+  AllowedRecipientTopUpTrpLdo,
+  RewardsShareProgramTopUp,
+  StethGasSupplyTopUp,
+  StethRewardProgramTopUp,
+  SandboxStethTopUp,
 } from 'shared/blockchain/contracts';
 import {
   createMotionFormPart,
   PopulateTxArgs,
 } from './create-motion-form-part';
-import { Address, Hex } from 'viem';
-import { ETH_DECIMALS } from 'shared/blockchain/constants';
 import {
   useAllowedRecipients,
   usePeriodLimitsData,
 } from '../../hooks/use-registry-with-limits';
-import { useTransitionLimits } from '../../hooks/use-transition-limits';
 import { useTokenByTopUpType } from '../../hooks/use-token-by-top-up-type';
+import { Address, Hex } from 'viem';
+import { useTransitionLimits } from '../../hooks/use-transition-limits';
+import {
+  MotionLimitProgress,
+  MotionLimitProgressWrapper,
+} from '../../motion-limit-progress';
 import {
   Fieldset,
   FieldsHeader,
@@ -31,10 +35,6 @@ import {
   MotionInfoBox,
   RemoveItemButton,
 } from './style';
-import {
-  MotionLimitProgress,
-  MotionLimitProgressWrapper,
-} from '../../motion-limit-progress';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateToken } from '../../utils/validate-token';
@@ -43,44 +43,47 @@ import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-th
 import { periodLimitError } from './start-new-top-up-with-limits-and-custom-token';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
-export const TOP_UP_WITH_LIMITS_MAP = {
-  [MotionType.LegoLDOTopUp]: {
-    evmContract: LegoLDOTopUp,
-    motionType: MotionType.LegoLDOTopUp,
-  },
-  [MotionType.StonksStethTopUp]: {
-    evmContract: StonksStethTopUp,
-    motionType: MotionType.StonksStethTopUp,
-  },
-  [MotionType.EcosystemOpsStethTopUp]: {
-    evmContract: EcosystemOpsStethTopUp,
-    motionType: MotionType.EcosystemOpsStethTopUp,
-  },
-  [MotionType.LabsOpsStethTopUp]: {
-    evmContract: LabsOpsStethTopUp,
-    motionType: MotionType.LabsOpsStethTopUp,
-  },
-};
-
 type Program = {
   address: string;
   amount: string;
 };
 
+export const ALLOWED_RECIPIENT_TOPUP_MAP = {
+  [MotionType.AllowedRecipientTopUpTrpLdo]: {
+    evmContract: AllowedRecipientTopUpTrpLdo,
+    motionType: MotionType.AllowedRecipientTopUpTrpLdo,
+  },
+  [MotionType.StethRewardProgramTopUp]: {
+    evmContract: StethRewardProgramTopUp,
+    motionType: MotionType.StethRewardProgramTopUp,
+  },
+  [MotionType.StethGasSupplyTopUp]: {
+    evmContract: StethGasSupplyTopUp,
+    motionType: MotionType.StethGasSupplyTopUp,
+  },
+  [MotionType.RewardsShareProgramTopUp]: {
+    evmContract: RewardsShareProgramTopUp,
+    motionType: MotionType.RewardsShareProgramTopUp,
+  },
+  [MotionType.SandboxStethTopUp]: {
+    evmContract: SandboxStethTopUp,
+    motionType: MotionType.SandboxStethTopUp,
+  },
+};
+
 export const formParts = ({
   registryType,
 }: {
-  registryType: keyof typeof TOP_UP_WITH_LIMITS_MAP;
+  registryType: keyof typeof ALLOWED_RECIPIENT_TOPUP_MAP;
 }) =>
   createMotionFormPart({
-    motionType: TOP_UP_WITH_LIMITS_MAP[registryType].motionType,
+    motionType: ALLOWED_RECIPIENT_TOPUP_MAP[registryType].motionType,
     populateTx: async ({
       evmScriptFactory,
       formData,
       contract,
     }: PopulateTxArgs<{
       tokenAddress: string;
-      tokenDecimals: number;
       programs: Program[];
     }>) => {
       const encodedCallData = new utils.AbiCoder().encode(
@@ -98,7 +101,6 @@ export const formParts = ({
     },
     getDefaultFormData: () => ({
       tokenAddress: '',
-      tokenDecimals: ETH_DECIMALS,
       programs: [{ address: '', amount: '' }] as Program[],
     }),
     Component: function StartNewMotionMotionFormLego({
@@ -106,12 +108,13 @@ export const formParts = ({
       submitAction,
     }) {
       const { isTrustedCallerConnected, isTrustedCallerLoading } =
-        useIsTrustedCaller(TOP_UP_WITH_LIMITS_MAP[registryType].evmContract);
+        useIsTrustedCaller(
+          ALLOWED_RECIPIENT_TOPUP_MAP[registryType].evmContract,
+        );
 
       const { data: periodLimitsData, isLoading: periodLimitsLoading } =
         usePeriodLimitsData({ registryType });
-
-      const legoDAIRecipients = useAllowedRecipients({ registryType });
+      const allowedRecipients = useAllowedRecipients({ registryType });
       const token = useTokenByTopUpType({ registryType });
 
       const fieldsArr = useFieldArray({ name: fieldNames.programs });
@@ -135,28 +138,28 @@ export const formParts = ({
       );
 
       const getFilteredOptions = (fieldIdx: number) => {
-        if (!legoDAIRecipients.data) return [];
+        if (!allowedRecipients.data) return [];
         const thatAddress = selectedPrograms[fieldIdx]?.address;
         const selectedAddresses = selectedPrograms.map(
           ({ address }) => address,
         );
-        return legoDAIRecipients.data.filter(
+        return allowedRecipients.data.filter(
           ({ address }) =>
             !selectedAddresses.includes(address) || address === thatAddress,
         );
       };
 
       useEffect(() => {
-        const recipientsCount = legoDAIRecipients.data?.length || 0;
+        const recipientsCount = allowedRecipients.data?.length || 0;
         const isMoreThanOne = recipientsCount > 1;
 
         if (isMoreThanOne) return;
 
-        const recipientAddress = legoDAIRecipients.data?.[0].address || '';
-        setValue(fieldNames.programs, [
-          { address: recipientAddress, amount: '' },
-        ]);
-      }, [fieldNames.programs, setValue, legoDAIRecipients.data]);
+        const recipientAddress = allowedRecipients.data?.[0]?.address || '';
+        if (!recipientAddress) return;
+
+        setValue(fieldNames.programs, [{ address: recipientAddress }]);
+      }, [fieldNames.programs, setValue, allowedRecipients.data]);
 
       const { data: limits, isLoading: isTransitionLimitsDataLoading } =
         useTransitionLimits();
@@ -171,7 +174,7 @@ export const formParts = ({
 
       if (
         isTrustedCallerLoading ||
-        legoDAIRecipients.isLoading ||
+        allowedRecipients.isLoading ||
         isTransitionLimitsDataLoading ||
         periodLimitsLoading
       ) {
@@ -203,10 +206,12 @@ export const formParts = ({
             <Fragment key={item.id}>
               <FieldsWrapper>
                 <FieldsHeader>
-                  <FieldsHeaderDesc>Recipient #{i + 1}</FieldsHeaderDesc>
+                  {fieldsArr.fields.length > 1 && (
+                    <FieldsHeaderDesc>Program #{i + 1}</FieldsHeaderDesc>
+                  )}
                   {fieldsArr.fields.length > 1 && (
                     <RemoveItemButton onClick={() => handleRemoveProgram(i)}>
-                      Remove recipient {i + 1}
+                      Remove program {i + 1}
                     </RemoveItemButton>
                   )}
                 </FieldsHeader>
@@ -218,13 +223,13 @@ export const formParts = ({
                 )}
                 <Fieldset>
                   <SelectHookForm
-                    label="Top up recipient address"
+                    label="Recipient address"
                     fieldName={`${fieldNames.programs}.${i}.address`}
                     rules={{ required: 'Field is required' }}
                   >
                     {getFilteredOptions(i).map((program, j) => (
                       <Option key={j} value={program.address}>
-                        {program.title}
+                        {program.title || program.address}
                       </Option>
                     ))}
                   </SelectHookForm>
@@ -234,7 +239,6 @@ export const formParts = ({
                   <InputHookForm
                     label={`${token.label} Amount`}
                     fieldName={`${fieldNames.programs}.${i}.amount`}
-                    autoFocus
                     rules={{
                       required: 'Field is required',
                       validate: (value) => {
@@ -278,8 +282,8 @@ export const formParts = ({
             </Fragment>
           ))}
 
-          {legoDAIRecipients.data &&
-            fieldsArr.fields.length < legoDAIRecipients.data.length && (
+          {allowedRecipients.data &&
+            fieldsArr.fields.length < allowedRecipients.data.length && (
               <Fieldset>
                 <ButtonIcon
                   type="button"
@@ -289,7 +293,7 @@ export const formParts = ({
                   icon={<Plus />}
                   color="secondary"
                 >
-                  One more recipient
+                  One more program
                 </ButtonIcon>
               </Fieldset>
             )}

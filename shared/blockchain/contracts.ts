@@ -351,10 +351,10 @@ export const ReferralPartnersRegistry: ContractObject<
 };
 
 export const StethRewardProgramRegistry: ContractObject<
-  typeof abi.rewardProgramRegistryAbi
+  typeof abi.allowedRecipientsRegistryAbi
 > = {
   name: 'StethRewardProgramRegistry',
-  abi: abi.rewardProgramRegistryAbi,
+  abi: abi.allowedRecipientsRegistryAbi,
   chainAddressMap: addr.StethRewardProgramRegistry,
 };
 
@@ -622,6 +622,13 @@ export const SandboxStablesTopUp: ContractObject<
   name: 'SandboxStablesTopUp',
   abi: abi.topUpWithLimitsStablesAbi,
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStablesTopUp],
+};
+export const SandboxStethTopUp: ContractObject<
+  typeof abi.topUpAllowedRecipientsAbi
+> = {
+  name: 'SandboxStethTopUp',
+  abi: abi.topUpAllowedRecipientsAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.SandboxStethTopUp],
 };
 
 export const SandboxStethAdd: ContractObject<
