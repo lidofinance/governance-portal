@@ -138,7 +138,7 @@ export const DashboardVote = ({
             nayNum={nayNum}
             totalSupply={totalSupply}
             fontSize="xxs"
-            minAcceptQuorum={Number(vote.minAcceptQuorum)}
+            minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
             startDate={startDate}
             voteDualGovernanceStatus={
               voteDualGovernanceStatus?.proposalStatus || null

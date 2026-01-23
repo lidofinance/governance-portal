@@ -241,18 +241,24 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   ]);
 
   const handleDelegatedVote = useCallback(
-    async ({ mode, voters }: { mode: VoteMode; voters: Address[] }) => {
+    async ({ mode }: { mode: VoteMode; voters: Address[] }) => {
       if (!isConnected) {
         txModalStages.failed(new Error('Please connect your wallet to vote'));
         return;
       }
-      txModalStages.sign({
+      txModalStages.confirm({
         mode,
-      });
+        voteId: BigInt(voteId),
+        onSubmit: async (selectedVoters) => {
+          txModalStages.sign({
+            mode,
+          });
 
-      await onDelegateVoteSubmit(mode, voters);
+          await onDelegateVoteSubmit(mode, selectedVoters);
+        },
+      });
     },
-    [isConnected, onDelegateVoteSubmit, txModalStages],
+    [isConnected, onDelegateVoteSubmit, txModalStages, voteId],
   );
 
   const handleOwnVote = useCallback(
