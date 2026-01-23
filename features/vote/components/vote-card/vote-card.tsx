@@ -223,6 +223,9 @@ export const VoteCard = ({ voteId }: Props) => {
             metadata={voteData.eventStart?.args.metadata || ''}
           />
         </DetailsBoxWrap>
+        {isWalletConnectionAllowed && voteData.phase !== VotePhase.Closed && (
+          <VoteActions disabled={!isWalletConnected} />
+        )}
         {!isWalletConnected &&
           isWalletConnectionAllowed &&
           voteData.phase !== VotePhase.Closed && (
@@ -237,10 +240,7 @@ export const VoteCard = ({ voteId }: Props) => {
               walletAddress={walletAddress}
             />
             {voteData.phase !== VotePhase.Closed && (
-              <>
-                <VotePowerInfo votePowerWei={voteData.votePowerWei} />
-                <VoteActions />
-              </>
+              <VotePowerInfo votePowerWei={voteData.votePowerWei} />
             )}
             {voteData.canExecute && (
               <Button fullwidth color="success" onClick={handleEnact}>

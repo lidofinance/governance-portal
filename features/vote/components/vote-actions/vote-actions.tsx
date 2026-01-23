@@ -12,7 +12,7 @@ import { useVoteContext } from 'features/vote/providers/vote-context';
 import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 import { formatBalance } from 'utils/format-balance';
 
-export const VoteActions = () => {
+export const VoteActions = ({ disabled }: { disabled?: boolean }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { voteData } = useVoteContext();
 
@@ -43,7 +43,9 @@ export const VoteActions = () => {
 
   const formattedDelegatedVP = useMemo(
     () =>
-      `${formatBalance(delegatorsData.totalVotingPower || 0n)} ${tokenData?.symbol}`,
+      `${formatBalance(delegatorsData.totalVotingPower || 0n)} ${
+        tokenData?.symbol
+      }`,
     [tokenData?.symbol, delegatorsData.totalVotingPower],
   );
 
@@ -85,17 +87,23 @@ export const VoteActions = () => {
         <BasicActions
           votePhase={voteData.phase}
           onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
+          disabled={disabled}
         />
       )}
       {canVoteWithDelegatedVotePower && !canVoteWithOwnPower && (
         <BasicActions
           votePhase={voteData.phase}
           onVote={(mode: VoteMode) => handleVote({ mode, type: 'delegated' })}
+          disabled={disabled}
         />
       )}
       {canVoteWithOwnPower && canVoteWithDelegatedVotePower && (
         <>
-          <VoteButton onClick={() => handleMenu('nay')} ref={nayButtonRef}>
+          <VoteButton
+            onClick={() => handleMenu('nay')}
+            ref={nayButtonRef}
+            disabled={disabled}
+          >
             <Box
               display="flex"
               gap={12}
@@ -108,7 +116,7 @@ export const VoteActions = () => {
           </VoteButton>
           <VoteButton
             onClick={() => handleMenu('yay')}
-            disabled={voteData.phase === VotePhase.Objection}
+            disabled={voteData.phase === VotePhase.Objection || disabled}
             ref={yayButtonRef}
           >
             <Box display="flex" alignItems="center">

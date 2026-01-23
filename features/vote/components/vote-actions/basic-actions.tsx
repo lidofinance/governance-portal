@@ -9,12 +9,13 @@ import { VoteMode } from '../../types';
 type Props = {
   onVote: (mode: VoteMode) => void;
   votePhase: VotePhase;
+  disabled?: boolean;
 };
 
-export const BasicActions = ({ onVote, votePhase }: Props) => {
+export const BasicActions = ({ onVote, votePhase, disabled }: Props) => {
   return (
     <>
-      <VoteButton onClick={() => onVote('nay')}>
+      <VoteButton onClick={() => onVote('nay')} disabled={disabled}>
         <Box
           display="flex"
           gap={12}
@@ -26,7 +27,7 @@ export const BasicActions = ({ onVote, votePhase }: Props) => {
         </Box>
       </VoteButton>
       <VoteButton
-        disabled={votePhase === VotePhase.Objection}
+        disabled={votePhase === VotePhase.Objection || disabled}
         onClick={() => onVote('yay')}
       >
         <Box
