@@ -49,14 +49,16 @@ export const VoteConfirmDelegatedModal = ({
       <Box textAlign="center">
         <Text>Vote Yes with Delegated VP</Text>
       </Box>
+      <Box margin="10px 0">
+        <Button color="secondary" onClick={handleSubmit} fullwidth>
+          {`"${voteModeDict[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
+        </Button>
+      </Box>
       <DelegatorsSelector
         voteEvents={voteData?.voteEvents || []}
         delegators={allEligibleDelegators}
         onSelectionChange={handleSelectionChange}
       />
-      <Button color="secondary" onClick={handleSubmit} fullwidth>
-        {`"${voteModeDict[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
-      </Button>
     </>
   );
 };
