@@ -120,6 +120,18 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
     void onActiveConnection(activeConnection ?? null);
   }, [activeConnection, onActiveConnection]);
 
+  useEffect(() => {
+    const handleChainChange = () => {
+      window.location.reload();
+    };
+
+    window.ethereum?.on('chainChanged', handleChainChange);
+
+    return () => {
+      window.ethereum?.removeListener('chainChanged', handleChainChange);
+    };
+  }, []);
+
   return (
     // default wagmi autoConnect, MUST be false in our case, because we use custom autoConnect from Reef Knot
     <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>

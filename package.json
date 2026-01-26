@@ -33,7 +33,7 @@
     "@lidofinance/eth-api-providers": "^0.45.1",
     "@lidofinance/eth-providers": "^0.45.1",
     "@lidofinance/evm-script-decoder": "0.2.2",
-    "@lidofinance/lido-ethereum-sdk": "4.5.1",
+    "@lidofinance/lido-ethereum-sdk": "4.6.0",
     "@lidofinance/lido-ui": "^3.31.0",
     "@lidofinance/next-api-wrapper": "^0.45.1",
     "@lidofinance/next-ip-rate-limit": "^0.45.1",
@@ -69,7 +69,7 @@
     "react-is": "^18.2.0",
     "react-markdown": "^8.0.7",
     "react-transition-group": "^4.4.2",
-    "reef-knot": "7.4.0",
+    "reef-knot": "7.4.2",
     "remark": "^13.0.0",
     "remark-external-links": "^8.0.0",
     "remark-gfm": "^3.0.1",
@@ -80,8 +80,8 @@
     "tiny-async-pool": "^1.2.0",
     "tiny-invariant": "^1.1.0",
     "uuid": "^8.3.2",
-    "viem": "^2.21",
-    "wagmi": "2.12.2"
+    "viem": "2.31.3",
+    "wagmi": "2.15.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
