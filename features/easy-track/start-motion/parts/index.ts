@@ -6,6 +6,7 @@ import * as formAllowedRecipientTopUp from './start-new-allowed-recipient-top-up
 import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
 import * as formAllowedRecipientRemove from './start-new-allowed-recipient-remove';
 import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
+import * as StartNewNodeOperatorLimitIncrease from './start-new-node-operator-limit-increase';
 import * as StartNewExitRequestHashesSubmit from './start-new-exit-request-hashes-submit';
 import * as StartNewMEVBoostRelaysAdd from './start-new-mev-boost-relays-add';
 import * as StartNewMEVBoostRelaysEdit from './start-new-mev-boost-relays-edit';
@@ -89,6 +90,14 @@ export const formParts = {
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,
   }),
+  [MotionTypeForms.NodeOperatorIncreaseLimit]:
+    StartNewNodeOperatorLimitIncrease.formParts({
+      motionType: MotionTypeForms.NodeOperatorIncreaseLimit,
+    }),
+  [MotionTypeForms.SandboxNodeOperatorIncreaseLimit]:
+    StartNewNodeOperatorLimitIncrease.formParts({
+      motionType: MotionTypeForms.SandboxNodeOperatorIncreaseLimit,
+    }),
   // SDVT Parts
   [MotionTypeForms.SDVTNodeOperatorsAdd]: StartSDVTNodeOperatorsAdd.formParts(),
   [MotionTypeForms.SDVTNodeOperatorsActivate]:

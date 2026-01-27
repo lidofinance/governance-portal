@@ -8,38 +8,37 @@ import {
   parseEvmSupportedChainId,
 } from 'features/easy-track/evm-addresses';
 import { getIsTrustedCaller } from 'shared/blockchain/utils/get-is-trusted-caller';
-import { Address } from 'viem';
+import { Address, getAddress } from 'viem';
 import { processInBatches } from 'utils/process-in-batches';
+import { useNodeOperatorsList } from './use-node-operators-list';
 
-// type NodeOperatorsList = ReturnType<typeof useNodeOperatorsList>['data'];
+type NodeOperatorsList = ReturnType<typeof useNodeOperatorsList>['data'];
 
-// const getIsNodeOperatorConnected = (
-//   walletAddress: string | null | undefined,
-//   nodeOperatorsList: NodeOperatorsList,
-// ) => {
-//   if (!walletAddress || !nodeOperatorsList) return false;
-//   return nodeOperatorsList.some(
-//     (o) =>
-//       utils.getAddress(o.rewardAddress) === utils.getAddress(walletAddress),
-//   );
-// };
+const getIsNodeOperatorConnected = (
+  walletAddress: string | null | undefined,
+  nodeOperatorsList: NodeOperatorsList,
+) => {
+  if (!walletAddress || !nodeOperatorsList) return false;
+  return nodeOperatorsList.some(
+    (o) => getAddress(o.rewardAddress) === getAddress(walletAddress),
+  );
+};
 
 export const useAvailableMotions = () => {
   const { chainId } = useLidoSDK();
   const { address: walletAddress } = useAccount();
   const publicClient = usePublicClient({ chainId });
+  const parsedChainId = parseEvmSupportedChainId(chainId);
 
-  // const { data: nodeOperators } = useNodeOperatorsList('curated');
+  const { data: nodeOperators } = useNodeOperatorsList('curated');
 
-  // const { data: sandboxNodeOperators } = useNodeOperatorsList('sandbox');
+  const { data: sandboxNodeOperators } = useNodeOperatorsList('sandbox');
 
   const { data: availableMotions } = useQuery({
     queryKey: ['available-motions', chainId, walletAddress],
     queryFn: async () => {
       invariant(walletAddress, 'Wallet address must be defined');
       invariant(publicClient, 'publicClient must be defined');
-
-      const parsedChainId = parseEvmSupportedChainId(chainId);
 
       const nodeOperatorIncreaseLimitAddress =
         EvmAddressesByChain[parsedChainId][
@@ -117,14 +116,38 @@ export const useAvailableMotions = () => {
     },
   });
 
-  // const isNodeOperatorConnected = getIsNodeOperatorConnected(
-  //   walletAddress,
-  //   nodeOperators,
-  // );
-  // const isSandboxNodeOperatorConnected = getIsNodeOperatorConnected(
-  //   walletAddress,
-  //   sandboxNodeOperators,
-  // );
+  const isNodeOperatorConnected = getIsNodeOperatorConnected(
+    walletAddress,
+    nodeOperators,
+  );
+  const isSandboxNodeOperatorConnected = getIsNodeOperatorConnected(
+    walletAddress,
+    sandboxNodeOperators,
+  );
 
-  return { availableMotions };
+  const allowedMotions = [...(availableMotions || [])];
+
+  if (isNodeOperatorConnected) {
+    allowedMotions.push({
+      motionType: MotionTypeForms.NodeOperatorIncreaseLimit,
+      address: EvmAddressesByChain[parsedChainId][
+        MotionTypeForms.NodeOperatorIncreaseLimit
+      ] as Address,
+      isTrusted: true,
+    });
+  }
+
+  if (isSandboxNodeOperatorConnected) {
+    allowedMotions.push({
+      motionType: MotionTypeForms.SandboxNodeOperatorIncreaseLimit,
+      address: EvmAddressesByChain[parsedChainId][
+        MotionTypeForms.SandboxNodeOperatorIncreaseLimit
+      ] as Address,
+      isTrusted: true,
+    });
+  }
+
+  return {
+    availableMotions: allowedMotions,
+  };
 };
