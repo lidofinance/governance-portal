@@ -1,7 +1,10 @@
 import { MotionType } from './motion-types';
 import {
   NodeOperatorIncreaseLimit,
+  NodeOperatorsRegistry,
   SandboxNodeOperatorIncreaseLimit,
+  SandboxNodeOperatorsRegistry,
+  SDVTRegistry,
 } from 'shared/blockchain/contracts';
 
 export const MOTION_ATTENTION_PERIOD = 1 / 24;
@@ -20,6 +23,17 @@ export const INCREASE_LIMIT_MOTION_MAP = {
 } as const;
 
 export type IncreaseLimitMotionType = keyof typeof INCREASE_LIMIT_MOTION_MAP;
+
+export const MAX_SUBMIT_HASH_COUNT = 200;
+
+export const NODE_OPERATORS_REGISTRY_MAP = {
+  curated: NodeOperatorsRegistry,
+  sdvt: SDVTRegistry,
+  sandbox: SandboxNodeOperatorsRegistry,
+} as const;
+
+export type NodeOperatorsRegistryType =
+  keyof typeof NODE_OPERATORS_REGISTRY_MAP;
 
 export const MAX_MEV_BOOST_RELAY_STRING_LENGTH = 1024;
 
