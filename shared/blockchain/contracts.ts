@@ -639,6 +639,14 @@ export const SandboxStethAdd: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.SandboxStethAdd],
 };
 
+export const SandboxStethRemove: ContractObject<
+  typeof abi.removeAllowedRecipientAbi
+> = {
+  name: 'SandboxStethRemove',
+  abi: abi.removeAllowedRecipientAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.SandboxStethRemove],
+};
+
 export const SandboxStethAllowedRecipientsRegistry: ContractObject<
   typeof abi.registryWithLimitsAbi
 > = {

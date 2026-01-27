@@ -85,6 +85,7 @@ export const REGISTRY_WITH_LIMITS_BY_MOTION_TYPE = {
     EcosystemOpsStethAllowedRecipientsRegistry,
   [MotionType.LabsOpsStablesTopUp]: LabsOpsStablesAllowedRecipientsRegistry,
   [MotionType.LabsOpsStethTopUp]: LabsOpsStethAllowedRecipientsRegistry,
+  [MotionType.SandboxStethRemove]: SandboxStethAllowedRecipientsRegistry,
   [MotionType.SandboxStethAdd]: SandboxStethAllowedRecipientsRegistry,
 } as const;
 
@@ -187,6 +188,7 @@ const TOKEN_BY_MOTION_TYPE: Record<
   [MotionType.EcosystemOpsStethTopUp]: { label: 'stETH', decimals: 18 },
   [MotionType.LabsOpsStablesTopUp]: { label: 'Stablecoins', decimals: 18 },
   [MotionType.LabsOpsStethTopUp]: { label: 'stETH', decimals: 18 },
+  [MotionType.SandboxStethRemove]: { label: 'stETH', decimals: 18 },
   [MotionType.SandboxStethAdd]: { label: 'stETH', decimals: 18 },
 };
 

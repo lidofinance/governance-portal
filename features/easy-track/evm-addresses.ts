@@ -274,7 +274,8 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x8a437cd5685e270cDDb347eeEfEbD22109Fa42a9',
     [MotionType.SDVTExitRequestHashesSubmit]:
       '0xAa3D6A8B52447F272c1E8FAaA06EA06658bd95E2',
-
+    [MotionType.SandboxStethRemove]:
+      '0x86E10ffC7c67A92e0c5E58ae42945213da43D0c7',
     [MotionType.SandboxStablesAdd]:
       '0x8C89b58F1B71C9B2Dc76AF0c99Ed31Bac23E0B88',
     [MotionType.SandboxStablesRemove]:

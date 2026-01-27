@@ -37,6 +37,7 @@ export const MotionTypeForms = {
   SandboxStablesTopUp: 'SandboxStablesTopUp',
   SandboxStablesAdd: 'SandboxStablesAdd',
   SandboxStablesRemove: 'SandboxStablesRemove',
+  SandboxStethRemove: 'SandboxStethRemove',
   LegoStablesTopUp: 'LegoStablesTopUp',
   StonksStethTopUp: 'StonksStethTopUp',
   StonksStablesTopUp: 'StonksStablesTopUp',
