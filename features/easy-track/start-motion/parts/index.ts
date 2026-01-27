@@ -6,6 +6,7 @@ import * as formAllowedRecipientTopUp from './start-new-allowed-recipient-top-up
 import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
 import * as formAllowedRecipientRemove from './start-new-allowed-recipient-remove';
 import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
+import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
 import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-stealing-penalty';
 
 export const formParts = {
@@ -64,6 +65,8 @@ export const formParts = {
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,
   }),
+  [MotionTypeForms.CSMSetVettedGateTree]:
+    StartNewCSMSetVettedGateTree.formParts,
   [MotionTypeForms.CSMSettleElStealingPenalty]:
     StartNewCSMSettleElStealingPenalty.formParts,
 } as const;
