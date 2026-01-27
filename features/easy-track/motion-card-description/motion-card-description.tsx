@@ -173,7 +173,6 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.StethGasSupplyTopUp]: (props: GenericDescProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.StethGasSupplyTopUp} />
   ),
-
   [MotionType.RewardsShareProgramAdd]: (props: GenericDescProps) => (
     <AllowedRecipientAdd
       {...props}

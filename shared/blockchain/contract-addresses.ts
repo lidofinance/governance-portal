@@ -243,6 +243,12 @@ export const CSModule: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x79CEf36D84743222f37765204Bec41E92a93E59d',
 };
 
+export const CSMRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F',
+  [CHAINS.Holesky]: '0x4562c3e63c2e586cd1651b958c22f88135acad4f',
+  [CHAINS.Hoodi]: '0x79CEf36D84743222f37765204Bec41E92a93E59d',
+};
+
 export const CSVerifier: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x0c345dFa318f9F4977cdd4f33d80F9D0ffA38e8B',
   [CHAINS.Holesky]: '0xC099dfD61F6E5420e0Ca7e84D820daAd17Fc1D44',
