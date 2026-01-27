@@ -20,3 +20,9 @@ export const INCREASE_LIMIT_MOTION_MAP = {
 } as const;
 
 export type IncreaseLimitMotionType = keyof typeof INCREASE_LIMIT_MOTION_MAP;
+
+export const MAX_MEV_BOOST_RELAY_STRING_LENGTH = 1024;
+
+export const MAX_MEV_BOOST_RELAYS_COUNT = 40;
+
+export const MAX_MEV_BOOST_UPDATE_COUNT = 20;
