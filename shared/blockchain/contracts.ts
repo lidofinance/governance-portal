@@ -743,6 +743,12 @@ export const CSMSettleElStealingPenalty: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.CSMSettleElStealingPenalty],
 };
 
+export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {
+  name: 'CSMRegistry',
+  abi: abi.csmRegistryAbi,
+  chainAddressMap: addr.CSMRegistry,
+};
+
 export const CSModule: ContractObject<typeof abi.csmRegistryAbi> = {
   name: 'CSModule',
   abi: abi.csmRegistryAbi,
