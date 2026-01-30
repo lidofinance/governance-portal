@@ -100,7 +100,15 @@ export const VoteActions = () => {
   }, []);
 
   const handleVote = useCallback(
-    async ({ mode, type }: { mode: VoteMode; type: VoteType }) => {
+    async ({
+      mode,
+      type,
+      skipConfirmation,
+    }: {
+      mode: VoteMode;
+      type: VoteType;
+      skipConfirmation?: boolean;
+    }) => {
       if (!voteData) {
         return;
       }
@@ -113,6 +121,7 @@ export const VoteActions = () => {
         await handleDelegatedVote({
           mode,
           voters: selectedDelegators,
+          skipConfirmation,
         });
       }
 
@@ -160,7 +169,11 @@ export const VoteActions = () => {
                 votePhase={voteData.phase}
                 disabled={!isSupportedChain}
                 onVote={(mode: VoteMode) =>
-                  handleVote({ mode, type: 'delegated' })
+                  handleVote({
+                    mode,
+                    type: 'delegated',
+                    skipConfirmation: true,
+                  })
                 }
               />
             )}

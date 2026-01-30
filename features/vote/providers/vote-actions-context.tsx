@@ -16,9 +16,11 @@ type Value = {
   handleDelegatedVote: ({
     mode,
     voters,
+    skipConfirmation,
   }: {
     mode: VoteMode;
     voters: Address[];
+    skipConfirmation?: boolean;
   }) => Promise<void>;
   handleOwnVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
   handleEnact: () => Promise<void>;
@@ -241,11 +243,29 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   ]);
 
   const handleDelegatedVote = useCallback(
-    async ({ mode }: { mode: VoteMode; voters: Address[] }) => {
+    async ({
+      mode,
+      voters,
+      skipConfirmation,
+    }: {
+      mode: VoteMode;
+      voters: Address[];
+      skipConfirmation?: boolean;
+    }) => {
       if (!isConnected) {
         txModalStages.failed(new Error('Please connect your wallet to vote'));
         return;
       }
+
+      if (skipConfirmation) {
+        txModalStages.sign({
+          mode,
+        });
+
+        await onDelegateVoteSubmit(mode, voters);
+        return;
+      }
+
       txModalStages.confirm({
         mode,
         voteId: BigInt(voteId),
