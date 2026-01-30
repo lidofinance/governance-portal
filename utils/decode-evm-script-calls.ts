@@ -38,7 +38,6 @@ const ABI_EXCEPTIONS = {
   NodeOperatorsRegistryRepo: abis.repoAbi,
   OracleRepo: abis.repoAbi,
   SimpleDVT: abis.nodeOperatorsRegistryAbi,
-  CSVerifierProposed: abis.csVerifierProposedAbi,
   DualGovernanceLegacy: abis.dualGovernanceAbi,
 };
 
@@ -47,10 +46,22 @@ const EVM_SCRIPT_VERSION = '00000001';
 /**
  * Converts PascalCase contract name to camelCase ABI key
  * e.g., AccountingOracle → accountingOracleAbi
+ * e.g., AragonACL → aragonAclAbi
  */
 const getAbiKey = (contractName: string): string => {
-  const camelCase =
-    contractName.charAt(0).toLowerCase() + contractName.slice(1);
+  const parts =
+    contractName.match(/([A-Z][a-z0-9]+)|([A-Z]+(?=[A-Z][a-z0-9]|$))/g) || [];
+  if (parts.length === 0) return `${contractName}Abi`;
+
+  const camelCase = parts
+    .map((part, index) => {
+      const lower = part.toLowerCase();
+      return index === 0
+        ? lower
+        : lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join('');
+
   return `${camelCase}Abi`;
 };
 
@@ -119,7 +130,6 @@ export const decodeCalls = <TCall extends BaseCall>({
     const contractAddress = call.target;
 
     const contractName = getContractName(chainId, contractAddress);
-
     let abi: ABIElement[] | undefined;
     const id = index + 1;
     if (contractName) {

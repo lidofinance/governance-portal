@@ -24,6 +24,7 @@ export const VoteButton = styled(Button).attrs({
   color: 'secondary',
   fullwidth: true,
 })`
+  text-align: left;
   svg {
     display: block;
     width: 24px;

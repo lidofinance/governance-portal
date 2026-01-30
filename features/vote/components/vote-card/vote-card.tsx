@@ -34,6 +34,7 @@ import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
 import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 import { Box } from 'shared/components/box';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type Props = {
   voteId: string;
@@ -58,6 +59,7 @@ const formatDate = (date: number) =>
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
   const { voteData, isLoading } = useVoteContext();
+  const isSupportedChain = useIsSupportedChain();
 
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
@@ -242,7 +244,12 @@ export const VoteCard = ({ voteId }: Props) => {
             </>
           )}
           {voteData.canExecute && (
-            <Button fullwidth color="success" onClick={handleEnact}>
+            <Button
+              fullwidth
+              color="success"
+              onClick={handleEnact}
+              disabled={!isSupportedChain}
+            >
               Enact
             </Button>
           )}

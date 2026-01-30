@@ -147,6 +147,8 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   html,
   body {
     width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     ${({ $layoutVariant }) => LayoutVariants[$layoutVariant]};

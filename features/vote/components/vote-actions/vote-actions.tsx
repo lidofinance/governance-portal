@@ -15,10 +15,12 @@ import { FlexWrapper } from 'shared/styled-components';
 import { Address } from 'viem';
 import { Box } from 'shared/components/box';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { voteData } = useVoteContext();
+  const isSupportedChain = useIsSupportedChain();
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
@@ -134,6 +136,7 @@ export const VoteActions = () => {
       {canVoteWithOwnPower &&
         (!canVoteWithDelegatedVotePower || !canVoteForDelegators) && (
           <BasicActions
+            disabled={!isSupportedChain}
             votePhase={voteData.phase}
             onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
           />
@@ -155,6 +158,7 @@ export const VoteActions = () => {
             {canVoteForDelegators && (
               <BasicActions
                 votePhase={voteData.phase}
+                disabled={!isSupportedChain}
                 onVote={(mode: VoteMode) =>
                   handleVote({ mode, type: 'delegated' })
                 }
@@ -167,51 +171,65 @@ export const VoteActions = () => {
         canVoteWithDelegatedVotePower &&
         canVoteForDelegators && (
           <>
-            <VoteButton onClick={() => handleMenu('nay')} ref={nayButtonRef}>
+            <VoteButton
+              onClick={() => handleMenu('nay')}
+              ref={nayButtonRef}
+              disabled={!isSupportedChain}
+            >
               <Box
                 display="flex"
                 gap={12}
                 width={'100%'}
-                justifyContent="center"
+                justifyContent="flex-start"
                 alignItems="center"
               >
                 <CrossIcon /> No
               </Box>
             </VoteButton>
-            <VoteButton
-              onClick={() => handleMenu('yay')}
-              disabled={voteData.phase === VotePhase.Objection}
-              ref={yayButtonRef}
-            >
-              <Box display="flex" alignItems="center">
-                {voteData.phase === VotePhase.Objection ? (
-                  <Tooltip
-                    placement="bottomLeft"
-                    title="You can only vote “No” in the Objection phase."
+            {voteData.phase === VotePhase.Objection ? (
+              <Tooltip
+                placement="bottomLeft"
+                title="You can only vote “No” in the Objection phase."
+              >
+                <div>
+                  <VoteButton
+                    disabled
+                    ref={yayButtonRef}
+                    style={{ pointerEvents: 'none', width: '100%' }}
                   >
-                    <Box
-                      display="flex"
-                      gap={12}
-                      width={'100%'}
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <CheckIcon /> Yes
+                    <Box display="flex" alignItems="center">
+                      <Box
+                        display="flex"
+                        gap={12}
+                        width={'100%'}
+                        justifyContent="flex-start"
+                        alignItems="center"
+                      >
+                        <CheckIcon /> Yes
+                      </Box>
                     </Box>
-                  </Tooltip>
-                ) : (
+                  </VoteButton>
+                </div>
+              </Tooltip>
+            ) : (
+              <VoteButton
+                onClick={() => handleMenu('yay')}
+                disabled={!isSupportedChain}
+                ref={yayButtonRef}
+              >
+                <Box display="flex" alignItems="center">
                   <Box
                     display="flex"
                     gap={12}
                     width={'100%'}
-                    justifyContent="center"
+                    justifyContent="flex-start"
                     alignItems="center"
                   >
                     <CheckIcon /> Yes
                   </Box>
-                )}
-              </Box>
-            </VoteButton>
+                </Box>
+              </VoteButton>
+            )}
           </>
         )}
 

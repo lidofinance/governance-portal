@@ -8,32 +8,33 @@ import { VoteMode } from '../../types';
 
 type Props = {
   onVote: (mode: VoteMode) => void;
+  disabled?: boolean;
   votePhase: VotePhase;
 };
 
-export const BasicActions = ({ onVote, votePhase }: Props) => {
+export const BasicActions = ({ onVote, votePhase, disabled }: Props) => {
   return (
     <BasicActionsWrapper>
-      <VoteButton onClick={() => onVote('nay')}>
+      <VoteButton onClick={() => onVote('nay')} disabled={disabled}>
         <Box
           display="flex"
           gap={12}
           alignItems="center"
           width="100%"
-          justifyContent="center"
+          justifyContent="flex-start"
         >
           <CrossIcon /> No
         </Box>
       </VoteButton>
       <VoteButton
-        disabled={votePhase === VotePhase.Objection}
+        disabled={votePhase === VotePhase.Objection || disabled}
         onClick={() => onVote('yay')}
       >
         <Box
           display="flex"
           alignItems="center"
           width={'100%'}
-          justifyContent="center"
+          justifyContent="flex-start"
         >
           {votePhase === VotePhase.Objection ? (
             <Tooltip
@@ -55,7 +56,7 @@ export const BasicActions = ({ onVote, votePhase }: Props) => {
               display="flex"
               gap={12}
               width={'100%'}
-              justifyContent="center"
+              justifyContent="flex-start"
               alignItems="center"
             >
               <CheckIcon /> Yes

@@ -47,7 +47,7 @@ export const VoteConfirmDelegatedModal = ({
   return (
     <>
       <Box textAlign="center">
-        <Text>Vote Yes with Delegated VP</Text>
+        <Text>Vote with Delegated VP</Text>
       </Box>
       <Box margin="10px 0">
         <Button color="secondary" onClick={handleSubmit} fullwidth>

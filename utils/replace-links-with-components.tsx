@@ -24,7 +24,7 @@ export const replaceJsxElements = (text: string) => {
             alignItems="center"
             background="#EFF2F6"
             borderRadius={10}
-            padding="2px"
+            padding="0px 8px 0px 3px;"
             gap={4}
           >
             <Identicon address={address} diameter={16} />

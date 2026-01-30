@@ -7,6 +7,7 @@ import { useFormControllerContext } from 'shared/hook-form/form-controller-conte
 import { useDelegationFormData } from '../../providers/delegation-form-context';
 import { DelegateButton } from './style';
 import { useConfirmReDelegateModal } from './confirm-re-delegate-modal';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type Props = {
   onCustomizeClick?: () => void;
@@ -14,6 +15,7 @@ type Props = {
 
 export const DelegationFormSubmitButton = ({ onCustomizeClick }: Props) => {
   const { isConnected: isWalletConnected } = useAccount();
+  const isSupportedChain = useIsSupportedChain();
   const { connect } = useConnect();
   const { mode, aragonDelegateAddress, snapshotDelegateAddress, watch } =
     useDelegationFormData();
@@ -138,7 +140,11 @@ export const DelegationFormSubmitButton = ({ onCustomizeClick }: Props) => {
 
   if (!match.isRedelegate || !isSimple) {
     return (
-      <DelegateButton type="submit" loading={isSubmitting}>
+      <DelegateButton
+        type="submit"
+        disabled={!isSupportedChain}
+        loading={isSubmitting}
+      >
         {buttonText}
       </DelegateButton>
     );
@@ -148,6 +154,7 @@ export const DelegationFormSubmitButton = ({ onCustomizeClick }: Props) => {
     <DelegateButton
       type="submit"
       loading={isSubmitting}
+      disabled={!isSupportedChain}
       onClick={onSubmitDialog}
     >
       {buttonText}
