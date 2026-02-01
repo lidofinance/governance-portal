@@ -6,7 +6,6 @@ import { processInBatches } from 'utils/process-in-batches';
 import { useQuery } from '@tanstack/react-query';
 
 type NodeOperatorSummary = {
-  isTargetLimitActive: boolean;
   targetValidatorsCount: bigint;
   stuckValidatorsCount: bigint;
   refundedValidatorsCount: bigint;
@@ -14,6 +13,7 @@ type NodeOperatorSummary = {
   totalExitedValidators: bigint;
   totalDepositedValidators: bigint;
   depositableValidatorsCount: bigint;
+  targetLimitMode: bigint;
 };
 
 const MAX_PROVIDER_BATCH = 20;
@@ -38,7 +38,6 @@ export const useSDVTNodeOperatorsSummaryMap = () => {
             [BigInt(nodeOperator.id)],
           );
           const [
-            isTargetLimitActive,
             targetValidatorsCount,
             stuckValidatorsCount,
             refundedValidatorsCount,
@@ -46,9 +45,9 @@ export const useSDVTNodeOperatorsSummaryMap = () => {
             totalExitedValidators,
             totalDepositedValidators,
             depositableValidatorsCount,
+            targetLimitMode,
           ] = summaryTuple;
           const summary: NodeOperatorSummary = {
-            isTargetLimitActive,
             targetValidatorsCount,
             stuckValidatorsCount,
             refundedValidatorsCount,
@@ -56,6 +55,7 @@ export const useSDVTNodeOperatorsSummaryMap = () => {
             totalExitedValidators,
             totalDepositedValidators,
             depositableValidatorsCount,
+            targetLimitMode,
           };
           return { id: nodeOperator.id, summary };
         },

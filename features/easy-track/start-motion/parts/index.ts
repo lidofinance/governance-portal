@@ -23,6 +23,16 @@ import * as StartNewVaultsSocializeBadDebtInVaultHub from './vaults/start-new-va
 import * as StartNewVaultsUpdateGroupsShareLimit from './vaults/start-new-vaults-update-groups-share-limit';
 import * as StartNewVaultsUpdateVaultsFeesInOperatorGrid from './vaults/start-new-vaults-update-vaults-fees-in-operator-grid';
 
+// SDVT Parts
+import * as StartSDVTNodeOperatorsAdd from './start-new-sdvt-node-operators-add';
+import * as StartNewSDVTNodeOperatorsActivate from './start-new-sdvt-node-operators-activate';
+import * as StartNewSDVTNodeOperatorsDeactivate from './start-new-sdvt-node-operators-deactivate';
+import * as StartNewSDVTVettedValidatorsLimitsSet from './start-new-sdvt-vetted-validators-limits-set';
+import * as StartNewSDVTTargetValidatorLimitsUpdateV2 from './start-new-sdvt-target-validator-limits-update-v2';
+import * as StartNewSDVTNodeOperatorRewardAddressesSet from './start-new-sdvt-node-operator-reward-addresses-set';
+import * as StartNewSDVTNodeOperatorNamesSet from './start-new-sdvt-node-operator-names-set';
+import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-operator-managers-change';
+
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
     formAllowedRecipientTopUp.formParts({
@@ -79,6 +89,22 @@ export const formParts = {
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,
   }),
+  // SDVT Parts
+  [MotionTypeForms.SDVTNodeOperatorsAdd]: StartSDVTNodeOperatorsAdd.formParts(),
+  [MotionTypeForms.SDVTNodeOperatorsActivate]:
+    StartNewSDVTNodeOperatorsActivate.formParts,
+  [MotionTypeForms.SDVTNodeOperatorsDeactivate]:
+    StartNewSDVTNodeOperatorsDeactivate.formParts,
+  [MotionTypeForms.SDVTVettedValidatorsLimitsSet]:
+    StartNewSDVTVettedValidatorsLimitsSet.formParts,
+  [MotionTypeForms.SDVTTargetValidatorLimitsUpdateV2]:
+    StartNewSDVTTargetValidatorLimitsUpdateV2.formParts,
+  [MotionTypeForms.SDVTNodeOperatorRewardAddressesSet]:
+    StartNewSDVTNodeOperatorRewardAddressesSet.formParts,
+  [MotionTypeForms.SDVTNodeOperatorNamesSet]:
+    StartNewSDVTNodeOperatorNamesSet.formParts,
+  [MotionTypeForms.SDVTNodeOperatorManagerChange]:
+    StartNewSDVTNodeOperatorManagersChange.formParts,
   [MotionTypeForms.MEVBoostRelaysAdd]: StartNewMEVBoostRelaysAdd.formParts,
   [MotionTypeForms.MEVBoostRelaysEdit]: StartNewMEVBoostRelaysEdit.formParts,
   [MotionTypeForms.MEVBoostRelaysRemove]:
