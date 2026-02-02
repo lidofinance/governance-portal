@@ -24,7 +24,6 @@ import { getErrorMessage } from 'utils';
 export const StartMotion = () => {
   const { availableMotions } = useAvailableMotions();
   const [isSubmitting, setSubmitting] = useState(false);
-
   const contractEasyTrack = useWriteContract(EasyTrack.abi);
   const easyTrackAddress = useContractAddress(EasyTrack);
 

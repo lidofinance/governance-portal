@@ -46,6 +46,7 @@ import { CsmSetVettedGateTree } from './motion-descriptions/csm-set-vetted-gate-
 import { CuratedExitRequestHashesSubmit } from './motion-descriptions/curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './motion-descriptions/sdvt-exit-request-hashes-submit';
 import { Address } from 'viem';
+import { DescVaultsForceValidatorExitsInVaultHub } from './motion-descriptions/vaults-force-validator-exits-in-vault-hub';
 
 // Generic props type for all motion descriptions
 type GenericDescProps = {
@@ -343,6 +344,9 @@ const MOTION_DESCRIPTIONS = {
   ),
   [MotionType.SDVTExitRequestHashesSubmit]: (props: GenericDescProps) => (
     <SdvtExitRequestHashesSubmit {...props} />
+  ),
+  [MotionType.ForceValidatorExitsInVaultHub]: (props: GenericDescProps) => (
+    <DescVaultsForceValidatorExitsInVaultHub {...props} />
   ),
 } as const;
 

@@ -118,4 +118,4 @@ export const erc20Abi = [
     ],
     name: 'Transfer',
   },
-] as const;
+] as const

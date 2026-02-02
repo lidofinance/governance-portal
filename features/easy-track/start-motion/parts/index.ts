@@ -13,6 +13,9 @@ import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remo
 import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
 import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-stealing-penalty';
 
+import * as StartNewVaultForceValidatorExitsInVaultHub from './start-new-vault-force-validator-exits-in-vault-hub';
+import * as StartNewVaultsAlterTiersInOperatorGrid from './start-new-vaults-alter-tiers-in-operator-grid';
+
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
     formAllowedRecipientTopUp.formParts({
@@ -81,6 +84,12 @@ export const formParts = {
     StartNewExitRequestHashesSubmit.formParts('curated'),
   [MotionTypeForms.SDVTExitRequestHashesSubmit]:
     StartNewExitRequestHashesSubmit.formParts('sdvt'),
+
+  // Vault motions
+  [MotionTypeForms.ForceValidatorExitsInVaultHub]:
+    StartNewVaultForceValidatorExitsInVaultHub.formParts,
+  [MotionTypeForms.AlterTiersInOperatorGrid]:
+    StartNewVaultsAlterTiersInOperatorGrid.formParts,
 } as const;
 
 export type FormData = {
