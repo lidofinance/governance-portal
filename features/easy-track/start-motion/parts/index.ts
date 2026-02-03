@@ -21,6 +21,7 @@ import * as StartNewVaultsSetJailStatusInOperatorGrid from './vaults/start-new-v
 import * as StartNewVaultsSetLiabilitySharesTargetInVaultHub from './vaults/start-new-vaults-set-liability-shares-target-in-vault-hub';
 import * as StartNewVaultsSocializeBadDebtInVaultHub from './vaults/start-new-vaults-socialize-bad-debt-in-vault-hub';
 import * as StartNewVaultsUpdateGroupsShareLimit from './vaults/start-new-vaults-update-groups-share-limit';
+import * as StartNewVaultsUpdateVaultsFeesInOperatorGrid from './vaults/start-new-vaults-update-vaults-fees-in-operator-grid';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -108,6 +109,8 @@ export const formParts = {
     StartNewVaultsSocializeBadDebtInVaultHub.formParts,
   [MotionTypeForms.UpdateGroupsShareLimit]:
     StartNewVaultsUpdateGroupsShareLimit.formParts,
+  [MotionTypeForms.UpdateVaultsFeesInOperatorGrid]:
+    StartNewVaultsUpdateVaultsFeesInOperatorGrid.formParts,
 } as const;
 
 export type FormData = {
