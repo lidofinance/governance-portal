@@ -20,7 +20,7 @@ import { Address, Hex } from 'viem';
 import { ForceValidatorExitsInVaultHub } from 'shared/blockchain/contracts';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
-import { VaultAddressInputHookForm } from '@easy-track/vaults/ui/VaultAddressInputHookForm';
+import { VaultAddressInputHookForm } from '@easy-track/vaults/ui/vault-address-input-hook-form';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { MotionType } from '@easy-track/motion-types';
 

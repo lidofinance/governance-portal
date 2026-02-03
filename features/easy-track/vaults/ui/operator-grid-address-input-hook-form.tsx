@@ -21,7 +21,7 @@ type GroupInput = {
   nodeOperator: string;
 };
 
-export const OperatorGridAddressInputControl = ({
+export const OperatorGridAddressInputHookForm = ({
   groupFieldName,
   fieldIndex,
   allowDuplicateAddresses,

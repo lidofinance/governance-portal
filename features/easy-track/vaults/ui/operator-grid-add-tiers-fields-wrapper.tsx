@@ -1,8 +1,6 @@
 import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
-import { BigNumber } from 'ethers';
 import { useFieldArray } from 'react-hook-form';
 import { EMPTY_TIER } from '../constants';
-import { parseEther } from 'ethers/lib/utils';
 import { useMemo } from 'react';
 import { OperatorGridTierFieldsets } from './operator-grid-tier-fieldsets';
 import {
@@ -12,10 +10,11 @@ import {
   FieldsWrapper,
   RemoveItemButton,
 } from '../../start-motion/parts/style';
+import { parseEther } from 'viem';
 
 type Props = {
   tierArrayFieldName: string;
-  maxShareLimit: BigNumber | string | undefined;
+  maxShareLimit: bigint | string | undefined;
   groupTiersCount: number | undefined;
 };
 
@@ -32,13 +31,13 @@ export const OperatorGridAddTiersFieldsWrapper = ({
 
   const maxShareLimitBn = useMemo(() => {
     if (!maxShareLimit) {
-      return BigNumber.from(0);
+      return 0n;
     }
     if (typeof maxShareLimit === 'string') {
       try {
         return parseEther(maxShareLimit);
       } catch (error) {
-        return BigNumber.from(0);
+        return 0n;
       }
     }
     return maxShareLimit;

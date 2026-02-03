@@ -978,3 +978,11 @@ export const RegisterGroupsInOperatorGrid: ContractObject<
   abi: abi.evmRegisterGroupsInOperatorsGridAbi,
   chainAddressMap: EvmAddressesByType[MotionType.RegisterGroupsInOperatorGrid],
 };
+
+export const RegisterTiersInOperatorGrid: ContractObject<
+  typeof abi.evmRegisterTiersInOperatorsGridAbi
+> = {
+  name: 'RegisterTiersInOperatorGrid',
+  abi: abi.evmRegisterTiersInOperatorsGridAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.RegisterTiersInOperatorGrid],
+};

@@ -16,6 +16,7 @@ import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-s
 import * as StartNewVaultForceValidatorExitsInVaultHub from './vaults/start-new-vault-force-validator-exits-in-vault-hub';
 import * as StartNewVaultsAlterTiersInOperatorGrid from './vaults/start-new-vaults-alter-tiers-in-operator-grid';
 import * as StartNewVaultsRegisterGroupsInOperatorGrid from './vaults/start-new-vaults-register-groups-in-operator-grid';
+import * as StartNewVaultsRegisterTiersInOperatorGrid from './vaults/start-new-vaults-register-tiers-in-operator-grid';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -93,6 +94,8 @@ export const formParts = {
     StartNewVaultsAlterTiersInOperatorGrid.formParts,
   [MotionTypeForms.RegisterGroupsInOperatorGrid]:
     StartNewVaultsRegisterGroupsInOperatorGrid.formParts,
+  [MotionTypeForms.RegisterTiersInOperatorGrid]:
+    StartNewVaultsRegisterTiersInOperatorGrid.formParts,
 } as const;
 
 export type FormData = {

@@ -34,7 +34,7 @@ import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
 import { convertShareLimitToInputValue } from '@easy-track/vaults/utils/convert-share-limit-to-input-value';
 import { OperatorGridTierFieldsets } from '@easy-track/vaults/ui/operator-grid-tier-fieldsets';
-import { OperatorGridAddressInputControl } from '@easy-track/vaults/ui/operator-grid-address-input-control';
+import { OperatorGridAddressInputHookForm } from '@easy-track/vaults/ui/operator-grid-address-input-hook-form';
 
 type TierInput = {
   nodeOperator: string;
@@ -173,7 +173,7 @@ export const formParts = createMotionFormPart({
                 </FieldsHeader>
 
                 <Fieldset>
-                  <OperatorGridAddressInputControl
+                  <OperatorGridAddressInputHookForm
                     groupFieldName={fieldNames.tiers}
                     fieldIndex={tierIndex}
                     getGroupData={getOperatorGridGroup}
