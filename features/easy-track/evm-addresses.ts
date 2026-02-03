@@ -242,6 +242,9 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.LabsOpsStethTopUp]:
       '0xef0Df040B76252cC7fa31a5fc2f36e85c1C8c4f9',
 
+    [MotionType.SetLiabilitySharesTargetInVaultHub]:
+      '0xc5dCd2A9642ceA9B71A632BF5b8ff52424Ea1B40',
+
     // next motion factories are @deprecated
     // we are keeping them here to display history data
     [MotionType.LEGOTopUp]: '',
