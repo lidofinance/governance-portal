@@ -1,73 +1,55 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { VaultData } from '../types';
 import { useEffect } from 'react';
-import { validateAddress } from 'utils/validate-address';
-import { useDebounce } from 'shared/hooks/use-debounce';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
-import { DEFAULT_TIER_OPERATOR } from '../constants';
+import { useDebounce } from 'shared/hooks/use-debounce';
+import { validateAddress } from 'utils/validate-address';
 
 type Props = {
   vaultsFieldName: string;
   fieldIndex: number;
-  allowDuplicateAddresses?: boolean;
-  allowDefaultOperatorAddress?: boolean;
+  allowDisconnectedVaults?: boolean;
   getVaultData: (address: string) => Promise<VaultData | null | undefined>;
-  onValidOperatorAddressInput?: (vaultData: VaultData) => void;
+  onValidVaultAddressInput?: (vaultData: VaultData) => void;
   extraValidateFn?: (vaultData: VaultData) => string | undefined;
-  onChange?: ((e: any) => void) | undefined;
-  addressFieldName?: string;
 };
 
 type VaultInput = {
-  nodeOperator: string;
+  address: string;
 };
 
 export const VaultAddressInputHookForm = ({
   vaultsFieldName,
   fieldIndex,
-  allowDuplicateAddresses,
-  allowDefaultOperatorAddress = true,
+  allowDisconnectedVaults,
   getVaultData,
-  onValidOperatorAddressInput,
+  onValidVaultAddressInput,
   extraValidateFn,
-  onChange,
-  addressFieldName = 'address',
 }: Props) => {
   const { setError, clearErrors, getValues } = useFormContext();
 
-  const fieldName = `${vaultsFieldName}.${fieldIndex}.${addressFieldName}`;
+  const fieldName = `${vaultsFieldName}.${fieldIndex}.address`;
   const fieldValue = useWatch({ name: fieldName });
 
   const debouncedAddress = useDebounce(fieldValue, 500);
 
-  const validateAddressSync = (value: string) => {
+  const validateVaultAddressSync = (value: string) => {
     if (!value) return;
-
     const addressErr = validateAddress(value);
     if (addressErr) {
       return addressErr;
     }
 
     const lowerAddress = value.toLowerCase();
+    const vaultsInputs: VaultInput[] = getValues(vaultsFieldName);
 
-    if (
-      !allowDefaultOperatorAddress &&
-      lowerAddress === DEFAULT_TIER_OPERATOR
-    ) {
-      return `Address can not be the default tier operator address`;
-    }
+    const addressInGroupInputIndex = vaultsInputs.findIndex(
+      ({ address }, index) =>
+        address.toLowerCase() === lowerAddress && fieldIndex !== index,
+    );
 
-    if (!allowDuplicateAddresses) {
-      const groupsInputs: VaultInput[] = getValues(vaultsFieldName);
-
-      const addressInGroupInputIndex = groupsInputs.findIndex(
-        ({ nodeOperator }, index) =>
-          nodeOperator.toLowerCase() === lowerAddress && fieldIndex !== index,
-      );
-
-      if (addressInGroupInputIndex !== -1) {
-        return 'Address is already in use by another group within the motion';
-      }
+    if (addressInGroupInputIndex !== -1) {
+      return 'Address is already in use by another update within the motion';
     }
   };
 
@@ -77,7 +59,7 @@ export const VaultAddressInputHookForm = ({
       return;
     }
 
-    const addressErr = validateAddressSync(debouncedAddress);
+    const addressErr = validateVaultAddressSync(debouncedAddress);
     if (addressErr) {
       setError(fieldName, { type: 'validate', message: addressErr });
       return;
@@ -96,7 +78,15 @@ export const VaultAddressInputHookForm = ({
       if (!vaultData) {
         setError(fieldName, {
           type: 'validate',
-          message: 'Node operator is not registered in Operator Grid',
+          message: 'Invalid vault address',
+        });
+        return;
+      }
+
+      if (!allowDisconnectedVaults && !vaultData.isVaultConnected) {
+        setError(fieldName, {
+          type: 'validate',
+          message: 'Vault is not connected in the Operator Grid',
         });
         return;
       }
@@ -111,7 +101,7 @@ export const VaultAddressInputHookForm = ({
       }
 
       // Success handling
-      onValidOperatorAddressInput?.(vaultData);
+      onValidVaultAddressInput?.(vaultData);
       clearErrors(fieldName);
     };
 
@@ -131,7 +121,6 @@ export const VaultAddressInputHookForm = ({
       fieldName={fieldName}
       label="Vault address"
       rules={{ required: 'Field is required' }}
-      onChange={onChange}
     />
   );
 };

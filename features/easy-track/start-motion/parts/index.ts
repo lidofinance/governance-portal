@@ -17,6 +17,7 @@ import * as StartNewVaultForceValidatorExitsInVaultHub from './vaults/start-new-
 import * as StartNewVaultsAlterTiersInOperatorGrid from './vaults/start-new-vaults-alter-tiers-in-operator-grid';
 import * as StartNewVaultsRegisterGroupsInOperatorGrid from './vaults/start-new-vaults-register-groups-in-operator-grid';
 import * as StartNewVaultsRegisterTiersInOperatorGrid from './vaults/start-new-vaults-register-tiers-in-operator-grid';
+import * as StartNewVaultsSetJailStatusInOperatorGrid from './vaults/start-new-vaults-set-jail-status-in-operator-grid';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -96,6 +97,8 @@ export const formParts = {
     StartNewVaultsRegisterGroupsInOperatorGrid.formParts,
   [MotionTypeForms.RegisterTiersInOperatorGrid]:
     StartNewVaultsRegisterTiersInOperatorGrid.formParts,
+  [MotionTypeForms.SetJailStatusInOperatorGrid]:
+    StartNewVaultsSetJailStatusInOperatorGrid.formParts,
 } as const;
 
 export type FormData = {
