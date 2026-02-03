@@ -11,18 +11,18 @@ import {
   FieldsWrapper,
   FieldsHeader,
   FieldsHeaderDesc,
-} from './style';
+} from '../style';
 import {
   createMotionFormPart,
   PopulateTxArgs,
-} from './create-motion-form-part';
-import { MotionType } from '../../motion-types';
+} from '../create-motion-form-part';
 import { Address, Hex } from 'viem';
-import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { ForceValidatorExitsInVaultHub } from 'shared/blockchain/contracts';
-import { useVaultsDataMap } from '../../vaults/hooks/use-vaults-data-map';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
-import { VaultAddressInputHookForm } from '../../vaults/ui/VaultAddressInputHookForm';
+import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
+import { VaultAddressInputHookForm } from '@easy-track/vaults/ui/VaultAddressInputHookForm';
+import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
+import { MotionType } from '@easy-track/motion-types';
 
 type VaultInput = {
   address: string;
@@ -101,7 +101,7 @@ export const formParts = createMotionFormPart({
 
               <Fieldset>
                 <VaultAddressInputHookForm
-                  groupFieldName={fieldNames.vaults}
+                  vaultsFieldName={fieldNames.vaults}
                   fieldIndex={fieldIndex}
                   getVaultData={getVaultData}
                   extraValidateFn={(vaultData) => {

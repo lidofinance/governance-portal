@@ -15,6 +15,9 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "incremental": true,
+    "paths": {
+      "@easy-track/*": ["features/easy-track/*"]
+    }
   },
   "include": ["**/*"],
   "exclude": ["node_modules"],

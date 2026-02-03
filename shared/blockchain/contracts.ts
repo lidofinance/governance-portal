@@ -970,3 +970,11 @@ export const AlterTiersInOperatorGrid: ContractObject<
   abi: abi.evmAlterTiersInOperatorGridAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AlterTiersInOperatorGrid],
 };
+
+export const RegisterGroupsInOperatorGrid: ContractObject<
+  typeof abi.evmRegisterGroupsInOperatorsGridAbi
+> = {
+  name: 'RegisterGroupsInOperatorGrid',
+  abi: abi.evmRegisterGroupsInOperatorsGridAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.RegisterGroupsInOperatorGrid],
+};

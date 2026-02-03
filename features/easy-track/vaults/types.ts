@@ -24,3 +24,21 @@ export type Group = {
   liabilityShares: bigint;
   tierIds: readonly bigint[];
 };
+
+export type GridGroup = {
+  nodeOperator: string;
+  shareLimit: string;
+  tiers: TierParams[];
+};
+
+export type PredefinedGroupSetup = {
+  label: string;
+  groupShareLimit: number;
+  tiers: PredefinedTierParams[];
+};
+
+type PredefinedTierParams = {
+  shareLimit: number;
+  reserveRatioBP: number;
+  forcedRebalanceThresholdBP: number;
+};

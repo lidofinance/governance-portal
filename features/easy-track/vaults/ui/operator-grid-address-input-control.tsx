@@ -1,41 +1,39 @@
+import React, { useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { VaultData } from '../types';
-import { useEffect } from 'react';
-import { validateAddress } from 'utils/validate-address';
-import { useDebounce } from 'shared/hooks/use-debounce';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { DEFAULT_TIER_OPERATOR } from '../constants';
+import { Group } from '../types';
+import { useDebounce } from 'shared/hooks/use-debounce';
+import { validateAddress } from 'utils/validate-address';
+import { InputHookForm } from 'shared/hook-form/input-hook-form';
 
 type Props = {
-  vaultsFieldName: string;
+  groupFieldName: string;
   fieldIndex: number;
   allowDuplicateAddresses?: boolean;
   allowDefaultOperatorAddress?: boolean;
-  getVaultData: (address: string) => Promise<VaultData | null | undefined>;
-  onValidOperatorAddressInput?: (vaultData: VaultData) => void;
-  extraValidateFn?: (vaultData: VaultData) => string | undefined;
+  getGroupData: (address: string) => Promise<any | null | undefined>;
+  onValidOperatorAddressInput?: (groupData: Group) => void;
+  extraValidateFn?: (groupData: Group) => string | undefined;
   onChange?: ((e: any) => void) | undefined;
-  addressFieldName?: string;
 };
 
-type VaultInput = {
+type GroupInput = {
   nodeOperator: string;
 };
 
-export const VaultAddressInputHookForm = ({
-  vaultsFieldName,
+export const OperatorGridAddressInputControl = ({
+  groupFieldName,
   fieldIndex,
   allowDuplicateAddresses,
   allowDefaultOperatorAddress = true,
-  getVaultData,
+  getGroupData,
   onValidOperatorAddressInput,
   extraValidateFn,
   onChange,
-  addressFieldName = 'address',
 }: Props) => {
   const { setError, clearErrors, getValues } = useFormContext();
 
-  const fieldName = `${vaultsFieldName}.${fieldIndex}.${addressFieldName}`;
+  const fieldName = `${groupFieldName}.${fieldIndex}.nodeOperator`;
   const fieldValue = useWatch({ name: fieldName });
 
   const debouncedAddress = useDebounce(fieldValue, 500);
@@ -58,7 +56,7 @@ export const VaultAddressInputHookForm = ({
     }
 
     if (!allowDuplicateAddresses) {
-      const groupsInputs: VaultInput[] = getValues(vaultsFieldName);
+      const groupsInputs: GroupInput[] = getValues(groupFieldName);
 
       const addressInGroupInputIndex = groupsInputs.findIndex(
         ({ nodeOperator }, index) =>
@@ -88,12 +86,12 @@ export const VaultAddressInputHookForm = ({
     const fetchAndValidate = async () => {
       const lowerAddress = debouncedAddress.toLowerCase();
 
-      const vaultData = await getVaultData(lowerAddress);
+      const groupData = await getGroupData(lowerAddress);
 
       // Check if this effect is still the latest one before setting state
       if (!isCurrent) return;
 
-      if (!vaultData) {
+      if (!groupData) {
         setError(fieldName, {
           type: 'validate',
           message: 'Node operator is not registered in Operator Grid',
@@ -101,7 +99,7 @@ export const VaultAddressInputHookForm = ({
         return;
       }
 
-      const extraValidationResult = extraValidateFn?.(vaultData);
+      const extraValidationResult = extraValidateFn?.(groupData);
       if (typeof extraValidationResult === 'string') {
         setError(fieldName, {
           type: 'validate',
@@ -111,7 +109,7 @@ export const VaultAddressInputHookForm = ({
       }
 
       // Success handling
-      onValidOperatorAddressInput?.(vaultData);
+      onValidOperatorAddressInput?.(groupData as Group);
       clearErrors(fieldName);
     };
 
@@ -126,10 +124,11 @@ export const VaultAddressInputHookForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedAddress]);
 
+  // 5. Render the InputControl
   return (
     <InputHookForm
       fieldName={fieldName}
-      label="Vault address"
+      label="Node operator address"
       rules={{ required: 'Field is required' }}
       onChange={onChange}
     />

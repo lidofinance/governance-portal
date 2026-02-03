@@ -11,30 +11,30 @@ import {
   FieldsHeader,
   FieldsHeaderDesc,
   MotionInfoBox,
-} from './style';
+} from '../style';
 import {
   createMotionFormPart,
   PopulateTxArgs,
-} from './create-motion-form-part';
-import { MotionType } from '../../motion-types';
-import { TierParams } from '../../vaults/types';
+} from '../create-motion-form-part';
+import { MotionType } from '@easy-track/motion-types';
+import { TierParams } from '@easy-track/vaults/types';
 import {
   DEFAULT_TIER_OPERATOR,
   EMPTY_TIER,
-} from 'features/easy-track/vaults/constants';
+} from '@easy-track/vaults/constants';
 import { Address, Hex } from 'viem';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { AlterTiersInOperatorGrid } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useOperatorGridInfo } from '../../vaults/hooks/use-operator-grid-info';
-import { useOperatorGridGroupMap } from '../../vaults/hooks/use-operator-grid-group-map';
-import { useOperatorGridTierMap } from '../../vaults/hooks/use-operator-grid-tier-map';
-import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
+import { useOperatorGridInfo } from '@easy-track/vaults/hooks/use-operator-grid-info';
+import { useOperatorGridGroupMap } from '@easy-track/vaults/hooks/use-operator-grid-group-map';
+import { useOperatorGridTierMap } from '@easy-track/vaults/hooks/use-operator-grid-tier-map';
+import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
-import { VaultAddressInputHookForm } from '../../vaults/ui/VaultAddressInputHookForm';
-import { convertShareLimitToInputValue } from '../../vaults/utils/convert-share-limit-to-input-value';
-import { OperatorGridTierFieldsets } from '../../vaults/ui/operator-grid-tier-fieldsets';
+import { convertShareLimitToInputValue } from '@easy-track/vaults/utils/convert-share-limit-to-input-value';
+import { OperatorGridTierFieldsets } from '@easy-track/vaults/ui/operator-grid-tier-fieldsets';
+import { OperatorGridAddressInputControl } from '@easy-track/vaults/ui/operator-grid-address-input-control';
 
 type TierInput = {
   nodeOperator: string;
@@ -173,7 +173,7 @@ export const formParts = createMotionFormPart({
                 </FieldsHeader>
 
                 <Fieldset>
-                  <VaultAddressInputHookForm
+                  <OperatorGridAddressInputControl
                     groupFieldName={fieldNames.tiers}
                     fieldIndex={tierIndex}
                     getGroupData={getOperatorGridGroup}
