@@ -986,3 +986,11 @@ export const RegisterTiersInOperatorGrid: ContractObject<
   abi: abi.evmRegisterTiersInOperatorsGridAbi,
   chainAddressMap: EvmAddressesByType[MotionType.RegisterTiersInOperatorGrid],
 };
+
+export const UpdateGroupsShareLimit: ContractObject<
+  typeof abi.evmUpdateGroupsShareLimitAbi
+> = {
+  name: 'UpdateGroupsShareLimit',
+  abi: abi.evmUpdateGroupsShareLimitAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.UpdateGroupsShareLimit],
+};
