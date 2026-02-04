@@ -145,7 +145,7 @@ export const formParts = createMotionFormPart({
       <>
         <MotionInfoBox>
           Note: to alter default tier with global tierId 0, use default tier
-          operator address address — {DEFAULT_TIER_OPERATOR}
+          operator address — {DEFAULT_TIER_OPERATOR}
         </MotionInfoBox>
         {tiersFieldArray.fields.map((item, tierIndex) => {
           const groupData =

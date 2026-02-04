@@ -79,7 +79,7 @@ const MOTION_TYPE_ABI_MAP = {
   [MotionType.RegisterGroupsInOperatorGrid]:
     abi.evmRegisterGroupsInOperatorsGridAbi,
   [MotionType.RegisterTiersInOperatorGrid]:
-    abi.evmRegisterGroupsInOperatorsGridAbi,
+    abi.evmRegisterTiersInOperatorsGridAbi,
   [MotionType.UpdateGroupsShareLimit]: abi.evmUpdateGroupsShareLimitAbi,
   [MotionType.AlterTiersInOperatorGrid]: abi.evmAlterTiersInOperatorGridAbi,
   [MotionType.SetJailStatusInOperatorGrid]:

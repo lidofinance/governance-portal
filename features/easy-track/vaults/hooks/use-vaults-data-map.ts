@@ -81,7 +81,7 @@ export const useVaultsDataMap = (params?: OptionalDataParams) => {
 
           badDebtEth =
             badDebtShares > 0
-              ? await stETH.readContract('getSharesByPooledEth', [
+              ? await stETH.readContract('getPooledEthByShares', [
                   badDebtShares,
                 ])
               : 0n;
