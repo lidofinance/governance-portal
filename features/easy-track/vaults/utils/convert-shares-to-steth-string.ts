@@ -1,15 +1,15 @@
-import { BigNumber, utils } from 'ethers';
 import { formatVaultParam } from './format-vault-param';
+import { parseEther } from 'viem';
 
-const ONE_ETHER = utils.parseEther('1');
+const ONE_ETHER = parseEther('1');
 
 export const convertSharesToStethString = (
-  sharesAmount: BigNumber,
-  shareRate: BigNumber | undefined,
+  sharesAmount: bigint,
+  shareRate: bigint | undefined,
 ): string => {
-  const stEthAmount = sharesAmount.mul(shareRate ?? 0).div(ONE_ETHER);
+  const stEthAmount = (sharesAmount * (shareRate ?? 0n)) / ONE_ETHER;
 
-  if (stEthAmount.isZero()) {
+  if (stEthAmount === 0n) {
     return '';
   }
 

@@ -1,13 +1,12 @@
-import { BigNumber } from 'ethers';
 import { convertSharesToStethString } from './convert-shares-to-steth-string';
 import { formatVaultParam } from './format-vault-param';
 
 // An utility function to render vault tier updates
 export const renderVaultParamUpdate = (
-  before: BigNumber | number | undefined,
-  after: BigNumber,
+  before: bigint | number | undefined,
+  after: bigint,
   isBp: boolean,
-  shareRate?: BigNumber,
+  shareRate?: bigint,
 ) => {
   const convertedSharesAfter = isBp
     ? ''
@@ -16,7 +15,7 @@ export const renderVaultParamUpdate = (
   if (before === undefined) {
     return `${formatVaultParam(after, isBp)}${convertedSharesAfter}`;
   }
-  if (after.eq(before)) {
+  if (after === before) {
     return (
       <>
         {formatVaultParam(after, isBp)}

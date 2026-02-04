@@ -3,7 +3,7 @@ import { AddressPop } from 'shared/components/address-pop';
 import { MotionDescriptionProps } from '../types';
 import { evmForceValidatorExitsInVaultHubAbi } from 'abi/generated';
 
-export const DescVaultsForceValidatorExitsInVaultHub = ({
+export const VaultsForceValidatorExitsInVaultHub = ({
   callData,
 }: MotionDescriptionProps<typeof evmForceValidatorExitsInVaultHubAbi>) => {
   const [vaults, pubkeys] = callData;

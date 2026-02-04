@@ -46,7 +46,15 @@ import { CsmSetVettedGateTree } from './motion-descriptions/csm-set-vetted-gate-
 import { CuratedExitRequestHashesSubmit } from './motion-descriptions/curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './motion-descriptions/sdvt-exit-request-hashes-submit';
 import { Address } from 'viem';
-import { DescVaultsForceValidatorExitsInVaultHub } from './motion-descriptions/vaults-force-validator-exits-in-vault-hub';
+import { VaultsForceValidatorExitsInVaultHub } from './motion-descriptions/vaults-force-validator-exits-in-vault-hub';
+import { VaultsRegisterGroupsInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-register-groups-in-operator-grid';
+import { VaultsUpdateGroupsShareLimit } from '@easy-track/motion-card-description/motion-descriptions/vaults-update-groups-share-limit';
+import { VaultsSetJailStatusInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-jail-status-in-operator-grid';
+import { VaultsUpdateVaultsFeesInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-update-vaults-fees-in-operator-grid';
+import { VaultsSocializeBadDebtInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-socialize-bad-debt-in-vault-hub';
+import { VaultsAlterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-alter-tiers-in-operator-grid';
+import { VaultsRegisterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-register-tiers-in-operator-grid';
+import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-liability-shares-target-in-vault-hub';
 
 // Generic props type for all motion descriptions
 type GenericDescProps = {
@@ -345,9 +353,58 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.SDVTExitRequestHashesSubmit]: (props: GenericDescProps) => (
     <SdvtExitRequestHashesSubmit {...props} />
   ),
-  [MotionType.ForceValidatorExitsInVaultHub]: (props: GenericDescProps) => (
-    <DescVaultsForceValidatorExitsInVaultHub {...props} />
+
+  // Vaults
+  [MotionType.RegisterGroupsInOperatorGrid]: (props: GenericDescProps) => (
+    <VaultsRegisterGroupsInOperatorGrid {...props} />
   ),
+  [MotionType.RegisterTiersInOperatorGrid]: (props: GenericDescProps) => (
+    <VaultsRegisterTiersInOperatorGrid {...props} />
+  ),
+  [MotionType.UpdateGroupsShareLimit]: (props: GenericDescProps) => (
+    <VaultsUpdateGroupsShareLimit {...props} />
+  ),
+  [MotionType.AlterTiersInOperatorGrid]: (props: GenericDescProps) => (
+    <VaultsAlterTiersInOperatorGrid {...props} />
+  ),
+  [MotionType.SetJailStatusInOperatorGrid]: (props: GenericDescProps) => (
+    <VaultsSetJailStatusInOperatorGrid {...props} />
+  ),
+  [MotionType.UpdateVaultsFeesInOperatorGrid]: (props: GenericDescProps) => (
+    <VaultsUpdateVaultsFeesInOperatorGrid {...props} />
+  ),
+  [MotionType.ForceValidatorExitsInVaultHub]: (props: GenericDescProps) => (
+    <VaultsForceValidatorExitsInVaultHub {...props} />
+  ),
+  [MotionType.SetLiabilitySharesTargetInVaultHub]: (
+    props: GenericDescProps,
+  ) => <VaultsSetLiabilitySharesTargetInVaultHub {...props} />,
+  [MotionType.SocializeBadDebtInVaultHub]: (props: GenericDescProps) => (
+    <VaultsSocializeBadDebtInVaultHub {...props} />
+  ),
+
+  // Vaults Phase One
+  [MotionType.RegisterGroupsInOperatorGridPhaseOne]: (
+    props: GenericDescProps,
+  ) => <VaultsRegisterGroupsInOperatorGrid {...props} />,
+  [MotionType.UpdateGroupsShareLimitPhaseOne]: (props: GenericDescProps) => (
+    <VaultsUpdateGroupsShareLimit {...props} />
+  ),
+  [MotionType.AlterTiersInOperatorGridPhaseOne]: (props: GenericDescProps) => (
+    <VaultsAlterTiersInOperatorGrid {...props} />
+  ),
+  [MotionType.SetJailStatusInOperatorGridPhaseOne]: (
+    props: GenericDescProps,
+  ) => <VaultsSetJailStatusInOperatorGrid {...props} />,
+  [MotionType.UpdateVaultsFeesInOperatorGridPhaseOne]: (
+    props: GenericDescProps,
+  ) => <VaultsUpdateVaultsFeesInOperatorGrid {...props} />,
+  [MotionType.ForceValidatorExitsInVaultHubPhaseOne]: (
+    props: GenericDescProps,
+  ) => <VaultsForceValidatorExitsInVaultHub {...props} />,
+  [MotionType.SocializeBadDebtInVaultHubPhaseOne]: (
+    props: GenericDescProps,
+  ) => <VaultsSocializeBadDebtInVaultHub {...props} />,
 } as const;
 
 type Props = {
