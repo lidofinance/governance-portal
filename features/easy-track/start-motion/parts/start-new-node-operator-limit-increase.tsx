@@ -18,7 +18,7 @@ import { useAccount } from 'wagmi';
 import { Loader } from '@lidofinance/lido-ui';
 import { Fieldset, MessageBox } from './style';
 import { KeysInfoBlock } from '../../motions/ui/keys-info-block';
-import { InputHookForm } from '../../../../shared/hook-form/input-hook-form';
+import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from '../../utils/validate-uint-value';
 
 export const formParts = ({
@@ -50,10 +50,7 @@ export const formParts = ({
       newLimit: '',
       nodeOperatorId: '',
     }),
-    Component: function StartNewMotionNodeOperatorLimitIncrease({
-      fieldNames,
-      submitAction,
-    }) {
+    Component: ({ fieldNames, submitAction }) => {
       const { address: walletAddress } = useAccount();
       const { setValue } = useFormContext();
       const registryType = getNodeOperatorRegistryType(motionType);
