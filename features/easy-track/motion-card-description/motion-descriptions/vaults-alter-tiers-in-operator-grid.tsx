@@ -6,7 +6,7 @@ import { OperatorGrid } from 'shared/blockchain/contracts';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
 import { useQuery } from '@tanstack/react-query';
 import { AddressPop } from 'shared/components/address-pop';
-import { renderVaultParamUpdate } from '@easy-track/vaults/utils/renderVaultParamUpdate';
+import { renderVaultParamUpdate } from '@easy-track/vaults/utils/render-vault-param-update';
 
 // Copies of original types without array part
 type TierParamsStructOutputCopy = {

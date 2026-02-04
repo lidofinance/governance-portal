@@ -5,7 +5,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { OperatorGrid } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { AddressPop } from 'shared/components/address-pop';
-import { renderVaultParamUpdate } from '@easy-track/vaults/utils/renderVaultParamUpdate';
+import { renderVaultParamUpdate } from '@easy-track/vaults/utils/render-vault-param-update';
 
 // UpdateVaultsFeesInOperatorGrid
 export const VaultsUpdateVaultsFeesInOperatorGrid = ({
