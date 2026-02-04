@@ -13,6 +13,16 @@ import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remo
 import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
 import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-stealing-penalty';
 
+import * as StartNewVaultForceValidatorExitsInVaultHub from './vaults/start-new-vault-force-validator-exits-in-vault-hub';
+import * as StartNewVaultsAlterTiersInOperatorGrid from './vaults/start-new-vaults-alter-tiers-in-operator-grid';
+import * as StartNewVaultsRegisterGroupsInOperatorGrid from './vaults/start-new-vaults-register-groups-in-operator-grid';
+import * as StartNewVaultsRegisterTiersInOperatorGrid from './vaults/start-new-vaults-register-tiers-in-operator-grid';
+import * as StartNewVaultsSetJailStatusInOperatorGrid from './vaults/start-new-vaults-set-jail-status-in-operator-grid';
+import * as StartNewVaultsSetLiabilitySharesTargetInVaultHub from './vaults/start-new-vaults-set-liability-shares-target-in-vault-hub';
+import * as StartNewVaultsSocializeBadDebtInVaultHub from './vaults/start-new-vaults-socialize-bad-debt-in-vault-hub';
+import * as StartNewVaultsUpdateGroupsShareLimit from './vaults/start-new-vaults-update-groups-share-limit';
+import * as StartNewVaultsUpdateVaultsFeesInOperatorGrid from './vaults/start-new-vaults-update-vaults-fees-in-operator-grid';
+
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
     formAllowedRecipientTopUp.formParts({
@@ -81,6 +91,26 @@ export const formParts = {
     StartNewExitRequestHashesSubmit.formParts('curated'),
   [MotionTypeForms.SDVTExitRequestHashesSubmit]:
     StartNewExitRequestHashesSubmit.formParts('sdvt'),
+
+  // Vault motions
+  [MotionTypeForms.ForceValidatorExitsInVaultHub]:
+    StartNewVaultForceValidatorExitsInVaultHub.formParts,
+  [MotionTypeForms.AlterTiersInOperatorGrid]:
+    StartNewVaultsAlterTiersInOperatorGrid.formParts,
+  [MotionTypeForms.RegisterGroupsInOperatorGrid]:
+    StartNewVaultsRegisterGroupsInOperatorGrid.formParts,
+  [MotionTypeForms.RegisterTiersInOperatorGrid]:
+    StartNewVaultsRegisterTiersInOperatorGrid.formParts,
+  [MotionTypeForms.SetJailStatusInOperatorGrid]:
+    StartNewVaultsSetJailStatusInOperatorGrid.formParts,
+  [MotionTypeForms.SetLiabilitySharesTargetInVaultHub]:
+    StartNewVaultsSetLiabilitySharesTargetInVaultHub.formParts,
+  [MotionTypeForms.SocializeBadDebtInVaultHub]:
+    StartNewVaultsSocializeBadDebtInVaultHub.formParts,
+  [MotionTypeForms.UpdateGroupsShareLimit]:
+    StartNewVaultsUpdateGroupsShareLimit.formParts,
+  [MotionTypeForms.UpdateVaultsFeesInOperatorGrid]:
+    StartNewVaultsUpdateVaultsFeesInOperatorGrid.formParts,
 } as const;
 
 export type FormData = {

@@ -53,6 +53,17 @@ export const MotionTypeForms = {
   MEVBoostRelaysAdd: 'MEVBoostRelaysAdd',
   MEVBoostRelaysEdit: 'MEVBoostRelaysEdit',
   MEVBoostRelaysRemove: 'MEVBoostRelaysRemove',
+
+  // Lido Vaults
+  RegisterGroupsInOperatorGrid: 'RegisterGroupsInOperatorGrid',
+  RegisterTiersInOperatorGrid: 'RegisterTiersInOperatorGrid',
+  UpdateGroupsShareLimit: 'UpdateGroupsShareLimit',
+  AlterTiersInOperatorGrid: 'AlterTiersInOperatorGrid',
+  SetJailStatusInOperatorGrid: 'SetJailStatusInOperatorGrid',
+  UpdateVaultsFeesInOperatorGrid: 'UpdateVaultsFeesInOperatorGrid',
+  ForceValidatorExitsInVaultHub: 'ForceValidatorExitsInVaultHub',
+  SocializeBadDebtInVaultHub: 'SocializeBadDebtInVaultHub',
+  SetLiabilitySharesTargetInVaultHub: 'SetLiabilitySharesTargetInVaultHub',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -87,6 +98,16 @@ export const MotionTypeDisplayOnly = {
   RccStablesTopUp: 'RccStablesTopUp',
   PmlStablesTopUp: 'PmlStablesTopUp',
   AtcStablesTopUp: 'AtcStablesTopUp',
+
+  RegisterGroupsInOperatorGridPhaseOne: 'RegisterGroupsInOperatorGridPhaseOne',
+  UpdateGroupsShareLimitPhaseOne: 'UpdateGroupsShareLimitPhaseOne',
+  AlterTiersInOperatorGridPhaseOne: 'AlterTiersInOperatorGridPhaseOne',
+  SetJailStatusInOperatorGridPhaseOne: 'SetJailStatusInOperatorGridPhaseOne',
+  UpdateVaultsFeesInOperatorGridPhaseOne:
+    'UpdateVaultsFeesInOperatorGridPhaseOne',
+  ForceValidatorExitsInVaultHubPhaseOne:
+    'ForceValidatorExitsInVaultHubPhaseOne',
+  SocializeBadDebtInVaultHubPhaseOne: 'SocializeBadDebtInVaultHubPhaseOne',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare

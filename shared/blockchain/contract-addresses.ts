@@ -603,3 +603,18 @@ export const SDVTRegistry: ChainAddressMap = {
 export const SandboxAllowedRecipientsRegistry: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x7E33f2192c2cEC339493B9193110BC0510d6CBD2',
 };
+
+export const VaultsAdapter: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x28F9Ac198C4E0FA6A9Ad2c2f97CB38F1A3120f27',
+  [CHAINS.Hoodi]: '0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910',
+};
+
+export const VaultHub: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x1d201BE093d847f6446530Efb0E8Fb426d176709',
+  [CHAINS.Hoodi]: '0x4C9fFC325392090F789255b9948Ab1659b797964',
+};
+
+export const OperatorGrid: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xC69685E89Cefc327b43B7234AC646451B27c544d',
+  [CHAINS.Hoodi]: '0x501e678182bB5dF3f733281521D3f3D1aDe69917',
+};

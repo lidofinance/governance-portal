@@ -3,6 +3,7 @@ import * as addr from 'shared/blockchain/contract-addresses';
 import { ContractObject } from './types';
 import { MotionType } from '../../features/easy-track/motion-types';
 import { EvmAddressesByType } from '../../features/easy-track/evm-addresses';
+import { evmForceValidatorExitsInVaultHubAbi } from '../../abi/generated/EvmForceValidatorExitsInVaultHub';
 
 export const StETH: ContractObject<typeof abi.stethAbi> = {
   name: 'stETH',
@@ -898,4 +899,98 @@ export const CuratedExitRequestHashesSubmit: ContractObject<
   abi: abi.submitExitRequestHashesAbi,
   chainAddressMap:
     EvmAddressesByType[MotionType.CuratedExitRequestHashesSubmit],
+};
+
+// Vaults
+
+export const VaultsAdapter: ContractObject<typeof abi.vaultsAdapterAbi> = {
+  name: 'VaultsAdapter',
+  abi: abi.vaultsAdapterAbi,
+  chainAddressMap: addr.VaultsAdapter,
+};
+
+export const VaultHub: ContractObject<typeof abi.vaultHubAbi> = {
+  name: 'VaultHub',
+  abi: abi.vaultHubAbi,
+  chainAddressMap: addr.VaultHub,
+};
+
+export const OperatorGrid: ContractObject<typeof abi.operatorGridAbi> = {
+  name: 'OperatorGrid',
+  abi: abi.operatorGridAbi,
+  chainAddressMap: addr.OperatorGrid,
+};
+
+export const ForceValidatorExitsInVaultHub: ContractObject<
+  typeof abi.evmForceValidatorExitsInVaultHubAbi
+> = {
+  name: 'ForceValidatorExitsInVaultHub',
+  abi: abi.evmForceValidatorExitsInVaultHubAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.ForceValidatorExitsInVaultHub],
+};
+
+export const SetJailStatusInOperatorGrid: ContractObject<
+  typeof abi.evmSetJailStatusInOperatorGridAbi
+> = {
+  name: 'SetJailStatusInOperatorGrid',
+  abi: abi.evmSetJailStatusInOperatorGridAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.SetJailStatusInOperatorGrid],
+};
+
+export const UpdateVaultsFeesInOperatorGrid: ContractObject<
+  typeof abi.evmUpdateVaultsFeesInOperatorGridAbi
+> = {
+  name: 'UpdateVaultsFeesInOperatorGrid',
+  abi: abi.evmUpdateVaultsFeesInOperatorGridAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.UpdateVaultsFeesInOperatorGrid],
+};
+
+export const SocializeBadDebtInVaultHub: ContractObject<
+  typeof abi.evmSocializeBadDebtInVaultHubAbi
+> = {
+  name: 'SocializeBadDebtInVaultHub',
+  abi: abi.evmSocializeBadDebtInVaultHubAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.SocializeBadDebtInVaultHub],
+};
+
+export const SetLiabilitySharesTargetInVaultHub: ContractObject<
+  typeof abi.evmSetLiabilitySharesTargetInVaultHubAbi
+> = {
+  name: 'SetLiabilitySharesTargetInVaultHub',
+  abi: abi.evmSetLiabilitySharesTargetInVaultHubAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.SetLiabilitySharesTargetInVaultHub],
+};
+
+export const AlterTiersInOperatorGrid: ContractObject<
+  typeof abi.evmAlterTiersInOperatorGridAbi
+> = {
+  name: 'AlterTiersInOperatorGrid',
+  abi: abi.evmAlterTiersInOperatorGridAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.AlterTiersInOperatorGrid],
+};
+
+export const RegisterGroupsInOperatorGrid: ContractObject<
+  typeof abi.evmRegisterGroupsInOperatorsGridAbi
+> = {
+  name: 'RegisterGroupsInOperatorGrid',
+  abi: abi.evmRegisterGroupsInOperatorsGridAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.RegisterGroupsInOperatorGrid],
+};
+
+export const RegisterTiersInOperatorGrid: ContractObject<
+  typeof abi.evmRegisterTiersInOperatorsGridAbi
+> = {
+  name: 'RegisterTiersInOperatorGrid',
+  abi: abi.evmRegisterTiersInOperatorsGridAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.RegisterTiersInOperatorGrid],
+};
+
+export const UpdateGroupsShareLimit: ContractObject<
+  typeof abi.evmUpdateGroupsShareLimitAbi
+> = {
+  name: 'UpdateGroupsShareLimit',
+  abi: abi.evmUpdateGroupsShareLimitAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.UpdateGroupsShareLimit],
 };

@@ -735,4 +735,4 @@ export const validatorsExitBusOracleAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const;
+] as const

@@ -76,6 +76,34 @@ const MOTION_TYPE_ABI_MAP = {
   [MotionType.CSMSetVettedGateTree]: abi.csmSetVettedGateTreeAbi,
   [MotionType.CuratedExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
   [MotionType.SDVTExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
+  [MotionType.RegisterGroupsInOperatorGrid]:
+    abi.evmRegisterGroupsInOperatorsGridAbi,
+  [MotionType.RegisterTiersInOperatorGrid]:
+    abi.evmRegisterTiersInOperatorsGridAbi,
+  [MotionType.UpdateGroupsShareLimit]: abi.evmUpdateGroupsShareLimitAbi,
+  [MotionType.AlterTiersInOperatorGrid]: abi.evmAlterTiersInOperatorGridAbi,
+  [MotionType.SetJailStatusInOperatorGrid]:
+    abi.evmSetJailStatusInOperatorGridAbi,
+  [MotionType.UpdateVaultsFeesInOperatorGrid]:
+    abi.evmUpdateVaultsFeesInOperatorGridAbi,
+  [MotionType.ForceValidatorExitsInVaultHub]:
+    abi.evmForceValidatorExitsInVaultHubAbi,
+  [MotionType.SocializeBadDebtInVaultHub]: abi.evmSocializeBadDebtInVaultHubAbi,
+  [MotionType.SetLiabilitySharesTargetInVaultHub]:
+    abi.evmSetLiabilitySharesTargetInVaultHubAbi,
+  [MotionType.RegisterGroupsInOperatorGridPhaseOne]:
+    abi.evmRegisterGroupsInOperatorsGridAbi,
+  [MotionType.UpdateGroupsShareLimitPhaseOne]: abi.evmUpdateGroupsShareLimitAbi,
+  [MotionType.AlterTiersInOperatorGridPhaseOne]:
+    abi.evmAlterTiersInOperatorGridAbi,
+  [MotionType.SetJailStatusInOperatorGridPhaseOne]:
+    abi.evmSetJailStatusInOperatorGridAbi,
+  [MotionType.UpdateVaultsFeesInOperatorGridPhaseOne]:
+    abi.evmUpdateVaultsFeesInOperatorGridAbi,
+  [MotionType.ForceValidatorExitsInVaultHubPhaseOne]:
+    abi.evmForceValidatorExitsInVaultHubAbi,
+  [MotionType.SocializeBadDebtInVaultHubPhaseOne]:
+    abi.evmSocializeBadDebtInVaultHubAbi,
 } as const;
 
 /**
