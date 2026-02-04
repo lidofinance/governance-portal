@@ -6,6 +6,7 @@ import * as formAllowedRecipientTopUp from './start-new-allowed-recipient-top-up
 import * as StartNewTopUpWithLimitsAndCustomToken from './start-new-top-up-with-limits-and-custom-token';
 import * as formAllowedRecipientRemove from './start-new-allowed-recipient-remove';
 import * as StartNewTopUpWithLimits from './start-new-top-up-with-limits';
+import * as StartNewExitRequestHashesSubmit from './start-new-exit-request-hashes-submit';
 import * as StartNewMEVBoostRelaysAdd from './start-new-mev-boost-relays-add';
 import * as StartNewMEVBoostRelaysEdit from './start-new-mev-boost-relays-edit';
 import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remove';
@@ -76,6 +77,10 @@ export const formParts = {
     StartNewCSMSetVettedGateTree.formParts,
   [MotionTypeForms.CSMSettleElStealingPenalty]:
     StartNewCSMSettleElStealingPenalty.formParts,
+  [MotionTypeForms.CuratedExitRequestHashesSubmit]:
+    StartNewExitRequestHashesSubmit.formParts('curated'),
+  [MotionTypeForms.SDVTExitRequestHashesSubmit]:
+    StartNewExitRequestHashesSubmit.formParts('sdvt'),
 } as const;
 
 export type FormData = {
