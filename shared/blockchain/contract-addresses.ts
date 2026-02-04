@@ -260,6 +260,7 @@ export const CSVerifierProposed: ChainAddressMap = {
 };
 
 export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x0000000000000000000000000000000000000000',
   [CHAINS.Holesky]: '0xD6C2ce3BB8bea2832496Ac8b5144819719f343AC',
   [CHAINS.Hoodi]: '0x682E94d2630846a503BDeE8b6810DF71C9806891',
 };
