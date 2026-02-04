@@ -27,7 +27,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { MAX_FEE_BP } from '@easy-track/constants';
 import { VaultAddressInputHookForm } from '@easy-track/vaults/ui/vault-address-input-hook-form';
-import { InputHookForm } from '../../../../../shared/hook-form/input-hook-form';
+import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from '@easy-track/utils/validate-uint-value';
 import { BpValueFormatted } from '@easy-track/vaults/ui/bp-value-formatted';
 
