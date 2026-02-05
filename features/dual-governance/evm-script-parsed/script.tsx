@@ -20,6 +20,10 @@ const sanitizeForJSON = (obj: any): any => {
     return obj;
   }
 
+  if (typeof obj === 'bigint') {
+    return String(obj);
+  }
+
   if (Array.isArray(obj)) {
     return obj.map(sanitizeForJSON);
   }
@@ -31,7 +35,7 @@ const sanitizeForJSON = (obj: any): any => {
         continue;
       }
       if (typeof value === 'bigint') {
-        sanitized[key] = value.toString();
+        sanitized[key] = String(value);
         continue;
       }
       try {

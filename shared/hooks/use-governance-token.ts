@@ -1,4 +1,4 @@
-import { useLidoSDK } from '../../providers/lido-sdk';
+import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { useReadContract } from '../blockchain/hooks/use-read-contract';
 import { useQuery } from '@tanstack/react-query';

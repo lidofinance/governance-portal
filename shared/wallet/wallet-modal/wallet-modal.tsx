@@ -28,6 +28,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useGovernanceToken } from '../../hooks/use-governance-token';
 import { Text } from 'shared/components/text';
 import { FlexWrapper } from '../../styled-components';
+import { formatBalance } from 'utils/format-balance';
 
 export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
   const { address } = useAccount();
@@ -77,7 +78,7 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
               {tokenData ? (
                 <Text size={12} data-testid="balance">
                   &nbsp;
-                  {`${tokenData.balance} ${tokenData.symbol}`}
+                  {`${formatBalance(tokenData.balance)} ${tokenData.symbol}`}
                 </Text>
               ) : null}
             </WalletModalBalanceWrapper>
