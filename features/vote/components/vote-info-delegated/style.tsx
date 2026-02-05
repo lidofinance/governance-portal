@@ -28,6 +28,7 @@ export const VoteStatus = styled.div<StatusProps>`
 `;
 
 export const AddressBadgeWrap = styled.span`
+  cursor: pointer;
   display: inline-flex;
   vertical-align: middle;
   align-items: center;

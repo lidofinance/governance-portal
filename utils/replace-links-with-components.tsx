@@ -19,9 +19,16 @@ export const replaceJsxElements = (text: string) => {
       regex: REGEX_ETH_ADDRESS,
       replace: (address) => (
         <AddressPop address={address}>
-          <Box display="flex" alignItems="flex-end" gap={4}>
-            <Identicon address={address} diameter={20} />
-            <Text style={{ background: '#EFF2F6' }} size="xxs">
+          <Box
+            display="flex"
+            alignItems="center"
+            background="#EFF2F6"
+            borderRadius={10}
+            padding="0px 8px 0px 3px;"
+            gap={4}
+          >
+            <Identicon address={address} diameter={16} />
+            <Text style={{ cursor: 'pointer' }} size="xxs">
               {trimAddress(address, 4)}
             </Text>
           </Box>

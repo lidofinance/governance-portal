@@ -40,6 +40,7 @@ export const AddressBadgeWrap = styled.span`
   vertical-align: middle;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   & > div:nth-child(1) {
     margin-right: 8px;
   }

@@ -168,7 +168,7 @@ export const UnsupportedChainBannerStyled = styled.div`
   padding: 30px;
   position: absolute;
   color: white;
-  z-index: 1;
+  z-index: 3;
   border-radius: 30px;
   width: 289px;
   top: 70px;

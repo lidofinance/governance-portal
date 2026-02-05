@@ -34,6 +34,7 @@ import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
 import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 import { Box } from 'shared/components/box';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type Props = {
   voteId: string;
@@ -58,6 +59,7 @@ const formatDate = (date: number) =>
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
   const { voteData, isLoading } = useVoteContext();
+  const isSupportedChain = useIsSupportedChain();
 
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
@@ -132,124 +134,127 @@ export const VoteCard = ({ voteId }: Props) => {
   } = getVoteDetailsFormatted(voteData);
 
   return (
-    <Container as="main" size="tight" key={voteId}>
-      <Card>
-        <VoteHeader>
-          <VoteTitle data-testid="voteTitle">Vote #{voteId}</VoteTitle>
-          {!voteDualGovernanceStatusLoading && (
-            <VoteStatusChips
-              totalSupply={totalSupply}
-              nayNum={nayNum}
-              yeaNum={yeaNum}
-              minAcceptQuorum={Number(formatEther(voteData?.minAcceptQuorum))}
-              status={voteData?.status}
-              executedTxHash={voteData?.eventExecute?.event.transactionHash}
-              votePhase={voteData.phase}
-              chainId={chainId}
-              proposalId={voteDualGovernanceStatus?.proposalId || null}
-              voteDualGovernanceStatus={
-                voteDualGovernanceStatus?.proposalStatus || null
-              }
-            />
-          )}
-          <BlockWrap>
-            <Text as="span" color="secondary" size={12}>
-              {'Block '}
-            </Text>
-            <Text as="span" color="default" size={12} data-testid="blockNumber">
-              {voteData.eventStart?.event.transactionHash ? (
-                <Link
-                  href={getEtherscanTxLink(
-                    chainId,
-                    voteData.eventStart?.event.transactionHash,
-                  )}
-                >
-                  #{voteData.snapshotBlock.toString()}
-                </Link>
-              ) : (
-                `#${voteData.snapshotBlock.toString()}`
-              )}
-            </Text>
-          </BlockWrap>
-        </VoteHeader>
-        <VoteTimestamps>
-          <Text color="secondary" size={12} data-testid="voteDate">
-            {formattedDate}
-          </Text>
-        </VoteTimestamps>
-        <DetailsBoxWrap>
-          <BoxVotes data-testid="voteDetails">
-            <VoteYesNoBar
-              yeaPct={yeaPct}
-              nayPct={nayPct}
-              yeaNum={yeaNum}
-              nayNum={nayNum}
-              yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
-              nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
-              showOnForeground
-              showNumber
-            />
-          </BoxVotes>
-        </DetailsBoxWrap>
-        {(voteData.phase === VotePhase.Main ||
-          voteData.phase === VotePhase.Objection) && (
-          <>
-            <VoteProgressBar
-              startDate={Number(voteData.startDate)}
-              voteTime={Number(voteData.voteTime)}
-              objectionPhaseTime={Number(voteData.objectionPhaseTime)}
-              isEnded={isEnded}
-              votePhase={voteData.phase}
-            />
-          </>
-        )}
-        {voteData.voteEvents.length > 0 && (
-          <VotersList voteEvents={voteData.voteEvents} />
-        )}
-        <SectionHeading>Proposal</SectionHeading>
-        {voteData.eventStart?.args.metadata && (
-          <DetailsBoxWrap>
-            <DescriptionWrap data-testid="voteDescription">
-              <VoteDescription
-                metadata={voteData.eventStart.args.metadata}
-                allowMD
-              />
-            </DescriptionWrap>
-          </DetailsBoxWrap>
-        )}
-        <DetailsBoxWrap data-testid="voteScript">
-          <VoteScript
-            script={voteData.script as Hex}
-            metadata={voteData.eventStart?.args.metadata || ''}
+    <Card key={voteId}>
+      <VoteHeader>
+        <VoteTitle data-testid="voteTitle">Vote #{voteId}</VoteTitle>
+        {!voteDualGovernanceStatusLoading && (
+          <VoteStatusChips
+            totalSupply={totalSupply}
+            nayNum={nayNum}
+            yeaNum={yeaNum}
+            minAcceptQuorum={Number(formatEther(voteData?.minAcceptQuorum))}
+            status={voteData?.status}
+            executedTxHash={voteData?.eventExecute?.event.transactionHash}
+            votePhase={voteData.phase}
+            chainId={chainId}
+            proposalId={voteDualGovernanceStatus?.proposalId || null}
+            voteDualGovernanceStatus={
+              voteDualGovernanceStatus?.proposalStatus || null
+            }
           />
+        )}
+        <BlockWrap>
+          <Text as="span" color="secondary" size={12}>
+            {'Block '}
+          </Text>
+          <Text as="span" color="default" size={12} data-testid="blockNumber">
+            {voteData.eventStart?.event.transactionHash ? (
+              <Link
+                href={getEtherscanTxLink(
+                  chainId,
+                  voteData.eventStart?.event.transactionHash,
+                )}
+              >
+                #{voteData.snapshotBlock.toString()}
+              </Link>
+            ) : (
+              `#${voteData.snapshotBlock.toString()}`
+            )}
+          </Text>
+        </BlockWrap>
+      </VoteHeader>
+      <VoteTimestamps>
+        <Text color="secondary" size={12} data-testid="voteDate">
+          {formattedDate}
+        </Text>
+      </VoteTimestamps>
+      <DetailsBoxWrap>
+        <BoxVotes data-testid="voteDetails">
+          <VoteYesNoBar
+            yeaPct={yeaPct}
+            nayPct={nayPct}
+            yeaNum={yeaNum}
+            nayNum={nayNum}
+            yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
+            nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
+            showOnForeground
+            showNumber
+          />
+        </BoxVotes>
+      </DetailsBoxWrap>
+      {(voteData.phase === VotePhase.Main ||
+        voteData.phase === VotePhase.Objection) && (
+        <>
+          <VoteProgressBar
+            startDate={Number(voteData.startDate)}
+            voteTime={Number(voteData.voteTime)}
+            objectionPhaseTime={Number(voteData.objectionPhaseTime)}
+            isEnded={isEnded}
+            votePhase={voteData.phase}
+          />
+        </>
+      )}
+      {voteData.voteEvents.length > 0 && (
+        <VotersList voteEvents={voteData.voteEvents} />
+      )}
+      <SectionHeading>Proposal</SectionHeading>
+      {voteData.eventStart?.args.metadata && (
+        <DetailsBoxWrap>
+          <DescriptionWrap data-testid="voteDescription">
+            <VoteDescription
+              metadata={voteData.eventStart.args.metadata}
+              allowMD
+            />
+          </DescriptionWrap>
         </DetailsBoxWrap>
-        {!isWalletConnected &&
-          isWalletConnectionAllowed &&
-          voteData.phase !== VotePhase.Closed && (
-            <Button fullwidth onClick={openConnectWalletModal}>
-              Connect wallet
+      )}
+      <DetailsBoxWrap data-testid="voteScript">
+        <VoteScript
+          script={voteData.script as Hex}
+          metadata={voteData.eventStart?.args.metadata || ''}
+        />
+      </DetailsBoxWrap>
+      {!isWalletConnected &&
+        isWalletConnectionAllowed &&
+        voteData.phase !== VotePhase.Closed && (
+          <Button fullwidth onClick={openConnectWalletModal}>
+            Connect wallet
+          </Button>
+        )}
+      {isWalletConnected && (
+        <>
+          <VoteInfoDelegated
+            voteEvents={voteData.voteEvents}
+            walletAddress={walletAddress}
+          />
+          {voteData.phase !== VotePhase.Closed && (
+            <>
+              <VotePowerInfo votePowerWei={voteData.votePowerWei} />
+              <VoteActions />
+            </>
+          )}
+          {voteData.canExecute && (
+            <Button
+              fullwidth
+              color="success"
+              onClick={handleEnact}
+              disabled={!isSupportedChain}
+            >
+              Enact
             </Button>
           )}
-        {isWalletConnected && (
-          <>
-            <VoteInfoDelegated
-              voteEvents={voteData.voteEvents}
-              walletAddress={walletAddress}
-            />
-            {voteData.phase !== VotePhase.Closed && (
-              <>
-                <VotePowerInfo votePowerWei={voteData.votePowerWei} />
-                <VoteActions />
-              </>
-            )}
-            {voteData.canExecute && (
-              <Button fullwidth color="success" onClick={handleEnact}>
-                Enact
-              </Button>
-            )}
-          </>
-        )}
-      </Card>
-    </Container>
+        </>
+      )}
+    </Card>
   );
 };

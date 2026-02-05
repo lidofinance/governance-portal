@@ -29,6 +29,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
+import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 
 type Props = {
   vote: Vote;
@@ -63,19 +64,21 @@ export const DashboardVote = ({
 
   const votingContractAddress = useContractAddress(Voting);
 
-  const { data: voteExecuteEvent } = useQuery({
-    queryKey: ['voteExecuteEvent', vote.id],
-    queryFn: async () => {
-      invariant(client, 'Client must be defined');
+  const { data: voteExecuteEvent, isLoading: voteExecuteEventLoading } =
+    useQuery({
+      queryKey: ['voteExecuteEvent', vote.id],
+      queryFn: async () => {
+        invariant(client, 'Client must be defined');
 
-      return await getEventExecuteVote({
-        address: votingContractAddress,
-        client,
-        voteId: BigInt(vote.id),
-        block: vote.snapshotBlock,
-      });
-    },
-  });
+        return await getEventExecuteVote({
+          address: votingContractAddress,
+          client,
+          voteId: BigInt(vote.id),
+          block: vote.snapshotBlock,
+          chainId,
+        });
+      },
+    });
   const {
     data: voteDualGovernanceStatus,
     isLoading: voteDualGovernanceStatusLoading,
@@ -83,6 +86,8 @@ export const DashboardVote = ({
     voteId: vote.id,
     eventExecuteVote: voteExecuteEvent,
   });
+
+  const isLoading = voteExecuteEventLoading || voteDualGovernanceStatusLoading;
 
   const handlePass = useCallback(() => {
     // TODO:
@@ -115,10 +120,14 @@ export const DashboardVote = ({
     vote.state.status === VoteStatus.Rejected ||
     vote.state.status === VoteStatus.Executed;
 
+  if (isLoading) {
+    return <DashboardVoteSkeleton />;
+  }
+
   return (
     <Link passHref href={votePage(vote.id)}>
       <Wrap data-testid={`voteCardPreview-${vote.id}`}>
-        {!voteDualGovernanceStatusLoading && (
+        {!isLoading && (
           <VoteStatusBanner
             executedAt={executedAt}
             voteTime={voteTime}
@@ -129,7 +138,7 @@ export const DashboardVote = ({
             nayNum={nayNum}
             totalSupply={totalSupply}
             fontSize="xxs"
-            minAcceptQuorum={Number(vote.minAcceptQuorum)}
+            minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
             startDate={startDate}
             voteDualGovernanceStatus={
               voteDualGovernanceStatus?.proposalStatus || null

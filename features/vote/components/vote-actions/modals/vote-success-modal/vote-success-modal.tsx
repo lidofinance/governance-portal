@@ -5,7 +5,7 @@ import { Text } from 'shared/components/text';
 import { Button } from '@lidofinance/lido-ui';
 import { VoteEvent, VotePhase } from 'shared/votes/types';
 import { useAccount } from 'wagmi';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { AddonSection } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { Address } from 'viem';
@@ -13,6 +13,7 @@ import { DelegatorsSelector } from '../../components/delegators-selector';
 import { useDelegators } from 'features/vote/hooks/use-delegators';
 import { Box } from 'shared/components/box';
 import { formatBalance } from 'utils/format-balance';
+import { useEligibleDelegators } from 'features/vote/hooks/use-eligible-delegators';
 
 type Props = {
   mode: VoteMode;
@@ -44,6 +45,15 @@ export const VoteSuccessModal = ({
   const { address } = useAccount();
   const { data: tokenData } = useGovernanceToken();
   const { data: delegatorsData } = useDelegators();
+
+  const {
+    data: { eligibleDelegatedVoters: allEligibleDelegators },
+    refetch: refetchEligibleDelegators,
+  } = useEligibleDelegators({ voteId: voteId });
+
+  useEffect(() => {
+    void refetchEligibleDelegators();
+  }, [refetchEligibleDelegators]);
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
@@ -109,6 +119,17 @@ export const VoteSuccessModal = ({
     return remainingDelegators.length > 0;
   }, [address, delegatorsData, voteEvents, justVotedDelegators]);
 
+  const eligibleDelegatedVoters = useMemo(() => {
+    if (!justVotedDelegators || justVotedDelegators.length === 0) {
+      return allEligibleDelegators;
+    }
+    const votedSet = new Set(justVotedDelegators.map((a) => a.toLowerCase()));
+
+    return allEligibleDelegators.filter(
+      (delegator) => !votedSet.has(delegator.address.toLowerCase()),
+    );
+  }, [allEligibleDelegators, justVotedDelegators]);
+
   const handleDelegatedVoteClick = () => {
     if (onVoteWithRemainingDelegated && selectedDelegators.length > 0) {
       onVoteWithRemainingDelegated(selectedDelegators, mode);
@@ -165,8 +186,9 @@ export const VoteSuccessModal = ({
                 </Button>
               </Box>
               <DelegatorsSelector
-                voteId={voteId}
                 onSelectionChange={handleSelectionChange}
+                delegators={eligibleDelegatedVoters}
+                voteEvents={voteEvents || []}
               />
             </AddonSection>
           )}
@@ -189,8 +211,9 @@ export const VoteSuccessModal = ({
                 Vote {voteModeDict[mode]} with delegated tokens
               </Text>
               <DelegatorsSelector
-                voteId={voteId}
                 onSelectionChange={handleSelectionChange}
+                delegators={eligibleDelegatedVoters}
+                voteEvents={voteEvents || []}
               />
               <Button onClick={handleDelegatedVoteClick} fullwidth>
                 {voteModeDict[mode]}

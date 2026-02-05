@@ -72,3 +72,13 @@ export const DelegationFormFootNoteStyled = styled(Text).attrs({
 })`
   margin-top: 8px;
 `;
+
+export const ModalButtonGroup = styled.div`
+  display: flex;
+  margin-top: 16px;
+  gap: 12px;
+  justify-content: center;
+  & > button {
+    flex: 1;
+  }
+`;

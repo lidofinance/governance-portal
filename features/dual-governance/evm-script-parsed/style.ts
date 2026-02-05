@@ -29,6 +29,11 @@ export const Tab = styled.div<TabProps>`
       width: auto;
     `};
 
+  ${({ theme }) => theme.mediaQueries.md} {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
   background-color: ${({ $isActive }) =>
     $isActive ? 'transparent' : '#1312170A'};
 
@@ -66,6 +71,7 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
     $variant &&
     $variant === 'voting' &&
     css`
+      border-top-right-radius: 20px;
       color: white;
       background: rgba(0, 163, 255, 0.08);
     `};

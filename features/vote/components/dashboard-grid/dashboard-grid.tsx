@@ -118,7 +118,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
   }
 
   return (
-    <Container as="main" size="full">
+    <>
       <GridWrap>
         {isLoading
           ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)
@@ -138,9 +138,9 @@ export const DashboardGrid = ({ currentPage }: Props) => {
           pagesCount={pagesCount}
           activePage={currentPage}
           onItemClick={(idx: number) => handleChangePage(idx)}
-          siblingCount={1}
+          siblingCount={0}
         />
       </PaginationWrap>
-    </Container>
+    </>
   );
 };

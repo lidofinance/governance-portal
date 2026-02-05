@@ -59,7 +59,6 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
   const { chainId } = useLidoSDK();
   const { userConfig } = useConfig();
   const { etherscanApiKey, useBundledAbi } = userConfig.savedUserConfig;
-
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
   const rpcUrl = getRpcUrlByChainId(chainId as unknown as CHAINS);
 

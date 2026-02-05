@@ -5,10 +5,18 @@ import { Text } from 'shared/components/text';
 export const AccordionWrap = styled(Accordion)`
   text-align: left;
   background-color: inherit;
+  width: 100%;
 
-  & > div {
-    padding: 20px 0 0;
-    margin: 0;
+  & > div[role='button'] {
+    padding: 0;
+    background: transparent;
+  }
+
+  // Force height to auto when expanded to fix 0px height accordion issue
+  & > [aria-hidden='false'] {
+    height: auto !important;
+    visibility: visible !important;
+    overflow: visible !important;
   }
 `;
 

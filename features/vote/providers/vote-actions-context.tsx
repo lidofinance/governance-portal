@@ -13,7 +13,15 @@ import { useLidoSDK } from 'providers/lido-sdk';
 
 type Value = {
   voteId: bigint;
-  handleDelegatedVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
+  handleDelegatedVote: ({
+    mode,
+    voters,
+    skipConfirmation,
+  }: {
+    mode: VoteMode;
+    voters: Address[];
+    skipConfirmation?: boolean;
+  }) => Promise<void>;
   handleOwnVote: ({ mode }: { mode: VoteMode }) => Promise<void>;
   handleEnact: () => Promise<void>;
 } | null;
@@ -235,19 +243,42 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   ]);
 
   const handleDelegatedVote = useCallback(
-    async ({ mode }: { mode: VoteMode }) => {
+    async ({
+      mode,
+      voters,
+      skipConfirmation,
+    }: {
+      mode: VoteMode;
+      voters: Address[];
+      skipConfirmation?: boolean;
+    }) => {
       if (!isConnected) {
         txModalStages.failed(new Error('Please connect your wallet to vote'));
+        return;
+      }
+
+      if (skipConfirmation) {
+        txModalStages.sign({
+          mode,
+        });
+
+        await onDelegateVoteSubmit(mode, voters);
         return;
       }
 
       txModalStages.confirm({
         mode,
         voteId: BigInt(voteId),
-        onSubmit: (voters: Address[]) => onDelegateVoteSubmit(mode, voters),
+        onSubmit: async (selectedVoters) => {
+          txModalStages.sign({
+            mode,
+          });
+
+          await onDelegateVoteSubmit(mode, selectedVoters);
+        },
       });
     },
-    [isConnected, txModalStages, voteId, onDelegateVoteSubmit],
+    [isConnected, onDelegateVoteSubmit, txModalStages, voteId],
   );
 
   const handleOwnVote = useCallback(
@@ -256,7 +287,6 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
         txModalStages.failed(new Error('Please connect your wallet to vote'));
         return;
       }
-
       txModalStages.sign({
         mode,
       });

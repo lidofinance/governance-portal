@@ -7,6 +7,8 @@ import { Address } from 'viem';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { Box } from 'shared/components/box';
+import { useEligibleDelegators } from 'features/vote/hooks/use-eligible-delegators';
+import { useVote } from 'features/vote/hooks/use-vote';
 
 type Props = {
   mode: VoteMode;
@@ -21,6 +23,12 @@ export const VoteConfirmDelegatedModal = ({
 }: Props) => {
   const [selectedAddresses, setSelectedAddresses] = useState<Address[]>([]);
   const [selectedBalance, setSelectedBalance] = useState<bigint>(0n);
+
+  const {
+    data: { eligibleDelegatedVoters: allEligibleDelegators },
+  } = useEligibleDelegators({ voteId: voteId });
+
+  const { data: voteData } = useVote({ voteId: BigInt(voteId) });
 
   const { data: tokenData } = useGovernanceToken();
 
@@ -39,15 +47,18 @@ export const VoteConfirmDelegatedModal = ({
   return (
     <>
       <Box textAlign="center">
-        <Text>Vote Yes with Delegated VP</Text>
+        <Text>Vote with Delegated VP</Text>
+      </Box>
+      <Box margin="10px 0">
+        <Button color="secondary" onClick={handleSubmit} fullwidth>
+          {`"${voteModeDict[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
+        </Button>
       </Box>
       <DelegatorsSelector
-        voteId={voteId}
+        voteEvents={voteData?.voteEvents || []}
+        delegators={allEligibleDelegators}
         onSelectionChange={handleSelectionChange}
       />
-      <Button color="secondary" onClick={handleSubmit} fullwidth>
-        {`"${voteModeDict[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
-      </Button>
     </>
   );
 };

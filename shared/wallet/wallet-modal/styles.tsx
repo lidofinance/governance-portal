@@ -12,6 +12,13 @@ export const WalletModalConnectedStyle = styled.div`
   align-items: center;
 `;
 
+export const WalletModalBalanceWrapper = styled.section`
+  display: flex;
+  flex-direction: row;
+  margin: 14px 0;
+  width: 100%;
+`;
+
 export const WalletModalConnectorStyle = styled.div`
   color: var(--lido-color-textSecondary);
   font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;

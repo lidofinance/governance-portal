@@ -21,6 +21,8 @@ export const Card = styled(Block).attrs({
   paddingLess: true,
 })`
   padding: 20px;
+  max-width: 560px;
+  margin: 0 auto 40px;
 `;
 
 export const VoteHeader = styled.div`
@@ -52,7 +54,7 @@ export const VoteTimestamps = styled.div`
 
 export const DetailsBoxWrap = styled.div`
   margin-top: ${({ theme }) => theme.spaceMap.md}px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
 `;
 
 export const BoxVotes = styled(ContentHighlightBox)`

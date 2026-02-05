@@ -40,8 +40,15 @@ export const useVoteDualGovernanceStatus = ({
     EmergencyProtectedTimelock,
   );
 
-  return useQuery({
-    queryKey: [`${voteId}-dg-status`, chainId],
+  const isEnabled = !!client && !!eventExecuteVote;
+
+  const query = useQuery({
+    queryKey: [
+      `${voteId}-dg-status`,
+      chainId,
+      eventExecuteVote?.event.transactionHash,
+    ],
+    enabled: isEnabled,
     queryFn: async () => {
       invariant(client, 'Client must be defined');
       invariant(eventExecuteVote, 'Execute event must be provided');
@@ -87,4 +94,14 @@ export const useVoteDualGovernanceStatus = ({
       }
     },
   });
+
+  return {
+    ...query,
+    isLoading:
+      eventExecuteVote === undefined
+        ? true
+        : isEnabled
+          ? query.isLoading
+          : false,
+  };
 };

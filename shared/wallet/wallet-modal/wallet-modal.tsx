@@ -20,16 +20,23 @@ import {
   WalletModalAccountStyle,
   WalletModalAddressStyle,
   WalletModalActionsStyle,
+  WalletModalBalanceWrapper,
 } from './styles';
 import { openWindow } from 'utils/open-window';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useGovernanceToken } from '../../hooks/use-governance-token';
+import { Text } from 'shared/components/text';
+import { FlexWrapper } from '../../styled-components';
+import { formatBalance } from 'utils/format-balance';
 
 export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
   const { address } = useAccount();
   const { connectorName } = useConnectorInfo();
   const { disconnect } = useDisconnect();
   const { chainId } = useLidoSDK();
+  const { data: tokenData, isLoading: isTokenDataLoading } =
+    useGovernanceToken();
 
   const handleDisconnect = useCallback(() => {
     disconnect?.();
@@ -57,11 +64,25 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
     <Modal title="Account" onClose={onClose} {...props}>
       <WalletModalContentStyle>
         <WalletModalConnectedStyle>
-          {connectorName && (
-            <WalletModalConnectorStyle data-testid="providerName">
-              Connected with {connectorName}
-            </WalletModalConnectorStyle>
-          )}
+          <FlexWrapper $flexDirection="column">
+            {connectorName && (
+              <WalletModalConnectorStyle data-testid="providerName">
+                Connected with {connectorName}
+              </WalletModalConnectorStyle>
+            )}
+
+            <WalletModalBalanceWrapper>
+              <Text size={12}>
+                {isTokenDataLoading ? 'Loading...' : 'Balance'}
+              </Text>
+              {tokenData ? (
+                <Text size={12} data-testid="balance">
+                  &nbsp;
+                  {`${formatBalance(tokenData.balance)} ${tokenData.symbol}`}
+                </Text>
+              ) : null}
+            </WalletModalBalanceWrapper>
+          </FlexWrapper>
 
           {disconnect && (
             <WalletModalDisconnectStyle

@@ -28,6 +28,7 @@ export const InputHookForm = ({
     <Input
       {...props}
       {...field}
+      value={field.value ?? ''}
       disabled={props.disabled ?? field.disabled}
       error={errorProp ?? (showErrorMessage ? errorMessage : hasErrorHighlight)}
       fullwidth

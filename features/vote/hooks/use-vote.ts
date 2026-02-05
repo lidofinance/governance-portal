@@ -90,6 +90,7 @@ export const useVote = ({ voteId }: Args) => {
             client,
             voteId: voteId,
             block: parsedVote.snapshotBlock,
+            chainId,
           }),
           getVoteEvents(votingContractAddress, client, voteId, snapshotBlock),
           accountAddress

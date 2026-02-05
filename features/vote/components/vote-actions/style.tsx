@@ -24,10 +24,18 @@ export const VoteButton = styled(Button).attrs({
   color: 'secondary',
   fullwidth: true,
 })`
+  text-align: left;
   svg {
     display: block;
     width: 24px;
     height: 24px;
     fill: currentColor;
   }
+`;
+
+export const BasicActionsWrapper = styled.section`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 12px;
 `;

@@ -15,7 +15,7 @@ export const useTestContractsInfo = () => {
         contractName as ContractName
       ] as ChainAddressMap;
       const address = chainAddressMap?.[chainId];
-      if (typeof address === 'object') {
+      if (typeof address === 'object' && address.test) {
         testContracts.push({
           name: contractName,
           address: address.test,

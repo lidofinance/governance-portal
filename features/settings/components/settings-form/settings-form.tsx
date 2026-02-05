@@ -35,7 +35,6 @@ export const SettingsForm = () => {
   const { chainId } = useLidoSDK();
   const { userConfig } = useConfig();
   const testContractsInfo = useTestContractsInfo();
-
   const debounceTimeoutRef = useRef<NodeJS.Timeout>();
 
   const formMethods = useForm<SettingsFormData>({

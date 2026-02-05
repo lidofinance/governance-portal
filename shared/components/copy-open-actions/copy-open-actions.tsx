@@ -1,4 +1,5 @@
 import { ButtonIcon, Copy } from '@lidofinance/lido-ui';
+import { MouseEvent } from 'react';
 import { Wrap } from './style';
 import { useCopyToClipboard } from 'shared/hooks';
 import { ButtonExternalView } from './button-external-view';
@@ -21,7 +22,10 @@ export const CopyOpenActions = ({ value, entity }: Props) => {
   return (
     <Wrap>
       <ButtonIcon
-        onClick={handleCopy}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCopy();
+        }}
         icon={<Copy />}
         size="xs"
         variant="ghost"
@@ -30,9 +34,10 @@ export const CopyOpenActions = ({ value, entity }: Props) => {
         Copy {copyText}
       </ButtonIcon>
       <ButtonExternalView
-        onClick={() =>
-          openWindow(getEtherscanLink(chainId, value ?? '', entity))
-        }
+        onClick={(e: MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation();
+          openWindow(getEtherscanLink(chainId, value ?? '', entity));
+        }}
         variant="ghost"
         data-testid="etherscanBtn"
       >

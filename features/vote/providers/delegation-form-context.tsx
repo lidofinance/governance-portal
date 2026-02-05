@@ -100,8 +100,6 @@ export const DelegationFormProvider: FC<DelegationFormProviderProps> = ({
 
   const processDelegation = useDelegateAction({
     mode,
-    aragonDelegateAddress: networkData.aragonDelegateAddress,
-    snapshotDelegateAddress: networkData.snapshotDelegateAddress,
     onConfirm: networkData.refetch,
     onRetry: retryFire,
   });
