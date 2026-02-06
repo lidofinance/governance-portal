@@ -1,14 +1,12 @@
 import { LogoLido } from 'shared/components/logos/logos';
-import { HeaderContainer, LogoTextStyle, LogoTextStyleMobile } from './style';
+import { HeaderContainer, LogoTextStyleMobile } from './style';
 import { HeaderActions } from './header-actions';
-import { Link } from '@lidofinance/lido-ui';
+import { NavStyledNav } from './nav/nav';
 
 export const Header = () => (
-  <HeaderContainer size="full" forwardedAs="header">
+  <HeaderContainer>
     <LogoLido />
-    <Link href="/" target="_self">
-      <LogoTextStyle>Governance</LogoTextStyle>
-    </Link>
+    <NavStyledNav />
     <LogoTextStyleMobile>DAO</LogoTextStyleMobile>
     <HeaderActions />
   </HeaderContainer>
