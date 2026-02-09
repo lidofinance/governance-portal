@@ -151,7 +151,11 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     -moz-osx-font-smoothing: grayscale;
   }
   body {
-    ${({ $layoutVariant }) => LayoutVariants[$layoutVariant]};
+    ${({ $layoutVariant }) =>
+      LayoutVariants[$layoutVariant] ||
+      css`
+        background-color: #eff2f6;
+      `};
     color: var(--lido-color-text);
     position: relative;
     box-sizing: border-box;

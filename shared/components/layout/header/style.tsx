@@ -136,6 +136,17 @@ export const HeaderControlButton = styled(Button).attrs({
     background-color: transparent !important;
   }
 
+  &:hover,
+  &:not(:disabled):hover {
+    background-color: #0085ff1a;
+    border-color: #0085ffb8;
+    svg {
+      path {
+        stroke: #0085ffb8;
+      }
+    }
+  }
+
   svg {
     margin-left: 4px;
     margin-top: 2px;

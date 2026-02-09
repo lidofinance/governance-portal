@@ -28,6 +28,7 @@ export const FooterStyle = styled(Container)`
 
 export const FooterBorderWrapper = styled.div`
   border-top: 1px solid var(--custom-border);
+  margin-top: 20px;
 `;
 
 type FooterLinkProps = {
