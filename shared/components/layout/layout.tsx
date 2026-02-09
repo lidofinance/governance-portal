@@ -20,7 +20,7 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
     title,
     subtitle,
     containerSize,
-    pageTitle = 'Dual Governance | Lido',
+    pageTitle = 'Governance Portal | Lido',
   } = props;
   const { children } = props;
 
