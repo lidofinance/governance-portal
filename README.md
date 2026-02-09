@@ -1,6 +1,6 @@
-# Dual Governance UI
+# Governance Portal UI
 
-Provides information on the current state of Dual Governance.
+Provides information on the current governance activities, including voting, Dual Governance state and proposals, Easy Track motions
 
 ### Prerequisites
 
