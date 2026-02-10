@@ -23,3 +23,12 @@ export const EASY_TRACK_PATH = '/easy-track';
 export const EASY_TRACK__MOTIONS_PATH = '/easy-track/active-motions';
 export const motionPage = (motionId: string) =>
   `/easy-track/motions/${motionId}`;
+
+// Stonks paths
+export const STONKS_PATH = '/stonks';
+export const STONKS_CREATE_ORDER_PATH = `${STONKS_PATH}/create-order`;
+export const STONKS_MANAGE_ORDER_PATH = `${STONKS_PATH}/manage-order`;
+export const stonksOrderPage = (orderAddress: string) =>
+  `${STONKS_PATH}/orders/${orderAddress}`;
+export const stonksInstancePage = (stonksAddress: string) =>
+  `${STONKS_PATH}/${stonksAddress}`;

@@ -83,7 +83,7 @@ export * from './ShapellaUpgradeTemplate';
 export * from './Snapshot';
 export * from './StakingRouter';
 export * from './Steth';
-export * from './Stonks';
+export * from './StonksV1';
 export * from './StonksOrder';
 export * from './SubmitExitRequestHashes';
 export * from './TRPVestingEscrowFactory';
