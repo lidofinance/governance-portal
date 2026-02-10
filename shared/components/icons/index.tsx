@@ -42,6 +42,7 @@ import { ReactComponent as CheckIcon } from 'assets/check-icon.svg';
 import { ReactComponent as TrashIcon } from 'assets/trash-icon.svg';
 import { ReactComponent as VoteDoneIcon } from 'assets/vote-done-icon.svg';
 import { ReactComponent as VoteFailIcon } from 'assets/vote-fail-icon.svg';
+import { ReactComponent as VoteSearchIcon } from 'assets/vote-search-icon.svg';
 
 export {
   RevokeIcon,
@@ -88,4 +89,5 @@ export {
   DualGovernancePlainIcon,
   VoteDoneIcon,
   VoteFailIcon,
+  VoteSearchIcon,
 };

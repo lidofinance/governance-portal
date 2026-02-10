@@ -95,7 +95,6 @@ export const fetchAragonVote = async ({
 
     const vote = parseVote(voteId, rawVote, canExecute);
 
-    // let startEvent: StartVoteEventArgs | null = null;
     let startEvent;
 
     if (client && vote.snapshotBlock) {

@@ -15,9 +15,11 @@ import { useWatchContractEvent } from 'wagmi';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { aragonVotingAbi } from 'abi/generated';
 import { AttentionBanner } from 'shared/components/attention-banner';
-import { GridWrap, PaginationWrap } from './style';
+import { GridWrap, PaginationWrap, DashboardGridHeading } from './style';
+import { Text } from 'shared/components/text';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 import { DashboardVote } from '../dashboard-vote';
+import { VoteSearch } from '../vote-search';
 
 const PAGE_SIZE = 12;
 
@@ -119,6 +121,12 @@ export const DashboardGrid = ({ currentPage }: Props) => {
 
   return (
     <>
+      <DashboardGridHeading>
+        <Text size={26} weight={700}>
+          All votes
+        </Text>
+        <VoteSearch />
+      </DashboardGridHeading>
       <GridWrap>
         {isLoading
           ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)

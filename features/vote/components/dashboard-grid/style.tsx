@@ -12,3 +12,10 @@ export const PaginationWrap = styled.div`
   margin: ${({ theme }) => theme.spaceMap.xxl}px auto;
   width: fit-content;
 `;
+
+export const DashboardGridHeading = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+`;
