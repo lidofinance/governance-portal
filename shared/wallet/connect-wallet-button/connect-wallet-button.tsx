@@ -26,7 +26,7 @@ export const ConnectWalletButton = (props: Props) => {
       disabled={!isWalletConnectionAllowed}
       data-testid="connectBtn"
     >
-      {rest.children ?? 'Connect wallet'}
+      {rest.children ?? 'Connect'}
     </Button>
   );
 };

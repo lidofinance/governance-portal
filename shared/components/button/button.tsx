@@ -19,12 +19,12 @@ export const ButtonStyled = styled(ButtonLib)<ButtonStyledProps>`
   color: var(--primary-color-white);
 
   &:hover {
-    background-color: var(--primary-color-black-72);
+    background-color: #0085ffb8;
   }
 
   &:not(:disabled):hover,
   &:focus-visible {
-    background-color: var(--primary-color-black-72);
+    background-color: #0085ffb8;
   }
 
   ${({ variant }) =>

@@ -1,15 +1,75 @@
 import { LogoLido } from 'shared/components/logos/logos';
-import { HeaderContainer, LogoTextStyle, LogoTextStyleMobile } from './style';
-import { HeaderActions } from './header-actions';
-import { Link } from '@lidofinance/lido-ui';
+import { HeaderActionsWrapper, HeaderContainer, WalletInfo } from './style';
+import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
+import { Nav, NavBurger, NavMobile } from './nav';
+import { useState } from 'react';
+import { HeaderVaultInfo } from './header-vault-info';
+import { DualGovernanceStatusButton } from '../../dual-governance-status-button';
+import { HeaderSettingsButton } from './header-settings-button';
+import { ConnectWalletButton, WalletButton } from 'shared/wallet';
+import { UnsupportedChainBanner } from './unsupported-chain-banner';
+import { useAccount } from 'wagmi';
+import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { Text } from 'shared/components/text';
+import { FlexWrapper } from 'shared/styled-components';
+import { Box } from 'shared/components/box';
+import { useScrollLock } from 'shared/hooks/use-scroll-lock';
 
-export const Header = () => (
-  <HeaderContainer size="full" forwardedAs="header">
-    <LogoLido />
-    <Link href="/" target="_self">
-      <LogoTextStyle>Governance</LogoTextStyle>
-    </Link>
-    <LogoTextStyleMobile>DAO</LogoTextStyleMobile>
-    <HeaderActions />
-  </HeaderContainer>
-);
+export const Header = () => {
+  const { isConnected } = useAccount();
+  const isSupportedChain = useIsSupportedChain();
+
+  const [isBurgerOpened, setBurgerOpened] = useState(false);
+
+  useScrollLock(isBurgerOpened);
+
+  return (
+    <HeaderContainer>
+      <LogoLido />
+      <NoSSRWrapper>
+        <Nav />
+        <HeaderActionsWrapper>
+          <>
+            <HeaderVaultInfo />
+            <DualGovernanceStatusButton />
+            <HeaderSettingsButton />
+            <WalletInfo>
+              {isConnected ? <WalletButton /> : <ConnectWalletButton />}
+              {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
+            </WalletInfo>
+          </>
+        </HeaderActionsWrapper>
+
+        <NavBurger
+          isOpened={isBurgerOpened}
+          onClick={() => setBurgerOpened(!isBurgerOpened)}
+        />
+        {isBurgerOpened && (
+          <NavMobile>
+            {
+              <FlexWrapper $flexDirection="column" $gap="12px">
+                <FlexWrapper $gap="12px">
+                  <DualGovernanceStatusButton />{' '}
+                  <Text>Dual Governance state</Text>
+                </FlexWrapper>
+                <FlexWrapper $gap="12px">
+                  <HeaderSettingsButton /> <Text>Settings</Text>
+                </FlexWrapper>
+                <Box width="100%" marginTop={32}>
+                  {isConnected ? (
+                    <WalletButton />
+                  ) : (
+                    <ConnectWalletButton style={{ width: '100%' }} />
+                  )}
+                  {isConnected && !isSupportedChain && (
+                    <UnsupportedChainBanner />
+                  )}
+                </Box>
+              </FlexWrapper>
+            }
+          </NavMobile>
+        )}
+      </NoSSRWrapper>
+    </HeaderContainer>
+  );
+};

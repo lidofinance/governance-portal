@@ -18,7 +18,7 @@ export const devicesHeaderMedia = {
 };
 
 type GlobalLayoutProps = {
-  $layoutVariant: VisibleGovernanceState;
+  $layoutVariant?: VisibleGovernanceState;
 };
 
 const LayoutVariants = {
@@ -151,7 +151,12 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     -moz-osx-font-smoothing: grayscale;
   }
   body {
-    ${({ $layoutVariant }) => LayoutVariants[$layoutVariant]};
+    ${({ $layoutVariant }) =>
+      $layoutVariant
+        ? LayoutVariants[$layoutVariant]
+        : css`
+            background-color: #eff2f6;
+          `};
     color: var(--lido-color-text);
     position: relative;
     box-sizing: border-box;
@@ -175,8 +180,16 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     &:hover {
       color: var(--lido-color-primaryHover);
     }
+  }
 
+  html.html-scroll-lock {
+    overflow-y: scroll;
+  }
 
+  body.body-scroll-lock {
+    overflow: hidden;
+    position: fixed;
+    height: auto;
   }
 `;
 

@@ -8,7 +8,7 @@ export const VoteMeta = () => {
 
   return (
     <Head>
-      <title>Lido DAO Voting UI</title>
+      <title>Governance Portal UI</title>
       <meta name="currentChain" content={String(chainId)} />
       {getAddressesList(chainId).map(({ contractName, address }) => (
         <meta key={contractName} name={contractName} content={address} />

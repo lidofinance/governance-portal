@@ -1,12 +1,12 @@
 import { aragonVotingAbi } from 'abi/generated';
-import { Vote, VoteStatus } from '../types';
+import { RawVote, Vote, VoteStatus } from '../types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { PublicClient } from 'viem';
+import { ContractFunctionParameters, PublicClient } from 'viem';
 import { parseVote } from './parse-vote';
-import {
-  EventStartVote,
-  getEventStartVote,
-} from 'shared/votes/utils/get-event-start-vote';
+import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
+import { EventExecuteVote } from './get-event-execute-vote';
+import { getEventsExecuteVote } from './get-events-execute-vote';
+import { getEventsStartVote } from './get-events-start-vote';
 
 type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
@@ -16,11 +16,14 @@ type FetchArgs = {
   votingContract: VotingContract;
   limit: number;
   offset?: number;
-  client: PublicClient | undefined;
+  client: PublicClient;
   onlyActive?: boolean;
 };
 
-type VoteResult = Vote & { startEvent: EventStartVote | null };
+type VoteResult = Vote & {
+  startEvent: EventStartVote | null;
+  executeEvent: EventExecuteVote | null;
+};
 
 const isVoteActive = (vote: Vote) => {
   if (
@@ -58,61 +61,69 @@ export const fetchAragonVotes = async ({
     (_, i) => startId - i,
   );
 
-  const votes = await Promise.all(
-    voteIds.map((voteId) =>
-      fetchAragonVote({
-        votingContract,
-        voteId,
-        client,
-      }),
-    ),
-  );
+  const contractConfig = {
+    address: votingContract.address,
+    abi: aragonVotingAbi,
+  } as const;
 
-  return votes.filter(
-    (vote): vote is VoteResult =>
-      !!vote && (onlyActive ? isVoteActive(vote) : true),
-  );
-};
+  const getVotesBatch = async (voteIds: number[]) => {
+    const voteCalls: ContractFunctionParameters[] = voteIds.map((id) => ({
+      ...contractConfig,
+      functionName: 'getVote',
+      args: [id],
+    }));
 
-type FetchVoteArgs = {
-  votingContract: VotingContract;
-  voteId: number;
-  client: PublicClient | undefined;
-};
+    const executeCalls: ContractFunctionParameters[] = voteIds.map((id) => ({
+      ...contractConfig,
+      functionName: 'canExecute',
+      args: [id],
+    }));
 
-export const fetchAragonVote = async ({
-  votingContract,
-  voteId,
-  client,
-}: FetchVoteArgs) => {
-  try {
-    const voteIdBigInt = BigInt(voteId);
+    const results = await client.multicall({
+      contracts: [...voteCalls, ...executeCalls],
+    });
 
-    const [rawVote, canExecute] = await Promise.all([
-      votingContract.readContract('getVote', [voteIdBigInt]),
-      votingContract.readContract('canExecute', [voteIdBigInt]),
-    ]);
+    const voteResults = results.slice(0, voteIds.length);
+    const executeResults = results.slice(voteIds.length);
 
-    const vote = parseVote(voteId, rawVote, canExecute);
+    return voteIds.map((id, index) => {
+      return parseVote(
+        id,
+        voteResults[index].result as RawVote,
+        executeResults[index].result as boolean,
+      );
+    });
+  };
 
-    // let startEvent: StartVoteEventArgs | null = null;
-    let startEvent;
+  const allVotes = await getVotesBatch(voteIds);
 
-    if (client && vote.snapshotBlock) {
-      startEvent = await getEventStartVote({
-        address: votingContract.address,
-        client,
-        voteId: voteIdBigInt,
-        block: vote.snapshotBlock,
-      });
-    }
+  const votesToProcess = onlyActive ? allVotes.filter(isVoteActive) : allVotes;
 
-    return {
-      ...vote,
-      startEvent,
-    };
-  } catch (e) {
-    console.error(`Error fetching vote ${voteId}:`, e);
-    return null;
+  if (votesToProcess.length === 0) {
+    return [];
   }
+
+  const voteArgs = {
+    votes: votesToProcess.map((v) => ({
+      id: v.id,
+      snapshotBlock: v.snapshotBlock,
+    })),
+    address: votingContract.address,
+    client,
+  };
+
+  const [executeEvents, startEvents] = await Promise.all([
+    !onlyActive
+      ? getEventsExecuteVote(voteArgs)
+      : Promise.resolve({} as Record<string, EventExecuteVote | null>),
+    getEventsStartVote(voteArgs),
+  ]);
+
+  return votesToProcess
+    .map((v) => ({
+      ...v,
+      executeEvent: executeEvents[v.id.toString()] || null,
+      startEvent: startEvents[v.id.toString()],
+    }))
+    .filter((vote): vote is VoteResult => !!vote);
 };
