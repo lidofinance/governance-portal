@@ -73,37 +73,20 @@ export const NavMobileActions = styled.section`
 type BurgerProps = { $isOpened: boolean };
 
 export const NavBurgerStyled = styled.div<BurgerProps>`
+  display: none;
   margin-left: 8px;
   border-radius: 50%;
   border: 1px solid #000a3d1f;
   width: 40px;
   height: 40px;
-  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 
   @media ${devicesHeaderMedia.tablet} {
     margin-left: auto;
+    display: flex;
   }
-`;
-
-export const NavBurgerWrap = styled.div<BurgerProps>`
-  ${({ $isOpened }) =>
-    $isOpened &&
-    css`
-      ${BurgerLine}:nth-child(1) {
-        transform-origin: center;
-        transform: translateY(8px) rotate(45deg);
-      }
-      ${BurgerLine}:nth-child(2) {
-        opacity: 0;
-      }
-      ${BurgerLine}:nth-child(3) {
-        transform-origin: center;
-        transform: translateY(-8px) rotate(-45deg);
-      }
-    `}
 `;
 
 export const BurgerLine = styled.div`
@@ -125,4 +108,22 @@ export const BurgerLine = styled.div`
   &:nth-child(3) {
     transform-origin: right 3px;
   }
+`;
+
+export const NavBurgerWrap = styled.div<BurgerProps>`
+  ${({ $isOpened }) =>
+    $isOpened &&
+    css`
+      ${BurgerLine}:nth-child(1) {
+        transform-origin: center;
+        transform: translateY(8px) rotate(45deg);
+      }
+      ${BurgerLine}:nth-child(2) {
+        opacity: 0;
+      }
+      ${BurgerLine}:nth-child(3) {
+        transform-origin: center;
+        transform: translateY(-8px) rotate(-45deg);
+      }
+    `}
 `;

@@ -21,7 +21,7 @@ type FetchArgs = {
 };
 
 type VoteResult = Vote & {
-  startEvent: EventStartVote;
+  startEvent: EventStartVote | null;
   executeEvent: EventExecuteVote | null;
 };
 

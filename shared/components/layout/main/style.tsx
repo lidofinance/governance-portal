@@ -4,5 +4,4 @@ import styled from 'styled-components';
 export const MainStyle = styled(Container)<ContainerProps>`
   padding-top: 24px;
   position: relative;
-  //max-width: 1400px;
 `;

@@ -18,7 +18,7 @@ export const devicesHeaderMedia = {
 };
 
 type GlobalLayoutProps = {
-  $layoutVariant: VisibleGovernanceState;
+  $layoutVariant?: VisibleGovernanceState;
 };
 
 const LayoutVariants = {
@@ -152,10 +152,11 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   }
   body {
     ${({ $layoutVariant }) =>
-      LayoutVariants[$layoutVariant] ||
-      css`
-        background-color: #eff2f6;
-      `};
+      $layoutVariant
+        ? LayoutVariants[$layoutVariant]
+        : css`
+            background-color: #eff2f6;
+          `};
     color: var(--lido-color-text);
     position: relative;
     box-sizing: border-box;

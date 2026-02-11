@@ -3,7 +3,7 @@ import { VoteSearchIcon } from 'shared/components/icons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { votePage } from 'constants/urls';
 import { useRouter } from 'next/router';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 export const VoteSearch = () => {
   const router = useRouter();

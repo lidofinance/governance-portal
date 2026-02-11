@@ -51,7 +51,18 @@ export const NavBurger = ({
   onClick: () => void;
 }) => {
   return (
-    <NavBurgerStyled onClick={onClick} $isOpened={isOpened}>
+    <NavBurgerStyled
+      onClick={onClick}
+      $isOpened={isOpened}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+    >
       <NavBurgerWrap $isOpened={isOpened}>
         <BurgerLine />
         <BurgerLine />
