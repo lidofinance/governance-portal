@@ -6,7 +6,7 @@ import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract
 
 const MIN_BALANCE_WEI = 10n;
 
-export const useStonksDataMap = () => {
+export const useStonksBalanceMap = () => {
   const { chainId } = useLidoSDK();
 
   const getStonksContract = useReadContractGetter(stonksV1Abi);
@@ -34,36 +34,27 @@ export const useStonksDataMap = () => {
 
           const tokenFromContractReader = getErc20Contract(tokenFromAddress);
 
-          const currentBalance = await tokenFromContractReader('balanceOf', [
+          let currentBalance = await tokenFromContractReader('balanceOf', [
             stonks.address,
           ]);
 
-          let expectedOutput = 0n;
-
-          if (currentBalance >= MIN_BALANCE_WEI) {
-            expectedOutput = await stonksContractReader(
-              'estimateTradeOutputFromCurrentBalance',
-            );
+          if (currentBalance < MIN_BALANCE_WEI) {
+            currentBalance = 0n;
           }
 
           return {
             address: stonks.address,
             currentBalance,
-            expectedOutput,
           };
         }),
       );
 
       return data.reduce(
         (acc, item) => {
-          acc[item.address] = item;
+          acc[item.address] = item.currentBalance;
           return acc;
         },
-        {} as Record<
-          string,
-          | { address: string; currentBalance: bigint; expectedOutput: bigint }
-          | undefined
-        >,
+        {} as Record<string, bigint | undefined>,
       );
     },
   });

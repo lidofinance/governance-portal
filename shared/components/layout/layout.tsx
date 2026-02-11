@@ -8,6 +8,8 @@ import { Footer } from './footer/footer';
 import { Main } from './main/main';
 import { LayoutTitleStyle, LayoutSubTitleStyle } from './style';
 
+const DEFAULT_PAGE_TITLE = 'Lido Governance';
+
 type Props = {
   title?: ReactNode;
   subtitle?: ReactNode;
@@ -16,18 +18,17 @@ type Props = {
 };
 
 export const Layout: FC<PropsWithChildren<Props>> = (props) => {
-  const {
-    title,
-    subtitle,
-    containerSize,
-    pageTitle = 'Dual Governance | Lido',
-  } = props;
+  const { title, subtitle, containerSize = 'full', pageTitle } = props;
   const { children } = props;
 
   return (
     <>
       <Head>
-        <title>{pageTitle}</title>
+        <title>
+          {pageTitle
+            ? `${pageTitle} | ${DEFAULT_PAGE_TITLE}`
+            : DEFAULT_PAGE_TITLE}
+        </title>
       </Head>
       <Header />
       <Main size={containerSize}>

@@ -1,22 +1,32 @@
-import { StonksGridWrapper } from '@stonks/grid-wrapper';
+import { StonksList } from '@stonks/list';
 import { StonksOrderResolverForm } from '@stonks/order-resolver-form';
 import { Layout } from 'shared/components';
-import { Text } from 'shared/components/text';
+import { Tab, Tabs } from 'shared/components/tabs';
+import { useState } from 'react';
+import { StonksTabContent, StonksTabText } from '@stonks/styles';
 
 export default function StonksIndexPage() {
+  const [mode, setMode] = useState<'create' | 'manage'>('create');
+
   return (
-    <Layout containerSize="full">
-      <Text size={24} strong>
-        Stonks
-      </Text>
-      <Text size={20} strong>
-        Manage existing order
-      </Text>
-      <StonksOrderResolverForm />
-      <Text size={20} strong>
-        Create on-chain order
-      </Text>
-      <StonksGridWrapper />
+    <Layout
+      pageTitle="Stonks"
+      title="Stonks"
+      subtitle="Treasury swaps"
+      containerSize="tight"
+    >
+      <Tabs>
+        <Tab isActive={mode === 'create'} onClick={() => setMode('create')}>
+          <StonksTabText>Create order</StonksTabText>
+        </Tab>
+        <Tab isActive={mode === 'manage'} onClick={() => setMode('manage')}>
+          <StonksTabText>Manage order</StonksTabText>
+        </Tab>
+      </Tabs>
+      <StonksTabContent>
+        {mode === 'create' && <StonksList />}
+        {mode === 'manage' && <StonksOrderResolverForm />}
+      </StonksTabContent>
     </Layout>
   );
 }

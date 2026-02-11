@@ -18,7 +18,7 @@ export const KnownToken: Record<
     },
   },
   StETH: {
-    symbol: 'StETH',
+    symbol: 'stETH',
     decimals: 18,
     addresses: {
       [CHAINS.Mainnet]: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
