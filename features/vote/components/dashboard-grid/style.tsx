@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const GridWrap = styled.div`
   margin: 0 auto;
@@ -18,4 +19,10 @@ export const DashboardGridHeading = styled.section`
   align-items: center;
   justify-content: space-between;
   padding: 24px 0;
+
+  @media ${devicesHeaderMedia.tablet} {
+    p {
+      font-size: 20px;
+    }
+  }
 `;

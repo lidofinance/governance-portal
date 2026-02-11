@@ -179,8 +179,16 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     &:hover {
       color: var(--lido-color-primaryHover);
     }
+  }
 
+  html.html-scroll-lock {
+    overflow-y: scroll;
+  }
 
+  body.body-scroll-lock {
+    overflow: hidden;
+    position: fixed;
+    height: auto;
   }
 `;
 

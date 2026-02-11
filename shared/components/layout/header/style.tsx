@@ -14,6 +14,12 @@ export const HeaderContainer = styled.section`
   z-index: 5;
   padding: 0 60px;
   display: flex;
+  align-items: center;
+  height: 90px;
+
+  @media ${devicesHeaderMedia.tablet} {
+    padding: 32px;
+  }
 `;
 
 export const HeaderActionsWrapper = styled.div`
@@ -23,59 +29,15 @@ export const HeaderActionsWrapper = styled.div`
   align-items: center;
   flex-shrink: 1;
   gap: 12px;
+
+  @media ${devicesHeaderMedia.tablet} {
+    display: none;
+  }
+
   @media ${devicesHeaderMedia.mobile} {
     gap: 10px;
   }
 `;
-
-export const LogoTextStyle = styled(Text).attrs({
-  size: 19,
-})`
-  font-weight: 500;
-  position: relative;
-  color: var(--custom-inverse-color-black);
-  text-transform: uppercase;
-  margin-left: ${({ theme }) => theme.spaceMap.xl}px;
-  padding-left: ${({ theme }) => theme.spaceMap.xl}px;
-  user-select: none;
-
-  &:before {
-    position: absolute;
-    content: '';
-    width: 1px;
-    height: 40px;
-    background-color: var(--primary-color-black-72);
-    left: 0;
-    top: -25%;
-  }
-  @media ${devicesHeaderMedia.tablet} {
-    display: none;
-  }
-`;
-
-export const LogoTextStyleMobile = styled(Text).attrs({
-  strong: true,
-  size: 19,
-})`
-  display: none;
-  position: relative;
-  margin-left: 20px;
-  padding-left: 20px;
-  margin-right: 10px;
-    
-  &:before {
-      position: absolute;
-      content: '';
-      width: 1px;
-      height: 40px;
-      background-color: var(--primary-color-black-72);
-      left: 0;
-      top: -25%;
-  }
-  @media ${devicesHeaderMedia.tablet} {
-      display: block;
-  }
-}`;
 
 export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
   position: absolute;

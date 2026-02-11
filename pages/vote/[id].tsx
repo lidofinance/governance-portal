@@ -1,6 +1,5 @@
 import { Layout } from 'shared/components';
 import { VoteCard } from 'features/vote/components/vote-card';
-import React from 'react';
 import { GetServerSideProps } from 'next';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
 import { VoteActionsProvider } from '../../features/vote/providers/vote-actions-context';
@@ -22,7 +21,7 @@ export default function VotePage({ voteId }: Props) {
         <VoteProvider voteId={voteId}>
           <VoteActionsProvider voteId={voteId}>
             <Box marginBottom={8}>
-              <Link href="/">
+              <Link href={VOTE_DASHBOARD_INDEX_PATH}>
                 {
                   <Text size={14} color="secondary">
                     {'< Back to all votes'}

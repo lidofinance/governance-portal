@@ -13,7 +13,6 @@ export const DualGovernanceStatusButtonStyled = styled(Button).attrs({
   height: 48px;
   border-radius: 50%;
   border: 1px solid #000a3d1f;
-  margin-right: 12px;
   padding: 14px;
 
   &:hover {
