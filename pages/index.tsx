@@ -1,7 +1,7 @@
-import { MainPage } from 'features/main';
-
 import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 
 export const getStaticProps = getDefaultStaticProps();
 
-export default MainPage;
+export default function Index() {
+  return null;
+}
