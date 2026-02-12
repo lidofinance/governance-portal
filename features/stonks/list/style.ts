@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styled from 'styled-components';
 
 export const ListStyled = styled.div`
@@ -7,17 +8,20 @@ export const ListStyled = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Card = styled.div`
+export const Card = styled(Link)`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
+  padding: ${({ theme }) => theme.spaceMap.lg}px;
+  background-color: var(--lido-color-foreground);
+  border-radius: ${({ theme }) => theme.borderRadiusesMap.xl}px;
+  box-shadow: 0px 4px 32px var(--lido-color-shadowLight);
+  color: inherit;
+  text-decoration: none;
 `;
 
 export const CardTitle = styled.div`
   display: flex;
   gap: 8px;
+  align-items: center;
   justify-content: space-between;
 `;

@@ -16,7 +16,7 @@ type FormData = {
   txHashOrAddress: Address;
 };
 
-export const StonksOrderResolverForm = () => {
+export const StonksFindOrderForm = () => {
   const client = usePublicClient();
   const router = useRouter();
 

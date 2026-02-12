@@ -5,7 +5,7 @@ import { StonksMetadata } from './types';
 export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
   [CHAINS.Mainnet]: [
     {
-      address: '0x3e2D251275A92a8169A3B17A2C49016e2de492a7',
+      address: '0x3e2d251275a92a8169a3b17a2c49016e2de492a7',
       tokenFrom: KnownToken.StETH,
       tokenTo: KnownToken.DAI,
       version: 1,
@@ -14,7 +14,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 550,
     },
     {
-      address: '0xf4F6A03E3dbf0aA22083be80fDD340943d275Ea5',
+      address: '0xf4f6a03e3dbf0aa22083be80fdd340943d275ea5',
       tokenFrom: KnownToken.StETH,
       tokenTo: KnownToken.USDC,
       version: 1,
@@ -23,7 +23,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 550,
     },
     {
-      address: '0x7C2a1E25cA6D778eCaEBC8549371062487846aAF',
+      address: '0x7c2a1e25ca6d778ecaebc8549371062487846aaf',
       tokenFrom: KnownToken.StETH,
       tokenTo: KnownToken.USDT,
       version: 1,
@@ -32,7 +32,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 550,
     },
     {
-      address: '0x79f5E20996abE9f6a48AF6f9b13f1E55AED6f06D',
+      address: '0x79f5e20996abe9f6a48af6f9b13f1e55aed6f06d',
       tokenFrom: KnownToken.DAI,
       tokenTo: KnownToken.USDC,
       version: 1,
@@ -41,7 +41,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 150,
     },
     {
-      address: '0x8Ba6D367D15Ebc52f3eBBdb4a8710948C0918d42',
+      address: '0x8ba6d367d15ebc52f3ebbdb4a8710948c0918d42',
       tokenFrom: KnownToken.DAI,
       tokenTo: KnownToken.USDT,
       version: 1,
@@ -50,7 +50,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 150,
     },
     {
-      address: '0x281e6BB6F26A94250aCEb24396a8E4190726C97e',
+      address: '0x281e6bb6f26a94250aceb24396a8e4190726c97e',
       tokenFrom: KnownToken.USDT,
       tokenTo: KnownToken.USDC,
       version: 1,
@@ -59,7 +59,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 150,
     },
     {
-      address: '0x64B6aF9A108dCdF470E48e4c0147127F26221A7C',
+      address: '0x64b6af9a108dcdf470e48e4c0147127f26221a7c',
       tokenFrom: KnownToken.USDT,
       tokenTo: KnownToken.DAI,
       version: 1,
@@ -68,7 +68,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 150,
     },
     {
-      address: '0x278f7B6CBB3Cc37374e6a40bDFEBfff08f65A5C7',
+      address: '0x278f7b6cbb3cc37374e6a40bdfebfff08f65a5c7',
       tokenFrom: KnownToken.USDC,
       tokenTo: KnownToken.USDT,
       version: 1,
@@ -77,7 +77,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 150,
     },
     {
-      address: '0x2B5a3944A654439379B206DE999639508bA2e850',
+      address: '0x2b5a3944a654439379b206de999639508ba2e850',
       tokenFrom: KnownToken.USDC,
       tokenTo: KnownToken.DAI,
       version: 1,

@@ -178,6 +178,10 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
 
 
   }
+
+    button {
+    cursor: pointer;
+    }
 `;
 
 export default GlobalStyle;
