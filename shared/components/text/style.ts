@@ -25,6 +25,7 @@ const getTextColor = ({
     error: colors.error,
     success: colors.success,
     white: colors.primaryContrast,
+    accent: `var(--lido-color-primary)`,
   };
 
   return colorsMap[color];
