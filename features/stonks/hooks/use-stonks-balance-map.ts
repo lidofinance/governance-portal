@@ -1,23 +1,29 @@
 import { STONKS_MAP } from '@stonks/addresses';
+import { MIN_STONKS_BALANCE_WEI } from '@stonks/constants';
 import { useQuery } from '@tanstack/react-query';
-import { erc20Abi, stonksV1Abi } from 'abi/generated';
+import { erc20Abi, stonksV2Abi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 
-const MIN_BALANCE_WEI = 10n;
-
-export const useStonksBalanceMap = () => {
+export const useStonksBalanceMap = (stonksAddress?: string) => {
   const { chainId } = useLidoSDK();
 
-  const getStonksContract = useReadContractGetter(stonksV1Abi);
+  const getStonksContract = useReadContractGetter(stonksV2Abi);
   const getErc20Contract = useReadContractGetter(erc20Abi);
 
   return useQuery({
-    queryKey: ['stonks-data', chainId],
+    queryKey: ['stonks-balance-map', chainId, stonksAddress ?? 'all'],
     queryFn: async () => {
-      const stonksMetadata = STONKS_MAP[chainId];
+      let stonksMetadata = STONKS_MAP[chainId];
       if (!stonksMetadata) {
-        return null;
+        return;
+      }
+
+      if (stonksAddress) {
+        stonksMetadata = stonksMetadata.filter(
+          (stonks) =>
+            stonks.address.toLowerCase() === stonksAddress.toLowerCase(),
+        );
       }
 
       const data = await Promise.all(
@@ -38,7 +44,7 @@ export const useStonksBalanceMap = () => {
             stonks.address,
           ]);
 
-          if (currentBalance < MIN_BALANCE_WEI) {
+          if (currentBalance < MIN_STONKS_BALANCE_WEI) {
             currentBalance = 0n;
           }
 
