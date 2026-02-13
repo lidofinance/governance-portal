@@ -60,7 +60,7 @@ export const PlaceOrderFormAmountInput = () => {
       maxValue={balance}
       dgStyle={false}
       decimals={stonksMetadata.tokenFrom.decimals}
-      label="Amount to sell"
+      label={`Amount to sell in ${stonksMetadata.tokenFrom.symbol}`}
       rules={{
         validate: (value: bigint) => {
           if (!value) {

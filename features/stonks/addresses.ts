@@ -86,4 +86,15 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
       priceToleranceBp: 150,
     },
   ],
+  [CHAINS.Hoodi]: [
+    {
+      address: '0x166aefe34e00a200b20f704db24ddb731e7b4699',
+      tokenFrom: KnownToken.StETH,
+      tokenTo: KnownToken.LDO,
+      version: 2,
+      orderDuration: 1800,
+      marginBp: 110,
+      priceToleranceBp: 550,
+    },
+  ],
 };

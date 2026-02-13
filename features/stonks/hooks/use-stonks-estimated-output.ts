@@ -9,7 +9,7 @@ export const useStonksEstimatedOutput = (
   stonksAddress: Address,
   amount: bigint | null | undefined,
 ) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { chainId } = useLidoSDK();
   const getStonksContract = useReadContractGetter(stonksV2Abi);
   const stonksContractReader = getStonksContract(stonksAddress);
@@ -38,7 +38,6 @@ export const useStonksEstimatedOutput = (
       stonksAddress,
       amount?.toString(),
     ],
-    enabled: !!amount && amount > 0n,
     queryFn: async () => fetchEstimatedOutput(amount),
   });
 
