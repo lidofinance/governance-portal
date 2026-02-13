@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { ContainerProps } from '@lidofinance/lido-ui';
 
-import { MainStyle } from './styles';
+import { MainStyle } from './style';
 
 export const Main: FC<ContainerProps> = (props) => {
   const { size = 'tight', ...rest } = props;

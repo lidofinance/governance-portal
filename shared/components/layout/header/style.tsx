@@ -1,17 +1,24 @@
-import { Container, InlineLoader } from '@lidofinance/lido-ui';
+import { InlineLoader } from '@lidofinance/lido-ui';
 import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
-export const HeaderContainer = styled((props) => <Container {...props} />)`
-  position: relative;
-  padding: 25px 60px;
+export const HeaderContainer = styled.section`
+  background: white;
+  border-bottom: 1px solid #000a3d1f;
+  position: sticky;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 5;
+  padding: 0 60px;
   display: flex;
   align-items: center;
+  height: 90px;
 
-  @media ${devicesHeaderMedia.mobile} {
-    padding: 20px;
+  @media ${devicesHeaderMedia.tablet} {
+    padding: 32px;
   }
 `;
 
@@ -21,60 +28,16 @@ export const HeaderActionsWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 1;
-  gap: 20px;
+  gap: 12px;
+
+  @media ${devicesHeaderMedia.tablet} {
+    display: none;
+  }
+
   @media ${devicesHeaderMedia.mobile} {
     gap: 10px;
   }
 `;
-
-export const LogoTextStyle = styled(Text).attrs({
-  size: 19,
-})`
-  font-weight: 500;
-  position: relative;
-  color: var(--custom-inverse-color-black);
-  text-transform: uppercase;
-  margin-left: ${({ theme }) => theme.spaceMap.xl}px;
-  padding-left: ${({ theme }) => theme.spaceMap.xl}px;
-  user-select: none;
-
-  &:before {
-    position: absolute;
-    content: '';
-    width: 1px;
-    height: 40px;
-    background-color: var(--primary-color-black-72);
-    left: 0;
-    top: -25%;
-  }
-  @media ${devicesHeaderMedia.tablet} {
-    display: none;
-  }
-`;
-
-export const LogoTextStyleMobile = styled(Text).attrs({
-  strong: true,
-  size: 19,
-})`
-  display: none;
-  position: relative;
-  margin-left: 20px;
-  padding-left: 20px;
-  margin-right: 10px;
-    
-  &:before {
-      position: absolute;
-      content: '';
-      width: 1px;
-      height: 40px;
-      background-color: var(--primary-color-black-72);
-      left: 0;
-      top: -25%;
-  }
-  @media ${devicesHeaderMedia.tablet} {
-      display: block;
-  }
-}`;
 
 export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
   position: absolute;
@@ -120,13 +83,13 @@ export const HeaderControlButton = styled(Button).attrs({
   border-radius: 50%;
   flex-shrink: 0;
   min-width: 0;
-  margin-left: ${({ theme }) => theme.spaceMap.sm}px;
-  padding-left: 10px;
-  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   line-height: 0;
   font-size: 0;
-  border: 1px solid var(--custom-border);
+  border: 1px solid #000a3d1f;
   fill: var(--lido-color-secondary);
   width: 48px;
   height: 48px;
@@ -135,10 +98,20 @@ export const HeaderControlButton = styled(Button).attrs({
     background-color: transparent !important;
   }
 
+  &:hover,
+  &:not(:disabled):hover {
+    background-color: #0085ff1a;
+    border-color: #0085ffb8;
+    svg {
+      path {
+        stroke: #0085ffb8;
+      }
+    }
+  }
+
   svg {
-    width: 24px;
-    height: 24px;
-    fill: var(--lido-color-secondary);
+    margin-left: 4px;
+    margin-top: 2px;
   }
 `;
 

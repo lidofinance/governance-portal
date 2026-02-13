@@ -22,13 +22,7 @@ import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { formatEther } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
-import { useQuery } from '@tanstack/react-query';
-import { getEventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
-import { usePublicClient } from 'wagmi';
-import { useLidoSDK } from 'providers/lido-sdk';
-import invariant from 'tiny-invariant';
-import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
-import { Voting } from 'shared/blockchain/contracts';
+import { EventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 
 type Props = {
@@ -38,6 +32,7 @@ type Props = {
   objectionPhaseTime: number;
   executedAt?: number;
   onPass: () => void;
+  executeEvent: EventExecuteVote | null;
 };
 
 export const DashboardVote = ({
@@ -47,6 +42,7 @@ export const DashboardVote = ({
   objectionPhaseTime,
   executedAt,
   onPass,
+  executeEvent,
 }: Props) => {
   const {
     nayPct,
@@ -59,35 +55,16 @@ export const DashboardVote = ({
     startDate,
     totalSupply,
   } = getVoteDetailsFormatted(vote);
-  const { chainId } = useLidoSDK();
-  const client = usePublicClient({ chainId });
 
-  const votingContractAddress = useContractAddress(Voting);
-
-  const { data: voteExecuteEvent, isLoading: voteExecuteEventLoading } =
-    useQuery({
-      queryKey: ['voteExecuteEvent', vote.id],
-      queryFn: async () => {
-        invariant(client, 'Client must be defined');
-
-        return await getEventExecuteVote({
-          address: votingContractAddress,
-          client,
-          voteId: BigInt(vote.id),
-          block: vote.snapshotBlock,
-          chainId,
-        });
-      },
-    });
   const {
     data: voteDualGovernanceStatus,
     isLoading: voteDualGovernanceStatusLoading,
   } = useVoteDualGovernanceStatus({
     voteId: vote.id,
-    eventExecuteVote: voteExecuteEvent,
+    eventExecuteVote: executeEvent,
   });
 
-  const isLoading = voteExecuteEventLoading || voteDualGovernanceStatusLoading;
+  const isLoading = voteDualGovernanceStatusLoading;
 
   const handlePass = useCallback(() => {
     // TODO:

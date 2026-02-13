@@ -137,7 +137,13 @@ export default withBundleAnalyzer({
       })),
     ];
   },
-  redirects: () => [],
+  redirects: () => [
+    {
+      source: '/',
+      destination: '/vote/dashboard',
+      permanent: false,
+    },
+  ],
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`
   serverRuntimeConfig: {

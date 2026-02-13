@@ -5,7 +5,7 @@ import { ServicePage } from '@lidofinance/lido-ui';
 const Page404: FC = () => (
   <ServicePage title="500">
     <Head>
-      <title>Dual Governance | Lido | Internal Server Error</title>
+      <title>Governance Portal | Lido | Internal Server Error</title>
     </Head>
     Internal Server Error
   </ServicePage>

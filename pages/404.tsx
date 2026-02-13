@@ -5,7 +5,7 @@ import { ServicePage } from '@lidofinance/lido-ui';
 const Page404: FC = () => (
   <ServicePage title="404">
     <Head>
-      <title>Dual Governance | Lido | Page Not Found</title>
+      <title>Governance Portal | Lido | Page Not Found</title>
     </Head>
     Page Not Found
   </ServicePage>
