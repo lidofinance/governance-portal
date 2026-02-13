@@ -20,6 +20,7 @@ import { Fieldset, MessageBox } from './style';
 import { KeysInfoBlock } from '../../motions/ui/keys-info-block';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from '../../utils/validate-uint-value';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 export const formParts = ({
   motionType,
@@ -134,8 +135,7 @@ export const formParts = ({
           </Fieldset>
 
           <Fieldset>
-            <InputHookForm
-              type="number"
+            <InputNumberHookForm
               fieldName={fieldNames.newLimit}
               label={<>New limit (current limit is {usedSigningKeys})</>}
               rules={{

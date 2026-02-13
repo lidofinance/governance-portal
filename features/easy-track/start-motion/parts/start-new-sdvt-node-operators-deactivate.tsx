@@ -154,6 +154,7 @@ export const formParts = createMotionFormPart({
                         });
                       } else {
                         setError(key, {
+                          type: 'validate',
                           message:
                             'Manager address not found. You need to input it manually',
                         });

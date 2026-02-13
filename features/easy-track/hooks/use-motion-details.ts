@@ -40,6 +40,23 @@ export const useMotionDetails = ({ motionId }: Args) => {
 
           return formatMotionDataOnchain(event as any, onChainMotionData);
         } else {
+          const subgraphMotion = await fetchMotionsSubgraphItem(
+            chainId,
+            motionId,
+          );
+
+          if (subgraphMotion) {
+            const event = (await getMotionCreatedEvent({
+              easyTrackContract,
+              motionId: BigInt(subgraphMotion.id),
+              motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
+              client,
+            })) as any;
+            return {
+              evmScript: event.args._evmScript,
+              ...subgraphMotion,
+            };
+          }
           return await fetchMotionsSubgraphItem(chainId, motionId);
         }
       } catch (error) {

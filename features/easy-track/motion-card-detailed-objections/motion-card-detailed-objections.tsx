@@ -38,7 +38,9 @@ export const MotionDetailedObjections = ({ motion }: Props) => {
           </>
         )}
       </ObjectionsValue>
-      <ObjectionsPercents>
+      <ObjectionsPercents
+        title={!progress ? undefined : `${progress.objectionsPctFormatted}%`}
+      >
         {!progress ? '...' : `${progress.objectionsPctFormatted}%`}
       </ObjectionsPercents>
     </ObjectionsInfo>

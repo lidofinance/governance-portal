@@ -22,8 +22,8 @@ import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { SDVTVettedValidatorsLimitsSet } from 'shared/blockchain/contracts';
 import { NodeOperatorSelectControl } from '../../motions/ui/node-operator-select-control/node-operator-select-control';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from 'utils/validate-uint-value';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 type NodeOperator = {
   id: string;
@@ -142,8 +142,7 @@ export const formParts = createMotionFormPart({
                 </Fieldset>
 
                 <Fieldset>
-                  <InputHookForm
-                    type="number"
+                  <InputNumberHookForm
                     label="Vetted validators limit"
                     fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.vettedValidatorsLimit`}
                     rules={{

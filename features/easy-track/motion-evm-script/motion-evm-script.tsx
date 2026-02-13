@@ -9,7 +9,7 @@ type Props = {
 };
 export const MotionEvmScript = ({ motion }: Props) => {
   const { chainId } = useLidoSDK();
-  const decoded = decodeEvmScript(motion.evmScriptHash as Hex);
+  const decoded = decodeEvmScript(motion.evmScript as Hex);
   const decodedEvmScriptCalls = decodeCalls({
     calls: decoded,
     chainId,
@@ -17,7 +17,7 @@ export const MotionEvmScript = ({ motion }: Props) => {
 
   return (
     <Script
-      rawScript={motion.evmScriptHash as Hex}
+      rawScript={motion.evmScript}
       decodedCalls={decodedEvmScriptCalls || []}
       tabVariant="voting"
     />

@@ -1,5 +1,6 @@
 import { Motion } from '../types';
 import { getMotionStatus } from './get-motion-status';
+import { Address, Hex } from 'viem';
 
 type MotionCreatedEventLog = {
   args: {
@@ -29,9 +30,9 @@ export const formatMotionDataOnchain = (
 ): Motion => {
   const motion: Motion = {
     ...contractMotion,
-    evmScriptFactory:
-      contractMotion.evmScriptFactory.toLowerCase() as `0x${string}`,
-    creator: contractMotion.creator.toLowerCase() as `0x${string}`,
+    evmScriptFactory: contractMotion.evmScriptFactory.toLowerCase() as Address,
+    creator: contractMotion.creator.toLowerCase() as Hex,
+    evmScript: event.args._evmScript,
     evmScriptCalldata: event.args._evmScriptCallData,
     isOnChain: true,
   };

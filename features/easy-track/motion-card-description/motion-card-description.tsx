@@ -45,7 +45,6 @@ import { MevBoostRelaysRemove } from './motion-descriptions/mev-boost-relays-rem
 import { CsmSetVettedGateTree } from './motion-descriptions/csm-set-vetted-gate-tree';
 import { CuratedExitRequestHashesSubmit } from './motion-descriptions/curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './motion-descriptions/sdvt-exit-request-hashes-submit';
-import { Address } from 'viem';
 import { VaultsForceValidatorExitsInVaultHub } from './motion-descriptions/vaults-force-validator-exits-in-vault-hub';
 import { VaultsRegisterGroupsInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-register-groups-in-operator-grid';
 import { VaultsUpdateGroupsShareLimit } from '@easy-track/motion-card-description/motion-descriptions/vaults-update-groups-share-limit';
@@ -425,7 +424,7 @@ export const MotionDescription = ({ motion }: Props) => {
       if (motionType === EvmUnrecognized || !callDataRaw) {
         return null;
       }
-      return decodeEvmScriptCallData(motionType, callDataRaw as Address);
+      return decodeEvmScriptCallData(motionType, callDataRaw);
     },
     enabled: motionType !== EvmUnrecognized && !!callDataRaw,
   });
@@ -442,7 +441,7 @@ export const MotionDescription = ({ motion }: Props) => {
     MOTION_DESCRIPTIONS[motionType as MotionType];
 
   return (
-    <Text size={12} weight={400} color="secondary">
+    <Text size={14} weight={400} color="secondary" as="div">
       <Desc callData={callData} isOnChain={motion.isOnChain} />
     </Text>
   );

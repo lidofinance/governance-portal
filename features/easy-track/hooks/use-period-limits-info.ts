@@ -118,15 +118,14 @@ export const usePeriodLimitsInfoByMotionType = (props: {
   const { chainId } = useLidoSDK();
   const easyTrack = useReadContract(EasyTrack);
   const registryContract = registryByMotionType[motionType];
-  const registry = useReadContract(registryContract as ContractObject);
+  const registry = useReadContract(
+    (registryContract ?? EasyTrack) as ContractObject,
+  );
 
   return useQuery({
     queryKey: [`period-limits-data`, chainId, motionType],
+    enabled: !!registryContract && motionType !== EvmUnrecognized,
     queryFn: async () => {
-      if (motionType === EvmUnrecognized) {
-        return null;
-      }
-
       if (!isContractWithLimits(registry)) {
         return null;
       }

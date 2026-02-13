@@ -1,6 +1,6 @@
 import { addNodeOperatorsAbi } from 'abi/generated/AddNodeOperators';
 import { MotionDescriptionProps } from '../types';
-import { AddressPop } from 'shared/components/address-pop';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const SdvtNodeOperatorsAdd = ({
   callData,
@@ -13,9 +13,9 @@ export const SdvtNodeOperatorsAdd = ({
           <div key={nodeOperator.managerAddress}>
             Add Node Operator <b>{nodeOperator.name}</b>(id:{' '}
             {Number(nodeOperatorsCount) + index}){' '}
-            <AddressPop address={nodeOperator.rewardAddress} /> and add{' '}
+            <AddressPopInline address={nodeOperator.rewardAddress} /> and add{' '}
             <b>MANAGE_SIGNING_KEYS</b> role to{' '}
-            <AddressPop address={nodeOperator.managerAddress} />
+            <AddressPopInline address={nodeOperator.managerAddress} />
             {index === nodeOperators.length - 1 ? '.' : '; '}
           </div>
         );

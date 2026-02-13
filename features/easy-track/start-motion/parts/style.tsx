@@ -38,10 +38,9 @@ export const FieldsHeaderDesc = styled.span`
   line-height: 19px;
 `;
 
-const RemoveItemButtonWrap = styled(Text).attrs({
-  size: 12,
-  weight: 500,
-})`
+const RemoveItemButtonWrap = styled.div`
+  font-size: 12px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +51,6 @@ const RemoveItemButtonWrap = styled(Text).attrs({
   cursor: pointer;
   transition: opacity ease ${({ theme }) => theme.duration.med};
   color: ${({ theme }) => theme.colors.error};
-  font-weight: 700;
 
   & svg {
     display: block;
@@ -174,4 +172,5 @@ export const MotionInfoBox = styled.div<{ $variant?: 'error' | 'warning' }>`
   border-radius: ${({ theme }) => theme.borderRadiusesMap.lg}px;
   line-height: 20px;
   margin-bottom: ${({ theme }) => theme.spaceMap.lg}px;
+  color: var(--lido-color-text);
 `;

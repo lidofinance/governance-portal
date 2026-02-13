@@ -22,8 +22,8 @@ import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { SetLiabilitySharesTargetInVaultHub } from 'shared/blockchain/contracts';
 import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
 import { VaultAddressInputHookForm } from '@easy-track/vaults/ui/vault-address-input-hook-form';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateEtherValue } from 'utils/validate-ether-value';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 type VaultInput = {
   address: string;
@@ -117,8 +117,7 @@ export const formParts = createMotionFormPart({
               </Fieldset>
 
               <Fieldset>
-                <InputHookForm
-                  type="number"
+                <InputNumberHookForm
                   fieldName={`${fieldNames.vaults}.${fieldIndex}.liabilitySharesTargets`}
                   label="Liability Shares Target"
                   rules={{

@@ -27,14 +27,19 @@ export const CACHE_CONTROL_PAGES = [
   '/manifest.json',
   '/favicon:size*',
   '/public/runtime/window-env.js',
-  '/proposals/:id',
   '/vote/dashboard',
   '/vote/:id',
   '/vote/delegation',
+  '/governance',
+  '/settings',
+  '/governance/proposals/:id',
+  '/easy-track/active-motions',
+  '/easy-track/motions/:id',
+  '/easy-track/start-motion',
   '/500',
 ];
 export const CACHE_CONTROL_VALUE =
-  'public, max-age=15, s-max-age=30, stale-if-error=604800, stale-while-revalidate=172800';
+  'public, max-age=30, stale-if-error=1200, stale-while-revalidate=30';
 
 const withBundleAnalyzer = NextBundleAnalyzer({
   enabled: process.env.ANALYZE_BUNDLE ?? false,

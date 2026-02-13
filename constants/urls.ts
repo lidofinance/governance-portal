@@ -21,6 +21,7 @@ export const VOTE_DELEGATORS_PATH = `${VOTE_DELEGATION_PATH}/delegators`;
 
 export const EASY_TRACK_PATH = '/easy-track';
 export const EASY_TRACK__MOTIONS_PATH = '/easy-track/active-motions';
+export const EASY_TRACK__START_MOTION_PATH = '/easy-track/start-motion';
 export const motionPage = (motionId: string) =>
   `/easy-track/motions/${motionId}`;
 

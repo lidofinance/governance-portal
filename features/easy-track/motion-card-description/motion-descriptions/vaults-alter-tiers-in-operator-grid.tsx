@@ -5,8 +5,9 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { OperatorGrid } from 'shared/blockchain/contracts';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
 import { useQuery } from '@tanstack/react-query';
-import { AddressPop } from 'shared/components/address-pop';
 import { renderVaultParamUpdate } from '@easy-track/vaults/utils/render-vault-param-update';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
+import { Address } from 'viem';
 
 // Copies of original types without array part
 type TierParamsStructOutputCopy = {
@@ -96,7 +97,7 @@ export const VaultsAlterTiersInOperatorGrid = ({
           return (
             <li key={operator}>
               Alter tier{s} for a group with node operator{' '}
-              <AddressPop address={operator} />:
+              <AddressPopInline address={operator as Address} />:
               <br />
               {tiers.map((tier, index) => (
                 <React.Fragment key={index}>

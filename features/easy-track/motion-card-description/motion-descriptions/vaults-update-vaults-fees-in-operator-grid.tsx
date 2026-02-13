@@ -4,8 +4,8 @@ import { evmUpdateVaultsFeesInOperatorGridAbi } from 'abi/generated';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { OperatorGrid } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { AddressPop } from 'shared/components/address-pop';
 import { renderVaultParamUpdate } from '@easy-track/vaults/utils/render-vault-param-update';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 // UpdateVaultsFeesInOperatorGrid
 export const VaultsUpdateVaultsFeesInOperatorGrid = ({
@@ -40,7 +40,7 @@ export const VaultsUpdateVaultsFeesInOperatorGrid = ({
         const updatedReservationFeeBP = reservationFeesBP[index];
         return (
           <li key={index}>
-            Update vault <AddressPop address={vault} /> fees to: <br />
+            Update vault <AddressPopInline address={vault} /> fees to: <br />
             <ul>
               <li>
                 <b>Infra fee: </b>

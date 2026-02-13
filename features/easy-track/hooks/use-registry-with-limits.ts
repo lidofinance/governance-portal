@@ -70,7 +70,7 @@ export const REGISTRY_WITH_LIMITS_BY_MOTION_TYPE = {
   [MotionType.SandboxStablesAdd]: SandboxStablesAllowedRecipientRegistry,
   [MotionType.SandboxStablesRemove]: SandboxStablesAllowedRecipientRegistry,
   [MotionType.SandboxStablesTopUp]: SandboxStablesAllowedRecipientRegistry,
-  [MotionType.SandboxStethTopUp]: SandboxStablesAllowedRecipientRegistry,
+  [MotionType.SandboxStethTopUp]: SandboxStethAllowedRecipientsRegistry,
   [MotionType.RccStethTopUp]: RccStethAllowedRecipientsRegistry,
   [MotionType.PmlStethTopUp]: PmlStethAllowedRecipientsRegistry,
   [MotionType.AtcStethTopUp]: AtcStethAllowedRecipientsRegistry,

@@ -2,11 +2,11 @@ import { useFormContext } from 'react-hook-form';
 import { formatVaultParam } from '../utils/format-vault-param';
 import { BpValueFormatted } from './bp-value-formatted';
 import { Fieldset } from '../../start-motion/parts/style';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from '../../utils/validate-uint-value';
 import { validateEtherValue } from 'utils/validate-ether-value';
 import { MAX_FEE_BP, MAX_RESERVE_RATIO_BP } from '../../constants';
 import { parseEther } from 'viem';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 type Props = {
   tierArrayFieldName: string;
@@ -24,8 +24,7 @@ export const OperatorGridTierFieldsets = ({
   return (
     <>
       <Fieldset>
-        <InputHookForm
-          type="number"
+        <InputNumberHookForm
           fieldName={`${tierArrayFieldName}.${fieldIndex}.shareLimit`}
           label="Share limit"
           disabled={maxShareLimit === 0n}
@@ -51,8 +50,7 @@ export const OperatorGridTierFieldsets = ({
       </Fieldset>
 
       <Fieldset>
-        <InputHookForm
-          type="number"
+        <InputNumberHookForm
           fieldName={`${tierArrayFieldName}.${fieldIndex}.reserveRatioBP`}
           label="Reserve ratio (BP)"
           rules={{
@@ -83,8 +81,7 @@ export const OperatorGridTierFieldsets = ({
       </Fieldset>
 
       <Fieldset>
-        <InputHookForm
-          type="number"
+        <InputNumberHookForm
           fieldName={`${tierArrayFieldName}.${fieldIndex}.forcedRebalanceThresholdBP`}
           label="Forced rebalance threshold (BP)"
           rules={{
@@ -123,9 +120,8 @@ export const OperatorGridTierFieldsets = ({
       </Fieldset>
 
       <Fieldset>
-        <InputHookForm
+        <InputNumberHookForm
           fieldName={`${tierArrayFieldName}.${fieldIndex}.infraFeeBP`}
-          type="number"
           label="Infra fee (BP)"
           rules={{
             required: 'Field is required',
@@ -150,9 +146,8 @@ export const OperatorGridTierFieldsets = ({
       </Fieldset>
 
       <Fieldset>
-        <InputHookForm
+        <InputNumberHookForm
           fieldName={`${tierArrayFieldName}.${fieldIndex}.liquidityFeeBP`}
-          type="number"
           label="Liquidity fee (BP)"
           rules={{
             required: 'Field is required',
@@ -177,9 +172,8 @@ export const OperatorGridTierFieldsets = ({
       </Fieldset>
 
       <Fieldset>
-        <InputHookForm
+        <InputNumberHookForm
           fieldName={`${tierArrayFieldName}.${fieldIndex}.reservationFeeBP`}
-          type="number"
           label="Reservation liquidity fee (BP)"
           rules={{
             required: 'Field is required',

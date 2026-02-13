@@ -1,5 +1,4 @@
 import { utils } from 'ethers';
-
 import { Fragment, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { ButtonIcon, Loader, Option, Plus } from '@lidofinance/lido-ui';
@@ -27,7 +26,7 @@ import {
   createMotionFormPart,
   PopulateTxArgs,
 } from './create-motion-form-part';
-import { Address, Hex } from 'viem';
+import { Address, getAddress, Hex } from 'viem';
 import { useAllowedTokens } from 'features/easy-track/hooks/use-allowed-tokens-registry';
 import { getScriptFactoryByMotionType } from '../../utils/get-motion-type';
 
@@ -162,15 +161,32 @@ export const formParts = ({
 
       const getFilteredOptions = (fieldIdx: number) => {
         if (!actualRecipients) return [];
-        const thatAddress = selectedPrograms[fieldIdx]?.address;
-        const selectedAddresses = selectedPrograms.map(
-          ({ address }) => address,
+        const thatAddress = selectedPrograms[fieldIdx]?.address?.toLowerCase();
+        const selectedAddresses = selectedPrograms.map(({ address }) =>
+          address?.toLowerCase(),
         );
-        return actualRecipients.filter(
-          ({ address }) =>
-            !selectedAddresses.includes(address) || address === thatAddress,
-        );
+        return actualRecipients.filter(({ address }) => {
+          const currentAddress = address.toLowerCase();
+          return (
+            !selectedAddresses.includes(currentAddress) ||
+            currentAddress === thatAddress
+          );
+        });
       };
+
+      useEffect(() => {
+        if (selectedTokenAddress && tokensDecimalsMap) {
+          const decimals = tokensDecimalsMap[selectedTokenAddress];
+          if (decimals !== undefined) {
+            setValue(fieldNames.tokenDecimals, decimals);
+          }
+        }
+      }, [
+        selectedTokenAddress,
+        tokensDecimalsMap,
+        setValue,
+        fieldNames.tokenDecimals,
+      ]);
 
       useEffect(() => {
         if (selectedTokenAddress) {
@@ -229,7 +245,7 @@ export const formParts = ({
 
       const transitionLimit =
         selectedTokenAddress && limits
-          ? limits[utils.getAddress(selectedTokenAddress)]
+          ? limits[getAddress(selectedTokenAddress)]
           : null;
 
       if (
@@ -265,12 +281,6 @@ export const formParts = ({
               label="Top up token"
               fieldName={fieldNames.tokenAddress}
               rules={{ required: 'Field is required' }}
-              onChange={(value) => {
-                const tokenDecimals = tokensDecimalsMap?.[value as string];
-                if (tokenDecimals) {
-                  setValue(fieldNames.tokenDecimals, tokenDecimals);
-                }
-              }}
             >
               {allowedTokens?.map((token, j) => (
                 <Option key={j} value={token.address}>

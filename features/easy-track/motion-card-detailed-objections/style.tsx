@@ -26,6 +26,10 @@ export const ObjectionsPercents = styled(Text).attrs({
   weight: 800,
 })`
   color: 'inherit';
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 `;
 
 type ObjectionsInfoProps = {
@@ -33,6 +37,9 @@ type ObjectionsInfoProps = {
   isDangered: boolean;
 };
 export const ObjectionsInfo = styled.div<ObjectionsInfoProps>`
+  overflow: hidden;
+  min-width: 0;
+
   ${({ isSucceed }) =>
     isSucceed &&
     css`

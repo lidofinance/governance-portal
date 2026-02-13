@@ -2,17 +2,22 @@ import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
 import { Motions } from 'features/easy-track/motions';
 import { Title } from 'features/easy-track/style';
+import { Button } from 'shared/components/button';
+import { EASY_TRACK__START_MOTION_PATH } from 'constants/urls';
+import Link from 'next/link';
 
 const ActiveMotionsPage = () => {
   return (
     <Layout containerSize="full">
       <Title>
-        <Text size={24} strong>
-          Active Motions
+        <Text size={26} weight={700}>
+          All motions
         </Text>
-        <Text color="secondary" size={12}>
-          Select the card to see details
-        </Text>
+        <Link href={EASY_TRACK__START_MOTION_PATH}>
+          <Button variant="outlined" size="sm">
+            Start Motion
+          </Button>
+        </Link>
       </Title>
       <Motions />
       {/*{initialLoading && <PageLoader />}*/}

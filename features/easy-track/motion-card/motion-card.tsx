@@ -4,6 +4,7 @@ import {
   CardStatus,
   CardStatusWrapper,
   CardTitle,
+  DescWrapper,
   EnactDate,
 } from './style';
 import { Motion, MotionStatus } from '../types';
@@ -51,9 +52,9 @@ export const MotionCard = ({ motion }: Props) => {
           getMotionTypeByScriptFactory(chainId, motion.evmScriptFactory),
         )}
       </CardTitle>
-      <Box marginBottom="auto">
+      <DescWrapper>
         <MotionDescription motion={motion} />
-      </Box>
+      </DescWrapper>
       <CardStatusWrapper $status={motionStatus}>
         <CardStatus>{motionStatus}</CardStatus>
         <>

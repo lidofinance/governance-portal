@@ -5,9 +5,9 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { OperatorGrid } from 'shared/blockchain/contracts';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
 import { useQuery } from '@tanstack/react-query';
-import { AddressPop } from 'shared/components/address-pop';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { convertSharesToStethString } from '@easy-track/vaults/utils/convert-shares-to-steth-string';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 // UpdateGroupsShareLimit
 export const VaultsUpdateGroupsShareLimit = ({
@@ -47,7 +47,7 @@ export const VaultsUpdateGroupsShareLimit = ({
         return (
           <li key={index}>
             Update share limit of group with node operator{' '}
-            <AddressPop address={nodeOperator} />{' '}
+            <AddressPopInline address={nodeOperator} />{' '}
             {isOnChain && data
               ? ` from ${formatVaultParam(currentShareLimit)} `
               : ''}

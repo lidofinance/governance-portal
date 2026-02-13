@@ -1,18 +1,14 @@
 import { useAvailableMotions } from '../hooks/use-available-motions';
-import {
-  Container,
-  Option,
-  ToastError,
-  ToastSuccess,
-} from '@lidofinance/lido-ui';
+import { Container, Option, ToastError } from '@lidofinance/lido-ui';
+import { SkeletonBar } from '../../vote/components/skeleton-bar';
 import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
 import { useForm, FormProvider } from 'react-hook-form';
 import { formParts, getDefaultFormPartsData, FormData } from './parts';
-import { Fieldset } from './parts/style';
+import { Fieldset, MessageBox } from './parts/style';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
 import { Button } from 'shared/components/button';
 import { RetryHint } from './style';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getScriptFactoryByMotionType } from '../utils/get-motion-type';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { validateMotionExtraData } from '../utils/on-submit-validation';
@@ -20,14 +16,28 @@ import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { EasyTrack } from 'shared/blockchain/contracts';
 import { getErrorMessage } from 'utils';
+import { Hex } from 'viem';
 
-export const StartMotion = () => {
-  const { availableMotions } = useAvailableMotions();
+type Props = {
+  onComplete: (txHash: Hex) => void;
+};
+
+const StartMotionSkeleton = () => (
+  <Container as="main" size="tight">
+    <Fieldset>
+      <SkeletonBar style={{ height: 56, borderRadius: 10 }} showOnBackground />
+    </Fieldset>
+  </Container>
+);
+
+export const StartMotion = ({ onComplete }: Props) => {
+  const { availableMotions, isLoading: isMotionsLoading } =
+    useAvailableMotions();
   const [isSubmitting, setSubmitting] = useState(false);
   const contractEasyTrack = useWriteContract(EasyTrack.abi);
   const easyTrackAddress = useContractAddress(EasyTrack);
 
-  const { chainId } = useLidoSDK();
+  const { chainId, rpcProvider } = useLidoSDK();
 
   const formMethods = useForm<FormData>({
     mode: 'onChange',
@@ -59,9 +69,14 @@ export const StartMotion = () => {
         }
 
         const validMotionType = motionType as keyof typeof formParts;
+        if (!rpcProvider) {
+          throw new Error('No provider available');
+        }
+
         const extraValidationError = await validateMotionExtraData(
           validMotionType,
           formData[validMotionType],
+          { chainId, provider: rpcProvider },
         );
 
         if (extraValidationError) {
@@ -79,10 +94,7 @@ export const StartMotion = () => {
           },
         });
 
-        ToastSuccess(
-          `Motion submitted successfully! Transaction hash: ${txHash}`,
-          {},
-        );
+        onComplete(txHash as Hex);
 
         formMethods.reset({
           motionType: null,
@@ -96,10 +108,25 @@ export const StartMotion = () => {
         setSubmitting(false);
       }
     },
-    [chainId, contractEasyTrack, easyTrackAddress, formMethods],
+    [
+      chainId,
+      contractEasyTrack,
+      easyTrackAddress,
+      formMethods,
+      onComplete,
+      rpcProvider,
+    ],
   );
 
   const motionType = formMethods.watch('motionType');
+  const { isValid } = formMethods.formState;
+
+  useEffect(() => {
+    if (motionType) {
+      void formMethods.trigger();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [motionType]);
 
   const CurrentFormPart =
     motionType && motionType in formParts
@@ -109,6 +136,19 @@ export const StartMotion = () => {
   // Filter available motions to only show supported ones
   const supportedMotions =
     availableMotions?.filter((motion) => motion.motionType in formParts) || [];
+
+  if (isMotionsLoading) {
+    return <StartMotionSkeleton />;
+  }
+
+  if (supportedMotions.length === 0 || availableMotions.length === 0) {
+    return (
+      <MessageBox>
+        Only Trusted Callers & Node Operator have access to Easy Track motion
+        creation
+      </MessageBox>
+    );
+  }
 
   return (
     <FormProvider {...formMethods}>
@@ -134,10 +174,7 @@ export const StartMotion = () => {
                     type="submit"
                     fullwidth
                     loading={isSubmitting}
-                    disabled={
-                      formMethods.formState.isDirty &&
-                      !formMethods.formState.isValid
-                    }
+                    disabled={!isValid}
                   >
                     Submit Motion
                   </Button>

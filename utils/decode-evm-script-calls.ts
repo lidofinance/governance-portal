@@ -39,6 +39,7 @@ const ABI_EXCEPTIONS = {
   OracleRepo: abis.repoAbi,
   SimpleDVT: abis.nodeOperatorsRegistryAbi,
   DualGovernanceLegacy: abis.dualGovernanceAbi,
+  SandboxAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
 };
 
 const EVM_SCRIPT_VERSION = '00000001';

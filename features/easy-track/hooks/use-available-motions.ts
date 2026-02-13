@@ -1,5 +1,5 @@
 import { MotionType, MotionTypeForms } from '../motion-types';
-import { useLidoSDK } from '../../../providers/lido-sdk';
+import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount, usePublicClient } from 'wagmi';
 import { useQuery } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
@@ -30,12 +30,17 @@ export const useAvailableMotions = () => {
   const publicClient = usePublicClient({ chainId });
   const parsedChainId = parseEvmSupportedChainId(chainId);
 
-  const { data: nodeOperators } = useNodeOperatorsList('curated');
+  const { data: nodeOperators, isPending: isNodeOperatorsPending } =
+    useNodeOperatorsList('curated');
 
-  const { data: sandboxNodeOperators } = useNodeOperatorsList('sandbox');
+  const {
+    data: sandboxNodeOperators,
+    isPending: isSandboxNodeOperatorsPending,
+  } = useNodeOperatorsList('sandbox');
 
-  const { data: availableMotions } = useQuery({
+  const { data: availableMotions, isPending } = useQuery({
     queryKey: ['available-motions', chainId, walletAddress],
+    enabled: !!walletAddress,
     queryFn: async () => {
       invariant(walletAddress, 'Wallet address must be defined');
       invariant(publicClient, 'publicClient must be defined');
@@ -151,7 +156,12 @@ export const useAvailableMotions = () => {
     });
   }
 
+  const isLoading =
+    !!walletAddress &&
+    (isPending || isNodeOperatorsPending || isSandboxNodeOperatorsPending);
+
   return {
     availableMotions: allowedMotions,
+    isLoading,
   };
 };

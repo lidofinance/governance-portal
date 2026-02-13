@@ -37,6 +37,7 @@ import { PredefinedGroupParamsPicker } from '@easy-track/vaults/ui/predefined-gr
 import { validateEtherValue } from 'utils/validate-ether-value';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { OperatorGridAddTiersFieldsWrapper } from '@easy-track/vaults/ui/operator-grid-add-tiers-fields-wrapper';
+import { InputNumberHookForm } from '../../../../../shared/hook-form/input-number-hook-form';
 
 export const formParts = createMotionFormPart({
   motionType: MotionType.RegisterGroupsInOperatorGrid,
@@ -200,7 +201,7 @@ export const formParts = createMotionFormPart({
                 />
 
                 <Fieldset>
-                  <InputHookForm
+                  <InputNumberHookForm
                     fieldName={`${fieldNames.groups}.${groupIndex}.shareLimit`}
                     label="Share limit"
                     rules={{

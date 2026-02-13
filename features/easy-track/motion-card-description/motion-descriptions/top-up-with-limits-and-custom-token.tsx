@@ -3,12 +3,11 @@ import {
   REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
 } from '../../hooks/use-registry-with-limits';
 
-import { AddressPop } from 'shared/components/address-pop';
-
 import { formatUnits, isAddress } from 'ethers/lib/utils';
 import { topUpWithLimitsStablesAbi } from 'abi/generated/TopUpWithLimitsStables';
 import { MotionDescriptionProps } from '../types';
 import { useMotionTokenData } from '../../hooks/use-motion-token-data';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 type Props = MotionDescriptionProps<typeof topUpWithLimitsStablesAbi> & {
   registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
@@ -46,7 +45,7 @@ export const TopUpWithLimitsAndCustomToken = ({
         return (
           <div key={i}>
             {shouldShowName ? <b>{recipientName} </b> : null}
-            <AddressPop address={address} /> with {formattedAmount}{' '}
+            <AddressPopInline address={address} /> with {formattedAmount}{' '}
             {tokenData ? <b>{tokenData.label}</b> : null}
           </div>
         );

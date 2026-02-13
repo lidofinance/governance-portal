@@ -2,10 +2,10 @@
 import { MotionDescriptionProps } from '@easy-track/motion-card-description/types';
 import { evmRegisterGroupsInOperatorsGridAbi } from 'abi/generated';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
-import { AddressPop } from 'shared/components/address-pop';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { convertSharesToStethString } from '@easy-track/vaults/utils/convert-shares-to-steth-string';
 import React from 'react';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const VaultsRegisterGroupsInOperatorGrid = ({
   callData,
@@ -21,8 +21,8 @@ export const VaultsRegisterGroupsInOperatorGrid = ({
 
         return (
           <li key={index}>
-            Group with node operator <AddressPop address={nodeOperator} />,
-            share limit{' '}
+            Group with node operator <AddressPopInline address={nodeOperator} />
+            , share limit{' '}
             <b>
               {formatVaultParam(shareLimit)}
               {convertSharesToStethString(shareLimit, shareRate)}

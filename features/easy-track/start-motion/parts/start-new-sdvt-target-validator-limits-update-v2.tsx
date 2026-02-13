@@ -24,8 +24,8 @@ import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { SDVTTargetValidatorLimitsUpdateV2 } from 'shared/blockchain/contracts';
 import { NodeOperatorSelectControl } from '../../motions/ui/node-operator-select-control/node-operator-select-control';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from 'utils/validate-uint-value';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 type NodeOperator = {
   id: string | undefined;
@@ -190,6 +190,7 @@ export const formParts = createMotionFormPart({
                         operatorsSummaryMap[nodeOperator.id];
 
                       fieldsArr.update(fieldIndex, {
+                        id: String(value),
                         targetLimitMode:
                           nodeOperatorSummary.targetLimitMode.toString(),
                         targetLimit:
@@ -242,8 +243,7 @@ export const formParts = createMotionFormPart({
                 </Fieldset>
 
                 <Fieldset>
-                  <InputHookForm
-                    type="number"
+                  <InputNumberHookForm
                     fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.targetLimit`}
                     label={`New limit ${
                       currentTargetLimit

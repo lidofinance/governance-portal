@@ -65,7 +65,7 @@ const convertSubgraphToMotion = (raw: RawMotionSubgraph): Motion => {
     evmScriptHash: raw.evmScriptHash as Hex,
     status: raw.status,
     enacted_at: raw.enacted_at ? Number(raw.enacted_at) : undefined,
-    evmScriptCalldata: raw.evmScriptCalldata,
+    evmScriptCalldata: raw.evmScriptCalldata as Hex,
     isOnChain: false,
   };
 };

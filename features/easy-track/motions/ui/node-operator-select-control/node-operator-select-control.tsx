@@ -31,7 +31,7 @@ export const NodeOperatorSelectControl = (props: Props) => {
       {...selectControlProps}
     >
       {options.map((nodeOperator) => (
-        <Option key={nodeOperator.id} value={nodeOperator.id}>
+        <Option key={nodeOperator.id} value={String(nodeOperator.id)}>
           {getOptionLabel(nodeOperator)}
         </Option>
       ))}

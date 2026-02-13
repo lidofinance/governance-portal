@@ -1,28 +1,44 @@
-import { MotionTypeForms } from '../motion-types';
-import { validateGateTreeIpfs } from './validate-gate-tree-ipfs';
-import { getDefaultFormPartsData, formParts } from '../start-motion/parts';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { getDefaultFormPartsData } from '@easy-track/start-motion/parts';
+import { MotionType, MotionTypeForms } from '@easy-track/motion-types';
+import { validateGateTreeIpfs } from '@easy-track/utils/validate-gate-tree-ipfs';
+import { validateForceExits } from '@easy-track/utils/validate-force-exits';
+import { PublicClient } from 'viem';
 
-type MotionFormData<M extends keyof typeof formParts> = ReturnType<
-  typeof getDefaultFormPartsData
->[M];
+type FormPartsData = ReturnType<typeof getDefaultFormPartsData>;
+type MotionFormData<M extends MotionTypeForms> = M extends keyof FormPartsData
+  ? FormPartsData[M]
+  : never;
 
-// Separate validation map for all motion types (including ones without form parts)
-export const EXTRA_VALIDATION_MAP: Record<
-  string,
-  (data: any) => Promise<string | null> | string | null
-> = {
-  [MotionTypeForms.CSMSetVettedGateTree]: validateGateTreeIpfs,
+type ChainData = {
+  chainId: CHAINS;
+  provider: PublicClient;
 };
 
-export const validateMotionExtraData = <M extends keyof typeof formParts>(
+type ValidateFn<M extends MotionTypeForms> = (
+  formData: MotionFormData<M>,
+  chainData: ChainData,
+) => Promise<string | null> | string | null;
+
+const EXTRA_VALIDATION_MAP: {
+  [K in MotionTypeForms]?: ValidateFn<K>;
+} = {
+  [MotionType.CSMSetVettedGateTree]: validateGateTreeIpfs,
+  [MotionType.ForceValidatorExitsInVaultHub]: validateForceExits,
+};
+
+export const validateMotionExtraData = <M extends MotionTypeForms>(
   motionType: M,
   formValues: MotionFormData<M>,
+  chainData: ChainData,
 ) => {
-  const validateFn = EXTRA_VALIDATION_MAP[motionType as string];
+  const validateFn = (
+    EXTRA_VALIDATION_MAP as Partial<Record<MotionTypeForms, ValidateFn<M>>>
+  )[motionType];
 
   if (!validateFn) {
     return null;
   }
 
-  return validateFn(formValues);
+  return validateFn(formValues, chainData);
 };

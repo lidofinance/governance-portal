@@ -14,6 +14,18 @@ export const Card = styled(Block)`
   padding: 16px;
   display: flex;
   flex-direction: column;
+  height: 250px;
+`;
+
+export const DescWrapper = styled.div`
+  margin-bottom: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  ul,
+  li {
+    list-style-position: inside;
+  }
 `;
 
 export const CardStatusWrapper = styled.section<{ $status?: string }>`
