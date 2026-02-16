@@ -26,7 +26,9 @@ export const StonksList = () => {
         ...stonks,
         balance: stonksBalanceMap?.[stonks.address] ?? 0n,
       }))
-      .sort((a, b) => Number(b.balance - a.balance));
+      .sort((a, b) =>
+        a.balance === b.balance ? 0 : a.balance > b.balance ? -1 : 1,
+      );
   }, [chainId, stonksBalanceMap]);
 
   if (isLoading) {
