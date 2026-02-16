@@ -18,7 +18,12 @@ type Props = {
 };
 
 export const Layout: FC<PropsWithChildren<Props>> = (props) => {
-  const { title, subtitle, containerSize = 'full', pageTitle } = props;
+  const {
+    title,
+    subtitle,
+    containerSize,
+    pageTitle = 'Governance Portal | Lido',
+  } = props;
   const { children } = props;
 
   return (
