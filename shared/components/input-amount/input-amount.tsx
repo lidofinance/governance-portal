@@ -17,12 +17,11 @@ import { InputDecoratorLocked } from './input-decorator-locked';
 import { InputStyled } from './styles';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
-const MIN_VALUE_STRING_LENGTH = 20; // '0' + '.' + 18 decimals
-
 const parseUnitsSafe = (value: string, decimals: number) => {
   try {
     const parsed = parseUnits(value, decimals);
-    if (parsed === 0n && value.length > MIN_VALUE_STRING_LENGTH) {
+    if (parsed === 0n && value.length > 2 + decimals) {
+      // 2 + decimals accounts for '0.' and decimals
       return null;
     }
     return parsed;
