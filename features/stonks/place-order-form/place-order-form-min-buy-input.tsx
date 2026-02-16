@@ -12,7 +12,6 @@ export const PlaceOrderFormMinBuyInput = () => {
       readOnly
       fieldName={MIN_BUY_AMOUNT_NAME}
       token={stonksMetadata.tokenFrom.symbol}
-      data-testid="stonksPlaceOrderInput"
       decimals={stonksMetadata.tokenTo.decimals}
       dgStyle={false}
       label={`Estimated output amount in ${stonksMetadata.tokenTo.symbol}`}

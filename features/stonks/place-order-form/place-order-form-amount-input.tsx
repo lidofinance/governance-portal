@@ -68,10 +68,6 @@ export const PlaceOrderFormAmountInput = () => {
             return 'Field is required';
           }
 
-          if (value === 0n) {
-            return 'Amount must be greater than zero';
-          }
-
           if (value < MIN_STONKS_BALANCE_WEI) {
             return `Amount must be at least ${MIN_STONKS_BALANCE_WEI} wei`;
           }
