@@ -25,14 +25,15 @@ export const PlaceOrderFormAmountInput = () => {
     let isCurrent = true; // Guard against race conditions
 
     const fetchOutput = async () => {
-      // Check if this effect is still the latest one before setting state
-      if (!isCurrent) return;
-
       try {
         const estimatedOutput = await fetchEstimatedOutput(debouncedValue);
 
+        if (!isCurrent) return;
+
         setValue(MIN_BUY_AMOUNT_NAME, estimatedOutput);
       } catch (error) {
+        if (!isCurrent) return;
+
         setError(SELL_AMOUNT_NAME, {
           type: 'validate',
           message: 'Failed to fetch estimated output',
