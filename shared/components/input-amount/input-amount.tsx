@@ -171,17 +171,17 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
         {...props}
         placeholder={placeholder}
         rightDecorator={
-          showMaxButton
-            ? (rightDecorator ?? (
-                <>
-                  <InputDecoratorMaxButton
-                    onClick={handleClickMax}
-                    disabled={!handleClickMax || props.disabled}
-                  />
-                  {isLocked ? <InputDecoratorLocked /> : undefined}
-                </>
-              ))
-            : null
+          rightDecorator ?? (
+            <>
+              {showMaxButton ? (
+                <InputDecoratorMaxButton
+                  onClick={handleClickMax}
+                  disabled={!handleClickMax || props.disabled}
+                />
+              ) : null}
+              {isLocked ? <InputDecoratorLocked /> : null}
+            </>
+          )
         }
         inputMode="decimal"
         defaultValue={defaultValue}
