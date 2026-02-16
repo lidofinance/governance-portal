@@ -1,6 +1,6 @@
 import { Button, ToastError } from '@lidofinance/lido-ui';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/router';
 import { Fieldset } from './style';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { stonksOrderAbi } from 'abi/generated';

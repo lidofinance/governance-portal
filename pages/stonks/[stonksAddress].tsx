@@ -17,7 +17,7 @@ export default function StonksDetailsPage() {
   const addressParam = String(router.query.stonksAddress);
 
   const stonksMetadata = STONKS_MAP[chainId]?.find(
-    (s) => s.address === addressParam,
+    (s) => s.address.toLowerCase() === addressParam.toLowerCase(),
   );
 
   if (!stonksMetadata) {

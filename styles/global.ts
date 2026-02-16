@@ -192,9 +192,9 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     height: auto;
   }
 
-    button {
+  button:not(:disabled) {
     cursor: pointer;
-    }
+  }
 `;
 
 export default GlobalStyle;

@@ -14,7 +14,7 @@ export const PlaceOrderFormAmountInput = () => {
 
   const fieldValue = useWatch({ name: SELL_AMOUNT_NAME });
 
-  const debouncedValue: bigint = useDebounce(fieldValue, 1000);
+  const debouncedValue: bigint | undefined = useDebounce(fieldValue, 1000);
 
   useEffect(() => {
     if (!formState.isDirty) {
