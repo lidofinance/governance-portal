@@ -40,6 +40,7 @@ export const usePlaceOrderAction = ({
 
         if (response.status === 'reverted') {
           txModalStages.failed(new Error(`Failed to place order`), onRetry);
+          return false;
         }
 
         txModalStages.success();
