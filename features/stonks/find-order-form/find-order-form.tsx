@@ -1,11 +1,10 @@
 import { Button, ToastError } from '@lidofinance/lido-ui';
 import { FormProvider, useForm } from 'react-hook-form';
-import { utils } from 'ethers';
 import { useRouter } from 'next/dist/client/router';
 import { Fieldset } from './style';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { stonksOrderAbi } from 'abi/generated';
-import { Address } from 'viem';
+import { isAddress } from 'viem';
 import { stonksOrderPage } from 'constants/urls';
 import { usePublicClient } from 'wagmi';
 import { getOrderByPlaceTxReceipt } from '@stonks/utils/get-order-by-tx';
@@ -13,7 +12,7 @@ import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
 
 type FormData = {
-  txHashOrAddress: Address;
+  txHashOrAddress: string;
 };
 
 export const StonksFindOrderForm = () => {
@@ -35,7 +34,7 @@ export const StonksFindOrderForm = () => {
 
   const handleSubmit = async (values: FormData) => {
     try {
-      if (utils.isAddress(values.txHashOrAddress)) {
+      if (isAddress(values.txHashOrAddress)) {
         const orderContractReader = getOrderContract(values.txHashOrAddress);
 
         try {
@@ -49,7 +48,7 @@ export const StonksFindOrderForm = () => {
             return;
           }
           const txReceipt = await client.getTransactionReceipt({
-            hash: values.txHashOrAddress,
+            hash: values.txHashOrAddress as `0x${string}`,
           });
           const orderFromReceipt = getOrderByPlaceTxReceipt(txReceipt);
           await router.push(stonksOrderPage(orderFromReceipt.address));
