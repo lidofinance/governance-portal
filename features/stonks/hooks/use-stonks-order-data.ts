@@ -16,7 +16,7 @@ export const useStonksOrderData = (orderAddress: string) => {
   const getErc20Contract = useReadContractGetter(erc20Abi);
 
   return useQuery<OrderData>({
-    queryKey: ['stonks-oder-data', chainId, orderAddress],
+    queryKey: ['stonks-order-data', chainId, orderAddress],
     enabled: !!orderAddress,
     queryFn: async () => {
       if (!isAddress(orderAddress)) {

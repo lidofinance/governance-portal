@@ -42,11 +42,11 @@ export const useCowOrderData = (order: OrderData | undefined) => {
       const executedSellAmount = BigInt(offChainOrder.executedSellAmount);
       const executedBuyAmount = BigInt(offChainOrder.executedBuyAmount);
 
-      const sellAmountFulfillmentPct = executedSellAmount
-        ? (order.sellAmount * 100n) / executedSellAmount
+      const sellAmountFulfillmentPct = order.sellAmount
+        ? (executedSellAmount * 100n) / order.sellAmount
         : 0n;
-      const buyAmountFulfillmentPct = executedBuyAmount
-        ? (order.buyAmount * 100n) / executedBuyAmount
+      const buyAmountFulfillmentPct = order.buyAmount
+        ? (executedBuyAmount * 100n) / order.buyAmount
         : 0n;
 
       return {
