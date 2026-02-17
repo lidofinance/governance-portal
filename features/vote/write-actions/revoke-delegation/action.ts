@@ -51,6 +51,7 @@ export const useRevokeDelegationAction = ({
             ),
             onRetry,
           );
+          return false;
         }
 
         txModalStages.success();

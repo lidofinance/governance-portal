@@ -11,7 +11,12 @@ type InjectedProps = {
 
 type TextLibProps = React.ComponentProps<typeof Text>;
 
-export type TextProps = Omit<TextLibProps, 'size'> & TextStyledProps;
+export type TextColor = NonNullable<TextLibProps['color']> | 'accent';
+
+export type TextProps = Omit<TextLibProps, 'size' | 'color'> &
+  TextStyledProps & {
+    color?: TextColor;
+  };
 
 const getTextColor = ({
   theme: { colors },
@@ -25,6 +30,7 @@ const getTextColor = ({
     error: colors.error,
     success: colors.success,
     white: colors.primaryContrast,
+    accent: `var(--lido-color-primary)`,
   };
 
   return colorsMap[color];

@@ -1,38 +1,57 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Stonks
+// StonksV2
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const stonksAbi = [
+export const stonksV2Abi = [
   {
     type: 'constructor',
     inputs: [
-      { name: 'agent_', internalType: 'address', type: 'address' },
-      { name: 'manager_', internalType: 'address', type: 'address' },
-      { name: 'tokenFrom_', internalType: 'address', type: 'address' },
-      { name: 'tokenTo_', internalType: 'address', type: 'address' },
-      { name: 'amountConverter_', internalType: 'address', type: 'address' },
-      { name: 'orderSample_', internalType: 'address', type: 'address' },
       {
-        name: 'orderDurationInSeconds_',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'marginInBasisPoints_',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'priceToleranceInBasisPoints_',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: 'initParams_',
+        internalType: 'struct Stonks.InitParams',
+        type: 'tuple',
+        components: [
+          { name: 'admin', internalType: 'address', type: 'address' },
+          { name: 'agent', internalType: 'address', type: 'address' },
+          { name: 'manager', internalType: 'address', type: 'address' },
+          { name: 'tokenFrom', internalType: 'address', type: 'address' },
+          { name: 'tokenTo', internalType: 'address', type: 'address' },
+          { name: 'amountConverter', internalType: 'address', type: 'address' },
+          { name: 'orderSample', internalType: 'address', type: 'address' },
+          {
+            name: 'orderDurationInSeconds',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'marginInBasisPoints',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'priceToleranceInBasisPoints',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'maxImprovementInBasisPoints',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'allowPartialFill', internalType: 'bool', type: 'bool' },
+        ],
       },
     ],
     stateMutability: 'nonpayable',
   },
   {
     type: 'error',
-    inputs: [{ name: 'agent_', internalType: 'address', type: 'address' }],
+    inputs: [{ name: 'admin', internalType: 'address', type: 'address' }],
+    name: 'InvalidAdminAddress',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'agent', internalType: 'address', type: 'address' }],
     name: 'InvalidAgentAddress',
   },
   {
@@ -46,11 +65,6 @@ export const stonksAbi = [
       { name: 'amountConverter', internalType: 'address', type: 'address' },
     ],
     name: 'InvalidAmountConverterAddress',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'manager', internalType: 'address', type: 'address' }],
-    name: 'InvalidManagerAddress',
   },
   {
     type: 'error',
@@ -87,6 +101,14 @@ export const stonksAbi = [
   {
     type: 'error',
     inputs: [
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+      { name: 'received', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'MaxImprovementOverflowsAllowedLimit',
+  },
+  {
+    type: 'error',
+    inputs: [
       { name: 'min', internalType: 'uint256', type: 'uint256' },
       { name: 'received', internalType: 'uint256', type: 'uint256' },
     ],
@@ -95,12 +117,17 @@ export const stonksAbi = [
   {
     type: 'error',
     inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'NotAgent',
+    name: 'NotAdmin',
   },
   {
     type: 'error',
     inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'NotAgentOrManager',
+    name: 'NotAdminOrManager',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
+    name: 'NotEmergencyOperator',
   },
   {
     type: 'error',
@@ -110,19 +137,51 @@ export const stonksAbi = [
     ],
     name: 'PriceToleranceOverflowsAllowedLimit',
   },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'available', internalType: 'uint256', type: 'uint256' },
+      { name: 'requested', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SellAmountExceedsBalance',
+  },
+  { type: 'error', inputs: [], name: 'StonksKilled' },
+  {
+    type: 'error',
+    inputs: [{ name: 'token', internalType: 'address', type: 'address' }],
+    name: 'TokenFromNotSupported',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'token', internalType: 'address', type: 'address' }],
+    name: 'TokenToNotSupported',
+  },
   { type: 'error', inputs: [], name: 'TokensCannotBeSame' },
   {
     type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: 'agent',
+        name: 'admin',
         internalType: 'address',
         type: 'address',
         indexed: false,
       },
     ],
-    name: 'AgentSet',
+    name: 'AdminSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'allowPartialFill',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'AllowPartialFillSet',
   },
   {
     type: 'event',
@@ -142,25 +201,25 @@ export const stonksAbi = [
     anonymous: false,
     inputs: [
       {
-        name: '_token',
+        name: 'token',
         internalType: 'address',
         type: 'address',
         indexed: true,
       },
       {
-        name: '_tokenId',
+        name: 'tokenId',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
       {
-        name: '_recipient',
+        name: 'recipient',
         internalType: 'address',
         type: 'address',
         indexed: true,
       },
       {
-        name: '_amount',
+        name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
@@ -173,19 +232,19 @@ export const stonksAbi = [
     anonymous: false,
     inputs: [
       {
-        name: '_token',
+        name: 'token',
         internalType: 'address',
         type: 'address',
         indexed: true,
       },
       {
-        name: '_recipient',
+        name: 'recipient',
         internalType: 'address',
         type: 'address',
         indexed: true,
       },
       {
-        name: '_amount',
+        name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
@@ -198,19 +257,19 @@ export const stonksAbi = [
     anonymous: false,
     inputs: [
       {
-        name: '_token',
+        name: 'token',
         internalType: 'address',
         type: 'address',
         indexed: true,
       },
       {
-        name: '_tokenId',
+        name: 'tokenId',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
       {
-        name: '_recipient',
+        name: 'recipient',
         internalType: 'address',
         type: 'address',
         indexed: true,
@@ -223,19 +282,40 @@ export const stonksAbi = [
     anonymous: false,
     inputs: [
       {
-        name: '_recipient',
+        name: 'emergencyOperator',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'EmergencyOperatorSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'recipient',
         internalType: 'address',
         type: 'address',
         indexed: true,
       },
       {
-        name: '_amount',
+        name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
         indexed: false,
       },
     ],
     name: 'EtherRecovered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'by', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'KillEngaged',
   },
   {
     type: 'event',
@@ -262,6 +342,19 @@ export const stonksAbi = [
       },
     ],
     name: 'MarginInBasisPointsSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'maxImprovementInBasisPoints',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'MaxImprovementInBasisPointsSet',
   },
   {
     type: 'event',
@@ -313,6 +406,19 @@ export const stonksAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'Paused',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'priceToleranceInBasisPoints',
         internalType: 'uint256',
         type: 'uint256',
@@ -320,6 +426,22 @@ export const stonksAbi = [
       },
     ],
     name: 'PriceToleranceInBasisPointsSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'by', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'SignaturesPaused',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'by', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'SignaturesUnpaused',
   },
   {
     type: 'event',
@@ -348,10 +470,37 @@ export const stonksAbi = [
     name: 'TokenToSet',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'Unpaused',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'ADMIN',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
     type: 'function',
     inputs: [],
     name: 'AGENT',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'ALLOW_PARTIAL_FILL',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
@@ -364,7 +513,21 @@ export const stonksAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'MARGIN_DIFFERENCE_IN_BASIS_POINTS',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'MARGIN_IN_BASIS_POINTS',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'MAX_IMPROVEMENT_IN_BASIS_POINTS',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -405,6 +568,20 @@ export const stonksAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'areSignaturesPaused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'emergencyOperator',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'amount_', internalType: 'uint256', type: 'uint256' }],
     name: 'estimateTradeOutput',
     outputs: [
@@ -420,6 +597,13 @@ export const stonksAbi = [
     type: 'function',
     inputs: [],
     name: 'estimateTradeOutputFromCurrentBalance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getMaxImprovementBps',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -444,8 +628,50 @@ export const stonksAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'isCreationPaused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'isKilled',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'killSwitch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'manager',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseCreation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseSignatures',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'paused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
@@ -454,6 +680,16 @@ export const stonksAbi = [
       { name: 'minBuyAmount_', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'placeOrder',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'sellAmount_', internalType: 'uint256', type: 'uint256' },
+      { name: 'minBuyAmount_', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'placeOrderWithAmount',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'nonpayable',
   },
@@ -496,9 +732,32 @@ export const stonksAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: 'emergencyOperator_', internalType: 'address', type: 'address' },
+    ],
+    name: 'setEmergencyOperator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'manager_', internalType: 'address', type: 'address' }],
     name: 'setManager',
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+  {
+    type: 'function',
+    inputs: [],
+    name: 'unpauseCreation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'unpauseSignatures',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;

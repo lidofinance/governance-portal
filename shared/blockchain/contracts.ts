@@ -3,7 +3,6 @@ import * as addr from 'shared/blockchain/contract-addresses';
 import { ContractObject } from './types';
 import { MotionType } from '../../features/easy-track/motion-types';
 import { EvmAddressesByType } from '../../features/easy-track/evm-addresses';
-import { evmForceValidatorExitsInVaultHubAbi } from '../../abi/generated/EvmForceValidatorExitsInVaultHub';
 
 export const StETH: ContractObject<typeof abi.stethAbi> = {
   name: 'stETH',
@@ -24,14 +23,6 @@ export const WithdrawalQueue: ContractObject<
   abi: abi.withdrawalQueueErc721Abi,
   chainAddressMap: addr.WithdrawalQueue,
 };
-
-// export const WithdrawalQueueMock: Object<
-//   typeof abi.withdrawalQueueMockAbi
-// > = {
-//   name: 'WithdrawalQueueMock',
-//   abi: abi.withdrawalQueueMockAbi,
-//   chainAddressMap: addr.WithdrawalQueue,
-// };
 
 export const Voting: ContractObject<typeof abi.aragonVotingAbi> = {
   name: 'AragonVoting',
