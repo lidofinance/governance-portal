@@ -19,6 +19,8 @@ export type SecretConfigType = Modify<
 
     rateLimit: number;
     rateLimitTimeFrame: number;
+
+    cowApiUrl: string | undefined;
   }
 >;
 
@@ -51,6 +53,7 @@ export const getSecretConfig = (): SecretConfigType => {
 
     rateLimit: Number(serverRuntimeConfig.rateLimit) || 100,
     rateLimitTimeFrame: Number(serverRuntimeConfig.rateLimitTimeFrame) || 60, // 1 minute;
+    cowApiUrl: serverRuntimeConfig.cowApiUrl,
   };
 };
 

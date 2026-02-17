@@ -37,6 +37,7 @@ declare module 'next/config' {
       rateLimitTimeFrame: string;
       subgraphMainnet: string;
       subgraphHoodi: string;
+      cowApiUrl: string | undefined;
     };
     publicRuntimeConfig: {
       basePath: string | undefined;

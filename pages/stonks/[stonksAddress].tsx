@@ -20,24 +20,24 @@ export default function StonksDetailsPage() {
     (s) => s.address.toLowerCase() === addressParam.toLowerCase(),
   );
 
-  if (!stonksMetadata) {
-    return (
-      <ErrorBox>
-        <Text>Invalid address</Text>
-      </ErrorBox>
-    );
-  }
-
-  const pairLabel = `${stonksMetadata.tokenFrom.symbol} -> ${stonksMetadata.tokenTo.symbol}`;
+  const pairLabel = stonksMetadata
+    ? `${stonksMetadata.tokenFrom.symbol} -> ${stonksMetadata.tokenTo.symbol} `
+    : '';
 
   return (
     <Layout
-      pageTitle={`${pairLabel} Stonks`}
-      title={`${pairLabel}`}
+      pageTitle={`${pairLabel}Stonks`}
+      title={pairLabel}
       subtitle="Place Stonks order"
       containerSize="tight"
     >
-      <StonksPlaceOrderForm stonksMetadata={stonksMetadata} />
+      {stonksMetadata ? (
+        <StonksPlaceOrderForm stonksMetadata={stonksMetadata} />
+      ) : (
+        <ErrorBox>
+          <Text>Invalid address</Text>
+        </ErrorBox>
+      )}
     </Layout>
   );
 }

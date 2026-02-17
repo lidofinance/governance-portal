@@ -28,3 +28,38 @@ export type PlaceOrderFormNetworkData = {
 export type PlaceOrderFormContextValue = PlaceOrderFormNetworkData & {
   stonksMetadata: StonksMetadata;
 };
+
+export type OrderData = {
+  address: Address;
+  receiverAddress: string;
+  stonksMetadata: StonksMetadata;
+  validTo: number;
+  sellAmount: bigint;
+  buyAmount: bigint;
+  isRecoverable: boolean;
+  recoverableAmount: bigint;
+  isExpired: boolean;
+  hasBalance: boolean;
+};
+
+export type OffChainOrderStatus =
+  | 'presignaturePending'
+  | 'open'
+  | 'fulfilled'
+  | 'cancelled'
+  | 'expired';
+
+export type OrderStatus = 'not-created' | OffChainOrderStatus;
+
+export type CowOrder = {
+  uid: string;
+  creationDate: string;
+  status: OffChainOrderStatus;
+  sellAmountFulfillmentPct: bigint;
+  buyAmountFulfillmentPct: bigint;
+  executedSellAmount: bigint;
+  executedBuyAmount: bigint;
+  transactions: {
+    txHash: string;
+  }[];
+};
