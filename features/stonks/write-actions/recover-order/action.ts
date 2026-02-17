@@ -35,7 +35,7 @@ export const useRecoverOrderAction = ({
       const response = await waitForTx(txHash);
 
       if (response.status === 'reverted') {
-        txModalStages.failed(new Error(`Failed to place order`), onRetry);
+        txModalStages.failed(new Error(`Failed to recover order`), onRetry);
         return false;
       }
 

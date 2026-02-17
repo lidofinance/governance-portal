@@ -17,7 +17,7 @@ export const useStonksOrderData = (orderAddress: string) => {
 
   return useQuery<OrderData>({
     queryKey: ['stonks-order-data', chainId, orderAddress],
-    enabled: !!orderAddress,
+    enabled: isAddress(orderAddress),
     queryFn: async () => {
       if (!isAddress(orderAddress)) {
         throw new Error(`Invalid order address`);

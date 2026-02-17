@@ -3,7 +3,7 @@ import { useCowOrderData } from '@stonks/hooks/use-cow-order-data';
 import { useStonksOrderData } from '@stonks/hooks/use-stonks-order-data';
 import { StonksOrderCard } from '@stonks/order-card';
 import { ErrorBox } from '@stonks/styles';
-import { useRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/router';
 import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
 
@@ -44,9 +44,9 @@ export default function StonksOrderPage() {
           cowOrderData={cowOrderData}
           isLoading={isLoading}
         />
-      ) : (
+      ) : isLoading && !error ? (
         <Loader />
-      )}
+      ) : null}
     </Layout>
   );
 }

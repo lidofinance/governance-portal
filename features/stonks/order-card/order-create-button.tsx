@@ -40,7 +40,7 @@ export const StonksOrderCardCreateButton = ({
         signature: '0x',
       };
 
-      const response = await fetch(`/${API_ROUTES.COW_API}/orders`, {
+      const response = await fetch(`/${API_ROUTES.COW_PLACE_ORDER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,6 @@ export const StonksOrderCardCreateButton = ({
       });
       const data = await response.json();
       if (response.ok) {
-        onSuccess?.();
         return data as string;
       }
     },
