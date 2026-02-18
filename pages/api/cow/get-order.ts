@@ -6,7 +6,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { isAddress } from 'viem';
 import { Cache } from 'memory-cache';
 
-import { secretConfig } from 'config';
 import {
   HttpMethod,
   httpMethodGuard,
@@ -18,51 +17,57 @@ import { API_ROUTES } from 'constants/api';
 import Metrics from 'utils-api/metrics';
 import { standardFetcher } from 'utils/standard-fetcher';
 import { API } from 'types';
+import { CowApiOrder } from '@stonks/types';
+import { COW_API_URL } from 'shared/external-urls';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const STALENESS_TIME_MS = 10_000;
 
-let handler: API;
+const cache = new Cache<string, CowApiOrder>();
 
-if (!secretConfig.cowApiUrl) {
-  console.info(
-    '[api/cow/get-order] Skipped setup: secretConfig.cowApiUrl is null',
-  );
-  handler = async (_: NextApiRequest, res: NextApiResponse) => {
-    res.status(404).end();
-  };
-} else {
-  const cowApiUrl = secretConfig.cowApiUrl;
-  const cache = new Cache<string, unknown>();
+const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
+  const chainId = parseInt(req.query.chainId as string);
+  if (isNaN(chainId)) {
+    res.status(400).json({ message: 'Invalid chainId' });
+    return;
+  }
 
-  handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    const address = req.query.address;
-    if (typeof address !== 'string' || !isAddress(address)) {
-      res.status(400).json({ message: 'Invalid address' });
-      return;
-    }
+  // There is no CoW API instance for Hoodi testnet
+  if (chainId !== CHAINS.Mainnet) {
+    res.json(null);
+    return;
+  }
 
-    const cacheKey = `cow-order-${address}`;
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      res.json(cached);
-      return;
-    }
+  const address = req.query.address;
 
-    const data = await standardFetcher(
-      `${cowApiUrl}/account/${address}/orders`,
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(STALENESS_TIME_MS),
+  if (typeof address !== 'string' || !isAddress(address)) {
+    res.status(400).json({ message: 'Invalid address' });
+    return;
+  }
+
+  const cacheKey = `cow-order-${address}`;
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    res.json(cached);
+    return;
+  }
+
+  const orders = await standardFetcher<CowApiOrder[]>(
+    `${COW_API_URL}/v1/account/${address}/orders`,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    );
+      signal: AbortSignal.timeout(STALENESS_TIME_MS),
+    },
+  );
 
-    cache.put(cacheKey, data, STALENESS_TIME_MS);
-    res.json(data);
-  };
-}
+  const order = orders?.[0] ?? null;
+
+  cache.put(cacheKey, order, STALENESS_TIME_MS);
+  res.json(order);
+};
 
 export default wrapNextRequest([
   httpMethodGuard([HttpMethod.GET]),

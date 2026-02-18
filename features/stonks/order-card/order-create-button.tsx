@@ -38,6 +38,7 @@ export const StonksOrderCardCreateButton = ({
         sellTokenBalance: 'erc20',
         buyTokenBalance: 'erc20',
         signature: '0x',
+        chainId,
       };
 
       const response = await fetch(`/${API_ROUTES.COW_PLACE_ORDER}`, {

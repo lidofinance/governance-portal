@@ -63,3 +63,15 @@ export type CowOrder = {
     txHash: string;
   }[];
 };
+
+export type CowApiOrder = {
+  creationDate: string;
+  uid: string;
+  executedSellAmount: string;
+  executedBuyAmount: string;
+  status: OffChainOrderStatus;
+};
+
+export type CowApiTrade = {
+  txHash: string;
+};
