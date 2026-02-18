@@ -3,7 +3,7 @@ import { useModal } from 'providers/modal-provider';
 import {
   ConfirmModal,
   ConfirmModalProps,
-} from 'shared/components/confirm-modal/confirm-modal';
+} from 'shared/components/confirm-modal';
 
 type ModalProps = Omit<ConfirmModalProps, 'onCancel' | 'onConfirm'>;
 

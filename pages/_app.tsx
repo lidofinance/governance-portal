@@ -15,7 +15,7 @@ import { config } from 'config';
 import { withCsp } from 'config/csp';
 import { Providers } from 'providers';
 import { ErrorBoundaryFallback } from 'shared/components/error-boundary';
-import NoSsrWrapper from 'shared/components/no-ssr-wrapper';
+import { NoSsrWrapper } from 'shared/components/no-ssr-wrapper';
 import { nprogress, COOKIES_ALLOWED_FULL_KEY } from 'utils';
 
 // Migrations old theme cookies to new cross domain cookies

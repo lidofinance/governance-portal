@@ -3,7 +3,7 @@ import { useAccount } from 'wagmi';
 import { ButtonProps } from '@lidofinance/lido-ui';
 
 import { AddressBadge } from '../address-badge/address-badge';
-import { useWalletModal } from '../wallet-modal/use-wallet-modal';
+import { useWalletModal } from '../wallet-modal';
 
 import { WalledButtonWrapperStyle } from './styles';
 

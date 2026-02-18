@@ -1,6 +1,6 @@
 import { LogoLido } from 'shared/components/logos/logos';
 import { HeaderActionsWrapper, HeaderContainer, WalletInfo } from './style';
-import NoSSRWrapper from 'shared/components/no-ssr-wrapper';
+import { NoSsrWrapper } from 'shared/components/no-ssr-wrapper';
 import { Nav, NavBurger, NavMobile } from './nav';
 import { useState } from 'react';
 import { HeaderVaultInfo } from './header-vault-info';
@@ -26,7 +26,7 @@ export const Header = () => {
   return (
     <HeaderContainer>
       <LogoLido />
-      <NoSSRWrapper>
+      <NoSsrWrapper>
         <Nav />
         <HeaderActionsWrapper>
           <>
@@ -69,7 +69,7 @@ export const Header = () => {
             }
           </NavMobile>
         )}
-      </NoSSRWrapper>
+      </NoSsrWrapper>
     </HeaderContainer>
   );
 };
