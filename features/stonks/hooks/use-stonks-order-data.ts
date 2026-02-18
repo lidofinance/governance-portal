@@ -9,7 +9,10 @@ import { isAddress } from 'viem';
 import { OrderData } from '@stonks/types';
 import { AragonAgent } from 'shared/blockchain/contract-addresses';
 
-export const useStonksOrderData = (orderAddress: string) => {
+const isValidAddress = (address: string | undefined): address is Address =>
+  !!address && isAddress(address);
+
+export const useStonksOrderData = (orderAddress: string | undefined) => {
   const { chainId } = useLidoSDK();
 
   const getOrderContract = useReadContractGetter(stonksOrderAbi);
@@ -17,9 +20,9 @@ export const useStonksOrderData = (orderAddress: string) => {
 
   return useQuery<OrderData>({
     queryKey: ['stonks-order-data', chainId, orderAddress],
-    enabled: isAddress(orderAddress),
+    enabled: isValidAddress(orderAddress),
     queryFn: async () => {
-      if (!isAddress(orderAddress)) {
+      if (!isValidAddress(orderAddress)) {
         throw new Error(`Invalid order address`);
       }
       const orderContractReader = getOrderContract(orderAddress);
