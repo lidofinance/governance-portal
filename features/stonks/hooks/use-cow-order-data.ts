@@ -1,18 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { OffChainOrderStatus, OrderData } from '@stonks/types';
+import { CowApiOrder, CowApiTrade, OrderData } from '@stonks/types';
 import { API_ROUTES } from 'constants/api';
 import { standardFetcher } from 'utils/standard-fetcher';
-
-type CowApiOrder = {
-  creationDate: string;
-  uid: string;
-  validTo: number;
-  sellToken: string;
-  executedSellAmount: string;
-  executedBuyAmount: string;
-  status: OffChainOrderStatus;
-};
 
 export const useCowOrderData = (order: OrderData | undefined) => {
   const { chainId } = useLidoSDK();
@@ -25,22 +15,20 @@ export const useCowOrderData = (order: OrderData | undefined) => {
         return;
       }
 
-      const ordersByOwner = await standardFetcher<CowApiOrder[] | undefined>(
-        `/${API_ROUTES.COW_GET_ORDER}?address=${order.address}`,
+      const cowOrder = await standardFetcher<CowApiOrder | null | undefined>(
+        `/${API_ROUTES.COW_GET_ORDER}?address=${order.address}&chainId=${chainId}`,
       );
 
-      if (!ordersByOwner?.length) {
+      if (!cowOrder) {
         return null;
       }
 
-      const offChainOrder = ordersByOwner[0];
+      const orderTransactions = await standardFetcher<CowApiTrade[]>(
+        `/${API_ROUTES.COW_GET_TRADES}?orderUid=${cowOrder.uid}&chainId=${chainId}`,
+      );
 
-      const orderTransactions = await standardFetcher<
-        { txHash: string }[] | undefined
-      >(`/${API_ROUTES.COW_GET_TRADES}?orderUid=${offChainOrder.uid}`);
-
-      const executedSellAmount = BigInt(offChainOrder.executedSellAmount);
-      const executedBuyAmount = BigInt(offChainOrder.executedBuyAmount);
+      const executedSellAmount = BigInt(cowOrder.executedSellAmount);
+      const executedBuyAmount = BigInt(cowOrder.executedBuyAmount);
 
       const sellAmountFulfillmentPct = order.sellAmount
         ? (executedSellAmount * 100n) / order.sellAmount
@@ -50,9 +38,9 @@ export const useCowOrderData = (order: OrderData | undefined) => {
         : 0n;
 
       return {
-        uid: offChainOrder.uid,
-        creationDate: offChainOrder.creationDate,
-        status: offChainOrder.status,
+        uid: cowOrder.uid,
+        creationDate: cowOrder.creationDate,
+        status: cowOrder.status,
         executedBuyAmount,
         executedSellAmount,
         sellAmountFulfillmentPct,

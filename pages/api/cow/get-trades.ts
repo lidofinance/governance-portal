@@ -5,7 +5,6 @@ import {
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Cache } from 'memory-cache';
 
-import { secretConfig } from 'config';
 import {
   HttpMethod,
   httpMethodGuard,
@@ -17,51 +16,54 @@ import { API_ROUTES } from 'constants/api';
 import Metrics from 'utils-api/metrics';
 import { standardFetcher } from 'utils/standard-fetcher';
 import { API } from 'types';
+import { COW_API_URL } from 'shared/external-urls';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { CowApiTrade } from '@stonks/types';
 
 const STALENESS_TIME_MS = 10_000;
 
-let handler: API;
+const cache = new Cache<string, CowApiTrade[]>();
 
-if (!secretConfig.cowApiUrl) {
-  console.info(
-    '[api/cow/get-trades] Skipped setup: secretConfig.cowApiUrl is null',
-  );
-  handler = async (_: NextApiRequest, res: NextApiResponse) => {
-    res.status(404).end();
-  };
-} else {
-  const cowApiUrl = secretConfig.cowApiUrl;
-  const cache = new Cache<string, unknown>();
+const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
+  const chainId = parseInt(req.query.chainId as string);
+  if (isNaN(chainId)) {
+    res.status(400).json({ message: 'Invalid chainId' });
+    return;
+  }
 
-  handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    const orderUid = req.query.orderUid;
-    if (typeof orderUid !== 'string' || !orderUid) {
-      res.status(400).json({ message: 'Invalid orderUid' });
-      return;
-    }
+  // There is no CoW API instance for Hoodi testnet
+  if (chainId !== CHAINS.Mainnet) {
+    res.json([]);
+    return;
+  }
 
-    const cacheKey = `cow-trades-${orderUid}`;
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      res.json(cached);
-      return;
-    }
+  const orderUid = req.query.orderUid;
+  if (typeof orderUid !== 'string' || !orderUid) {
+    res.status(400).json({ message: 'Invalid orderUid' });
+    return;
+  }
 
-    const data = await standardFetcher(
-      `${cowApiUrl}/trades?orderUid=${encodeURIComponent(orderUid)}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(STALENESS_TIME_MS),
+  const cacheKey = `cow-trades-${orderUid}`;
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    res.json(cached);
+    return;
+  }
+
+  const data = await standardFetcher<CowApiTrade[]>(
+    `${COW_API_URL}/v2/trades?orderUid=${encodeURIComponent(orderUid)}`,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    );
+      signal: AbortSignal.timeout(STALENESS_TIME_MS),
+    },
+  );
 
-    cache.put(cacheKey, data, STALENESS_TIME_MS);
-    res.json(data);
-  };
-}
+  cache.put(cacheKey, data, STALENESS_TIME_MS);
+  res.json(data);
+};
 
 export default wrapNextRequest([
   httpMethodGuard([HttpMethod.GET]),

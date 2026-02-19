@@ -1,4 +1,3 @@
-import React from 'react';
 import { usePlaceOrderFormData } from '@stonks/providers/place-order-form-context';
 import { TokenAmountInputHookForm } from 'shared/hook-form/token-amount-input-hook-form';
 import { MIN_BUY_AMOUNT_NAME } from './constants';

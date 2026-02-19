@@ -3,13 +3,12 @@ import { useCowOrderData } from '@stonks/hooks/use-cow-order-data';
 import { useStonksOrderData } from '@stonks/hooks/use-stonks-order-data';
 import { StonksOrderCard } from '@stonks/order-card';
 import { ErrorBox } from '@stonks/styles';
-import { useRouter } from 'next/dist/client/router';
 import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
+import { useParsedQuery } from 'shared/hooks/use-parsed-query';
 
 export default function StonksOrderPage() {
-  const router = useRouter();
-  const orderAddress = String(router.query.orderAddress);
+  const [orderAddress] = useParsedQuery('orderAddress');
 
   const {
     data: orderData,
@@ -44,9 +43,9 @@ export default function StonksOrderPage() {
           cowOrderData={cowOrderData}
           isLoading={isLoading}
         />
-      ) : (
+      ) : isLoading && !error ? (
         <Loader />
-      )}
+      ) : null}
     </Layout>
   );
 }

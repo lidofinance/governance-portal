@@ -9,5 +9,5 @@ export const getCowOrderUrl = (
     return null;
   }
 
-  return `${COW_EXPLORER_URL}orders/${orderUid}`;
+  return `${COW_EXPLORER_URL}/orders/${orderUid}`;
 };
