@@ -5,7 +5,6 @@ import { DelegationFormBalance } from './delegation-form-balance';
 import { DelegationFormSubmitButton } from './delegation-form-submit-button';
 import { DelegationFormFootNote } from './delegation-form-foot-note';
 import { DelegationFormController } from './delegation-form-controller';
-import { DelegationTxStatus } from './delegation-tx-status';
 import { DelegationFormPublicDelegateTooltip } from './delegation-form-public-delegate-tooltip';
 import {
   DelegationFormProvider,
@@ -30,7 +29,6 @@ export const DelegationForm = ({
         <DelegationFormBalance onCustomizeClick={onCustomizeClick} />
         <DelegationFormSubmitButton onCustomizeClick={onCustomizeClick} />
         <DelegationFormFootNote />
-        <DelegationTxStatus />
       </DelegationFormController>
     </DelegationFormProvider>
   );

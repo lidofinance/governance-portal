@@ -1,6 +1,6 @@
 import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
-import { Motions } from 'features/easy-track/motions/motions';
+import { Motions } from 'features/easy-track/motions';
 import { Title } from 'features/easy-track/style';
 
 const ActiveMotionsPage = () => {

@@ -115,3 +115,4 @@ export * from './OperatorGrid';
 export * from './StakingVault';
 export * from './EvmAlterTiersInOperatorGrid';
 export * from './StonksV2';
+export * from './WithdrawalVault';
