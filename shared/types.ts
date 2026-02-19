@@ -6,6 +6,6 @@ export type ContractReadFunctionReturnType<
 > = ContractFunctionReturnType<abi, 'view', functionName>;
 
 export type ActionArgs = {
-  onConfirm: () => Promise<void>;
+  onConfirm: () => Promise<void> | void;
   onRetry?: () => void;
 };

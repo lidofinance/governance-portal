@@ -1,4 +1,4 @@
-import { Button, ToastError } from '@lidofinance/lido-ui';
+import { ToastError } from '@lidofinance/lido-ui';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { Fieldset } from './style';
@@ -10,6 +10,7 @@ import { usePublicClient } from 'wagmi';
 import { getOrderByPlaceTxReceipt } from '@stonks/utils/get-order-by-tx';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
+import { SubmitButtonHookForm } from 'shared/hook-form/submit-button-hook-form';
 
 type FormData = {
   txHashOrAddress: string;
@@ -30,8 +31,6 @@ export const StonksFindOrderForm = () => {
 
   const getOrderContract = useReadContractGetter(stonksOrderAbi);
 
-  const { isSubmitting } = formMethods.formState;
-
   const handleSubmit = async (values: FormData) => {
     try {
       if (isAddress(values.txHashOrAddress)) {
@@ -39,6 +38,7 @@ export const StonksFindOrderForm = () => {
 
         try {
           await orderContractReader('stonks');
+          await router.push(stonksOrderPage(values.txHashOrAddress));
         } catch (error) {
           throw new Error('Invalid order address');
         }
@@ -82,14 +82,12 @@ export const StonksFindOrderForm = () => {
               },
             }}
           />
-          <Button
-            fullwidth
-            type="submit"
-            loading={isSubmitting}
-            disabled={!formMethods.formState.isValid}
+          <SubmitButtonHookForm
+            errorField="txHashOrAddress"
+            data-testid="findOrderBtn"
           >
             Find order
-          </Button>
+          </SubmitButtonHookForm>
         </Fieldset>
       </form>
     </FormProvider>

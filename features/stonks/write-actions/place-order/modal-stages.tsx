@@ -15,7 +15,6 @@ import { formatToken } from 'shared/blockchain/utils';
 type Args = PlaceOrderFormInput & { stonksMetadata: StonksMetadata };
 
 const getInProgressText = (args: Args) => {
-  // TODO: decimals and symbols
   return `Placing order to sell ${formatToken({
     amount: args.sellAmount,
     decimals: args.stonksMetadata.tokenFrom.decimals,
