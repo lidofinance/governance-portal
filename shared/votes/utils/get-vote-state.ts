@@ -1,23 +1,19 @@
 import { Vote, VoteStatus } from 'shared/votes/types';
-import { formatUnits } from 'viem';
-
-type VoteWithoutState = Omit<Vote, 'state'>;
+import { formatEther } from 'viem';
 
 const EMPTY_SCRIPT = '0x00000001';
 
-const isVoteEnactable = (vote: VoteWithoutState): boolean | string => {
+const isVoteEnactable = (vote: Pick<Vote, 'script'>): boolean | string => {
   return vote.script && vote.script !== EMPTY_SCRIPT;
 };
 
-export const isQuorumReached = (vote: VoteWithoutState): boolean => {
-  const totalSupply = Number(
-    formatUnits(vote.votingPower as unknown as bigint, 18),
-  );
-  const yeaNum = Number(formatUnits(vote.yea as unknown as bigint, 18));
-  const nayNum = Number(formatUnits(vote.nay as unknown as bigint, 18));
-  const minAcceptQuorum = Number(
-    formatUnits(vote.minAcceptQuorum as unknown as bigint, 18),
-  );
+const isQuroumReached = (
+  vote: Pick<Vote, 'votingPower' | 'yea' | 'nay' | 'minAcceptQuorum'>,
+): boolean => {
+  const totalSupply = Number(formatEther(vote.votingPower));
+  const yeaNum = Number(formatEther(vote.yea));
+  const nayNum = Number(formatEther(vote.nay));
+  const minAcceptQuorum = Number(formatEther(vote.minAcceptQuorum));
 
   const yeaQuorum = yeaNum / totalSupply;
   const nayQuorum = nayNum / totalSupply;
@@ -26,7 +22,7 @@ export const isQuorumReached = (vote: VoteWithoutState): boolean => {
 };
 
 export const getVoteState = (
-  vote: VoteWithoutState,
+  vote: Omit<Vote, 'state'>,
   canExecute: boolean | undefined | null,
 ): { status: VoteStatus; isQuorumReached: boolean } => {
   const { open, executed, phase } = vote;
@@ -35,39 +31,39 @@ export const getVoteState = (
     if (executed) {
       return {
         status: VoteStatus.Executed,
-        isQuorumReached: isQuorumReached(vote),
+        isQuorumReached: isQuroumReached(vote),
       };
     }
 
     if (canExecute && !isVoteEnactable(vote)) {
       return {
         status: VoteStatus.Passed,
-        isQuorumReached: isQuorumReached(vote),
+        isQuorumReached: isQuroumReached(vote),
       };
     }
 
     if (canExecute && isVoteEnactable(vote)) {
       return {
         status: VoteStatus.Pending,
-        isQuorumReached: isQuorumReached(vote),
+        isQuorumReached: isQuroumReached(vote),
       };
     }
 
     return {
       status: VoteStatus.Rejected,
-      isQuorumReached: isQuorumReached(vote),
+      isQuorumReached: isQuroumReached(vote),
     };
   }
 
   if (!executed && phase === 1) {
     return {
       status: VoteStatus.ActiveObjection,
-      isQuorumReached: isQuorumReached(vote),
+      isQuorumReached: isQuroumReached(vote),
     };
   }
 
   return {
     status: VoteStatus.ActiveMain,
-    isQuorumReached: isQuorumReached(vote),
+    isQuorumReached: isQuroumReached(vote),
   };
 };

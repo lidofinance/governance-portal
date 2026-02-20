@@ -49,6 +49,7 @@ export type UseVoteData = {
   phase: VotePhase;
   status: VoteStatus;
   voteId: bigint;
+  isQuorumReached: boolean;
 };
 
 export const useVote = ({ voteId }: Args) => {
@@ -141,6 +142,7 @@ export const useVote = ({ voteId }: Args) => {
           votingPower,
           script,
           phase,
+          state: { isQuorumReached },
         },
       } = data;
 
@@ -166,6 +168,7 @@ export const useVote = ({ voteId }: Args) => {
         phase,
         status: getVoteStatus({ open, executed, phase, canExecute, script }),
         voteId,
+        isQuorumReached,
       };
     },
   });

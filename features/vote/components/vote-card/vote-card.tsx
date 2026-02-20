@@ -151,6 +151,7 @@ export const VoteCard = ({ voteId }: Props) => {
             voteDualGovernanceStatus={
               voteDualGovernanceStatus?.proposalStatus || null
             }
+            isQuorumReached={voteData.isQuorumReached}
           />
         )}
         <BlockWrap>

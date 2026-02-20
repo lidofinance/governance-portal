@@ -22,26 +22,8 @@ interface Props {
   voteDualGovernanceStatus: ProposalStatus | null;
   proposalId: number | null;
   chainId: CHAINS;
+  isQuorumReached: boolean;
 }
-
-const isQuorumReached = ({
-  yeaNum,
-  nayNum,
-  totalSupply,
-  minAcceptQuorum,
-}: Omit<
-  Props,
-  'voteDualGovernanceStatus' | 'chainId' | 'proposalId'
->): boolean => {
-  if (totalSupply === 0) {
-    return false;
-  }
-
-  const yeaQuorum = yeaNum / totalSupply;
-  const nayQuorum = nayNum / totalSupply;
-
-  return yeaQuorum > minAcceptQuorum || nayQuorum > minAcceptQuorum;
-};
 
 const getWinningOption = (yeaNum: number, nayNum: number): 'Yes' | 'No' => {
   return yeaNum > nayNum ? 'Yes' : 'No';
@@ -57,16 +39,8 @@ export const VoteStatusChips = ({
   votePhase,
   voteDualGovernanceStatus,
   proposalId,
+  isQuorumReached,
 }: Props) => {
-  const quorumIsReached = isQuorumReached({
-    yeaNum,
-    nayNum,
-    totalSupply,
-    minAcceptQuorum,
-    status,
-    votePhase,
-  });
-
   const minQuorumSupply = totalSupply * minAcceptQuorum;
 
   let winningOptionChip = null;
@@ -88,7 +62,7 @@ export const VoteStatusChips = ({
       statusChip = <Chip variant="success">Passed (pending)</Chip>;
       break;
     case VoteStatus.Rejected:
-      if (quorumIsReached) {
+      if (isQuorumReached) {
         statusChip = <Chip variant="danger">Rejected</Chip>;
       }
       break;
@@ -165,12 +139,12 @@ export const VoteStatusChips = ({
         placement="bottomLeft"
       >
         {votePhase === VotePhase.Closed ? (
-          !quorumIsReached && (
+          !isQuorumReached && (
             <Chip variant="warning">
               No quorum <InfoIcon />
             </Chip>
           )
-        ) : quorumIsReached ? (
+        ) : isQuorumReached ? (
           <Chip variant="success">
             Quorum reached <InfoIcon />
           </Chip>
