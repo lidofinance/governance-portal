@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
-export const REGEX_REPLACER_HINT = /(__\$\d+__)/g;
-export const REGEX_REPLACER_INDEX = /__\$(\d+)__/g;
+const REGEX_REPLACER_HINT = /(__\$\d+__)/g;
+const REGEX_REPLACER_INDEX = /__\$(\d+)__/g;
 
 type ReplaceRule = {
   regex: RegExp;

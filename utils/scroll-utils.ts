@@ -1,5 +1,5 @@
-export const HTML_LOCK_CLASS = 'html-scroll-lock';
-export const BODY_LOCK_CLASS = 'body-scroll-lock';
+const HTML_LOCK_CLASS = 'html-scroll-lock';
+const BODY_LOCK_CLASS = 'body-scroll-lock';
 
 const isClient = typeof window !== 'undefined';
 
@@ -9,7 +9,7 @@ let isScrollLocked = false;
 const body = isClient ? document.body : null;
 const html = isClient ? document.documentElement : null;
 
-export const getScrollPosition = () => {
+const getScrollPosition = () => {
   if (!html || !body) return 0;
   if (!isScrollLocked) {
     scrollPosition =

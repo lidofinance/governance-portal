@@ -18,7 +18,6 @@ if (
 const basePath = process.env.BASE_PATH;
 
 const developmentMode = process.env.NODE_ENV === 'development';
-const isIPFSMode = process.env.IPFS_MODE === 'true';
 
 // cache control
 export const CACHE_CONTROL_HEADER = 'x-cache-control';
@@ -43,15 +42,6 @@ const withBundleAnalyzer = NextBundleAnalyzer({
 export default withBundleAnalyzer({
   basePath,
   generateBuildId,
-
-  // IPFS next.js configuration reference:
-  // https://github.com/Velenir/nextjs-ipfs-example
-  trailingSlash: !!isIPFSMode,
-  assetPrefix: isIPFSMode ? './' : undefined,
-
-  // IPFS version has hash-based routing,
-  // so we provide only index.html in ipfs version
-  exportPathMap: isIPFSMode ? () => ({ '/': { page: '/' } }) : undefined,
 
   eslint: {
     ignoreDuringBuilds: true,
@@ -88,11 +78,6 @@ export default withBundleAnalyzer({
         use: [
           {
             loader: 'webpack-preprocessor-loader',
-            options: {
-              params: {
-                IPFS_MODE: isIPFSMode,
-              },
-            },
           },
         ],
       },

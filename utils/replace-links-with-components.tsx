@@ -5,9 +5,9 @@ import { REGEX_ETH_ADDRESS } from './regex-eth-address';
 import { REGEX_CID, REGEX_CID_CUTER } from './regex-cid';
 import { replaceRegexWithJSX } from './replace-regex-with-JSX';
 import { getIpfsUrl } from './get-ipfs-url';
-import { AddressPop } from '../shared/components/address-pop';
-import { Box } from '../shared/components/box';
-import { ExternalLink } from '../shared/components/external-link/external-link';
+import { AddressPop } from 'shared/components/address-pop';
+import { Box } from 'shared/components/box';
+import { ExternalLink } from 'shared/components';
 
 export const replaceJsxElements = (text: string) => {
   return replaceRegexWithJSX(text, [

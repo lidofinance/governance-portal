@@ -1,18 +1,16 @@
 import { GearIcon } from 'shared/components/icons';
 import { SETTINGS_PATH } from 'constants/urls';
-import { useRouterPath } from 'shared/hooks';
-import { usePrefixedPush } from 'shared/hooks';
-
 import { HeaderControlButton } from './style';
+import { useRouter } from 'next/router';
 
 export const HeaderSettingsButton = () => {
-  const push = usePrefixedPush();
-  const route = useRouterPath();
+  const router = useRouter();
 
+  // TODO: should be a link, not a button
   return (
     <HeaderControlButton
-      disabled={route === SETTINGS_PATH}
-      onClick={() => push(SETTINGS_PATH)}
+      disabled={router.asPath === SETTINGS_PATH}
+      onClick={() => router.push(SETTINGS_PATH)}
     >
       <GearIcon />
     </HeaderControlButton>

@@ -15,9 +15,6 @@ const toBoolean = (val) => {
   );
 };
 
-/** @type boolean */
-export const ipfsMode = toBoolean(process.env.IPFS_MODE);
-
 /** @type string */
 export const rootOrigin = process.env.ROOT_ORIGIN || 'https://lido.fi';
 export const selfOrigin =

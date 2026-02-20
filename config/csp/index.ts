@@ -41,19 +41,13 @@ export const contentSecurityPolicy: ContentSecurityPolicyOption = {
       ...(config.developmentMode ? ['ws:'] : []), // for HMR
     ],
 
-    ...(!config.ipfsMode && {
-      // CSP directive 'frame-ancestors' is ignored when delivered via a <meta> element.
-      // CSP directive 'report-uri' is ignored when delivered via a <meta> element.
-      frameAncestors: ['*'],
-      reportURI: secretConfig.cspReportUri,
-    }),
     childSrc: [
       "'self'",
       'https://*.walletconnect.org',
       'https://*.walletconnect.com',
     ],
     workerSrc: ["'none'"],
-    'base-uri': config.ipfsMode ? undefined : ["'none'"],
+    'base-uri': ["'none'"],
   },
   reportOnly: secretConfig.cspReportOnly,
 };

@@ -1,14 +1,6 @@
 import { useCallback } from 'react';
-import invariant from 'tiny-invariant';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-
-// Don't use absolute import here!
-// code'''
-//    import { config } from 'config';
-// '''
-// otherwise you will get something like a cyclic error!
-import { config } from '../get-config';
 
 import { useUserConfig } from '../user-config';
 
@@ -20,20 +12,12 @@ export const getBackendRPCPath = (chainId: string | number): string => {
 export const useGetRpcUrlByChainId = () => {
   const userConfig = useUserConfig();
   const savedRpcUrls = userConfig.savedUserConfig.rpcUrls;
-  const prefillRpcUrls = userConfig.prefillUnsafeElRpcUrls;
 
   return useCallback(
     (chainId: CHAINS) => {
-      if (config.ipfsMode) {
-        const rpc = savedRpcUrls[chainId] || prefillRpcUrls[chainId]?.[0];
-
-        invariant(rpc, '[useGetRpcUrlByChainId] RPC is required!');
-        return rpc;
-      }
-
       return savedRpcUrls[chainId] || getBackendRPCPath(chainId);
     },
-    [savedRpcUrls, prefillRpcUrls],
+    [savedRpcUrls],
   );
 };
 

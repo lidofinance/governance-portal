@@ -18,9 +18,7 @@ export const DualGovernancePage = () => {
   const metaTitle = 'Dual Governance | Lido';
   const metaDescription =
     'Lido Dual Governance uses a Dynamic Timelock so stETH holders can delay execution until withdrawal—enhancing protocol safety and stETH oversight.';
-  const metaPreviewImgUrl = config.ipfsMode
-    ? 'https://dg.lido.fi/dg-preview.png'
-    : `${(config as any).selfOrigin}/dg-preview.png`;
+  const metaPreviewImgUrl = `${(config as any).selfOrigin}/dg-preview.png`;
 
   return (
     <>
