@@ -1,7 +1,7 @@
 import Hash from 'ipfs-only-hash';
 import { getIpfsUrl } from './get-ipfs-url';
 
-export const DEFAULT_PARAMS = {
+const DEFAULT_PARAMS = {
   method: 'GET',
   headers: {
     'Content-type': 'text/plain',

@@ -4,10 +4,10 @@ import {
   NODE_OPERATORS_REGISTRY_MAP,
   nodeOperatorsKeysInfo,
 } from '../constants';
-import { fetcherStandard } from 'utils/fetcher-standard';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { useQuery } from '@tanstack/react-query';
+import { standardFetcher } from 'utils/standard-fetcher';
 
 export const useNodeOperatorKeysInfo = (
   registryType: NodeOperatorsRegistryType,
@@ -26,7 +26,7 @@ export const useNodeOperatorKeysInfo = (
       moduleAddress,
     ],
     queryFn: () =>
-      fetcherStandard<KeysInfo>(
+      standardFetcher<KeysInfo>(
         nodeOperatorsKeysInfo(chainId, `${walletAddress}`, `${moduleAddress}`),
       ),
     enabled: !!(chainId && walletAddress && moduleAddress),
