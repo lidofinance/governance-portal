@@ -43,7 +43,7 @@ import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-th
 import { periodLimitError } from './start-new-top-up-with-limits-and-custom-token';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
-export const TOP_UP_WITH_LIMITS_MAP = {
+const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.LegoLDOTopUp]: {
     evmContract: LegoLDOTopUp,
     motionType: MotionType.LegoLDOTopUp,

@@ -18,7 +18,7 @@ import { Fieldset, MessageBox } from './style';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
-export const ALLOWED_RECIPIENT_ADD_MAP = {
+const ALLOWED_RECIPIENT_ADD_MAP = {
   [MotionType.StethRewardProgramAdd]: {
     evmContract: StethRewardProgramAdd,
     motionType: MotionType.StethRewardProgramAdd,

@@ -56,7 +56,7 @@ const DEFAULT_QUERY_KEYS: EscrowQueryKeys = {
   escrowBalances: ['escrow-balances'],
 };
 
-export const EscrowContext = createContext<EscrowContextValue>({
+const EscrowContext = createContext<EscrowContextValue>({
   totalStEthInEscrow: 0n,
   stEthTotalSupply: 0n,
   rageQuitSupport: 0n,

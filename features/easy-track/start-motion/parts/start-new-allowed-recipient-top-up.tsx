@@ -48,7 +48,7 @@ type Program = {
   amount: string;
 };
 
-export const ALLOWED_RECIPIENT_TOPUP_MAP = {
+const ALLOWED_RECIPIENT_TOPUP_MAP = {
   [MotionType.AllowedRecipientTopUpTrpLdo]: {
     evmContract: AllowedRecipientTopUpTrpLdo,
     motionType: MotionType.AllowedRecipientTopUpTrpLdo,

@@ -6,7 +6,7 @@ type BoxProps = {
   isCentered?: boolean;
 };
 
-export const ContentHighlightBox = styled.div<BoxProps>`
+const ContentHighlightBox = styled.div<BoxProps>`
   margin-bottom: 10px;
   padding: 10px;
   color: var(--lido-color-text);

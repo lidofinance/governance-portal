@@ -13,7 +13,7 @@ import { validateBigintMax } from 'shared/hook-form/validate-bigint-max';
 
 // time that validation function waits for context data to resolve
 // should be enough to load token balances/tvl/max&min amounts and other contract data
-export const VALIDATION_CONTEXT_TIMEOUT = 8000;
+const VALIDATION_CONTEXT_TIMEOUT = 8000;
 
 const messageMaxAmount = (max: bigint, token: Token) =>
   `Entered ${token} amount exceeds your available balance of ${formatEther(max)}`;

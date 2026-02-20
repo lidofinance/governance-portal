@@ -10,13 +10,6 @@ export const StyledModal = styled(Modal)<ModalProps>`
   }
 ` as React.FC<ModalProps>;
 
-export const ButtonsWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
 export const StyledInput = styled(Input)`
   span {
     padding: 17px 26px;

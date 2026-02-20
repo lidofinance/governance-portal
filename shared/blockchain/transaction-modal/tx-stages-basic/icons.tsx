@@ -5,7 +5,6 @@ import {
   LedgerConfirm,
   LedgerLoading,
   LedgerSuccess,
-  Warning,
 } from '@lidofinance/lido-ui';
 
 import {
@@ -14,7 +13,6 @@ import {
   SuccessIcon,
   FailIcon,
   TxLoader,
-  WarningIcon,
 } from './icons-styles';
 
 const createStageIcon = (
@@ -54,18 +52,4 @@ export const StageIconLoader = createStageIcon(
   <TxLoader size="large" />,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   <LedgerLoading fill="transparent" />,
-);
-
-export const StageIconLimit = createStageIcon(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  <Warning />,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  <LedgerFail fill="transparent" />,
-);
-
-export const StageIconDialog = createStageIcon(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  <WarningIcon />,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  <WarningIcon />,
 );

@@ -27,7 +27,7 @@ export type SecretConfigType = Modify<
 //
 // Also you can note that 'getSecretConfig' is just a proxy for 'serverRuntimeConfig'
 // because we want similar approach with 'getConfig'
-export const getSecretConfig = (): SecretConfigType => {
+const getSecretConfig = (): SecretConfigType => {
   return {
     ...serverRuntimeConfig,
 

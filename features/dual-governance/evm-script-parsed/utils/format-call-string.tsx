@@ -219,7 +219,7 @@ const FormatSingleCall: React.FC<{
   );
 };
 
-export const formatDecodedCallString = (
+const formatDecodedCallString = (
   decodedCall: DecodedCall,
   chainId: CHAINS,
 ): React.JSX.Element => {

@@ -1,7 +1,7 @@
 import { InfoTooltip } from 'shared/components/info-tooltip';
 import { StyledContent } from './style';
 
-export const tooltipTitle = {
+const tooltipTitle = {
   vetoSupport: () =>
     `The amount of stETH opposing execution now. Bar shows progress toward the next threshold`,
   vetoSignalling: () => {

@@ -4,7 +4,7 @@ import { ExternalLinkModal } from '../external-link-modal/external-link-modal';
 
 import { ExternalLinkWrap } from './style';
 
-export const useExternalLinkModal = getUseModal(ExternalLinkModal);
+const useExternalLinkModal = getUseModal(ExternalLinkModal);
 
 type Props = {
   href?: string;

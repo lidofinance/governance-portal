@@ -7,6 +7,7 @@ import {
   ShowMoreButton,
   TitleWrap,
   Wrap,
+  InfoLabel,
 } from './style';
 import { DelegatorsListItem } from './delegators-list-item';
 import { useAccount } from 'wagmi';
@@ -17,7 +18,6 @@ import {
   DELEGATORS_FETCH_TOTAL,
   DELEGATORS_PAGE_SIZE,
 } from 'features/vote/constants';
-import { InfoLabel } from '../info-row';
 import { ExternalLink } from 'shared/components/external-link/external-link';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';

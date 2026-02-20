@@ -54,41 +54,7 @@ export const useRewardProgramsAll = () => {
 /**
  * @deprecated
  */
-export const useRewardProgramsActual = () => {
-  const { chainId } = useLidoSDK();
-  const { data: programsAll } = useRewardProgramsAll();
-  const rewardProgramRegistry = useReadContract(RewardProgramRegistry);
-
-  return useQuery({
-    queryKey: [
-      'reward-programs-actual',
-      chainId,
-      rewardProgramRegistry.address,
-      programsAll ? 'named' : 'not_named',
-    ],
-    queryFn: async () => {
-      const addresses =
-        await rewardProgramRegistry.readContract('getRewardPrograms');
-      if (programsAll) {
-        return programsAll.filter((p) => addresses.indexOf(p.address) !== -1);
-      }
-      return addresses.map((address) => ({ title: address, address }));
-    },
-  });
-};
-
-/**
- * @deprecated
- */
 export const useRewardProgramsMapAll = () => {
   const partners = useRewardProgramsAll();
-  return useRewardProgramsMap(partners);
-};
-
-/**
- * @deprecated
- */
-export const useRewardProgramsMapActual = () => {
-  const partners = useRewardProgramsActual();
   return useRewardProgramsMap(partners);
 };

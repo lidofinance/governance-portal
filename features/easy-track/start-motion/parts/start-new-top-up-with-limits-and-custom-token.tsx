@@ -57,7 +57,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 
-export const TOP_UP_WITH_LIMITS_MAP = {
+const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.RccStablesTopUp]: {
     evmContract: RccStablesTopUp,
     motionType: MotionType.RccStablesTopUp,

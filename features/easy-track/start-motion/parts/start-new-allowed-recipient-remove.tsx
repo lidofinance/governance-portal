@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 
-export const ALLOWED_RECIPIENT_REMOVE_MAP = {
+const ALLOWED_RECIPIENT_REMOVE_MAP = {
   [MotionType.StethRewardProgramRemove]: {
     evmContract: StethRewardProgramRemove,
     motionType: MotionType.StethRewardProgramRemove,

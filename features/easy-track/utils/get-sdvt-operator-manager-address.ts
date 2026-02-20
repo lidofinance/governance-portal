@@ -8,7 +8,7 @@
 */
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
-export const MANAGER_ADDRESS_MAP: Partial<
+const MANAGER_ADDRESS_MAP: Partial<
   Record<CHAINS, Record<number, string | undefined>>
 > = {
   [CHAINS.Mainnet]: {

@@ -62,10 +62,6 @@ export const DelegateButton = styled(Button)`
   }
 `;
 
-export const HiddenButton = styled(Button)`
-  display: none;
-`;
-
 export const DelegationFormFootNoteStyled = styled(Text).attrs({
   size: 'xxs',
   color: 'secondary',

@@ -3,7 +3,6 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ReferralPartnersRegistry } from 'shared/blockchain/contracts';
-import { Address } from 'viem';
 
 type ReferralPartner = {
   title: string;
@@ -51,38 +50,7 @@ export const useReferralPartnersAll = () => {
   });
 };
 
-export const useReferralPartnersActual = () => {
-  const { chainId } = useLidoSDK();
-  const partnersAll = useReferralPartnersAll();
-  const referalPartnersRegistry = useReadContract(ReferralPartnersRegistry);
-
-  return useQuery({
-    queryKey: [
-      'referral-partners-actual',
-      referalPartnersRegistry?.address,
-      chainId,
-    ],
-    queryFn: async () => {
-      if (!referalPartnersRegistry) return [];
-      const addresses =
-        await referalPartnersRegistry.readContract('getRewardPrograms');
-      if (partnersAll.data) {
-        return partnersAll.data.filter(
-          (p) => addresses.indexOf(p.address as Address) !== -1,
-        );
-      }
-      return addresses.map((address) => ({ title: address, address }));
-    },
-    enabled: !!referalPartnersRegistry,
-  });
-};
-
 export const useReferralPartnersMapAll = () => {
   const partners = useReferralPartnersAll();
-  return useReferralPartnersMap(partners);
-};
-
-export const useReferralPartnersMapActual = () => {
-  const partners = useReferralPartnersActual();
   return useReferralPartnersMap(partners);
 };

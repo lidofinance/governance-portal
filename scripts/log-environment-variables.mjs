@@ -24,15 +24,11 @@ export const openKeys = [
   // 'REWARDS_BACKEND_BASE_PATH',
 ];
 
-export const secretKeys = [
-  'EL_RPC_URLS_1',
-  'EL_RPC_URLS_17000',
-  'EL_RPC_URLS_560048',
-];
+const secretKeys = ['EL_RPC_URLS_1', 'EL_RPC_URLS_17000', 'EL_RPC_URLS_560048'];
 
 /* eslint-disable no-console */
 
-export const logOpenEnvironmentVariables = () => {
+const logOpenEnvironmentVariables = () => {
   console.log('---------------------------------------------');
   console.log('Log environment variables (without secrets):');
   console.log('---------------------------------------------');
@@ -50,7 +46,7 @@ export const logOpenEnvironmentVariables = () => {
   console.log('');
 };
 
-export const logSecretEnvironmentVariables = () => {
+const logSecretEnvironmentVariables = () => {
   console.log('---------------------------------------------');
   console.log('Log secret environment variables:');
   console.log('---------------------------------------------');

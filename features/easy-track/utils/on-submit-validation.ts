@@ -7,7 +7,7 @@ type MotionFormData<M extends keyof typeof formParts> = ReturnType<
 >[M];
 
 // Separate validation map for all motion types (including ones without form parts)
-export const EXTRA_VALIDATION_MAP: Record<
+const EXTRA_VALIDATION_MAP: Record<
   string,
   (data: any) => Promise<string | null> | string | null
 > = {

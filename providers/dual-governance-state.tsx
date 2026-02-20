@@ -35,7 +35,7 @@ const defaultDetailedState: DualGovernanceDetailedState = {
   vetoSignallingDuration: 0,
 };
 
-export const DualGovernanceStateContext =
+const DualGovernanceStateContext =
   createContext<DualGovernanceStateContextValue>({
     visibleState: VisibleGovernanceState.Loading,
     isAssetManagementLocked: false,

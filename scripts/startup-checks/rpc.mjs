@@ -1,10 +1,10 @@
 import { createClient, http } from 'viem';
 import { getChainId } from 'viem/actions';
 
-export const BROKEN_URL = 'BROKEN_URL';
-export const RPC_TIMEOUT_MS = 10_000;
-export const MAX_RETRY_COUNT = 3;
-export const RETRY_WAIT_TIME_MS = 10_000;
+const BROKEN_URL = 'BROKEN_URL';
+const RPC_TIMEOUT_MS = 10_000;
+const MAX_RETRY_COUNT = 3;
+const RETRY_WAIT_TIME_MS = 10_000;
 
 // Safely initialize a global variable
 const globalStartupRPCChecks = globalThis.__startupRPCChecks || {

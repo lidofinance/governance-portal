@@ -90,30 +90,6 @@ export const DelegateInfo = styled.div`
   }
 `;
 
-export const AvatarWrap = styled.div`
-  position: relative;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  overflow: hidden;
-  flex-shrink: 0;
-
-  & > img,
-  & > svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  & > img[src=''] {
-    display: none;
-  }
-
-  @media (max-width: ${BREAKPOINT_MD}) {
-    width: 32px;
-    height: 32px;
-  }
-`;
-
 export const SocialButtons = styled.div`
   display: flex;
   gap: 6px;

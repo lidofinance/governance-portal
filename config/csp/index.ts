@@ -15,7 +15,7 @@ const trustedHosts = secretConfig.cspTrustedHosts
   ? secretConfig.cspTrustedHosts.split(',')
   : [];
 
-export const contentSecurityPolicy: ContentSecurityPolicyOption = {
+const contentSecurityPolicy: ContentSecurityPolicyOption = {
   directives: {
     'default-src': ["'self'"],
     styleSrc: ["'self'", "'unsafe-inline'"],

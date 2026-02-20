@@ -7,19 +7,6 @@ import {
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { MotionType } from '../motion-types';
 
-export const parseScriptFactory = (chainId: CHAINS, scriptFactory: string) => {
-  const address = scriptFactory.toLowerCase();
-  if (
-    !Object.prototype.hasOwnProperty.call(
-      EvmTypesByAddress[parseEvmSupportedChainId(chainId)],
-      address,
-    )
-  ) {
-    throw new Error(`Script factory ${address} not recognized`);
-  }
-  return address;
-};
-
 export const getMotionTypeByScriptFactory = (
   chainId: CHAINS,
   scriptFactory: string,

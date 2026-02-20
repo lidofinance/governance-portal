@@ -78,11 +78,3 @@ export const Wrap = styled.div<WrapProps>`
       ? 'rgba(0, 163, 255, 0.1)'
       : 'var(--lido-color-backgroundSecondary)'};
 `;
-
-export const IconWrap = styled.div<{ $type: 'success' | 'fail' }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-`;

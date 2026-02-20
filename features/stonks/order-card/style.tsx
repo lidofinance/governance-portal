@@ -9,13 +9,6 @@ export const OrderCardWrapper = styled(Block)`
   gap: 16px;
 `;
 
-export const OrderUid = styled(Text).attrs({
-  size: 14,
-  weight: 800,
-})`
-  color: rgba(39, 56, 82, 0.6);
-`;
-
 type StatusValueProps = {
   value: OrderStatus;
 };
@@ -61,13 +54,6 @@ export const ButtonsRow = styled.div`
   & > * {
     flex: 1;
   }
-`;
-
-export const MessageBox = styled.div`
-  padding: 20px 15px;
-  font-size: 14px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: ${({ theme }) => theme.borderRadiusesMap.md + 'px'};
 `;
 
 export const Label = styled(Text).attrs({

@@ -2,11 +2,11 @@ import { memo } from 'react';
 import { Text } from 'shared/components/text';
 import styled from 'styled-components';
 
-export const Wrap = styled.div`
+const Wrap = styled.div`
   text-align: center;
 `;
 
-export const Title = styled(Text).attrs({
+const Title = styled(Text).attrs({
   size: 24,
 })`
   margin-top: ${({ theme }) => theme.spaceMap.xl}px;
@@ -14,7 +14,7 @@ export const Title = styled(Text).attrs({
   text-align: center;
 `;
 
-export const Description = styled(Text).attrs({
+const Description = styled(Text).attrs({
   size: 14,
   color: 'secondary',
 })`
@@ -22,11 +22,11 @@ export const Description = styled(Text).attrs({
   text-align: center;
 `;
 
-export const Footer = styled.div`
+const Footer = styled.div`
   margin-top: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
-export const FooterHint = styled(Text).attrs({
+const FooterHint = styled(Text).attrs({
   size: 14,
   color: 'secondary',
 })`

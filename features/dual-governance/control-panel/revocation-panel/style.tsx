@@ -3,13 +3,6 @@ import { PopupMenu, PopupMenuProps, Text } from '@lidofinance/lido-ui';
 import { Button } from 'shared/components/button';
 import { devicesHeaderMedia } from 'styles/global';
 
-export const RevokeTokenItemsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 24px;
-`;
-
 export const RevokeStEthPopupStyled = styled(PopupMenu)<PopupMenuProps>`
   box-shadow: 0 4px 50px #18284933;
   border: 1px solid #0000001a;
@@ -108,13 +101,6 @@ export const NoTokensMessage = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-`;
-
-export const NftClaimTrigger = styled(Text)`
-  color: var(--accent-color-ocean-light);
-  cursor: pointer;
-  padding-bottom: 10px;
-  text-align: right;
 `;
 
 export const ClaimNftText = styled(Text)`

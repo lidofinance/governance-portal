@@ -11,7 +11,7 @@ type ButtonStyledProps = Omit<ButtonLibProps, 'variant'> & {
 };
 
 // Restyled version of the Button component from th lido-ui library
-export const ButtonStyled = styled(ButtonLib)<ButtonStyledProps>`
+const ButtonStyled = styled(ButtonLib)<ButtonStyledProps>`
   border-radius: 32px;
   font-size: 17px;
   background-color: var(--primary-color-black);

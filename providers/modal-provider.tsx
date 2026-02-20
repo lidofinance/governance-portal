@@ -36,7 +36,7 @@ export type ModalContextValue = {
   closeModal: <P extends object>(modal?: ModalComponentType<P>) => void;
 };
 
-export const modalContext = createContext({} as ModalContextValue);
+const modalContext = createContext({} as ModalContextValue);
 
 /**
  * Context accessors

@@ -84,3 +84,10 @@ export const CounterBadge = styled.div`
   font-weight: 700;
   display: inline-block;
 `;
+
+export const InfoLabel = styled.div`
+  display: inline-block;
+  font-size: ${({ theme }) => theme.fontSizesMap.xs}px;
+  font-weight: 400;
+  color: var(--lido-color-textSecondary);
+`;

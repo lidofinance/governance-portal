@@ -22,7 +22,3 @@ export const getPreConfig = (): PreConfigType => {
     ...(typeof window !== 'undefined' ? window.__env__ : dynamics),
   };
 };
-
-// `preConfig` needs for external internal in 'config/groups/*'
-// Not use `preConfig` outside of 'config/groups/*'
-export const preConfig = getPreConfig();
