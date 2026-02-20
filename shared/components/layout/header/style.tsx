@@ -39,18 +39,6 @@ export const HeaderActionsWrapper = styled.div`
   }
 `;
 
-export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
-  position: absolute;
-  right: 0;
-  top: calc(100% + 15px);
-  width: 255px;
-  z-index: 3;
-
-  @media ${devicesHeaderMedia.tablet} {
-    display: none;
-  }
-`;
-
 export const VaultInfoButton = styled.button`
   display: flex;
   flex-shrink: 0;

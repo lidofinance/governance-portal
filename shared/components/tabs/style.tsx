@@ -1,12 +1,6 @@
 import styled, { css } from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
-export const FormWrapper = styled.div`
-  margin-top: 24px;
-  border-radius: 28px;
-  border: 1px solid #0000001a;
-`;
-
 type TabProps = {
   $isActive: boolean;
   $disabled?: boolean;

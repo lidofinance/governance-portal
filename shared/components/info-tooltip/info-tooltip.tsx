@@ -1,4 +1,4 @@
-import { TooltipHoverable } from '../tooltip-hoverable/tooltip-hoverable';
+import { TooltipHoverable } from '..';
 import { ReactNode } from 'react';
 import { IconWrapper } from './style';
 
