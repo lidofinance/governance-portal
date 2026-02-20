@@ -1,4 +1,4 @@
-import { formatEther } from '@ethersproject/units';
+import { formatEther } from 'viem';
 import type { Motion, RawMotionSubgraph } from '../types';
 
 export const getMotionProgress = (
@@ -7,7 +7,7 @@ export const getMotionProgress = (
 ) => {
   const thresholdPct = Number(motion.objectionsThreshold) / 100;
   const totalSupplyNumber = Number(formatEther(totalSupply));
-  const objectionsAmount = Number(formatEther(motion.objectionsAmount));
+  const objectionsAmount = Number(motion.objectionsAmount);
   const thresholdAmount = (totalSupplyNumber * thresholdPct) / 100;
   // if thresholdAmount is 0, use 1 to avoid division by 0
   const objectionsPct = (objectionsAmount / (thresholdAmount || 1)) * 100;
