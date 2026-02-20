@@ -13,7 +13,7 @@ const ETHERSCAN_PREFIX_BY_NETWORK: Partial<Record<CHAINS, string>> = {
   [CHAINS.Hoodi]: 'hoodi.',
 };
 
-export const getEtherscanPrefix = (chainId: CHAINS) => {
+const getEtherscanPrefix = (chainId: CHAINS) => {
   const prefix = ETHERSCAN_PREFIX_BY_NETWORK[chainId];
   invariant(prefix != null, 'Chain is not supported');
   return prefix;
@@ -32,10 +32,6 @@ export const getEtherscanLink = (
 
 export const getEtherscanTxLink = (chainId: CHAINS, hash: string) => {
   return getEtherscanLink(chainId, hash, ETHERSCAN_ENTITIES.Tx);
-};
-
-export const getEtherscanTokenLink = (chainId: CHAINS, hash: string) => {
-  return getEtherscanLink(chainId, hash, ETHERSCAN_ENTITIES.Token);
 };
 
 export const getEtherscanAddressLink = (chainId: CHAINS, hash: string) => {

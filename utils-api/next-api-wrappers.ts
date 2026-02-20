@@ -17,7 +17,7 @@ export enum HttpMethod {
   OPTIONS = 'OPTIONS',
 }
 
-export const extractErrorMessage = (
+const extractErrorMessage = (
   error: unknown,
   defaultMessage?: string,
 ): string => {
@@ -68,7 +68,7 @@ export const rateLimit = rateLimitWrapper({
   rateLimitTimeFrame: secretConfig.rateLimitTimeFrame,
 });
 
-export const nextDefaultErrorHandler =
+const nextDefaultErrorHandler =
   (args?: DefaultErrorHandlerArgs): RequestWrapper =>
   async (req, res, next) => {
     const { errorMessage = DEFAULT_API_ERROR_MESSAGE, serverLogger: console } =

@@ -10,8 +10,3 @@ export const compareWithRouterPathInInfra = (asPath: string, href: string) => {
 
   return pathWithoutLastSlash === href;
 };
-
-export const compareWithRouterPathInIPFS = (asPath: string, href: string) => {
-  // '/?ref=123&embed=456&app=789#/wrap' ---> '/wrap'
-  return asPath.split('#')[1] === href;
-};
