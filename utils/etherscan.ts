@@ -9,7 +9,6 @@ enum ETHERSCAN_ENTITIES {
 
 const ETHERSCAN_PREFIX_BY_NETWORK: Partial<Record<CHAINS, string>> = {
   [CHAINS.Mainnet]: '',
-  [CHAINS.Holesky]: 'holesky.',
   [CHAINS.Hoodi]: 'hoodi.',
 };
 

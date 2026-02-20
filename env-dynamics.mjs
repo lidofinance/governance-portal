@@ -42,9 +42,6 @@ export const supportedChains = process.env.SUPPORTED_CHAINS
 export const prefillUnsafeElRpcUrls1 =
   process.env.PREFILL_UNSAFE_EL_RPC_URLS_1?.split(',') ?? [];
 /** @type string[] */
-export const prefillUnsafeElRpcUrls17000 =
-  process.env.PREFILL_UNSAFE_EL_RPC_URLS_17000?.split(',') ?? [];
-/** @type string[] */
 export const prefillUnsafeElRpcUrls560048 =
   process.env.PREFILL_UNSAFE_EL_RPC_URLS_560048?.split(',') ?? [];
 /** @type boolean */

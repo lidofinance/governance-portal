@@ -24,7 +24,7 @@ export const openKeys = [
   // 'REWARDS_BACKEND_BASE_PATH',
 ];
 
-const secretKeys = ['EL_RPC_URLS_1', 'EL_RPC_URLS_17000', 'EL_RPC_URLS_560048'];
+const secretKeys = ['EL_RPC_URLS_1', 'EL_RPC_URLS_560048'];
 
 /* eslint-disable no-console */
 
