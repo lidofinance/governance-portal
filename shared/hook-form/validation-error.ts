@@ -1,6 +1,6 @@
 import { ToastError } from '@lidofinance/lido-ui';
 
-export enum DefaultValidationErrorTypes {
+enum DefaultValidationErrorTypes {
   VALIDATE = 'VALIDATE',
   UNHANDLED = 'UNHANDLED',
 }

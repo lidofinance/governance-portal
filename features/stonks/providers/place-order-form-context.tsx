@@ -68,7 +68,7 @@ const usePlaceOrderFormNetworkData = (
   };
 };
 
-export type PlaceOrderFormProviderProps = {
+type PlaceOrderFormProviderProps = {
   stonksMetadata: StonksMetadata;
   children?: React.ReactNode;
 };

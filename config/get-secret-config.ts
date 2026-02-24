@@ -3,7 +3,7 @@ import { type Modify, toBoolean } from './helpers';
 
 const { serverRuntimeConfig } = getConfigNext();
 
-export type SecretConfigType = Modify<
+type SecretConfigType = Modify<
   typeof serverRuntimeConfig,
   {
     defaultChain: number;

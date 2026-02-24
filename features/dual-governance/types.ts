@@ -1,10 +1,7 @@
 import { Token } from 'shared/blockchain/types';
 import { ProposalCombinedData } from './proposals/types';
 import { VoteData } from 'shared/votes/types';
-import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
-import { Log, Address } from 'viem';
-
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { Address } from 'viem';
 
 export const isVoteItem = (
   item: ProposalCombinedData | VoteData,
@@ -35,35 +32,6 @@ export const VisibleGovernanceState = {
 
 export type VisibleGovernanceState = keyof typeof VisibleGovernanceState;
 
-export enum TransactionState {
-  SUCCESS,
-  ERROR,
-  PENDING,
-}
-
-export type DualGovernanceState = {
-  rageQuitSupport: bigint;
-  totalStEthInEscrowFormatted: string;
-  totalStEthInEscrow: bigint;
-  amountTillNextPhasePercent: number;
-  nextPhaseSupportThresholdPercent: number;
-  visibleState: VisibleGovernanceState;
-  stEthTotalSupply: bigint;
-  detailedState: {
-    effectiveState: number;
-    persistedState: number;
-    persistedStateEnteredAt: number;
-    vetoSignallingActivatedAt: number;
-    vetoSignallingReactivationTime: number;
-    normalOrVetoCooldownExitedAt: number;
-    rageQuitRound: bigint;
-    vetoSignallingDuration: number;
-  };
-  isAssetManagementLocked: boolean;
-  firstSealRageQuitSupport: number;
-  secondSealRageQuitSupport: number;
-};
-
 export type DualGovernanceDetailedState = {
   effectiveState: GovernanceState;
   persistedState: GovernanceState;
@@ -90,18 +58,6 @@ export type DualGovernanceConfig = {
   rageQuitEthWithdrawalsDelayGrowth: number;
 };
 
-type DualGovernanceStateChangeEventArgs = {
-  from: GovernanceState;
-  to: GovernanceState;
-  state: DualGovernanceState & {
-    enteredAt: number;
-  };
-};
-
-export type DualGovernanceStateChangeEventLog = Log & {
-  args?: DualGovernanceStateChangeEventArgs;
-};
-
 export const VetoSupportedTokens = [
   Token.stETH,
   Token.wstETH,
@@ -111,13 +67,6 @@ export const VetoSupportedTokens = [
 export type VetoSupportedTokens = (typeof VetoSupportedTokens)[number];
 
 export type WithdrawalsMap = Record<string, bigint>; // id, stEthAmount
-
-export type UseEventWatcherConfig<T> = {
-  chainId: CHAINS;
-  refetchFn: (
-    options?: RefetchOptions | undefined,
-  ) => Promise<QueryObserverResult<T | undefined, Error>>;
-};
 
 export type EscrowActionArgs = (
   | {

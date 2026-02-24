@@ -3,7 +3,7 @@ import { useSimpleReducer } from 'shared/hooks/use-simple-reducer';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { OperatorGrid } from 'shared/blockchain/contracts';
 
-export type Tier = {
+type Tier = {
   operator: string;
   shareLimit: bigint;
   liabilityShares: bigint;

@@ -6,7 +6,7 @@ import {
 } from './style';
 import { Component } from 'types';
 
-export type BackgroundGradientComponent = Component<
+type BackgroundGradientComponent = Component<
   'svg',
   { width: number; height: number; state: VisibleGovernanceState }
 >;

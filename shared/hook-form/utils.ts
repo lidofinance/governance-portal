@@ -1,4 +1,4 @@
-export enum DefaultValidationErrorTypes {
+enum DefaultValidationErrorTypes {
   VALIDATE = 'VALIDATE',
   UNHANDLED = 'UNHANDLED',
 }

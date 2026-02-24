@@ -5,14 +5,14 @@ import { Address } from 'viem';
 
 const EvmSupportedChains = [CHAINS.Mainnet, CHAINS.Hoodi] as const;
 
-export type EvmSupportedChain = (typeof EvmSupportedChains)[number];
+type EvmSupportedChain = (typeof EvmSupportedChains)[number];
 
 type EvmAddresses = Record<
   EvmSupportedChain,
   Partial<Record<MotionType, Address | ''>>
 >;
 
-export type KeyFromValue<V, T extends Record<PropertyKey, PropertyKey>> = {
+type KeyFromValue<V, T extends Record<PropertyKey, PropertyKey>> = {
   [K in keyof T]: V extends T[K] ? K : never;
 }[keyof T];
 

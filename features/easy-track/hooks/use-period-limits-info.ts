@@ -16,7 +16,7 @@ type UsePeriodLimitInfoProps<T> = {
   isPending?: boolean;
 };
 
-export type UsePeriodLimitsInfoResultData = {
+type UsePeriodLimitsInfoResultData = {
   limits: LimitsType;
   periodData: PeriodDataType;
   motionDuration: number;

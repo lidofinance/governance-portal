@@ -6,7 +6,7 @@ import type { TrackedFetchRPC } from '@lidofinance/api-rpc';
 import type { FetchRpcInitBody } from '@lidofinance/rpc';
 import { iterateUrls } from '@lidofinance/rpc';
 
-export type RpcProviders = Record<string | number, [string, ...string[]]>;
+type RpcProviders = Record<string | number, [string, ...string[]]>;
 
 const DEFAULT_API_ERROR_MESSAGE =
   'Something went wrong. Sorry, try again later :(';
@@ -32,7 +32,7 @@ class InvalidRequestError extends ClientError {
   }
 }
 
-export type RPCFactoryParams = {
+type RPCFactoryParams = {
   metrics: {
     prefix: string;
     registry: Registry;

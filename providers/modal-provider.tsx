@@ -24,7 +24,7 @@ export type ModalComponentType<P extends object = EmptyObj> = React.FC<
 /**
  * Context definition
  */
-export type ModalContextValue = {
+type ModalContextValue = {
   openModal: <P extends object>(
     modal: ModalComponentType<P>,
     props: P,

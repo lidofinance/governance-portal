@@ -1,13 +1,5 @@
 import { WithdrawalsMap } from 'features/dual-governance/types';
-import { Token } from 'shared/blockchain/types';
 import { Address } from 'viem';
-
-export type SupportFormDataContextValue = SupportFormNetworkData;
-
-export type SupportFormInput = {
-  token: Token;
-  amount: string | undefined;
-};
 
 export type SupportFormNetworkData = {
   etherBalance: bigint | undefined;

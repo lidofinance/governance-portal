@@ -4,7 +4,7 @@ import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
-export type VoteTimeData = {
+type VoteTimeData = {
   isPassed: boolean;
   diff: number;
   diffFormatted: string;

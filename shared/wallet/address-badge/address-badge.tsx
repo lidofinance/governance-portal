@@ -2,7 +2,7 @@ import { useBreakpoint, IdenticonBadgeProps } from '@lidofinance/lido-ui';
 import { Component } from 'types';
 import { AddressBadgeStyle } from './styles';
 
-export type AddressBadgeComponent = Component<
+type AddressBadgeComponent = Component<
   'div',
   Omit<IdenticonBadgeProps, 'address' | 'as'> & { address?: string | null } & {
     symbolsMobile?: number;

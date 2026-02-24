@@ -6,15 +6,6 @@ import {
   SDVTRegistry,
 } from 'shared/blockchain/contracts';
 
-export type NestProps<T> =
-  T extends Promise<infer U>
-    ? NestProps<U>
-    : T extends (...args: any[]) => infer R
-      ? NestProps<R>
-      : T extends object
-        ? { [K in keyof T]: NestProps<T[K]> }
-        : T;
-
 export const NODE_OPERATORS_REGISTRY_MAP = {
   curated: NodeOperatorsRegistry,
   sdvt: SDVTRegistry,

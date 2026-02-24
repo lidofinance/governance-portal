@@ -2,7 +2,7 @@ import { Address, PublicClient } from 'viem';
 import { CONTRACT_DEPLOYMENT_BLOCKS } from 'shared/blockchain/deployment-blocks';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
-export interface FetchLogsOptions {
+interface FetchLogsOptions {
   client: PublicClient;
   address: Address | Address[];
   event: any;
