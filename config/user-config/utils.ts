@@ -4,7 +4,6 @@
 // '''
 // otherwise you will get something like a cyclic error!
 
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { config } from '../get-config';
 import { UserConfigDefaultType } from './types';
 
@@ -12,11 +11,6 @@ export const getUserConfigDefault = (): UserConfigDefaultType => {
   return {
     defaultChain: Number(config.defaultChain),
     supportedChainIds: config.supportedChains,
-    prefillUnsafeElRpcUrls: {
-      [CHAINS.Mainnet]: config.prefillUnsafeElRpcUrls1,
-      [CHAINS.Holesky]: config.prefillUnsafeElRpcUrls17000,
-      [CHAINS.Hoodi]: config.prefillUnsafeElRpcUrls560048,
-    },
     walletconnectProjectId: config.walletconnectProjectId,
   };
 };
