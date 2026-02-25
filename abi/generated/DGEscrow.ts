@@ -137,6 +137,7 @@ export const dgEscrowAbi = [
   },
   { type: 'error', inputs: [], name: 'NonProxyCallsForbidden' },
   { type: 'error', inputs: [], name: 'PercentD16Overflow' },
+  { type: 'error', inputs: [], name: 'RageQuitExtensionPeriodAlreadyStarted' },
   { type: 'error', inputs: [], name: 'RageQuitExtensionPeriodNotStarted' },
   {
     type: 'error',
@@ -887,4 +888,4 @@ export const dgEscrowAbi = [
     stateMutability: 'nonpayable',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

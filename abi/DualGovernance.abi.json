@@ -81,91 +81,47 @@
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
-  {
-    "inputs": [],
-    "name": "AlreadyInitialized",
-    "type": "error"
-  },
+  { "inputs": [], "name": "AlreadyInitialized", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotAdminExecutor",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotProposalsCanceller",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotResealCommittee",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotTiebreakerCommittee",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "DurationOverflow",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "DurationUnderflow",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ERC1167FailedCreateClone",
-    "type": "error"
-  },
+  { "inputs": [], "name": "DurationOverflow", "type": "error" },
+  { "inputs": [], "name": "DurationUnderflow", "type": "error" },
+  { "inputs": [], "name": "ERC1167FailedCreateClone", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "executor", "type": "address" }
     ],
     "name": "ExecutorNotRegistered",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "IndexOneBasedOverflow",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "IndexOneBasedUnderflow",
-    "type": "error"
-  },
+  { "inputs": [], "name": "IndexOneBasedOverflow", "type": "error" },
+  { "inputs": [], "name": "IndexOneBasedUnderflow", "type": "error" },
   {
     "inputs": [
       {
@@ -179,11 +135,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "executor", "type": "address" }
     ],
     "name": "InvalidExecutor",
     "type": "error"
@@ -201,11 +153,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "canceller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "canceller", "type": "address" }
     ],
     "name": "InvalidProposalsCanceller",
     "type": "error"
@@ -277,11 +225,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "sealable",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "sealable", "type": "address" }
     ],
     "name": "InvalidSealable",
     "type": "error"
@@ -289,10 +233,17 @@
   {
     "inputs": [
       {
-        "internalType": "Duration",
-        "name": "timeout",
-        "type": "uint32"
+        "internalType": "PercentD16",
+        "name": "secondSealRageQuitSupport",
+        "type": "uint128"
       }
+    ],
+    "name": "InvalidSecondSealRageQuitSupport",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "Duration", "name": "timeout", "type": "uint32" }
     ],
     "name": "InvalidTiebreakerActivationTimeout",
     "type": "error"
@@ -315,11 +266,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "account", "type": "address" }
     ],
     "name": "InvalidTiebreakerCommittee",
     "type": "error"
@@ -340,27 +287,16 @@
     "name": "InvalidVetoSignallingDurationRange",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "PercentD16Underflow",
-    "type": "error"
-  },
+  { "inputs": [], "name": "PercentD16Overflow", "type": "error" },
+  { "inputs": [], "name": "PercentD16Underflow", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "ProposalSchedulingBlocked",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "ProposalSubmissionBlocked",
-    "type": "error"
-  },
+  { "inputs": [], "name": "ProposalSubmissionBlocked", "type": "error" },
   {
     "inputs": [
       {
@@ -383,29 +319,17 @@
     "name": "ProposerNotRegistered",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "ResealIsNotAllowedInNormalState",
-    "type": "error"
-  },
+  { "inputs": [], "name": "ResealIsNotAllowedInNormalState", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "sealable",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "sealable", "type": "address" }
     ],
     "name": "SealableWithdrawalBlockerAlreadyAdded",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "sealable",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "sealable", "type": "address" }
     ],
     "name": "SealableWithdrawalBlockerNotFound",
     "type": "error"
@@ -415,16 +339,8 @@
     "name": "SealableWithdrawalBlockersLimitReached",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "TiebreakNotAllowed",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "TimestampOverflow",
-    "type": "error"
-  },
+  { "inputs": [], "name": "TiebreakNotAllowed", "type": "error" },
+  { "inputs": [], "name": "TimestampOverflow", "type": "error" },
   {
     "anonymous": false,
     "inputs": [],
@@ -467,11 +383,7 @@
       },
       {
         "components": [
-          {
-            "internalType": "enum State",
-            "name": "state",
-            "type": "uint8"
-          },
+          { "internalType": "enum State", "name": "state", "type": "uint8" },
           {
             "internalType": "Timestamp",
             "name": "enteredAt",
@@ -487,11 +399,7 @@
             "name": "signallingEscrow",
             "type": "address"
           },
-          {
-            "internalType": "uint8",
-            "name": "rageQuitRound",
-            "type": "uint8"
-          },
+          { "internalType": "uint8", "name": "rageQuitRound", "type": "uint8" },
           {
             "internalType": "Timestamp",
             "name": "vetoSignallingReactivationTime",
@@ -724,39 +632,21 @@
   {
     "inputs": [],
     "name": "MAX_SEALABLE_WITHDRAWAL_BLOCKERS_COUNT",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_TIEBREAKER_ACTIVATION_TIMEOUT",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MIN_TIEBREAKER_ACTIVATION_TIMEOUT",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -764,11 +654,7 @@
     "inputs": [],
     "name": "TIMELOCK",
     "outputs": [
-      {
-        "internalType": "contract ITimelock",
-        "name": "",
-        "type": "address"
-      }
+      { "internalType": "contract ITimelock", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -796,58 +682,30 @@
   {
     "inputs": [],
     "name": "canCancelAllPendingProposals",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "canScheduleProposal",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "canSubmitProposal",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "cancelAllPendingProposals",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -893,13 +751,7 @@
   {
     "inputs": [],
     "name": "getProposalsCanceller",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -915,16 +767,8 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "executor",
-            "type": "address"
-          }
+          { "internalType": "address", "name": "account", "type": "address" },
+          { "internalType": "address", "name": "executor", "type": "address" }
         ],
         "internalType": "struct Proposers.Proposer",
         "name": "proposer",
@@ -940,16 +784,8 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "executor",
-            "type": "address"
-          }
+          { "internalType": "address", "name": "account", "type": "address" },
+          { "internalType": "address", "name": "executor", "type": "address" }
         ],
         "internalType": "struct Proposers.Proposer[]",
         "name": "proposers",
@@ -962,26 +798,14 @@
   {
     "inputs": [],
     "name": "getRageQuitEscrow",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getResealCommittee",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1059,11 +883,7 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "bool",
-            "name": "isTie",
-            "type": "bool"
-          },
+          { "internalType": "bool", "name": "isTie", "type": "bool" },
           {
             "internalType": "address",
             "name": "tiebreakerCommittee",
@@ -1091,32 +911,16 @@
   {
     "inputs": [],
     "name": "getVetoSignallingEscrow",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "executor", "type": "address" }
     ],
     "name": "isExecutor",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1129,13 +933,7 @@
       }
     ],
     "name": "isProposer",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1146,11 +944,7 @@
         "name": "proposerAccount",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "executor", "type": "address" }
     ],
     "name": "registerProposer",
     "outputs": [],
@@ -1172,11 +966,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "sealable",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "sealable", "type": "address" }
     ],
     "name": "resealSealable",
     "outputs": [],
@@ -1185,11 +975,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "scheduleProposal",
     "outputs": [],
@@ -1229,11 +1015,7 @@
         "name": "proposerAccount",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "newExecutor",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "newExecutor", "type": "address" }
     ],
     "name": "setProposerExecutor",
     "outputs": [],
@@ -1296,50 +1078,26 @@
     "inputs": [
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "uint96",
-            "name": "value",
-            "type": "uint96"
-          },
-          {
-            "internalType": "bytes",
-            "name": "payload",
-            "type": "bytes"
-          }
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "uint96", "name": "value", "type": "uint96" },
+          { "internalType": "bytes", "name": "payload", "type": "bytes" }
         ],
         "internalType": "struct ExternalCall[]",
         "name": "calls",
         "type": "tuple[]"
       },
-      {
-        "internalType": "string",
-        "name": "metadata",
-        "type": "string"
-      }
+      { "internalType": "string", "name": "metadata", "type": "string" }
     ],
     "name": "submitProposal",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "sealable",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "sealable", "type": "address" }
     ],
     "name": "tiebreakerResumeSealable",
     "outputs": [],
@@ -1348,11 +1106,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "tiebreakerScheduleProposal",
     "outputs": [],
