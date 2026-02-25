@@ -104,20 +104,12 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.SocializeBadDebtInVaultHub]:
       '0xaf35A63a4114B7481589fDD9FDB3e35Fd65fAed7',
 
-    [MotionType.RegisterGroupsInOperatorGridPhaseOne]:
-      '0x194A46DA1947E98c9D79af13E06Cfbee0D8610cC',
-    [MotionType.UpdateGroupsShareLimitPhaseOne]:
-      '0x8Bdc726a3147D8187820391D7c6F9F942606aEe6',
-    [MotionType.AlterTiersInOperatorGridPhaseOne]:
-      '0xa29173C7BCf39dA48D5E404146A652d7464aee14',
-    [MotionType.SetJailStatusInOperatorGridPhaseOne]:
-      '0x93F1DEE4473Ee9F42c8257C201e33a6Da30E5d67',
-    [MotionType.UpdateVaultsFeesInOperatorGridPhaseOne]:
-      '0x5C3bDFa3E7f312d8cf72F56F2b797b026f6B471c',
-    [MotionType.ForceValidatorExitsInVaultHubPhaseOne]:
-      '0x6C968cD89CA358fbAf57B18e77a8973Fa869a6aA',
-    [MotionType.SocializeBadDebtInVaultHubPhaseOne]:
-      '0x1dF50522A1D868C12bF71747Bb6F24A18Fe6d32C',
+    [MotionType.CuratedExitRequestHashesSubmit]:
+      '0x8aa34dAaF0fC263203A15Bcfa0Ed926D466e59F3',
+    [MotionType.SDVTExitRequestHashesSubmit]:
+      '0xB7668B5485d0f826B86a75b0115e088bB9ee03eE',
+    [MotionType.CSMSetVettedGateTree]:
+      '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
 
     // next motion factories are @deprecated
     // we are keeping them here to display history data
@@ -159,13 +151,20 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.RccStablesTopUp]: '0x75bDecbb6453a901EBBB945215416561547dfDD4',
     [MotionType.PmlStablesTopUp]: '0x92a27C4e5e35cFEa112ACaB53851Ec70e2D99a8D',
     [MotionType.AtcStablesTopUp]: '0x1843Bc35d1fD15AbE1913b9f72852a79457C42Ab',
-
-    [MotionType.CuratedExitRequestHashesSubmit]:
-      '0x8aa34dAaF0fC263203A15Bcfa0Ed926D466e59F3',
-    [MotionType.SDVTExitRequestHashesSubmit]:
-      '0xB7668B5485d0f826B86a75b0115e088bB9ee03eE',
-    [MotionType.CSMSetVettedGateTree]:
-      '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
+    [MotionType.RegisterGroupsInOperatorGridPhaseOne]:
+      '0x194A46DA1947E98c9D79af13E06Cfbee0D8610cC',
+    [MotionType.UpdateGroupsShareLimitPhaseOne]:
+      '0x8Bdc726a3147D8187820391D7c6F9F942606aEe6',
+    [MotionType.AlterTiersInOperatorGridPhaseOne]:
+      '0xa29173C7BCf39dA48D5E404146A652d7464aee14',
+    [MotionType.SetJailStatusInOperatorGridPhaseOne]:
+      '0x93F1DEE4473Ee9F42c8257C201e33a6Da30E5d67',
+    [MotionType.UpdateVaultsFeesInOperatorGridPhaseOne]:
+      '0x5C3bDFa3E7f312d8cf72F56F2b797b026f6B471c',
+    [MotionType.ForceValidatorExitsInVaultHubPhaseOne]:
+      '0x6C968cD89CA358fbAf57B18e77a8973Fa869a6aA',
+    [MotionType.SocializeBadDebtInVaultHubPhaseOne]:
+      '0x1dF50522A1D868C12bF71747Bb6F24A18Fe6d32C',
   },
 
   // Holesky

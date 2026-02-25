@@ -10,17 +10,12 @@ export const depositSecurityModuleAbi = [
       { name: '_depositContract', internalType: 'address', type: 'address' },
       { name: '_stakingRouter', internalType: 'address', type: 'address' },
       {
-        name: '_maxDepositsPerBlock',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: '_minDepositBlockDistance',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
         name: '_pauseIntentValidityPeriodBlocks',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: '_maxOperatorsPerUnvetting',
         internalType: 'uint256',
         type: 'uint256',
       },
@@ -29,16 +24,18 @@ export const depositSecurityModuleAbi = [
   },
   { type: 'error', inputs: [], name: 'DepositInactiveModule' },
   { type: 'error', inputs: [], name: 'DepositNoQuorum' },
-  { type: 'error', inputs: [], name: 'DepositNonceChanged' },
   { type: 'error', inputs: [], name: 'DepositRootChanged' },
   { type: 'error', inputs: [], name: 'DepositTooFrequent' },
   { type: 'error', inputs: [], name: 'DepositUnexpectedBlockHash' },
+  { type: 'error', inputs: [], name: 'DepositsArePaused' },
+  { type: 'error', inputs: [], name: 'DepositsNotPaused' },
   {
     type: 'error',
     inputs: [{ name: 'addr', internalType: 'address', type: 'address' }],
     name: 'DuplicateAddress',
   },
   { type: 'error', inputs: [], name: 'InvalidSignature' },
+  { type: 'error', inputs: [], name: 'ModuleNonceChanged' },
   {
     type: 'error',
     inputs: [{ name: 'addr', internalType: 'address', type: 'address' }],
@@ -51,6 +48,8 @@ export const depositSecurityModuleAbi = [
   },
   { type: 'error', inputs: [], name: 'PauseIntentExpired' },
   { type: 'error', inputs: [], name: 'SignaturesNotSorted' },
+  { type: 'error', inputs: [], name: 'UnvetPayloadInvalid' },
+  { type: 'error', inputs: [], name: 'UnvetUnexpectedBlockHash' },
   {
     type: 'error',
     inputs: [{ name: 'field', internalType: 'string', type: 'string' }],
@@ -71,28 +70,10 @@ export const depositSecurityModuleAbi = [
         type: 'address',
         indexed: true,
       },
-      {
-        name: 'stakingModuleId',
-        internalType: 'uint24',
-        type: 'uint24',
-        indexed: true,
-      },
     ],
     name: 'DepositsPaused',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'stakingModuleId',
-        internalType: 'uint24',
-        type: 'uint24',
-        indexed: true,
-      },
-    ],
-    name: 'DepositsUnpaused',
-  },
+  { type: 'event', anonymous: false, inputs: [], name: 'DepositsUnpaused' },
   {
     type: 'event',
     anonymous: false,
@@ -143,7 +124,7 @@ export const depositSecurityModuleAbi = [
         indexed: false,
       },
     ],
-    name: 'MaxDepositsChanged',
+    name: 'LastDepositBlockChanged',
   },
   {
     type: 'event',
@@ -156,7 +137,7 @@ export const depositSecurityModuleAbi = [
         indexed: false,
       },
     ],
-    name: 'MinDepositBlockDistanceChanged',
+    name: 'MaxOperatorsPerUnvettingChanged',
   },
   {
     type: 'event',
@@ -221,6 +202,20 @@ export const depositSecurityModuleAbi = [
     outputs: [
       { name: '', internalType: 'contract IStakingRouter', type: 'address' },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'UNVET_MESSAGE_PREFIX',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'VERSION',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -299,14 +294,14 @@ export const depositSecurityModuleAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'getMaxDeposits',
+    name: 'getLastDepositBlock',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'getMinDepositBlockDistance',
+    name: 'getMaxOperatorsPerUnvetting',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -326,6 +321,13 @@ export const depositSecurityModuleAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'isDepositsPaused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'addr', internalType: 'address', type: 'address' }],
     name: 'isGuardian',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -334,8 +336,16 @@ export const depositSecurityModuleAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
       { name: 'stakingModuleId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isMinDepositDistancePassed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
       {
         name: 'sig',
         internalType: 'struct DepositSecurityModule.Signature',
@@ -370,14 +380,7 @@ export const depositSecurityModuleAbi = [
   {
     type: 'function',
     inputs: [{ name: 'newValue', internalType: 'uint256', type: 'uint256' }],
-    name: 'setMaxDeposits',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'newValue', internalType: 'uint256', type: 'uint256' }],
-    name: 'setMinDepositBlockDistance',
+    name: 'setMaxOperatorsPerUnvetting',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -397,9 +400,7 @@ export const depositSecurityModuleAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      { name: 'stakingModuleId', internalType: 'uint256', type: 'uint256' },
-    ],
+    inputs: [],
     name: 'unpauseDeposits',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -407,10 +408,24 @@ export const depositSecurityModuleAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'newLastDepositBlock', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'stakingModuleId', internalType: 'uint256', type: 'uint256' },
+      { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+      { name: 'nodeOperatorIds', internalType: 'bytes', type: 'bytes' },
+      { name: 'vettedSigningKeysCounts', internalType: 'bytes', type: 'bytes' },
+      {
+        name: 'sig',
+        internalType: 'struct DepositSecurityModule.Signature',
+        type: 'tuple',
+        components: [
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'vs', internalType: 'bytes32', type: 'bytes32' },
+        ],
+      },
     ],
-    name: 'setLastDepositBlock',
+    name: 'unvetSigningKeys',
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;
