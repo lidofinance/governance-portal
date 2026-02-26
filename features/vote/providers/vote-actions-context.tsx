@@ -1,7 +1,6 @@
 import { createContext, FC, useCallback, useContext } from 'react';
 import invariant from 'tiny-invariant';
 import { useAccount } from 'wagmi';
-import { useVote } from '../hooks/use-vote';
 import { VoteMode, voteModeDict } from '../types';
 import { useTxModalVote } from '../write-actions/vote/modal-stages';
 import { useVoteTxSender } from '../write-actions/vote/tx-sender';
@@ -10,6 +9,7 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useVoteContext } from './vote-context';
 
 type Value = {
   voteId: bigint;
@@ -46,7 +46,7 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
   voteId,
   children,
 }) => {
-  const { data: voteData, refetch } = useVote({ voteId: BigInt(voteId) });
+  const { vote, voteEvents, refetchVote, refetchVoteEvents } = useVoteContext();
   const { txModalStages } = useTxModalVote();
   const { data: isMultisig } = useIsContract();
   const { voteOwnTxSender, voteDelegatedTxSender, voteEnactTxSender } =
@@ -58,9 +58,6 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
 
   const onOwnVoteSubmit = useCallback(
     async (mode: VoteMode) => {
-      if (!voteData) {
-        return;
-      }
       try {
         const txHash = await voteOwnTxSender({
           mode,
@@ -81,15 +78,20 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           return;
         }
 
-        let updatedVoteData = voteData;
-        if (refetch) {
-          const refetchResult = await refetch();
-          updatedVoteData = refetchResult.data || voteData;
-
-          await queryClient.invalidateQueries({
-            queryKey: ['vote', String(voteId), chainId, accountAddress],
-          });
+        let updatedVote = vote;
+        let updatedVoteEvents = voteEvents;
+        const refetchedVote = await refetchVote();
+        if (refetchedVote.data) {
+          updatedVote = refetchedVote.data.vote;
         }
+        const refetchedVoteEvents = await refetchVoteEvents();
+        if (refetchedVoteEvents.data) {
+          updatedVoteEvents = refetchedVoteEvents.data;
+        }
+
+        await queryClient.invalidateQueries({
+          queryKey: ['vote', String(voteId), chainId, accountAddress],
+        });
 
         txModalStages.success({
           mode,
@@ -99,9 +101,9 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
             selectedVoters: Address[],
             voteMode: VoteMode,
           ) => onDelegateVoteSubmit(voteMode, selectedVoters),
-          voteEvents: updatedVoteData?.voteEvents,
-          votePhase: updatedVoteData?.phase,
-          votePower: updatedVoteData?.votePowerWei || 0n,
+          voteEvents: updatedVoteEvents,
+          votePhase: updatedVote.phase,
+          votePower: updatedVote.votingPower,
           voteId: BigInt(voteId),
           title: `You voted "${voteModeDict[mode]}"`,
         });
@@ -118,9 +120,9 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
       chainId,
       isMultisig,
       queryClient,
-      refetch,
       txModalStages,
-      voteData,
+      vote,
+      voteEvents,
       voteId,
       voteOwnTxSender,
       waitForTx,
@@ -155,15 +157,20 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
           return;
         }
 
-        let updatedVoteData = voteData;
-        if (refetch) {
-          const refetchResult = await refetch();
-          updatedVoteData = refetchResult.data || voteData;
-
-          await queryClient.invalidateQueries({
-            queryKey: ['vote', String(voteId), chainId, accountAddress],
-          });
+        let updatedVote = vote;
+        let updatedVoteEvents = voteEvents;
+        const refetchedVote = await refetchVote();
+        if (refetchedVote.data) {
+          updatedVote = refetchedVote.data.vote;
         }
+        const refetchedVoteEvents = await refetchVoteEvents();
+        if (refetchedVoteEvents.data) {
+          updatedVoteEvents = refetchedVoteEvents.data;
+        }
+
+        await queryClient.invalidateQueries({
+          queryKey: ['vote', String(voteId), chainId, accountAddress],
+        });
 
         txModalStages.success({
           mode,
@@ -173,9 +180,9 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
             selectedVoters: Address[],
             voteMode: VoteMode,
           ) => onDelegateVoteSubmit(voteMode, selectedVoters),
-          voteEvents: updatedVoteData?.voteEvents,
-          votePhase: updatedVoteData?.phase,
-          votePower: updatedVoteData?.votePowerWei || 0n,
+          voteEvents: updatedVoteEvents,
+          votePhase: updatedVote.phase,
+          votePower: updatedVote.votingPower,
           voteId: BigInt(voteId),
           title: `You voted "${voteModeDict[mode]}" as a Delegate`,
           justVotedDelegators: voters,
@@ -188,18 +195,20 @@ export const VoteActionsProvider: FC<VoteActionsProviderProps> = ({
       }
     },
     [
-      accountAddress,
-      chainId,
       isConnected,
-      isMultisig,
-      onOwnVoteSubmit,
-      queryClient,
-      refetch,
       txModalStages,
-      voteData,
       voteDelegatedTxSender,
       voteId,
+      isMultisig,
       waitForTx,
+      vote,
+      voteEvents,
+      refetchVote,
+      refetchVoteEvents,
+      queryClient,
+      chainId,
+      accountAddress,
+      onOwnVoteSubmit,
     ],
   );
 

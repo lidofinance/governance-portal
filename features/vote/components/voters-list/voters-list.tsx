@@ -4,38 +4,48 @@ import { Wrap, ListRow, ListRowCell, ShowMoreBtn } from './style';
 
 import { Text, useBreakpoint } from '@lidofinance/lido-ui';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
-import { VoteEvent } from 'shared/votes/types';
 import { VoterItem } from './voter-item';
 import { useEnsNames } from 'shared/hooks/use-ens-names';
-
-type Props = {
-  voteEvents: VoteEvent[];
-};
+import { Address } from 'viem';
+import { useVoteContext } from 'features/vote/providers/vote-context';
+import { ONE_LDO } from 'features/vote/constants';
 
 const INITIAL_PAGE_SIZE = 5;
 
-export const VotersList = ({ voteEvents }: Props) => {
+export const VotersList = () => {
+  const { vote, voteEvents } = useVoteContext();
   const { data: tokenData } = useGovernanceToken();
   const isMobile = useBreakpoint('md');
 
-  const votersAddresses = useMemo(() => {
-    const result = new Set<string>();
-    voteEvents.forEach(({ voter, delegatedVotes }) => {
-      result.add(voter);
-      delegatedVotes?.forEach(({ voter: delegatedVoter }) => {
-        result.add(delegatedVoter);
-      });
+  const votersAddressesForEns = useMemo(() => {
+    // Load only for addresses with >= 1 LDO to avoid spam RPC calls
+    const result = new Set<Address>();
+    voteEvents.forEach(({ voter, delegatedVotes, stake }) => {
+      if (stake >= ONE_LDO) {
+        result.add(voter);
+      }
+      delegatedVotes?.forEach(
+        ({ voter: delegatedVoter, stake: delegatedStake }) => {
+          if (delegatedStake >= ONE_LDO) {
+            result.add(delegatedVoter);
+          }
+        },
+      );
     });
     return Array.from(result);
   }, [voteEvents]);
 
-  const { data: ensMap } = useEnsNames(votersAddresses);
-
-  const [limit, setLimit] = useState(INITIAL_PAGE_SIZE);
-
   const votersCount = useMemo(() => {
     return new Set(voteEvents.map((event) => event.voter)).size;
   }, [voteEvents]);
+
+  const { data: ensMap } = useEnsNames(votersAddressesForEns, vote.id);
+
+  const [limit, setLimit] = useState(INITIAL_PAGE_SIZE);
+
+  if (voteEvents.length === 0) {
+    return null;
+  }
 
   return (
     <Wrap>

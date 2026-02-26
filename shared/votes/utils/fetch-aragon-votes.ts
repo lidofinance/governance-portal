@@ -1,10 +1,9 @@
 import { aragonVotingAbi } from 'abi/generated';
-import { RawVote, Vote, VoteStatus } from '../types';
+import { EventExecuteVote, RawVote, Vote, VoteStatus } from '../types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ContractFunctionParameters, PublicClient } from 'viem';
 import { parseVote } from './parse-vote';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { EventExecuteVote } from './get-event-execute-vote';
 import { getEventsExecuteVote } from './get-events-execute-vote';
 import { getEventsStartVote } from './get-events-start-vote';
 

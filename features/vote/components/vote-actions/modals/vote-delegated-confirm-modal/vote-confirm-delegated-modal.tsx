@@ -8,7 +8,7 @@ import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { Box } from 'shared/components/box';
 import { useEligibleDelegators } from 'features/vote/hooks/use-eligible-delegators';
-import { useVote } from 'features/vote/hooks/use-vote';
+import { useVoteContext } from 'features/vote/providers/vote-context';
 
 type Props = {
   mode: VoteMode;
@@ -26,9 +26,9 @@ export const VoteConfirmDelegatedModal = ({
 
   const {
     data: { eligibleDelegatedVoters: allEligibleDelegators },
-  } = useEligibleDelegators({ voteId: voteId });
+  } = useEligibleDelegators(voteId);
 
-  const { data: voteData } = useVote({ voteId: BigInt(voteId) });
+  const { voteEvents } = useVoteContext();
 
   const { data: tokenData } = useGovernanceToken();
 
@@ -55,7 +55,7 @@ export const VoteConfirmDelegatedModal = ({
         </Button>
       </Box>
       <DelegatorsSelector
-        voteEvents={voteData?.voteEvents || []}
+        voteEvents={voteEvents}
         delegators={allEligibleDelegators}
         onSelectionChange={handleSelectionChange}
       />

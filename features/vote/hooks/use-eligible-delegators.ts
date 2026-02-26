@@ -8,10 +8,6 @@ import invariant from 'tiny-invariant';
 import { DELEGATED_VOTERS_ADDRESSES_LIMIT } from '../constants';
 import { Address } from 'viem';
 
-type Args = {
-  voteId?: bigint;
-};
-
 export interface EligibleDelegator {
   address: string;
   votingPower: bigint;
@@ -66,7 +62,7 @@ const processEligibleDelegators = (
   );
 };
 
-export const useEligibleDelegators = ({ voteId }: Args) => {
+export const useEligibleDelegators = (voteId: bigint) => {
   const { chainId } = useLidoSDK();
   const { address: walletAddress } = useAccount();
   const voting = useReadContract(Voting);

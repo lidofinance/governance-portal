@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, InlineLoader } from '@lidofinance/lido-ui';
+import { Block } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
 type BoxProps = {
@@ -74,9 +74,4 @@ export const DescriptionWrap = styled.div`
   font-size: ${({ theme }) => theme.fontSizesMap.xs}px;
   font-weight: 400;
   line-height: 24px;
-`;
-
-export const InlineLoaderStyled = styled(InlineLoader)`
-  height: 400px;
-  border-radius: 20px;
 `;

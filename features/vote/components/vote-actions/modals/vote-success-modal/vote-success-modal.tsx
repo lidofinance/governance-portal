@@ -49,7 +49,7 @@ export const VoteSuccessModal = ({
   const {
     data: { eligibleDelegatedVoters: allEligibleDelegators },
     refetch: refetchEligibleDelegators,
-  } = useEligibleDelegators({ voteId: voteId });
+  } = useEligibleDelegators(voteId);
 
   useEffect(() => {
     void refetchEligibleDelegators();

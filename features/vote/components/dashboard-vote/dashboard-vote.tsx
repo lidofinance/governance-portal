@@ -11,7 +11,12 @@ import {
   Footer,
   NeededToQuorum,
 } from './style';
-import { Vote, VotePhase, VoteStatus } from 'shared/votes/types';
+import {
+  EventExecuteVote,
+  Vote,
+  VotePhase,
+  VoteStatus,
+} from 'shared/votes/types';
 import { getVoteDetailsFormatted } from 'features/vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from 'features/vote/hooks/use-vote-passed-callback';
 import { formatFloatPct } from 'features/vote/utils/format-float-pct';
@@ -22,7 +27,6 @@ import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { formatEther } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
-import { EventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 
 type Props = {

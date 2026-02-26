@@ -3,7 +3,7 @@ import { aragonVotingAbi } from 'abi/generated';
 import { getBlock } from 'viem/actions';
 import { Address, PublicClient } from 'viem';
 import { fetchLogsInParallelChunks } from 'utils/fetch-logs-in-parallel';
-import { EventExecuteVote } from './get-event-execute-vote';
+import { EventExecuteVote } from '../types';
 
 type Args = {
   address: Address;

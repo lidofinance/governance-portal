@@ -8,13 +8,12 @@ import {
   VoteHeader,
   VoteTimestamps,
   VoteTitle,
-  InlineLoaderStyled,
 } from './style';
-import { Button, Container, Link } from '@lidofinance/lido-ui';
+import { Button, Link } from '@lidofinance/lido-ui';
 import { VoteStatusChips } from '../vote-status-chips';
 import { getVoteDetailsFormatted } from '../../utils/get-vote-details-formatted';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { formatEther, Hex } from 'viem';
+import { formatEther } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { Text } from 'shared/components/text';
 import { getEtherscanTxLink } from 'utils/etherscan';
@@ -33,7 +32,6 @@ import { VoteActions } from '../vote-actions';
 import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
 import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
-import { Box } from 'shared/components/box';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 type Props = {
@@ -58,7 +56,17 @@ const formatDate = (date: number) =>
 
 export const VoteCard = ({ voteId }: Props) => {
   const { chainId } = useLidoSDK();
-  const { voteData, isLoading } = useVoteContext();
+  const {
+    vote,
+    canExecute,
+    eventExecute,
+    eventStart,
+    voteEvents,
+    voterDaoTokenBalance,
+    voteTime,
+    objectionPhaseTime,
+  } = useVoteContext();
+
   const isSupportedChain = useIsSupportedChain();
 
   const { isConnected: isWalletConnected, address: walletAddress } =
@@ -78,50 +86,26 @@ export const VoteCard = ({ voteId }: Props) => {
     isLoading: voteDualGovernanceStatusLoading,
   } = useVoteDualGovernanceStatus({
     voteId,
-    eventExecuteVote: voteData?.eventExecute,
+    eventExecuteVote: eventExecute,
   });
 
-  const isEnded = useMemo(
-    () =>
-      voteData?.status === VoteStatus.Rejected ||
-      voteData?.status === VoteStatus.Executed,
-    [voteData],
-  );
+  const isEnded =
+    vote.state.status === VoteStatus.Rejected ||
+    vote.state.status === VoteStatus.Executed;
 
   const formattedDate = useMemo(() => {
-    if (!voteData || (!voteData.eventExecute && !voteData.startDate)) {
+    if (!eventExecute && !vote.startDate) {
       return null;
     }
-    if (!voteData.eventExecute) {
-      return `Started ${formatDate(Number(voteData.startDate))}`;
+
+    if (!eventExecute) {
+      return `Started ${formatDate(Number(vote.startDate))}`;
     }
 
-    if (voteData.eventExecute.executedAt) {
-      return `Enacted ${formatDate(Number(voteData.eventExecute.executedAt))}`;
+    if (eventExecute.executedAt) {
+      return `Enacted ${formatDate(Number(eventExecute.executedAt))}`;
     }
-  }, [voteData]);
-
-  if (isLoading)
-    return (
-      <Container as="main" size="tight" key={voteId}>
-        <InlineLoaderStyled />
-      </Container>
-    );
-
-  if (!voteData)
-    return (
-      <Container as="main" size="tight" key={voteId}>
-        <Box textAlign="center">
-          <Text size={18} strong>
-            No results found for vote #{voteId}
-          </Text>
-          <Text size={14} color="secondary">
-            Sorry, we weren&#39;t able to find any votes for your search. Try
-            another search.
-          </Text>
-        </Box>
-      </Container>
-    );
+  }, [eventExecute, vote.startDate]);
 
   const {
     totalSupply,
@@ -131,7 +115,7 @@ export const VoteCard = ({ voteId }: Props) => {
     yeaPct,
     nayPctOfTotalSupplyFormatted,
     yeaPctOfTotalSupplyFormatted,
-  } = getVoteDetailsFormatted(voteData);
+  } = getVoteDetailsFormatted(vote);
 
   return (
     <Card key={voteId}>
@@ -142,10 +126,10 @@ export const VoteCard = ({ voteId }: Props) => {
             totalSupply={totalSupply}
             nayNum={nayNum}
             yeaNum={yeaNum}
-            minAcceptQuorum={Number(formatEther(voteData?.minAcceptQuorum))}
-            status={voteData?.status}
-            executedTxHash={voteData?.eventExecute?.event.transactionHash}
-            votePhase={voteData.phase}
+            minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
+            status={vote.state.status}
+            executedTxHash={eventExecute?.event.transactionHash}
+            votePhase={vote.phase}
             chainId={chainId}
             proposalId={voteDualGovernanceStatus?.proposalId || null}
             voteDualGovernanceStatus={
@@ -158,17 +142,17 @@ export const VoteCard = ({ voteId }: Props) => {
             {'Block '}
           </Text>
           <Text as="span" color="default" size={12} data-testid="blockNumber">
-            {voteData.eventStart?.event.transactionHash ? (
+            {eventStart?.event.transactionHash ? (
               <Link
                 href={getEtherscanTxLink(
                   chainId,
-                  voteData.eventStart?.event.transactionHash,
+                  eventStart?.event.transactionHash,
                 )}
               >
-                #{voteData.snapshotBlock.toString()}
+                #{vote.snapshotBlock.toString()}
               </Link>
             ) : (
-              `#${voteData.snapshotBlock.toString()}`
+              `#${vote.snapshotBlock.toString()}`
             )}
           </Text>
         </BlockWrap>
@@ -192,41 +176,36 @@ export const VoteCard = ({ voteId }: Props) => {
           />
         </BoxVotes>
       </DetailsBoxWrap>
-      {(voteData.phase === VotePhase.Main ||
-        voteData.phase === VotePhase.Objection) && (
+      {(vote.phase === VotePhase.Main ||
+        vote.phase === VotePhase.Objection) && (
         <>
           <VoteProgressBar
-            startDate={Number(voteData.startDate)}
-            voteTime={Number(voteData.voteTime)}
-            objectionPhaseTime={Number(voteData.objectionPhaseTime)}
+            startDate={Number(vote.startDate)}
+            voteTime={voteTime}
+            objectionPhaseTime={objectionPhaseTime}
             isEnded={isEnded}
-            votePhase={voteData.phase}
+            votePhase={vote.phase}
           />
         </>
       )}
-      {voteData.voteEvents.length > 0 && (
-        <VotersList voteEvents={voteData.voteEvents} />
-      )}
+      <VotersList />
       <SectionHeading>Proposal</SectionHeading>
-      {voteData.eventStart?.args.metadata && (
+      {eventStart?.args.metadata && (
         <DetailsBoxWrap>
           <DescriptionWrap data-testid="voteDescription">
-            <VoteDescription
-              metadata={voteData.eventStart.args.metadata}
-              allowMD
-            />
+            <VoteDescription metadata={eventStart.args.metadata} allowMD />
           </DescriptionWrap>
         </DetailsBoxWrap>
       )}
       <DetailsBoxWrap data-testid="voteScript">
         <VoteScript
-          script={voteData.script as Hex}
-          metadata={voteData.eventStart?.args.metadata || ''}
+          script={vote.script}
+          metadata={eventStart?.args.metadata || ''}
         />
       </DetailsBoxWrap>
       {!isWalletConnected &&
         isWalletConnectionAllowed &&
-        voteData.phase !== VotePhase.Closed && (
+        vote.phase !== VotePhase.Closed && (
           <Button fullwidth onClick={openConnectWalletModal}>
             Connect wallet
           </Button>
@@ -234,16 +213,16 @@ export const VoteCard = ({ voteId }: Props) => {
       {isWalletConnected && (
         <>
           <VoteInfoDelegated
-            voteEvents={voteData.voteEvents}
+            voteEvents={voteEvents}
             walletAddress={walletAddress}
           />
-          {voteData.phase !== VotePhase.Closed && (
+          {vote.phase !== VotePhase.Closed && (
             <>
-              <VotePowerInfo votePowerWei={voteData.votePowerWei} />
+              <VotePowerInfo votePowerWei={voterDaoTokenBalance} />
               <VoteActions />
             </>
           )}
-          {voteData.canExecute && (
+          {canExecute && (
             <Button
               fullwidth
               color="success"

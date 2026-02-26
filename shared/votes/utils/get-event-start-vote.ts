@@ -7,7 +7,7 @@ type Args = {
   address: Address | undefined;
   client: PublicClient;
   voteId: bigint;
-  block: bigint;
+  fromBlock: bigint;
 };
 
 export type StartVoteEventArgs = {
@@ -21,37 +21,32 @@ export type EventStartVote = {
   args: StartVoteEventArgs;
 };
 
-type LogReturnType = Log & {
-  args: StartVoteEventArgs;
-};
-
 type GetEventStartVoteReturnType = Promise<EventStartVote>;
+
+const startVoteEventAbi = findAbiItem({
+  abi: aragonVotingAbi,
+  name: 'StartVote',
+  type: 'event',
+});
 
 export const getEventStartVote = async ({
   address,
   client,
   voteId,
-  block,
-}: Args): Promise<GetEventStartVoteReturnType | null> => {
+  fromBlock,
+}: Args): Promise<GetEventStartVoteReturnType | undefined> => {
   try {
-    const startVoteEventAbi = findAbiItem({
-      abi: aragonVotingAbi,
-      name: 'StartVote',
-      type: 'event',
-    });
-
-    const events = (await getLogs(client, {
+    const events = await getLogs(client, {
       address,
       event: startVoteEventAbi,
-      args: {
-        voteId,
-      },
-      fromBlock: block,
-      toBlock: block + 1n,
-    })) as LogReturnType[];
+      args: { voteId },
+      fromBlock,
+      toBlock: fromBlock + 1n,
+      strict: true,
+    });
 
     if (events.length === 0) {
-      return null;
+      return;
     }
 
     const event = events[0];
@@ -59,6 +54,6 @@ export const getEventStartVote = async ({
     return { event, args: event.args };
   } catch (e) {
     console.error(e);
-    return null;
+    return;
   }
 };

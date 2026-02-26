@@ -19,7 +19,7 @@ import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { voteData } = useVoteContext();
+  const { vote, voteEvents, voterDaoTokenBalance } = useVoteContext();
   const isSupportedChain = useIsSupportedChain();
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
@@ -30,28 +30,28 @@ export const VoteActions = () => {
     data: { eligibleDelegatedVoters, delegatedVotersAddresses },
     isLoading: isEligibleLoading,
     refetch: refetchEligibleDelegators,
-  } = useEligibleDelegators({ voteId: voteData?.voteId });
+  } = useEligibleDelegators(BigInt(vote.id));
 
   const delegatorsVotedThemselves = useMemo(() => {
-    if (!voteData?.voteEvents) return [];
+    if (!voteEvents) return [];
 
     const delegatorSet = new Set(
       delegatedVotersAddresses.map((addr) => addr.toLowerCase()),
     );
     const votedThroughDelegateSet = new Set(
-      voteData.voteEvents.flatMap(
+      voteEvents.flatMap(
         (event) =>
           event.delegatedVotes?.map((e) => e.voter.toLowerCase()) ?? [],
       ),
     );
 
-    return voteData.voteEvents.filter(
+    return voteEvents.filter(
       (event) =>
         !event.delegatedVotes?.length &&
         delegatorSet.has(event.voter.toLowerCase()) &&
         !votedThroughDelegateSet.has(event.voter.toLowerCase()),
     );
-  }, [delegatedVotersAddresses, voteData?.voteEvents]);
+  }, [delegatedVotersAddresses, voteEvents]);
 
   const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 
@@ -62,33 +62,22 @@ export const VoteActions = () => {
   const { data: delegatorsData, isLoading: isDelegatorsLoading } =
     useDelegators();
 
-  const canVoteForDelegators = useMemo(
-    () => !isEligibleLoading && eligibleDelegatedVoters.length > 0,
-    [isEligibleLoading, eligibleDelegatedVoters.length],
-  );
+  const canVoteForDelegators =
+    !isEligibleLoading && eligibleDelegatedVoters.length > 0;
 
-  const canVoteWithOwnPower = useMemo(
-    () => !!voteData?.votePowerWei && voteData?.votePowerWei > 0,
-    [voteData?.votePowerWei],
-  );
+  const canVoteWithOwnPower = !!voterDaoTokenBalance;
 
   const canVoteWithDelegatedVotePower = useMemo(() => {
     return !isDelegatorsLoading && delegatorsData.totalVotingPower > 0;
   }, [isDelegatorsLoading, delegatorsData.totalVotingPower]);
 
-  const formattedOwnVP = useMemo(
-    () => `${formatBalance(voteData?.votePowerWei || 0n)} ${tokenData?.symbol}`,
-    [tokenData?.symbol, voteData?.votePowerWei],
-  );
+  const formattedOwnVP = `${formatBalance(voterDaoTokenBalance || 0n)} ${tokenData?.symbol}`;
 
-  const formattedDelegatedVP = useMemo(
-    () =>
-      `${formatBalance(delegatorsData.totalVotingPower || 0n)} ${tokenData?.symbol}`,
-    [tokenData?.symbol, delegatorsData.totalVotingPower],
-  );
-  const handleSelectionChange = useCallback((selectedAddresses: Address[]) => {
+  const formattedDelegatedVP = `${formatBalance(delegatorsData.totalVotingPower || 0n)} ${tokenData?.symbol}`;
+
+  const handleSelectionChange = (selectedAddresses: Address[]) => {
     setSelectedDelegators(selectedAddresses);
-  }, []);
+  };
 
   const handleMenu = (mode: VoteMode) => {
     setCurrentMode(mode);
@@ -109,9 +98,6 @@ export const VoteActions = () => {
       type: VoteType;
       skipConfirmation?: boolean;
     }) => {
-      if (!voteData) {
-        return;
-      }
       setIsMenuOpen(false);
 
       if (type === 'own') {
@@ -128,7 +114,6 @@ export const VoteActions = () => {
       await refetchEligibleDelegators();
     },
     [
-      voteData,
       handleOwnVote,
       handleDelegatedVote,
       selectedDelegators,
@@ -136,37 +121,33 @@ export const VoteActions = () => {
     ],
   );
 
-  if (!voteData) {
-    return null;
-  }
-
   return (
     <Actions>
       {canVoteWithOwnPower &&
         (!canVoteWithDelegatedVotePower || !canVoteForDelegators) && (
           <BasicActions
             disabled={!isSupportedChain}
-            votePhase={voteData.phase}
+            votePhase={vote.phase}
             onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
           />
         )}
       {canVoteWithDelegatedVotePower &&
         !canVoteWithOwnPower &&
-        voteData.phase !== VotePhase.Closed && (
+        vote.phase !== VotePhase.Closed && (
           <FlexWrapper $flexDirection="column">
             {!isEligibleLoading &&
               (eligibleDelegatedVoters.length > 0 ||
                 delegatorsVotedThemselves.length > 0) && (
                 <DelegatorsSelector
                   delegators={eligibleDelegatedVoters}
-                  voteEvents={voteData.voteEvents}
+                  voteEvents={voteEvents}
                   onSelectionChange={handleSelectionChange}
                   delegatorsVotedThemselves={delegatorsVotedThemselves}
                 />
               )}
             {canVoteForDelegators && (
               <BasicActions
-                votePhase={voteData.phase}
+                votePhase={vote.phase}
                 disabled={!isSupportedChain}
                 onVote={(mode: VoteMode) =>
                   handleVote({
@@ -199,7 +180,7 @@ export const VoteActions = () => {
                 <CrossIcon /> No
               </Box>
             </VoteButton>
-            {voteData.phase === VotePhase.Objection ? (
+            {vote.phase === VotePhase.Objection ? (
               <Tooltip
                 placement="bottomLeft"
                 title="You can only vote “No” in the Objection phase."

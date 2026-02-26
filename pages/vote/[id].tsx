@@ -17,16 +17,14 @@ export default function VotePage({ voteId }: Props) {
   return (
     <>
       <VoteMeta />
-      <Layout>
+      <Layout metaTitle={`Vote #${voteId}`}>
         <VoteProvider voteId={voteId}>
           <VoteActionsProvider voteId={voteId}>
             <Box marginBottom={8}>
               <Link href={VOTE_DASHBOARD_INDEX_PATH}>
-                {
-                  <Text size={14} color="secondary">
-                    {'< Back to all votes'}
-                  </Text>
-                }
+                <Text size={14} color="secondary">
+                  ← To all votes
+                </Text>
               </Link>
             </Box>
             <VoteCard voteId={voteId} />

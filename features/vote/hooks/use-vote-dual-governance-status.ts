@@ -8,7 +8,7 @@ import {
   EmergencyProtectedTimelock,
 } from 'shared/blockchain/contracts';
 import { Address, Log, parseEventLogs } from 'viem';
-import { EventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
+import { EventExecuteVote } from 'shared/votes/types';
 import {
   ProposalDetails,
   SubmitProposalCall,
