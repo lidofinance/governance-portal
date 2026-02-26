@@ -1,0 +1,606 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// StakingVault
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stakingVaultAbi = [
+  {
+    type: 'constructor',
+    inputs: [
+      {
+        name: '_beaconChainDepositContract',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'error', inputs: [], name: 'AlreadyOssified' },
+  { type: 'error', inputs: [], name: 'BeaconChainDepositsAlreadyPaused' },
+  { type: 'error', inputs: [], name: 'BeaconChainDepositsAlreadyResumed' },
+  { type: 'error', inputs: [], name: 'BeaconChainDepositsOnPause' },
+  { type: 'error', inputs: [], name: 'EthCollectionNotAllowed' },
+  {
+    type: 'error',
+    inputs: [
+      { name: '_balance', internalType: 'uint256', type: 'uint256' },
+      { name: '_required', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'InsufficientBalance',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: '_staged', internalType: 'uint256', type: 'uint256' },
+      { name: '_requested', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'InsufficientStaged',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: '_passed', internalType: 'uint256', type: 'uint256' },
+      { name: '_required', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'InsufficientValidatorWithdrawalFee',
+  },
+  { type: 'error', inputs: [], name: 'InvalidInitialization' },
+  { type: 'error', inputs: [], name: 'InvalidPubkeysLength' },
+  { type: 'error', inputs: [], name: 'MalformedPubkeysArray' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'keysCount', internalType: 'uint256', type: 'uint256' },
+      { name: 'amountsCount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'MismatchedArrayLengths',
+  },
+  { type: 'error', inputs: [], name: 'NewDepositorSameAsPrevious' },
+  { type: 'error', inputs: [], name: 'NoWithdrawalRequests' },
+  { type: 'error', inputs: [], name: 'NotInitializing' },
+  {
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  { type: 'error', inputs: [], name: 'RenouncementNotAllowed' },
+  {
+    type: 'error',
+    inputs: [{ name: 'token', internalType: 'address', type: 'address' }],
+    name: 'SafeERC20FailedOperation',
+  },
+  { type: 'error', inputs: [], name: 'SenderNotDepositor' },
+  { type: 'error', inputs: [], name: 'SenderNotNodeOperator' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'recipient', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'TransferFailed',
+  },
+  { type: 'error', inputs: [], name: 'WithdrawalFeeInvalidData' },
+  { type: 'error', inputs: [], name: 'WithdrawalFeeReadFailed' },
+  {
+    type: 'error',
+    inputs: [{ name: 'callData', internalType: 'bytes', type: 'bytes' }],
+    name: 'WithdrawalRequestAdditionFailed',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'ZeroArgument',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'assetAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'AssetsRecovered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [],
+    name: 'BeaconChainDepositsPaused',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [],
+    name: 'BeaconChainDepositsResumed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousDepositor',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newDepositor',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'DepositorSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'EtherFunded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'EtherStaged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'EtherUnstaged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'recipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'EtherWithdrawn',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'version',
+        internalType: 'uint64',
+        type: 'uint64',
+        indexed: false,
+      },
+    ],
+    name: 'Initialized',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'NodeOperatorSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferStarted',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'PinnedImplementationUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'pubkeys', internalType: 'bytes', type: 'bytes', indexed: false },
+      {
+        name: 'excess',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'refundRecipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorEjectionsTriggered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'pubkey', internalType: 'bytes', type: 'bytes', indexed: true },
+      {
+        name: 'pubkeyRaw',
+        internalType: 'bytes',
+        type: 'bytes',
+        indexed: false,
+      },
+    ],
+    name: 'ValidatorExitRequested',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'pubkeys', internalType: 'bytes', type: 'bytes', indexed: false },
+      {
+        name: 'amountsInGwei',
+        internalType: 'uint64[]',
+        type: 'uint64[]',
+        indexed: false,
+      },
+      {
+        name: 'excess',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'refundRecipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'ValidatorWithdrawalsTriggered',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'DEPOSIT_CONTRACT',
+    outputs: [
+      { name: '', internalType: 'contract IDepositContract', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'availableBalance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'beaconChainDepositsPaused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_numberOfKeys', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'calculateValidatorWithdrawalFee',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_token', internalType: 'address', type: 'address' },
+      { name: '_recipient', internalType: 'address', type: 'address' },
+      { name: '_amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'collectERC20',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: '_deposit',
+        internalType: 'struct IStakingVault.Deposit',
+        type: 'tuple',
+        components: [
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'depositDataRoot', internalType: 'bytes32', type: 'bytes32' },
+        ],
+      },
+      { name: '_additionalAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'depositFromStaged',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: '_deposit',
+        internalType: 'struct IStakingVault.Deposit',
+        type: 'tuple',
+        components: [
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+          { name: 'amount', internalType: 'uint256', type: 'uint256' },
+          { name: 'depositDataRoot', internalType: 'bytes32', type: 'bytes32' },
+        ],
+      },
+    ],
+    name: 'depositToBeaconChain',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'depositor',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_pubkeys', internalType: 'bytes', type: 'bytes' },
+      { name: '_refundRecipient', internalType: 'address', type: 'address' },
+    ],
+    name: 'ejectValidators',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'fund',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getInitializedVersion',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_owner', internalType: 'address', type: 'address' },
+      { name: '_nodeOperator', internalType: 'address', type: 'address' },
+      { name: '_depositor', internalType: 'address', type: 'address' },
+    ],
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'nodeOperator',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'ossify',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pauseBeaconChainDeposits',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'pendingOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_pubkeys', internalType: 'bytes', type: 'bytes' }],
+    name: 'requestValidatorExit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'resumeBeaconChainDeposits',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_depositor', internalType: 'address', type: 'address' }],
+    name: 'setDepositor',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_ether', internalType: 'uint256', type: 'uint256' }],
+    name: 'stage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'stagedBalance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_pubkeys', internalType: 'bytes', type: 'bytes' },
+      { name: '_amountsInGwei', internalType: 'uint64[]', type: 'uint64[]' },
+      {
+        name: '_excessRefundRecipient',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'triggerValidatorWithdrawals',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_ether', internalType: 'uint256', type: 'uint256' }],
+    name: 'unstage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'version',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_recipient', internalType: 'address', type: 'address' },
+      { name: '_ether', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'withdrawalCredentials',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  { type: 'receive', stateMutability: 'payable' },
+] as const

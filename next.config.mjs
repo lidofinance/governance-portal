@@ -28,6 +28,9 @@ export const CACHE_CONTROL_PAGES = [
   '/favicon:size*',
   '/public/runtime/window-env.js',
   '/proposals/:id',
+  '/vote/dashboard',
+  '/vote/:id',
+  '/vote/delegation',
   '/500',
 ];
 export const CACHE_CONTROL_VALUE =
@@ -134,7 +137,13 @@ export default withBundleAnalyzer({
       })),
     ];
   },
-  redirects: () => [],
+  redirects: () => [
+    {
+      source: '/',
+      destination: '/vote/dashboard',
+      permanent: false,
+    },
+  ],
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`
   serverRuntimeConfig: {
@@ -153,6 +162,8 @@ export default withBundleAnalyzer({
 
     rateLimit: process.env.RATE_LIMIT,
     rateLimitTimeFrame: process.env.RATE_LIMIT_TIME_FRAME,
+    subgraphHoodi: process.env.SUBGRAPH_HOODI,
+    subgraphMainnet: process.env.SUBGRAPH_MAINNET,
   },
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`

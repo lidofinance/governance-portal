@@ -4,6 +4,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { getContractAddress } from '../get-contract-address';
 import { Address } from 'viem';
 import { TOKEN_CONTRACT_MAP } from '../constants';
+import { useConfig } from 'config';
 
 type TokenContractObject = {
   address: Address;
@@ -11,11 +12,16 @@ type TokenContractObject = {
 
 export const useTokenContractObject = (token: Token): TokenContractObject => {
   const { chainId } = useLidoSDK();
+  const { userConfig } = useConfig();
 
   return useMemo(() => {
     const contractObject = TOKEN_CONTRACT_MAP[token];
-    const address = getContractAddress(contractObject, chainId);
+    const address = getContractAddress(
+      contractObject,
+      chainId,
+      userConfig.savedUserConfig.useTestContracts,
+    );
 
     return { ...contractObject, address };
-  }, [chainId, token]);
+  }, [chainId, token, userConfig.savedUserConfig.useTestContracts]);
 };

@@ -58,18 +58,6 @@ export type RPCFactoryParams = {
   maxResponseSize?: number;
 };
 
-export const dynamicAllowedLogsAddresses: Record<number, Set<string>> = {};
-
-export const addDynamicAllowedLogsAddress = (
-  chainId: number,
-  address: string,
-): void => {
-  if (!dynamicAllowedLogsAddresses[chainId]) {
-    dynamicAllowedLogsAddresses[chainId] = new Set();
-  }
-  dynamicAllowedLogsAddresses[chainId].add(address.toLowerCase());
-};
-
 export const rpcFactory = ({
   metrics: { prefix, registry },
   providers,
@@ -99,14 +87,7 @@ export const rpcFactory = ({
 
   const allowedLogsAddressMap = Object.entries(allowedLogsAddresses).reduce(
     (acc, [chainId, addresses]) => {
-      const chainIdNum = Number(chainId);
       acc[chainId] = new Set(addresses.map((a) => a.toLowerCase()));
-
-      if (dynamicAllowedLogsAddresses[chainIdNum]) {
-        dynamicAllowedLogsAddresses[chainIdNum].forEach((address) => {
-          acc[chainId].add(address.toLowerCase());
-        });
-      }
 
       return acc;
     },
@@ -185,11 +166,8 @@ export const rpcFactory = ({
 
                 const lowerCaseAddress = eventAddress.toLowerCase();
 
-                // Check both the static whitelist and the dynamic whitelist
                 const isAllowed =
-                  allowedLogsAddressMap[chainId]?.has(lowerCaseAddress) ||
-                  dynamicAllowedLogsAddresses[chainId]?.has(lowerCaseAddress);
-
+                  allowedLogsAddressMap[chainId]?.has(lowerCaseAddress);
                 return !isAllowed;
               })
             ) {

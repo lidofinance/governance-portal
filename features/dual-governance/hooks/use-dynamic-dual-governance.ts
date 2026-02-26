@@ -10,7 +10,7 @@ import {
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
 import { Address } from 'viem';
-import { dualGovernanceAbi } from 'abi/ts';
+import { dualGovernanceAbi } from 'abi/generated';
 
 /**
  * Hook to get the DualGovernance contract address from the EmergencyProtectedTimelock contract.

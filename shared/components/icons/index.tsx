@@ -17,6 +17,32 @@ import { ReactComponent as SandwatchIcon } from 'assets/sandwatch-icon.svg';
 import { ReactComponent as WarningIconTransparent } from 'assets/warning-icon-transparent.svg';
 import { ReactComponent as InfoIcon } from 'assets/info-icon.svg';
 import { ReactComponent as EthIcon } from 'assets/tokens/eth.svg';
+import { ReactComponent as AragonSmallLogo } from 'assets/aragon-small-logo.svg';
+import { ReactComponent as SnapshotLogo } from 'assets/snapshot-logo.svg';
+import { ReactComponent as AvatarPlaceholder } from 'assets/avatar-placeholder.svg';
+import { ReactComponent as RetryIcon } from 'assets/retry-icon.svg';
+import { ReactComponent as LidoSocialIcon } from 'assets/lido-social-icon.svg';
+import { ReactComponent as XSocialIcon } from 'assets/x-social-icon.svg';
+import { ReactComponent as LidoIcon } from 'assets/main-page/lido-icon.svg';
+import { ReactComponent as SnapshotIcon } from 'assets/main-page/snapshot-icon.svg';
+import { ReactComponent as AragonIcon } from 'assets/main-page/aragon-icon.svg';
+import { ReactComponent as DualGovernanceIcon } from 'assets/main-page/dg-icon.svg';
+import { ReactComponent as DualGovernancePlainIcon } from 'assets/dual-governance-icon.svg';
+import { ReactComponent as LidoBlueIcon } from 'assets/main-page/lido-blue-icon.svg';
+import { ReactComponent as DiscordIcon } from 'assets/main-page/discord-icon.svg';
+import { ReactComponent as TelegramIcon } from 'assets/main-page/tg-icon.svg';
+import { ReactComponent as ChatIcon } from 'assets/main-page/chat-icon.svg';
+import { ReactComponent as CalendarIcon } from 'assets/main-page/calendar-icon.svg';
+import { ReactComponent as BranchIcon } from 'assets/main-page/branch-icon.svg';
+import { ReactComponent as DocumentIcon } from 'assets/main-page/document-icon.svg';
+import { ReactComponent as DocumentUnknownIcon } from 'assets/main-page/document-unknown-icon.svg';
+import { ReactComponent as UnionIcon } from 'assets/union-icon.svg';
+import { ReactComponent as CrossIcon } from 'assets/cross-icon.svg';
+import { ReactComponent as CheckIcon } from 'assets/check-icon.svg';
+import { ReactComponent as TrashIcon } from 'assets/trash-icon.svg';
+import { ReactComponent as VoteDoneIcon } from 'assets/vote-done-icon.svg';
+import { ReactComponent as VoteFailIcon } from 'assets/vote-fail-icon.svg';
+import { ReactComponent as VoteSearchIcon } from 'assets/vote-search-icon.svg';
 
 export {
   RevokeIcon,
@@ -38,4 +64,30 @@ export {
   WarningIconTransparent,
   InfoIcon,
   EthIcon,
+  AragonSmallLogo,
+  SnapshotLogo,
+  RetryIcon,
+  AvatarPlaceholder,
+  LidoSocialIcon,
+  XSocialIcon,
+  LidoIcon,
+  SnapshotIcon,
+  AragonIcon,
+  DualGovernanceIcon,
+  LidoBlueIcon,
+  DiscordIcon,
+  TelegramIcon,
+  ChatIcon,
+  CalendarIcon,
+  BranchIcon,
+  DocumentIcon,
+  DocumentUnknownIcon,
+  UnionIcon,
+  CrossIcon,
+  CheckIcon,
+  TrashIcon,
+  DualGovernancePlainIcon,
+  VoteDoneIcon,
+  VoteFailIcon,
+  VoteSearchIcon,
 };

@@ -11,8 +11,13 @@ export const HISTORICAL_ADDRESSES = {
     governanceAddresses: [
       '0x4d12b9f6aCAB54FF6a3a776BA3b8724D9B77845F',
       '0xf1fbb8360c19830228260ed5bb432476a9d4897a',
+      '0x9CAaCCc62c66d817CC59c44780D1b722359795bF',
     ],
-    escrowAddresses: ['0x0ab2ebf304e41bcc5db37bf0a3fdb83faa19324e'],
+    escrowAddresses: [
+      '0x0ab2ebf304e41bcc5db37bf0a3fdb83faa19324e',
+      '0x781afe6c8d768ceaa9a97f2a75714e80ae0e83b9',
+      '0xf41BF095A14b18ec6213586D9Fa91c0aB9825B89', // test VS address
+    ],
   },
   [CHAINS.Mainnet]: {
     governanceAddresses: [

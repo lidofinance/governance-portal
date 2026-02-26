@@ -8,7 +8,6 @@ import {
   Copy,
   Address,
 } from '@lidofinance/lido-ui';
-import { useEtherscanOpen } from '@lido-sdk/react';
 import { useConnectorInfo, useDisconnect } from 'reef-knot/core-react';
 
 import type { ModalComponentType } from 'providers/modal-provider';
@@ -21,12 +20,23 @@ import {
   WalletModalAccountStyle,
   WalletModalAddressStyle,
   WalletModalActionsStyle,
+  WalletModalBalanceWrapper,
 } from './styles';
+import { openWindow } from 'utils/open-window';
+import { getEtherscanAddressLink } from 'utils/etherscan';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { useGovernanceToken } from '../../hooks/use-governance-token';
+import { Text } from 'shared/components/text';
+import { FlexWrapper } from '../../styled-components';
+import { formatBalance } from 'utils/format-balance';
 
 export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
   const { address } = useAccount();
   const { connectorName } = useConnectorInfo();
   const { disconnect } = useDisconnect();
+  const { chainId } = useLidoSDK();
+  const { data: tokenData, isLoading: isTokenDataLoading } =
+    useGovernanceToken();
 
   const handleDisconnect = useCallback(() => {
     disconnect?.();
@@ -34,7 +44,7 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
   }, [disconnect, onClose]);
 
   const handleCopy = useCopyToClipboard(address ?? '');
-  const handleEtherscan = useEtherscanOpen(address ?? '', 'address');
+  // const handleEtherscan = useEtherscanOpen(address ?? '', 'address');
 
   useEffect(() => {
     // Close the modal if a wallet was somehow disconnected while the modal was open
@@ -54,11 +64,25 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
     <Modal title="Account" onClose={onClose} {...props}>
       <WalletModalContentStyle>
         <WalletModalConnectedStyle>
-          {connectorName && (
-            <WalletModalConnectorStyle data-testid="providerName">
-              Connected with {connectorName}
-            </WalletModalConnectorStyle>
-          )}
+          <FlexWrapper $flexDirection="column">
+            {connectorName && (
+              <WalletModalConnectorStyle data-testid="providerName">
+                Connected with {connectorName}
+              </WalletModalConnectorStyle>
+            )}
+
+            <WalletModalBalanceWrapper>
+              <Text size={12}>
+                {isTokenDataLoading ? 'Loading...' : 'Balance'}
+              </Text>
+              {tokenData ? (
+                <Text size={12} data-testid="balance">
+                  &nbsp;
+                  {`${formatBalance(tokenData.balance)} ${tokenData.symbol}`}
+                </Text>
+              ) : null}
+            </WalletModalBalanceWrapper>
+          </FlexWrapper>
 
           {disconnect && (
             <WalletModalDisconnectStyle
@@ -87,12 +111,7 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
           <ButtonIcon
             data-testid="copyAddressBtn"
             onClick={handleCopy}
-            icon={
-              <Copy
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
-            }
+            icon={<Copy />}
             size="xs"
             variant="ghost"
           >
@@ -100,13 +119,10 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
           </ButtonIcon>
           <ButtonIcon
             data-testid="etherscanBtn"
-            onClick={handleEtherscan}
-            icon={
-              <External
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
+            onClick={() =>
+              openWindow(getEtherscanAddressLink(chainId, address ?? ''))
             }
+            icon={<External />}
             size="xs"
             variant="ghost"
           >

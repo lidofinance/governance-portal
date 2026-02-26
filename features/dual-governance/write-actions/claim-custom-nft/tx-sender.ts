@@ -3,12 +3,12 @@ import { Address } from 'viem';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { WithdrawalQueue } from 'shared/blockchain/contracts';
-import { escrowAbi } from 'abi/ts';
+import { dgEscrowAbi } from 'abi/generated';
 import invariant from 'tiny-invariant';
 
 export const useClaimCustomNftTxSend = () => {
   const readWithdrawalQueue = useReadContract(WithdrawalQueue);
-  const writeEscrow = useWriteContract(escrowAbi);
+  const writeEscrow = useWriteContract(dgEscrowAbi);
 
   return useCallback(
     async (nftIds: string[], escrowAddress: Address) => {

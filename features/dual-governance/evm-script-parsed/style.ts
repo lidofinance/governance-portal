@@ -5,7 +5,8 @@ export const Tabs = styled.div`
   display: flex;
 `;
 
-type TabProps = { $isActive?: boolean };
+type TabProps = { $isActive?: boolean; $variant?: 'voting' | 'dg' };
+
 export const Tab = styled.div<TabProps>`
   position: relative;
   padding: 20px;
@@ -18,6 +19,20 @@ export const Tab = styled.div<TabProps>`
   z-index: 1;
   width: 100%;
   text-align: center;
+
+  ${({ $variant }) =>
+    $variant &&
+    $variant === 'voting' &&
+    css`
+      padding: 10px 24px;
+      font-size: 14px;
+      width: auto;
+    `};
+
+  ${({ theme }) => theme.mediaQueries.md} {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
 
   background-color: ${({ $isActive }) =>
     $isActive ? 'transparent' : '#1312170A'};
@@ -41,7 +56,7 @@ export const Tab = styled.div<TabProps>`
     `}
 `;
 
-export const VoteScriptBodyWrap = styled.div`
+export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
   padding: 16px 32px;
   font-size: 15px;
   position: relative;
@@ -50,21 +65,25 @@ export const VoteScriptBodyWrap = styled.div`
   border-bottom-left-radius: 20px;
   border: 1px solid var(--border-color-fog);
   background: #f0f2f6;
+  line-height: 2;
+
+  ${({ $variant }) =>
+    $variant &&
+    $variant === 'voting' &&
+    css`
+      border-top-right-radius: 20px;
+      color: white;
+      background: rgba(0, 163, 255, 0.08);
+    `};
 `;
 
 export const CallWrapper = styled.div`
   word-break: break-all;
   margin-bottom: 16px;
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--lido-color-border);
-  }
 `;
 
 export const CallTitle = styled.span`
   font-weight: 600;
-  b {
-    font-weight: 800;
-  }
   a {
     font-weight: normal;
   }
@@ -97,8 +116,31 @@ export const CallData = styled.div`
   margin-top: 8px;
 `;
 export const CallDataItem = styled.div`
-  font-weight: 600;
+  font-weight: 500;
 `;
 export const NestedCallWrapper = styled.div`
   margin-top: 8px;
+  border-left: 1px solid var(--lido-color-border);
+`;
+
+export const DGBadge = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  background-color: rgba(0, 163, 255, 0.1);
+  border-radius: 5px;
+  gap: 4px;
+  width: fit-content;
+  margin-left: auto;
+  user-select: none;
+  margin-bottom: 12px;
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+
+    path {
+      fill: var(--lido-color-primary);
+    }
+  }
 `;

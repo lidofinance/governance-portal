@@ -1,5 +1,6 @@
 import { Address } from 'viem';
-import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
+// TODO: Generate proper event types from ABI
+type DGProposalSubmittedEvent = any;
 import { BigNumber } from 'ethers';
 
 type TimeStamp = number;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
-import { escrowAbi } from 'abi/ts';
+import { dgEscrowAbi } from 'abi/generated';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useEscrowContext } from 'providers/escrow';
 import { EscrowActionArgs } from 'features/dual-governance/types';
@@ -8,7 +8,7 @@ import { Token } from 'shared/blockchain/types';
 
 export const useRevokeTokensTxSender = () => {
   const { vetoSignallingAddress } = useEscrowContext();
-  const writeEscrowContract = useWriteContract(escrowAbi);
+  const writeEscrowContract = useWriteContract(dgEscrowAbi);
 
   return useCallback(
     async (args: EscrowActionArgs) => {

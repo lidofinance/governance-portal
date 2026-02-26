@@ -14,7 +14,7 @@ import {
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
 import { useWatchContractEvent } from 'wagmi';
-import { escrowAbi } from '../abi/ts';
+import { dgEscrowAbi } from '../abi/generated';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from './lido-sdk';
 import { StETH } from 'shared/blockchain/contracts';
@@ -87,7 +87,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     refetch: refetchAddresses,
   } = useEscrowAddresses();
 
-  const readEscrowGetter = useReadContractGetter(escrowAbi);
+  const readEscrowGetter = useReadContractGetter(dgEscrowAbi);
   const stEthContract = useReadContract(StETH);
   const queryClient = useQueryClient();
 
@@ -241,7 +241,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
   // Watch for StETHSharesLocked events (when user locks tokens)
   useWatchContractEvent({
     address: vetoSignallingAddress,
-    abi: escrowAbi,
+    abi: dgEscrowAbi,
     eventName: 'StETHSharesLocked',
     enabled: isEnabled,
     onLogs: () => {
@@ -253,7 +253,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
   // Watch for StETHSharesUnlocked events (when user unlocks stETH tokens)
   useWatchContractEvent({
     address: vetoSignallingAddress,
-    abi: escrowAbi,
+    abi: dgEscrowAbi,
     eventName: 'StETHSharesUnlocked',
     enabled: isEnabled,
     onLogs: () => {
@@ -265,7 +265,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
   // Watch for UnstETHLocked events (when user locks unstETH tokens)
   useWatchContractEvent({
     address: vetoSignallingAddress,
-    abi: escrowAbi,
+    abi: dgEscrowAbi,
     eventName: 'UnstETHLocked',
     enabled: isEnabled,
     onLogs: () => {
@@ -277,7 +277,7 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
   // Watch for UnstETHUnlocked events (when user unlocks unstETH tokens)
   useWatchContractEvent({
     address: vetoSignallingAddress,
-    abi: escrowAbi,
+    abi: dgEscrowAbi,
     eventName: 'UnstETHUnlocked',
     enabled: isEnabled,
     onLogs: () => {

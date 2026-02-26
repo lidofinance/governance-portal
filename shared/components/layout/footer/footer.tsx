@@ -13,7 +13,7 @@ import {
 
 const getVersionInfo = () => {
   const { version, branch } = buildInfo;
-  const repoBaseUrl = 'https://github.com/lidofinance/dual-governance-ui';
+  const repoBaseUrl = 'https://github.com/lidofinance/governance-portal';
   if (version === 'REPLACE_WITH_VERSION')
     return {
       label: 'dev',
@@ -64,13 +64,6 @@ export const Footer: FC = () => {
           Specification
         </FooterLink>
         <LinkDivider />
-        {/*<FooterLink*/}
-        {/*  data-testid="privacyNotice"*/}
-        {/*  href={`${config.selfOrigin}/committee`}*/}
-        {/*  $marginRight="auto"*/}
-        {/*>*/}
-        {/*  Tiebreaker committee*/}
-        {/*</FooterLink>*/}
         <Version data-testid="appVersion" href={link}>
           {label}
         </Version>

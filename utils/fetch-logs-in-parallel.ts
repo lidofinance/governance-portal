@@ -113,8 +113,10 @@ export const fetchLogsInParallelChunks = async <T>({
         }
 
         const logs = await client.getLogs(filter);
-
         if (logs.length > 0) {
+          console.debug(
+            `Found ${logs.length} matching logs in chunk ${chunk.fromBlock}-${chunk.toBlock}`,
+          );
           return logs as unknown as T[];
         }
       } catch (error) {

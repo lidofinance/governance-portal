@@ -9,19 +9,19 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { formatEther, maxUint256, parseEther } from 'viem';
+import { formatUnits, maxUint256, parseUnits } from 'viem';
 import { Input } from '@lidofinance/lido-ui';
 
 import { InputDecoratorMaxButton } from './input-decorator-max-button';
 import { InputDecoratorLocked } from './input-decorator-locked';
 import { InputStyled } from './styles';
+import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
-const MIN_VALUE_STRING_LENGTH = 20; // '0' + '.' + 18 decimals
-
-const parseEtherSafe = (value: string) => {
+const parseUnitsSafe = (value: string, decimals: number) => {
   try {
-    const parsed = parseEther(value);
-    if (parsed === 0n && value.length > MIN_VALUE_STRING_LENGTH) {
+    const parsed = parseUnits(value, decimals);
+    if (parsed === 0n && value.length > 2 + decimals) {
+      // 2 + decimals accounts for '0.' and decimals
       return null;
     }
     return parsed;
@@ -36,6 +36,10 @@ type Props = {
   onMaxClick?: (event: MouseEvent<HTMLButtonElement>, maxValue: bigint) => void;
   maxValue?: bigint;
   isLocked?: boolean;
+  // Temp prop to apply different styles, TODO: integrate with design system and remove
+  dgStyle?: boolean;
+  showMaxButton?: boolean;
+  decimals?: number;
 } & Omit<ComponentProps<typeof Input>, 'onChange' | 'value'>;
 
 export const InputAmount = forwardRef<HTMLInputElement, Props>(
@@ -48,12 +52,18 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
       isLocked,
       maxValue,
       placeholder = '0',
+      dgStyle = true,
+      showMaxButton = true,
+      decimals = ETH_DECIMALS,
       ...props
     },
     ref,
   ) => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const defaultValue = useMemo(() => (value ? formatEther(value) : ''), []);
+    const defaultValue = useMemo(
+      () => (value ? formatUnits(value, decimals) : ''),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    );
 
     const lastInputValue = useRef(defaultValue);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -87,7 +97,7 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
         if (currentValue === '') {
           onChange?.(null);
         } else {
-          const value = parseEtherSafe(currentValue);
+          const value = parseUnitsSafe(currentValue, decimals);
           // invalid value, so we rollback to last valid value
           if (value === null) {
             const rollbackCaretPosition =
@@ -107,7 +117,7 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
 
           const cappedValue = value > maxUint256 ? maxUint256 : value;
           if (value > maxUint256) {
-            currentValue = formatEther(maxUint256);
+            currentValue = formatUnits(maxUint256, decimals);
           }
           onChange?.(cappedValue);
         }
@@ -126,7 +136,7 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
         }
         lastInputValue.current = currentValue;
       },
-      [onChange],
+      [onChange, decimals],
     );
 
     useEffect(() => {
@@ -135,16 +145,16 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
       if (value === null || value === undefined) {
         input.value = '';
       } else {
-        const parsedValue = parseEtherSafe(input.value);
+        const parsedValue = parseUnitsSafe(input.value, decimals);
         // only change string state if casted values differ
         // this allows user to enter 0.100 without immediate change to 0.1
         if (parsedValue === null || parsedValue !== value) {
-          input.value = formatEther(value);
+          input.value = formatUnits(value, decimals);
           // prevents rollback to incorrect value in onChange
           lastInputValue.current = input.value;
         }
       }
-    }, [value]);
+    }, [value, decimals]);
 
     const handleClickMax =
       onChange && maxValue && maxValue > 0n
@@ -153,18 +163,23 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
             onMaxClick?.(event, maxValue);
           }
         : undefined;
+
+    const Component = (dgStyle ? InputStyled : Input) as typeof Input;
+
     return (
-      <InputStyled
+      <Component
         {...props}
         placeholder={placeholder}
         rightDecorator={
           rightDecorator ?? (
             <>
-              <InputDecoratorMaxButton
-                onClick={handleClickMax}
-                disabled={!handleClickMax || props.disabled}
-              />
-              {isLocked ? <InputDecoratorLocked /> : undefined}
+              {showMaxButton ? (
+                <InputDecoratorMaxButton
+                  onClick={handleClickMax}
+                  disabled={!handleClickMax || props.disabled}
+                />
+              ) : null}
+              {isLocked ? <InputDecoratorLocked /> : null}
             </>
           )
         }

@@ -1,0 +1,107 @@
+import { usePublicClient } from 'wagmi';
+import { useQuery } from '@tanstack/react-query';
+import { useLidoSDK } from 'providers/lido-sdk';
+import invariant from 'tiny-invariant';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import {
+  DualGovernance,
+  EmergencyProtectedTimelock,
+} from 'shared/blockchain/contracts';
+import { Address, Log, parseEventLogs } from 'viem';
+import { EventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
+import {
+  ProposalDetails,
+  SubmitProposalCall,
+} from 'features/dual-governance/proposals/types';
+
+type Args = {
+  voteId: number | string;
+  eventExecuteVote: EventExecuteVote | null | undefined;
+};
+
+type DualGovernanceProposalSubmittedLog = Log & {
+  args: {
+    metadata: string;
+    proposalId: bigint;
+    proposerAccount: Address;
+  };
+};
+
+type ProposalDataResult = [ProposalDetails, SubmitProposalCall[]];
+
+export const useVoteDualGovernanceStatus = ({
+  voteId,
+  eventExecuteVote,
+}: Args) => {
+  const client = usePublicClient();
+  const { chainId } = useLidoSDK();
+
+  const emergencyProtectedTimelock = useReadContract(
+    EmergencyProtectedTimelock,
+  );
+
+  const isEnabled = !!client && !!eventExecuteVote;
+
+  const query = useQuery({
+    queryKey: [
+      `${voteId}-dg-status`,
+      chainId,
+      eventExecuteVote?.event.transactionHash,
+    ],
+    enabled: isEnabled,
+    queryFn: async () => {
+      invariant(client, 'Client must be defined');
+      invariant(eventExecuteVote, 'Execute event must be provided');
+
+      if (!eventExecuteVote.event.transactionHash) {
+        return null;
+      }
+
+      try {
+        const receipt = await client.getTransactionReceipt({
+          hash: eventExecuteVote.event.transactionHash,
+        });
+
+        const logs = parseEventLogs({
+          abi: DualGovernance.abi,
+          logs: receipt.logs,
+        });
+
+        const proposalSubmittedLog = logs.find(
+          (log) => log.eventName === 'ProposalSubmitted',
+        ) as DualGovernanceProposalSubmittedLog;
+
+        if (!proposalSubmittedLog) {
+          return null;
+        }
+
+        const proposalId = proposalSubmittedLog.args.proposalId;
+
+        const proposalInfo = (await emergencyProtectedTimelock.readContract(
+          'getProposal',
+          [proposalId],
+        )) as unknown as ProposalDataResult;
+
+        const proposalStatus = proposalInfo[0].status;
+
+        return {
+          proposalId: Number(proposalId),
+          proposalStatus,
+        };
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    },
+  });
+
+  return {
+    ...query,
+    isLoading:
+      eventExecuteVote === undefined
+        ? true
+        : isEnabled
+          ? query.isLoading
+          : false,
+  };
+};

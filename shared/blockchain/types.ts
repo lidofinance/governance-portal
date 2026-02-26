@@ -1,6 +1,7 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
 import { ABIElement as ABIElementImported } from '@lidofinance/evm-script-decoder/lib/types';
+import { ContractTransaction } from 'ethers';
 
 export const Token = {
   stETH: 'stETH',
@@ -10,7 +11,9 @@ export const Token = {
 
 export type Token = (typeof Token)[keyof typeof Token];
 
-export type ChainAddressMap = Partial<Record<CHAINS, Address>>;
+export type ChainAddressMap = Partial<
+  Record<CHAINS, Address | { test: Address; actual: Address } | ''>
+>;
 
 // TODO: maybe a better name?
 export type ContractObject<T = Abi> = {
@@ -35,3 +38,25 @@ export type ABIElement = Omit<ABIElementImported, 'name' | 'type'> & {
 };
 
 export type ABI = ABIElement[];
+
+export type SafeTx = {
+  safeTxHash: string;
+};
+
+export type ResultTx =
+  | {
+      type: 'safe';
+      tx: SafeTx;
+    }
+  | {
+      type: 'regular';
+      tx: ContractTransaction;
+    };
+
+export type KeyFromValue<V, T extends Record<PropertyKey, PropertyKey>> = {
+  [K in keyof T]: V extends T[K] ? K : never;
+}[keyof T];
+
+export type Invert<T extends Record<PropertyKey, PropertyKey>> = {
+  [V in T[keyof T]]: KeyFromValue<V, T>;
+};

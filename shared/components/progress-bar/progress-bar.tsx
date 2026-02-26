@@ -30,10 +30,6 @@ export const ProgressBar = (props: Props) => {
     return null;
   }
 
-  // const progress = (progressPercent / totalPercent) * 100;
-
-  // const roundProgress = Math.round(progress * 100) / 100;
-
   return (
     <ProgressBarWrapper $variant={variant} $progress={progressPercent}>
       <ProgressBarOutline>

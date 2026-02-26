@@ -1,7 +1,7 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useMemo } from 'react';
 import { DualGovernance } from 'shared/blockchain/contracts';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { useReadContracts } from 'wagmi';
 import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 import { Address } from 'viem';
@@ -9,12 +9,14 @@ import { Address } from 'viem';
 export const useEscrowAddresses = () => {
   const { chainId } = useLidoSDK();
 
+  const dgAddress = useContractAddress(DualGovernance);
+
   const dgContract = useMemo(
     () => ({
-      address: getContractAddress(DualGovernance, chainId),
+      address: dgAddress,
       abi: DualGovernance.abi,
     }),
-    [chainId],
+    [dgAddress],
   );
 
   const {

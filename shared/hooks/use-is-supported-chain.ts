@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { useAccount, useChainId } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useUserConfig } from 'config/user-config';
 
 export const useIsSupportedChain = () => {
   const { chainId: walletChainId } = useAccount();
-  const chainId = useChainId();
   const { supportedChainIds } = useUserConfig();
 
   return useMemo(() => {
@@ -12,6 +11,7 @@ export const useIsSupportedChain = () => {
       return supportedChainIds.indexOf(walletChainId) > -1;
     }
 
-    return supportedChainIds.indexOf(chainId) > -1;
-  }, [walletChainId, chainId, supportedChainIds]);
+    // When no wallet is connected, we set chainId as default in SDK provider
+    return true;
+  }, [walletChainId, supportedChainIds]);
 };

@@ -1,5 +1,5 @@
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
-import { erc20Abi } from 'abi/ts';
+import { erc20Abi } from 'abi/generated';
 import { useCallback, useMemo, useState } from 'react';
 import { Address, WatchContractEventOnLogsFn } from 'viem';
 import { useAccount, useWatchContractEvent } from 'wagmi';

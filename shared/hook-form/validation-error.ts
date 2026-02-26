@@ -66,7 +66,7 @@ export const handleResolverValidationError = (
     values: {},
     errors: {
       // for general errors we use 'requests' field
-      // cause non-fields get ignored and form is still considerate valid
+      // cause non-fields get ignored and start-motion-form is still considerate valid
       [fallbackErrorField]: {
         type: DefaultValidationErrorTypes.UNHANDLED,
         message: 'unknown validation error',

@@ -25,5 +25,5 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
           TARGET_REPO: "lidofinance/infra-mainnet"
-          TARGET_WORKFLOW: "deploy_hoodi_testnet_dual_governance_ui.yaml"
+          TARGET_WORKFLOW: "deploy_hoodi_testnet_governance_portal_ui.yaml"
           TARGET: "develop"

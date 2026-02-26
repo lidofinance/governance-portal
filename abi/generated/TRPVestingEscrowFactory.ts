@@ -1,0 +1,183 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TRPVestingEscrowFactory
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const trpVestingEscrowFactoryAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'creator', type: 'address', indexed: true },
+      { name: 'recipient', type: 'address', indexed: true },
+      { name: 'escrow', type: 'address', indexed: false },
+    ],
+    name: 'VestingEscrowCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'token', type: 'address', indexed: false },
+      { name: 'amount', type: 'uint256', indexed: false },
+    ],
+    name: 'ERC20Recovered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'amount', type: 'uint256', indexed: false }],
+    name: 'ETHRecovered',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'voting_adapter', type: 'address', indexed: false }],
+    name: 'VotingAdapterUpgraded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'owner', type: 'address', indexed: false }],
+    name: 'OwnerChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'manager', type: 'address', indexed: false }],
+    name: 'ManagerChanged',
+  },
+  {
+    type: 'constructor',
+    inputs: [
+      { name: 'target', type: 'address' },
+      { name: 'token', type: 'address' },
+      { name: 'owner', type: 'address' },
+      { name: 'manager', type: 'address' },
+      { name: 'voting_adapter', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', type: 'uint256' },
+      { name: 'recipient', type: 'address' },
+      { name: 'vesting_duration', type: 'uint256' },
+    ],
+    name: 'deploy_vesting_contract',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', type: 'uint256' },
+      { name: 'recipient', type: 'address' },
+      { name: 'vesting_duration', type: 'uint256' },
+      { name: 'vesting_start', type: 'uint256' },
+    ],
+    name: 'deploy_vesting_contract',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', type: 'uint256' },
+      { name: 'recipient', type: 'address' },
+      { name: 'vesting_duration', type: 'uint256' },
+      { name: 'vesting_start', type: 'uint256' },
+      { name: 'cliff_length', type: 'uint256' },
+    ],
+    name: 'deploy_vesting_contract',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'amount', type: 'uint256' },
+      { name: 'recipient', type: 'address' },
+      { name: 'vesting_duration', type: 'uint256' },
+      { name: 'vesting_start', type: 'uint256' },
+      { name: 'cliff_length', type: 'uint256' },
+      { name: 'is_fully_revokable', type: 'bool' },
+    ],
+    name: 'deploy_vesting_contract',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'token', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'recover_erc20',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'recover_ether',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'voting_adapter', type: 'address' }],
+    name: 'update_voting_adapter',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'owner', type: 'address' }],
+    name: 'change_owner',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'manager', type: 'address' }],
+    name: 'change_manager',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'token',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'target',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'voting_adapter',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'manager',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+] as const

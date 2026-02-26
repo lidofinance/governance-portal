@@ -13,8 +13,4 @@ export const LogoLidoStyle = styled.div`
       fill: var(--custom-inverse-color-black);
     }
   }
-  ${({ theme }) => theme.mediaQueries.md} {
-    width: 14px;
-    justify-content: flex-start;
-  }
 `;

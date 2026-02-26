@@ -7,6 +7,10 @@ import {
 } from './constants';
 import { ThemeName } from '@lidofinance/lido-ui';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { themeDefault } from '@lidofinance/lido-ui';
+
+export const BREAKPOINT_MOBILE = '960px';
+export const BREAKPOINT_MD = themeDefault.breakpointsMap.md.width;
 
 export const devicesHeaderMedia = {
   tablet: `screen and (max-width: ${NAV_TABLET_MAX_WIDTH}px)`,
@@ -14,7 +18,7 @@ export const devicesHeaderMedia = {
 };
 
 type GlobalLayoutProps = {
-  $layoutVariant: VisibleGovernanceState;
+  $layoutVariant?: VisibleGovernanceState;
 };
 
 const LayoutVariants = {
@@ -37,7 +41,7 @@ const LayoutVariants = {
     background-color: var(--layout-background-cooldown);
   `,
   [VisibleGovernanceState.Loading]: css`
-    background-color: var(--layout-background-default);
+    background-color: var(--layout-background-normal);
   `,
   [VisibleGovernanceState.Emergency]: css`
     background-color: var(--layout-background-blocked);
@@ -135,6 +139,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   *:before,
   *:after {
     box-sizing: border-box;
+    font-family: 'Manrope', sans-serif;
   }
   svg {
     box-sizing: content-box;
@@ -142,9 +147,16 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   html,
   body {
     width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
-    ${({ $layoutVariant }) => LayoutVariants[$layoutVariant]};
+    ${({ $layoutVariant }) =>
+      $layoutVariant
+        ? LayoutVariants[$layoutVariant]
+        : css`
+            background-color: #eff2f6;
+          `};
     color: var(--lido-color-text);
     position: relative;
     box-sizing: border-box;
@@ -168,8 +180,20 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     &:hover {
       color: var(--lido-color-primaryHover);
     }
+  }
 
+  html.html-scroll-lock {
+    overflow-y: scroll;
+  }
 
+  body.body-scroll-lock {
+    overflow: hidden;
+    position: fixed;
+    height: auto;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
   }
 `;
 

@@ -29,7 +29,7 @@ import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-s
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
 import { Box, Link } from '@lidofinance/lido-ui';
-import { useAccount, usePublicClient } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -41,7 +41,7 @@ import { ProposalStatus } from '../types';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { useProposals } from '../../hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { Log, PublicClient } from 'viem';
+import { Log } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
 import invariant from 'tiny-invariant';
 import { getEtherscanTxLink } from 'utils/etherscan';
@@ -50,6 +50,16 @@ import {
   estimateBlockRangeFromTimestamp,
 } from 'utils/estimate-block-range';
 import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import {
+  replaceAddressAndCIDInMD,
+  replaceImagesInMD,
+  replaceLinksInMD,
+} from 'utils/replace-custom-elements-in-MD';
+import { MarkdownWrap } from '../proposals-list/style';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
 
 type Props = {
   id: number;
@@ -63,8 +73,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const { isConnected, address } = useAccount();
   const isSupportedChain = useIsSupportedChain();
-  const { chainId } = useLidoSDK();
-  const client = usePublicClient();
+  const { chainId, rpcProvider } = useLidoSDK();
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
@@ -80,7 +89,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     queryKey: ['proposal-vote-id', chainId],
     queryFn: async () => {
       return await isAragonProposal({
-        client: client as PublicClient,
+        client: rpcProvider,
         proposalLog: cachedProposal?.DGEvent as unknown as Log,
         chainId,
       });
@@ -132,19 +141,19 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const { data: proposalExecutedAt } = useQuery({
     queryKey: ['proposal-executed-event', proposal?.proposalId, chainId],
     queryFn: async () => {
-      if (!proposal?.proposalId || !client || !chainId) {
+      if (!proposal?.proposalId || !rpcProvider || !chainId) {
         return null;
       }
 
       try {
         const proposalExecutedEvent = await getProposalExecutedEvent({
           proposalId: proposal.proposalId,
-          client,
+          client: rpcProvider,
           chainId: chainId,
         });
 
         if (proposalExecutedEvent && proposalExecutedEvent.blockNumber) {
-          const block = await client.getBlock({
+          const block = await rpcProvider.getBlock({
             blockNumber: proposalExecutedEvent.blockNumber,
           });
           if (block) {
@@ -164,7 +173,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     },
     enabled:
       !!proposal?.proposalId &&
-      !!client &&
+      !!rpcProvider &&
       !!chainId &&
       proposal?.proposalDetails.status == ProposalStatus.Executed,
   });
@@ -185,7 +194,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState(false);
-
   const { data: isEmergencyExecutionCommittee = false } = useQuery({
     queryKey: [
       'emergency-execution-committee',
@@ -326,15 +334,15 @@ export const ProposalFullInfo = ({ id }: Props) => {
     ],
     queryFn: async () => {
       invariant(proposal, 'Proposal must be defined');
-      invariant(client, 'Client must be defined');
+      invariant(rpcProvider, 'Client must be defined');
 
-      const averageBlockTime = await calculateAverageBlockTime(client);
+      const averageBlockTime = await calculateAverageBlockTime(rpcProvider);
 
       const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
         proposal.proposalDetails.scheduledAt,
         2499n, // Half of the RPC getLogs limit
         averageBlockTime,
-        client,
+        rpcProvider,
       );
 
       const eventAbi = findAbiItem({
@@ -346,25 +354,31 @@ export const ProposalFullInfo = ({ id }: Props) => {
       // Three ranges for log fetching to expand the search window up to ~15000 blocks
       const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
 
+      const emergencyProtectedTimelockAddress = getContractAddress(
+        EmergencyProtectedTimelock,
+        chainId,
+      );
+
       // Fetch logs for each block range
-      const logsPromises = ranges.map((range) =>
-        client.getLogs({
-          address: EmergencyProtectedTimelock.chainAddressMap[chainId],
+      const logsPromises = ranges.map((range) => {
+        return rpcProvider.getLogs({
+          address: emergencyProtectedTimelockAddress,
           event: eventAbi,
           fromBlock: range.fromBlock,
           toBlock: range.toBlock,
           args: {
             id: BigInt(proposal.proposalId),
           },
-        }),
-      );
+        });
+      });
 
       const allLogsResults = await Promise.all(logsPromises);
       const proposalScheduledLogs = allLogsResults.flat();
 
       return proposalScheduledLogs[0] || null;
     },
-    enabled: !!proposal && !!client && !!proposal.proposalDetails.scheduledAt,
+    enabled:
+      !!proposal && !!rpcProvider && !!proposal.proposalDetails.scheduledAt,
   });
 
   const scheduledAt = useMemo(() => {
@@ -391,7 +405,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
     );
   }
 
-  const calls = proposal.proposalDetails?.calls || [];
+  const calls = (proposal.proposalDetails?.calls as BaseCall[]) || [];
+  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
 
   return (
     <ProposalContainer>
@@ -479,7 +494,18 @@ export const ProposalFullInfo = ({ id }: Props) => {
             </Box>
             {proposal.DGEvent?.args?.metadata && (
               <Box marginTop={30}>
-                <Text size={22}>{proposal?.DGEvent.args?.metadata}</Text>
+                <MarkdownWrap>
+                  <ReactMarkdown
+                    remarkPlugins={[[remarkGfm, {}]]}
+                    components={{
+                      a: replaceLinksInMD,
+                      img: replaceImagesInMD,
+                      code: replaceAddressAndCIDInMD,
+                    }}
+                  >
+                    {proposal?.DGEvent.args?.metadata}
+                  </ReactMarkdown>
+                </MarkdownWrap>
               </Box>
             )}
           </>
@@ -498,7 +524,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
       {calls && calls.length > 0 && (
         <Box marginTop={30}>
-          <Script rawCalls={calls} />
+          <Script decodedCalls={decodedEvmScriptCalls} />
         </Box>
       )}
 

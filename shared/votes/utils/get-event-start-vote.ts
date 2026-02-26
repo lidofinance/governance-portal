@@ -1,41 +1,54 @@
 import { getLogs } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
+import { findAbiItem } from 'utils/find-abi-item';
+import { aragonVotingAbi } from 'abi/generated';
 
-type Props = {
+type Args = {
   address: Address | undefined;
   client: PublicClient;
-  eventAbi: any;
   voteId: bigint;
   block: bigint;
 };
 
-type VoteEventArgs = {
+export type StartVoteEventArgs = {
   voteId: bigint;
   creator: Address;
   metadata: string;
 };
 
-type ReturnType = Log & {
-  args: VoteEventArgs;
+export type EventStartVote = {
+  event: Log;
+  args: StartVoteEventArgs;
 };
+
+type LogReturnType = Log & {
+  args: StartVoteEventArgs;
+};
+
+type GetEventStartVoteReturnType = Promise<EventStartVote>;
 
 export const getEventStartVote = async ({
   address,
   client,
-  eventAbi,
   voteId,
   block,
-}: Props): Promise<VoteEventArgs | null> => {
+}: Args): Promise<GetEventStartVoteReturnType | null> => {
   try {
+    const startVoteEventAbi = findAbiItem({
+      abi: aragonVotingAbi,
+      name: 'StartVote',
+      type: 'event',
+    });
+
     const events = (await getLogs(client, {
       address,
-      event: eventAbi,
+      event: startVoteEventAbi,
       args: {
         voteId,
       },
       fromBlock: block,
       toBlock: block + 1n,
-    })) as ReturnType[];
+    })) as LogReturnType[];
 
     if (events.length === 0) {
       return null;
@@ -43,9 +56,9 @@ export const getEventStartVote = async ({
 
     const event = events[0];
 
-    return event.args;
+    return { event, args: event.args };
   } catch (e) {
     console.error(e);
+    return null;
   }
-  return null;
 };

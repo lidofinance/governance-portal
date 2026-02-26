@@ -20,6 +20,8 @@ import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
 import { DGTooltip } from '../../tooltips';
 import { Address } from 'viem';
+import { ChainAddressMap } from 'shared/blockchain/types';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 type Props = {
   id: number;
@@ -27,6 +29,16 @@ type Props = {
   calls: SubmitProposalCall[] | undefined;
   proposalDetails: ProposalCombinedData['proposalDetails'];
   proposer?: Address;
+};
+
+const getAddressFromMap = (
+  addressMap: ChainAddressMap | Record<number, string | string[]>,
+  chainId: CHAINS,
+): Address | undefined => {
+  const entry = (addressMap as any)[chainId];
+  if (!entry) return undefined;
+  if (Array.isArray(entry)) return undefined; // Skip arrays
+  return typeof entry === 'string' ? entry : entry.actual;
 };
 
 export const ProposalsListItem = ({
@@ -50,10 +62,19 @@ export const ProposalsListItem = ({
 
   const isUnknownContractCalled = calls
     ? calls.some((call) => {
-        return !Object.values(contractAddresses).some(
-          (contract) =>
-            contract[chainId]?.toLowerCase() === call.target.toLowerCase(),
-        );
+        const addressMaps = Object.entries(contractAddresses);
+
+        const isKnown = addressMaps.some(([, addressMap]) => {
+          const address = getAddressFromMap(addressMap, chainId as CHAINS);
+
+          if (!address) {
+            return false;
+          }
+
+          return address.toLowerCase() === call.target.toLowerCase();
+        });
+
+        return !isKnown;
       })
     : false;
 
@@ -85,7 +106,7 @@ export const ProposalsListItem = ({
         </TimelockWrapper>
       </SummarySection>
       <ProposalDescription>
-        {descriptionLines.map((line, index) => (
+        {descriptionLines.splice(0, 10).map((line, index) => (
           <DescriptionText key={index}>{line}</DescriptionText>
         ))}
         {isUnknownContractCalled && (

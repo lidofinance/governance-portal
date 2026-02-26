@@ -5,10 +5,7 @@ import { LockWrapper } from './styles';
 export const InputDecoratorLocked: FC = (props) => (
   <Tooltip title="Token locked" placement="top" {...props}>
     <LockWrapper>
-      <Lock
-        onPointerEnterCapture={undefined}
-        onPointerLeaveCapture={undefined}
-      />
+      <Lock />
     </LockWrapper>
   </Tooltip>
 );

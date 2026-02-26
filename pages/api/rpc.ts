@@ -19,17 +19,40 @@ import {
   EmergencyGovernance,
   EmergencyProtectedTimelock,
   Voting,
+  EasyTrack,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
 import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 
 const allowedLogContracts = (chainId: CHAINS) => {
-  const hardcodedAddresses = [
+  const contractAddresses = [
     DualGovernance[chainId],
     EmergencyProtectedTimelock[chainId],
     EmergencyGovernance[chainId],
     Voting[chainId],
-  ].filter((address): address is Address => address !== undefined);
+    EasyTrack[chainId],
+  ];
+
+  const hardcodedAddresses: Address[] = [];
+
+  for (const contractAddress of contractAddresses) {
+    if (!contractAddress) continue;
+
+    if (
+      contractAddress &&
+      typeof contractAddress === 'object' &&
+      ('actual' in contractAddress || 'test' in contractAddress)
+    ) {
+      if ('actual' in contractAddress && contractAddress.actual) {
+        hardcodedAddresses.push(contractAddress.actual);
+      }
+      if ('test' in contractAddress && contractAddress.test) {
+        hardcodedAddresses.push(contractAddress.test);
+      }
+    } else {
+      hardcodedAddresses.push(contractAddress);
+    }
+  }
 
   const historicalGovernanceAddresses: Address[] =
     (HISTORICAL_ADDRESSES[chainId as keyof typeof HISTORICAL_ADDRESSES]

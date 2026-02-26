@@ -8,9 +8,10 @@ import {
 } from 'viem';
 import { ContractObject } from '../types';
 import { getContractAddress } from '../get-contract-address';
-import { useChainId } from 'wagmi';
 import { readContract } from 'viem/actions';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useConfig } from 'config';
+import { isTestnet as getIsTestnet } from '../utils/is-testnet';
 
 export const useReadContractGetter = <T extends Abi>(abi: T) => {
   const { rpcProvider } = useLidoSDK();
@@ -32,8 +33,9 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
             args,
           });
         } catch (error) {
+          console.error(error);
           console.debug(
-            `Error reading contract ${address}.${String(functionName)}`,
+            `Error reading contract ${address}.${String(functionName)}, args: ${args}`,
           );
           return null as any;
         }
@@ -42,13 +44,31 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
   );
 };
 
-export const useReadContract = <T extends Abi>(contract: ContractObject<T>) => {
-  const chainId = useChainId();
+type ReadContractFunction<T extends Abi> = <
+  F extends ContractFunctionName<T, 'pure' | 'view'>,
+  A extends ContractFunctionArgs<T, 'pure' | 'view', F>,
+>(
+  functionName: F,
+  args?: A,
+) => Promise<ReadContractReturnType<T, F>>;
 
-  const contractAddress = useMemo(
-    () => getContractAddress(contract, chainId),
-    [chainId, contract],
-  );
+export const useReadContract = <T extends Abi>(
+  contract: ContractObject<T>,
+): {
+  address: Address;
+  readContract: ReadContractFunction<T>;
+} => {
+  const { chainId } = useLidoSDK();
+  const { userConfig } = useConfig();
+
+  const contractAddress = useMemo(() => {
+    const isTestnet = getIsTestnet(chainId);
+
+    const isInTestMode =
+      userConfig.savedUserConfig.useTestContracts && isTestnet;
+
+    return getContractAddress(contract, chainId, isInTestMode);
+  }, [chainId, contract, userConfig.savedUserConfig.useTestContracts]);
 
   const readContractGetter = useReadContractGetter(contract.abi);
 

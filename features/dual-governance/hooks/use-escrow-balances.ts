@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount, useWatchContractEvent } from 'wagmi';
-import { escrowAbi } from 'abi/ts';
+import { dgEscrowAbi } from 'abi/generated';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useState } from 'react';
 import { useEscrowContext } from 'providers/escrow';
@@ -33,7 +33,7 @@ export const useEscrowBalances = () => {
   const { vetoSignallingAddress, historicalEscrowAddresses } =
     useEscrowContext();
 
-  const readEscrowContract = useReadContractGetter(escrowAbi);
+  const readEscrowContract = useReadContractGetter(dgEscrowAbi);
 
   const isEnabled =
     !!accountAddress && !!readEscrowContract && !!vetoSignallingAddress;
@@ -42,7 +42,7 @@ export const useEscrowBalances = () => {
 
   useWatchContractEvent({
     address: vetoSignallingAddress,
-    abi: escrowAbi,
+    abi: dgEscrowAbi,
     eventName: 'StETHSharesLocked',
     enabled: isEnabled,
     onLogs: () => {
@@ -55,7 +55,7 @@ export const useEscrowBalances = () => {
 
   useWatchContractEvent({
     address: vetoSignallingAddress,
-    abi: escrowAbi,
+    abi: dgEscrowAbi,
     eventName: 'UnstETHLocked',
     enabled: isEnabled,
     onLogs: () => {

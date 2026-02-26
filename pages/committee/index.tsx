@@ -12,7 +12,7 @@ const CommitteePage = () => {
     <Layout containerSize="full">
       <DualGovernanceProposalsProvider>
         <Head>
-          <title>Dual Governance | Lido</title>
+          <title>Governance Portal | Lido</title>
         </Head>
         <BackgroundGradient
           state={VisibleGovernanceState.BlockedRageQuit}
