@@ -124,6 +124,14 @@ export const LIDO_ROLES: Partial<Record<string, string>> = {
   [keccakRole('REMOVE_TOKEN_FROM_ALLOWED_LIST_ROLE')]:
     'REMOVE TOKEN FROM ALLOWED LIST ROLE',
   [keccakRole('MODULE_MANAGER_ROLE')]: 'MODULE MANAGER ROLE',
+  [keccakRole('vaults.OperatorsGrid.Registry')]:
+    'vaults.OperatorsGrid.Registry',
+  [keccakRole('vaults.VaultHub.ValidatorExitRole')]:
+    'vaults.VaultHub.ValidatorExitRole',
+  [keccakRole('vaults.VaultHub.BadDebtMasterRole')]:
+    'vaults.VaultHub.BadDebtMasterRole',
+  [keccakRole('PausableUntilWithRoles.ResumeRole')]:
+    'PausableUntilWithRoles.ResumeRole',
 };
 
 export const DEFAULT_ADMIN_ROLE =

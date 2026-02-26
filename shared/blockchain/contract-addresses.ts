@@ -619,3 +619,31 @@ export const OperatorGrid: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xC69685E89Cefc327b43B7234AC646451B27c544d',
   [CHAINS.Hoodi]: '0x501e678182bB5dF3f733281521D3f3D1aDe69917',
 };
+
+export const StakingVaultBeacon: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x5FbE8cEf9CCc56ad245736D3C5bAf82ad54Ca789',
+  [CHAINS.Hoodi]: '0xb3e6a8b6a752d3bb905a1b3ef12bbdee77e8160e',
+};
+
+export const LazyOracle: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x5DB427080200c235F2Ae8Cd17A7be87921f7AD6c',
+  [CHAINS.Hoodi]: '0xf41491C79C30e8f4862d3F4A5b790171adB8e04A',
+};
+
+export const PredepositGuarantee: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xF4bF42c6D6A0E38825785048124DBAD6c9eaaac3',
+  [CHAINS.Hoodi]: '0xa5f55f3402bea2b14ae15dae1b6811457d43581d',
+};
+
+export const Accounting: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x23ED611be0e1a820978875C0122F92260804cdDf',
+  [CHAINS.Hoodi]: '0x9b5b78D1C9A3238bF24662067e34c57c83E8c354',
+};
+
+export const TRPAllowedRecipientsRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x231ac69a1a37649c6b06a71ab32ddd92158c80b8',
+};
+
+export const LidoV3Template: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x34E01ecFebd403370b0879C628f8A5319dDb8507',
+};

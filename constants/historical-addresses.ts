@@ -24,6 +24,8 @@ export const HISTORICAL_ADDRESSES = {
       '0xcdf49b058d606ad34c5789fd8c3bf8b3e54ba2db',
       '0x75850938c1aa50b8cc6eb3c00995759dc1425ae6',
     ],
+    emergencyProtectedTimelockAddress:
+      '0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316',
     escrowAddresses: ['0xa8f14d033f377779274ae016584a05bf14dccaf8'],
   },
 };
