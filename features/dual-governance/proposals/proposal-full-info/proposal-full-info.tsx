@@ -86,7 +86,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const cachedProposal = getProposalById(id);
 
   const { data: queryVoteId, isLoading: isVoteIdLoading } = useQuery({
-    queryKey: ['proposal-vote-id', chainId],
+    queryKey: ['proposal-vote-id', chainId, cachedProposal?.proposalId],
     queryFn: async () => {
       return await isAragonProposal({
         client: rpcProvider,
@@ -328,6 +328,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const { data: proposalScheduledLog } = useQuery({
     queryKey: [
+      'proposal-scheduled-log',
       proposal?.proposalId,
       chainId,
       proposal?.proposalDetails.submittedAt,

@@ -16,7 +16,7 @@ export const useAllowedTokens = () => {
   const tokenRegistry = useReadContract(AllowedTokensRegistry);
 
   const { data, isLoading } = useQuery({
-    queryKey: [`allowed-tokens-${chainId}`],
+    queryKey: [`allowed-tokens`, chainId],
     queryFn: async () => {
       const tokensAddresses =
         await tokenRegistry.readContract('getAllowedTokens');

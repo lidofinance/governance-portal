@@ -9,7 +9,7 @@ import { aggregatorEthUsdPriceFeed } from '../../price-feed-addresses';
 
 export const useEthUsd = (amount: bigint | undefined, enabled = true) => {
   const aggregatorContract = useReadContractGetter(aggregatorAbi);
-  const { rpcProvider } = useLidoSDK();
+  const { rpcProvider, chainId } = useLidoSDK();
 
   const {
     data: price,
@@ -18,7 +18,7 @@ export const useEthUsd = (amount: bigint | undefined, enabled = true) => {
     refetch,
     isFetching,
   } = useQuery({
-    queryKey: ['eth-usd-price', rpcProvider],
+    queryKey: ['eth-usd-price', chainId],
     enabled: !!rpcProvider && enabled,
     staleTime: 300000, // 5 minutes
     refetchOnWindowFocus: false,
