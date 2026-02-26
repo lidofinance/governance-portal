@@ -5,7 +5,7 @@ export const ErrorBoundaryFallback = () => {
   return (
     <ServicePage title="Client Side Error">
       <Head>
-        <title>Lido | Client Side Error</title>
+        <title>Client Side Error | Lido</title>
       </Head>
       <p style={{ marginBottom: '15px' }}>Something went wrong</p>
       <Button

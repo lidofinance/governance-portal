@@ -20,7 +20,6 @@ export default function StonksDetailsPage() {
 
   return (
     <Layout
-      pageTitle={`${pairLabel}Stonks`}
       title={pairLabel}
       subtitle="Place Stonks order"
       containerSize="tight"

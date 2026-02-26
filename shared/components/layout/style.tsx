@@ -1,4 +1,4 @@
-import { H1 } from '@lidofinance/lido-ui';
+import { Container, ContainerProps, H1 } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
@@ -35,4 +35,11 @@ export const IPFSInfoBoxOnlyMobileAndPortableWrapper = styled.div`
     margin-top: -6px;
     margin-bottom: 40px;
   }
+`;
+
+export const ContainerStyled = styled(Container).attrs({
+  forwardedAs: 'main',
+})<ContainerProps>`
+  padding-top: 24px;
+  position: relative;
 `;
