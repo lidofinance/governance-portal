@@ -53,6 +53,9 @@ export const formParts = {
   [MotionTypeForms.SandboxStethTopUp]: formAllowedRecipientTopUp.formParts({
     registryType: MotionTypeForms.SandboxStethTopUp,
   }),
+  [MotionTypeForms.StonksStethTopUp]: formAllowedRecipientTopUp.formParts({
+    registryType: MotionTypeForms.StonksStethTopUp,
+  }),
   [MotionTypeForms.SandboxStablesTopUp]:
     StartNewTopUpWithLimitsAndCustomToken.formParts({
       registryType: MotionTypeForms.SandboxStablesTopUp,
@@ -60,6 +63,22 @@ export const formParts = {
   [MotionTypeForms.LegoStablesTopUp]:
     StartNewTopUpWithLimitsAndCustomToken.formParts({
       registryType: MotionTypeForms.LegoStablesTopUp,
+    }),
+  [MotionTypeForms.StonksStablesTopUp]:
+    StartNewTopUpWithLimitsAndCustomToken.formParts({
+      registryType: MotionTypeForms.StonksStablesTopUp,
+    }),
+  [MotionTypeForms.AllianceOpsStablesTopUp]:
+    StartNewTopUpWithLimitsAndCustomToken.formParts({
+      registryType: MotionTypeForms.AllianceOpsStablesTopUp,
+    }),
+  [MotionTypeForms.EcosystemOpsStablesTopUp]:
+    StartNewTopUpWithLimitsAndCustomToken.formParts({
+      registryType: MotionTypeForms.EcosystemOpsStablesTopUp,
+    }),
+  [MotionTypeForms.LabsOpsStablesTopUp]:
+    StartNewTopUpWithLimitsAndCustomToken.formParts({
+      registryType: MotionTypeForms.LabsOpsStablesTopUp,
     }),
   [MotionTypeForms.StethRewardProgramAdd]: formAllowedRecipientAdd.formParts({
     registryType: MotionTypeForms.StethRewardProgramAdd,

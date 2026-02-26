@@ -76,11 +76,15 @@ export const useAvailableMotions = () => {
             return acc;
           }
 
-          acc.push({ motionType: contractName as MotionType, address });
+          if (!(contractName in MotionTypeForms)) {
+            return acc;
+          }
+
+          acc.push({ motionType: contractName as MotionTypeForms, address });
 
           return acc;
         },
-        [] as Array<{ motionType: MotionType; address: Address }>,
+        [] as Array<{ motionType: MotionTypeForms; address: Address }>,
       );
 
       const results = await processInBatches(

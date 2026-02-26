@@ -10,6 +10,7 @@ import {
   StethGasSupplyTopUp,
   StethRewardProgramTopUp,
   SandboxStethTopUp,
+  StonksStethTopUp,
 } from 'shared/blockchain/contracts';
 import {
   createMotionFormPart,
@@ -68,6 +69,10 @@ export const ALLOWED_RECIPIENT_TOPUP_MAP = {
   [MotionType.SandboxStethTopUp]: {
     evmContract: SandboxStethTopUp,
     motionType: MotionType.SandboxStethTopUp,
+  },
+  [MotionType.StonksStethTopUp]: {
+    evmContract: StonksStethTopUp,
+    motionType: MotionType.StonksStethTopUp,
   },
 };
 
