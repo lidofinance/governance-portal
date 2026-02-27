@@ -3,30 +3,19 @@ import invariant from 'tiny-invariant';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
-import { VoteTxArgs } from './types';
 
-export const useVoteTxSender = () => {
+export const useEnactVoteTxSender = () => {
   const writeVotingContract = useWriteContract(Voting.abi);
   const votingContractAddress = useContractAddress(Voting);
 
   return useCallback(
-    async ({ mode, voteId, delegatedVoters }: VoteTxArgs) => {
+    async (voteId: bigint) => {
       invariant(voteId, 'vote ID must be provided');
-
-      const isSupporting = mode === 'yay';
-
-      if (delegatedVoters?.length) {
-        return writeVotingContract({
-          address: votingContractAddress,
-          functionName: 'attemptVoteForMultiple',
-          args: [voteId, isSupporting, delegatedVoters],
-        });
-      }
 
       return writeVotingContract({
         address: votingContractAddress,
-        functionName: 'vote',
-        args: [voteId, isSupporting, false],
+        functionName: 'executeVote',
+        args: [voteId],
       });
     },
     [votingContractAddress, writeVotingContract],

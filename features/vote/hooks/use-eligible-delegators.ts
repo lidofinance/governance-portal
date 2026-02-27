@@ -7,23 +7,10 @@ import { useQuery } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
 import { DELEGATED_VOTERS_ADDRESSES_LIMIT } from '../constants';
 import { Address } from 'viem';
-
-export interface EligibleDelegator {
-  address: string;
-  votingPower: bigint;
-  votedByDelegate: boolean;
-}
-
-// export interface EligibleDelegatorsData {
-//   delegatedVotersAddresses: string[];
-//   eligibleDelegatedVotingPower: bigint;
-//   delegatedVotersState: VoterState[];
-//   eligibleDelegatedVoters: EligibleDelegator[];
-//   eligibleDelegatedVotersAddresses: string[];
-// }
+import { EligibleDelegator } from '../types';
 
 const processEligibleDelegators = (
-  addresses: string[],
+  addresses: Address[],
   votingPowers: bigint[],
   voterStates: VoterState[],
 ): {
@@ -62,74 +49,85 @@ const processEligibleDelegators = (
   );
 };
 
-export const useEligibleDelegators = (voteId: bigint) => {
+export const useEligibleDelegators = (voteId: number | undefined) => {
   const { chainId } = useLidoSDK();
   const { address: walletAddress } = useAccount();
   const voting = useReadContract(Voting);
 
-  const { data, isLoading, refetch } = useQuery({
+  return useQuery({
     queryKey: [
-      'useEligibleDelegators',
-      Number(voteId),
+      'eligible-delegators',
+      voteId,
       chainId,
       walletAddress,
       voting.address,
     ],
+    enabled: !!voteId && !!walletAddress,
     queryFn: async () => {
       invariant(walletAddress, 'Wallet address is required');
-      invariant(voteId, 'voteId address is required');
+      invariant(voteId, 'Vote ID is required');
 
-      try {
-        const delegatedVotersAddresses = (await voting.readContract(
-          'getDelegatedVoters',
-          [walletAddress, 0n, BigInt(DELEGATED_VOTERS_ADDRESSES_LIMIT)],
-        )) as Address[];
+      const totalCount = await voting.readContract('getDelegatedVotersCount', [
+        walletAddress,
+      ]);
 
-        const delegatedVotersVotingPower = (await voting.readContract(
-          'getVotingPowerMultipleAtVote',
-          [BigInt(voteId), delegatedVotersAddresses],
-        )) as bigint[];
-
-        const delegatedVotersState = (await voting.readContract(
-          'getVoterStateMultipleAtVote',
-          [BigInt(voteId), delegatedVotersAddresses],
-        )) as number[];
-
-        const { eligibleDelegatedVoters, eligibleDelegatedVotingPower } =
-          processEligibleDelegators(
-            delegatedVotersAddresses,
-            delegatedVotersVotingPower,
-            delegatedVotersState,
-          );
-
-        const eligibleDelegatedVotersAddresses = eligibleDelegatedVoters.map(
-          ({ address }) => address,
-        );
-
+      if (totalCount === 0n) {
         return {
-          delegatedVotersAddresses,
-          eligibleDelegatedVotingPower,
-          delegatedVotersState,
-          eligibleDelegatedVoters,
-          eligibleDelegatedVotersAddresses,
+          delegatedVotersAddresses: [],
+          eligibleDelegatedVotingPower: 0n,
+          delegatedVotersState: [],
+          eligibleDelegatedVoters: [],
+          eligibleDelegatedVotersAddresses: [],
         };
-      } catch (error) {
-        console.error('Error in useEligibleDelegators:', error);
-        throw error;
       }
+
+      const batchCount = Math.ceil(
+        Number(totalCount) / DELEGATED_VOTERS_ADDRESSES_LIMIT,
+      );
+
+      const addressBatches = await Promise.all(
+        Array.from({ length: batchCount }, (_, i) =>
+          voting.readContract('getDelegatedVoters', [
+            walletAddress,
+            BigInt(i * DELEGATED_VOTERS_ADDRESSES_LIMIT),
+            BigInt(DELEGATED_VOTERS_ADDRESSES_LIMIT),
+          ]),
+        ),
+      );
+
+      const delegatedVotersAddresses = addressBatches.flat();
+
+      const [votingPowerBatches, voterStateBatches] = await Promise.all([
+        Promise.all(
+          addressBatches.map((batch) =>
+            voting.readContract('getVotingPowerMultipleAtVote', [
+              BigInt(voteId),
+              batch,
+            ]),
+          ),
+        ),
+        Promise.all(
+          addressBatches.map((batch) =>
+            voting.readContract('getVoterStateMultipleAtVote', [
+              BigInt(voteId),
+              batch,
+            ]),
+          ),
+        ),
+      ]);
+
+      const delegatedVotersVotingPower = votingPowerBatches.flat();
+      const delegatedVotersState = voterStateBatches.flat();
+
+      const { eligibleDelegatedVoters } = processEligibleDelegators(
+        delegatedVotersAddresses,
+        delegatedVotersVotingPower,
+        delegatedVotersState,
+      );
+
+      return {
+        eligibleDelegatedVoters,
+      };
     },
   });
-
-  return {
-    data: {
-      delegatedVotersAddresses: data?.delegatedVotersAddresses || [],
-      eligibleDelegatedVotingPower: data?.eligibleDelegatedVotingPower || 0n,
-      delegatedVotersState: data?.delegatedVotersState || [],
-      eligibleDelegatedVoters: data?.eligibleDelegatedVoters || [],
-      eligibleDelegatedVotersAddresses:
-        data?.eligibleDelegatedVotersAddresses || [],
-    },
-    isLoading,
-    refetch,
-  };
 };

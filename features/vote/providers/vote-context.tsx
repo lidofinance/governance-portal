@@ -14,6 +14,8 @@ import { useVotingConfig } from '../hooks/use-voting-config';
 import { InlineVoteCardLoader } from '../styles';
 import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
+import { useEligibleDelegators } from '../hooks/use-eligible-delegators';
+import { EligibleDelegator } from '../types';
 
 type Value = {
   vote: Vote;
@@ -25,6 +27,7 @@ type Value = {
   voterDaoTokenBalance: bigint | undefined;
   voteTime: number;
   objectionPhaseTime: number;
+  eligibleDelegators: EligibleDelegator[];
   refetchVote: ReturnType<typeof useVote>['refetch'];
   refetchVoteEvents: ReturnType<typeof useCastVoteEvents>['refetch'];
 };
@@ -41,6 +44,7 @@ const VoteContext = createContext<Value>({
   refetchVoteEvents: (() => {}) as any,
   voteTime: 0,
   objectionPhaseTime: 0,
+  eligibleDelegators: [],
 });
 
 export const useVoteContext = () => {
@@ -74,6 +78,8 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     voteData?.vote.snapshotBlock,
   );
 
+  const { data: delegatorsData } = useEligibleDelegators(voteData?.vote.id);
+
   if (isVotingConfigLoading || isVoteDataLoading) {
     return <InlineVoteCardLoader />;
   }
@@ -103,6 +109,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
         voteEvents: voteEvents ?? [],
         voteTime: votingConfig?.voteTime ?? 0,
         objectionPhaseTime: votingConfig?.objectionPhaseTime ?? 0,
+        eligibleDelegators: delegatorsData?.eligibleDelegatedVoters ?? [],
         refetchVote,
         refetchVoteEvents,
       }}

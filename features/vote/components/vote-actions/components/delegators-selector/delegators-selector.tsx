@@ -19,7 +19,7 @@ import {
   VotedByHolderWrap,
 } from './style';
 import { formatBalance } from 'utils/format-balance';
-import { EligibleDelegator } from 'features/vote/hooks/use-eligible-delegators';
+import { EligibleDelegator } from 'features/vote/types';
 
 const TRANSACTION_LIMIT = 100;
 
@@ -75,12 +75,10 @@ const VotableDelegatorItem = ({
       <Checkbox
         data-testid="delegatorCheckbox"
         checked={isChecked}
-        onChange={(e) =>
-          onCheckedChange(delegator.address as Address, e.target.checked)
-        }
+        onChange={(e) => onCheckedChange(delegator.address, e.target.checked)}
       />
       <AddressPop
-        address={delegator.address as Address}
+        address={delegator.address}
         data-testid="delegatorAddressPopUp"
       >
         <AddressBadgeWrap data-testid="delegatorAddress">
@@ -264,7 +262,7 @@ export const DelegatorsSelector = ({
           <ListWrap>
             {delegatorsVotedThemselves.map((voteEvent) => (
               <DelegatorsListItem key={voteEvent.voter}>
-                <AddressPop address={voteEvent.voter as Address}>
+                <AddressPop address={voteEvent.voter}>
                   <AddressBadgeWrap>
                     <Text as="span" size={12}>
                       {trimAddress(voteEvent.voter, 4)}

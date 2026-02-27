@@ -31,8 +31,8 @@ import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
-import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useEnactVoteAction } from 'features/vote/write-actions/enact-vote/action';
 
 type Props = {
   voteId: string;
@@ -75,7 +75,11 @@ export const VoteCard = ({ voteId }: Props) => {
   const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
 
-  const { handleEnact } = useVoteActionsContext();
+  const processEnact = useEnactVoteAction({
+    voteId: BigInt(vote.id),
+    // TODO: process refetch
+    onConfirm: () => Promise.resolve(),
+  });
 
   const openConnectWalletModal = useCallback(async () => {
     await connect();
@@ -222,7 +226,7 @@ export const VoteCard = ({ voteId }: Props) => {
             <Button
               fullwidth
               color="success"
-              onClick={handleEnact}
+              onClick={processEnact}
               disabled={!isSupportedChain}
             >
               Enact

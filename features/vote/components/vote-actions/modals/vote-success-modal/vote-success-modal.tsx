@@ -1,11 +1,11 @@
 import { TxStageSuccess } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts/success-text';
-import { VoteMode, voteModeDict } from 'features/vote/types';
+import { VoteMode } from 'features/vote/types';
 import { Text } from 'shared/components/text';
 import { Button } from '@lidofinance/lido-ui';
 import { VoteEvent, VotePhase } from 'shared/votes/types';
 import { useAccount } from 'wagmi';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { AddonSection } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { Address } from 'viem';
@@ -13,7 +13,8 @@ import { DelegatorsSelector } from '../../components/delegators-selector';
 import { useDelegators } from 'features/vote/hooks/use-delegators';
 import { Box } from 'shared/components/box';
 import { formatBalance } from 'utils/format-balance';
-import { useEligibleDelegators } from 'features/vote/hooks/use-eligible-delegators';
+import { useVoteContext } from 'features/vote/providers/vote-context';
+import { VOTE_MODE_MAP } from 'features/vote/constants';
 
 type Props = {
   mode: VoteMode;
@@ -26,7 +27,6 @@ type Props = {
   voteEvents?: VoteEvent[];
   votePhase?: VotePhase;
   votePower?: bigint;
-  voteId: bigint;
   title: string;
   justVotedDelegators?: Address[];
 };
@@ -38,7 +38,6 @@ export const VoteSuccessModal = ({
   onVoteWithRemainingDelegated,
   voteEvents,
   votePower,
-  voteId,
   title,
   justVotedDelegators,
 }: Props) => {
@@ -46,14 +45,7 @@ export const VoteSuccessModal = ({
   const { data: tokenData } = useGovernanceToken();
   const { data: delegatorsData } = useDelegators();
 
-  const {
-    data: { eligibleDelegatedVoters: allEligibleDelegators },
-    refetch: refetchEligibleDelegators,
-  } = useEligibleDelegators(voteId);
-
-  useEffect(() => {
-    void refetchEligibleDelegators();
-  }, [refetchEligibleDelegators]);
+  const { eligibleDelegators } = useVoteContext();
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
@@ -121,14 +113,14 @@ export const VoteSuccessModal = ({
 
   const eligibleDelegatedVoters = useMemo(() => {
     if (!justVotedDelegators || justVotedDelegators.length === 0) {
-      return allEligibleDelegators;
+      return eligibleDelegators;
     }
     const votedSet = new Set(justVotedDelegators.map((a) => a.toLowerCase()));
 
-    return allEligibleDelegators.filter(
+    return eligibleDelegators.filter(
       (delegator) => !votedSet.has(delegator.address.toLowerCase()),
     );
-  }, [allEligibleDelegators, justVotedDelegators]);
+  }, [eligibleDelegators, justVotedDelegators]);
 
   const handleDelegatedVoteClick = () => {
     if (onVoteWithRemainingDelegated && selectedDelegators.length > 0) {
@@ -151,6 +143,8 @@ export const VoteSuccessModal = ({
     );
   }
 
+  const voteModeLabel = VOTE_MODE_MAP[mode];
+
   return (
     <TxStageSuccess
       txHash={txHash}
@@ -161,10 +155,7 @@ export const VoteSuccessModal = ({
 
           {canVoteWithOwnTokens && hasRemainingDelegatedPower && (
             <AddonSection>
-              <Text
-                strong
-                size={16}
-              >{`Vote "${voteModeDict[mode]}" with`}</Text>
+              <Text strong size={16}>{`Vote "${voteModeLabel}" with`}</Text>
 
               <Box display="flex" gap={8} marginTop="12px">
                 <Button
@@ -200,23 +191,21 @@ export const VoteSuccessModal = ({
                 {tokenData?.symbol}
               </Text>
               <Button onClick={() => onVoteWithOwnTokens(mode)} fullwidth>
-                {voteModeDict[mode]}
+                {voteModeLabel}
               </Button>
             </AddonSection>
           )}
 
           {!canVoteWithOwnTokens && hasRemainingDelegatedPower && (
             <AddonSection>
-              <Text strong>
-                Vote {voteModeDict[mode]} with delegated tokens
-              </Text>
+              <Text strong>Vote {voteModeLabel} with delegated tokens</Text>
               <DelegatorsSelector
                 onSelectionChange={handleSelectionChange}
                 delegators={eligibleDelegatedVoters}
                 voteEvents={voteEvents || []}
               />
               <Button onClick={handleDelegatedVoteClick} fullwidth>
-                {voteModeDict[mode]}
+                {voteModeLabel}
               </Button>
             </AddonSection>
           )}

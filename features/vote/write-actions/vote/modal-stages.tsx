@@ -6,16 +6,20 @@ import {
 import {
   TxStagePending,
   TxStageSign,
-  TxStageSuccess,
 } from 'shared/blockchain/transaction-modal/tx-stages-basic';
-import { VoteMode, voteModeDict } from '../../types';
+import { VoteMode } from 'features/vote/types';
 import { VoteEvent, VotePhase } from 'shared/votes/types';
 import { Address, Hex } from 'viem';
 import { VoteSuccessModal } from '../../components/vote-actions/modals/vote-success-modal/vote-success-modal';
 import { VoteConfirmDelegatedModal } from '../../components/vote-actions/modals/vote-delegated-confirm-modal';
+import { VoteTxArgs } from './types';
+import { VOTE_MODE_MAP } from 'features/vote/constants';
 
-const getInProgressText = (mode: VoteMode) => {
-  return `You are voting "${voteModeDict[mode]}"`;
+const getInProgressText = ({ delegatedVoters, mode }: VoteTxArgs) => {
+  if (delegatedVoters?.length) {
+    return `You are voting '${VOTE_MODE_MAP[mode]}' on behalf of ${delegatedVoters.length} delegator${delegatedVoters.length > 1 ? 's' : ''}`;
+  }
+  return `You are voting '${VOTE_MODE_MAP[mode]}'`;
 };
 
 const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
@@ -23,51 +27,21 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
 
   confirm: ({
     mode,
-    voteId,
     onSubmit,
   }: {
     mode: VoteMode;
-    voteId: bigint;
     onSubmit: (selectedDelegatorsAddresses: Address[]) => void;
   }) =>
+    transitStage(<VoteConfirmDelegatedModal mode={mode} onSubmit={onSubmit} />),
+
+  sign: (args: VoteTxArgs) =>
     transitStage(
-      <VoteConfirmDelegatedModal
-        mode={mode}
-        voteId={voteId}
-        onSubmit={onSubmit}
-      />,
+      <TxStageSign title={getInProgressText(args)} description="" />,
     ),
 
-  sign: ({ mode }: { mode: VoteMode }) =>
+  pending: (args: VoteTxArgs, txHash?: Hex) =>
     transitStage(
-      <TxStageSign title={getInProgressText(mode)} description="" />,
-    ),
-
-  signEnact: ({ voteId }: { voteId: string }) =>
-    transitStage(
-      <TxStageSign title={`You are enacting vote #${voteId}`} description="" />,
-    ),
-
-  pendingEnact: ({ voteId, txHash }: { voteId: string; txHash?: Hex }) =>
-    transitStage(
-      <TxStagePending
-        title={`You are enacting vote #${voteId}`}
-        txHash={txHash}
-      />,
-    ),
-
-  pending: (mode: VoteMode, txHash?: Hex) =>
-    transitStage(
-      <TxStagePending title={getInProgressText(mode)} txHash={txHash} />,
-    ),
-
-  successEnact: ({ voteId, txHash }: { voteId: string; txHash?: Hex }) =>
-    transitStage(
-      <TxStageSuccess
-        title={`Vote #${voteId} is enacted`}
-        txHash={txHash}
-        description=""
-      />,
+      <TxStagePending title={getInProgressText(args)} txHash={txHash} />,
     ),
 
   success: ({
@@ -78,7 +52,6 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
     voteEvents,
     votePhase,
     votePower,
-    voteId,
     title,
     justVotedDelegators,
   }: {
@@ -92,7 +65,6 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
     voteEvents?: VoteEvent[];
     votePhase?: VotePhase;
     votePower?: bigint;
-    voteId: bigint;
     title: string;
     justVotedDelegators?: Address[];
   }) => {
@@ -105,7 +77,6 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
         voteEvents={voteEvents}
         votePhase={votePhase}
         votePower={votePower}
-        voteId={voteId}
         title={title}
         justVotedDelegators={justVotedDelegators}
       />,

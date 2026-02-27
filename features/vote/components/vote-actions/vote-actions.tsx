@@ -1,42 +1,42 @@
 import { PopupMenu, PopupMenuItem, Tooltip } from '@lidofinance/lido-ui';
 import { Actions, VoteButton } from './style';
-import { VoteMode, VoteType } from '../../types';
+import { VoteMode } from '../../types';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VotePhase } from 'shared/votes/types';
 import { useDelegators } from '../../hooks/use-delegators';
 import { BasicActions } from './basic-actions';
 import { useVoteContext } from 'features/vote/providers/vote-context';
-import { useVoteActionsContext } from 'features/vote/providers/vote-actions-context';
 import { formatBalance } from 'utils/format-balance';
-import { useEligibleDelegators } from '../../hooks/use-eligible-delegators';
 import { DelegatorsSelector } from './components/delegators-selector';
 import { FlexWrapper } from 'shared/styled-components';
 import { Address } from 'viem';
 import { Box } from 'shared/components/box';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
+import { useVoteAction } from 'features/vote/write-actions/vote/action';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { vote, voteEvents, voterDaoTokenBalance } = useVoteContext();
+  const { vote, voteEvents, voterDaoTokenBalance, eligibleDelegators } =
+    useVoteContext();
   const isSupportedChain = useIsSupportedChain();
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
-  const { handleDelegatedVote, handleOwnVote } = useVoteActionsContext();
-
-  const {
-    data: { eligibleDelegatedVoters, delegatedVotersAddresses },
-    isLoading: isEligibleLoading,
-    refetch: refetchEligibleDelegators,
-  } = useEligibleDelegators(BigInt(vote.id));
+  const processVote = useVoteAction({
+    voteId: BigInt(vote.id),
+    onConfirm: async () => {
+      // TODO: add refetch
+      // await refetchEligibleDelegators();
+    },
+  });
 
   const delegatorsVotedThemselves = useMemo(() => {
     if (!voteEvents) return [];
 
     const delegatorSet = new Set(
-      delegatedVotersAddresses.map((addr) => addr.toLowerCase()),
+      eligibleDelegators.map(({ address }) => address.toLowerCase()),
     );
     const votedThroughDelegateSet = new Set(
       voteEvents.flatMap(
@@ -51,7 +51,7 @@ export const VoteActions = () => {
         delegatorSet.has(event.voter.toLowerCase()) &&
         !votedThroughDelegateSet.has(event.voter.toLowerCase()),
     );
-  }, [delegatedVotersAddresses, voteEvents]);
+  }, [eligibleDelegators, voteEvents]);
 
   const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 
@@ -62,8 +62,7 @@ export const VoteActions = () => {
   const { data: delegatorsData, isLoading: isDelegatorsLoading } =
     useDelegators();
 
-  const canVoteForDelegators =
-    !isEligibleLoading && eligibleDelegatedVoters.length > 0;
+  const canVoteForDelegators = eligibleDelegators.length > 0;
 
   const canVoteWithOwnPower = !!voterDaoTokenBalance;
 
@@ -88,39 +87,6 @@ export const VoteActions = () => {
     setIsMenuOpen(false);
   }, []);
 
-  const handleVote = useCallback(
-    async ({
-      mode,
-      type,
-      skipConfirmation,
-    }: {
-      mode: VoteMode;
-      type: VoteType;
-      skipConfirmation?: boolean;
-    }) => {
-      setIsMenuOpen(false);
-
-      if (type === 'own') {
-        await handleOwnVote({ mode });
-      }
-      if (type === 'delegated') {
-        await handleDelegatedVote({
-          mode,
-          voters: selectedDelegators,
-          skipConfirmation,
-        });
-      }
-
-      await refetchEligibleDelegators();
-    },
-    [
-      handleOwnVote,
-      handleDelegatedVote,
-      selectedDelegators,
-      refetchEligibleDelegators,
-    ],
-  );
-
   return (
     <Actions>
       {canVoteWithOwnPower &&
@@ -128,32 +94,30 @@ export const VoteActions = () => {
           <BasicActions
             disabled={!isSupportedChain}
             votePhase={vote.phase}
-            onVote={(mode: VoteMode) => handleVote({ mode, type: 'own' })}
+            onVote={(mode: VoteMode) => processVote({ mode })}
           />
         )}
       {canVoteWithDelegatedVotePower &&
         !canVoteWithOwnPower &&
         vote.phase !== VotePhase.Closed && (
           <FlexWrapper $flexDirection="column">
-            {!isEligibleLoading &&
-              (eligibleDelegatedVoters.length > 0 ||
-                delegatorsVotedThemselves.length > 0) && (
-                <DelegatorsSelector
-                  delegators={eligibleDelegatedVoters}
-                  voteEvents={voteEvents}
-                  onSelectionChange={handleSelectionChange}
-                  delegatorsVotedThemselves={delegatorsVotedThemselves}
-                />
-              )}
+            {(canVoteForDelegators || delegatorsVotedThemselves.length > 0) && (
+              <DelegatorsSelector
+                delegators={eligibleDelegators}
+                voteEvents={voteEvents}
+                onSelectionChange={handleSelectionChange}
+                delegatorsVotedThemselves={delegatorsVotedThemselves}
+              />
+            )}
             {canVoteForDelegators && (
               <BasicActions
                 votePhase={vote.phase}
                 disabled={!isSupportedChain}
                 onVote={(mode: VoteMode) =>
-                  handleVote({
+                  processVote({
                     mode,
-                    type: 'delegated',
-                    skipConfirmation: true,
+                    delegatedVoters: selectedDelegators,
+                    shouldSkipConfirmation: true,
                   })
                 }
               />
@@ -237,14 +201,14 @@ export const VoteActions = () => {
         open={isMenuOpen}
       >
         <PopupMenuItem
-          data-testid="delegatedVPBtn"
-          onClick={() => handleVote({ mode: currentMode, type: 'own' })}
+          data-testid="myOwnVPBtn"
+          onClick={() => processVote({ mode: currentMode })}
         >
           {`My own (${formattedOwnVP})`}
         </PopupMenuItem>
         <PopupMenuItem
-          data-testid="myOwnVPBtn"
-          onClick={() => handleVote({ mode: currentMode, type: 'delegated' })}
+          data-testid="delegatedVPBtn"
+          onClick={() => processVote({ mode: currentMode })}
         >
           {`Delegated (${formattedDelegatedVP})`}
         </PopupMenuItem>

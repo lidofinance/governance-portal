@@ -1,5 +1,5 @@
 import { Button } from '@lidofinance/lido-ui';
-import { VoteMode, voteModeDict } from 'features/vote/types';
+import { VoteMode } from 'features/vote/types';
 import { DelegatorsSelector } from '../../components/delegators-selector';
 import { Text } from 'shared/components/text';
 import { useState } from 'react';
@@ -7,28 +7,19 @@ import { Address } from 'viem';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { Box } from 'shared/components/box';
-import { useEligibleDelegators } from 'features/vote/hooks/use-eligible-delegators';
 import { useVoteContext } from 'features/vote/providers/vote-context';
+import { VOTE_MODE_MAP } from 'features/vote/constants';
 
 type Props = {
   mode: VoteMode;
-  voteId: bigint;
   onSubmit: (selectedVoters: Address[]) => void;
 };
 
-export const VoteConfirmDelegatedModal = ({
-  mode,
-  voteId,
-  onSubmit,
-}: Props) => {
+export const VoteConfirmDelegatedModal = ({ mode, onSubmit }: Props) => {
   const [selectedAddresses, setSelectedAddresses] = useState<Address[]>([]);
   const [selectedBalance, setSelectedBalance] = useState<bigint>(0n);
 
-  const {
-    data: { eligibleDelegatedVoters: allEligibleDelegators },
-  } = useEligibleDelegators(voteId);
-
-  const { voteEvents } = useVoteContext();
+  const { voteEvents, eligibleDelegators } = useVoteContext();
 
   const { data: tokenData } = useGovernanceToken();
 
@@ -51,12 +42,12 @@ export const VoteConfirmDelegatedModal = ({
       </Box>
       <Box margin="10px 0">
         <Button color="secondary" onClick={handleSubmit} fullwidth>
-          {`"${voteModeDict[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
+          {`"${VOTE_MODE_MAP[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
         </Button>
       </Box>
       <DelegatorsSelector
         voteEvents={voteEvents}
-        delegators={allEligibleDelegators}
+        delegators={eligibleDelegators}
         onSelectionChange={handleSelectionChange}
       />
     </>

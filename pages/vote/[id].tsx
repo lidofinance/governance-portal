@@ -2,7 +2,6 @@ import { Layout } from 'shared/components';
 import { VoteCard } from 'features/vote/components/vote-card';
 import { GetServerSideProps } from 'next';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
-import { VoteActionsProvider } from '../../features/vote/providers/vote-actions-context';
 import { VoteMeta } from '../../features/vote/meta';
 import { Text } from 'shared/components/text';
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
@@ -19,16 +18,14 @@ export default function VotePage({ voteId }: Props) {
       <VoteMeta />
       <Layout metaTitle={`Vote #${voteId}`}>
         <VoteProvider voteId={voteId}>
-          <VoteActionsProvider voteId={voteId}>
-            <Box marginBottom={8}>
-              <Link href={VOTE_DASHBOARD_INDEX_PATH}>
-                <Text size={14} color="secondary">
-                  ← To all votes
-                </Text>
-              </Link>
-            </Box>
-            <VoteCard voteId={voteId} />
-          </VoteActionsProvider>
+          <Box marginBottom={8}>
+            <Link href={VOTE_DASHBOARD_INDEX_PATH}>
+              <Text size={14} color="secondary">
+                ← To all votes
+              </Text>
+            </Link>
+          </Box>
+          <VoteCard voteId={voteId} />
         </VoteProvider>
       </Layout>
     </>
