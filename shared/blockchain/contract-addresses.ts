@@ -592,3 +592,8 @@ export const OperatorGrid: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xC69685E89Cefc327b43B7234AC646451B27c544d',
   [CHAINS.Hoodi]: '0x501e678182bB5dF3f733281521D3f3D1aDe69917',
 };
+
+export const PredepositGuarantee: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xf4bf42c6d6a0e38825785048124dbad6c9eaaac3',
+  [CHAINS.Hoodi]: '0xa5F55f3402beA2B14AE15Dae1b6811457D43581d',
+};

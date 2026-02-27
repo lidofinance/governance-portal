@@ -63,7 +63,7 @@ export const VoterItem = ({
         onClick={handleExpandClick}
       >
         <ListRowCell>
-          <AddressPop address={voter}>
+          <AddressPop address={voter} isPaddingless>
             <AddressWrap data-testid="voterAddress">
               {isDelegated && <TurnArrow />}
               {publicDelegate ? (

@@ -8,9 +8,15 @@ import { useSimpleReducer } from 'shared/hooks/use-simple-reducer';
 import { useClickOutside } from 'shared/hooks/use-click-outside';
 import { CopyOpenActions } from '../copy-open-actions';
 
-type Props = React.ComponentProps<typeof IdenticonBadge>;
+type Props = {
+  isPaddingless?: boolean;
+} & React.ComponentProps<typeof IdenticonBadge>;
 
-export const AddressPop = ({ children, ...badgeProps }: Props) => {
+export const AddressPop = ({
+  children,
+  isPaddingless,
+  ...badgeProps
+}: Props) => {
   const { address } = badgeProps;
 
   const wrapRef = useRef<HTMLSpanElement | null>(null);
@@ -48,7 +54,7 @@ export const AddressPop = ({ children, ...badgeProps }: Props) => {
   );
 
   return (
-    <Wrap ref={wrapRef}>
+    <Wrap ref={wrapRef} $paddingless={isPaddingless}>
       <button onClick={handleOpen}>{children}</button>
       {isOpened && (
         <Pop ref={popRef} isVisible={Boolean(position)} style={position}>

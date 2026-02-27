@@ -57,7 +57,7 @@ export const Tab = styled.div<TabProps>`
 `;
 
 export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
-  padding: 16px 32px;
+  padding: 20px;
   font-size: 15px;
   position: relative;
   margin-top: -1px;
@@ -94,13 +94,13 @@ export const ScriptBox = styled.div`
   resize: vertical;
   width: 100%;
   font-family:
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    Liberation Mono,
-    Courier New,
-    monospace !important;
+    SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+
+  * {
+    font-family: inherit;
+  }
+
   font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;
   color: var(--lido-color-text);
   border-radius: 8px;

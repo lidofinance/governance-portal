@@ -118,7 +118,7 @@ export const VoteCard = ({ voteId }: Props) => {
   } = getVoteDetailsFormatted(vote);
 
   return (
-    <Card key={voteId}>
+    <Card key={voteId} data-testid="voteCard">
       <VoteHeader>
         <VoteTitle data-testid="voteTitle">Vote #{voteId}</VoteTitle>
         {!voteDualGovernanceStatusLoading && (
@@ -162,20 +162,18 @@ export const VoteCard = ({ voteId }: Props) => {
           {formattedDate}
         </Text>
       </VoteTimestamps>
-      <DetailsBoxWrap>
-        <BoxVotes data-testid="voteDetails">
-          <VoteYesNoBar
-            yeaPct={yeaPct}
-            nayPct={nayPct}
-            yeaNum={yeaNum}
-            nayNum={nayNum}
-            yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
-            nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
-            showOnForeground
-            showNumber
-          />
-        </BoxVotes>
-      </DetailsBoxWrap>
+      <BoxVotes data-testid="voteDetails">
+        <VoteYesNoBar
+          yeaPct={yeaPct}
+          nayPct={nayPct}
+          yeaNum={yeaNum}
+          nayNum={nayNum}
+          yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
+          nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
+          showOnForeground
+          showNumber
+        />
+      </BoxVotes>
       {(vote.phase === VotePhase.Main ||
         vote.phase === VotePhase.Objection) && (
         <>
@@ -191,11 +189,9 @@ export const VoteCard = ({ voteId }: Props) => {
       <VotersList />
       <SectionHeading>Proposal</SectionHeading>
       {eventStart?.args.metadata && (
-        <DetailsBoxWrap>
-          <DescriptionWrap data-testid="voteDescription">
-            <VoteDescription metadata={eventStart.args.metadata} allowMD />
-          </DescriptionWrap>
-        </DetailsBoxWrap>
+        <DescriptionWrap data-testid="voteDescription">
+          <VoteDescription metadata={eventStart.args.metadata} allowMD />
+        </DescriptionWrap>
       )}
       <DetailsBoxWrap data-testid="voteScript">
         <VoteScript

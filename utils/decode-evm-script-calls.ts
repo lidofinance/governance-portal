@@ -126,12 +126,11 @@ export const decodeCalls = <TCall extends BaseCall>({
   chainId,
 }: DecodeCallArgs<TCall>): DecodedCall[] => {
   if (calls.length === 0) return [];
-  return calls.map((call, index) => {
+  const decoded = calls.reduce<DecodedCall[]>((result, call) => {
     const contractAddress = call.target;
 
     const contractName = getContractName(chainId, contractAddress);
     let abi: ABIElement[] | undefined;
-    const id = index + 1;
     if (contractName) {
       abi = getContractAbi(contractAddress, chainId);
     }
@@ -148,7 +147,7 @@ export const decodeCalls = <TCall extends BaseCall>({
           ...decodedData,
           contractAddress,
           contractName,
-          id,
+          id: 0,
           nestedCalls: [],
         };
 
@@ -180,17 +179,12 @@ export const decodeCalls = <TCall extends BaseCall>({
             target: callData.target,
             payload: callData.payload,
           }));
-          const nestedCalls = decodeCalls({
+          const innerCalls = decodeCalls({
             calls: rawForwardDecodedData,
             chainId,
           });
-          decodedCall.nestedCalls = nestedCalls.map(
-            (nestedCall) =>
-              ({
-                ...nestedCall,
-                id: undefined,
-              }) as unknown as DecodedCall,
-          );
+          result.push(...innerCalls);
+          return result;
         }
       } catch (e) {
         console.warn(
@@ -200,6 +194,9 @@ export const decodeCalls = <TCall extends BaseCall>({
       }
     }
 
-    return decodedCall;
-  });
+    result.push(decodedCall);
+    return result;
+  }, []);
+
+  return decoded.map((call, i) => (call ? { ...call, id: i + 1 } : call));
 };
