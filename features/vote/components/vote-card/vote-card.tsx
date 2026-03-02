@@ -61,7 +61,6 @@ export const VoteCard = ({ voteId }: Props) => {
     eventExecute,
     eventStart,
     voteEvents,
-    voterDaoTokenBalance,
     voteTime,
     objectionPhaseTime,
     dgProposal,
@@ -202,7 +201,7 @@ export const VoteCard = ({ voteId }: Props) => {
           />
           {vote.phase !== VotePhase.Closed && (
             <>
-              <VotePowerInfo votePowerWei={voterDaoTokenBalance} />
+              <VotePowerInfo />
               <VoteActions />
             </>
           )}

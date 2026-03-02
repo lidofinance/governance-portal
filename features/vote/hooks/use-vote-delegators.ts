@@ -31,9 +31,7 @@ const processEligibleDelegators = (
         const delegator: EligibleDelegator = {
           address,
           votingPower,
-          votedByDelegate:
-            voterState === VoterState.DelegateNay ||
-            voterState === VoterState.DelegateYea,
+          delegateVote: voterState === VoterState.Absent ? null : voterState,
         };
 
         acc.eligibleDelegatedVoters.push(delegator);

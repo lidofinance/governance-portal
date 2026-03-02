@@ -7,9 +7,7 @@ import {
   TxStagePending,
   TxStageSign,
 } from 'shared/blockchain/transaction-modal/tx-stages-basic';
-import { VoteMode } from 'features/vote/types';
-import { VoteEvent, VotePhase } from 'shared/votes/types';
-import { Address, Hex } from 'viem';
+import { Hex } from 'viem';
 import { VoteSuccessModal } from '../../components/vote-actions/modals/vote-success-modal/vote-success-modal';
 import { VoteConfirmDelegatedModal } from '../../components/vote-actions/modals/vote-delegated-confirm-modal';
 import { VoteTxArgs } from './types';
@@ -39,46 +37,10 @@ const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
       <TxStagePending title={getInProgressText(args)} txHash={txHash} />,
     ),
 
-  success: ({
-    mode,
-    txHash,
-    onVoteWithOwnTokens,
-    onVoteWithRemainingDelegated,
-    voteEvents,
-    votePhase,
-    votePower,
-    title,
-    justVotedDelegators,
-  }: {
-    mode: VoteMode;
-    txHash: string | undefined;
-    onVoteWithOwnTokens: (mode: VoteMode) => void;
-    onVoteWithRemainingDelegated?: (
-      selectedVoters: Address[],
-      mode: VoteMode,
-    ) => void;
-    voteEvents?: VoteEvent[];
-    votePhase?: VotePhase;
-    votePower?: bigint;
-    title: string;
-    justVotedDelegators?: Address[];
-  }) => {
-    return transitStage(
-      <VoteSuccessModal
-        mode={mode}
-        txHash={txHash}
-        onVoteWithOwnTokens={onVoteWithOwnTokens}
-        onVoteWithRemainingDelegated={onVoteWithRemainingDelegated}
-        voteEvents={voteEvents}
-        votePhase={votePhase}
-        votePower={votePower}
-        title={title}
-        justVotedDelegators={justVotedDelegators}
-      />,
-      {
-        isClosableOnLedger: true,
-      },
-    );
+  success: (props: ComponentProps<typeof VoteSuccessModal>) => {
+    return transitStage(<VoteSuccessModal {...props} />, {
+      isClosableOnLedger: true,
+    });
   },
 });
 

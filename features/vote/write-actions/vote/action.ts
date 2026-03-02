@@ -25,7 +25,7 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const sendVoteTx = useVoteTxSender();
   const waitForTx = useTxConfirmation();
 
-  const { eligibleDelegators, vote, voteEvents } = useVoteContext();
+  const { eligibleDelegators, vote } = useVoteContext();
 
   const proceedWithVote = useCallback(
     async ({ voteId, delegatedVoters, mode }: VoteTxArgs) => {
@@ -87,7 +87,6 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
         if (requestDelegateSelection) {
           txModalStages.confirm({
             mode,
-            voteEvents,
             eligibleDelegators,
             onSubmit: async (selectedVoters) => {
               return proceedWithVote({
@@ -114,7 +113,6 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
       vote.id,
       isConnected,
       txModalStages,
-      voteEvents,
       eligibleDelegators,
       proceedWithVote,
       onRetry,

@@ -17,7 +17,6 @@ export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
     vote,
-    voteEvents,
     voterDaoTokenBalance,
     eligibleDelegators,
     isLoading,
@@ -86,7 +85,6 @@ export const VoteActions = () => {
             {(canVoteForDelegators || delegatorsVotedThemselves.length > 0) && (
               <DelegatorsSelector
                 delegators={eligibleDelegators}
-                voteEvents={voteEvents}
                 onSelectionChange={handleSelectionChange}
                 delegatorsVotedThemselves={delegatorsVotedThemselves}
               />

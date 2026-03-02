@@ -5,7 +5,6 @@ import { Address } from 'viem';
 import { AddressPop } from 'shared/components/address-pop';
 import { Text } from 'shared/components/text';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
-import { VoteEvent } from 'shared/votes/types';
 
 import {
   AccordionWrap,
@@ -20,12 +19,9 @@ import {
 } from './style';
 import { formatBalance } from 'utils/format-balance';
 import { EligibleDelegator, VoterInfo } from 'features/vote/types';
+import { VoterState } from 'shared/votes/types';
 
 const TRANSACTION_LIMIT = 100;
-
-type Delegator = EligibleDelegator & {
-  delegateVote?: boolean;
-};
 
 type CheckedItems = Record<string, boolean>;
 
@@ -65,7 +61,7 @@ const VotableDelegatorItem = ({
   onCheckedChange,
   tokenSymbol,
 }: {
-  delegator: Delegator & { votedByDelegate?: boolean; delegateVote?: boolean };
+  delegator: EligibleDelegator;
   isChecked: boolean;
   onCheckedChange: (address: Address, isChecked: boolean) => void;
   tokenSymbol?: string;
@@ -88,9 +84,11 @@ const VotableDelegatorItem = ({
         </AddressBadgeWrap>
       </AddressPop>
     </AddressWrap>
-    {delegator.votedByDelegate && (
+    {delegator.delegateVote !== null && (
       <Text as="span" size={12} color="secondary">
-        {delegator.delegateVote ? 'Yes (You)' : 'No (You)'}
+        {delegator.delegateVote === VoterState.DelegateYea
+          ? 'Yes (You)'
+          : 'No (You)'}
       </Text>
     )}
     <DelegatorsVotingPower data-testid="delegatorVP">
@@ -101,7 +99,6 @@ const VotableDelegatorItem = ({
 
 interface DelegatorsSelectorProps {
   delegators: EligibleDelegator[];
-  voteEvents: VoteEvent[];
   delegatorsVotedThemselves?: VoterInfo[];
   onSelectionChange?: (
     selectedAddresses: Address[],
@@ -111,7 +108,6 @@ interface DelegatorsSelectorProps {
 
 export const DelegatorsSelector = ({
   onSelectionChange,
-  voteEvents,
   delegators,
   delegatorsVotedThemselves,
 }: DelegatorsSelectorProps) => {
@@ -124,57 +120,25 @@ export const DelegatorsSelector = ({
     [delegators],
   );
 
-  const votableDelegators = useMemo(() => {
-    if (delegators.length === 0) {
-      return [] as Delegator[];
-    }
-
-    const delegatorAddresses = new Set(
-      delegators.map((d) => d.address.toLowerCase()),
-    );
-
-    const votedByDelegate = voteEvents.filter(
-      (event) =>
-        event.delegatedVotes?.length &&
-        event.delegatedVotes.some((vote) =>
-          delegatorAddresses.has(vote.voter.toLowerCase()),
-        ),
-    );
-
-    const delegateVoteMap = new Map<string, boolean>();
-    votedByDelegate.forEach((event) => {
-      event.delegatedVotes?.forEach((vote) => {
-        if (delegatorAddresses.has(vote.voter.toLowerCase())) {
-          delegateVoteMap.set(vote.voter.toLowerCase(), vote.supports);
-        }
-      });
-    });
-
-    return delegators.map((delegator) => ({
-      ...delegator,
-      delegateVote: delegateVoteMap.get(delegator.address.toLowerCase()),
-    }));
-  }, [delegators, voteEvents]);
-
   const checkedItems = useMemo(() => {
-    if (votableDelegators.length === 0) return {};
+    if (delegators.length === 0) return {};
 
     return Object.fromEntries(
-      votableDelegators
-        .filter((delegator) => !delegator.votedByDelegate)
+      delegators
+        .filter((delegator) => delegator.delegateVote === null)
         .map((delegator, index) => [
           delegator.address,
           index < TRANSACTION_LIMIT,
         ]),
     );
-  }, [votableDelegators]);
+  }, [delegators]);
 
   const [finalCheckedItems, setFinalCheckedItems] = useState<CheckedItems>(
     () => {
-      if (votableDelegators.length === 0) return {};
+      if (delegators.length === 0) return {};
       return Object.fromEntries(
-        votableDelegators
-          .filter((delegator) => !delegator.votedByDelegate)
+        delegators
+          .filter((delegator) => delegator.delegateVote === null)
           .map((delegator, index) => [
             delegator.address,
             index < TRANSACTION_LIMIT,
@@ -207,12 +171,12 @@ export const DelegatorsSelector = ({
       (key) => finalCheckedItems[key],
     ) as Address[];
 
-    const selectedBalance = votableDelegators
+    const selectedBalance = delegators
       .filter((d) => finalCheckedItems[d.address])
       .reduce((acc, d) => acc + d.votingPower, 0n);
 
     return { selectedAddresses, selectedBalance };
-  }, [finalCheckedItems, votableDelegators]);
+  }, [finalCheckedItems, delegators]);
 
   useEffect(() => {
     if (onSelectionChange) {
@@ -223,8 +187,8 @@ export const DelegatorsSelector = ({
     }
   }, [selectionData, onSelectionChange]);
 
-  // Don't render until we have complete data AND votableDelegators are processed
-  if (votableDelegators.length === 0 && !delegatorsVotedThemselves?.length) {
+  // Don't render until we have complete data AND delegators are processed
+  if (delegators.length === 0 && !delegatorsVotedThemselves?.length) {
     return null;
   }
 
@@ -242,7 +206,7 @@ export const DelegatorsSelector = ({
       }
     >
       <ListWrap data-testid="delegatorsList">
-        {votableDelegators.map((delegator) => (
+        {delegators.map((delegator) => (
           <VotableDelegatorItem
             key={delegator.address}
             delegator={delegator}
