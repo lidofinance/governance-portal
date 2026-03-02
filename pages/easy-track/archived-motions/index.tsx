@@ -103,9 +103,3 @@ const ArchivePage = () => {
 };
 
 export default ArchivePage;
-
-export const getServerSideProps = async () => {
-  return {
-    props: {},
-  };
-};
