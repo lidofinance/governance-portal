@@ -69,7 +69,7 @@ export type EligibleDelegator = {
 };
 
 export type VoterInfo = {
-  address: string;
+  address: Address;
   supports: boolean;
   stake: bigint;
 };

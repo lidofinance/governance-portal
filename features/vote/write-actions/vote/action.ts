@@ -29,42 +29,77 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
 
   const proceedWithVote = useCallback(
     async ({ voteId, delegatedVoters, mode }: VoteTxArgs) => {
-      try {
-        txModalStages.sign({ delegatedVoters, voteId, mode });
+      txModalStages.sign({ delegatedVoters, voteId, mode });
 
-        const txHash = await sendVoteTx({ delegatedVoters, voteId, mode });
+      const txHash = await sendVoteTx({ delegatedVoters, voteId, mode });
 
-        if (isMultisig) {
-          txModalStages.successMultisig();
-          return true;
-        }
-
-        txModalStages.pending({ delegatedVoters, voteId, mode }, txHash);
-
-        const response = await waitForTx(txHash);
-        if (response.status === 'reverted') {
-          txModalStages.failed(new Error('Transaction was reverted'), onRetry);
-          return;
-        }
-        await onConfirm();
-
-        // TODO: add success call
-        // txModalStages.success({
-        //   mode,
-        //   txHash,
-        //   onVoteWithOwnTokens: onOwnVoteSubmit,
-        //   onVoteWithRemainingDelegated: (
-        //     selectedVoters: Address[],
-        //     voteMode: VoteMode,
-        //   ) => onDelegateVoteSubmit(voteMode, selectedVoters),
-        //   voteEvents: updatedVoteEvents,
-        //   votePhase: updatedVote.phase,
-        //   votePower: updatedVote.votingPower,
-        //   voteId: BigInt(voteId),
-        //   title: `You voted "${voteModeDict[mode]}"`,
-        // });
-
+      if (isMultisig) {
+        txModalStages.successMultisig();
         return true;
+      }
+
+      txModalStages.pending({ delegatedVoters, voteId, mode }, txHash);
+
+      const response = await waitForTx(txHash);
+      if (response.status === 'reverted') {
+        throw new Error('Transaction was reverted');
+      }
+      await onConfirm();
+
+      // TODO: add success call
+      // txModalStages.success({
+      //   mode,
+      //   txHash,
+      //   onVoteWithOwnTokens: onOwnVoteSubmit,
+      //   onVoteWithRemainingDelegated: (
+      //     selectedVoters: Address[],
+      //     voteMode: VoteMode,
+      //   ) => onDelegateVoteSubmit(voteMode, selectedVoters),
+      //   voteEvents: updatedVoteEvents,
+      //   votePhase: updatedVote.phase,
+      //   votePower: updatedVote.votingPower,
+      //   voteId: BigInt(voteId),
+      //   title: `You voted "${voteModeDict[mode]}"`,
+      // });
+
+      return true;
+    },
+    [txModalStages, sendVoteTx, isMultisig, waitForTx, onConfirm],
+  );
+
+  return useCallback(
+    async ({
+      requestDelegateSelection,
+      mode,
+      delegatedVoters,
+    }: VoteActionArgs) => {
+      try {
+        const voteId = BigInt(vote.id);
+        invariant(
+          voteId >= 0n,
+          'Valid vote ID is required to proceed with voting',
+        );
+        invariant(
+          isConnected,
+          'Wallet must be connected to proceed with voting',
+        );
+
+        if (requestDelegateSelection) {
+          txModalStages.confirm({
+            mode,
+            voteEvents,
+            eligibleDelegators,
+            onSubmit: async (selectedVoters) => {
+              return proceedWithVote({
+                voteId,
+                mode,
+                delegatedVoters: selectedVoters,
+              });
+            },
+          });
+        } else {
+          return proceedWithVote({ voteId, mode, delegatedVoters });
+        }
       } catch (error) {
         console.error('Error during vote:', error);
         txModalStages.failed(
@@ -75,39 +110,6 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
         return false;
       }
     },
-    [txModalStages, sendVoteTx, isMultisig, waitForTx, onConfirm, onRetry],
-  );
-
-  return useCallback(
-    async ({
-      requestDelegateSelection,
-      mode,
-      delegatedVoters,
-    }: VoteActionArgs) => {
-      const voteId = BigInt(vote.id);
-      invariant(
-        voteId >= 0n,
-        'Valid vote ID is required to proceed with voting',
-      );
-      invariant(isConnected, 'Wallet must be connected to proceed with voting');
-
-      if (requestDelegateSelection) {
-        txModalStages.confirm({
-          mode,
-          voteEvents,
-          eligibleDelegators,
-          onSubmit: async (selectedVoters) => {
-            await proceedWithVote({
-              voteId,
-              mode,
-              delegatedVoters: selectedVoters,
-            });
-          },
-        });
-      } else {
-        await proceedWithVote({ voteId, mode, delegatedVoters });
-      }
-    },
     [
       vote.id,
       isConnected,
@@ -115,6 +117,7 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
       voteEvents,
       eligibleDelegators,
       proceedWithVote,
+      onRetry,
     ],
   );
 };
