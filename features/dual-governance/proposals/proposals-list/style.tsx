@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, InlineLoader } from '@lidofinance/lido-ui';
+import { Block, InlineLoader, Link } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { devicesHeaderMedia } from 'styles/global';
 
@@ -210,4 +210,14 @@ export const UnknownContract = styled.span`
   display: flex;
   align-items: center;
   gap: 8px;
+`;
+
+export const InlineLoaderDescription = styled(InlineLoader)`
+  height: 18px;
+  border-radius: 20px;
+  margin-top: 16px;
+`;
+
+export const ListItemLink = styled(Link)`
+  min-width: 0;
 `;

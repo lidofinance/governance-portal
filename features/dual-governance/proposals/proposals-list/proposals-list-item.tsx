@@ -1,5 +1,6 @@
 import {
   DescriptionText,
+  InlineLoaderDescription,
   ProposalDescription,
   ProposalListItemWrapper,
   StatusBadgeWrapper,
@@ -8,11 +9,8 @@ import {
   UnknownContract,
 } from './style';
 import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import {
-  ProposalCombinedData,
-  SubmitProposalCall,
-} from 'features/dual-governance/proposals/types';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';
+import { ChainAddressMap } from 'shared/blockchain/types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WarningIconTransparent } from 'shared/components/icons';
 import { useProposalStatus } from '../../hooks/use-proposal-status';
@@ -20,75 +18,66 @@ import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
 import { DGTooltip } from '../../tooltips';
 import { Address } from 'viem';
-import { ChainAddressMap } from 'shared/blockchain/types';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { useProposalDetails } from '../../hooks/use-proposal-details';
+import { useProposalEvents } from '../../hooks/use-proposal-events';
+import { useMemo, memo } from 'react';
 
 type Props = {
-  id: number;
-  description: string;
-  calls: SubmitProposalCall[] | undefined;
-  proposalDetails: ProposalCombinedData['proposalDetails'];
-  proposer?: Address;
+  proposalId: number;
 };
 
-const getAddressFromMap = (
-  addressMap: ChainAddressMap | Record<number, string | string[]>,
-  chainId: CHAINS,
-): Address | undefined => {
-  const entry = (addressMap as any)[chainId];
-  if (!entry) return undefined;
-  if (Array.isArray(entry)) return undefined; // Skip arrays
-  return typeof entry === 'string' ? entry : entry.actual;
-};
+export const ProposalsListItem = memo(({ proposalId }: Props) => {
+  const { data: proposalDetails } = useProposalDetails(proposalId);
 
-export const ProposalsListItem = ({
-  id,
-  description,
-  proposalDetails,
-  calls,
-  proposer,
-}: Props) => {
   const { chainId } = useLidoSDK();
 
-  const { status, submittedAt } = proposalDetails;
+  const { data, isLoading } = useProposalEvents({ proposalDetails });
 
   const proposalStatusInfo = useProposalStatus({
-    proposalStatus: status,
-    submittedAt: submittedAt,
-    scheduledAt: proposalDetails.scheduledAt,
+    proposalStatus: proposalDetails?.status,
+    submittedAt: proposalDetails?.submittedAt,
+    scheduledAt: proposalDetails?.scheduledAt,
   });
 
-  const descriptionLines = description.split('\n');
+  const proposalDescription = useMemo(() => {
+    const metadata = data?.proposalSubmittedEvent?.args?.metadata;
+    if (!metadata) {
+      return [] as string[];
+    }
+    return metadata.split('\n');
+  }, [data?.proposalSubmittedEvent?.args?.metadata]);
 
-  const isUnknownContractCalled = calls
-    ? calls.some((call) => {
-        const addressMaps = Object.entries(contractAddresses);
+  const isUnknownContractCalled = useMemo(() => {
+    if (!proposalDetails?.calls) return false;
+    const contractAddressValues = Object.values(contractAddresses) as ChainAddressMap[];
+    return proposalDetails.calls.some((call) => {
+      return !contractAddressValues.some((contract) => {
+        const raw = contract[chainId];
+        const resolved =
+          raw && typeof raw === 'object' ? raw.actual : raw;
+        return resolved?.toLowerCase() === call.target.toLowerCase();
+      });
+    });
+  }, [proposalDetails?.calls, chainId]);
 
-        const isKnown = addressMaps.some(([, addressMap]) => {
-          const address = getAddressFromMap(addressMap, chainId as CHAINS);
+  const proposerAddress = data?.proposalSubmittedEvent?.args
+    ?.proposerAccount as Address | null;
 
-          if (!address) {
-            return false;
-          }
-
-          return address.toLowerCase() === call.target.toLowerCase();
-        });
-
-        return !isKnown;
-      })
-    : false;
+  if (!proposalDetails) {
+    return null;
+  }
 
   return (
     <ProposalListItemWrapper>
       <SummarySection>
         <ProposalName
-          id={id}
+          id={Number(proposalDetails.id)}
           isUnknownContractCalled={isUnknownContractCalled}
-          proposer={proposer}
           chainId={chainId}
+          proposer={proposerAddress}
         />
         <StatusBadgeWrapper>
-          {proposalStatusInfo && proposalStatusInfo.badge && (
+          {proposalStatusInfo?.badge && (
             <Badge $variant={proposalStatusInfo.badge.variant}>
               <Box display="flex" alignItems="center" gap={5}>
                 {proposalStatusInfo.badge.text}
@@ -100,22 +89,29 @@ export const ProposalsListItem = ({
           )}
         </StatusBadgeWrapper>
         <TimelockWrapper>
-          <Box width={260}>
-            {proposalStatusInfo?.info && proposalStatusInfo.info}
-          </Box>
+          <Box width={260}>{proposalStatusInfo?.info}</Box>
         </TimelockWrapper>
       </SummarySection>
       <ProposalDescription>
-        {descriptionLines.splice(0, 10).map((line, index) => (
-          <DescriptionText key={index}>{line}</DescriptionText>
-        ))}
-        {isUnknownContractCalled && (
-          <UnknownContract>
-            <WarningIconTransparent />
-            <span>Unknown Contract Called</span>
-          </UnknownContract>
+        {isLoading ? (
+          <>
+            <InlineLoaderDescription />
+            <InlineLoaderDescription />
+          </>
+        ) : (
+          <>
+            {proposalDescription.slice(0, 10).map((line, index) => (
+              <DescriptionText key={index}>{line}</DescriptionText>
+            ))}
+            {isUnknownContractCalled && (
+              <UnknownContract>
+                <WarningIconTransparent />
+                <span>Unknown Contract Called</span>
+              </UnknownContract>
+            )}
+          </>
         )}
       </ProposalDescription>
     </ProposalListItemWrapper>
   );
-};
+});

@@ -1,24 +1,20 @@
-import { ProposalsListItem } from './proposals-list-item';
-import { InlineLoaderStyled, ProposalSearchItemWrapper } from './style';
+import { Link } from '@lidofinance/lido-ui';
 import { PROPOSALS_PATH } from 'constants/urls';
-import Link from 'next/link';
-import { Address } from 'viem';
-import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
+import { InlineLoaderStyled, ProposalSearchItemWrapper } from './style';
+import { ProposalsListItem } from './proposals-list-item';
+import { useProposalDetails } from '../../hooks/use-proposal-details';
 
-export const ProposalSearchItem = ({ id }: { id: string }) => {
-  const {
-    getProposalById,
-    isLoading: isProposalsLoading,
-    isError: isProposalsError,
-  } = useDualGovernanceProposalsContext();
+type Props = {
+  proposalId: number;
+};
+export const ProposalSearchItem = ({ proposalId }: Props) => {
+  const { data: proposalDetails, isLoading: isProposalDetailsLoading } =
+    useProposalDetails(proposalId);
 
-  const proposal = getProposalById(Number(id));
-
-  if (isProposalsLoading && !proposal) {
+  if (isProposalDetailsLoading && !proposalId) {
     return <InlineLoaderStyled />;
   }
-
-  if (isProposalsError) {
+  if (!proposalDetails) {
     return (
       <ProposalSearchItemWrapper>
         <h1>No proposal found</h1>
@@ -26,20 +22,15 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
     );
   }
 
-  if (proposal) {
+  if (proposalDetails) {
     return (
       <ProposalSearchItemWrapper>
         <Link
-          href={`${PROPOSALS_PATH}/${proposal.proposalId}`}
-          key={proposal.proposalId}
+          href={`${PROPOSALS_PATH}/${proposalId}`}
+          target="_self"
+          key={proposalId}
         >
-          <ProposalsListItem
-            id={proposal.proposalId}
-            proposer={proposal.DGEvent?.args.proposerAccount as Address}
-            description={proposal.DGEvent?.args?.metadata || ''}
-            calls={proposal.proposalDetails?.calls}
-            proposalDetails={proposal.proposalDetails}
-          />
+          <ProposalsListItem proposalId={proposalId} />
         </Link>
       </ProposalSearchItemWrapper>
     );

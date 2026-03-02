@@ -18,7 +18,7 @@ import {
 import { DecodedCall } from 'utils/decode-evm-script-calls';
 import { DualGovernancePlainIcon } from 'shared/components/icons';
 import { DualGovernance } from 'shared/blockchain/contract-addresses';
-import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
+import { HISTORICAL_ADDRESSES } from '../../../../constants/historical-addresses.mjs';
 
 interface FormatOptions {
   chainId: CHAINS;

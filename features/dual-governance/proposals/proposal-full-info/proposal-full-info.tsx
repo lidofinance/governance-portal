@@ -1,20 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   ActionsWrapper,
   ArrowIconWrapper,
-  InlineLoaderStyled,
+  DescriptionLoaderStyled,
+  EventsLoaderStyled,
   ProposalContainer,
   ProposalHeader,
-  ProposalLink,
   ProposalName,
   ProposalStateLogWrapper,
   SubmitDate,
-  SubmittedBy,
 } from './style';
 import { Text } from 'shared/components/text';
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
 
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
@@ -29,27 +27,18 @@ import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-s
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { config } from 'config';
 import { Box, Link } from '@lidofinance/lido-ui';
-import { useAccount } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
-import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useDynamicDualGovernance } from '../../hooks';
 import { ProposalStatus } from '../types';
-import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
-import { useProposals } from '../../hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { Log } from 'viem';
-import { findAbiItem } from 'utils/find-abi-item';
-import invariant from 'tiny-invariant';
+import { decodeCalls, BaseCall } from 'utils/decode-evm-script-calls';
+import { PublicClient } from 'viem';
 import { getEtherscanTxLink } from 'utils/etherscan';
-import {
-  calculateAverageBlockTime,
-  estimateBlockRangeFromTimestamp,
-} from 'utils/estimate-block-range';
-import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -58,8 +47,9 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
-import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
+import { useProposalDetails } from '../../hooks/use-proposal-details';
+import { useProposalEvents } from '../../hooks/use-proposal-events';
+import { useIsEmergencyCommittee } from '../../hooks/use-is-emergency-committee';
 
 type Props = {
   id: number;
@@ -67,70 +57,39 @@ type Props = {
 
 export const ProposalFullInfo = ({ id }: Props) => {
   const router = useRouter();
+  const { data: proposalDetails, refetch: refetchProposalDetails } =
+    useProposalDetails(id);
+  const { data: proposalEvents, isLoading: isEventsLoading } =
+    useProposalEvents({
+      proposalDetails,
+      fetchExecuted: true,
+    });
 
-  const [proposal, setProposal] = useState<ProposalCombinedData | null>(null);
-  const [voteId, setVoteId] = useState<number | null>(null);
-
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const isSupportedChain = useIsSupportedChain();
-  const { chainId, rpcProvider } = useLidoSDK();
-
+  const { chainId } = useLidoSDK();
+  const client = usePublicClient();
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
-  const {
-    getProposalById,
-    isLoading: isProposalsLoading,
-    refetchProposals,
-  } = useDualGovernanceProposalsContext();
-
-  const cachedProposal = getProposalById(id);
-
-  const { data: queryVoteId, isLoading: isVoteIdLoading } = useQuery({
+  const { data: voteId } = useQuery({
     queryKey: ['proposal-vote-id', chainId],
     queryFn: async () => {
+      if (!proposalEvents?.proposalSubmittedEvent) {
+        return null;
+      }
       return await isAragonProposal({
-        client: rpcProvider,
-        proposalLog: cachedProposal?.DGEvent as unknown as Log,
+        client: client as PublicClient,
+        proposalLog: proposalEvents?.proposalSubmittedEvent,
         chainId,
       });
     },
+    enabled: !!proposalEvents?.proposalSubmittedEvent,
   });
 
-  useEffect(() => {
-    if (!proposal?.voteId && !isVoteIdLoading && queryVoteId && !voteId) {
-      setVoteId(Number(queryVoteId));
-    } else if (proposal && proposal.voteId && !voteId) {
-      setVoteId(proposal.voteId);
-    }
-  }, [isVoteIdLoading, proposal, queryVoteId, voteId]);
-
-  const { data: fetchedProposal, isLoading: isFetchLoading } = useProposals({
-    id,
-    enabled: !cachedProposal && !isProposalsLoading,
-  }) as UseQueryResult<ProposalCombinedData>;
-
-  const isLoading = isProposalsLoading || isFetchLoading;
-
-  useEffect(() => {
-    if (!cachedProposal && !fetchedProposal) {
-      setProposal(null);
-      return;
-    }
-
-    if (cachedProposal) {
-      setProposal(cachedProposal);
-      return;
-    }
-
-    if (fetchedProposal) {
-      setProposal(fetchedProposal);
-    }
-  }, [cachedProposal, fetchedProposal, id]);
-
   const proposalStatusInfo = useProposalStatus({
-    proposalStatus: proposal?.proposalDetails?.status || 0,
-    submittedAt: proposal?.proposalDetails?.submittedAt || 0,
-    scheduledAt: proposal?.proposalDetails?.scheduledAt || 0,
+    proposalStatus: proposalDetails?.status || 0,
+    submittedAt: proposalDetails?.submittedAt || 0,
+    scheduledAt: proposalDetails?.scheduledAt || 0,
   });
 
   const { readDynamicContract } = useDynamicDualGovernance();
@@ -138,51 +97,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
     EmergencyProtectedTimelock,
   );
 
-  const { data: proposalExecutedAt } = useQuery({
-    queryKey: ['proposal-executed-event', proposal?.proposalId, chainId],
-    queryFn: async () => {
-      if (!proposal?.proposalId || !rpcProvider || !chainId) {
-        return null;
-      }
-
-      try {
-        const proposalExecutedEvent = await getProposalExecutedEvent({
-          proposalId: proposal.proposalId,
-          client: rpcProvider,
-          chainId: chainId,
-        });
-
-        if (proposalExecutedEvent && proposalExecutedEvent.blockNumber) {
-          const block = await rpcProvider.getBlock({
-            blockNumber: proposalExecutedEvent.blockNumber,
-          });
-          if (block) {
-            const date = getDateFromTimestamp({
-              timestamp: Number(block.timestamp),
-              showYear: true,
-            });
-
-            return `${date.date} ${date.tz}`;
-          }
-        }
-        return null;
-      } catch (error) {
-        console.error('Error fetching proposal executed event:', error);
-        return null;
-      }
-    },
-    enabled:
-      !!proposal?.proposalId &&
-      !!rpcProvider &&
-      !!chainId &&
-      proposal?.proposalDetails.status == ProposalStatus.Executed,
-  });
-
   const updateProposalState = useCallback(async () => {
-    await refetchProposals();
+    await refetchProposalDetails();
     setIsScheduleLoading(false);
     setIsExecuteLoading(false);
-  }, [refetchProposals]);
+  }, [refetchProposalDetails]);
 
   const scheduleProposal = useScheduleProposalAction({
     onConfirm: updateProposalState,
@@ -194,47 +113,9 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
   const [isExecuteLoading, setIsExecuteLoading] = useState(false);
-  const { data: isEmergencyExecutionCommittee = false } = useQuery({
-    queryKey: [
-      'emergency-execution-committee',
-      address,
-      isConnected,
-      isSupportedChain,
-    ],
-    queryFn: async () => {
-      if (
-        !emergencyProtectedTimelock ||
-        !address ||
-        !isConnected ||
-        !isSupportedChain
-      ) {
-        return false;
-      }
 
-      try {
-        const emergencyExecutionCommittee =
-          await emergencyProtectedTimelock.readContract(
-            'getEmergencyExecutionCommittee',
-          );
-
-        if (typeof emergencyExecutionCommittee === 'string' && address) {
-          return (
-            emergencyExecutionCommittee.toLowerCase() === address.toLowerCase()
-          );
-        } else {
-          return false;
-        }
-      } catch (error) {
-        console.error('Error fetching emergency execution committee:', error);
-        return false;
-      }
-    },
-    enabled:
-      !!emergencyProtectedTimelock &&
-      !!address &&
-      isConnected &&
-      isSupportedChain,
-  });
+  const { data: isEmergencyExecutionCommittee = false } =
+    useIsEmergencyCommittee();
 
   const {
     data: actionButtons = {
@@ -245,7 +126,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     queryKey: [
       'proposal-actions',
       id,
-      proposal?.proposalDetails?.status,
+      proposalDetails?.status,
       isEmergencyModeActive,
       isEmergencyExecutionCommittee,
     ],
@@ -254,7 +135,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         !emergencyProtectedTimelock ||
         !readDynamicContract ||
         !id ||
-        !proposal
+        !proposalDetails
       ) {
         return { showScheduleButton: false, showExecuteButton: false };
       }
@@ -269,8 +150,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
           [BigInt(id)],
         );
 
-        const isExecuted =
-          proposal?.proposalDetails?.status === ProposalStatus.Executed;
+        const isExecuted = proposalDetails?.status === ProposalStatus.Executed;
 
         const showExecuteButton =
           !isExecuted &&
@@ -290,7 +170,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
       !!emergencyProtectedTimelock &&
       !!readDynamicContract &&
       !!id &&
-      !!proposal,
+      !!proposalDetails,
   });
 
   const { showScheduleButton, showExecuteButton } = actionButtons;
@@ -314,99 +194,52 @@ export const ProposalFullInfo = ({ id }: Props) => {
   };
 
   const submittedAt = useMemo(() => {
-    if (!proposal) {
+    if (!proposalDetails) {
       return null;
     }
 
     const date = getDateFromTimestamp({
-      timestamp: proposal.proposalDetails?.submittedAt || 0,
+      timestamp: proposalDetails?.submittedAt || 0,
       showYear: true,
     });
 
     return `${date.date} ${date.tz}`;
-  }, [proposal]);
-
-  const { data: proposalScheduledLog } = useQuery({
-    queryKey: [
-      proposal?.proposalId,
-      chainId,
-      proposal?.proposalDetails.submittedAt,
-    ],
-    queryFn: async () => {
-      invariant(proposal, 'Proposal must be defined');
-      invariant(rpcProvider, 'Client must be defined');
-
-      const averageBlockTime = await calculateAverageBlockTime(rpcProvider);
-
-      const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
-        proposal.proposalDetails.scheduledAt,
-        2499n, // Half of the RPC getLogs limit
-        averageBlockTime,
-        rpcProvider,
-      );
-
-      const eventAbi = findAbiItem({
-        abi: EmergencyProtectedTimelock.abi,
-        name: 'ProposalScheduled',
-        type: 'event',
-      });
-
-      // Three ranges for log fetching to expand the search window up to ~15000 blocks
-      const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
-
-      const emergencyProtectedTimelockAddress = getContractAddress(
-        EmergencyProtectedTimelock,
-        chainId,
-      );
-
-      // Fetch logs for each block range
-      const logsPromises = ranges.map((range) => {
-        return rpcProvider.getLogs({
-          address: emergencyProtectedTimelockAddress,
-          event: eventAbi,
-          fromBlock: range.fromBlock,
-          toBlock: range.toBlock,
-          args: {
-            id: BigInt(proposal.proposalId),
-          },
-        });
-      });
-
-      const allLogsResults = await Promise.all(logsPromises);
-      const proposalScheduledLogs = allLogsResults.flat();
-
-      return proposalScheduledLogs[0] || null;
-    },
-    enabled:
-      !!proposal && !!rpcProvider && !!proposal.proposalDetails.scheduledAt,
-  });
-
+  }, [proposalDetails]);
   const scheduledAt = useMemo(() => {
-    if (!proposal || !proposal.proposalDetails?.scheduledAt) {
+    if (!proposalDetails?.scheduledAt) {
       return null;
     }
 
     const date = getDateFromTimestamp({
-      timestamp: proposal.proposalDetails?.scheduledAt || 0,
+      timestamp: proposalDetails?.scheduledAt || 0,
       showYear: true,
     });
 
     return `${date.date} ${date.tz}`;
-  }, [proposal]);
+  }, [proposalDetails]);
 
-  if (!proposal || isLoading) {
-    return (
-      <>
-        <ProposalContainer>
-          <ProposalName>Proposal #{id}</ProposalName>
-          <InlineLoaderStyled />
-        </ProposalContainer>
-      </>
-    );
-  }
+  const decodedCalls = useMemo(
+    () =>
+      proposalDetails?.calls
+        ? decodeCalls({ calls: proposalDetails.calls as BaseCall[], chainId })
+        : [],
+    [proposalDetails?.calls, chainId],
+  );
 
-  const calls = (proposal.proposalDetails?.calls as BaseCall[]) || [];
-  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
+  const executedAt = useMemo(() => {
+    if (!proposalEvents?.proposalExecutedEvent) {
+      return null;
+    }
+
+    const date = getDateFromTimestamp({
+      timestamp: Number(
+        proposalEvents?.proposalExecutedEvent.blockTimestamp || 0,
+      ),
+      showYear: true,
+    });
+
+    return `${date.date} ${date.tz}`;
+  }, [proposalEvents?.proposalExecutedEvent]);
 
   return (
     <ProposalContainer>
@@ -426,15 +259,17 @@ export const ProposalFullInfo = ({ id }: Props) => {
       </ProposalHeader>
       <ProposalName>Proposal #{id}</ProposalName>
       <ProposalStateLogWrapper>
-        {submittedAt && (
+        {isEventsLoading && <EventsLoaderStyled />}
+        {submittedAt && !isEventsLoading && (
           <>
             {voteId && (
               <SubmitDate as="span">
-                {proposal.DGEvent?.transactionHash ? (
+                {proposalEvents?.proposalSubmittedEvent &&
+                proposalEvents?.proposalSubmittedEvent.transactionHash ? (
                   <Link
                     href={getEtherscanTxLink(
                       chainId,
-                      proposal.DGEvent?.transactionHash,
+                      proposalEvents?.proposalSubmittedEvent.transactionHash,
                     )}
                   >
                     Submitted
@@ -443,12 +278,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
                   <span>Submitted</span>
                 )}{' '}
                 from{' '}
-                <ProposalLink
+                <Link
                   href={`${config.voteOrigin}/vote/${voteId}`}
                   target="_blank"
                 >
-                  Aragon {voteId}
-                </ProposalLink>{' '}
+                  Vote #{Number(voteId)}
+                </Link>{' '}
                 on {submittedAt}
               </SubmitDate>
             )}
@@ -457,14 +292,16 @@ export const ProposalFullInfo = ({ id }: Props) => {
             )}
           </>
         )}
-        {scheduledAt && (
+        {isEventsLoading && <EventsLoaderStyled />}
+        {scheduledAt && !isEventsLoading && (
           <>
-            {proposalScheduledLog ? (
+            {proposalEvents?.proposalScheduledEvent &&
+            proposalEvents?.proposalScheduledEvent.transactionHash ? (
               <SubmitDate as="span">
                 <Link
                   href={getEtherscanTxLink(
                     chainId,
-                    proposalScheduledLog.transactionHash,
+                    proposalEvents?.proposalScheduledEvent.transactionHash,
                   )}
                 >
                   Scheduled
@@ -476,23 +313,43 @@ export const ProposalFullInfo = ({ id }: Props) => {
             )}
           </>
         )}
-        {proposalExecutedAt && (
-          <SubmitDate as="span">Executed on {proposalExecutedAt}</SubmitDate>
+        {isEventsLoading && <EventsLoaderStyled />}
+        {executedAt && !isEventsLoading && (
+          <>
+            {proposalEvents?.proposalExecutedEvent?.transactionHash ? (
+              <SubmitDate as="span">
+                <Link
+                  href={getEtherscanTxLink(
+                    chainId,
+                    proposalEvents?.proposalExecutedEvent.transactionHash,
+                  )}
+                >
+                  Executed
+                </Link>{' '}
+                {executedAt && `on ${executedAt}`}
+              </SubmitDate>
+            ) : (
+              <SubmitDate as="span">
+                Executed {executedAt && `on ${executedAt}`}
+              </SubmitDate>
+            )}
+          </>
         )}
       </ProposalStateLogWrapper>
       <Box marginTop={'30px'}>
-        {voteId && (
+        <Text weight={500} size={28}>
+          Description
+        </Text>
+        <Box marginTop={12}>
+          <Text size={15} color="secondary">
+            <b>Disclaimer:</b> Description provided by proposer.
+          </Text>
+        </Box>
+        {isEventsLoading && <DescriptionLoaderStyled />}
+
+        {voteId && !isEventsLoading && (
           <>
-            <Text weight={500} size={28}>
-              Description
-            </Text>
-            <Box marginTop={12}>
-              <Text size={15} color="secondary">
-                <b>Disclaimer:</b> Description provided by the proposal author;
-                may include items not under Dual Governance
-              </Text>
-            </Box>
-            {proposal.DGEvent?.args?.metadata && (
+            {proposalEvents?.proposalSubmittedEvent?.args.metadata && (
               <Box marginTop={30}>
                 <MarkdownWrap>
                   <ReactMarkdown
@@ -503,28 +360,18 @@ export const ProposalFullInfo = ({ id }: Props) => {
                       code: replaceAddressAndCIDInMD,
                     }}
                   >
-                    {proposal?.DGEvent.args?.metadata}
+                    {proposalEvents?.proposalSubmittedEvent.args?.metadata}
                   </ReactMarkdown>
                 </MarkdownWrap>
               </Box>
             )}
           </>
         )}
-        {!voteId && (
-          <SubmittedBy>
-            <Text size={22}>
-              Proposal submitted by{' '}
-              <Text size={22} weight={500}>
-                {proposal?.DGEvent?.args.proposerAccount}
-              </Text>
-            </Text>
-          </SubmittedBy>
-        )}
       </Box>
 
-      {calls && calls.length > 0 && (
+      {proposalDetails?.calls && proposalDetails.calls.length > 0 && (
         <Box marginTop={30}>
-          <Script decodedCalls={decodedEvmScriptCalls} />
+          <Script decodedCalls={decodedCalls} />
         </Box>
       )}
 

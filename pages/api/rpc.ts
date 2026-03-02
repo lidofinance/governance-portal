@@ -22,7 +22,7 @@ import {
   EasyTrack,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
-import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
+import { HISTORICAL_ADDRESSES } from '../../constants/historical-addresses.mjs';
 
 const allowedLogContracts = (chainId: CHAINS) => {
   const contractAddresses = [

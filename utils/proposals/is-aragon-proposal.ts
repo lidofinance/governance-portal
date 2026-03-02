@@ -1,19 +1,13 @@
-import {
-  decodeEventLog,
-  keccak256,
-  Log,
-  PublicClient,
-  stringToBytes,
-} from 'viem';
+import { decodeEventLog, keccak256, PublicClient, stringToBytes } from 'viem';
 import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { findAbiItem } from '../find-abi-item';
 import invariant from 'tiny-invariant';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { ProposalSubmittedLog } from 'features/dual-governance/hooks/use-proposal-events';
 
 type Props = {
   client: PublicClient;
-  proposalLog: Log;
+  proposalLog: ProposalSubmittedLog;
   chainId: CHAINS;
 };
 
@@ -28,14 +22,12 @@ export const isAragonProposal = async ({
   const receipt = await client.getTransactionReceipt({
     hash: proposalLog.transactionHash,
   });
-
-  const aragonAddress = getContractAddress(Voting, chainId);
-
-  if (!aragonAddress) {
-    console.warn(`No Aragon voting contract address for chainId: ${chainId}`);
-    return false;
-  }
-
+  const rawAddress = Voting.chainAddressMap[chainId];
+  const resolvedAddress =
+    rawAddress && typeof rawAddress === 'object'
+      ? rawAddress.actual
+      : rawAddress;
+  const aragonAddress = resolvedAddress?.toLowerCase();
   const aragonEvents = receipt.logs.filter(
     (log) => log.address.toLowerCase() === aragonAddress,
   );

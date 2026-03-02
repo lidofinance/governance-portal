@@ -1,7 +1,11 @@
 import { Address } from 'viem';
-// TODO: Generate proper event types from ABI
-type DGProposalSubmittedEvent = any;
+import { ProposalSubmittedEvent as DGProposalSubmittedEvent } from 'generated/DualGovernanceAbi';
 import { BigNumber } from 'ethers';
+import {
+  ProposalExecutedLog,
+  ProposalScheduledLog,
+  ProposalSubmittedLog,
+} from '../hooks/use-proposal-events';
 
 type TimeStamp = number;
 
@@ -25,6 +29,20 @@ export type ProposalCombinedData = {
   voteId?: number;
   DGEvent?: DGProposalSubmittedEvent;
   proposalDetails: ProposalDetails;
+};
+
+export type EventsLogs = {
+  proposalSubmittedEvent: ProposalSubmittedLog | null;
+  proposalScheduledEvent: ProposalScheduledLog | null;
+  proposalExecutedEvent: ProposalExecutedLog | null;
+};
+
+export type CachedEventsData = {
+  [chainId: string]: {
+    proposals: {
+      [proposalId: string]: EventsLogs;
+    };
+  };
 };
 
 export enum ProposalStatus {

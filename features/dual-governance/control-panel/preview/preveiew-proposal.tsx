@@ -1,6 +1,3 @@
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
-import { VoteData } from 'shared/votes/types';
-import { isVoteItem } from '../../types';
 import { IconWrapper, ProposalWrapper, VoteWrapper } from '../style';
 import { AragonLogo, ProposalsIcon } from 'shared/components/icons';
 import { Text } from 'shared/components/text';
@@ -10,9 +7,12 @@ import { DGTooltip } from 'features/dual-governance/tooltips';
 import { ReactNode } from 'react';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
+import { useProposalDetails } from '../../hooks/use-proposal-details';
+import { ProposalStatus } from '../../proposals/types';
 
 type Props = {
-  proposal: ProposalCombinedData | VoteData;
+  proposalId: number;
+  isVote?: boolean;
 };
 
 const ActiveProposalWrapper = ({
@@ -40,27 +40,38 @@ const ActiveProposalWrapper = ({
   );
 };
 
-export const PreviewProposal = ({ proposal }: Props) => {
-  const isVote = isVoteItem(proposal);
-
-  const { status, submittedAt, scheduledAt } =
-    'proposalDetails' in proposal
-      ? proposal.proposalDetails
-      : { status: undefined, submittedAt: undefined, scheduledAt: undefined };
+export const PreviewProposal = ({ proposalId, isVote }: Props) => {
+  const { data: proposalDetails, isLoading } = useProposalDetails(
+    proposalId,
+    !isVote,
+  );
 
   const proposalStatusInfo = useProposalStatus({
-    proposalStatus: status,
-    submittedAt: submittedAt,
-    scheduledAt: scheduledAt,
+    proposalStatus: proposalDetails?.status,
+    submittedAt: proposalDetails?.submittedAt,
+    scheduledAt: proposalDetails?.scheduledAt,
   });
+
+  if (isLoading && !isVote) {
+    return null;
+  }
+
+  if (
+    !isVote &&
+    proposalDetails &&
+    (proposalDetails.status === ProposalStatus.Executed ||
+      proposalDetails.status === ProposalStatus.Cancelled)
+  ) {
+    return null;
+  }
 
   if (isVote) {
     return (
       <VoteWrapper>
         <AragonLogo />
         <Text size={22}>
-          <Link href={`${config.voteOrigin}/vote/${proposal.proposalId}`}>
-            {`LDO Vote #${proposal.proposalId} `}
+          <Link href={`${config.voteOrigin}/vote/${proposalId}`}>
+            {`LDO Vote #${proposalId} `}
           </Link>
           &mdash; Not submitted to Dual Governance yet
         </Text>
@@ -68,15 +79,15 @@ export const PreviewProposal = ({ proposal }: Props) => {
     );
   }
 
+  if (!proposalDetails || !proposalStatusInfo) {
+    return null;
+  }
+
   return (
-    <ActiveProposalWrapper proposalId={proposal.proposalId}>
-      {proposalStatusInfo && (
-        <>
-          {proposalStatusInfo.badge.text}{' '}
-          {proposalStatusInfo.badge.text === 'Ready to execute' && (
-            <DGTooltip topic="readyToExecute" />
-          )}
-        </>
+    <ActiveProposalWrapper proposalId={proposalId}>
+      {proposalStatusInfo.badge.text}{' '}
+      {proposalStatusInfo.badge.text === 'Ready to execute' && (
+        <DGTooltip topic="readyToExecute" />
       )}
     </ActiveProposalWrapper>
   );

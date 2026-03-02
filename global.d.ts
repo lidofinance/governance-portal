@@ -37,6 +37,8 @@ declare module 'next/config' {
       rateLimitTimeFrame: string;
       subgraphMainnet: string;
       subgraphHoodi: string;
+
+      etherscanApiKey: string | undefined;
     };
     publicRuntimeConfig: {
       basePath: string | undefined;

@@ -1,35 +1,62 @@
 import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
-import { PreviewProposal } from './';
 
 import {
   ControlPanelWrapper,
   PreviewControls,
-  PreviewProposalList,
   Description,
+  PreviewProposalList,
   InlineLoaderStyled,
 } from '../style';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
-import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { DGTooltip } from 'features/dual-governance/tooltips';
 import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
 import { Link } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
-
-const PROPOSALS_TO_SHOW = 3;
+import { PreviewProposal } from './preveiew-proposal';
+import { useProposalsCount } from '../../hooks/use-proposals-count';
+import { useVotes } from 'shared/votes/hooks/use-votes';
+import { useMemo } from 'react';
+import { useActiveProposals } from '../../hooks/use-active-proposals';
 
 type Props = {
   onContinue: () => void;
 };
 
+const PROPOSALS_TO_SHOW = 3;
+const VOTES_LIMIT = 15;
+
 export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
   const { isConnected } = useAccount();
-  const { activeProposals, isLoading } = useDualGovernanceProposalsContext();
-
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
-  const restProposalsAmount = activeProposals.length - PROPOSALS_TO_SHOW;
+  const { data: proposalsCount, isLoading: isProposalsCountLoading } =
+    useProposalsCount();
+
+  const { data: votesData, isFetching: isVotesFetching } = useVotes({
+    limit: VOTES_LIMIT,
+    shouldGetActive: true,
+  });
+
+  const { data: activeProposals, isLoading: isActiveProposalsLoading } =
+    useActiveProposals({ proposalsCount });
+
+  const isLoading =
+    isProposalsCountLoading || isVotesFetching || isActiveProposalsLoading;
+
+  const combinedProposals = useMemo(() => {
+    return [
+      ...(votesData?.votes.map((vote) => ({
+        isVote: true,
+        proposalId: vote.proposalId,
+      })) || []),
+      ...(activeProposals || []).map((id) => ({
+        isVote: false,
+        proposalId: id,
+      })),
+    ];
+  }, [votesData, activeProposals]);
 
   return (
     <ControlPanelWrapper>
@@ -39,22 +66,20 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
       {isLoading && <InlineLoaderStyled />}
       {!isLoading && (
         <>
-          {activeProposals.length > 0 && (
+          {combinedProposals.length > 0 && (
             <PreviewProposalList>
-              {activeProposals
-                .map((proposal) => (
+              {combinedProposals
+                .map(({ isVote, proposalId }) => (
                   <PreviewProposal
-                    key={proposal.proposalId}
-                    proposal={proposal}
+                    key={proposalId}
+                    isVote={isVote}
+                    proposalId={proposalId}
                   />
                 ))
                 .slice(0, PROPOSALS_TO_SHOW)}
-              {restProposalsAmount > 0 && (
-                <Text>And {restProposalsAmount} more</Text>
-              )}
             </PreviewProposalList>
           )}
-          {activeProposals.length === 0 && (
+          {combinedProposals.length === 0 && (
             <>
               <br />
               <Text>No active proposals</Text>

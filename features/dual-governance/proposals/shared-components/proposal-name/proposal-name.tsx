@@ -16,7 +16,7 @@ type Props = {
   id: number;
   isAragon?: boolean;
   isUnknownContractCalled?: boolean;
-  proposer?: Address;
+  proposer?: Address | null;
   chainId: number;
 };
 

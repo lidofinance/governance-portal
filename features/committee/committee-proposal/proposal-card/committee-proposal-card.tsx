@@ -1,19 +1,22 @@
-import { useMemo } from 'react';
 import { Box } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import {
   CommitteeCardHeading,
   CommitteeCardWrapper,
-  StyledDGLink,
   StyledAragonLink,
+  StyledDGLink,
 } from './style';
 import { PROPOSALS_PATH } from 'constants/urls';
-import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
-import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
-import { Script } from 'features/dual-governance/evm-script-parsed';
 import { CommitteeProposalSignersInfo } from '../signers-info/committee-proposal-signers-info';
 import { TiebreakerQuorum } from '../tiebreaker-quorum';
-import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
+import { useProposalDetails } from 'features/dual-governance/hooks/use-proposal-details';
+import { Script } from 'features/dual-governance/evm-script-parsed';
+import { useProposalEvents } from 'features/dual-governance/hooks/use-proposal-events';
+import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
+import { Voting } from 'shared/blockchain/contracts';
+import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
+import { decodeCalls, BaseCall } from 'utils/decode-evm-script-calls';
+import { useMemo } from 'react';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
@@ -22,19 +25,25 @@ type Props = {
 };
 
 export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
+  const { data: proposalDetails } = useProposalDetails(proposalId);
+  const { data: proposalEvents } = useProposalEvents({
+    proposalDetails,
+  });
+
+  const aragonAddress = useContractAddress(Voting);
   const { chainId } = useLidoSDK();
-  const { proposals } = useDualGovernanceProposalsContext();
-  const proposal = useMemo(
-    () => proposals.find((proposal) => proposal.proposalId === proposalId),
-    [proposalId, proposals],
+
+  const decodedCalls = useMemo(
+    () =>
+      proposalDetails?.calls
+        ? decodeCalls({ calls: proposalDetails.calls as BaseCall[], chainId })
+        : [],
+    [proposalDetails?.calls, chainId],
   );
 
-  if (!proposal) {
+  if (!proposalDetails) {
     return null;
   }
-
-  const calls = proposal.proposalDetails.calls as BaseCall[];
-  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
 
   return (
     <CommitteeCardWrapper>
@@ -52,15 +61,16 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
             </StyledDGLink>
           )}
         </CommitteeCardHeading>
-        {proposal?.voteId && (
+        {proposalEvents?.proposalSubmittedEvent?.args.proposerAccount ===
+          aragonAddress && (
           <Box>
             <Text color="primary">
               Submitted from
-              <StyledAragonLink href="#">{` Aragon${proposal.voteId}`}</StyledAragonLink>{' '}
+              <StyledAragonLink href="#">{` Aragon${proposalId}`}</StyledAragonLink>{' '}
               on{' '}
               {
                 getDateFromTimestamp({
-                  timestamp: proposal.proposalDetails.submittedAt,
+                  timestamp: proposalDetails?.submittedAt,
                   showYear: true,
                 }).date
               }
@@ -76,10 +86,12 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
       </Box>
       {!isTiebreaker && (
         <Box width="50%">
-          {calls && calls.length > 0 && (
+          {proposalDetails?.calls && proposalDetails?.calls.length > 0 && (
             <Script
-              decodedCalls={decodedEvmScriptCalls}
-              metadata={proposal?.DGEvent?.args.metadata}
+              decodedCalls={decodedCalls}
+              metadata={
+                proposalEvents?.proposalSubmittedEvent?.args.metadata
+              }
             />
           )}
         </Box>
@@ -96,7 +108,9 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
             </Text>
           </Box>
           <Box marginTop={20}>
-            <Text color="primary">{proposal.DGEvent?.args?.metadata}</Text>
+            <Text color="primary">
+              {proposalEvents?.proposalSubmittedEvent?.args?.metadata}
+            </Text>
           </Box>
           <br />
           <StyledDGLink

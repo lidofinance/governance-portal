@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { useReadContracts } from 'wagmi';
-import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
+import { HISTORICAL_ADDRESSES } from '../../../constants/historical-addresses.mjs';
 import { Address } from 'viem';
 
 export const useEscrowAddresses = () => {

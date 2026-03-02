@@ -174,6 +174,7 @@ export default withBundleAnalyzer({
     rateLimitTimeFrame: process.env.RATE_LIMIT_TIME_FRAME,
     subgraphHoodi: process.env.SUBGRAPH_HOODI,
     subgraphMainnet: process.env.SUBGRAPH_MAINNET,
+    etherscanApiKey: process.env.ETHERSCAN_API_KEY,
   },
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`

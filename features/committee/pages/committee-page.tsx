@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { VerticalTabs } from 'shared/components/vertical-tabs';
-import { CommitteeProposalCard } from '../committee-proposal';
 import { CommitteeLayout, CommitteeSection, TabsSection } from './style';
 import {
   CommitteeHeader,
   CommitteeQuorum,
   CommitteeTitle,
 } from '../committee-proposal/proposal-card/style';
-import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
+import { CommitteeProposalCard } from '../committee-proposal';
+import { useProposalsCount } from '../../dual-governance/hooks/use-proposals-count';
 
 type Committee = {
   id: number;
@@ -34,11 +34,20 @@ const committeesMock = [
 ];
 
 export const CommitteePage = () => {
+  const { data: proposalsCount, isLoading: isProposalsCountLoading } =
+    useProposalsCount();
+
+  const proposalsIds = useMemo(() => {
+    if (Number(proposalsCount) === 0) return [] as number[];
+    return Array.from(
+      { length: Number(proposalsCount) },
+      (_, i) => i + 1,
+    ).reverse();
+  }, [proposalsCount]);
+
   const [activeCommittee, setActiveCommittee] = useState<Committee>(
     committeesMock[0],
   );
-
-  const { proposals, isLoading } = useDualGovernanceProposalsContext();
 
   const handleCommitteeTabChange = (id: number) => {
     const committee = committeesMock.find(
@@ -68,15 +77,15 @@ export const CommitteePage = () => {
           )}
           {activeCommittee.id !== 0 && <CommitteeQuorum>4/5</CommitteeQuorum>}
         </CommitteeHeader>
-        {!isLoading &&
-          proposals &&
-          proposals
+        {!isProposalsCountLoading &&
+          proposalsIds &&
+          proposalsIds
             .slice(0, 4)
-            .map((proposal) => (
+            .map((proposalId) => (
               <CommitteeProposalCard
                 isTiebreaker={activeCommittee.id === 0}
-                key={proposal.proposalId}
-                proposalId={proposal.proposalId}
+                key={proposalId}
+                proposalId={proposalId}
               />
             ))}
       </CommitteeSection>

@@ -63,7 +63,11 @@ export const ProposalsSection = () => {
       {!isEmergencyModeActive && !isEmergencyGovernanceActive && showBanner && (
         <ProposalFlowBanner />
       )}
-      {proposalId ? <ProposalSearchItem id={proposalId} /> : <ProposalsList />}
+      {proposalId ? (
+        <ProposalSearchItem proposalId={Number(proposalId)} />
+      ) : (
+        <ProposalsList />
+      )}
     </ProposalsWrapper>
   );
 };

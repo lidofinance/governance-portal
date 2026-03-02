@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
-import Link from 'next/link';
 import { devicesHeaderMedia } from 'styles/global';
 
 export const ProposalContainer = styled(Block)`
@@ -46,23 +45,12 @@ export const SubmitDate = styled(Text)`
   }
 `;
 
-export const ProposalLink = styled(Link)`
-  color: var(--accent-color-ocean);
-`;
-
 export const ActionsWrapper = styled.div`
   margin-top: 30px;
 
   button {
     width: auto;
   }
-`;
-
-export const InlineLoaderStyled = styled(InlineLoader)`
-  margin-top: 24px;
-  width: 100%;
-  height: 200px;
-  border-radius: 20px;
 `;
 
 export const ArrowIconWrapper = styled.div`
@@ -81,7 +69,16 @@ export const ArrowIconWrapper = styled.div`
   }
 `;
 
-export const SubmittedBy = styled.div`
-  margin: 30px 0;
-  word-break: break-word;
+export const EventsLoaderStyled = styled(InlineLoader)`
+  margin-top: 12px;
+  width: 300px;
+  height: 16px;
+  border-radius: 12px;
+`;
+
+export const DescriptionLoaderStyled = styled(InlineLoader)`
+  margin-top: 24px;
+  width: 100%;
+  height: 80px;
+  border-radius: 20px;
 `;
