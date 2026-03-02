@@ -1,6 +1,6 @@
+import { useRouter } from 'next/router';
 import { Layout } from 'shared/components';
 import { VoteCard } from 'features/vote/components/vote-card';
-import { GetServerSideProps } from 'next';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
 import { VoteMeta } from '../../features/vote/meta';
 import { Text } from 'shared/components/text';
@@ -8,45 +8,29 @@ import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
 import Link from 'next/link';
 import { Box } from '@lidofinance/lido-ui';
 
-type Props = {
-  voteId: string;
-};
+export default function VotePage() {
+  const { query, isReady } = useRouter();
+  const id = query.id;
 
-export default function VotePage({ voteId }: Props) {
+  if (!isReady || typeof id !== 'string') {
+    return null;
+  }
+
   return (
     <>
       <VoteMeta />
-      <Layout metaTitle={`Vote #${voteId}`}>
-        <VoteProvider voteId={voteId}>
+      <Layout metaTitle={`Vote #${id}`}>
+        <VoteProvider voteId={id}>
           <Box marginBottom={8}>
             <Link href={VOTE_DASHBOARD_INDEX_PATH}>
               <Text size={14} color="secondary">
-                ← To all votes
+                {'< Back to all votes'}
               </Text>
             </Link>
           </Box>
-          <VoteCard voteId={voteId} />
+          <VoteCard voteId={id} />
         </VoteProvider>
       </Layout>
     </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.params?.id;
-
-  if (typeof id === 'string' && !/^\d+$/.test(id)) {
-    return {
-      redirect: {
-        destination: VOTE_DASHBOARD_INDEX_PATH,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      voteId: id,
-    },
-  };
-};

@@ -143,6 +143,16 @@ export default withBundleAnalyzer({
       destination: '/vote/dashboard',
       permanent: false,
     },
+    {
+      source: '/vote',
+      destination: '/vote/dashboard',
+      permanent: false,
+    },
+    {
+      source: '/easy-track',
+      destination: '/easy-track/active-motions',
+      permanent: false,
+    },
   ],
 
   // ATTENTION: If you add a new variable you should declare it in `global.d.ts`

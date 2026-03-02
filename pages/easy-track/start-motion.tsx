@@ -56,9 +56,3 @@ export default function StartMotionPage() {
     </Layout>
   );
 }
-
-export const getServerSideProps = async () => {
-  return {
-    props: {},
-  };
-};

@@ -20,12 +20,11 @@ export const getBackendRPCPath = (chainId: string | number): string => {
 export const useGetRpcUrlByChainId = () => {
   const userConfig = useUserConfig();
   const savedRpcUrls = userConfig.savedUserConfig.rpcUrls;
-  const prefillRpcUrls = userConfig.prefillUnsafeElRpcUrls;
 
   return useCallback(
     (chainId: CHAINS) => {
       if (config.ipfsMode) {
-        const rpc = savedRpcUrls[chainId] || prefillRpcUrls[chainId]?.[0];
+        const rpc = savedRpcUrls[chainId];
 
         invariant(rpc, '[useGetRpcUrlByChainId] RPC is required!');
         return rpc;
@@ -33,7 +32,7 @@ export const useGetRpcUrlByChainId = () => {
 
       return savedRpcUrls[chainId] || getBackendRPCPath(chainId);
     },
-    [savedRpcUrls, prefillRpcUrls],
+    [savedRpcUrls],
   );
 };
 

@@ -41,18 +41,6 @@ export const supportedChains = process.env.SUPPORTED_CHAINS
   ? process.env.SUPPORTED_CHAINS.split(',').map((chain) => parseInt(chain, 10))
   : [560048];
 
-/** @type string[] */
-export const prefillUnsafeElRpcUrls1 =
-  process.env.PREFILL_UNSAFE_EL_RPC_URLS_1?.split(',') ?? [];
-/** @type string[] */
-export const prefillUnsafeElRpcUrls17000 =
-  process.env.PREFILL_UNSAFE_EL_RPC_URLS_17000?.split(',') ?? [];
-/** @type string[] */
-export const prefillUnsafeElRpcUrls560048 =
-  process.env.PREFILL_UNSAFE_EL_RPC_URLS_560048?.split(',') ?? [];
-/** @type boolean */
-export const enableQaHelpers = toBoolean(process.env.ENABLE_QA_HELPERS);
-
 export const walletconnectProjectId = process.env.WALLETCONNECT_PROJECT_ID;
 
 // /** @type string */
