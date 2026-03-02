@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 const BREAKPOINT_MOBILE = '960px';
 
 export const Wrap = styled.div`
-  margin-top: ${({ theme }) => theme.spaceMap.xl}px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const ListRowCell = styled.div`

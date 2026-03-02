@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useAccount } from 'wagmi';
 
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
@@ -6,26 +7,31 @@ import { ActionArgs } from 'shared/types';
 import { useVoteTxSender } from './tx-sender';
 import { useTxModalVote } from './modal-stages';
 import { VoteTxArgs } from './types';
-
-type Args = {
-  voteId: bigint;
-} & ActionArgs;
-
-type TxArgs = Omit<VoteTxArgs, 'voteId'>;
+import { VoteMode } from 'features/vote/types';
+import { Address } from 'viem';
+import { useVoteContext } from 'features/vote/providers/vote-context';
+import invariant from 'tiny-invariant';
 
 type VoteActionArgs = {
-  shouldSkipConfirmation?: boolean;
-} & TxArgs;
+  mode: VoteMode;
+  delegatedVoters?: Address[];
+  requestDelegateSelection?: boolean;
+};
 
-export const useVoteAction = ({ voteId, onConfirm, onRetry }: Args) => {
+export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
+  const { isConnected } = useAccount();
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalVote();
   const sendVoteTx = useVoteTxSender();
   const waitForTx = useTxConfirmation();
 
+  const { eligibleDelegators, vote, voteEvents } = useVoteContext();
+
   const proceedWithVote = useCallback(
-    async ({ delegatedVoters, mode }: TxArgs) => {
+    async ({ voteId, delegatedVoters, mode }: VoteTxArgs) => {
       try {
+        txModalStages.sign({ delegatedVoters, voteId, mode });
+
         const txHash = await sendVoteTx({ delegatedVoters, voteId, mode });
 
         if (isMultisig) {
@@ -36,7 +42,6 @@ export const useVoteAction = ({ voteId, onConfirm, onRetry }: Args) => {
         txModalStages.pending({ delegatedVoters, voteId, mode }, txHash);
 
         const response = await waitForTx(txHash);
-
         if (response.status === 'reverted') {
           txModalStages.failed(new Error('Transaction was reverted'), onRetry);
           return;
@@ -64,42 +69,49 @@ export const useVoteAction = ({ voteId, onConfirm, onRetry }: Args) => {
         console.error('Error during vote:', error);
         txModalStages.failed(
           error instanceof Error ? error : new Error('Unknown error occurred'),
+          onRetry,
         );
 
         return false;
       }
     },
-    [
-      voteId,
-      isMultisig,
-      txModalStages,
-      waitForTx,
-      onConfirm,
-      onRetry,
-      sendVoteTx,
-    ],
+    [txModalStages, sendVoteTx, isMultisig, waitForTx, onConfirm, onRetry],
   );
 
   return useCallback(
     async ({
-      shouldSkipConfirmation,
+      requestDelegateSelection,
       mode,
       delegatedVoters,
     }: VoteActionArgs) => {
-      if (!shouldSkipConfirmation) {
+      const voteId = BigInt(vote.id);
+      invariant(voteId, 'Vote ID is required to proceed with voting');
+      invariant(isConnected, 'Wallet must be connected to proceed with voting');
+
+      if (requestDelegateSelection) {
         txModalStages.confirm({
           mode,
+          voteEvents,
+          eligibleDelegators,
           onSubmit: async (selectedVoters) => {
             await proceedWithVote({
+              voteId,
               mode,
               delegatedVoters: selectedVoters,
             });
           },
         });
       } else {
-        await proceedWithVote({ mode, delegatedVoters });
+        await proceedWithVote({ voteId, mode, delegatedVoters });
       }
     },
-    [txModalStages, proceedWithVote],
+    [
+      vote.id,
+      isConnected,
+      txModalStages,
+      voteEvents,
+      eligibleDelegators,
+      proceedWithVote,
+    ],
   );
 };

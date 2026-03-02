@@ -15,7 +15,7 @@ import {
 } from 'features/dual-governance/proposals/types';
 
 type Args = {
-  voteId: number | string;
+  voteId: number | string | undefined;
   eventExecuteVote: EventExecuteVote | null | undefined;
 };
 
@@ -40,7 +40,7 @@ export const useVoteDualGovernanceStatus = ({
     EmergencyProtectedTimelock,
   );
 
-  const isEnabled = !!client && !!eventExecuteVote;
+  const isEnabled = !!client && !!eventExecuteVote && !!voteId;
 
   const query = useQuery({
     queryKey: [

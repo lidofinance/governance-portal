@@ -14,8 +14,10 @@ import { useVotingConfig } from '../hooks/use-voting-config';
 import { InlineVoteCardLoader } from '../styles';
 import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
-import { useEligibleDelegators } from '../hooks/use-eligible-delegators';
-import { EligibleDelegator } from '../types';
+import { useVoteDelegators } from '../hooks/use-vote-delegators';
+import { EligibleDelegator, VoterInfo } from '../types';
+import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 
 type Value = {
   vote: Vote;
@@ -28,24 +30,22 @@ type Value = {
   voteTime: number;
   objectionPhaseTime: number;
   eligibleDelegators: EligibleDelegator[];
+  eligibleDelegatedVotingPower: bigint;
+  totalDelegatedVotingPower: bigint;
+  delegatorsVotedThemselves: VoterInfo[];
+  dgProposal:
+    | {
+        proposalId: number;
+        proposalStatus: ProposalStatus;
+      }
+    | null
+    | undefined;
+  isLoading: boolean;
   refetchVote: ReturnType<typeof useVote>['refetch'];
   refetchVoteEvents: ReturnType<typeof useCastVoteEvents>['refetch'];
 };
 
-const VoteContext = createContext<Value>({
-  vote: {} as Vote,
-  canExecute: false,
-  eventStart: undefined,
-  eventExecute: undefined,
-  voteEvents: [],
-  voterState: undefined,
-  voterDaoTokenBalance: 0n,
-  refetchVote: (() => {}) as any,
-  refetchVoteEvents: (() => {}) as any,
-  voteTime: 0,
-  objectionPhaseTime: 0,
-  eligibleDelegators: [],
-});
+const VoteContext = createContext<Value | null>(null);
 
 export const useVoteContext = () => {
   const value = useContext(VoteContext);
@@ -68,17 +68,36 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchVote,
   } = useVote(voteId, votingConfig?.voteTime);
 
-  const { data: voteEvents, refetch: refetchVoteEvents } = useCastVoteEvents(
+  const {
+    data: voteEvents,
+    isLoading: isCastVoteEventsDataLoading,
+    refetch: refetchVoteEvents,
+  } = useCastVoteEvents(
     voteData?.vote,
     voteData?.eventExecute?.event.blockNumber,
   );
 
-  const { data: voterStateData } = useVoterState(
+  const { data: voterState, isLoading: isVoterStateLoading } = useVoterState(
     voteData?.vote.id,
     voteData?.vote.snapshotBlock,
   );
 
-  const { data: delegatorsData } = useEligibleDelegators(voteData?.vote.id);
+  const { data: dgProposal, isLoading: isProposalDataLoading } =
+    useVoteDualGovernanceStatus({
+      voteId: voteData?.vote.id,
+      eventExecuteVote: voteData?.eventExecute,
+    });
+
+  const { data: delegatorsData, isLoading: isDelegatorsDataLoading } =
+    useVoteDelegators(voteData?.vote.id);
+
+  const isLoading =
+    isVotingConfigLoading ||
+    isVoteDataLoading ||
+    isCastVoteEventsDataLoading ||
+    isVoterStateLoading ||
+    isDelegatorsDataLoading ||
+    isProposalDataLoading;
 
   if (isVotingConfigLoading || isVoteDataLoading) {
     return <InlineVoteCardLoader />;
@@ -104,12 +123,20 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     <VoteContext.Provider
       value={{
         ...voteData,
-        voterState: voterStateData?.voterState,
-        voterDaoTokenBalance: voterStateData?.voterDaoTokenBalance,
+        voterState: voterState?.voterState,
+        voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
         voteEvents: voteEvents ?? [],
         voteTime: votingConfig?.voteTime ?? 0,
         objectionPhaseTime: votingConfig?.objectionPhaseTime ?? 0,
         eligibleDelegators: delegatorsData?.eligibleDelegatedVoters ?? [],
+        eligibleDelegatedVotingPower:
+          delegatorsData?.eligibleDelegatedVotingPower ?? 0n,
+        totalDelegatedVotingPower:
+          delegatorsData?.totalDelegatedVotingPower ?? 0n,
+        delegatorsVotedThemselves:
+          delegatorsData?.delegatedVotersVotedThemselves ?? [],
+        dgProposal,
+        isLoading,
         refetchVote,
         refetchVoteEvents,
       }}

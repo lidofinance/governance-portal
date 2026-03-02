@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
 import { DELEGATED_VOTERS_ADDRESSES_LIMIT } from '../constants';
 import { Address } from 'viem';
-import { EligibleDelegator } from '../types';
+import { EligibleDelegator, VoterInfo } from '../types';
 
 const processEligibleDelegators = (
   addresses: Address[],
@@ -16,6 +16,7 @@ const processEligibleDelegators = (
 ): {
   eligibleDelegatedVoters: EligibleDelegator[];
   eligibleDelegatedVotingPower: bigint;
+  delegatedVotersVotedThemselves: VoterInfo[];
 } => {
   return addresses.reduce(
     (acc, address, index) => {
@@ -38,18 +39,28 @@ const processEligibleDelegators = (
         acc.eligibleDelegatedVoters.push(delegator);
         acc.eligibleDelegatedVotingPower =
           acc.eligibleDelegatedVotingPower + votingPower;
+      } else if (
+        voterState === VoterState.Yea ||
+        voterState === VoterState.Nay
+      ) {
+        acc.delegatedVotersVotedThemselves.push({
+          address,
+          supports: voterState === VoterState.Yea,
+          stake: votingPower,
+        });
       }
 
       return acc;
     },
     {
       eligibleDelegatedVoters: [] as EligibleDelegator[],
+      delegatedVotersVotedThemselves: [] as VoterInfo[],
       eligibleDelegatedVotingPower: 0n,
     },
   );
 };
 
-export const useEligibleDelegators = (voteId: number | undefined) => {
+export const useVoteDelegators = (voteId: number | undefined) => {
   const { chainId } = useLidoSDK();
   const { address: walletAddress } = useAccount();
   const voting = useReadContract(Voting);
@@ -73,11 +84,10 @@ export const useEligibleDelegators = (voteId: number | undefined) => {
 
       if (totalCount === 0n) {
         return {
-          delegatedVotersAddresses: [],
-          eligibleDelegatedVotingPower: 0n,
-          delegatedVotersState: [],
           eligibleDelegatedVoters: [],
-          eligibleDelegatedVotersAddresses: [],
+          eligibleDelegatedVotingPower: 0n,
+          totalDelegatedVotingPower: 0n,
+          delegatedVotersVotedThemselves: [],
         };
       }
 
@@ -119,7 +129,16 @@ export const useEligibleDelegators = (voteId: number | undefined) => {
       const delegatedVotersVotingPower = votingPowerBatches.flat();
       const delegatedVotersState = voterStateBatches.flat();
 
-      const { eligibleDelegatedVoters } = processEligibleDelegators(
+      const totalDelegatedVotingPower = delegatedVotersVotingPower.reduce(
+        (acc, power) => acc + power,
+        0n,
+      );
+
+      const {
+        eligibleDelegatedVoters,
+        eligibleDelegatedVotingPower,
+        delegatedVotersVotedThemselves,
+      } = processEligibleDelegators(
         delegatedVotersAddresses,
         delegatedVotersVotingPower,
         delegatedVotersState,
@@ -127,6 +146,9 @@ export const useEligibleDelegators = (voteId: number | undefined) => {
 
       return {
         eligibleDelegatedVoters,
+        eligibleDelegatedVotingPower,
+        totalDelegatedVotingPower,
+        delegatedVotersVotedThemselves,
       };
     },
   });

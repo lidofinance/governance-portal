@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useAccount } from 'wagmi';
 
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
@@ -11,13 +12,21 @@ type Args = {
 } & ActionArgs;
 
 export const useEnactVoteAction = ({ voteId, onConfirm, onRetry }: Args) => {
+  const { isConnected } = useAccount();
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalEnactVote();
   const sendEnactTx = useEnactVoteTxSender();
   const waitForTx = useTxConfirmation();
 
   return useCallback(async () => {
+    if (!isConnected) {
+      txModalStages.failed(new Error('Please connect your wallet to enact'));
+      return;
+    }
+
     try {
+      txModalStages.sign(voteId);
+
       const txHash = await sendEnactTx(voteId);
 
       if (isMultisig) {
@@ -47,6 +56,7 @@ export const useEnactVoteAction = ({ voteId, onConfirm, onRetry }: Args) => {
     }
   }, [
     voteId,
+    isConnected,
     isMultisig,
     txModalStages,
     waitForTx,

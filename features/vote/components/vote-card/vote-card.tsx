@@ -6,7 +6,7 @@ import {
   DetailsBoxWrap,
   SectionHeading,
   VoteHeader,
-  VoteTimestamps,
+  VoteTimestamp,
   VoteTitle,
 } from './style';
 import { Button, Link } from '@lidofinance/lido-ui';
@@ -14,7 +14,6 @@ import { VoteStatusChips } from '../vote-status-chips';
 import { getVoteDetailsFormatted } from '../../utils/get-vote-details-formatted';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { formatEther } from 'viem';
-import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { Text } from 'shared/components/text';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import React, { useCallback, useMemo } from 'react';
@@ -65,6 +64,7 @@ export const VoteCard = ({ voteId }: Props) => {
     voterDaoTokenBalance,
     voteTime,
     objectionPhaseTime,
+    dgProposal,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -84,14 +84,6 @@ export const VoteCard = ({ voteId }: Props) => {
   const openConnectWalletModal = useCallback(async () => {
     await connect();
   }, [connect]);
-
-  const {
-    data: voteDualGovernanceStatus,
-    isLoading: voteDualGovernanceStatusLoading,
-  } = useVoteDualGovernanceStatus({
-    voteId,
-    eventExecuteVote: eventExecute,
-  });
 
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
@@ -125,22 +117,18 @@ export const VoteCard = ({ voteId }: Props) => {
     <Card key={voteId} data-testid="voteCard">
       <VoteHeader>
         <VoteTitle data-testid="voteTitle">Vote #{voteId}</VoteTitle>
-        {!voteDualGovernanceStatusLoading && (
-          <VoteStatusChips
-            totalSupply={totalSupply}
-            nayNum={nayNum}
-            yeaNum={yeaNum}
-            minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
-            status={vote.state.status}
-            executedTxHash={eventExecute?.event.transactionHash}
-            votePhase={vote.phase}
-            chainId={chainId}
-            proposalId={voteDualGovernanceStatus?.proposalId || null}
-            voteDualGovernanceStatus={
-              voteDualGovernanceStatus?.proposalStatus || null
-            }
-          />
-        )}
+        <VoteStatusChips
+          totalSupply={totalSupply}
+          nayNum={nayNum}
+          yeaNum={yeaNum}
+          minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
+          status={vote.state.status}
+          executedTxHash={eventExecute?.event.transactionHash}
+          votePhase={vote.phase}
+          chainId={chainId}
+          proposalId={dgProposal?.proposalId}
+          proposalStatus={dgProposal?.proposalStatus}
+        />
         <BlockWrap>
           <Text as="span" color="secondary" size={12}>
             {'Block '}
@@ -161,11 +149,9 @@ export const VoteCard = ({ voteId }: Props) => {
           </Text>
         </BlockWrap>
       </VoteHeader>
-      <VoteTimestamps>
-        <Text color="secondary" size={12} data-testid="voteDate">
-          {formattedDate}
-        </Text>
-      </VoteTimestamps>
+      <VoteTimestamp color="secondary" size={12} data-testid="voteDate">
+        {formattedDate}
+      </VoteTimestamp>
       <BoxVotes data-testid="voteDetails">
         <VoteYesNoBar
           yeaPct={yeaPct}
@@ -180,15 +166,13 @@ export const VoteCard = ({ voteId }: Props) => {
       </BoxVotes>
       {(vote.phase === VotePhase.Main ||
         vote.phase === VotePhase.Objection) && (
-        <>
-          <VoteProgressBar
-            startDate={Number(vote.startDate)}
-            voteTime={voteTime}
-            objectionPhaseTime={objectionPhaseTime}
-            isEnded={isEnded}
-            votePhase={vote.phase}
-          />
-        </>
+        <VoteProgressBar
+          startDate={Number(vote.startDate)}
+          voteTime={voteTime}
+          objectionPhaseTime={objectionPhaseTime}
+          isEnded={isEnded}
+          votePhase={vote.phase}
+        />
       )}
       <VotersList />
       <SectionHeading>Proposal</SectionHeading>

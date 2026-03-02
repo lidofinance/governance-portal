@@ -67,3 +67,9 @@ export type EligibleDelegator = {
   votingPower: bigint;
   votedByDelegate: boolean;
 };
+
+export type VoterInfo = {
+  address: string;
+  supports: boolean;
+  stake: bigint;
+};

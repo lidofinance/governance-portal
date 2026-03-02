@@ -3,19 +3,31 @@ import { Tooltip } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
 import { VotePhase } from 'shared/votes/types';
-import { BasicActionsWrapper, VoteButton } from './style';
+import { ActionButtonsStyled, VoteButton } from './style';
 import { VoteMode } from '../../types';
 
 type Props = {
   onVote: (mode: VoteMode) => void;
   disabled?: boolean;
   votePhase: VotePhase;
+  nayRef?: React.Ref<HTMLButtonElement>;
+  yayRef?: React.Ref<HTMLButtonElement>;
 };
 
-export const BasicActions = ({ onVote, votePhase, disabled }: Props) => {
+export const ActionButtons = ({
+  onVote,
+  votePhase,
+  disabled,
+  nayRef,
+  yayRef,
+}: Props) => {
   return (
-    <BasicActionsWrapper>
-      <VoteButton onClick={() => onVote('nay')} disabled={disabled}>
+    <ActionButtonsStyled>
+      <VoteButton
+        onClick={() => onVote('nay')}
+        disabled={disabled}
+        ref={nayRef}
+      >
         <Box
           display="flex"
           gap={12}
@@ -29,6 +41,7 @@ export const BasicActions = ({ onVote, votePhase, disabled }: Props) => {
       <VoteButton
         disabled={votePhase === VotePhase.Objection || disabled}
         onClick={() => onVote('yay')}
+        ref={yayRef}
       >
         <Box
           display="flex"
@@ -64,6 +77,6 @@ export const BasicActions = ({ onVote, votePhase, disabled }: Props) => {
           )}
         </Box>
       </VoteButton>
-    </BasicActionsWrapper>
+    </ActionButtonsStyled>
   );
 };

@@ -79,7 +79,6 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
 
 export const CallWrapper = styled.div`
   word-break: break-all;
-  margin-bottom: 16px;
 `;
 
 export const CallTitle = styled.span`

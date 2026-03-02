@@ -31,7 +31,7 @@ export const VoteHeader = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
 `;
 
 export const VoteTitle = styled(Text).attrs({
@@ -46,27 +46,29 @@ export const BlockWrap = styled.div`
   margin-left: auto;
 `;
 
-export const VoteTimestamps = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+export const VoteTimestamp = styled(Text).attrs({
+  size: 12,
+  color: 'secondary',
+})`
+  margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
 `;
 
 export const DetailsBoxWrap = styled.div`
-  margin-top: ${({ theme }) => theme.spaceMap.md}px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
+  margin-top: ${({ theme }) => theme.spaceMap.lg}px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const BoxVotes = styled(ContentHighlightBox)`
   padding: 0;
   background: none;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const SectionHeading = styled(Text).attrs({
   size: 16,
   weight: 700,
 })`
-  margin: 20px 0;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const DescriptionWrap = styled.div`

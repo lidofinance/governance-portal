@@ -14,6 +14,7 @@ import { VoteSuccessModal } from '../../components/vote-actions/modals/vote-succ
 import { VoteConfirmDelegatedModal } from '../../components/vote-actions/modals/vote-delegated-confirm-modal';
 import { VoteTxArgs } from './types';
 import { VOTE_MODE_MAP } from 'features/vote/constants';
+import { ComponentProps } from 'react';
 
 const getInProgressText = ({ delegatedVoters, mode }: VoteTxArgs) => {
   if (delegatedVoters?.length) {
@@ -25,14 +26,8 @@ const getInProgressText = ({ delegatedVoters, mode }: VoteTxArgs) => {
 const getTxModalStagesVote = (transitStage: TransactionModalTransitStage) => ({
   ...getGeneralTransactionModalStages(transitStage),
 
-  confirm: ({
-    mode,
-    onSubmit,
-  }: {
-    mode: VoteMode;
-    onSubmit: (selectedDelegatorsAddresses: Address[]) => void;
-  }) =>
-    transitStage(<VoteConfirmDelegatedModal mode={mode} onSubmit={onSubmit} />),
+  confirm: (props: ComponentProps<typeof VoteConfirmDelegatedModal>) =>
+    transitStage(<VoteConfirmDelegatedModal {...props} />),
 
   sign: (args: VoteTxArgs) =>
     transitStage(

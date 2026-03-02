@@ -2,24 +2,28 @@ import { Button } from '@lidofinance/lido-ui';
 import { VoteMode } from 'features/vote/types';
 import { DelegatorsSelector } from '../../components/delegators-selector';
 import { Text } from 'shared/components/text';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { Address } from 'viem';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { Box } from 'shared/components/box';
-import { useVoteContext } from 'features/vote/providers/vote-context';
 import { VOTE_MODE_MAP } from 'features/vote/constants';
 
 type Props = {
   mode: VoteMode;
+  voteEvents: ComponentProps<typeof DelegatorsSelector>['voteEvents'];
+  eligibleDelegators: ComponentProps<typeof DelegatorsSelector>['delegators'];
   onSubmit: (selectedVoters: Address[]) => void;
 };
 
-export const VoteConfirmDelegatedModal = ({ mode, onSubmit }: Props) => {
+export const VoteConfirmDelegatedModal = ({
+  voteEvents,
+  eligibleDelegators,
+  mode,
+  onSubmit,
+}: Props) => {
   const [selectedAddresses, setSelectedAddresses] = useState<Address[]>([]);
   const [selectedBalance, setSelectedBalance] = useState<bigint>(0n);
-
-  const { voteEvents, eligibleDelegators } = useVoteContext();
 
   const { data: tokenData } = useGovernanceToken();
 

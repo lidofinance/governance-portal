@@ -19,8 +19,8 @@ interface Props {
   status: VoteStatus;
   executedTxHash?: string | null;
   votePhase: VotePhase | undefined;
-  voteDualGovernanceStatus: ProposalStatus | null;
-  proposalId: number | null;
+  proposalStatus: ProposalStatus | undefined;
+  proposalId: number | undefined;
   chainId: CHAINS;
 }
 
@@ -29,10 +29,7 @@ const isQuorumReached = ({
   nayNum,
   totalSupply,
   minAcceptQuorum,
-}: Omit<
-  Props,
-  'voteDualGovernanceStatus' | 'chainId' | 'proposalId'
->): boolean => {
+}: Omit<Props, 'proposalStatus' | 'chainId' | 'proposalId'>): boolean => {
   if (totalSupply === 0) {
     return false;
   }
@@ -55,7 +52,7 @@ export const VoteStatusChips = ({
   status,
   executedTxHash,
   votePhase,
-  voteDualGovernanceStatus,
+  proposalStatus,
   proposalId,
 }: Props) => {
   const quorumIsReached = isQuorumReached({
@@ -93,10 +90,7 @@ export const VoteStatusChips = ({
       }
       break;
     case VoteStatus.Executed:
-      if (
-        voteDualGovernanceStatus === null ||
-        voteDualGovernanceStatus === ProposalStatus.Executed
-      ) {
+      if (!proposalStatus || proposalStatus === ProposalStatus.Executed) {
         statusChip = (
           <VotePhasesTooltip
             placement="bottomLeft"
@@ -109,7 +103,7 @@ export const VoteStatusChips = ({
         break;
       }
 
-      if (voteDualGovernanceStatus === ProposalStatus.Cancelled) {
+      if (proposalStatus === ProposalStatus.Cancelled) {
         statusChip = (
           <Tooltip
             title={

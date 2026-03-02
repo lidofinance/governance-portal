@@ -33,7 +33,7 @@ export const VoteButton = styled(Button).attrs({
   }
 `;
 
-export const BasicActionsWrapper = styled.section`
+export const ActionButtonsStyled = styled.section`
   display: flex;
   flex-direction: row;
   width: 100%;

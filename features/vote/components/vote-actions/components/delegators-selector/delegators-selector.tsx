@@ -19,7 +19,7 @@ import {
   VotedByHolderWrap,
 } from './style';
 import { formatBalance } from 'utils/format-balance';
-import { EligibleDelegator } from 'features/vote/types';
+import { EligibleDelegator, VoterInfo } from 'features/vote/types';
 
 const TRANSACTION_LIMIT = 100;
 
@@ -102,7 +102,7 @@ const VotableDelegatorItem = ({
 interface DelegatorsSelectorProps {
   delegators: EligibleDelegator[];
   voteEvents: VoteEvent[];
-  delegatorsVotedThemselves?: VoteEvent[];
+  delegatorsVotedThemselves?: VoterInfo[];
   onSelectionChange?: (
     selectedAddresses: Address[],
     selectedBalance: bigint,
@@ -260,20 +260,20 @@ export const DelegatorsSelector = ({
             </Text>
           </VotedByHolderWrap>
           <ListWrap>
-            {delegatorsVotedThemselves.map((voteEvent) => (
-              <DelegatorsListItem key={voteEvent.voter}>
-                <AddressPop address={voteEvent.voter}>
+            {delegatorsVotedThemselves.map((voter) => (
+              <DelegatorsListItem key={voter.address}>
+                <AddressPop address={voter.address}>
                   <AddressBadgeWrap>
                     <Text as="span" size={12}>
-                      {trimAddress(voteEvent.voter, 4)}
+                      {trimAddress(voter.address, 4)}
                     </Text>
                   </AddressBadgeWrap>
                 </AddressPop>
                 <Text as="span" size={12} color="secondary">
-                  {voteEvent.supports ? 'Yes' : 'No'}
+                  {voter.supports ? 'Yes' : 'No'}
                 </Text>
                 <DelegatorsVotingPower>
-                  {formatBalance(voteEvent.stake)} {tokenSymbol}
+                  {formatBalance(voter.stake)} {tokenSymbol}
                 </DelegatorsVotingPower>
               </DelegatorsListItem>
             ))}
