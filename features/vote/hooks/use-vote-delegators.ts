@@ -73,10 +73,10 @@ export const useVoteDelegators = (voteId: number | undefined) => {
       walletAddress,
       voting.address,
     ],
-    enabled: !!voteId && !!walletAddress,
+    enabled: !!walletAddress && typeof voteId === 'number',
     queryFn: async () => {
       invariant(walletAddress, 'Wallet address is required');
-      invariant(voteId, 'Vote ID is required');
+      invariant(typeof voteId === 'number', 'Vote ID is required');
 
       const totalCount = await voting.readContract('getDelegatedVotersCount', [
         walletAddress,
@@ -107,11 +107,13 @@ export const useVoteDelegators = (voteId: number | undefined) => {
 
       const delegatedVotersAddresses = addressBatches.flat();
 
+      const voteIdBigInt = BigInt(voteId);
+
       const [votingPowerBatches, voterStateBatches] = await Promise.all([
         Promise.all(
           addressBatches.map((batch) =>
             voting.readContract('getVotingPowerMultipleAtVote', [
-              BigInt(voteId),
+              voteIdBigInt,
               batch,
             ]),
           ),
@@ -119,7 +121,7 @@ export const useVoteDelegators = (voteId: number | undefined) => {
         Promise.all(
           addressBatches.map((batch) =>
             voting.readContract('getVoterStateMultipleAtVote', [
-              BigInt(voteId),
+              voteIdBigInt,
               batch,
             ]),
           ),

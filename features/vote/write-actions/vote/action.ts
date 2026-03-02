@@ -85,7 +85,10 @@ export const useVoteAction = ({ onConfirm, onRetry }: ActionArgs) => {
       delegatedVoters,
     }: VoteActionArgs) => {
       const voteId = BigInt(vote.id);
-      invariant(voteId, 'Vote ID is required to proceed with voting');
+      invariant(
+        voteId >= 0n,
+        'Valid vote ID is required to proceed with voting',
+      );
       invariant(isConnected, 'Wallet must be connected to proceed with voting');
 
       if (requestDelegateSelection) {

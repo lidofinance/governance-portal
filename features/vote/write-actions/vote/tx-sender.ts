@@ -11,7 +11,10 @@ export const useVoteTxSender = () => {
 
   return useCallback(
     async ({ mode, voteId, delegatedVoters }: VoteTxArgs) => {
-      invariant(voteId, 'vote ID must be provided');
+      invariant(
+        voteId >= 0n,
+        'Valid vote ID is required to send vote transaction',
+      );
 
       const isSupporting = mode === 'yay';
 

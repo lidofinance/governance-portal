@@ -10,7 +10,7 @@ export const useEnactVoteTxSender = () => {
 
   return useCallback(
     async (voteId: bigint) => {
-      invariant(voteId, 'vote ID must be provided');
+      invariant(voteId >= 0n, 'Invalid vote ID');
 
       return writeVotingContract({
         address: votingContractAddress,
