@@ -10,6 +10,7 @@ type Props = {
   onVote: (mode: VoteMode) => void;
   disabled?: boolean;
   votePhase: VotePhase;
+  isLoading: boolean;
   nayRef?: React.Ref<HTMLButtonElement>;
   yayRef?: React.Ref<HTMLButtonElement>;
 };
@@ -20,6 +21,7 @@ export const ActionButtons = ({
   disabled,
   nayRef,
   yayRef,
+  isLoading,
 }: Props) => {
   return (
     <ActionButtonsStyled>
@@ -27,6 +29,7 @@ export const ActionButtons = ({
         onClick={() => onVote('nay')}
         disabled={disabled}
         ref={nayRef}
+        loading={isLoading}
       >
         <Box
           display="flex"
@@ -42,6 +45,7 @@ export const ActionButtons = ({
         disabled={votePhase === VotePhase.Objection || disabled}
         onClick={() => onVote('yay')}
         ref={yayRef}
+        loading={isLoading}
       >
         <Box
           display="flex"

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { Button } from '@lidofinance/lido-ui';
 
 export const Actions = styled.div`
-  margin-bottom: ${({ theme }) => theme.spaceMap.lg}px;
   display: flex;
   gap: 10px;
 

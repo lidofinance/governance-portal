@@ -60,15 +60,11 @@ export const DashboardVote = ({
     totalSupply,
   } = getVoteDetailsFormatted(vote);
 
-  const {
-    data: voteDualGovernanceStatus,
-    isLoading: voteDualGovernanceStatusLoading,
-  } = useVoteDualGovernanceStatus({
-    voteId: vote.id,
-    eventExecuteVote: executeEvent,
-  });
-
-  const isLoading = voteDualGovernanceStatusLoading;
+  const { data: voteDualGovernanceStatus, isLoading } =
+    useVoteDualGovernanceStatus({
+      voteId: vote.id,
+      eventExecuteVote: executeEvent,
+    });
 
   const handlePass = useCallback(() => {
     // TODO:

@@ -33,4 +33,11 @@ export const ChipWrap = styled.div<InjectedPropsTr>`
   display: flex;
   align-items: center;
   gap: 4px;
+
+  svg {
+    scale: 0.8;
+    path {
+      fill-opacity: 1;
+    }
+  }
 `;

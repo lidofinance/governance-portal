@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { Text } from '@lidofinance/lido-ui';
 
-export const InfoWrap = styled.div``;
+export const InfoWrap = styled.div`
+  margin: ${({ theme }) => theme.spaceMap.md}px 0;
+`;
 
 export const VotingPower = styled.div`
   display: flex;

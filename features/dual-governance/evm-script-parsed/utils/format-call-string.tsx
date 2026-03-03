@@ -162,12 +162,7 @@ const FormatSingleCall: React.FC<{
   );
 
   return (
-    <CallWrapper
-      style={{
-        paddingLeft: `${depth * 20}px`,
-        marginBottom: '40px',
-      }}
-    >
+    <CallWrapper $withDg={isDualGovernanceCall}>
       {isDualGovernanceCall && (
         <DGBadge>
           <DualGovernancePlainIcon />{' '}

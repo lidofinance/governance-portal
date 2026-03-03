@@ -4,6 +4,7 @@ import {
   Card,
   DescriptionWrap,
   DetailsBoxWrap,
+  EnactButtonWrap,
   SectionHeading,
   VoteHeader,
   VoteTimestamp,
@@ -23,7 +24,6 @@ import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { useUserConfig } from 'config/user-config';
 import { useConnect } from 'reef-knot/core-react';
 import { VoteInfoDelegated } from '../vote-info-delegated';
 import { VotePowerInfo } from '../vote-power-info';
@@ -71,7 +71,6 @@ export const VoteCard = ({ voteId }: Props) => {
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
 
-  const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
 
   const processEnact = useEnactVoteAction();
@@ -182,13 +181,11 @@ export const VoteCard = ({ voteId }: Props) => {
           metadata={eventStart?.args.metadata || ''}
         />
       </DetailsBoxWrap>
-      {!isWalletConnected &&
-        isWalletConnectionAllowed &&
-        vote.phase !== VotePhase.Closed && (
-          <Button fullwidth onClick={openConnectWalletModal}>
-            Connect wallet
-          </Button>
-        )}
+      {!isWalletConnected && vote.phase !== VotePhase.Closed && (
+        <Button fullwidth onClick={openConnectWalletModal}>
+          Connect wallet
+        </Button>
+      )}
       {isWalletConnected && (
         <>
           <VoteInfoDelegated
@@ -202,14 +199,16 @@ export const VoteCard = ({ voteId }: Props) => {
             </>
           )}
           {canExecute && (
-            <Button
-              fullwidth
-              color="success"
-              onClick={processEnact}
-              disabled={!isSupportedChain}
-            >
-              Enact
-            </Button>
+            <EnactButtonWrap>
+              <Button
+                fullwidth
+                color="success"
+                onClick={processEnact}
+                disabled={!isSupportedChain}
+              >
+                Enact
+              </Button>
+            </EnactButtonWrap>
           )}
         </>
       )}

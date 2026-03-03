@@ -1,3 +1,4 @@
+// TODO: move to shared components
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Hex } from 'viem';

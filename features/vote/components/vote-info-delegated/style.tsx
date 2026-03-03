@@ -8,7 +8,7 @@ export const InfoWrap = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-bottom: 10px;
+  margin-top: ${({ theme }) => theme.spaceMap.md}px;
 `;
 
 export const VoteStatus = styled.div<StatusProps>`

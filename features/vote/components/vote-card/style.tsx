@@ -23,6 +23,8 @@ export const Card = styled(Block).attrs({
   padding: 20px;
   max-width: 560px;
   margin: 0 auto 40px;
+  box-shadow: ${({ theme }) => theme.boxShadows.xl}
+    var(--lido-color-shadowLight);
 `;
 
 export const VoteHeader = styled.div`
@@ -54,8 +56,7 @@ export const VoteTimestamp = styled(Text).attrs({
 `;
 
 export const DetailsBoxWrap = styled.div`
-  margin-top: ${({ theme }) => theme.spaceMap.lg}px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+  margin-top: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const BoxVotes = styled(ContentHighlightBox)`
@@ -76,4 +77,8 @@ export const DescriptionWrap = styled.div`
   font-size: ${({ theme }) => theme.fontSizesMap.xs}px;
   font-weight: 400;
   line-height: 24px;
+`;
+
+export const EnactButtonWrap = styled.div`
+  margin-top: ${({ theme }) => theme.spaceMap.xl}px;
 `;

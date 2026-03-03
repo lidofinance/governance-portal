@@ -1,13 +1,12 @@
 import { Chip } from 'shared/components/chip';
 import { VoteStatusWrap } from './style';
-import { InfoIcon } from 'shared/components/icons/index';
+import { InfoIcon, ExternalLinkIcon } from 'shared/components/icons';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { VotePhasesTooltip } from '../vote-phases-tooltip';
 import { Link, Tooltip } from '@lidofinance/lido-ui';
 import { LinkWrap, TooltipText } from '../vote-phases-tooltip/style';
-import { ExternalLinkIcon } from 'shared/components/icons/index';
 import { VoteQuorumStatusTooltip } from '../vote-quorum-status-tooltip';
 import { PROPOSALS_PATH } from 'constants/urls';
 

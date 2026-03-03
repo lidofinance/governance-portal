@@ -23,7 +23,7 @@ type Value = {
   vote: Vote;
   canExecute: boolean;
   eventStart: EventStartVote | undefined;
-  eventExecute: EventExecuteVote | undefined;
+  eventExecute: EventExecuteVote | null | undefined;
   voteEvents: VoteEvent[];
   voterState: VoterState | undefined;
   voterDaoTokenBalance: bigint | undefined;

@@ -59,10 +59,6 @@ export const VoteActions = () => {
 
   const handleMenuClose = () => setIsMenuOpen(false);
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <Actions>
       {canVoteWithOwnPower &&
@@ -71,6 +67,7 @@ export const VoteActions = () => {
             disabled={!isSupportedChain}
             votePhase={vote.phase}
             onVote={(mode: VoteMode) => processVote({ mode })}
+            isLoading={isLoading}
           />
         )}
       {canVoteWithDelegatedVotePower &&
@@ -94,6 +91,7 @@ export const VoteActions = () => {
                     delegatedVoters: selectedDelegators,
                   })
                 }
+                isLoading={isLoading}
               />
             )}
           </FlexWrapper>
@@ -108,6 +106,7 @@ export const VoteActions = () => {
             disabled={!isSupportedChain}
             nayRef={nayButtonRef}
             yayRef={yayButtonRef}
+            isLoading={isLoading}
           />
         )}
 
