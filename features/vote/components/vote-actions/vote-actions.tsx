@@ -67,7 +67,7 @@ export const VoteActions = () => {
             disabled={!isSupportedChain}
             votePhase={vote.phase}
             onVote={(mode: VoteMode) => processVote({ mode })}
-            isLoading={isLoading}
+            loading={isLoading}
           />
         )}
       {canVoteWithDelegatedVotePower &&
@@ -91,7 +91,7 @@ export const VoteActions = () => {
                     delegatedVoters: selectedDelegators,
                   })
                 }
-                isLoading={isLoading}
+                loading={isLoading}
               />
             )}
           </FlexWrapper>
@@ -106,7 +106,7 @@ export const VoteActions = () => {
             disabled={!isSupportedChain}
             nayRef={nayButtonRef}
             yayRef={yayButtonRef}
-            isLoading={isLoading}
+            loading={isLoading}
           />
         )}
 

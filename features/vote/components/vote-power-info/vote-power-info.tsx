@@ -12,7 +12,7 @@ export const VotePowerInfo = () => {
     <InfoWrap>
       <VotingPower>
         <Text as="span" color="secondary" size="xxs">
-          My voting power
+          Your voting power
         </Text>
         <Amount data-testid="myVPAmount">
           {formatBalance(voterDaoTokenBalance ?? 0n)} {tokenData?.symbol}

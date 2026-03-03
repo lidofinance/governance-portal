@@ -25,7 +25,7 @@ import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
 import { useConnect } from 'reef-knot/core-react';
-import { VoteInfoDelegated } from '../vote-info-delegated';
+import { VoteInfo } from '../vote-info';
 import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from 'features/vote/providers/vote-context';
@@ -168,7 +168,7 @@ export const VoteCard = ({ voteId }: Props) => {
           votePhase={vote.phase}
         />
       )}
-      <VotersList />
+      <VotersList walletAddress={walletAddress} />
       <SectionHeading>Proposal</SectionHeading>
       {eventStart?.args.metadata && (
         <DescriptionWrap data-testid="voteDescription">
@@ -188,16 +188,9 @@ export const VoteCard = ({ voteId }: Props) => {
       )}
       {isWalletConnected && (
         <>
-          <VoteInfoDelegated
-            voteEvents={voteEvents}
-            walletAddress={walletAddress}
-          />
-          {vote.phase !== VotePhase.Closed && (
-            <>
-              <VotePowerInfo />
-              <VoteActions />
-            </>
-          )}
+          {vote.phase !== VotePhase.Closed && <VotePowerInfo />}
+          <VoteInfo voteEvents={voteEvents} walletAddress={walletAddress} />
+          {vote.phase !== VotePhase.Closed && <VoteActions />}
           {canExecute && (
             <EnactButtonWrap>
               <Button
