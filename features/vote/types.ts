@@ -39,7 +39,7 @@ export type PublicDelegate = {
   avatar: string;
   address: Address;
   lido: string;
-  twitter: string;
+  twitter: string | null;
 };
 
 export type DelegationFormAsyncValidationContext = {

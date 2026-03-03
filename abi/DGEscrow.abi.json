@@ -153,6 +153,11 @@
   { "inputs": [], "name": "PercentD16Overflow", "type": "error" },
   {
     "inputs": [],
+    "name": "RageQuitExtensionPeriodAlreadyStarted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "RageQuitExtensionPeriodNotStarted",
     "type": "error"
   },

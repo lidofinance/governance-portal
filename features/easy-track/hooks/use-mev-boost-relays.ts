@@ -9,10 +9,7 @@ export const useMEVBoostRelays = () => {
   const readMEVBoostRelayList = useReadContract(MEVBoostRelayList);
 
   const result = useQuery({
-    queryKey: [
-      `mev-boost-relays-list-${chainId}`,
-      readMEVBoostRelayList.address,
-    ],
+    queryKey: [`mev-boost-relays-list`, chainId, readMEVBoostRelayList.address],
     queryFn: async () => {
       const relays = await readMEVBoostRelayList.readContract('get_relays');
 

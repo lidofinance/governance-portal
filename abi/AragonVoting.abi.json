@@ -3,24 +3,14 @@
     "constant": true,
     "inputs": [],
     "name": "hasInitialized",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_delegate",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "name": "_delegate", "type": "address" }],
     "name": "assignDelegate",
     "outputs": [],
     "payable": false,
@@ -38,12 +28,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_objectionPhaseTime",
-        "type": "uint64"
-      }
-    ],
+    "inputs": [{ "name": "_objectionPhaseTime", "type": "uint64" }],
     "name": "unsafelyChangeObjectionPhaseTime",
     "outputs": [],
     "payable": false,
@@ -53,26 +38,11 @@
   {
     "constant": false,
     "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "name": "_supportRequiredPct",
-        "type": "uint64"
-      },
-      {
-        "name": "_minAcceptQuorumPct",
-        "type": "uint64"
-      },
-      {
-        "name": "_voteTime",
-        "type": "uint64"
-      },
-      {
-        "name": "_objectionPhaseTime",
-        "type": "uint64"
-      }
+      { "name": "_token", "type": "address" },
+      { "name": "_supportRequiredPct", "type": "uint64" },
+      { "name": "_minAcceptQuorumPct", "type": "uint64" },
+      { "name": "_voteTime", "type": "uint64" },
+      { "name": "_objectionPhaseTime", "type": "uint64" }
     ],
     "name": "initialize",
     "outputs": [],
@@ -84,24 +54,14 @@
     "constant": true,
     "inputs": [],
     "name": "UNSAFELY_MODIFY_VOTE_TIME_ROLE",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bytes32" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_voteTime",
-        "type": "uint64"
-      }
-    ],
+    "inputs": [{ "name": "_voteTime", "type": "uint64" }],
     "name": "unsafelyChangeVoteTime",
     "outputs": [],
     "payable": false,
@@ -110,19 +70,9 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_script",
-        "type": "bytes"
-      }
-    ],
+    "inputs": [{ "name": "_script", "type": "bytes" }],
     "name": "getEVMScriptExecutor",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -131,12 +81,7 @@
     "constant": true,
     "inputs": [],
     "name": "getRecoveryVault",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -145,12 +90,7 @@
     "constant": true,
     "inputs": [],
     "name": "MODIFY_QUORUM_ROLE",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bytes32" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -159,12 +99,7 @@
     "constant": true,
     "inputs": [],
     "name": "objectionPhaseTime",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint64" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -172,99 +107,40 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_voter",
-        "type": "address"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_voter", "type": "address" }
     ],
     "name": "getVoterState",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint8"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint8" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_voter",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "name": "_voter", "type": "address" }],
     "name": "getDelegate",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "name": "_voteId", "type": "uint256" }],
     "name": "getVote",
     "outputs": [
-      {
-        "name": "open",
-        "type": "bool"
-      },
-      {
-        "name": "executed",
-        "type": "bool"
-      },
-      {
-        "name": "startDate",
-        "type": "uint64"
-      },
-      {
-        "name": "snapshotBlock",
-        "type": "uint64"
-      },
-      {
-        "name": "supportRequired",
-        "type": "uint64"
-      },
-      {
-        "name": "minAcceptQuorum",
-        "type": "uint64"
-      },
-      {
-        "name": "yea",
-        "type": "uint256"
-      },
-      {
-        "name": "nay",
-        "type": "uint256"
-      },
-      {
-        "name": "votingPower",
-        "type": "uint256"
-      },
-      {
-        "name": "script",
-        "type": "bytes"
-      },
-      {
-        "name": "phase",
-        "type": "uint8"
-      }
+      { "name": "open", "type": "bool" },
+      { "name": "executed", "type": "bool" },
+      { "name": "startDate", "type": "uint64" },
+      { "name": "snapshotBlock", "type": "uint64" },
+      { "name": "supportRequired", "type": "uint64" },
+      { "name": "minAcceptQuorum", "type": "uint64" },
+      { "name": "yea", "type": "uint256" },
+      { "name": "nay", "type": "uint256" },
+      { "name": "votingPower", "type": "uint256" },
+      { "name": "script", "type": "bytes" },
+      { "name": "phase", "type": "uint8" }
     ],
     "payable": false,
     "stateMutability": "view",
@@ -273,38 +149,19 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_delegate",
-        "type": "address"
-      },
-      {
-        "name": "_offset",
-        "type": "uint256"
-      },
-      {
-        "name": "_limit",
-        "type": "uint256"
-      }
+      { "name": "_delegate", "type": "address" },
+      { "name": "_offset", "type": "uint256" },
+      { "name": "_limit", "type": "uint256" }
     ],
     "name": "getDelegatedVoters",
-    "outputs": [
-      {
-        "name": "voters",
-        "type": "address[]"
-      }
-    ],
+    "outputs": [{ "name": "voters", "type": "address[]" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_minAcceptQuorumPct",
-        "type": "uint64"
-      }
-    ],
+    "inputs": [{ "name": "_minAcceptQuorumPct", "type": "uint64" }],
     "name": "changeMinAcceptQuorumPct",
     "outputs": [],
     "payable": false,
@@ -315,12 +172,7 @@
     "constant": true,
     "inputs": [],
     "name": "MODIFY_SUPPORT_ROLE",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bytes32" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -328,22 +180,11 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_voters",
-        "type": "address[]"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_voters", "type": "address[]" }
     ],
     "name": "getVotingPowerMultipleAtVote",
-    "outputs": [
-      {
-        "name": "balances",
-        "type": "uint256[]"
-      }
-    ],
+    "outputs": [{ "name": "balances", "type": "uint256[]" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -351,18 +192,9 @@
   {
     "constant": false,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_supports",
-        "type": "bool"
-      },
-      {
-        "name": "_voter",
-        "type": "address"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_supports", "type": "bool" },
+      { "name": "_voter", "type": "address" }
     ],
     "name": "attemptVoteFor",
     "outputs": [],
@@ -373,18 +205,9 @@
   {
     "constant": false,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_supports",
-        "type": "bool"
-      },
-      {
-        "name": "_voters",
-        "type": "address[]"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_supports", "type": "bool" },
+      { "name": "_voters", "type": "address[]" }
     ],
     "name": "attemptVoteForMultiple",
     "outputs": [],
@@ -394,12 +217,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_supportRequiredPct",
-        "type": "uint64"
-      }
-    ],
+    "inputs": [{ "name": "_supportRequiredPct", "type": "uint64" }],
     "name": "changeSupportRequiredPct",
     "outputs": [],
     "payable": false,
@@ -408,19 +226,9 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "name": "token", "type": "address" }],
     "name": "allowRecoverability",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -429,31 +237,16 @@
     "constant": true,
     "inputs": [],
     "name": "appId",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bytes32" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_delegate",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "name": "_delegate", "type": "address" }],
     "name": "getDelegatedVotersCount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint256" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -462,24 +255,14 @@
     "constant": true,
     "inputs": [],
     "name": "getInitializationBlock",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint256" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "name": "_token", "type": "address" }],
     "name": "transferToVault",
     "outputs": [],
     "payable": false,
@@ -489,26 +272,12 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_sender",
-        "type": "address"
-      },
-      {
-        "name": "_role",
-        "type": "bytes32"
-      },
-      {
-        "name": "_params",
-        "type": "uint256[]"
-      }
+      { "name": "_sender", "type": "address" },
+      { "name": "_role", "type": "bytes32" },
+      { "name": "_params", "type": "uint256[]" }
     ],
     "name": "canPerform",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -517,12 +286,7 @@
     "constant": true,
     "inputs": [],
     "name": "getEVMScriptRegistry",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -530,41 +294,20 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_voters",
-        "type": "address[]"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_voters", "type": "address[]" }
     ],
     "name": "getVoterStateMultipleAtVote",
-    "outputs": [
-      {
-        "name": "voterStatesList",
-        "type": "uint8[]"
-      }
-    ],
+    "outputs": [{ "name": "voterStatesList", "type": "uint8[]" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_voters",
-        "type": "address[]"
-      }
-    ],
+    "inputs": [{ "name": "_voters", "type": "address[]" }],
     "name": "getVotingPowerMultiple",
-    "outputs": [
-      {
-        "name": "balances",
-        "type": "uint256[]"
-      }
-    ],
+    "outputs": [{ "name": "balances", "type": "uint256[]" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -573,12 +316,7 @@
     "constant": true,
     "inputs": [],
     "name": "voteTime",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint64" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -587,12 +325,7 @@
     "constant": true,
     "inputs": [],
     "name": "CREATE_VOTES_ROLE",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bytes32" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -600,41 +333,20 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_sender",
-        "type": "address"
-      },
-      {
-        "name": "",
-        "type": "bytes"
-      }
+      { "name": "_sender", "type": "address" },
+      { "name": "", "type": "bytes" }
     ],
     "name": "canForward",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "name": "_voteId", "type": "uint256" }],
     "name": "canExecute",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -642,22 +354,11 @@
   {
     "constant": true,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_voter",
-        "type": "address"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_voter", "type": "address" }
     ],
     "name": "canVote",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -666,12 +367,7 @@
     "constant": true,
     "inputs": [],
     "name": "kernel",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -679,34 +375,18 @@
   {
     "constant": false,
     "inputs": [
-      {
-        "name": "_executionScript",
-        "type": "bytes"
-      },
-      {
-        "name": "_metadata",
-        "type": "string"
-      }
+      { "name": "_executionScript", "type": "bytes" },
+      { "name": "_metadata", "type": "string" }
     ],
     "name": "newVote",
-    "outputs": [
-      {
-        "name": "voteId",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "name": "voteId", "type": "uint256" }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_evmScript",
-        "type": "bytes"
-      }
-    ],
+    "inputs": [{ "name": "_evmScript", "type": "bytes" }],
     "name": "forward",
     "outputs": [],
     "payable": false,
@@ -717,12 +397,7 @@
     "constant": true,
     "inputs": [],
     "name": "minAcceptQuorumPct",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint64" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -731,12 +406,7 @@
     "constant": true,
     "inputs": [],
     "name": "isPetrified",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -745,12 +415,7 @@
     "constant": true,
     "inputs": [],
     "name": "votesLength",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint256" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -758,18 +423,9 @@
   {
     "constant": false,
     "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      },
-      {
-        "name": "_supports",
-        "type": "bool"
-      },
-      {
-        "name": "",
-        "type": "bool"
-      }
+      { "name": "_voteId", "type": "uint256" },
+      { "name": "_supports", "type": "bool" },
+      { "name": "", "type": "bool" }
     ],
     "name": "vote",
     "outputs": [],
@@ -780,61 +436,29 @@
   {
     "constant": false,
     "inputs": [
-      {
-        "name": "_executionScript",
-        "type": "bytes"
-      },
-      {
-        "name": "_metadata",
-        "type": "string"
-      },
-      {
-        "name": "",
-        "type": "bool"
-      },
-      {
-        "name": "",
-        "type": "bool"
-      }
+      { "name": "_executionScript", "type": "bytes" },
+      { "name": "_metadata", "type": "string" },
+      { "name": "", "type": "bool" },
+      { "name": "", "type": "bool" }
     ],
     "name": "newVote",
-    "outputs": [
-      {
-        "name": "voteId",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "name": "voteId", "type": "uint256" }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "name": "_voteId", "type": "uint256" }],
     "name": "getVotePhase",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint8"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint8" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_voteId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "name": "_voteId", "type": "uint256" }],
     "name": "executeVote",
     "outputs": [],
     "payable": false,
@@ -845,12 +469,7 @@
     "constant": true,
     "inputs": [],
     "name": "supportRequiredPct",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint64" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -859,12 +478,7 @@
     "constant": true,
     "inputs": [],
     "name": "token",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -873,12 +487,7 @@
     "constant": true,
     "inputs": [],
     "name": "PCT_BASE",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "uint64" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -887,12 +496,7 @@
     "constant": true,
     "inputs": [],
     "name": "isForwarder",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "name": "", "type": "bool" }],
     "payable": false,
     "stateMutability": "pure",
     "type": "function"
@@ -900,21 +504,9 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "voteId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "metadata",
-        "type": "string"
-      }
+      { "indexed": true, "name": "voteId", "type": "uint256" },
+      { "indexed": true, "name": "creator", "type": "address" },
+      { "indexed": false, "name": "metadata", "type": "string" }
     ],
     "name": "StartVote",
     "type": "event"
@@ -922,26 +514,10 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "voteId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "supports",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
-        "name": "stake",
-        "type": "uint256"
-      }
+      { "indexed": true, "name": "voteId", "type": "uint256" },
+      { "indexed": true, "name": "voter", "type": "address" },
+      { "indexed": false, "name": "supports", "type": "bool" },
+      { "indexed": false, "name": "stake", "type": "uint256" }
     ],
     "name": "CastVote",
     "type": "event"
@@ -949,45 +525,23 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "voteId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "stake",
-        "type": "uint256"
-      }
+      { "indexed": true, "name": "voteId", "type": "uint256" },
+      { "indexed": true, "name": "voter", "type": "address" },
+      { "indexed": false, "name": "stake", "type": "uint256" }
     ],
     "name": "CastObjection",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "voteId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "indexed": true, "name": "voteId", "type": "uint256" }],
     "name": "ExecuteVote",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "name": "supportRequiredPct",
-        "type": "uint64"
-      }
+      { "indexed": false, "name": "supportRequiredPct", "type": "uint64" }
     ],
     "name": "ChangeSupportRequired",
     "type": "event"
@@ -995,35 +549,21 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "name": "minAcceptQuorumPct",
-        "type": "uint64"
-      }
+      { "indexed": false, "name": "minAcceptQuorumPct", "type": "uint64" }
     ],
     "name": "ChangeMinQuorum",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "voteTime",
-        "type": "uint64"
-      }
-    ],
+    "inputs": [{ "indexed": false, "name": "voteTime", "type": "uint64" }],
     "name": "ChangeVoteTime",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "name": "objectionPhaseTime",
-        "type": "uint64"
-      }
+      { "indexed": false, "name": "objectionPhaseTime", "type": "uint64" }
     ],
     "name": "ChangeObjectionPhaseTime",
     "type": "event"
@@ -1031,16 +571,8 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "assignedDelegate",
-        "type": "address"
-      }
+      { "indexed": true, "name": "voter", "type": "address" },
+      { "indexed": true, "name": "assignedDelegate", "type": "address" }
     ],
     "name": "AssignDelegate",
     "type": "event"
@@ -1048,16 +580,8 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "unassignedDelegate",
-        "type": "address"
-      }
+      { "indexed": true, "name": "voter", "type": "address" },
+      { "indexed": true, "name": "unassignedDelegate", "type": "address" }
     ],
     "name": "UnassignDelegate",
     "type": "event"
@@ -1065,21 +589,9 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "voteId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "name": "delegate",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "voters",
-        "type": "address[]"
-      }
+      { "indexed": true, "name": "voteId", "type": "uint256" },
+      { "indexed": true, "name": "delegate", "type": "address" },
+      { "indexed": false, "name": "voters", "type": "address[]" }
     ],
     "name": "AttemptCastVoteAsDelegate",
     "type": "event"
@@ -1087,26 +599,10 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "executor",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "script",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "name": "input",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "name": "returnData",
-        "type": "bytes"
-      }
+      { "indexed": true, "name": "executor", "type": "address" },
+      { "indexed": false, "name": "script", "type": "bytes" },
+      { "indexed": false, "name": "input", "type": "bytes" },
+      { "indexed": false, "name": "returnData", "type": "bytes" }
     ],
     "name": "ScriptResult",
     "type": "event"
@@ -1114,21 +610,9 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "name": "vault",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "amount",
-        "type": "uint256"
-      }
+      { "indexed": true, "name": "vault", "type": "address" },
+      { "indexed": true, "name": "token", "type": "address" },
+      { "indexed": false, "name": "amount", "type": "uint256" }
     ],
     "name": "RecoverToVault",
     "type": "event"

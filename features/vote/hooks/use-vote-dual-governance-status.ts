@@ -44,7 +44,8 @@ export const useVoteDualGovernanceStatus = ({
 
   const query = useQuery({
     queryKey: [
-      `${voteId}-dg-status`,
+      `dg-status`,
+      voteId,
       chainId,
       eventExecuteVote?.event.transactionHash,
     ],

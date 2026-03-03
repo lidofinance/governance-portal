@@ -204,6 +204,17 @@ export const dualGovernanceAbi = [
   },
   {
     type: 'error',
+    inputs: [
+      {
+        name: 'secondSealRageQuitSupport',
+        internalType: 'PercentD16',
+        type: 'uint128',
+      },
+    ],
+    name: 'InvalidSecondSealRageQuitSupport',
+  },
+  {
+    type: 'error',
     inputs: [{ name: 'timeout', internalType: 'Duration', type: 'uint32' }],
     name: 'InvalidTiebreakerActivationTimeout',
   },
@@ -244,6 +255,7 @@ export const dualGovernanceAbi = [
     ],
     name: 'InvalidVetoSignallingDurationRange',
   },
+  { type: 'error', inputs: [], name: 'PercentD16Overflow' },
   { type: 'error', inputs: [], name: 'PercentD16Underflow' },
   {
     type: 'error',
@@ -993,4 +1005,4 @@ export const dualGovernanceAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

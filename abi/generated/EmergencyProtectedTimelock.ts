@@ -141,6 +141,11 @@ export const emergencyProtectedTimelockAbi = [
     inputs: [{ name: 'governance', internalType: 'address', type: 'address' }],
     name: 'InvalidGovernance',
   },
+  {
+    type: 'error',
+    inputs: [{ name: 'proposalId', internalType: 'uint256', type: 'uint256' }],
+    name: 'MinExecutionDelayNotPassed',
+  },
   { type: 'error', inputs: [], name: 'TimestampOverflow' },
   {
     type: 'error',
@@ -741,4 +746,4 @@ export const emergencyProtectedTimelockAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

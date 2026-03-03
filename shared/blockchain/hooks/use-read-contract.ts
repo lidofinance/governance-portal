@@ -5,6 +5,7 @@ import {
   ContractFunctionArgs,
   ContractFunctionName,
   ReadContractReturnType,
+  zeroAddress,
 } from 'viem';
 import { ContractObject } from '../types';
 import { getContractAddress } from '../get-contract-address';
@@ -26,6 +27,9 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
         args?: A,
       ): Promise<ReadContractReturnType<T, F>> => {
         try {
+          if (address === zeroAddress) {
+            throw new Error('Contract address is zero address');
+          }
           return await readContract(rpcProvider, {
             abi,
             address,
