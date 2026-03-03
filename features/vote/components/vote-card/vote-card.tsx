@@ -74,11 +74,7 @@ export const VoteCard = ({ voteId }: Props) => {
   const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
 
-  const processEnact = useEnactVoteAction({
-    voteId: BigInt(vote.id),
-    // TODO: process refetch
-    onConfirm: () => Promise.resolve(),
-  });
+  const processEnact = useEnactVoteAction();
 
   const openConnectWalletModal = useCallback(async () => {
     await connect();

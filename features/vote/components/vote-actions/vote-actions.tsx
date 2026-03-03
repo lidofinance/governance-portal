@@ -28,12 +28,7 @@ export const VoteActions = () => {
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
-  const processVote = useVoteAction({
-    onConfirm: async () => {
-      // TODO: add refetch
-      // await refetchEligibleDelegators();
-    },
-  });
+  const processVote = useVoteAction();
 
   const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 

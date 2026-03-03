@@ -17,28 +17,26 @@ import { VOTE_MODE_MAP } from 'features/vote/constants';
 type Props = {
   mode: VoteMode;
   txHash: string | undefined;
+  voteEvents: VoteEvent[];
+  votePower: bigint;
+  remainingDelegators: EligibleDelegator[];
+  remainingDelegatedVotingPower: bigint;
   onVoteWithOwnTokens: (mode: VoteMode) => void;
   onVoteWithRemainingDelegated?: (
     selectedVoters: Address[],
     mode: VoteMode,
   ) => void;
-  voteEvents: VoteEvent[];
-  votePower?: bigint;
-  title: string;
-  remainingDelegators: EligibleDelegator[];
-  remainingDelegatedVotingPower: bigint;
 };
 
 export const VoteSuccessModal = ({
   mode,
   txHash,
-  onVoteWithOwnTokens,
-  onVoteWithRemainingDelegated,
   voteEvents,
   votePower,
-  title,
   remainingDelegatedVotingPower,
   remainingDelegators,
+  onVoteWithOwnTokens,
+  onVoteWithRemainingDelegated,
 }: Props) => {
   const { address } = useAccount();
   const { data: tokenData } = useGovernanceToken();
@@ -72,23 +70,23 @@ export const VoteSuccessModal = ({
     setSelectedDelegators(selectedAddresses);
   };
 
+  const voteModeLabel = VOTE_MODE_MAP[mode];
+
   if (!canVoteWithOwnTokens && !hasRemainingDelegatedPower) {
     return (
       <TxStageSuccess
         txHash={txHash}
-        title={title}
+        title={`You voted '${voteModeLabel}'`}
         description={<SuccessText txHash={txHash} />}
         showEtherscan={false}
       />
     );
   }
 
-  const voteModeLabel = VOTE_MODE_MAP[mode];
-
   return (
     <TxStageSuccess
       txHash={txHash}
-      title={title}
+      title={`You voted '${voteModeLabel}'`}
       description={
         <>
           <SuccessText txHash={txHash} />

@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from 'react';
+import { createContext, FC, useContext, useMemo } from 'react';
 import invariant from 'tiny-invariant';
 import { useVote } from '../hooks/use-vote';
 import {
@@ -41,8 +41,12 @@ type Value = {
     | null
     | undefined;
   isLoading: boolean;
-  refetchVote: ReturnType<typeof useVote>['refetch'];
-  refetchVoteEvents: ReturnType<typeof useCastVoteEvents>['refetch'];
+  refetchers: {
+    refetchVote: ReturnType<typeof useVote>['refetch'];
+    refetchVoteEvents: ReturnType<typeof useCastVoteEvents>['refetch'];
+    refetchVoterState: ReturnType<typeof useVoterState>['refetch'];
+    refetchDelegatorsData: ReturnType<typeof useVoteDelegators>['refetch'];
+  };
 };
 
 const VoteContext = createContext<Value | null>(null);
@@ -77,10 +81,11 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     voteData?.eventExecute?.event.blockNumber,
   );
 
-  const { data: voterState, isLoading: isVoterStateLoading } = useVoterState(
-    voteData?.vote.id,
-    voteData?.vote.snapshotBlock,
-  );
+  const {
+    data: voterState,
+    isLoading: isVoterStateLoading,
+    refetch: refetchVoterState,
+  } = useVoterState(voteData?.vote.id, voteData?.vote.snapshotBlock);
 
   const { data: dgProposal, isLoading: isProposalDataLoading } =
     useVoteDualGovernanceStatus({
@@ -88,8 +93,21 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
       eventExecuteVote: voteData?.eventExecute,
     });
 
-  const { data: delegatorsData, isLoading: isDelegatorsDataLoading } =
-    useVoteDelegators(voteData?.vote.id);
+  const {
+    data: delegatorsData,
+    isLoading: isDelegatorsDataLoading,
+    refetch: refetchDelegatorsData,
+  } = useVoteDelegators(voteData?.vote.id);
+
+  const refetchers = useMemo(
+    () => ({
+      refetchVote,
+      refetchVoteEvents,
+      refetchVoterState,
+      refetchDelegatorsData,
+    }),
+    [refetchVote, refetchVoteEvents, refetchVoterState, refetchDelegatorsData],
+  );
 
   const isLoading =
     isVotingConfigLoading ||
@@ -99,11 +117,53 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isDelegatorsDataLoading ||
     isProposalDataLoading;
 
+  const value = useMemo(() => {
+    if (!voteData?.vote) {
+      return null;
+    }
+
+    return {
+      vote: voteData.vote,
+      canExecute: voteData.canExecute,
+      eventStart: voteData.eventStart,
+      eventExecute: voteData.eventExecute,
+      voterState: voterState?.voterState,
+      voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
+      voteEvents: voteEvents ?? [],
+      voteTime: votingConfig?.voteTime ?? 0,
+      objectionPhaseTime: votingConfig?.objectionPhaseTime ?? 0,
+      eligibleDelegators: delegatorsData?.eligibleDelegatedVoters ?? [],
+      eligibleDelegatedVotingPower:
+        delegatorsData?.eligibleDelegatedVotingPower ?? 0n,
+      totalDelegatedVotingPower:
+        delegatorsData?.totalDelegatedVotingPower ?? 0n,
+      delegatorsVotedThemselves:
+        delegatorsData?.delegatedVotersVotedThemselves ?? [],
+      dgProposal,
+      isLoading,
+      refetchers,
+    };
+  }, [
+    delegatorsData?.delegatedVotersVotedThemselves,
+    delegatorsData?.eligibleDelegatedVoters,
+    delegatorsData?.eligibleDelegatedVotingPower,
+    delegatorsData?.totalDelegatedVotingPower,
+    dgProposal,
+    isLoading,
+    refetchers,
+    voteData,
+    voteEvents,
+    voterState?.voterDaoTokenBalance,
+    voterState?.voterState,
+    votingConfig?.objectionPhaseTime,
+    votingConfig?.voteTime,
+  ]);
+
   if (isVotingConfigLoading || isVoteDataLoading) {
     return <InlineVoteCardLoader />;
   }
 
-  if (!voteData) {
+  if (!value) {
     return (
       <Container as="main" size="tight" key={voteId}>
         <Box textAlign="center">
@@ -119,29 +179,5 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     );
   }
 
-  return (
-    <VoteContext.Provider
-      value={{
-        ...voteData,
-        voterState: voterState?.voterState,
-        voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
-        voteEvents: voteEvents ?? [],
-        voteTime: votingConfig?.voteTime ?? 0,
-        objectionPhaseTime: votingConfig?.objectionPhaseTime ?? 0,
-        eligibleDelegators: delegatorsData?.eligibleDelegatedVoters ?? [],
-        eligibleDelegatedVotingPower:
-          delegatorsData?.eligibleDelegatedVotingPower ?? 0n,
-        totalDelegatedVotingPower:
-          delegatorsData?.totalDelegatedVotingPower ?? 0n,
-        delegatorsVotedThemselves:
-          delegatorsData?.delegatedVotersVotedThemselves ?? [],
-        dgProposal,
-        isLoading,
-        refetchVote,
-        refetchVoteEvents,
-      }}
-    >
-      {children}
-    </VoteContext.Provider>
-  );
+  return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;
 };

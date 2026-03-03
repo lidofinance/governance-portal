@@ -1,67 +1,51 @@
 import { useCallback } from 'react';
-import { useAccount } from 'wagmi';
 
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
-import { ActionArgs } from 'shared/types';
 import { useEnactVoteTxSender } from './tx-sender';
 import { useTxModalEnactVote } from './modal-stages';
+import { useVoteContext } from 'features/vote/providers/vote-context';
 
-type Args = {
-  voteId: bigint;
-} & ActionArgs;
-
-export const useEnactVoteAction = ({ voteId, onConfirm, onRetry }: Args) => {
-  const { isConnected } = useAccount();
+export const useEnactVoteAction = () => {
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalEnactVote();
   const sendEnactTx = useEnactVoteTxSender();
   const waitForTx = useTxConfirmation();
+  const { vote, refetchers } = useVoteContext();
 
-  return useCallback(async () => {
-    if (!isConnected) {
-      txModalStages.failed(new Error('Please connect your wallet to enact'));
-      return;
-    }
-
+  const enactVote = useCallback(async () => {
     try {
-      txModalStages.sign(voteId);
+      const voteIdBigInt = BigInt(vote.id);
+      txModalStages.sign(voteIdBigInt);
 
-      const txHash = await sendEnactTx(voteId);
+      const txHash = await sendEnactTx(voteIdBigInt);
 
       if (isMultisig) {
         txModalStages.successMultisig();
         return true;
       }
 
-      txModalStages.pending(voteId, txHash);
+      txModalStages.pending(voteIdBigInt, txHash);
 
       const response = await waitForTx(txHash);
 
       if (response.status === 'reverted') {
-        txModalStages.failed(new Error('Transaction was reverted'), onRetry);
-        return;
+        throw new Error('Transaction was reverted');
       }
 
-      await onConfirm();
-      txModalStages.success(voteId, txHash);
+      await refetchers.refetchVote();
+      txModalStages.success(voteIdBigInt, txHash);
       return true;
     } catch (error) {
-      console.error('Error during vote:', error);
+      console.error('Error during vote enact:', error);
       txModalStages.failed(
         error instanceof Error ? error : new Error('Unknown error occurred'),
+        () => enactVote(),
       );
 
       return false;
     }
-  }, [
-    voteId,
-    isConnected,
-    isMultisig,
-    txModalStages,
-    waitForTx,
-    onConfirm,
-    onRetry,
-    sendEnactTx,
-  ]);
+  }, [vote.id, txModalStages, isMultisig, refetchers, waitForTx, sendEnactTx]);
+
+  return enactVote;
 };
