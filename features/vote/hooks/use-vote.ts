@@ -27,7 +27,7 @@ export const useVote = (voteId: string, voteTime: number | undefined) => {
       const { snapshotBlock, executed } = vote;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const voteLengthInBlocks = BigInt(voteTime! / 12); // Assuming average block time of 12 seconds
+      const voteLengthInBlocks = BigInt(voteTime! / 10); // Assuming average block time of 12 seconds but using 10 seconds to be safe, as it can vary
 
       const [eventStart, eventExecute] = await Promise.all([
         getEventStartVote({

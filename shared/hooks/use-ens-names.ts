@@ -8,7 +8,7 @@ export const useEnsNames = (addresses: Address[], voteId: number) => {
   const { chainId, rpcProvider } = useLidoSDK();
 
   return useQuery({
-    queryKey: ['ens-names', chainId, voteId],
+    queryKey: ['ens-names', chainId, voteId, addresses],
     enabled: addresses.length > 0,
     staleTime: Infinity,
     queryFn: async () => {
@@ -26,8 +26,8 @@ export const useEnsNames = (addresses: Address[], voteId: number) => {
               console.debug(
                 'Ignoring CSP error for api.gaianet.ai -> request api.gaianet.ai blocked by CSP, GNS not supported',
               );
-              result[address] = null;
             }
+            result[address] = null;
           }
         }),
       );
