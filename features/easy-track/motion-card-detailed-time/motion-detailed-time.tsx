@@ -1,5 +1,5 @@
 import { Wrap, Title, Value, Subvalue } from './style';
-import { MotionDisplayStatus } from '../motion-types';
+import { MotionDisplayStatus } from '../types';
 import { MotionTimeData } from '../hooks/use-motion-time-countdown';
 import { MotionStatus, RawMotionSubgraph } from '../types';
 import { FormattedDate } from '../../vote/components/formatted-date';

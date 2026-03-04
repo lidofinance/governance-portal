@@ -3,7 +3,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EasyTrack } from 'shared/blockchain/contracts';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { Motion, RawMotionSubgraph } from '../types';
+import { Motion } from '../types';
 import {
   getQuerySubgraphMotions,
   fetchMotionsSubgraphList,
@@ -12,7 +12,7 @@ import { getMotionCreatedEvent } from '../utils/get-motion-created-event';
 import { usePublicClient } from 'wagmi';
 import invariant from 'tiny-invariant';
 import { formatMotionDataOnchain } from '../utils/format-motion-data-onchain';
-import { Hex } from 'viem';
+import { formatMotionDataSubgraph } from '../utils/format-motion-data-subgraph';
 
 export const useActiveMotions = () => {
   const easyTrack = useReadContract(EasyTrack);
@@ -52,24 +52,6 @@ export const useActiveMotions = () => {
 
 const PAGE_SIZE = 8;
 
-const convertSubgraphToMotion = (raw: RawMotionSubgraph): Motion => {
-  return {
-    id: BigInt(raw.id),
-    evmScriptFactory: raw.evmScriptFactory.toLowerCase() as Hex,
-    creator: raw.creator.toLowerCase() as Hex,
-    duration: BigInt(raw.duration),
-    startDate: BigInt(raw.startDate),
-    snapshotBlock: BigInt(raw.snapshotBlock),
-    objectionsThreshold: BigInt(raw.objectionsThreshold),
-    objectionsAmount: BigInt(raw.objectionsAmount),
-    evmScriptHash: raw.evmScriptHash as Hex,
-    status: raw.status,
-    enacted_at: raw.enacted_at ? Number(raw.enacted_at) : undefined,
-    evmScriptCalldata: raw.evmScriptCalldata as Hex,
-    isOnChain: false,
-  };
-};
-
 export const useArchivedMotions = () => {
   const { chainId } = useLidoSDK();
 
@@ -81,7 +63,7 @@ export const useArchivedMotions = () => {
         skip: pageParam * PAGE_SIZE,
       });
       const rawMotions = await fetchMotionsSubgraphList(chainId, query);
-      return rawMotions.map(convertSubgraphToMotion);
+      return rawMotions.map(formatMotionDataSubgraph);
     },
     getNextPageParam: (lastPage, allPages) => {
       // If the last page has fewer items than PAGE_SIZE, there are no more pages

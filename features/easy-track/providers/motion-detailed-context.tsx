@@ -1,7 +1,6 @@
-import { createContext, FC, useContext, useMemo } from 'react';
+import { createContext, FC, useContext } from 'react';
 import invariant from 'tiny-invariant';
-import { formatUnits, formatEther, Hex } from 'viem';
-import { useQuery } from '@tanstack/react-query';
+import { Hex } from 'viem';
 
 import { Motion, MotionStatus, RawMotionSubgraph } from '@easy-track/types';
 import { MotionType } from '@easy-track/motion-types';
@@ -12,37 +11,13 @@ import {
   useMotionTimeCountdown,
   MotionTimeData,
 } from '@easy-track/hooks/use-motion-time-countdown';
-import {
-  usePeriodLimitsInfoByMotionType,
-  UsePeriodLimitsInfoResultData,
-} from '@easy-track/hooks/use-period-limits-info';
-import { decodeEvmScriptCallData } from '@easy-track/hooks/use-decode-evm-script-call-data';
-import { useMotionTokenData } from '@easy-track/hooks/use-motion-token-data';
+import { UsePeriodLimitsInfoResultData } from '@easy-track/hooks/use-period-limits-info';
+import { useMotionCallData } from '@easy-track/hooks/use-motion-call-data';
+import { useMotionLimitStatus } from '@easy-track/hooks/use-motion-limit-status';
+import { useMotionActions } from '@easy-track/hooks/use-motion-actions';
 import { useLidoSDK } from 'providers/lido-sdk';
 
-const DEFAULT_DECIMALS = 18;
-
-const getTopUpAmount = (
-  callData: any,
-  tokenDecimals = DEFAULT_DECIMALS,
-): number => {
-  if (!callData) return 0;
-
-  if (callData[1]?.[0]?._isBigNumber) {
-    return Number(formatEther(callData[1][0])) || 0;
-  }
-
-  if (Array.isArray(callData.amounts)) {
-    const amountsSum = (callData.amounts as bigint[]).reduce(
-      (acc, amount) => acc + amount,
-    );
-    return Number(formatUnits(amountsSum, tokenDecimals));
-  }
-
-  return 0;
-};
-
-type MotionDetailedContextValue = {
+type MotionsContextValue = {
   motion: Motion | RawMotionSubgraph;
   motionType: MotionType | EvmUnrecognized;
   isArchived: boolean;
@@ -55,18 +30,16 @@ type MotionDetailedContextValue = {
   progress: ReturnType<typeof useMotionProgress>;
   timeData: MotionTimeData;
   isPending: boolean;
+  handleObject: (motionId: bigint) => Promise<void>;
+  handleEnact: (motionId: bigint, calldata: Hex) => Promise<void>;
+  handleCancel: (motionId: bigint) => Promise<void>;
 };
 
-const MotionDetailedContext = createContext<MotionDetailedContextValue | null>(
-  null,
-);
+const MotionsContext = createContext<MotionsContextValue | null>(null);
 
-export const useMotionDetailed = () => {
-  const value = useContext(MotionDetailedContext);
-  invariant(
-    value,
-    'useMotionDetailed was used outside of MotionDetailedProvider',
-  );
+export const useMotions = () => {
+  const value = useContext(MotionsContext);
+  invariant(value, 'useMotions was used outside of MotionsProvider');
   return value;
 };
 
@@ -75,7 +48,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const MotionDetailedProvider: FC<Props> = ({ motion, children }) => {
+export const MotionsProvider: FC<Props> = ({ motion, children }) => {
   const { chainId } = useLidoSDK();
 
   const motionType = getMotionTypeByScriptFactory(
@@ -92,46 +65,17 @@ export const MotionDetailedProvider: FC<Props> = ({ motion, children }) => {
   const timeData = useMotionTimeCountdown(motion);
   const progress = useMotionProgress(motion);
 
-  const { data: callData } = useQuery({
-    queryKey: ['call-data', chainId, Number(motion.id)],
-    queryFn: () =>
-      decodeEvmScriptCallData(
-        motionType as MotionType,
-        motion.evmScriptCalldata as Hex,
-      ),
-    enabled: !!motion.evmScriptCalldata && motionType !== EvmUnrecognized,
-  });
-
-  const { data: tokenData } = useMotionTokenData(
-    (callData as any)?.token ?? undefined,
-  );
-
-  const { data: periodLimitsData } = usePeriodLimitsInfoByMotionType({
+  const { callData, motionTopUpAmount, motionTopUpToken } = useMotionCallData(
+    motion,
     motionType,
-    isPending,
-  });
-
-  const motionTopUpAmount = useMemo(
-    () => getTopUpAmount(callData, tokenData?.decimals ?? DEFAULT_DECIMALS),
-    [callData, tokenData],
   );
 
-  const motionTopUpToken = tokenData?.label;
+  const { periodLimitsData, isOverPeriodLimit, isCanEnactInNextPeriod } =
+    useMotionLimitStatus({ motionType, isPending, motionTopUpAmount });
 
-  const isOverPeriodLimit = useMemo(() => {
-    if (!periodLimitsData) return false;
-    const newSpentAmount =
-      Number(periodLimitsData.periodData.alreadySpentAmount) +
-      motionTopUpAmount;
-    return newSpentAmount > Number(periodLimitsData.limits.limit);
-  }, [periodLimitsData, motionTopUpAmount]);
+  const { handleObject, handleEnact, handleCancel } = useMotionActions();
 
-  const isCanEnactInNextPeriod = useMemo(() => {
-    if (!periodLimitsData) return false;
-    return periodLimitsData.isEndInNextPeriod;
-  }, [periodLimitsData]);
-
-  const value: MotionDetailedContextValue = {
+  const value: MotionsContextValue = {
     motion,
     motionType,
     isArchived,
@@ -144,11 +88,12 @@ export const MotionDetailedProvider: FC<Props> = ({ motion, children }) => {
     progress,
     timeData,
     isPending,
+    handleObject,
+    handleEnact,
+    handleCancel,
   };
 
   return (
-    <MotionDetailedContext.Provider value={value}>
-      {children}
-    </MotionDetailedContext.Provider>
+    <MotionsContext.Provider value={value}>{children}</MotionsContext.Provider>
   );
 };

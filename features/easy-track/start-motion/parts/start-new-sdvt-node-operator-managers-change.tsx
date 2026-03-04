@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import {
   Fieldset,
   MessageBox,
@@ -14,12 +15,7 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { MotionType } from 'features/easy-track/motion-types';
-import {
-  Address,
-  encodeAbiParameters,
-  parseAbiParameters,
-  getAddress,
-} from 'viem';
+import { encodeAbiParameters, parseAbiParameters, getAddress } from 'viem';
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import {
@@ -69,7 +65,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -116,7 +112,7 @@ export const formParts = createMotionFormPart({
       } as NodeOperator);
 
     if (isTrustedCallerLoading || isNodeOperatorsDataLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

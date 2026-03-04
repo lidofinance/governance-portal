@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { renderVaultParamUpdate } from '@easy-track/vaults/utils/render-vault-param-update';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 import { Address } from 'viem';
+import { Text } from 'shared/components/text';
 
 // Copies of original types without array part
 type TierParamsStructOutputCopy = {
@@ -101,7 +102,10 @@ export const VaultsAlterTiersInOperatorGrid = ({
               <br />
               {tiers.map((tier, index) => (
                 <React.Fragment key={index}>
-                  <span>Tier with global tierId {tier.tierId.toString()}:</span>
+                  <br />
+                  <Text size={12} weight={800}>
+                    Tier with global tierId {tier.tierId.toString()}:
+                  </Text>
                   <ul>
                     <li>
                       <b>Share limit: </b>
@@ -159,6 +163,7 @@ export const VaultsAlterTiersInOperatorGrid = ({
                       .
                     </li>
                   </ul>
+                  <br />
                 </React.Fragment>
               ))}
             </li>

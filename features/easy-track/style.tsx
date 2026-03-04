@@ -5,6 +5,6 @@ export const Title = styled.div`
   font-weight: 800;
   margin-bottom: 16px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 `;

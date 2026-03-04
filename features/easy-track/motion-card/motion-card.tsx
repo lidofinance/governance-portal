@@ -11,12 +11,15 @@ import { Motion, MotionStatus } from '../types';
 import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getMotionTypeByScriptFactory } from '../utils/get-motion-type';
-import { getMotionStatus } from '../utils/get-motion-status';
+import {
+  getMotionDisplayStatus,
+  getMotionStatus,
+} from '../utils/get-motion-status';
 import { Text } from 'shared/components/text';
 import { FormattedDate } from '../../vote/components/formatted-date';
 import { useMotionTimeCountdown } from '../hooks/use-motion-time-countdown';
 import { useMotionProgress } from '../hooks/use-motion-progress';
-// import { MOTION_ATTENTION_PERIOD } from '../constants';
+import { MOTION_ATTENTION_PERIOD } from '../constants';
 import { AddressPop } from 'shared/components/address-pop';
 import { Identicon, trimAddress } from '@lidofinance/lido-ui';
 import { MotionDescription } from '../motion-card-description';
@@ -24,7 +27,6 @@ import { Box } from 'shared/components/box';
 
 type Props = {
   motion: Motion;
-  isCompact?: boolean;
 };
 
 export const MotionCard = ({ motion }: Props) => {
@@ -41,11 +43,17 @@ export const MotionCard = ({ motion }: Props) => {
   const timeData = useMotionTimeCountdown(motion);
   const { isPassed, diffFormatted } = timeData;
 
-  // const isAttentionTime =
-  //   diff <= Number(motion.duration) * MOTION_ATTENTION_PERIOD;
+  const isAttentionTime =
+    timeData.diff <= Number(motion.duration) * MOTION_ATTENTION_PERIOD;
+
+  const displayStatus = getMotionDisplayStatus({
+    motion,
+    progress,
+    isAttentionTime,
+  });
 
   return (
-    <Card>
+    <Card $displayStatus={displayStatus}>
       <CardTitle>
         #{motion.id.toString()}{' '}
         {getMotionTypeDisplayName(

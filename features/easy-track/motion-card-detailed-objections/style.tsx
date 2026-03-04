@@ -6,7 +6,7 @@ export const ObjectionsTitle = styled(Text).attrs({
   weight: 500,
 })`
   margin-bottom: 6px;
-  color: 'inherit';
+  color: inherit;
 `;
 
 export const ObjectionsValue = styled(Text).attrs({
@@ -14,7 +14,7 @@ export const ObjectionsValue = styled(Text).attrs({
   weight: 800,
 })`
   margin-bottom: 8px;
-  color: 'inherit';
+  color: inherit;
 `;
 
 export const ObjectionsThreshold = styled.span`
@@ -25,7 +25,7 @@ export const ObjectionsPercents = styled(Text).attrs({
   size: 36,
   weight: 800,
 })`
-  color: 'inherit';
+  color: inherit;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

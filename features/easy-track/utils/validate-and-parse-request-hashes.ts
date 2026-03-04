@@ -1,12 +1,12 @@
-import { BigNumber, utils } from 'ethers';
+import { decodeAbiParameters } from 'viem';
 import { MAX_SUBMIT_HASH_COUNT, NodeOperatorsRegistryType } from '../constants';
 
 type SubmitHashesRequest = {
-  moduleId: BigNumber;
-  nodeOpId: BigNumber;
-  valIndex: BigNumber;
-  valPubkey: string;
-  valPubKeyIndex: BigNumber;
+  moduleId: bigint;
+  nodeOpId: bigint;
+  valIndex: bigint;
+  valPubkey: `0x${string}`;
+  valPubKeyIndex: bigint;
 };
 
 type SubmitHashesRequestParsed = {
@@ -46,12 +46,21 @@ export const validateAndParseRequestHashes = ({
   nodeOperatorId,
 }: Args): ParsingResult => {
   try {
-    const decodedCalldata = new utils.AbiCoder().decode(
+    const decodedCalldata = decodeAbiParameters(
       [
-        'tuple(uint256 moduleId, uint256 nodeOpId, uint64 valIndex, bytes valPubkey, uint256 valPubKeyIndex)[]',
+        {
+          type: 'tuple[]',
+          components: [
+            { name: 'moduleId', type: 'uint256' },
+            { name: 'nodeOpId', type: 'uint256' },
+            { name: 'valIndex', type: 'uint64' },
+            { name: 'valPubkey', type: 'bytes' },
+            { name: 'valPubKeyIndex', type: 'uint256' },
+          ],
+        },
       ],
-      calldata,
-    )[0] as SubmitHashesRequest[];
+      calldata as `0x${string}`,
+    )[0] as unknown as SubmitHashesRequest[];
 
     if (decodedCalldata.length === 0) {
       return { error: 'No requests found in calldata', data: [] };
@@ -71,22 +80,22 @@ export const validateAndParseRequestHashes = ({
 
     let errors: string[] = [];
     let hasErrors = false;
-    let prevDataWithoutPubkey = BigNumber.from(0);
+    let prevDataWithoutPubkey = 0n;
 
     for (const [i, request] of decodedCalldata.entries()) {
       errors = [];
 
-      if (!request.moduleId.eq(STAKING_MODULE_IDS[registryType] ?? 0)) {
+      if (request.moduleId !== BigInt(STAKING_MODULE_IDS[registryType] ?? 0)) {
         errors.push('invalid module ID');
       }
 
-      if (request.nodeOpId.gte(nodeOperatorsCount)) {
+      if (request.nodeOpId >= BigInt(nodeOperatorsCount)) {
         errors.push('node operator ID is out of range');
       }
 
       if (
         nodeOperatorId !== undefined &&
-        !request.nodeOpId.eq(nodeOperatorId)
+        request.nodeOpId !== BigInt(nodeOperatorId)
       ) {
         errors.push('node operator ID does not match connected node operator');
       }
@@ -99,14 +108,13 @@ export const validateAndParseRequestHashes = ({
       }
 
       // Compute dataWithoutPubkey for sorting validation
-      const moduleIdShifted = request.moduleId.shl(64 + 40); // moduleId << 104
-      const nodeOpIdShifted = request.nodeOpId.shl(64); // nodeOpId << 64
-      const dataWithoutPubkey = moduleIdShifted
-        .or(nodeOpIdShifted)
-        .or(request.valIndex);
+      const moduleIdShifted = request.moduleId << 104n; // moduleId << 104
+      const nodeOpIdShifted = request.nodeOpId << 64n; // nodeOpId << 64
+      const dataWithoutPubkey =
+        moduleIdShifted | nodeOpIdShifted | request.valIndex;
 
       // Check that the combined data is in ascending order (strict comparison for no duplicates)
-      if (dataWithoutPubkey.lte(prevDataWithoutPubkey) && i > 0) {
+      if (dataWithoutPubkey <= prevDataWithoutPubkey && i > 0) {
         errors.push('invalid sort order or duplicate entry');
       } else {
         prevDataWithoutPubkey = dataWithoutPubkey;

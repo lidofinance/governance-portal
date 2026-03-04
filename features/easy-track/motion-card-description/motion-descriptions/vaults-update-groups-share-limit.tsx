@@ -23,18 +23,16 @@ export const VaultsUpdateGroupsShareLimit = ({
     queryKey: [
       `vaults-update-groups-share-limit-desc-${nodeOperators.join('-')}`,
     ],
-    queryFn: async () => {
-      if (!isOnChain) return;
-
-      return Promise.all(
+    enabled: isOnChain,
+    queryFn: () =>
+      Promise.all(
         nodeOperators.map(async (nodeOperator) => {
           const group = await operatorGrid.readContract('group', [
             nodeOperator,
           ]);
           return group.shareLimit;
         }),
-      );
-    },
+      ),
   });
 
   const currentShareLimits = data ?? [];

@@ -1,12 +1,12 @@
-import { utils } from 'ethers';
-const DEFAULT_DECIMALS = 18;
+import { parseUnits } from 'viem';
+import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
-export const validateToken = (value: string, decimals = DEFAULT_DECIMALS) => {
+export const validateToken = (value: string, decimals = ETH_DECIMALS) => {
   if (Number(value) <= 0) {
     return 'Value must be positive';
   }
   try {
-    utils.parseUnits(value, decimals);
+    parseUnits(value, decimals);
     return null;
   } catch (_) {
     return 'Unable to parse value';

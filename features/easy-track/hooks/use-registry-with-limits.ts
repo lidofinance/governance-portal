@@ -31,6 +31,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Address } from 'viem';
+import { ContractObject } from 'shared/blockchain/types';
 import { usePeriodLimitsInfo } from './use-period-limits-info';
 
 export type AllowedRecipient = {
@@ -113,14 +114,14 @@ const useRecipientMap = (
 export const useAllowedRecipients = ({ registryType }: HookArgs) => {
   const { chainId } = useLidoSDK();
   const registry = useReadContract(
-    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType] as any,
+    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType] as ContractObject,
   );
 
   return useQuery({
     queryKey: ['allowed-recipients', chainId, registry.address],
     queryFn: async () => {
-      const addresses = (await (registry.readContract as any)(
-        'getAllowedRecipients',
+      const addresses = (await registry.readContract(
+        'getAllowedRecipients' as any,
       )) as Address[];
       return addresses.map((address: Address) => ({ title: address, address }));
     },
@@ -134,10 +135,10 @@ export const useRecipientMapAll = ({ registryType }: HookArgs) => {
 
 export const usePeriodLimitsData = ({ registryType }: HookArgs) => {
   const registry = useReadContract(
-    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType] as any,
+    REGISTRY_WITH_LIMITS_BY_MOTION_TYPE[registryType] as ContractObject,
   );
   return usePeriodLimitsInfo({
-    contract: registry as any,
+    contract: registry,
   });
 };
 

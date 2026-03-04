@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { decodeEvmScriptCallData } from '../hooks/use-decode-evm-script-call-data';
 
@@ -24,10 +25,12 @@ import {
 import { TopUpWithLimits } from './motion-descriptions/top-up-with-limits';
 import { TopUpWithLimitsAndCustomToken } from './motion-descriptions/top-up-with-limits-and-custom-token';
 
+import { Abi } from 'viem';
 import { Motion } from '../types';
 import { MotionType } from '../motion-types';
 import { EvmUnrecognized } from '../evm-addresses';
 import { getMotionTypeByScriptFactory } from '../utils/get-motion-type';
+import { MotionDescriptionProps } from './types';
 import { SdvtNodeOperatorsDeactivate } from './motion-descriptions/sdvt-node-operators-deactivate';
 import { SdvtNodeOperatorsActivate } from './motion-descriptions/sdvt-node-operators-activate';
 import { SdvtVettedValidatorsLimitsSet } from './motion-descriptions/sdvt-vetted-validators-limits-set';
@@ -55,354 +58,357 @@ import { VaultsAlterTiersInOperatorGrid } from '@easy-track/motion-card-descript
 import { VaultsRegisterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-register-tiers-in-operator-grid';
 import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-liability-shares-target-in-vault-hub';
 
-// Generic props type for all motion descriptions
-type GenericDescProps = {
-  isOnChain?: boolean;
-  callData: any;
-};
+type GenericDescProps = MotionDescriptionProps<Abi>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DescDispatchProps = { callData: any; isOnChain?: boolean };
 
 const MOTION_DESCRIPTIONS = {
-  [MotionType.NodeOperatorIncreaseLimit]: (props: GenericDescProps) => (
+  [MotionType.NodeOperatorIncreaseLimit]: (props: DescDispatchProps) => (
     <DescNodeOperatorIncreaseLimit
       {...props}
       motionType={MotionType.NodeOperatorIncreaseLimit}
     />
   ),
-  [MotionType.LEGOTopUp]: (props: GenericDescProps) => <LEGOTopUp {...props} />,
-  [MotionType.RewardProgramAdd]: (props: GenericDescProps) => (
+  [MotionType.LEGOTopUp]: (props: DescDispatchProps) => (
+    <LEGOTopUp {...props} />
+  ),
+  [MotionType.RewardProgramAdd]: (props: DescDispatchProps) => (
     <RewardProgramAdd {...props} />
   ),
-  [MotionType.RewardProgramTopUp]: (props: GenericDescProps) => (
+  [MotionType.RewardProgramTopUp]: (props: DescDispatchProps) => (
     <RewardProgramTopUp {...props} />
   ),
-  [MotionType.RewardProgramRemove]: (props: GenericDescProps) => (
+  [MotionType.RewardProgramRemove]: (props: DescDispatchProps) => (
     <RewardProgramRemove {...props} />
   ),
-  [MotionType.ReferralPartnerAdd]: (props: GenericDescProps) => (
+  [MotionType.ReferralPartnerAdd]: (props: DescDispatchProps) => (
     <ReferralPartnerAdd {...props} />
   ),
-  [MotionType.ReferralPartnerTopUp]: (props: GenericDescProps) => (
+  [MotionType.ReferralPartnerTopUp]: (props: DescDispatchProps) => (
     <ReferralPartnerTopUp {...props} />
   ),
-  [MotionType.ReferralPartnerRemove]: (props: GenericDescProps) => (
+  [MotionType.ReferralPartnerRemove]: (props: DescDispatchProps) => (
     <ReferralPartnerRemove {...props} />
   ),
-  [MotionType.AllowedRecipientAdd]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientAdd]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd
       {...props}
       registryType={MotionType.AllowedRecipientAdd}
     />
   ),
-  [MotionType.AllowedRecipientRemove]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientRemove]: (props: DescDispatchProps) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.AllowedRecipientRemove}
     />
   ),
-  [MotionType.AllowedRecipientTopUp]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientTopUp]: (props: DescDispatchProps) => (
     <AllowedRecipientTopUp
       {...props}
       registryType={MotionType.AllowedRecipientTopUp}
     />
   ),
-  [MotionType.AllowedRecipientAddReferralDai]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientAddReferralDai]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd
       {...props}
       registryType={MotionType.AllowedRecipientAddReferralDai}
     />
   ),
-  [MotionType.AllowedRecipientRemoveReferralDai]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientRemoveReferralDai]: (
+    props: DescDispatchProps,
+  ) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.AllowedRecipientRemoveReferralDai}
     />
   ),
-  [MotionType.AllowedRecipientTopUpReferralDai]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientTopUpReferralDai]: (props: DescDispatchProps) => (
     <AllowedRecipientTopUp
       {...props}
       registryType={MotionType.AllowedRecipientTopUpReferralDai}
     />
   ),
-  [MotionType.AllowedRecipientTopUpTrpLdo]: (props: GenericDescProps) => (
+  [MotionType.AllowedRecipientTopUpTrpLdo]: (props: DescDispatchProps) => (
     <AllowedRecipientTopUp
       {...props}
       registryType={MotionType.AllowedRecipientTopUpTrpLdo}
     />
   ),
-  [MotionType.LegoLDOTopUp]: (props: GenericDescProps) => (
+  [MotionType.LegoLDOTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.LegoLDOTopUp} />
   ),
-  [MotionType.LegoDAITopUp]: (props: GenericDescProps) => (
+  [MotionType.LegoDAITopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.LegoDAITopUp} />
   ),
-  [MotionType.RccDAITopUp]: (props: GenericDescProps) => (
+  [MotionType.RccDAITopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.RccDAITopUp} />
   ),
-  [MotionType.PmlDAITopUp]: (props: GenericDescProps) => (
+  [MotionType.PmlDAITopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.PmlDAITopUp} />
   ),
-  [MotionType.AtcDAITopUp]: (props: GenericDescProps) => (
+  [MotionType.AtcDAITopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.AtcDAITopUp} />
   ),
-  [MotionType.GasFunderETHTopUp]: (props: GenericDescProps) => (
+  [MotionType.GasFunderETHTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.GasFunderETHTopUp} />
   ),
-  [MotionType.StethRewardProgramAdd]: (props: GenericDescProps) => (
+  [MotionType.StethRewardProgramAdd]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd
       {...props}
       registryType={MotionType.StethRewardProgramAdd}
     />
   ),
-  [MotionType.StethRewardProgramRemove]: (props: GenericDescProps) => (
+  [MotionType.StethRewardProgramRemove]: (props: DescDispatchProps) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.StethRewardProgramRemove}
     />
   ),
-  [MotionType.StethRewardProgramTopUp]: (props: GenericDescProps) => (
+  [MotionType.StethRewardProgramTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits
       {...props}
       registryType={MotionType.StethRewardProgramTopUp}
     />
   ),
 
-  [MotionType.StethGasSupplyAdd]: (props: GenericDescProps) => (
+  [MotionType.StethGasSupplyAdd]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd
       {...props}
       registryType={MotionType.StethGasSupplyAdd}
     />
   ),
-  [MotionType.StethGasSupplyRemove]: (props: GenericDescProps) => (
+  [MotionType.StethGasSupplyRemove]: (props: DescDispatchProps) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.StethGasSupplyRemove}
     />
   ),
-  [MotionType.StethGasSupplyTopUp]: (props: GenericDescProps) => (
+  [MotionType.StethGasSupplyTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.StethGasSupplyTopUp} />
   ),
-  [MotionType.RewardsShareProgramAdd]: (props: GenericDescProps) => (
+  [MotionType.RewardsShareProgramAdd]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd
       {...props}
       registryType={MotionType.RewardsShareProgramAdd}
     />
   ),
-  [MotionType.RewardsShareProgramRemove]: (props: GenericDescProps) => (
+  [MotionType.RewardsShareProgramRemove]: (props: DescDispatchProps) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.RewardsShareProgramRemove}
     />
   ),
-  [MotionType.RewardsShareProgramTopUp]: (props: GenericDescProps) => (
+  [MotionType.RewardsShareProgramTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits
       {...props}
       registryType={MotionType.RewardsShareProgramTopUp}
     />
   ),
-  [MotionType.SDVTNodeOperatorsAdd]: (props: GenericDescProps) => (
+  [MotionType.SDVTNodeOperatorsAdd]: (props: DescDispatchProps) => (
     <SdvtNodeOperatorsAdd {...props} />
   ),
-  [MotionType.SDVTNodeOperatorsActivate]: (props: GenericDescProps) => (
+  [MotionType.SDVTNodeOperatorsActivate]: (props: DescDispatchProps) => (
     <SdvtNodeOperatorsActivate {...props} />
   ),
-  [MotionType.SDVTNodeOperatorsDeactivate]: (props: GenericDescProps) => (
+  [MotionType.SDVTNodeOperatorsDeactivate]: (props: DescDispatchProps) => (
     <SdvtNodeOperatorsDeactivate {...props} />
   ),
-  [MotionType.SDVTVettedValidatorsLimitsSet]: (props: GenericDescProps) => (
+  [MotionType.SDVTVettedValidatorsLimitsSet]: (props: DescDispatchProps) => (
     <SdvtVettedValidatorsLimitsSet {...props} />
   ),
   [MotionType.SDVTNodeOperatorRewardAddressesSet]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <SdvtNodeOperatorRewardAddressesSet {...props} />,
-  [MotionType.SDVTNodeOperatorNamesSet]: (props: GenericDescProps) => (
+  [MotionType.SDVTNodeOperatorNamesSet]: (props: DescDispatchProps) => (
     <SdvtNodeOperatorNamesSet {...props} />
   ),
-  [MotionType.SDVTTargetValidatorLimitsUpdateV2]: (props: GenericDescProps) => (
-    <SdvtTargetValidatorLimitsUpdateV2 {...props} />
-  ),
-  [MotionType.SDVTTargetValidatorLimitsUpdateV1]: (props: GenericDescProps) => (
-    <SdvtTargetValidatorLimitsUpdateV1 {...props} />
-  ),
-  [MotionType.SDVTNodeOperatorManagerChange]: (props: GenericDescProps) => (
+  [MotionType.SDVTTargetValidatorLimitsUpdateV2]: (
+    props: DescDispatchProps,
+  ) => <SdvtTargetValidatorLimitsUpdateV2 {...props} />,
+  [MotionType.SDVTTargetValidatorLimitsUpdateV1]: (
+    props: DescDispatchProps,
+  ) => <SdvtTargetValidatorLimitsUpdateV1 {...props} />,
+  [MotionType.SDVTNodeOperatorManagerChange]: (props: DescDispatchProps) => (
     <SdvtNodeOperatorManagersChange {...props} />
   ),
-  [MotionType.SandboxNodeOperatorIncreaseLimit]: (props: GenericDescProps) => (
+  [MotionType.SandboxNodeOperatorIncreaseLimit]: (props: DescDispatchProps) => (
     <DescNodeOperatorIncreaseLimit
       {...props}
       motionType={MotionType.SandboxNodeOperatorIncreaseLimit}
     />
   ),
-  [MotionType.RccStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.RccStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.RccStablesTopUp}
     />
   ),
-  [MotionType.PmlStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.PmlStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.PmlStablesTopUp}
     />
   ),
-  [MotionType.AtcStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.AtcStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.AtcStablesTopUp}
     />
   ),
-  [MotionType.SandboxStethAdd]: (props: GenericDescProps) => (
+  [MotionType.SandboxStethAdd]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd {...props} registryType={MotionType.SandboxStethAdd} />
   ),
-  [MotionType.SandboxStablesAdd]: (props: GenericDescProps) => (
+  [MotionType.SandboxStablesAdd]: (props: DescDispatchProps) => (
     <AllowedRecipientAdd
       {...props}
       registryType={MotionType.SandboxStablesAdd}
     />
   ),
-  [MotionType.SandboxStablesRemove]: (props: GenericDescProps) => (
+  [MotionType.SandboxStablesRemove]: (props: DescDispatchProps) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.SandboxStablesRemove}
     />
   ),
-  [MotionType.SandboxStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.SandboxStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.SandboxStablesTopUp}
     />
   ),
-  [MotionType.SandboxStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.SandboxStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.SandboxStethTopUp} />
   ),
-  [MotionType.SandboxStethRemove]: (props: GenericDescProps) => (
+  [MotionType.SandboxStethRemove]: (props: DescDispatchProps) => (
     <AllowedRecipientRemove
       {...props}
       registryType={MotionType.SandboxStethRemove}
     />
   ),
-  [MotionType.RccStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.RccStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.RccStethTopUp} />
   ),
-  [MotionType.PmlStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.PmlStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.PmlStethTopUp} />
   ),
-  [MotionType.AtcStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.AtcStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.AtcStethTopUp} />
   ),
-  [MotionType.LegoStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.LegoStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.LegoStablesTopUp}
     />
   ),
-  [MotionType.StonksStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.StonksStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.StonksStablesTopUp}
     />
   ),
-  [MotionType.StonksStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.StonksStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.StonksStethTopUp} />
   ),
-  [MotionType.CSMSettleElStealingPenalty]: (props: GenericDescProps) => (
+  [MotionType.CSMSettleElStealingPenalty]: (props: DescDispatchProps) => (
     <CsmSettleElStealingPenalty {...props} />
   ),
-  [MotionType.AllianceOpsStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.AllianceOpsStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.AllianceOpsStablesTopUp}
     />
   ),
-  [MotionType.EcosystemOpsStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.EcosystemOpsStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.EcosystemOpsStablesTopUp}
     />
   ),
-  [MotionType.LabsOpsStablesTopUp]: (props: GenericDescProps) => (
+  [MotionType.LabsOpsStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
       registryType={MotionType.LabsOpsStablesTopUp}
     />
   ),
-  [MotionType.EcosystemOpsStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.EcosystemOpsStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits
       {...props}
       registryType={MotionType.EcosystemOpsStethTopUp}
     />
   ),
-  [MotionType.LabsOpsStethTopUp]: (props: GenericDescProps) => (
+  [MotionType.LabsOpsStethTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimits {...props} registryType={MotionType.LabsOpsStethTopUp} />
   ),
-  [MotionType.MEVBoostRelaysAdd]: (props: GenericDescProps) => (
+  [MotionType.MEVBoostRelaysAdd]: (props: DescDispatchProps) => (
     <MevBoostRelaysAdd {...props} />
   ),
-  [MotionType.MEVBoostRelaysEdit]: (props: GenericDescProps) => (
+  [MotionType.MEVBoostRelaysEdit]: (props: DescDispatchProps) => (
     <MevBoostRelaysEdit {...props} />
   ),
-  [MotionType.MEVBoostRelaysRemove]: (props: GenericDescProps) => (
+  [MotionType.MEVBoostRelaysRemove]: (props: DescDispatchProps) => (
     <MevBoostRelaysRemove {...props} />
   ),
-  [MotionType.CSMSetVettedGateTree]: (props: GenericDescProps) => (
+  [MotionType.CSMSetVettedGateTree]: (props: DescDispatchProps) => (
     <CsmSetVettedGateTree {...props} />
   ),
-  [MotionType.CuratedExitRequestHashesSubmit]: (props: GenericDescProps) => (
+  [MotionType.CuratedExitRequestHashesSubmit]: (props: DescDispatchProps) => (
     <CuratedExitRequestHashesSubmit {...props} />
   ),
-  [MotionType.SDVTExitRequestHashesSubmit]: (props: GenericDescProps) => (
+  [MotionType.SDVTExitRequestHashesSubmit]: (props: DescDispatchProps) => (
     <SdvtExitRequestHashesSubmit {...props} />
   ),
 
   // Vaults
-  [MotionType.RegisterGroupsInOperatorGrid]: (props: GenericDescProps) => (
+  [MotionType.RegisterGroupsInOperatorGrid]: (props: DescDispatchProps) => (
     <VaultsRegisterGroupsInOperatorGrid {...props} />
   ),
-  [MotionType.RegisterTiersInOperatorGrid]: (props: GenericDescProps) => (
+  [MotionType.RegisterTiersInOperatorGrid]: (props: DescDispatchProps) => (
     <VaultsRegisterTiersInOperatorGrid {...props} />
   ),
-  [MotionType.UpdateGroupsShareLimit]: (props: GenericDescProps) => (
+  [MotionType.UpdateGroupsShareLimit]: (props: DescDispatchProps) => (
     <VaultsUpdateGroupsShareLimit {...props} />
   ),
-  [MotionType.AlterTiersInOperatorGrid]: (props: GenericDescProps) => (
+  [MotionType.AlterTiersInOperatorGrid]: (props: DescDispatchProps) => (
     <VaultsAlterTiersInOperatorGrid {...props} />
   ),
-  [MotionType.SetJailStatusInOperatorGrid]: (props: GenericDescProps) => (
+  [MotionType.SetJailStatusInOperatorGrid]: (props: DescDispatchProps) => (
     <VaultsSetJailStatusInOperatorGrid {...props} />
   ),
-  [MotionType.UpdateVaultsFeesInOperatorGrid]: (props: GenericDescProps) => (
+  [MotionType.UpdateVaultsFeesInOperatorGrid]: (props: DescDispatchProps) => (
     <VaultsUpdateVaultsFeesInOperatorGrid {...props} />
   ),
-  [MotionType.ForceValidatorExitsInVaultHub]: (props: GenericDescProps) => (
+  [MotionType.ForceValidatorExitsInVaultHub]: (props: DescDispatchProps) => (
     <VaultsForceValidatorExitsInVaultHub {...props} />
   ),
   [MotionType.SetLiabilitySharesTargetInVaultHub]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <VaultsSetLiabilitySharesTargetInVaultHub {...props} />,
-  [MotionType.SocializeBadDebtInVaultHub]: (props: GenericDescProps) => (
+  [MotionType.SocializeBadDebtInVaultHub]: (props: DescDispatchProps) => (
     <VaultsSocializeBadDebtInVaultHub {...props} />
   ),
 
   // Vaults Phase One
   [MotionType.RegisterGroupsInOperatorGridPhaseOne]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <VaultsRegisterGroupsInOperatorGrid {...props} />,
-  [MotionType.UpdateGroupsShareLimitPhaseOne]: (props: GenericDescProps) => (
+  [MotionType.UpdateGroupsShareLimitPhaseOne]: (props: DescDispatchProps) => (
     <VaultsUpdateGroupsShareLimit {...props} />
   ),
-  [MotionType.AlterTiersInOperatorGridPhaseOne]: (props: GenericDescProps) => (
+  [MotionType.AlterTiersInOperatorGridPhaseOne]: (props: DescDispatchProps) => (
     <VaultsAlterTiersInOperatorGrid {...props} />
   ),
   [MotionType.SetJailStatusInOperatorGridPhaseOne]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <VaultsSetJailStatusInOperatorGrid {...props} />,
   [MotionType.UpdateVaultsFeesInOperatorGridPhaseOne]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <VaultsUpdateVaultsFeesInOperatorGrid {...props} />,
   [MotionType.ForceValidatorExitsInVaultHubPhaseOne]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <VaultsForceValidatorExitsInVaultHub {...props} />,
   [MotionType.SocializeBadDebtInVaultHubPhaseOne]: (
-    props: GenericDescProps,
+    props: DescDispatchProps,
   ) => <VaultsSocializeBadDebtInVaultHub {...props} />,
 } as const;
 
@@ -442,7 +448,9 @@ export const MotionDescription = ({ motion }: Props) => {
 
   return (
     <Text size={14} weight={400} color="secondary" as="div">
-      <Desc callData={callData} isOnChain={motion.isOnChain} />
+      <ErrorBoundary fallback={<>Failed to render motion description</>}>
+        <Desc callData={callData} isOnChain={motion.isOnChain} />
+      </ErrorBoundary>
     </Text>
   );
 };

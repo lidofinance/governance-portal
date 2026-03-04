@@ -69,7 +69,7 @@ export const StatusValue = styled(Text).attrs({
   ${({ isRejected }: StatusValueProps) =>
     isRejected &&
     css`
-      color: #de186b;
+      color: var(--lido-color-error);
     `}
 `;
 
@@ -83,6 +83,14 @@ export const Description = styled.div`
   ul {
     padding-left: 20px;
   }
+`;
+
+export const DescriptionMeta = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 `;
 
 export const InfoRow = styled.div`

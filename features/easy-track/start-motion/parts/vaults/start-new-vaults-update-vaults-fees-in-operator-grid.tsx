@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -18,7 +17,7 @@ import {
   PopulateTxArgs,
 } from '../create-motion-form-part';
 import { MotionType } from '@easy-track/motion-types';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, getAddress, parseAbiParameters } from 'viem';
 import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { UpdateVaultsFeesInOperatorGrid } from 'shared/blockchain/contracts';
@@ -45,20 +44,20 @@ export const formParts = createMotionFormPart({
     formData,
     contract,
   }: PopulateTxArgs<{ vaults: VaultFeesInput[] }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['address[]', 'uint256[]', 'uint256[]', 'uint256[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('address[], uint256[], uint256[], uint256[]'),
       [
-        formData.vaults.map((vault) => utils.getAddress(vault.address)),
-        formData.vaults.map((vault) => Number(vault.infraFeeBP)),
-        formData.vaults.map((vault) => Number(vault.liquidityFeeBP)),
-        formData.vaults.map((vault) => Number(vault.reservationFeeBP)),
+        formData.vaults.map((vault) => getAddress(vault.address)),
+        formData.vaults.map((vault) => BigInt(vault.infraFeeBP)),
+        formData.vaults.map((vault) => BigInt(vault.liquidityFeeBP)),
+        formData.vaults.map((vault) => BigInt(vault.reservationFeeBP)),
       ],
     );
 
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -113,7 +112,7 @@ export const formParts = createMotionFormPart({
       } as VaultFeesInput);
 
     if (isFactoryDataLoading || !factoryData || isTrustedCallerLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

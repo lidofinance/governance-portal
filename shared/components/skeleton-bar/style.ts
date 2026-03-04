@@ -17,7 +17,6 @@ export const Bar = styled.div<BarProps>`
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 2px;
   border-radius: ${({ theme }) => theme.borderRadiusesMap.xs}px;
   background-color: ${({ showOnBackground }) =>
     showOnBackground

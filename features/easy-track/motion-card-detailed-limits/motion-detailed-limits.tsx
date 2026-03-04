@@ -1,9 +1,9 @@
 import { Divider } from '@lidofinance/lido-ui';
 
-import { MotionDetailedLimitsWrapper } from './MotionDetailedLimitsStyle';
+import { MotionDetailedLimitsWrapper } from './style';
 import { MotionLimitProgress } from '@easy-track/motion-limit-progress';
 import { MotionInfoBox } from '@easy-track/start-motion/parts/style';
-import { useMotionDetailed } from '@easy-track/providers/motion-detailed-context';
+import { useMotions } from '@easy-track/providers/motion-detailed-context';
 
 export const MotionDetailedLimits = () => {
   const {
@@ -13,7 +13,7 @@ export const MotionDetailedLimits = () => {
     isOverPeriodLimit,
     isCanEnactInNextPeriod,
     isArchived,
-  } = useMotionDetailed();
+  } = useMotions();
 
   if (!periodLimitsData || isArchived) return null;
 

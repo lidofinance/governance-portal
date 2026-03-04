@@ -1,9 +1,9 @@
-import { utils } from 'ethers';
-import { Address, Hex, parseEther } from 'viem';
+import { encodeAbiParameters, getAddress, parseEther } from 'viem';
 
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -23,6 +23,7 @@ import { GridGroup } from '@easy-track/vaults/types';
 import {
   DEFAULT_TIER_OPERATOR,
   EMPTY_GROUP,
+  PREDEFINED_CONSTANT_TIER_PARAMS,
 } from '@easy-track/vaults/constants';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { RegisterGroupsInOperatorGrid } from 'shared/blockchain/contracts';
@@ -37,7 +38,7 @@ import { PredefinedGroupParamsPicker } from '@easy-track/vaults/ui/predefined-gr
 import { validateEtherValue } from 'utils/validate-ether-value';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { OperatorGridAddTiersFieldsWrapper } from '@easy-track/vaults/ui/operator-grid-add-tiers-fields-wrapper';
-import { InputNumberHookForm } from '../../../../../shared/hook-form/input-number-hook-form';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 export const formParts = createMotionFormPart({
   motionType: MotionType.RegisterGroupsInOperatorGrid,
@@ -52,24 +53,35 @@ export const formParts = createMotionFormPart({
       a.nodeOperator.toLowerCase().localeCompare(b.nodeOperator.toLowerCase()),
     );
 
-    const encodedCallData = new utils.AbiCoder().encode(
+    const tierComponents = [
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+    ] as const;
+    const encodedCallData = encodeAbiParameters(
       [
-        'address[]',
-        'uint256[]',
-        'tuple(uint256,uint256,uint256,uint256,uint256,uint256)[][]',
-      ],
+        { type: 'address[]' },
+        { type: 'uint256[]' },
+        { type: 'tuple[][]', components: tierComponents },
+      ] as const,
       [
-        sortedGroups.map((group) => utils.getAddress(group.nodeOperator)),
-        sortedGroups.map((group) => utils.parseEther(group.shareLimit)),
+        sortedGroups.map((group) => getAddress(group.nodeOperator)),
+        sortedGroups.map((group) => parseEther(group.shareLimit)),
         sortedGroups.map((group) =>
-          group.tiers.map((tier) => [
-            utils.parseEther(tier.shareLimit),
-            Number(tier.reserveRatioBP),
-            Number(tier.forcedRebalanceThresholdBP),
-            Number(tier.infraFeeBP),
-            Number(tier.liquidityFeeBP),
-            Number(tier.reservationFeeBP),
-          ]),
+          group.tiers.map(
+            (tier) =>
+              [
+                parseEther(tier.shareLimit),
+                BigInt(tier.reserveRatioBP),
+                BigInt(tier.forcedRebalanceThresholdBP),
+                BigInt(tier.infraFeeBP),
+                BigInt(tier.liquidityFeeBP),
+                BigInt(tier.reservationFeeBP),
+              ] as const,
+          ),
         ),
       ],
     );
@@ -77,7 +89,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -107,7 +119,7 @@ export const formParts = createMotionFormPart({
 
     const groupsFieldArray = useFieldArray({ name: fieldNames.groups });
 
-    const { watch } = useFormContext();
+    const { watch, getValues } = useFormContext();
     const groupsInput: GridGroup[] = watch(fieldNames.groups);
 
     const groupsShareLimitsSum = groupsInput.map((group) => {
@@ -126,7 +138,7 @@ export const formParts = createMotionFormPart({
       isOperatorGridInfoLoading ||
       isTrustedCallerLoading
     ) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -195,9 +207,26 @@ export const formParts = createMotionFormPart({
                 </Fieldset>
 
                 <PredefinedGroupParamsPicker
-                  groupsArrayFieldName={fieldNames.groups}
-                  groupIndex={groupIndex}
-                  onUpdate={groupsFieldArray.update}
+                  onSelect={(groupOption) => {
+                    groupsFieldArray.update(groupIndex, {
+                      nodeOperator: getValues(
+                        `${fieldNames.groups}.${groupIndex}.nodeOperator`,
+                      ),
+                      shareLimit: groupOption.shareLimit.toString(),
+                      tiers: groupOption.tiers.map((tier) => ({
+                        shareLimit: tier.shareLimit.toString(),
+                        reserveRatioBP: tier.reserveRatioBP.toString(),
+                        forcedRebalanceThresholdBP:
+                          tier.forcedRebalanceThresholdBP.toString(),
+                        infraFeeBP:
+                          PREDEFINED_CONSTANT_TIER_PARAMS.infraFeeBP.toString(),
+                        liquidityFeeBP:
+                          PREDEFINED_CONSTANT_TIER_PARAMS.liquidityFeeBP.toString(),
+                        reservationFeeBP:
+                          PREDEFINED_CONSTANT_TIER_PARAMS.reservationFeeBP.toString(),
+                      })),
+                    });
+                  }}
                 />
 
                 <Fieldset>

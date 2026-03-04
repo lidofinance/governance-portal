@@ -13,7 +13,6 @@ export const Hash = styled(Text).attrs({
   border-radius: 20px;
   width: fit-content;
   word-break: break-all;
-  /* background-color: rgba(39, 56, 82, 0.1); */
   background-color: rgba(0, 163, 255, 0.1);
 `;
 

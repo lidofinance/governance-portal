@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -18,13 +17,17 @@ import {
   PopulateTxArgs,
 } from '@easy-track/start-motion/parts/create-motion-form-part';
 import { GridGroup } from '@easy-track/vaults/types';
-import { Address, Hex } from 'viem';
-import { EMPTY_TIER } from '@easy-track/vaults/constants';
+import { encodeAbiParameters, getAddress, parseEther } from 'viem';
+import {
+  EMPTY_TIER,
+  PREDEFINED_CONSTANT_TIER_PARAMS,
+} from '@easy-track/vaults/constants';
 import { useOperatorGridGroupMap } from '@easy-track/vaults/hooks/use-operator-grid-group-map';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { RegisterTiersInOperatorGrid } from 'shared/blockchain/contracts';
 import { OperatorGridAddressInputHookForm } from '@easy-track/vaults/ui/operator-grid-address-input-hook-form';
 import { OperatorGridAddTiersFieldsWrapper } from '@easy-track/vaults/ui/operator-grid-add-tiers-fields-wrapper';
+import { PredefinedGroupParamsPicker } from '@easy-track/vaults/ui/predefined-group-params-picker';
 
 type GroupInput = Omit<GridGroup, 'shareLimit'>;
 
@@ -37,22 +40,33 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     groups: GroupInput[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
+    const tierComponents = [
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+      { type: 'uint256' },
+    ] as const;
+    const encodedCallData = encodeAbiParameters(
       [
-        'address[]',
-        'tuple(uint256,uint256,uint256,uint256,uint256,uint256)[][]',
-      ],
+        { type: 'address[]' },
+        { type: 'tuple[][]', components: tierComponents },
+      ] as const,
       [
-        formData.groups.map((group) => utils.getAddress(group.nodeOperator)),
+        formData.groups.map((group) => getAddress(group.nodeOperator)),
         formData.groups.map((group) =>
-          group.tiers.map((tier) => [
-            utils.parseEther(tier.shareLimit),
-            Number(tier.reserveRatioBP),
-            Number(tier.forcedRebalanceThresholdBP),
-            Number(tier.infraFeeBP),
-            Number(tier.liquidityFeeBP),
-            Number(tier.reservationFeeBP),
-          ]),
+          group.tiers.map(
+            (tier) =>
+              [
+                parseEther(tier.shareLimit),
+                BigInt(tier.reserveRatioBP),
+                BigInt(tier.forcedRebalanceThresholdBP),
+                BigInt(tier.infraFeeBP),
+                BigInt(tier.liquidityFeeBP),
+                BigInt(tier.reservationFeeBP),
+              ] as const,
+          ),
         ),
       ],
     );
@@ -60,7 +74,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -73,14 +87,14 @@ export const formParts = createMotionFormPart({
       useIsTrustedCaller(RegisterTiersInOperatorGrid);
 
     const groupsFieldArray = useFieldArray({ name: fieldNames.groups });
-    const { watch } = useFormContext();
+    const { watch, getValues } = useFormContext();
     const groupsInput: GroupInput[] = watch(fieldNames.groups);
 
     const handleAddGroup = () =>
       groupsFieldArray.append({ nodeOperator: '', tiers: [{ ...EMPTY_TIER }] });
 
     if (isTrustedCallerLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -116,6 +130,31 @@ export const formParts = createMotionFormPart({
                     allowDefaultOperatorAddress={false}
                   />
                 </Fieldset>
+
+                <PredefinedGroupParamsPicker
+                  onSelect={(groupOption) => {
+                    // For phase III we need to add all tiers except first one, which was added in Phase I
+                    const tiersToAdd = groupOption.tiers.slice(1);
+
+                    groupsFieldArray.update(groupIndex, {
+                      nodeOperator: getValues(
+                        `${fieldNames.groups}.${groupIndex}.nodeOperator`,
+                      ),
+                      tiers: tiersToAdd.map((tier) => ({
+                        shareLimit: tier.shareLimit.toString(),
+                        reserveRatioBP: tier.reserveRatioBP.toString(),
+                        forcedRebalanceThresholdBP:
+                          tier.forcedRebalanceThresholdBP.toString(),
+                        infraFeeBP:
+                          PREDEFINED_CONSTANT_TIER_PARAMS.infraFeeBP.toString(),
+                        liquidityFeeBP:
+                          PREDEFINED_CONSTANT_TIER_PARAMS.liquidityFeeBP.toString(),
+                        reservationFeeBP:
+                          PREDEFINED_CONSTANT_TIER_PARAMS.reservationFeeBP.toString(),
+                      })),
+                    });
+                  }}
+                />
 
                 <OperatorGridAddTiersFieldsWrapper
                   tierArrayFieldName={`${fieldNames.groups}.${groupIndex}.tiers`}

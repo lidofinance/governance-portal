@@ -53,7 +53,6 @@ export default function StartMotionPage() {
           <PageConnectMessageBox>
             Connect your wallet first
           </PageConnectMessageBox>
-          <br />
           <Button type="submit" fullwidth onClick={openConnectWalletModal}>
             Connect wallet
           </Button>

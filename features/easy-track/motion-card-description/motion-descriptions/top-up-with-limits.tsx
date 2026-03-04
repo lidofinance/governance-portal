@@ -5,7 +5,7 @@ import {
   useTokenByTopUpType,
 } from '../../hooks/use-registry-with-limits';
 
-import { formatEther, isAddress } from 'ethers/lib/utils';
+import { formatEther, isAddress } from 'viem';
 import { topUpWithLimitsAbi } from 'abi/generated/TopUpWithLimits';
 import { MotionDescriptionProps } from '../types';
 import { AddressPopInline } from 'shared/components/address-pop-inline';

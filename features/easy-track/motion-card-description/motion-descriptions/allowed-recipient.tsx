@@ -7,7 +7,7 @@ import {
   type AllowedRecipient,
 } from '../../hooks/use-registry-with-limits';
 
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'viem';
 
 import {
   MotionDescriptionWithRegistryProps,

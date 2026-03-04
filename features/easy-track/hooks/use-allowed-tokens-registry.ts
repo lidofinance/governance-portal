@@ -50,6 +50,7 @@ export const useAllowedTokens = () => {
       }
       return { allowedTokens, tokensDecimalsMap };
     },
+    enabled: !!tokenRegistry.address,
   });
 
   return {

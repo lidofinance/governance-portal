@@ -9,29 +9,33 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EasyTrack, GovernanceToken } from 'shared/blockchain/contracts';
 import { formatEther, Hex } from 'viem';
 import { useConnect } from 'reef-knot/core-react';
-import { MotionType } from '@easy-track/motion-types';
-import { useMotionActionsContext } from '@easy-track/providers/motion-actions-context';
-import { useMotionDetailed } from '@easy-track/providers/motion-detailed-context';
+import { useMotions } from '@easy-track/providers/motion-detailed-context';
+import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
   motion: Motion | RawMotionSubgraph;
-  motionType: MotionType;
 };
 
 const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
   const { address: walletAddress } = useAccount();
+  const { chainId } = useLidoSDK();
   const { data: governanceTokenData } = useGovernanceToken();
-  const { handleObject, handleEnact } = useMotionActionsContext();
-  const { isOverPeriodLimit, motionTopUpToken } = useMotionDetailed();
+  const { handleObject, handleEnact, isOverPeriodLimit } = useMotions();
 
   const governanceTokenContract = useReadContract(GovernanceToken);
   const easyTrackContract = useReadContract(EasyTrack);
 
   const { data: balanceAt, isLoading: isBalanceDataLoading } = useQuery({
-    queryKey: ['balanceAt', walletAddress],
+    queryKey: [
+      'balanceAt',
+      chainId,
+      String(motion.snapshotBlock),
+      walletAddress,
+    ],
+    enabled: !!walletAddress,
     queryFn: async () => {
       if (!walletAddress) {
-        return undefined;
+        throw new Error('walletAddress is required');
       }
       return await governanceTokenContract.readContract('balanceOfAt', [
         walletAddress,
@@ -43,10 +47,11 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
   const balanceAtFormatted = balanceAt ? formatEther(balanceAt) : null;
 
   const { data: isObjected, isLoading: isIsObjectedLoading } = useQuery({
-    queryKey: ['isObjected', String(motion.id), walletAddress],
+    queryKey: ['isObjected', chainId, String(motion.id), walletAddress],
+    enabled: !!walletAddress,
     queryFn: async () => {
       if (!walletAddress) {
-        return undefined;
+        throw new Error('walletAddress is required');
       }
       return await easyTrackContract.readContract('objections', [
         BigInt(motion.id),
@@ -56,10 +61,11 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
   });
 
   const { data: canObject, isLoading: isCanObjectLoading } = useQuery({
-    queryKey: ['canObject', String(motion.id), walletAddress],
+    queryKey: ['canObject', chainId, String(motion.id), walletAddress],
+    enabled: !!walletAddress,
     queryFn: async () => {
       if (!walletAddress) {
-        return undefined;
+        throw new Error('walletAddress is required');
       }
       return await easyTrackContract.readContract('canObjectToMotion', [
         BigInt(motion.id),
@@ -89,7 +95,7 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
         {showHintObjected && balanceAtFormatted && (
           <>
             You have objected this motion with{' '}
-            <b>{String(balanceAtFormatted)}</b> {motionTopUpToken}
+            <b>{String(balanceAtFormatted)}</b> {governanceTokenData?.symbol}
           </>
         )}
         {showHintCanObject && balanceAtFormatted && (
@@ -109,7 +115,7 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
       <Actions>
         <ButtonStyled
           size="sm"
-          disabled={!canObject || isOverPeriodLimit}
+          disabled={!canObject}
           onClick={() => handleObject(BigInt(motion.id))}
         >
           Submit objection
@@ -146,10 +152,7 @@ const AuthStub = () => {
   );
 };
 
-export const MotionCardDetailedActions = ({
-  motion,
-  motionType: _motionType,
-}: Props) => {
+export const MotionCardDetailedActions = ({ motion }: Props) => {
   const { isConnected } = useAccount();
 
   if (!isConnected) {

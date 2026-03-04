@@ -31,5 +31,16 @@ export const useMotionTxSender = () => {
     [easyTrackAddress, writeEasyTrackContract],
   );
 
-  return { objectMotionTxSender, enactMotionTxSender };
+  const cancelMotionTxSender = useCallback(
+    (motionId: bigint) => {
+      return writeEasyTrackContract({
+        address: easyTrackAddress,
+        functionName: 'cancelMotion',
+        args: [motionId],
+      });
+    },
+    [easyTrackAddress, writeEasyTrackContract],
+  );
+
+  return { objectMotionTxSender, enactMotionTxSender, cancelMotionTxSender };
 };

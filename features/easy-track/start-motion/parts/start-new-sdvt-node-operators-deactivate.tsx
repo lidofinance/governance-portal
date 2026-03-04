@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -17,7 +16,7 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { MotionType } from '../../motion-types';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, getAddress, parseAbiParameters } from 'viem';
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import {
@@ -48,12 +47,12 @@ export const formParts = createMotionFormPart({
       (a, b) => Number(a.id) - Number(b.id),
     );
 
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['tuple(uint256 nodeOperatorId, address managerAddress)[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('(uint256 nodeOperatorId, address managerAddress)[]'),
       [
         sortedNodeOperators.map((nodeOperator) => ({
-          nodeOperatorId: Number(nodeOperator.id),
-          managerAddress: utils.getAddress(nodeOperator.managerAddress),
+          nodeOperatorId: BigInt(nodeOperator.id),
+          managerAddress: getAddress(nodeOperator.managerAddress),
         })),
       ],
     );
@@ -61,7 +60,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -107,7 +106,7 @@ export const formParts = createMotionFormPart({
       } as NodeOperator);
 
     if (isTrustedCallerLoading || isNodeOperatorsDataLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

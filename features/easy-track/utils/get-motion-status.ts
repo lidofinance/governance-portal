@@ -1,5 +1,5 @@
 import { Motion, RawMotionSubgraph } from '../types';
-import { MotionDisplayStatus, MotionStatus } from '../motion-types';
+import { MotionDisplayStatus, MotionStatus } from '../types';
 import { MotionProgress } from './get-motion-progress';
 
 export const getMotionStatus = (motion: Motion) => {

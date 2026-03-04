@@ -95,45 +95,6 @@ export const ErrorBox = styled.div`
   border-radius: ${({ theme }) => theme.borderRadiusesMap.md + 'px'};
 `;
 
-export const RetryHint = styled(Text).attrs({
-  size: 12,
-  weight: 500,
-})`
-  margin-top: 20px;
-  text-align: center;
-  opacity: 0.8;
-
-  & button {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    border: none;
-    font-size: 12px;
-    font-weight: 500;
-    background: none;
-    font-weight: 800;
-    cursor: pointer;
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
-export const RelayInfoRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 0 4px;
-
-  & > div:nth-child(2) {
-    word-break: break-all;
-  }
-`;
-
-export const RelayInfoText = styled(Text).attrs({ size: 14 })`
-  word-break: break-all;
-  &:not(:last-child) {
-    margin-bottom: 20px;
-  }
-`;
-
 export const HashRequests = styled.div`
   display: flex;
   flex-direction: column;

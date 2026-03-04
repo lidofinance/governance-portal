@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -18,7 +17,7 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { MotionType } from '../../motion-types';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, getAddress, parseAbiParameters } from 'viem';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import {
   AragonAcl,
@@ -45,294 +44,284 @@ type NodeOperator = {
   managerAddress: string;
 };
 
-export const formParts = () =>
-  createMotionFormPart({
-    motionType: MotionType.SDVTNodeOperatorsAdd,
-    populateTx: async ({
-      evmScriptFactory,
-      formData,
-      contract,
-    }: PopulateTxArgs<{
-      nodeOperators: NodeOperator[];
-      nodeOperatorsCount: number;
-    }>) => {
-      const encodedCallData = new utils.AbiCoder().encode(
-        [
-          'uint256 nodeOperatorsCount',
-          'tuple(string name, address rewardAddress, address managerAddress)[]',
-        ],
-        [
-          formData.nodeOperatorsCount,
-          formData.nodeOperators.map((item) => ({
-            name: item.name,
-            rewardAddress: utils.getAddress(item.rewardAddress),
-            managerAddress: utils.getAddress(item.managerAddress),
-          })),
-        ],
-      );
-      return await contract.write({
-        address: contract.address,
-        functionName: 'createMotion',
-        args: [evmScriptFactory as Address, encodedCallData as Hex],
-      });
-    },
-    getDefaultFormData: () => ({
-      nodeOperators: [
-        { name: '', rewardAddress: '', managerAddress: '' },
-      ] as NodeOperator[],
-      nodeOperatorsCount: NaN,
-    }),
-    Component: ({ fieldNames, submitAction }) => {
-      const { setValue, watch } = useFormContext();
-      const { chainId } = useLidoSDK();
+export const formParts = createMotionFormPart({
+  motionType: MotionType.SDVTNodeOperatorsAdd,
+  populateTx: async ({
+    evmScriptFactory,
+    formData,
+    contract,
+  }: PopulateTxArgs<{
+    nodeOperators: NodeOperator[];
+    nodeOperatorsCount: number;
+  }>) => {
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters(
+        'uint256 nodeOperatorsCount, (string name, address rewardAddress, address managerAddress)[]',
+      ),
+      [
+        BigInt(formData.nodeOperatorsCount),
+        formData.nodeOperators.map((item) => ({
+          name: item.name,
+          rewardAddress: getAddress(item.rewardAddress),
+          managerAddress: getAddress(item.managerAddress),
+        })),
+      ],
+    );
+    return await contract.write({
+      address: contract.address,
+      functionName: 'createMotion',
+      args: [evmScriptFactory, encodedCallData],
+    });
+  },
+  getDefaultFormData: () => ({
+    nodeOperators: [
+      { name: '', rewardAddress: '', managerAddress: '' },
+    ] as NodeOperator[],
+    nodeOperatorsCount: NaN,
+  }),
+  Component: ({ fieldNames, submitAction }) => {
+    const { setValue, watch } = useFormContext();
+    const { chainId } = useLidoSDK();
 
-      const { isTrustedCallerConnected, isTrustedCallerLoading } =
-        useIsTrustedCaller(SDVTNodeOperatorsAdd);
+    const { isTrustedCallerConnected, isTrustedCallerLoading } =
+      useIsTrustedCaller(SDVTNodeOperatorsAdd);
 
-      const sdvtRegistry = useReadContract(SDVTRegistry);
-      const aragonAcl = useReadContract(AragonAcl);
+    const sdvtRegistry = useReadContract(SDVTRegistry);
+    const aragonAcl = useReadContract(AragonAcl);
 
-      const stETHAddress = getContractAddress(StETH, chainId);
+    const stETHAddress = getContractAddress(StETH, chainId);
 
-      const { data: nodeOperatorsList, isLoading: isNodeOperatorsListLoading } =
-        useNodeOperatorsList('sdvt');
-      const {
-        data: maxNodeOperatorNameLength,
-        isLoading: NONameLengthLoading,
-      } = useSDVTOperatorNameLimit();
+    const { data: nodeOperatorsList, isLoading: isNodeOperatorsListLoading } =
+      useNodeOperatorsList('sdvt');
+    const { data: maxNodeOperatorNameLength, isLoading: NONameLengthLoading } =
+      useSDVTOperatorNameLimit();
 
-      const { data: NOCounts, isLoading: maxOperatorsLoading } =
-        useSDVTOperatorsCounts();
+    const { data: NOCounts, isLoading: maxOperatorsLoading } =
+      useSDVTOperatorsCounts();
 
-      const fieldsArr = useFieldArray({ name: fieldNames.nodeOperators });
-      const selectedNodeOperators: NodeOperator[] = watch(
-        fieldNames.nodeOperators,
-      );
+    const fieldsArr = useFieldArray({ name: fieldNames.nodeOperators });
+    const selectedNodeOperators: NodeOperator[] = watch(
+      fieldNames.nodeOperators,
+    );
 
-      useEffect(() => {
-        if (typeof NOCounts?.current === 'number') {
-          setValue(fieldNames.nodeOperatorsCount, NOCounts.current);
-        }
-      }, [setValue, NOCounts, fieldNames.nodeOperatorsCount]);
+    useEffect(() => {
+      if (typeof NOCounts?.current === 'number') {
+        setValue(fieldNames.nodeOperatorsCount, NOCounts.current);
+      }
+    }, [setValue, NOCounts, fieldNames.nodeOperatorsCount]);
 
-      const nodeOperatorsDetailsMaps = useMemo(() => {
-        const result: Record<
-          'name' | 'rewardAddress',
-          Record<string, number | undefined>
-        > = { name: {}, rewardAddress: {} };
-        if (!nodeOperatorsList) return result;
+    const nodeOperatorsDetailsMaps = useMemo(() => {
+      const result: Record<
+        'name' | 'rewardAddress',
+        Record<string, number | undefined>
+      > = { name: {}, rewardAddress: {} };
+      if (!nodeOperatorsList) return result;
 
-        for (const nodeOperator of nodeOperatorsList) {
-          result['name'][nodeOperator.name] = nodeOperator.id;
-          result['rewardAddress'][nodeOperator.rewardAddress] = nodeOperator.id;
-        }
-
-        return result;
-      }, [nodeOperatorsList]);
-
-      const handleAddNodeOperators = () =>
-        fieldsArr.append({
-          name: '',
-          rewardAddress: '',
-          managerAddress: '',
-        } as NodeOperator);
-
-      const handleRemoveNodeOperator = (fieldIndex: number) =>
-        fieldsArr.remove(fieldIndex);
-
-      if (
-        isTrustedCallerLoading ||
-        NONameLengthLoading ||
-        maxOperatorsLoading ||
-        isNodeOperatorsListLoading
-      ) {
-        return <Loader />;
+      for (const nodeOperator of nodeOperatorsList) {
+        result['name'][nodeOperator.name] = nodeOperator.id;
+        result['rewardAddress'][nodeOperator.rewardAddress] = nodeOperator.id;
       }
 
-      if (!isTrustedCallerConnected) {
-        return (
-          <MessageBox>You should be connected as trusted caller</MessageBox>
-        );
-      }
+      return result;
+    }, [nodeOperatorsList]);
 
-      if (!NOCounts) {
-        return <ErrorBox>Cannot load node operators count data</ErrorBox>;
-      }
+    const handleAddNodeOperators = () =>
+      fieldsArr.append({
+        name: '',
+        rewardAddress: '',
+        managerAddress: '',
+      } as NodeOperator);
 
-      if (NOCounts.current >= NOCounts.max) {
-        return <MessageBox>Node operators limit reached</MessageBox>;
-      }
+    const handleRemoveNodeOperator = (fieldIndex: number) =>
+      fieldsArr.remove(fieldIndex);
 
-      return (
-        <>
-          {fieldsArr.fields.map((item, fieldIndex) => (
-            <Fragment key={item.id}>
-              <FieldsWrapper>
-                <FieldsHeader>
-                  {fieldsArr.fields.length > 1 && (
-                    <FieldsHeaderDesc>
-                      NodeOperator #{NOCounts.current + fieldIndex}
-                    </FieldsHeaderDesc>
-                  )}
-                  {fieldsArr.fields.length > 1 && (
-                    <RemoveItemButton
-                      onClick={() => handleRemoveNodeOperator(fieldIndex)}
-                    >
-                      Remove node operator {NOCounts.current + fieldIndex}
-                    </RemoveItemButton>
-                  )}
-                </FieldsHeader>
+    if (
+      isTrustedCallerLoading ||
+      NONameLengthLoading ||
+      maxOperatorsLoading ||
+      isNodeOperatorsListLoading
+    ) {
+      return <PageLoader />;
+    }
 
-                <Fieldset>
-                  <InputHookForm
-                    label="Name"
-                    fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.name`}
-                    rules={{
-                      required: 'Field is required',
-                      validate: (value) => {
-                        const nameErr = validateNodeOperatorName(
-                          value,
-                          maxNodeOperatorNameLength,
+    if (!isTrustedCallerConnected) {
+      return <MessageBox>You should be connected as trusted caller</MessageBox>;
+    }
+
+    if (!NOCounts) {
+      return <ErrorBox>Cannot load node operators count data</ErrorBox>;
+    }
+
+    if (NOCounts.current >= NOCounts.max) {
+      return <MessageBox>Node operators limit reached</MessageBox>;
+    }
+
+    return (
+      <>
+        {fieldsArr.fields.map((item, fieldIndex) => (
+          <Fragment key={item.id}>
+            <FieldsWrapper>
+              <FieldsHeader>
+                {fieldsArr.fields.length > 1 && (
+                  <FieldsHeaderDesc>
+                    NodeOperator #{NOCounts.current + fieldIndex}
+                  </FieldsHeaderDesc>
+                )}
+                {fieldsArr.fields.length > 1 && (
+                  <RemoveItemButton
+                    onClick={() => handleRemoveNodeOperator(fieldIndex)}
+                  >
+                    Remove node operator {NOCounts.current + fieldIndex}
+                  </RemoveItemButton>
+                )}
+              </FieldsHeader>
+
+              <Fieldset>
+                <InputHookForm
+                  label="Name"
+                  fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.name`}
+                  rules={{
+                    required: 'Field is required',
+                    validate: (value) => {
+                      const nameErr = validateNodeOperatorName(
+                        value,
+                        maxNodeOperatorNameLength,
+                      );
+                      if (nameErr) {
+                        return nameErr;
+                      }
+
+                      const idInNameMap =
+                        nodeOperatorsDetailsMaps['name'][value];
+
+                      if (typeof idInNameMap === 'number') {
+                        return 'Name must not be in use by another node operator';
+                      }
+
+                      const nameInSelectedNodeOperatorsIndex =
+                        selectedNodeOperators.findIndex(
+                          ({ name }, index) =>
+                            name.toLowerCase() === value.toLowerCase() &&
+                            fieldIndex !== index,
                         );
-                        if (nameErr) {
-                          return nameErr;
-                        }
 
-                        const idInNameMap =
-                          nodeOperatorsDetailsMaps['name'][value];
+                      if (nameInSelectedNodeOperatorsIndex !== -1) {
+                        return 'Name is already in use by another update';
+                      }
 
-                        if (typeof idInNameMap === 'number') {
-                          return 'Name must not be in use by another node operator';
-                        }
+                      return true;
+                    },
+                  }}
+                />
+              </Fieldset>
 
-                        const nameInSelectedNodeOperatorsIndex =
-                          selectedNodeOperators.findIndex(
-                            ({ name }, index) =>
-                              name.toLowerCase() === value.toLowerCase() &&
-                              fieldIndex !== index,
-                          );
+              <Fieldset>
+                <InputHookForm
+                  label="Reward address"
+                  fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.rewardAddress`}
+                  rules={{
+                    required: 'Field is required',
+                    validate: (value: string) => {
+                      const addressErr = validateAddress(value);
+                      if (addressErr) {
+                        return addressErr;
+                      }
 
-                        if (nameInSelectedNodeOperatorsIndex !== -1) {
-                          return 'Name is already in use by another update';
-                        }
+                      const valueAddress = getAddress(value);
 
-                        return true;
-                      },
-                    }}
-                  />
-                </Fieldset>
+                      if (
+                        stETHAddress &&
+                        valueAddress === getAddress(stETHAddress)
+                      ) {
+                        return 'Address must not be stETH address';
+                      }
 
-                <Fieldset>
-                  <InputHookForm
-                    label="Reward address"
-                    fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.rewardAddress`}
-                    rules={{
-                      required: 'Field is required',
-                      validate: (value: string) => {
-                        const addressErr = validateAddress(value);
-                        if (addressErr) {
-                          return addressErr;
-                        }
+                      const idInAddressMap =
+                        nodeOperatorsDetailsMaps['rewardAddress'][valueAddress];
 
-                        const valueAddress = utils.getAddress(value);
+                      if (typeof idInAddressMap === 'number') {
+                        return 'Address must not be in use by another node operator';
+                      }
 
-                        if (
-                          stETHAddress &&
-                          valueAddress === utils.getAddress(stETHAddress)
-                        ) {
-                          return 'Address must not be stETH address';
-                        }
+                      const addressInSelectedNodeOperatorsIndex =
+                        selectedNodeOperators.findIndex(
+                          ({ rewardAddress }, index) =>
+                            rewardAddress &&
+                            getAddress(rewardAddress) === valueAddress &&
+                            fieldIndex !== index,
+                        );
 
-                        const idInAddressMap =
-                          nodeOperatorsDetailsMaps['rewardAddress'][
-                            valueAddress
-                          ];
+                      if (addressInSelectedNodeOperatorsIndex !== -1) {
+                        return 'Address is already in use by another update';
+                      }
 
-                        if (typeof idInAddressMap === 'number') {
-                          return 'Address must not be in use by another node operator';
-                        }
+                      return true;
+                    },
+                  }}
+                />
+              </Fieldset>
 
-                        const addressInSelectedNodeOperatorsIndex =
-                          selectedNodeOperators.findIndex(
-                            ({ rewardAddress }, index) =>
-                              rewardAddress &&
-                              utils.getAddress(rewardAddress) ===
-                                valueAddress &&
-                              fieldIndex !== index,
-                          );
+              <Fieldset>
+                <InputHookForm
+                  label={`Manager address`}
+                  fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.managerAddress`}
+                  rules={{
+                    required: 'Field is required',
+                    validate: async (value) => {
+                      const addressErr = validateAddress(value);
+                      if (addressErr) {
+                        return addressErr;
+                      }
 
-                        if (addressInSelectedNodeOperatorsIndex !== -1) {
-                          return 'Address is already in use by another update';
-                        }
+                      const valueAddress = getAddress(value);
 
-                        return true;
-                      },
-                    }}
-                  />
-                </Fieldset>
+                      const addressInSelectedNodeOperatorsIndex =
+                        selectedNodeOperators.findIndex(
+                          ({ managerAddress }, index) =>
+                            managerAddress &&
+                            getAddress(managerAddress) === valueAddress &&
+                            fieldIndex !== index,
+                        );
 
-                <Fieldset>
-                  <InputHookForm
-                    label={`Manager address`}
-                    fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.managerAddress`}
-                    rules={{
-                      required: 'Field is required',
-                      validate: async (value) => {
-                        const addressErr = validateAddress(value);
-                        if (addressErr) {
-                          return addressErr;
-                        }
+                      if (addressInSelectedNodeOperatorsIndex !== -1) {
+                        return 'Address is already in use by another update';
+                      }
 
-                        const valueAddress = utils.getAddress(value);
+                      const isAlreadyManager =
+                        await checkAddressForManageSigningKeysRole(
+                          value,
+                          sdvtRegistry,
+                          aragonAcl,
+                        );
 
-                        const addressInSelectedNodeOperatorsIndex =
-                          selectedNodeOperators.findIndex(
-                            ({ managerAddress }, index) =>
-                              managerAddress &&
-                              utils.getAddress(managerAddress) ===
-                                valueAddress &&
-                              fieldIndex !== index,
-                          );
+                      if (isAlreadyManager) {
+                        return 'Address already has a signing keys manager role';
+                      }
+                      return true;
+                    },
+                  }}
+                />
+              </Fieldset>
+            </FieldsWrapper>
+          </Fragment>
+        ))}
+        {NOCounts.max > fieldsArr.fields.length + NOCounts.current && (
+          <Fieldset>
+            <ButtonIcon
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleAddNodeOperators}
+              icon={<Plus />}
+              color="secondary"
+            >
+              One more node operator
+            </ButtonIcon>
+          </Fieldset>
+        )}
 
-                        if (addressInSelectedNodeOperatorsIndex !== -1) {
-                          return 'Address is already in use by another update';
-                        }
-
-                        const isAlreadyManager =
-                          await checkAddressForManageSigningKeysRole(
-                            value,
-                            sdvtRegistry,
-                            aragonAcl,
-                          );
-
-                        if (isAlreadyManager) {
-                          return 'Address already has a signing keys manager role';
-                        }
-                        return true;
-                      },
-                    }}
-                  />
-                </Fieldset>
-              </FieldsWrapper>
-            </Fragment>
-          ))}
-          {NOCounts.max > fieldsArr.fields.length + NOCounts.current && (
-            <Fieldset>
-              <ButtonIcon
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={handleAddNodeOperators}
-                icon={<Plus />}
-                color="secondary"
-              >
-                One more node operator
-              </ButtonIcon>
-            </Fieldset>
-          )}
-
-          {submitAction}
-        </>
-      );
-    },
-  });
+        {submitAction}
+      </>
+    );
+  },
+});

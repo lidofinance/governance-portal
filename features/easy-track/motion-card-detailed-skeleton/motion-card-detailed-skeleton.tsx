@@ -8,8 +8,16 @@ import {
   MotionContainer,
   StartDateCell,
 } from '../motion-card-detailed/style';
-import { SkeletonBar } from '../../vote/components/skeleton-bar';
-import { SkeletonText } from '../../vote/components/skeleton-text';
+import { SkeletonText } from 'shared/components/skeleton-text';
+import {
+  DescriptionBlock,
+  DescLineSkeleton,
+  InfoLabelSkeleton,
+  LabelSkeleton,
+  ObjectionsLabelSkeleton,
+  ObjectionsSubLabelSkeleton,
+  TimerBarSkeleton,
+} from './style';
 
 export const MotionCardDetailedSkeleton = () => {
   return (
@@ -18,48 +26,46 @@ export const MotionCardDetailedSkeleton = () => {
         {/* Header */}
         <Header>
           <div>
-            <SkeletonText width={80} size={14} style={{ marginBottom: 3 }} />
+            <LabelSkeleton width={80} size={14} />
             <SkeletonText width={200} size={14} />
           </div>
           <HeaderAside>
             <div>
-              <SkeletonText width={40} size={12} style={{ marginBottom: 3 }} />
+              <LabelSkeleton width={40} size={12} />
               <SkeletonText width={70} size={14} />
             </div>
           </HeaderAside>
         </Header>
 
         {/* Description */}
-        <div style={{ marginBottom: 64 }}>
-          <SkeletonText width="100%" size={12} style={{ marginBottom: 6 }} />
-          <SkeletonText width="90%" size={12} style={{ marginBottom: 6 }} />
-          <SkeletonText width="75%" size={12} style={{ marginBottom: 6 }} />
+        <DescriptionBlock>
+          <DescLineSkeleton width="100%" size={12} />
+          <DescLineSkeleton width="90%" size={12} />
+          <DescLineSkeleton width="75%" size={12} />
           <SkeletonText width="55%" size={12} />
-        </div>
+        </DescriptionBlock>
 
         {/* InfoRow */}
         <InfoRow>
           <InfoCol>
             <div>
-              <SkeletonText width={60} size={12} style={{ marginBottom: 4 }} />
+              <InfoLabelSkeleton width={60} size={12} />
               <SkeletonText width={120} size={36} />
             </div>
             <StartDateCell>
-              <SkeletonText width={70} size={12} style={{ marginBottom: 4 }} />
+              <InfoLabelSkeleton width={70} size={12} />
               <SkeletonText width={130} size={14} />
             </StartDateCell>
           </InfoCol>
           <InfoCol>
             <InfoCell>
-              <SkeletonText width={80} size={12} style={{ marginBottom: 6 }} />
-              <SkeletonText width={90} size={12} style={{ marginBottom: 8 }} />
+              <ObjectionsLabelSkeleton width={80} size={12} />
+              <ObjectionsSubLabelSkeleton width={90} size={12} />
               <SkeletonText width={100} size={36} />
             </InfoCell>
             <div>
-              <SkeletonText width={90} size={12} style={{ marginBottom: 4 }} />
-              <SkeletonBar
-                style={{ width: 140, height: 28, borderRadius: 6 }}
-              />
+              <InfoLabelSkeleton width={90} size={12} />
+              <TimerBarSkeleton />
             </div>
           </InfoCol>
         </InfoRow>

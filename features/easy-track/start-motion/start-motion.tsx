@@ -1,13 +1,13 @@
 import { useAvailableMotions } from '../hooks/use-available-motions';
 import { Container, Option, ToastError } from '@lidofinance/lido-ui';
-import { SkeletonBar } from '../../vote/components/skeleton-bar';
 import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
 import { useForm, FormProvider } from 'react-hook-form';
 import { formParts, getDefaultFormPartsData, FormData } from './parts';
+import { type AnyFormPart } from './parts/create-motion-form-part';
 import { Fieldset, MessageBox } from './parts/style';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
 import { Button } from 'shared/components/button';
-import { RetryHint } from './style';
+import { MotionTypeSelectSkeleton, RetryHint } from './style';
 import { useCallback, useEffect, useState } from 'react';
 import { getScriptFactoryByMotionType } from '../utils/get-motion-type';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -15,8 +15,11 @@ import { validateMotionExtraData } from '../utils/on-submit-validation';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { EasyTrack } from 'shared/blockchain/contracts';
-import { getErrorMessage } from 'utils';
 import { Hex } from 'viem';
+import { useQueryClient } from '@tanstack/react-query';
+import { useTxModalMotion } from '../write-actions/motion/modal-stages';
+import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
+import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 
 type Props = {
   onComplete: (txHash: Hex) => void;
@@ -25,7 +28,7 @@ type Props = {
 const StartMotionSkeleton = () => (
   <Container as="main" size="tight">
     <Fieldset>
-      <SkeletonBar style={{ height: 56, borderRadius: 10 }} showOnBackground />
+      <MotionTypeSelectSkeleton showOnBackground />
     </Fieldset>
   </Container>
 );
@@ -38,6 +41,10 @@ export const StartMotion = ({ onComplete }: Props) => {
   const easyTrackAddress = useContractAddress(EasyTrack);
 
   const { chainId, rpcProvider } = useLidoSDK();
+  const { txModalStages } = useTxModalMotion();
+  const waitForTx = useTxConfirmation();
+  const { data: isMultisig } = useIsContract();
+  const queryClient = useQueryClient();
 
   const formMethods = useForm<FormData>({
     mode: 'onChange',
@@ -51,26 +58,30 @@ export const StartMotion = ({ onComplete }: Props) => {
 
   const handleSubmit = useCallback(
     async (formData: FormData) => {
+      const motionType = formData.motionType;
+      if (!motionType || !(motionType in formParts)) return;
+
+      setSubmitting(true);
+
       try {
-        const motionType = formData.motionType;
-        if (!motionType || !(motionType in formParts)) return;
-
-        setSubmitting(true);
-
         const evmScriptFactory = getScriptFactoryByMotionType(
           chainId,
           motionType,
         );
 
         if (!evmScriptFactory) {
-          throw new Error(
+          ToastError(
             `EVM script factory for motion type ${motionType} in chain ${chainId} not found`,
+            {},
           );
+          return;
         }
 
         const validMotionType = motionType as keyof typeof formParts;
+
         if (!rpcProvider) {
-          throw new Error('No provider available');
+          ToastError('No provider available', {});
+          return;
         }
 
         const extraValidationError = await validateMotionExtraData(
@@ -81,30 +92,49 @@ export const StartMotion = ({ onComplete }: Props) => {
 
         if (extraValidationError) {
           ToastError(extraValidationError, {});
-          setSubmitting(false);
           return;
         }
 
-        const txHash = await (formParts[validMotionType] as any).populateTx({
+        txModalStages.signSubmit();
+
+        const part = formParts[validMotionType] as unknown as AnyFormPart;
+        const txHash = await part.populateTx({
           evmScriptFactory,
-          formData: formData[validMotionType],
+          formData: formData[validMotionType] as Record<string, unknown>,
           contract: {
             write: contractEasyTrack,
             address: easyTrackAddress,
           },
         });
 
-        onComplete(txHash as Hex);
+        if (isMultisig) {
+          txModalStages.successMultisig();
+          return;
+        }
+
+        txModalStages.pendingSubmit(txHash);
+
+        const receipt = await waitForTx(txHash);
+
+        if (receipt.status === 'reverted') {
+          txModalStages.failed(new Error('Transaction was reverted'));
+          return;
+        }
+
+        await queryClient.invalidateQueries({
+          queryKey: ['active-motions', chainId],
+        });
+
+        txModalStages.successSubmit(txHash);
+        onComplete(txHash);
 
         formMethods.reset({
           motionType: null,
           ...getDefaultFormPartsData(),
         });
-
-        setSubmitting(false);
-      } catch (error: any) {
-        console.error(error);
-        ToastError(getErrorMessage(error), {});
+      } catch (error) {
+        txModalStages.failed(error);
+      } finally {
         setSubmitting(false);
       }
     },
@@ -113,8 +143,12 @@ export const StartMotion = ({ onComplete }: Props) => {
       contractEasyTrack,
       easyTrackAddress,
       formMethods,
+      isMultisig,
       onComplete,
+      queryClient,
       rpcProvider,
+      txModalStages,
+      waitForTx,
     ],
   );
 
@@ -130,7 +164,11 @@ export const StartMotion = ({ onComplete }: Props) => {
 
   const CurrentFormPart =
     motionType && motionType in formParts
-      ? (formParts[motionType as keyof typeof formParts].Component as any)
+      ? (
+          formParts[
+            motionType as keyof typeof formParts
+          ] as unknown as AnyFormPart
+        ).Component
       : null;
 
   // Filter available motions to only show supported ones

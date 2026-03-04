@@ -3,8 +3,8 @@ export const HOME_PATH = '/';
 export const SETTINGS_PATH = '/settings';
 
 // DG paths
-export const PROPOSALS_PATH = '/governance/proposals';
-export const GOVERNANCE_PATH = '/governance';
+export const PROPOSALS_PATH = '/dg/proposals';
+export const GOVERNANCE_PATH = '/dg';
 
 // Vote paths
 export const VOTE_PATH = '/vote';

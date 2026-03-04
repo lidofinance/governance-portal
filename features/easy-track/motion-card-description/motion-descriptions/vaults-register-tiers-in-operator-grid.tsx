@@ -21,17 +21,16 @@ export const VaultsRegisterTiersInOperatorGrid = ({
 
   const { data: tiersCounts } = useQuery({
     queryKey: [`vaults-register-tiers-desc-${nodeOperators.join('-')}`],
-    queryFn: async () => {
-      if (!isOnChain) return;
-      return Promise.all(
+    enabled: isOnChain,
+    queryFn: () =>
+      Promise.all(
         nodeOperators.map(async (nodeOperator) => {
           const group = await operatorGrid.readContract('group', [
             nodeOperator,
           ]);
           return group.tierIds.length;
         }),
-      );
-    },
+      ),
   });
 
   return (

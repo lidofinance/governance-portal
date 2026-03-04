@@ -11,7 +11,7 @@ type InputHookFormProps = Partial<React.ComponentProps<typeof Input>> & {
   rules?: RegisterOptions;
 };
 
-const NUM_REGEX = /^-?(\d+\.?\d*|\d*\.\d+|\.)$/;
+const NUM_REGEX = /^(\d+\.?\d*|\d*\.\d+|\.)$/;
 
 export const InputNumberHookForm = ({
   fieldName,
@@ -46,15 +46,10 @@ export const InputNumberHookForm = ({
         return;
       }
 
-      if (value.includes('-')) {
-        e.currentTarget.value = value.replaceAll('-', '');
-      }
-
       // Validate the input matches numeric pattern
       if (!NUM_REGEX.test(value)) {
         return;
       }
-
       field.onChange(e);
       onChange?.(e);
     },

@@ -36,9 +36,10 @@ export const NavMobileWrapper = styled.div`
 
 export const NavItem = styled.div<{ $isActive?: boolean }>`
   font-size: 16px;
-  padding: 33px 16px;
   cursor: pointer;
   a {
+    display: block;
+    padding: 33px 16px;
     text-decoration: none;
     color: inherit;
   }
@@ -54,8 +55,10 @@ export const NavItem = styled.div<{ $isActive?: boolean }>`
 `;
 
 export const NavMobileItem = styled(NavItem)<{ $isActive?: boolean }>`
-  padding: 6px 16px;
   margin: 16px 0 16px -16px;
+  a {
+    padding: 6px 16px;
+  }
   ${({ $isActive }) =>
     $isActive &&
     css`

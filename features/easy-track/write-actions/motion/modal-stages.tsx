@@ -57,6 +57,45 @@ const getTxModalStagesMotion = (
       />,
       { isClosableOnLedger: true },
     ),
+
+  signCancel: (motionId: bigint) =>
+    transitStage(
+      <TxStageSign title={`Cancelling motion #${motionId}`} description="" />,
+    ),
+
+  pendingCancel: (motionId: bigint, txHash?: Hex) =>
+    transitStage(
+      <TxStagePending
+        title={`Cancelling motion #${motionId}`}
+        txHash={txHash}
+      />,
+    ),
+
+  successCancel: (motionId: bigint, txHash?: Hex) =>
+    transitStage(
+      <TxStageSuccess
+        title={`Motion #${motionId} cancelled`}
+        txHash={txHash}
+        description=""
+      />,
+      { isClosableOnLedger: true },
+    ),
+
+  signSubmit: () =>
+    transitStage(<TxStageSign title="Creating motion" description="" />),
+
+  pendingSubmit: (txHash?: Hex) =>
+    transitStage(<TxStagePending title="Creating motion" txHash={txHash} />),
+
+  successSubmit: (txHash?: Hex) =>
+    transitStage(
+      <TxStageSuccess
+        title="Motion created successfully"
+        txHash={txHash}
+        description=""
+      />,
+      { isClosableOnLedger: true },
+    ),
 });
 
 export const useTxModalMotion = () => {

@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -17,7 +16,12 @@ import {
   PopulateTxArgs,
 } from '@easy-track/start-motion/parts/create-motion-form-part';
 import { MotionType } from '@easy-track/motion-types';
-import { Address, Hex } from 'viem';
+import {
+  encodeAbiParameters,
+  getAddress,
+  parseAbiParameters,
+  parseEther,
+} from 'viem';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { SetLiabilitySharesTargetInVaultHub } from 'shared/blockchain/contracts';
 import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
@@ -39,12 +43,12 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     vaults: VaultInput[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['address[]', 'uint256[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('address[], uint256[]'),
       [
-        formData.vaults.map((vault) => utils.getAddress(vault.address)),
+        formData.vaults.map((vault) => getAddress(vault.address)),
         formData.vaults.map((vault) =>
-          utils.parseEther(vault.liabilitySharesTargets),
+          parseEther(vault.liabilitySharesTargets),
         ),
       ],
     );
@@ -52,7 +56,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -78,7 +82,7 @@ export const formParts = createMotionFormPart({
       } as VaultInput);
 
     if (isTrustedCallerLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

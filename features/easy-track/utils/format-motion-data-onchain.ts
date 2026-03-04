@@ -2,7 +2,7 @@ import { Motion } from '../types';
 import { getMotionStatus } from './get-motion-status';
 import { Address, Hex } from 'viem';
 
-type MotionCreatedEventLog = {
+export type MotionCreatedEventLog = {
   args: {
     _motionId: bigint;
     _creator: `0x${string}`;

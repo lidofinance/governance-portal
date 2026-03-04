@@ -4,7 +4,7 @@ import {
   useRewardProgramsMapAll,
 } from '../../hooks/use-reward-programs';
 
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'viem';
 import { evmAddRewardProgramAbi } from 'abi/generated/EvmAddRewardProgram';
 import { evmRemoveRewardProgramAbi } from 'abi/generated/EvmRemoveRewardProgram';
 import { evmTopUpRewardProgramsAbi } from 'abi/generated/EvmTopUpRewardPrograms';

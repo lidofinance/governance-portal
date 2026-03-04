@@ -22,7 +22,7 @@ export const Nav = () => {
           asPath.startsWith('/vote') && !asPath.startsWith('/vote/delegation')
         }
       >
-        <Link href="/vote" passHref>
+        <Link href="/vote/dashboard" passHref>
           On-chain Voting
         </Link>
       </NavItem>
@@ -31,13 +31,13 @@ export const Nav = () => {
           Delegation
         </Link>
       </NavItem>
-      <NavItem $isActive={asPath.startsWith('/governance')}>
-        <Link href="/governance" passHref>
+      <NavItem $isActive={asPath.startsWith('/dg')}>
+        <Link href="/dg" passHref>
           Dual Governance
         </Link>
       </NavItem>
       <NavItem $isActive={asPath.startsWith('/easy-track')}>
-        <Link href="/easy-track">Easy Track</Link>
+        <Link href="/easy-track/active-motions">Easy Track</Link>
       </NavItem>
     </NavStyled>
   );
@@ -83,7 +83,7 @@ export const NavMobile = ({ children }: { children: React.ReactNode }) => {
             asPath.startsWith('/vote') && !asPath.startsWith('/vote/delegation')
           }
         >
-          <Link href="/vote" passHref>
+          <Link href="/vote/dashboard" passHref>
             On-chain Voting
           </Link>
         </NavMobileItem>
@@ -92,13 +92,13 @@ export const NavMobile = ({ children }: { children: React.ReactNode }) => {
             Delegation
           </Link>
         </NavMobileItem>
-        <NavMobileItem $isActive={asPath.startsWith('/governance')}>
-          <Link href="/governance" passHref>
+        <NavMobileItem $isActive={asPath.startsWith('/dg')}>
+          <Link href="/dg" passHref>
             Dual Governance
           </Link>
         </NavMobileItem>
         <NavMobileItem $isActive={asPath.startsWith('/easy-track')}>
-          <Link href="/easy-track">Easy Track</Link>
+          <Link href="/easy-track/active-motions">Easy Track</Link>
         </NavMobileItem>
         <NavMobileActions>{children}</NavMobileActions>
       </NavMobileWrapper>

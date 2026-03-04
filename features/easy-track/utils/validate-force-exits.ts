@@ -28,7 +28,8 @@ export const validateForceExits = async (
       data: '0x',
     });
 
-    if (!feeData) {
+    // '0x' is truthy but has no payload; uint256 requires 32 bytes (66 chars with 0x prefix)
+    if (!feeData || feeData.length < 66) {
       throw new Error('No fee data returned');
     }
 

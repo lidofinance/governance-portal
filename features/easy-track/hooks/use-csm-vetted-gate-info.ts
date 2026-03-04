@@ -1,4 +1,4 @@
-import { useLidoSDK } from '../../../providers/lido-sdk';
+import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { CSMSetVettedGateTree } from 'shared/blockchain/contracts';

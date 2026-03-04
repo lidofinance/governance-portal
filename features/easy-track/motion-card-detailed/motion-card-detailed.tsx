@@ -1,5 +1,6 @@
 import {
   Description,
+  DescriptionMeta,
   EnactWarningBox,
   Header,
   HeaderAside,
@@ -35,10 +36,9 @@ import { MotionDetailedObjections } from '../motion-card-detailed-objections';
 import { AddressPop } from 'shared/components/address-pop';
 import { getMotionEnactWarning } from '@easy-track/utils/get-motion-enact-warning';
 import { MotionCardDetailedActions } from '@easy-track/motion-card-detailed-actions';
-import { MotionActionsProvider } from '@easy-track/providers/motion-actions-context';
 import {
-  MotionDetailedProvider,
-  useMotionDetailed,
+  MotionsProvider,
+  useMotions,
 } from '@easy-track/providers/motion-detailed-context';
 import { MotionDetailedLimits } from '@easy-track/motion-card-detailed-limits';
 
@@ -48,8 +48,7 @@ type Props = {
 
 const MotionCardDetailedInner = () => {
   const { address: walletAddress } = useAccount();
-  const { motion, motionType, isArchived, timeData, progress } =
-    useMotionDetailed();
+  const { motion, motionType, isArchived, timeData, progress } = useMotions();
 
   const { isPassed, diff } = timeData;
   const isAttentionTime =
@@ -95,18 +94,17 @@ const MotionCardDetailedInner = () => {
           </div>
 
           {isAuthorConnected && motion.status !== MotionStatus.CANCELED && (
-            <MotionCardDetailedCancelButton motion={motion} />
+            <MotionCardDetailedCancelButton />
           )}
         </HeaderAside>
       </Header>
       <Description>
         <MotionDescription motion={motion as Motion} />
-        <br />
-        <br />
-        <div>Snapshot: {motion.snapshotBlock.toString()}</div>
-        <br />
-        <div>Script:</div>
-        <br />
+        <DescriptionMeta>
+          <div>Snapshot: {motion.snapshotBlock.toString()}</div>
+          <div>Script:</div>
+        </DescriptionMeta>
+
         <MotionEvmScript motion={motion} />
       </Description>
       <InfoRow>
@@ -153,7 +151,7 @@ const MotionCardDetailedInner = () => {
             walletAddress && (
               <EnactWarningBox>{enactWarningMessage}</EnactWarningBox>
             )}
-          <MotionCardDetailedActions motion={motion} motionType={motionType} />
+          <MotionCardDetailedActions motion={motion} />
         </>
       )}
     </MotionCard>
@@ -184,12 +182,10 @@ export const MotionCardDetailed = ({ motionId }: Props) => {
   }
 
   return (
-    <MotionDetailedProvider motion={motion}>
-      <MotionActionsProvider>
-        <MotionContainer key={motionId}>
-          <MotionCardDetailedInner />
-        </MotionContainer>
-      </MotionActionsProvider>
-    </MotionDetailedProvider>
+    <MotionsProvider motion={motion}>
+      <MotionContainer key={motionId}>
+        <MotionCardDetailedInner />
+      </MotionContainer>
+    </MotionsProvider>
   );
 };

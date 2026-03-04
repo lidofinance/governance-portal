@@ -30,7 +30,7 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
   return (
     <>
       <Head>
-        <title>{metaTitleProp ?? title ?? 'Governance Portal'} | Lido</title>
+        <title>{`${metaTitleProp ?? title ?? 'Governance Portal'} | Lido`}</title>
       </Head>
       <Header />
       <ContainerStyled size={containerSize}>

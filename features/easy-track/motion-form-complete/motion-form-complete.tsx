@@ -12,7 +12,7 @@ import { useGnosisOpener } from 'shared/blockchain/hooks/use-gnosis-opener';
 import { getEtherscanLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
-import { Hex } from 'viem';
+import { Hex, TransactionReceipt } from 'viem';
 
 type BodySafeProps = {
   txHash: Hex;
@@ -51,18 +51,16 @@ const BodyRegular = ({ txHash }: BodyRegularProps) => {
   useEffect(() => {
     if (!client) return;
 
-    const checkTransaction = (e: any) => {
-      if (!e) {
-        setStatus('pending');
-      } else if (e.status === 'success' || e.status === 1) {
+    const checkTransaction = (receipt: TransactionReceipt) => {
+      if (receipt.status === 'success') {
         setStatus('success');
-      } else if (e.status === 'reverted' || e.status === 0) {
+      } else {
         setStatus('failed');
       }
     };
 
-    const onError = (error: any) => {
-      console.error(error);
+    const onError = (error: unknown) => {
+      console.error('Failed to get tx receipt:', error);
       setStatus('failed');
     };
 

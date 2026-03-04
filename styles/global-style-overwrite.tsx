@@ -10,7 +10,7 @@ export const GlobalStyleOverwrite = () => {
 
   const { asPath } = useRouter();
 
-  if (asPath.startsWith('/governance')) {
+  if (asPath.startsWith('/dg')) {
     layoutVariant = visibleState;
   }
 

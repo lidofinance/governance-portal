@@ -1,6 +1,6 @@
 import { editMevBoostRelaysAbi } from 'abi/generated/EditMEVBoostRelays';
 import { MotionDescriptionProps } from '../types';
-import { MEVBoostRelay } from '../types-mev';
+import { MEVBoostRelay } from '@easy-track/types';
 import { useMEVBoostRelays } from '../../hooks/use-mev-boost-relays';
 
 type RelayChange = {
@@ -65,7 +65,9 @@ export const MevBoostRelaysEdit = ({
   callData,
   isOnChain,
 }: MotionDescriptionProps<typeof editMevBoostRelaysAbi>) => {
-  const { relaysMap, isRelaysDataLoading } = useMEVBoostRelays();
+  const { relaysMap, isRelaysDataLoading } = useMEVBoostRelays({
+    enabled: isOnChain,
+  });
 
   if (isRelaysDataLoading) {
     return <div>Loading...</div>;

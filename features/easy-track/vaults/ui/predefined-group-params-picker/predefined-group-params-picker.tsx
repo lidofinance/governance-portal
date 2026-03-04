@@ -1,67 +1,43 @@
 import { Button } from '@lidofinance/lido-ui';
-import { useFormContext } from 'react-hook-form';
-import {
-  PREDEFINED_CONSTANT_TIER_PARAMS,
-  PREDEFINED_GROUP_SETUPS_MAP,
-} from '../../constants';
-import { ButtonsWrap, Wrap } from './style';
-import { useLidoSDK } from 'providers/lido-sdk';
 import { Text } from 'shared/components/text';
+import { ButtonsWrap, Wrap } from './style';
+import { PredefinedGroupSetup } from '@easy-track/vaults/types';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { PREDEFINED_GROUP_SETUPS_MAP } from '@easy-track/vaults/constants';
 
 type Props = {
-  groupsArrayFieldName: string;
-  groupIndex: number;
-  onUpdate: (index: number, value: unknown) => void;
+  title?: string;
+  upgradeMode?: boolean;
+  onSelect: (option: PredefinedGroupSetup) => void;
 };
 
 export const PredefinedGroupParamsPicker = ({
-  groupsArrayFieldName,
-  groupIndex,
-  onUpdate,
+  title,
+  upgradeMode,
+  onSelect,
 }: Props) => {
   const { chainId } = useLidoSDK();
-  const { getValues } = useFormContext();
 
-  const predefinedGroups = PREDEFINED_GROUP_SETUPS_MAP[chainId];
+  const options = PREDEFINED_GROUP_SETUPS_MAP[chainId];
 
-  if (!predefinedGroups?.length) {
+  if (!options?.length) {
     return null;
   }
 
-  const handleGroupClick = (index: number) => {
-    const predefinedGroup = predefinedGroups[index];
-
-    onUpdate(groupIndex, {
-      nodeOperator: getValues(
-        `${groupsArrayFieldName}.${groupIndex}.nodeOperator`,
-      ),
-      shareLimit: predefinedGroup.groupShareLimit.toString(),
-      tiers: predefinedGroup.tiers.map((tier) => ({
-        shareLimit: tier.shareLimit.toString(),
-        reserveRatioBP: tier.reserveRatioBP.toString(),
-        forcedRebalanceThresholdBP: tier.forcedRebalanceThresholdBP.toString(),
-        infraFeeBP: PREDEFINED_CONSTANT_TIER_PARAMS.infraFeeBP.toString(),
-        liquidityFeeBP:
-          PREDEFINED_CONSTANT_TIER_PARAMS.liquidityFeeBP.toString(),
-        reservationFeeBP:
-          PREDEFINED_CONSTANT_TIER_PARAMS.reservationFeeBP.toString(),
-      })),
-    });
-  };
-
   return (
     <Wrap>
-      <Text size={14}>Predefined group setups</Text>
+      <Text size={14}>{title ?? 'Predefined group setups'}</Text>
       <ButtonsWrap>
-        {predefinedGroups.map((group, index) => (
+        {options.map((option, index) => (
           <Button
             variant="outlined"
             key={index}
             size="xs"
             type="button"
-            onClick={() => handleGroupClick(index)}
+            onClick={() => onSelect(option)}
           >
-            {group.label}
+            {upgradeMode ? 'Upgrade to ' : ''}
+            {option.label}
           </Button>
         ))}
       </ButtonsWrap>
