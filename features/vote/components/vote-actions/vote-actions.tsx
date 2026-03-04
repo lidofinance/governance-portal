@@ -78,14 +78,7 @@ export const VoteActions = () => {
 
   const handleMenuClose = () => setIsMenuOpen(false);
 
-  const isDisabled =
-    !isSupportedChain ||
-    (!canVoteWithOwnPower && selectedDelegators.length === 0);
-
   const handleVoteActionClick = (mode: VoteMode) => {
-    if (isDisabled) {
-      return;
-    }
     setCurrentMode(mode);
     if (canVoteWithOwnPower && canVoteWithDelegatedVotePower) {
       setIsMenuOpen(true);
@@ -113,7 +106,10 @@ export const VoteActions = () => {
           <ActionButtons
             onVote={handleVoteActionClick}
             votePhase={vote.phase}
-            disabled={isDisabled}
+            disabled={
+              !isSupportedChain ||
+              (!canVoteWithOwnPower && selectedDelegators.length === 0)
+            }
             nayRef={nayButtonRef}
             yayRef={yayButtonRef}
             loading={isLoading}
@@ -141,6 +137,7 @@ export const VoteActions = () => {
         </PopupMenuItem>
         <PopupMenuItem
           data-testid="delegatedVPBtn"
+          disabled={availableDelegatedVotingPower === 0n}
           onClick={() => {
             handleMenuClose();
             void processVote({

@@ -21,7 +21,7 @@ export const VotePowerInfo = () => {
       {totalDelegatedVotingPower > 0n && (
         <VotingPower>
           <Text as="span" color="secondary" size="xxs">
-            Delegated voting power
+            Total delegated voting power
           </Text>
           <Amount data-testid="delegatedVPAmount">
             {formatBalance(totalDelegatedVotingPower)} {tokenData?.symbol}

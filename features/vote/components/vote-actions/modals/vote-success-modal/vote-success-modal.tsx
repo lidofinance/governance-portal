@@ -54,7 +54,7 @@ export const VoteSuccessModal = ({
     hasOwnVotingPower && !hasAlreadyVotedWithOwnTokens;
 
   const hasRemainingDelegatedPower = remainingDelegators.some(
-    (delegator) => delegator.delegateVoteMode !== mode,
+    (delegator) => delegator.delegateVoteMode === 'absent',
   );
 
   const handleDelegatedVoteClick = () => {

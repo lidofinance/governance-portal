@@ -35,7 +35,7 @@ export const ChipWrap = styled.div<InjectedPropsTr>`
   gap: 4px;
 
   svg {
-    scale: 0.8;
+    transform: scale(0.8);
     path {
       fill-opacity: 1;
     }
