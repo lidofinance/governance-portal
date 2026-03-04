@@ -160,6 +160,18 @@ export const useVoteDelegators = (voteId: number | undefined) => {
         delegatedVotersState,
       );
 
+      eligibleDelegatedVoters.sort((a, b) =>
+        a.votingPower > b.votingPower
+          ? -1
+          : a.votingPower < b.votingPower
+            ? 1
+            : 0,
+      );
+
+      delegatedVotersVotedThemselves.sort((a, b) =>
+        a.stake > b.stake ? -1 : a.stake < b.stake ? 1 : 0,
+      );
+
       return {
         eligibleDelegatedVoters,
         eligibleDelegatedVotingPower,
