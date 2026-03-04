@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useMemo } from 'react';
+import { createContext, FC, useCallback, useContext, useMemo } from 'react';
 import invariant from 'tiny-invariant';
 import { useVote } from '../hooks/use-vote';
 import {
@@ -18,6 +18,7 @@ import { useVoteDelegators } from '../hooks/use-vote-delegators';
 import { EligibleDelegator, VoterInfo } from '../types';
 import { ProposalStatus } from 'features/dual-governance/proposals/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
+import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 
 type Value = {
   vote: Vote;
@@ -158,6 +159,25 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     votingConfig?.objectionPhaseTime,
     votingConfig?.voteTime,
   ]);
+
+  const handlePass = useCallback(() => {
+    setTimeout(() => refetchVote(), 1200);
+  }, [refetchVote]);
+
+  useVotePassedCallback({
+    startDate: Number(voteData?.vote.startDate ?? 0),
+    voteTime: votingConfig?.voteTime ?? 0,
+    onPass: handlePass,
+  });
+
+  useVotePassedCallback({
+    startDate: Number(voteData?.vote.startDate ?? 0),
+    voteTime:
+      votingConfig?.voteTime != null && votingConfig?.objectionPhaseTime != null
+        ? votingConfig.voteTime - votingConfig.objectionPhaseTime
+        : undefined,
+    onPass: handlePass,
+  });
 
   if (isVotingConfigLoading || isVoteDataLoading) {
     return <InlineVoteCardLoader />;
