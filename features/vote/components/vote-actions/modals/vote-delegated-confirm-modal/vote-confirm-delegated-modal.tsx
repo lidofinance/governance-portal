@@ -49,6 +49,7 @@ export const VoteConfirmDelegatedModal = ({
       </Box>
       <DelegatorsSelector
         delegators={eligibleDelegators}
+        currentMode={mode}
         onSelectionChange={handleSelectionChange}
       />
     </>

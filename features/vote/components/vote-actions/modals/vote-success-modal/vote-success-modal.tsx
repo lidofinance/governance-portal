@@ -115,6 +115,7 @@ export const VoteSuccessModal = ({
                 </Button>
               </Box>
               <DelegatorsSelector
+                currentMode={mode}
                 onSelectionChange={handleSelectionChange}
                 delegators={remainingDelegators}
               />
@@ -137,6 +138,7 @@ export const VoteSuccessModal = ({
             <AddonSection>
               <Text strong>Vote {voteModeLabel} with delegated tokens</Text>
               <DelegatorsSelector
+                currentMode={mode}
                 onSelectionChange={handleSelectionChange}
                 delegators={remainingDelegators}
               />

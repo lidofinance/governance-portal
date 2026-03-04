@@ -60,7 +60,6 @@ export const VoteCard = ({ voteId }: Props) => {
     canExecute,
     eventExecute,
     eventStart,
-    voteEvents,
     voteTime,
     objectionPhaseTime,
     dgProposal,
@@ -182,14 +181,16 @@ export const VoteCard = ({ voteId }: Props) => {
         />
       </DetailsBoxWrap>
       {!isWalletConnected && vote.phase !== VotePhase.Closed && (
-        <Button fullwidth onClick={openConnectWalletModal}>
-          Connect wallet
-        </Button>
+        <DetailsBoxWrap>
+          <Button fullwidth onClick={openConnectWalletModal}>
+            Connect wallet
+          </Button>
+        </DetailsBoxWrap>
       )}
       {isWalletConnected && (
         <>
           {vote.phase !== VotePhase.Closed && <VotePowerInfo />}
-          <VoteInfo voteEvents={voteEvents} walletAddress={walletAddress} />
+          <VoteInfo walletAddress={walletAddress} />
           {vote.phase !== VotePhase.Closed && <VoteActions />}
           {canExecute && (
             <EnactButtonWrap>

@@ -1,7 +1,7 @@
 import { PopupMenu, PopupMenuItem } from '@lidofinance/lido-ui';
 import { Actions } from './style';
 import { VoteMode } from '../../types';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VotePhase } from 'shared/votes/types';
 import { ActionButtons } from './action-buttons';
@@ -21,10 +21,18 @@ export const VoteActions = () => {
     eligibleDelegators,
     isLoading,
     eligibleDelegatedVotingPower,
-    totalDelegatedVotingPower,
     delegatorsVotedThemselves,
   } = useVoteContext();
   const isSupportedChain = useIsSupportedChain();
+
+  const canVoteWithOwnPower = !!voterDaoTokenBalance;
+
+  const canVoteWithDelegatedVotePower =
+    !isLoading && eligibleDelegatedVotingPower > 0n;
+
+  const canVote =
+    vote.phase !== VotePhase.Closed &&
+    (canVoteWithOwnPower || canVoteWithDelegatedVotePower);
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
@@ -37,78 +45,81 @@ export const VoteActions = () => {
 
   const { data: tokenData } = useGovernanceToken();
 
-  const canVoteForDelegators = eligibleDelegators.length > 0;
+  // Calculate value to show in popup for delegated vp filtered by current mode
+  const availableDelegatedVotingPower = useMemo(() => {
+    if (!eligibleDelegatedVotingPower) {
+      return 0n;
+    }
+    const votedForCurrentModeSum = eligibleDelegators.reduce(
+      (acc, { delegateVoteMode, votingPower }) => {
+        if (delegateVoteMode === currentMode) {
+          return acc + votingPower;
+        }
+        return acc;
+      },
+      0n,
+    );
 
-  const canVoteWithOwnPower = !!voterDaoTokenBalance;
+    const result = eligibleDelegatedVotingPower - votedForCurrentModeSum;
+    if (result < 0n) {
+      return 0n;
+    }
 
-  const canVoteWithDelegatedVotePower =
-    !isLoading && eligibleDelegatedVotingPower > 0n;
+    return result;
+  }, [currentMode, eligibleDelegatedVotingPower, eligibleDelegators]);
 
   const formattedOwnVP = `${formatBalance(voterDaoTokenBalance || 0n)} ${tokenData?.symbol}`;
 
-  const formattedDelegatedVP = `${formatBalance(totalDelegatedVotingPower)} ${tokenData?.symbol}`;
+  const formattedDelegatedVP = `${formatBalance(availableDelegatedVotingPower)} ${tokenData?.symbol}`;
 
   const handleSelectionChange = (selectedAddresses: Address[]) => {
     setSelectedDelegators(selectedAddresses);
   };
 
-  const handleMenu = (mode: VoteMode) => {
-    setCurrentMode(mode);
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   const handleMenuClose = () => setIsMenuOpen(false);
+
+  const isDisabled =
+    !isSupportedChain ||
+    (!canVoteWithOwnPower && selectedDelegators.length === 0);
+
+  const handleVoteActionClick = (mode: VoteMode) => {
+    if (isDisabled) {
+      return;
+    }
+    setCurrentMode(mode);
+    if (canVoteWithOwnPower && canVoteWithDelegatedVotePower) {
+      setIsMenuOpen(true);
+    } else if (canVoteWithOwnPower) {
+      void processVote({ mode });
+    } else if (selectedDelegators.length > 0) {
+      void processVote({ mode, delegatedVoters: selectedDelegators });
+    }
+  };
 
   return (
     <Actions>
-      {canVoteWithOwnPower &&
-        (!canVoteWithDelegatedVotePower || !canVoteForDelegators) && (
+      <FlexWrapper $flexDirection="column">
+        {!canVoteWithOwnPower &&
+          (canVoteWithDelegatedVotePower ||
+            delegatorsVotedThemselves.length > 0) && (
+            <DelegatorsSelector
+              delegators={eligibleDelegators}
+              currentMode={null}
+              onSelectionChange={handleSelectionChange}
+              delegatorsVotedThemselves={delegatorsVotedThemselves}
+            />
+          )}
+        {canVote && (
           <ActionButtons
-            disabled={!isSupportedChain}
+            onVote={handleVoteActionClick}
             votePhase={vote.phase}
-            onVote={(mode: VoteMode) => processVote({ mode })}
-            loading={isLoading}
-          />
-        )}
-      {canVoteWithDelegatedVotePower &&
-        !canVoteWithOwnPower &&
-        vote.phase !== VotePhase.Closed && (
-          <FlexWrapper $flexDirection="column">
-            {(canVoteForDelegators || delegatorsVotedThemselves.length > 0) && (
-              <DelegatorsSelector
-                delegators={eligibleDelegators}
-                onSelectionChange={handleSelectionChange}
-                delegatorsVotedThemselves={delegatorsVotedThemselves}
-              />
-            )}
-            {canVoteForDelegators && (
-              <ActionButtons
-                votePhase={vote.phase}
-                disabled={!isSupportedChain}
-                onVote={(mode: VoteMode) =>
-                  processVote({
-                    mode,
-                    delegatedVoters: selectedDelegators,
-                  })
-                }
-                loading={isLoading}
-              />
-            )}
-          </FlexWrapper>
-        )}
-
-      {canVoteWithOwnPower &&
-        canVoteWithDelegatedVotePower &&
-        canVoteForDelegators && (
-          <ActionButtons
-            onVote={handleMenu}
-            votePhase={vote.phase}
-            disabled={!isSupportedChain}
+            disabled={isDisabled}
             nayRef={nayButtonRef}
             yayRef={yayButtonRef}
             loading={isLoading}
           />
         )}
+      </FlexWrapper>
 
       <PopupMenu
         anchorRef={currentMode === 'nay' ? nayButtonRef : yayButtonRef}

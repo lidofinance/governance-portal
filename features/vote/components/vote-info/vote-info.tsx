@@ -1,18 +1,19 @@
 import { Identicon, trimAddress } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { InfoWrap, VoteStatus, AddressBadgeWrap } from './style';
-import { VoteEvent } from 'shared/votes/types';
+import { VotePhase } from 'shared/votes/types';
 import { AddressPop } from 'shared/components/address-pop';
 import { useMemo } from 'react';
 import { getPublicDelegate } from 'features/vote/utils/get-public-delegate';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
+import { useVoteContext } from 'features/vote/providers/vote-context';
 
 interface Props {
   walletAddress: string | null | undefined;
-  voteEvents: VoteEvent[];
 }
 
-export const VoteInfo = ({ walletAddress, voteEvents }: Props) => {
+export const VoteInfo = ({ walletAddress }: Props) => {
+  const { voteEvents, vote, voterDaoTokenBalance } = useVoteContext();
   const voteInfo = useMemo(() => {
     if (!walletAddress || !voteEvents) {
       return undefined;
@@ -51,10 +52,17 @@ export const VoteInfo = ({ walletAddress, voteEvents }: Props) => {
   }
 
   if (voteInfo === null) {
+    // If no balance at snapshot block, show nothing
+    if (!voterDaoTokenBalance) {
+      return null;
+    }
+
     return (
       <InfoWrap>
         <Text size={12} color="secondary">
-          You have not voted yet
+          {vote.phase === VotePhase.Closed
+            ? 'You did not vote'
+            : 'You have not voted yet'}
         </Text>
       </InfoWrap>
     );
