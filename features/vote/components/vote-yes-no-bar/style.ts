@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 export const VotesTitleWrap = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
 `;
 
 type VotesBarWrapProps = { showOnForeground?: boolean };

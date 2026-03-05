@@ -126,7 +126,7 @@ export const decodeCalls = <TCall extends BaseCall>({
   chainId,
 }: DecodeCallArgs<TCall>): DecodedCall[] => {
   if (calls.length === 0) return [];
-  const decoded = calls.reduce<DecodedCall[]>((result, call) => {
+  const decoded = calls.reduce<DecodedCall[]>((result, call, index) => {
     const contractAddress = call.target;
 
     const contractName = getContractName(chainId, contractAddress);
@@ -135,7 +135,14 @@ export const decodeCalls = <TCall extends BaseCall>({
       abi = getContractAbi(contractAddress, chainId);
     }
 
-    let decodedCall: DecodedCall = null;
+    let decodedCall: DecodedCall = {
+      contractAddress,
+      id: index,
+      contractName,
+      functionName: 'unknown',
+      args: undefined,
+      nestedCalls: [],
+    };
 
     if (abi && call.payload.startsWith('0x')) {
       try {
@@ -171,6 +178,7 @@ export const decodeCalls = <TCall extends BaseCall>({
           );
         }
 
+        // Flatten calls for `forward` function
         if (decodedCall.functionName === 'forward' && decodedCall.args) {
           const forwardDecodedData = decodeEvmScript(
             decodedCall.args[0] as Hex,

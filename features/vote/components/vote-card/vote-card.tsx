@@ -4,6 +4,7 @@ import {
   Card,
   DescriptionWrap,
   DetailsBoxWrap,
+  EnactButtonWrap,
   SectionHeading,
   VoteHeader,
   VoteTimestamp,
@@ -23,9 +24,8 @@ import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { useUserConfig } from 'config/user-config';
 import { useConnect } from 'reef-knot/core-react';
-import { VoteInfoDelegated } from '../vote-info-delegated';
+import { VoteInfo } from '../vote-info';
 import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from 'features/vote/providers/vote-context';
@@ -60,7 +60,6 @@ export const VoteCard = ({ voteId }: Props) => {
     canExecute,
     eventExecute,
     eventStart,
-    voteEvents,
     voteTime,
     objectionPhaseTime,
     dgProposal,
@@ -71,7 +70,6 @@ export const VoteCard = ({ voteId }: Props) => {
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
 
-  const { isWalletConnectionAllowed } = useUserConfig();
   const { connect } = useConnect();
 
   const processEnact = useEnactVoteAction();
@@ -169,7 +167,7 @@ export const VoteCard = ({ voteId }: Props) => {
           votePhase={vote.phase}
         />
       )}
-      <VotersList />
+      <VotersList walletAddress={walletAddress} />
       <SectionHeading>Proposal</SectionHeading>
       {eventStart?.args.metadata && (
         <DescriptionWrap data-testid="voteDescription">
@@ -182,34 +180,29 @@ export const VoteCard = ({ voteId }: Props) => {
           metadata={eventStart?.args.metadata || ''}
         />
       </DetailsBoxWrap>
-      {!isWalletConnected &&
-        isWalletConnectionAllowed &&
-        vote.phase !== VotePhase.Closed && (
+      {!isWalletConnected && vote.phase !== VotePhase.Closed && (
+        <DetailsBoxWrap>
           <Button fullwidth onClick={openConnectWalletModal}>
             Connect wallet
           </Button>
-        )}
+        </DetailsBoxWrap>
+      )}
       {isWalletConnected && (
         <>
-          <VoteInfoDelegated
-            voteEvents={voteEvents}
-            walletAddress={walletAddress}
-          />
-          {vote.phase !== VotePhase.Closed && (
-            <>
-              <VotePowerInfo />
-              <VoteActions />
-            </>
-          )}
+          {vote.phase !== VotePhase.Closed && <VotePowerInfo />}
+          <VoteInfo walletAddress={walletAddress} />
+          {vote.phase !== VotePhase.Closed && <VoteActions />}
           {canExecute && (
-            <Button
-              fullwidth
-              color="success"
-              onClick={processEnact}
-              disabled={!isSupportedChain}
-            >
-              Enact
-            </Button>
+            <EnactButtonWrap>
+              <Button
+                fullwidth
+                color="success"
+                onClick={processEnact}
+                disabled={!isSupportedChain}
+              >
+                Enact
+              </Button>
+            </EnactButtonWrap>
           )}
         </>
       )}

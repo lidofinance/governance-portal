@@ -1,5 +1,4 @@
 import { UseFormRegister, UseFormWatch } from 'react-hook-form';
-import { VoterState } from 'shared/votes/types';
 import { Address } from 'viem';
 
 export type DelegationInfo = {
@@ -66,7 +65,7 @@ export type VoteMode = 'yay' | 'nay';
 export type EligibleDelegator = {
   address: Address;
   votingPower: bigint;
-  delegateVote: VoterState.DelegateNay | VoterState.DelegateYea | null;
+  delegateVoteMode: VoteMode | 'absent';
 };
 
 export type VoterInfo = {

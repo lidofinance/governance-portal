@@ -20,12 +20,8 @@ type Props = {
   voteEvents: VoteEvent[];
   votePower: bigint;
   remainingDelegators: EligibleDelegator[];
-  remainingDelegatedVotingPower: bigint;
-  onVoteWithOwnTokens: (mode: VoteMode) => void;
-  onVoteWithRemainingDelegated?: (
-    selectedVoters: Address[],
-    mode: VoteMode,
-  ) => void;
+  onVoteWithOwnTokens: () => void;
+  onVoteWithRemainingDelegated?: (selectedVoters: Address[]) => void;
 };
 
 export const VoteSuccessModal = ({
@@ -33,7 +29,6 @@ export const VoteSuccessModal = ({
   txHash,
   voteEvents,
   votePower,
-  remainingDelegatedVotingPower,
   remainingDelegators,
   onVoteWithOwnTokens,
   onVoteWithRemainingDelegated,
@@ -58,11 +53,13 @@ export const VoteSuccessModal = ({
   const canVoteWithOwnTokens =
     hasOwnVotingPower && !hasAlreadyVotedWithOwnTokens;
 
-  const hasRemainingDelegatedPower = remainingDelegatedVotingPower > 0n;
+  const hasRemainingDelegatedPower = remainingDelegators.some(
+    (delegator) => delegator.delegateVoteMode === 'absent',
+  );
 
   const handleDelegatedVoteClick = () => {
     if (onVoteWithRemainingDelegated && selectedDelegators.length > 0) {
-      onVoteWithRemainingDelegated(selectedDelegators, mode);
+      onVoteWithRemainingDelegated(selectedDelegators);
     }
   };
 
@@ -99,7 +96,7 @@ export const VoteSuccessModal = ({
                 <Button
                   size="sm"
                   color="secondary"
-                  onClick={() => onVoteWithOwnTokens(mode)}
+                  onClick={onVoteWithOwnTokens}
                   style={{ flex: 1 }}
                 >
                   My own ({formatBalance(votePower)} {tokenData?.symbol})
@@ -115,6 +112,7 @@ export const VoteSuccessModal = ({
                 </Button>
               </Box>
               <DelegatorsSelector
+                currentMode={mode}
                 onSelectionChange={handleSelectionChange}
                 delegators={remainingDelegators}
               />
@@ -127,8 +125,8 @@ export const VoteSuccessModal = ({
                 Vote with your own {formatBalance(votePower)}{' '}
                 {tokenData?.symbol}
               </Text>
-              <Button onClick={() => onVoteWithOwnTokens(mode)} fullwidth>
-                {voteModeLabel}
+              <Button onClick={onVoteWithOwnTokens} fullwidth>
+                Vote {voteModeLabel}
               </Button>
             </AddonSection>
           )}
@@ -137,11 +135,12 @@ export const VoteSuccessModal = ({
             <AddonSection>
               <Text strong>Vote {voteModeLabel} with delegated tokens</Text>
               <DelegatorsSelector
+                currentMode={mode}
                 onSelectionChange={handleSelectionChange}
                 delegators={remainingDelegators}
               />
               <Button onClick={handleDelegatedVoteClick} fullwidth>
-                {voteModeLabel}
+                Vote {voteModeLabel}
               </Button>
             </AddonSection>
           )}

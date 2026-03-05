@@ -44,7 +44,7 @@ export const useVote = (voteId: string, voteTime: number | undefined) => {
               fromBlock: snapshotBlock + voteLengthInBlocks,
               chainId,
             })
-          : undefined,
+          : null,
       ]);
 
       return {

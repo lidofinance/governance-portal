@@ -71,22 +71,16 @@ export const useVoteAction = () => {
         txModalStages.success({
           mode,
           txHash,
-          onVoteWithOwnTokens: (voteMode: VoteMode) =>
-            processVote({ mode: voteMode }),
-          onVoteWithRemainingDelegated: (
-            selectedVoters: Address[],
-            voteMode: VoteMode,
-          ) =>
+          onVoteWithOwnTokens: () => processVote({ mode }),
+          onVoteWithRemainingDelegated: (selectedVoters: Address[]) =>
             processVote({
               delegatedVoters: selectedVoters,
-              mode: voteMode,
+              mode,
             }),
           voteEvents: updatedVoteEvents.data ?? [],
           votePower: updatedVoterState.data?.voterDaoTokenBalance ?? 0n,
           remainingDelegators:
             updatedDelegatorsData.data?.eligibleDelegatedVoters ?? [],
-          remainingDelegatedVotingPower:
-            updatedDelegatorsData.data?.eligibleDelegatedVotingPower ?? 0n,
         });
 
         return true;

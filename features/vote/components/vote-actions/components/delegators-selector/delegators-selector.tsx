@@ -18,8 +18,7 @@ import {
   VotedByHolderWrap,
 } from './style';
 import { formatBalance } from 'utils/format-balance';
-import { EligibleDelegator, VoterInfo } from 'features/vote/types';
-import { VoterState } from 'shared/votes/types';
+import { EligibleDelegator, VoteMode, VoterInfo } from 'features/vote/types';
 
 const TRANSACTION_LIMIT = 100;
 
@@ -84,11 +83,9 @@ const VotableDelegatorItem = ({
         </AddressBadgeWrap>
       </AddressPop>
     </AddressWrap>
-    {delegator.delegateVote !== null && (
+    {delegator.delegateVoteMode !== 'absent' && (
       <Text as="span" size={12} color="secondary">
-        {delegator.delegateVote === VoterState.DelegateYea
-          ? 'Yes (You)'
-          : 'No (You)'}
+        {delegator.delegateVoteMode === 'yay' ? 'Yes (You)' : 'No (You)'}
       </Text>
     )}
     <DelegatorsVotingPower data-testid="delegatorVP">
@@ -99,6 +96,7 @@ const VotableDelegatorItem = ({
 
 interface DelegatorsSelectorProps {
   delegators: EligibleDelegator[];
+  currentMode: VoteMode | null;
   delegatorsVotedThemselves?: VoterInfo[];
   onSelectionChange?: (
     selectedAddresses: Address[],
@@ -109,6 +107,7 @@ interface DelegatorsSelectorProps {
 export const DelegatorsSelector = ({
   onSelectionChange,
   delegators,
+  currentMode,
   delegatorsVotedThemselves,
 }: DelegatorsSelectorProps) => {
   const { data: governanceTokenData } = useGovernanceToken();
@@ -125,27 +124,21 @@ export const DelegatorsSelector = ({
 
     return Object.fromEntries(
       delegators
-        .filter((delegator) => delegator.delegateVote === null)
+        .filter((delegator) =>
+          // For inline view of the select, filter delegators voted for ANY mode
+          currentMode === null
+            ? delegator.delegateVoteMode === 'absent'
+            : delegator.delegateVoteMode !== currentMode,
+        )
         .map((delegator, index) => [
           delegator.address,
           index < TRANSACTION_LIMIT,
         ]),
     );
-  }, [delegators]);
+  }, [delegators, currentMode]);
 
-  const [finalCheckedItems, setFinalCheckedItems] = useState<CheckedItems>(
-    () => {
-      if (delegators.length === 0) return {};
-      return Object.fromEntries(
-        delegators
-          .filter((delegator) => delegator.delegateVote === null)
-          .map((delegator, index) => [
-            delegator.address,
-            index < TRANSACTION_LIMIT,
-          ]),
-      );
-    },
-  );
+  const [finalCheckedItems, setFinalCheckedItems] =
+    useState<CheckedItems>(checkedItems);
 
   useEffect(() => {
     setFinalCheckedItems(checkedItems);
@@ -187,42 +180,52 @@ export const DelegatorsSelector = ({
     }
   }, [selectionData, onSelectionChange]);
 
+  const shouldShowSelection = delegators.length > 0;
+
   // Don't render until we have complete data AND delegators are processed
-  if (delegators.length === 0 && !delegatorsVotedThemselves?.length) {
+  if (!shouldShowSelection && !delegatorsVotedThemselves?.length) {
     return null;
   }
 
   return (
     <AccordionWrap
       key={delegators.length}
-      defaultExpanded={false}
+      defaultExpanded={!shouldShowSelection}
       summary={
-        <DelegatorsSummary
-          selectedBalance={selectionData.selectedBalance}
-          totalVotingPower={totalVotingPower}
-          delegatorCount={delegators.length}
-          tokenSymbol={tokenSymbol}
-        />
-      }
-    >
-      <ListWrap data-testid="delegatorsList">
-        {delegators.map((delegator) => (
-          <VotableDelegatorItem
-            key={delegator.address}
-            delegator={delegator}
-            isChecked={finalCheckedItems[delegator.address] || false}
-            onCheckedChange={handleCheckboxChange}
+        shouldShowSelection ? (
+          <DelegatorsSummary
+            selectedBalance={selectionData.selectedBalance}
+            totalVotingPower={totalVotingPower}
+            delegatorCount={selectionData.selectedAddresses.length}
             tokenSymbol={tokenSymbol}
           />
-        ))}
-      </ListWrap>
+        ) : (
+          'Voted by holder'
+        )
+      }
+    >
+      {shouldShowSelection && (
+        <ListWrap data-testid="delegatorsList">
+          {delegators.map((delegator) => (
+            <VotableDelegatorItem
+              key={delegator.address}
+              delegator={delegator}
+              isChecked={finalCheckedItems[delegator.address] || false}
+              onCheckedChange={handleCheckboxChange}
+              tokenSymbol={tokenSymbol}
+            />
+          ))}
+        </ListWrap>
+      )}
       {delegatorsVotedThemselves && delegatorsVotedThemselves.length > 0 && (
         <>
-          <VotedByHolderWrap>
-            <Text size={12} color="secondary">
-              Voted by holder
-            </Text>
-          </VotedByHolderWrap>
+          {shouldShowSelection && (
+            <VotedByHolderWrap>
+              <Text size={12} color="secondary">
+                Voted by holder
+              </Text>
+            </VotedByHolderWrap>
+          )}
           <ListWrap>
             {delegatorsVotedThemselves.map((voter) => (
               <DelegatorsListItem key={voter.address}>

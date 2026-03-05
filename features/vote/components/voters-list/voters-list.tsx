@@ -12,7 +12,11 @@ import { ONE_LDO } from 'features/vote/constants';
 
 const INITIAL_PAGE_SIZE = 5;
 
-export const VotersList = () => {
+type Props = {
+  walletAddress: Address | undefined;
+};
+
+export const VotersList = ({ walletAddress }: Props) => {
   const { vote, voteEvents } = useVoteContext();
   const { data: tokenData } = useGovernanceToken();
   const isMobile = useBreakpoint('md');
@@ -76,6 +80,7 @@ export const VotersList = () => {
           ensMap={ensMap}
           isMobile={isMobile}
           key={`${event.voter}-${i}`}
+          walletAddress={walletAddress}
         />
       ))}
       {voteEvents.length > limit && (

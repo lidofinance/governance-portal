@@ -7,7 +7,23 @@ import { useQuery } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
 import { DELEGATED_VOTERS_ADDRESSES_LIMIT } from '../constants';
 import { Address } from 'viem';
-import { EligibleDelegator, VoterInfo } from '../types';
+import { EligibleDelegator, VoteMode, VoterInfo } from '../types';
+
+const convertVoterStateToVoteMode = (
+  voterState:
+    | VoterState.DelegateYea
+    | VoterState.DelegateNay
+    | VoterState.Absent,
+): VoteMode | 'absent' => {
+  switch (voterState) {
+    case VoterState.DelegateYea:
+      return 'yay';
+    case VoterState.DelegateNay:
+      return 'nay';
+    default:
+      return 'absent';
+  }
+};
 
 const processEligibleDelegators = (
   addresses: Address[],
@@ -31,7 +47,7 @@ const processEligibleDelegators = (
         const delegator: EligibleDelegator = {
           address,
           votingPower,
-          delegateVote: voterState === VoterState.Absent ? null : voterState,
+          delegateVoteMode: convertVoterStateToVoteMode(voterState),
         };
 
         acc.eligibleDelegatedVoters.push(delegator);
@@ -142,6 +158,18 @@ export const useVoteDelegators = (voteId: number | undefined) => {
         delegatedVotersAddresses,
         delegatedVotersVotingPower,
         delegatedVotersState,
+      );
+
+      eligibleDelegatedVoters.sort((a, b) =>
+        a.votingPower > b.votingPower
+          ? -1
+          : a.votingPower < b.votingPower
+            ? 1
+            : 0,
+      );
+
+      delegatedVotersVotedThemselves.sort((a, b) =>
+        a.stake > b.stake ? -1 : a.stake < b.stake ? 1 : 0,
       );
 
       return {
