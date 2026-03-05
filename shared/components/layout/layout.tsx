@@ -1,40 +1,43 @@
-import { ReactNode, FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
 
 import { ContainerProps } from '@lidofinance/lido-ui';
 
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
-import { Main } from './main/main';
-import { LayoutTitleStyle, LayoutSubTitleStyle } from './style';
+import {
+  LayoutTitleStyle,
+  LayoutSubTitleStyle,
+  ContainerStyled,
+} from './style';
 
 type Props = {
-  title?: ReactNode;
-  subtitle?: ReactNode;
+  title?: string | null;
+  subtitle?: string | null;
   containerSize?: ContainerProps['size'];
-  pageTitle?: string;
+  metaTitle?: string;
 };
 
 export const Layout: FC<PropsWithChildren<Props>> = (props) => {
   const {
     title,
     subtitle,
-    containerSize,
-    pageTitle = 'Governance Portal | Lido',
+    containerSize = 'tight',
+    metaTitle: metaTitleProp,
   } = props;
   const { children } = props;
 
   return (
     <>
       <Head>
-        <title>{pageTitle}</title>
+        <title>{metaTitleProp ?? title ?? 'Governance Portal'} | Lido</title>
       </Head>
       <Header />
-      <Main size={containerSize}>
+      <ContainerStyled size={containerSize}>
         <LayoutTitleStyle>{title}</LayoutTitleStyle>
         <LayoutSubTitleStyle>{subtitle}</LayoutSubTitleStyle>
         {children}
-      </Main>
+      </ContainerStyled>
       <Footer />
     </>
   );

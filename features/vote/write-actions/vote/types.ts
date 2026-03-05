@@ -1,11 +1,8 @@
 import { Address } from 'viem';
 import { VoteMode } from '../../types';
 
-export type ProcessVoteTxArgs = {
-  mode: VoteMode;
+export type VoteTxArgs = {
   voteId: bigint;
-};
-
-export type ProcessVoteDelegatedTxArgs = ProcessVoteTxArgs & {
-  voters: Address[];
+  mode: VoteMode;
+  delegatedVoters?: Address[];
 };

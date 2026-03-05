@@ -4,12 +4,13 @@ import { getBlock } from 'viem/actions';
 import { Address, Log, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { fetchLogsInParallelChunks } from 'utils/fetch-logs-in-parallel';
+import { EventExecuteVote } from '../types';
 
 type Args = {
   address: Address;
   client: PublicClient;
   voteId: bigint;
-  block: bigint;
+  fromBlock: bigint;
   chainId: CHAINS;
 };
 
@@ -19,43 +20,34 @@ type LogReturnType = Log & {
   };
 };
 
-export type EventExecuteVote = {
-  event: Log;
-  executedAt: bigint | undefined;
-};
-
-type GetEventExecuteVoteReturnType = Promise<EventExecuteVote | null>;
+const executeVoteEventAbi = findAbiItem({
+  abi: aragonVotingAbi,
+  name: 'ExecuteVote',
+  type: 'event',
+});
 
 export const getEventExecuteVote = async ({
   client,
   address,
   voteId,
-  block,
+  fromBlock,
   chainId,
-}: Args): GetEventExecuteVoteReturnType => {
+}: Args): Promise<EventExecuteVote | undefined> => {
   try {
-    const executeVoteEventAbi = findAbiItem({
-      abi: aragonVotingAbi,
-      name: 'ExecuteVote',
-      type: 'event',
-    });
-
-    const latestBlockNumber = await client.getBlockNumber();
+    const toBlock = await client.getBlockNumber();
 
     const events = await fetchLogsInParallelChunks<LogReturnType>({
       client,
       address,
       event: executeVoteEventAbi,
-      args: {
-        voteId,
-      },
-      fromBlock: block,
-      toBlock: latestBlockNumber,
+      args: { voteId },
+      fromBlock,
+      toBlock,
       chainId,
     });
 
     if (events.length === 0) {
-      return null;
+      return;
     }
 
     const event = events[0];
@@ -71,6 +63,6 @@ export const getEventExecuteVote = async ({
     };
   } catch (e) {
     console.error(e);
-    return null;
+    return;
   }
 };

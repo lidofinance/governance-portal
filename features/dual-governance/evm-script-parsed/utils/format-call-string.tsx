@@ -108,23 +108,27 @@ const FormatSingleCall: React.FC<{
           addr.toLowerCase() === decodedCall.contractAddress.toLowerCase(),
       ));
 
+  const cardTitle = decodedCall ? (
+    <CallTitle>
+      {id}. On{' '}
+      {decodedCall.contractName ? (
+        <>
+          <b>[{decodedCall.contractName}]</b>
+          <br />
+        </>
+      ) : null}
+      <Link
+        href={getEtherscanAddressLink(chainId, decodedCall.contractAddress)}
+      >
+        {decodedCall.contractAddress}
+      </Link>
+    </CallTitle>
+  ) : null;
+
   if (!decodedCall || !decodedCall.functionName) {
     return (
       <CallWrapper style={{ paddingLeft: `${depth * 20}px` }}>
-        <CallTitle>
-          {id}. On <b>[{decodedCall?.contractName || 'Unknown'}]</b>
-          <br />
-          {decodedCall?.contractAddress && (
-            <Link
-              href={getEtherscanAddressLink(
-                chainId,
-                decodedCall.contractAddress,
-              )}
-            >
-              {decodedCall?.contractAddress}
-            </Link>
-          )}
-        </CallTitle>
+        {cardTitle}
         <CallFunction>Unknown function</CallFunction>
       </CallWrapper>
     );
@@ -158,12 +162,7 @@ const FormatSingleCall: React.FC<{
   );
 
   return (
-    <CallWrapper
-      style={{
-        paddingLeft: `${depth * 20}px`,
-        marginBottom: '40px',
-      }}
-    >
+    <CallWrapper $withDg={isDualGovernanceCall}>
       {isDualGovernanceCall && (
         <DGBadge>
           <DualGovernancePlainIcon />{' '}
@@ -172,15 +171,7 @@ const FormatSingleCall: React.FC<{
           </Text>
         </DGBadge>
       )}
-      <CallTitle>
-        {id}. On <b>[{decodedCall.contractName || 'Unknown'}]</b>
-        <br />
-        <Link
-          href={getEtherscanAddressLink(chainId, decodedCall.contractAddress)}
-        >
-          {decodedCall.contractAddress}
-        </Link>
-      </CallTitle>
+      {cardTitle}
       <CallFunction>
         function <b>{functionName}</b>
         {formattedArgs?.length ? (

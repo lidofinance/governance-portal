@@ -26,11 +26,18 @@ const ChipStatusStyle = {
 
 export const ChipWrap = styled.div<InjectedPropsTr>`
   ${({ $variant }) => ChipStatusStyle[$variant]};
-  padding: 6px 8px;
-  border-radius: 12px;
+  padding: 0 4px;
+  border-radius: 5px;
   font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 4px;
+
+  svg {
+    transform: scale(0.8);
+    path {
+      fill-opacity: 1;
+    }
+  }
 `;

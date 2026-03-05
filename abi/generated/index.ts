@@ -116,3 +116,4 @@ export * from './StakingVault';
 export * from './EvmAlterTiersInOperatorGrid';
 export * from './StonksV2';
 export * from './WithdrawalVault';
+export * from './PredepositGuarantee';

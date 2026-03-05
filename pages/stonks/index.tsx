@@ -9,12 +9,7 @@ export default function StonksIndexPage() {
   const [mode, setMode] = useState('create');
 
   return (
-    <Layout
-      pageTitle="Stonks"
-      title="Stonks"
-      subtitle="Treasury swaps"
-      containerSize="tight"
-    >
+    <Layout title="Stonks" subtitle="Treasury swaps" containerSize="tight">
       <StonksTabsWrapper>
         <ToggleButton
           onChange={setMode}

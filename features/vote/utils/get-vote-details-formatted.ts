@@ -1,8 +1,9 @@
 import { formatNumber } from 'shared/blockchain/utils';
 import { formatFloatPct } from './format-float-pct';
 import { formatEther } from 'viem';
+import { Vote } from 'shared/votes/types';
 
-export const getVoteDetailsFormatted = (vote: any) => {
+export const getVoteDetailsFormatted = (vote: Vote) => {
   const totalSupply = Number(formatEther(vote.votingPower || 0n));
   const totalSupplyFormatted = formatNumber({ value: totalSupply });
   const nayNum = Number(formatEther(vote.nay));

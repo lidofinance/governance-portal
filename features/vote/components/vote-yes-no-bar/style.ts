@@ -1,10 +1,9 @@
 import styled, { css } from 'styled-components';
 
 export const VotesTitleWrap = styled.div`
-  margin-top: ${({ theme }) => theme.spaceMap.lg}px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
 `;
 
 type VotesBarWrapProps = { showOnForeground?: boolean };

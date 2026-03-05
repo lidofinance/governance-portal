@@ -147,7 +147,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
           pagesCount={pagesCount}
           activePage={currentPage}
           onItemClick={(idx: number) => handleChangePage(idx)}
-          siblingCount={0}
+          siblingCount={1}
         />
       </PaginationWrap>
     </>

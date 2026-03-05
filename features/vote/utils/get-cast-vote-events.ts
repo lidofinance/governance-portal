@@ -1,26 +1,40 @@
 import { aragonVotingAbi } from 'abi/generated';
-import {
-  VoteEvent,
-  VoteCastEventLog,
-  VoteCastEventLogArgs,
-  AttemptCastVoteAsDelegateEventLog,
-} from 'shared/votes/types';
-import type { Address, PublicClient } from 'viem';
+import { VoteEvent } from 'shared/votes/types';
+import type { Address, GetLogsReturnType, PublicClient } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
+import { fetchLogsInParallelChunks } from 'utils/fetch-logs-in-parallel';
 
-const GET_LOGS__HALF_RANGE = 2499n;
+const castVoteEventAbi = findAbiItem({
+  abi: aragonVotingAbi,
+  name: 'CastVote',
+  type: 'event',
+});
 
-type VoteInfo = Pick<VoteCastEventLog, 'blockNumber' | 'transactionIndex'> &
-  VoteCastEventLogArgs;
+const attemptCastVoteAsDelegateAbi = findAbiItem({
+  abi: aragonVotingAbi,
+  name: 'AttemptCastVoteAsDelegate',
+  type: 'event',
+});
 
-type VotesMap = Record<
-  string,
-  Pick<VoteCastEventLog, 'blockNumber' | 'transactionIndex'> &
-    VoteCastEventLogArgs
->;
+type CastVoteLog = GetLogsReturnType<
+  typeof castVoteEventAbi,
+  [typeof castVoteEventAbi],
+  true
+>[number];
+
+type AttemptCastVoteAsDelegateLog = GetLogsReturnType<
+  typeof attemptCastVoteAsDelegateAbi,
+  [typeof attemptCastVoteAsDelegateAbi],
+  true
+>[number];
+
+type VoteInfo = Pick<CastVoteLog, 'blockNumber' | 'transactionIndex'> &
+  CastVoteLog['args'];
+
+type VotesMap = Record<string, VoteInfo>;
 
 const isVoteMoreRecentThan = (
-  newVote: VoteCastEventLog,
+  newVote: CastVoteLog,
   existingVote: VoteInfo,
 ): boolean => {
   if (!existingVote) {
@@ -51,33 +65,39 @@ const isVoteMoreRecentThan = (
   return false;
 };
 
-const castVoteEventAbi = findAbiItem({
-  abi: aragonVotingAbi,
-  name: 'CastVote',
-  type: 'event',
-});
+type Args = {
+  votingContractAddress: Address;
+  client: PublicClient;
+  voteId: bigint;
+  fromBlock: bigint;
+  toBlock: bigint;
+};
 
-const attemptCastVoteAsDelegateAbi = findAbiItem({
-  abi: aragonVotingAbi,
-  name: 'AttemptCastVoteAsDelegate',
-  type: 'event',
-});
-
-export const getVoteEvents = async (
-  votingContractAddress: Address,
-  client: PublicClient,
-  voteId: bigint,
-  block: bigint,
-): Promise<VoteEvent[]> => {
-  const castVoteEvents = (await client.getLogs({
-    address: votingContractAddress,
-    event: castVoteEventAbi,
-    args: {
-      voteId: BigInt(voteId),
-    },
-    fromBlock: block - GET_LOGS__HALF_RANGE,
-    toBlock: block + GET_LOGS__HALF_RANGE,
-  })) as unknown as VoteCastEventLog[];
+export const getCastVoteEvents = async ({
+  votingContractAddress,
+  client,
+  voteId,
+  fromBlock,
+  toBlock,
+}: Args): Promise<VoteEvent[]> => {
+  const [castVoteEvents, castVoteAsDelegateEvents] = await Promise.all([
+    fetchLogsInParallelChunks<CastVoteLog>({
+      client,
+      address: votingContractAddress,
+      event: castVoteEventAbi,
+      args: { voteId },
+      fromBlock,
+      toBlock,
+    }),
+    fetchLogsInParallelChunks<AttemptCastVoteAsDelegateLog>({
+      client,
+      address: votingContractAddress,
+      event: attemptCastVoteAsDelegateAbi,
+      args: { voteId },
+      fromBlock,
+      toBlock,
+    }),
+  ]);
 
   if (castVoteEvents.length === 0) {
     return [];
@@ -94,21 +114,11 @@ export const getVoteEvents = async (
         transactionIndex: event.transactionIndex ?? 0,
         voter: event.args.voter,
         supports: event.args.supports,
-        stake: event.args.stake as unknown as bigint,
+        stake: event.args.stake,
         voteId: event.args.voteId,
       };
     }
   }
-
-  const castVoteAsDelegateEvents = (await client.getLogs({
-    address: votingContractAddress,
-    event: attemptCastVoteAsDelegateAbi,
-    args: {
-      voteId: BigInt(voteId),
-    },
-    fromBlock: block - GET_LOGS__HALF_RANGE,
-    toBlock: block + GET_LOGS__HALF_RANGE,
-  })) as unknown as AttemptCastVoteAsDelegateEventLog[];
 
   // ${delegateAddress}-${supports} -> VoteEvent
   const delegatedVotesMap: Record<string, VoteEvent | undefined> = {};

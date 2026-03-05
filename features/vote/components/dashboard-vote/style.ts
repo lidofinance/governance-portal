@@ -48,4 +48,5 @@ export const Footer = styled.div`
 export const NeededToQuorum = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
 `;

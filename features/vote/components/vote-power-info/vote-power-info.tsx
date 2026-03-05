@@ -1,36 +1,30 @@
 import { Text } from '@lidofinance/lido-ui';
 import { InfoWrap, VotingPower, Amount } from './style';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
-import { useDelegators } from '../../hooks/use-delegators';
 import { formatBalance } from 'utils/format-balance';
+import { useVoteContext } from 'features/vote/providers/vote-context';
 
-interface Props {
-  votePowerWei: bigint | null | undefined;
-}
-
-export const VotePowerInfo = ({ votePowerWei }: Props) => {
+export const VotePowerInfo = () => {
   const { data: tokenData } = useGovernanceToken();
-  const {
-    data: { nonZeroDelegators, totalVotingPower },
-  } = useDelegators();
+  const { voterDaoTokenBalance, totalDelegatedVotingPower } = useVoteContext();
 
   return (
     <InfoWrap>
       <VotingPower>
         <Text as="span" color="secondary" size="xxs">
-          My voting power
+          Your voting power
         </Text>
         <Amount data-testid="myVPAmount">
-          {formatBalance(votePowerWei || 0n)} {tokenData?.symbol}
+          {formatBalance(voterDaoTokenBalance ?? 0n)} {tokenData?.symbol}
         </Amount>
       </VotingPower>
-      {nonZeroDelegators.length > 0 && (
+      {totalDelegatedVotingPower > 0n && (
         <VotingPower>
           <Text as="span" color="secondary" size="xxs">
-            Delegated voting power
+            Total delegated voting power
           </Text>
           <Amount data-testid="delegatedVPAmount">
-            {formatBalance(totalVotingPower)} {tokenData?.symbol}
+            {formatBalance(totalDelegatedVotingPower)} {tokenData?.symbol}
           </Amount>
         </VotingPower>
       )}

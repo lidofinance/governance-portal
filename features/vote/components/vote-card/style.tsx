@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, InlineLoader } from '@lidofinance/lido-ui';
+import { Block } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
 type BoxProps = {
@@ -23,6 +23,8 @@ export const Card = styled(Block).attrs({
   padding: 20px;
   max-width: 560px;
   margin: 0 auto 40px;
+  box-shadow: ${({ theme }) => theme.boxShadows.xl}
+    var(--lido-color-shadowLight);
 `;
 
 export const VoteHeader = styled.div`
@@ -31,7 +33,7 @@ export const VoteHeader = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
 `;
 
 export const VoteTitle = styled(Text).attrs({
@@ -46,27 +48,28 @@ export const BlockWrap = styled.div`
   margin-left: auto;
 `;
 
-export const VoteTimestamps = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+export const VoteTimestamp = styled(Text).attrs({
+  size: 12,
+  color: 'secondary',
+})`
+  margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
 `;
 
 export const DetailsBoxWrap = styled.div`
-  margin-top: ${({ theme }) => theme.spaceMap.md}px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
+  margin-top: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const BoxVotes = styled(ContentHighlightBox)`
   padding: 0;
   background: none;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const SectionHeading = styled(Text).attrs({
   size: 16,
   weight: 700,
 })`
-  margin: 20px 0;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const DescriptionWrap = styled.div`
@@ -76,7 +79,6 @@ export const DescriptionWrap = styled.div`
   line-height: 24px;
 `;
 
-export const InlineLoaderStyled = styled(InlineLoader)`
-  height: 400px;
-  border-radius: 20px;
+export const EnactButtonWrap = styled.div`
+  margin-top: ${({ theme }) => theme.spaceMap.xl}px;
 `;

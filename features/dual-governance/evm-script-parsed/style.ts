@@ -57,7 +57,6 @@ export const Tab = styled.div<TabProps>`
 `;
 
 export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
-  padding: 16px 32px;
   font-size: 15px;
   position: relative;
   margin-top: -1px;
@@ -73,13 +72,18 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
     css`
       border-top-right-radius: 20px;
       color: white;
-      background: rgba(0, 163, 255, 0.08);
     `};
 `;
 
-export const CallWrapper = styled.div`
+export const CallWrapper = styled.div<{ $withDg?: boolean }>`
   word-break: break-all;
-  margin-bottom: 16px;
+  padding: 20px;
+
+  ${({ $withDg }) =>
+    $withDg &&
+    css`
+      background-color: rgba(0, 163, 255, 0.08);
+    `}
 `;
 
 export const CallTitle = styled.span`
@@ -94,13 +98,13 @@ export const ScriptBox = styled.div`
   resize: vertical;
   width: 100%;
   font-family:
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    Liberation Mono,
-    Courier New,
-    monospace !important;
+    SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+
+  * {
+    font-family: inherit;
+  }
+
   font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;
   color: var(--lido-color-text);
   border-radius: 8px;

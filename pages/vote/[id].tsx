@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { Layout } from 'shared/components';
 import { VoteCard } from 'features/vote/components/vote-card';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
-import { VoteActionsProvider } from '../../features/vote/providers/vote-actions-context';
 import { VoteMeta } from '../../features/vote/meta';
 import { Text } from 'shared/components/text';
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
@@ -20,18 +19,16 @@ export default function VotePage() {
   return (
     <>
       <VoteMeta />
-      <Layout>
+      <Layout metaTitle={`Vote #${id}`}>
         <VoteProvider voteId={id}>
-          <VoteActionsProvider voteId={id}>
-            <Box marginBottom={8}>
-              <Link href={VOTE_DASHBOARD_INDEX_PATH}>
-                <Text size={14} color="secondary">
-                  {'< Back to all votes'}
-                </Text>
-              </Link>
-            </Box>
-            <VoteCard voteId={id} />
-          </VoteActionsProvider>
+          <Box marginBottom={8}>
+            <Link href={VOTE_DASHBOARD_INDEX_PATH}>
+              <Text size={14} color="secondary">
+                {'< Back to all votes'}
+              </Text>
+            </Link>
+          </Box>
+          <VoteCard voteId={id} />
         </VoteProvider>
       </Layout>
     </>
