@@ -85,6 +85,7 @@ export const StonksFindOrderForm = () => {
           <SubmitButtonHookForm
             errorField="txHashOrAddress"
             data-testid="findOrderBtn"
+            buttonStyleVersion="default"
           >
             Find order
           </SubmitButtonHookForm>

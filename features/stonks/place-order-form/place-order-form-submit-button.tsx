@@ -10,6 +10,7 @@ export const PlaceOrderFormSubmitButton = () => {
       loading={isLoading}
       disabled={!formState.isValid}
       data-testid="placeOrderBtn"
+      buttonStyleVersion="default"
     >
       Place Order
     </SubmitButtonHookForm>
