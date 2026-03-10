@@ -21,6 +21,7 @@ export type PlaceOrderFormNetworkData = {
   estimatedOutputFromBalance: bigint | undefined;
   isLoading: boolean;
   isFetched: boolean;
+  isStonksManagerConnected: boolean | undefined;
   refetch: () => Promise<void>;
   fetchEstimatedOutput: (value: bigint | undefined) => Promise<bigint>;
 };

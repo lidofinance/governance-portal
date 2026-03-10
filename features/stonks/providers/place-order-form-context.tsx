@@ -22,6 +22,7 @@ import {
 import { usePlaceOrderAction } from '@stonks/write-actions/place-order/action';
 import { useStonksBalanceMap } from '@stonks/hooks/use-stonks-balance-map';
 import { useStonksEstimatedOutput } from '@stonks/hooks/use-stonks-estimated-output';
+import { useIsStonksManager } from '@stonks/hooks/use-is-stonks-manager';
 
 const PlaceOrderFormContext = createContext<
   PlaceOrderFormContextValue | undefined
@@ -39,6 +40,12 @@ export const usePlaceOrderFormData = () => {
 const usePlaceOrderFormNetworkData = (
   stonksMetadata: StonksMetadata,
 ): PlaceOrderFormNetworkData => {
+  const {
+    data: isStonksManagerConnected,
+    isLoading: isStonksManagerLoading,
+    isFetched: isStonksManagerFetched,
+  } = useIsStonksManager(stonksMetadata.address);
+
   const {
     data: balanceMap,
     isLoading: isBalanceMapLoading,
@@ -59,8 +66,11 @@ const usePlaceOrderFormNetworkData = (
   return {
     balance,
     estimatedOutputFromBalance,
-    isLoading: isBalanceMapLoading || isEstimatedOutputLoading,
-    isFetched: isBalanceMapFetched && isEstimatedOutputFetched,
+    isLoading:
+      isBalanceMapLoading || isEstimatedOutputLoading || isStonksManagerLoading,
+    isFetched:
+      isBalanceMapFetched && isEstimatedOutputFetched && isStonksManagerFetched,
+    isStonksManagerConnected,
     fetchEstimatedOutput,
     refetch: async () => {
       await Promise.allSettled([refetchBalanceMap(), refetchEstimatedOutput()]);

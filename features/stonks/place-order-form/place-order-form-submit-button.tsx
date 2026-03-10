@@ -4,15 +4,17 @@ import { useFormContext } from 'react-hook-form';
 
 export const PlaceOrderFormSubmitButton = () => {
   const { formState } = useFormContext();
-  const { isLoading } = usePlaceOrderFormData();
+  const { isLoading, isStonksManagerConnected } = usePlaceOrderFormData();
   return (
     <SubmitButtonHookForm
       loading={isLoading}
-      disabled={!formState.isValid}
+      disabled={!formState.isValid || !isStonksManagerConnected}
       data-testid="placeOrderBtn"
       buttonStyleVersion="default"
     >
-      Place Order
+      {isStonksManagerConnected === false
+        ? 'Only Stonks manager can place orders'
+        : 'Place Order'}
     </SubmitButtonHookForm>
   );
 };
