@@ -3,10 +3,8 @@ import { Layout } from 'shared/components';
 import { VoteCard } from 'features/vote/components/vote-card';
 import { VoteProvider } from '../../features/vote/providers/vote-context';
 import { VoteMeta } from '../../features/vote/meta';
-import { Text } from 'shared/components/text';
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
-import Link from 'next/link';
-import { Box } from '@lidofinance/lido-ui';
+import { BackButton } from 'shared/components/back-button';
 
 export default function VotePage() {
   const { query, isReady } = useRouter();
@@ -20,15 +18,9 @@ export default function VotePage() {
     <>
       <VoteMeta />
       <Layout metaTitle={`Vote #${id}`}>
+        <BackButton label="votes" href={VOTE_DASHBOARD_INDEX_PATH} />
         <VoteProvider voteId={id}>
-          <Box marginBottom={8}>
-            <Link href={VOTE_DASHBOARD_INDEX_PATH}>
-              <Text size={14} color="secondary">
-                {'< Back to all votes'}
-              </Text>
-            </Link>
-          </Box>
-          <VoteCard voteId={id} />
+          <VoteCard />
         </VoteProvider>
       </Layout>
     </>

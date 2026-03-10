@@ -33,10 +33,6 @@ import { VoteProgressBar } from '../vote-progress-bar';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useEnactVoteAction } from 'features/vote/write-actions/enact-vote/action';
 
-type Props = {
-  voteId: string;
-};
-
 const localeDateOptions = {
   month: 'long',
   day: 'numeric',
@@ -53,7 +49,7 @@ const formatDate = (date: number) =>
     localeDateOptions as Intl.DateTimeFormatOptions,
   );
 
-export const VoteCard = ({ voteId }: Props) => {
+export const VoteCard = () => {
   const { chainId } = useLidoSDK();
   const {
     vote,
@@ -107,9 +103,9 @@ export const VoteCard = ({ voteId }: Props) => {
   } = getVoteDetailsFormatted(vote);
 
   return (
-    <Card key={voteId} data-testid="voteCard">
+    <Card key={vote.id} data-testid="voteCard">
       <VoteHeader>
-        <VoteTitle data-testid="voteTitle">Vote #{voteId}</VoteTitle>
+        <VoteTitle data-testid="voteTitle">Vote #{vote.id}</VoteTitle>
         <VoteStatusChips
           totalSupply={totalSupply}
           nayNum={nayNum}
