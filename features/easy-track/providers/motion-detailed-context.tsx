@@ -11,7 +11,9 @@ import { useMotionProgress } from '@easy-track/hooks/use-motion-progress';
 import { UsePeriodLimitsInfoResultData } from '@easy-track/hooks/use-period-limits-info';
 import { useMotionCallData } from '@easy-track/hooks/use-motion-call-data';
 import { useMotionLimitStatus } from '@easy-track/hooks/use-motion-limit-status';
-import { useMotionActions } from '@easy-track/hooks/use-motion-actions';
+import { useObjectMotionAction } from '@easy-track/write-actions/object-motion/action';
+import { useEnactMotionAction } from '@easy-track/write-actions/enact-motion/action';
+import { useCancelMotionAction } from '@easy-track/write-actions/cancel-motion/action';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 type MotionContextValue = {
@@ -64,7 +66,9 @@ export const MotionsProvider: FC<Props> = ({ motion, children }) => {
   const { periodLimitsData, isOverPeriodLimit, canEnactInNextPeriod } =
     useMotionLimitStatus({ motionType, isPending, motionTopUpAmount });
 
-  const { handleObject, handleEnact, handleCancel } = useMotionActions();
+  const handleObject = useObjectMotionAction();
+  const handleEnact = useEnactMotionAction();
+  const handleCancel = useCancelMotionAction();
 
   const value: MotionContextValue = useMemo(
     () => ({

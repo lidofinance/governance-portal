@@ -18,27 +18,18 @@ export const useMotionDetails = ({ motionId }: Args) => {
   const client = usePublicClient({ chainId });
 
   return useQuery({
+    enabled: !!client,
     queryKey: ['motion-details', motionId, chainId],
     queryFn: async () => {
       invariant(client, 'client must be defined');
-      invariant(easyTrackContract, 'easyTrack contract must be defined');
       invariant(motionId, 'motionId contract must be defined');
 
-      try {
-        const onChainMotionData = await easyTrackContract.readContract(
-          'getMotion',
-          [BigInt(motionId)],
-        );
+      const onChainMotionData = await easyTrackContract.readContract(
+        'getMotion',
+        [BigInt(motionId)],
+      );
 
-        const event = await getMotionCreatedEvent({
-          easyTrackContract,
-          motionId: onChainMotionData.id,
-          motionSnapshotBlock: onChainMotionData.snapshotBlock,
-          client,
-        });
-
-        return formatMotionDataOnchain(event, onChainMotionData);
-      } catch {
+      if (!onChainMotionData) {
         const subgraphMotion = await fetchMotionsSubgraphItem(
           chainId,
           motionId,
@@ -46,17 +37,33 @@ export const useMotionDetails = ({ motionId }: Args) => {
         if (!subgraphMotion) {
           return undefined;
         }
-        const event = await getMotionCreatedEvent({
-          easyTrackContract,
-          motionId: BigInt(subgraphMotion.id),
-          motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
-          client,
-        });
+
+        let event;
+        try {
+          event = await getMotionCreatedEvent({
+            easyTrackContract,
+            motionId: BigInt(subgraphMotion.id),
+            motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
+            client,
+          });
+        } catch {
+          // evmScript is optional — return subgraph data without it
+        }
+
         return {
           ...subgraphMotion,
           evmScript: event?.args._evmScript,
         };
       }
+
+      const event = await getMotionCreatedEvent({
+        easyTrackContract,
+        motionId: onChainMotionData.id,
+        motionSnapshotBlock: onChainMotionData.snapshotBlock,
+        client,
+      });
+
+      return formatMotionDataOnchain(event, onChainMotionData);
     },
   });
 };

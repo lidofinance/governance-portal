@@ -17,7 +17,7 @@ import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address
 import { EasyTrack } from 'shared/blockchain/contracts';
 import { Hex } from 'viem';
 import { useQueryClient } from '@tanstack/react-query';
-import { useTxModalMotion } from '../write-actions/motion/modal-stages';
+import { useTxModalMotion } from '@easy-track/write-actions/create-motion/modal-stages';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 
