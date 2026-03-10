@@ -177,6 +177,8 @@ export default withBundleAnalyzer({
 
     rateLimit: process.env.RATE_LIMIT,
     rateLimitTimeFrame: process.env.RATE_LIMIT_TIME_FRAME,
+
+    etherscanApiKey: process.env.ETHERSCAN_API_KEY,
     subgraphHoodi: process.env.SUBGRAPH_HOODI,
     subgraphMainnet: process.env.SUBGRAPH_MAINNET,
   },

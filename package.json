@@ -17,7 +17,9 @@
     "generate:ts-abi": "npx wagmi generate",
     "postinstall": "husky install && yarn typechain || true",
     "test:unit": "jest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build-events:local": "node --env-file=.env.local ./scripts/proposals/build-proposals-events.mjs",
+    "validate-events": "node --env-file=.env.local ./scripts/proposals/validate-proposals-events.mjs"
   },
   "dependencies": {
     "@lidofinance/api-metrics": "^0.45.1",

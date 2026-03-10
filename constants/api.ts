@@ -5,4 +5,5 @@ export const enum API_ROUTES {
   COW_GET_ORDER = 'api/cow/get-order',
   COW_GET_TRADES = 'api/cow/get-trades',
   COW_PLACE_ORDER = 'api/cow/place-order',
+  ETHERSCAN_BLOCK_BY_TIMESTAMP = 'api/etherscan/block-by-timestamp',
 }

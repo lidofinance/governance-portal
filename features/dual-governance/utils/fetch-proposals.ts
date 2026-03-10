@@ -1,4 +1,5 @@
 import {
+  CachedEventsData,
   ProposalCombinedData,
   ProposalDetails,
   SubmitProposalCall,
@@ -30,7 +31,20 @@ export const fetchProposals = async ({
   EPTContract,
   publicClient,
   governanceAddresses,
+  chainId,
 }: Props): Promise<(ProposalCombinedData | null)[]> => {
+  // Load cached events data to avoid RPC getLogs calls for known proposals
+  let cachedEventsData: CachedEventsData = {};
+  try {
+    const response = await fetch('/proposals-events-data.json');
+    if (response.ok) {
+      cachedEventsData = await response.json();
+    }
+  } catch {
+    // Cache unavailable — will fall back to on-demand event fetching below
+  }
+  const cachedChainData = cachedEventsData[chainId.toString()]?.proposals || {};
+
   const proposalIds = Array.from({ length: Number(proposalsCount) }, (_, i) =>
     BigInt(i + 1),
   );
@@ -62,33 +76,38 @@ export const fetchProposals = async ({
     (proposal): proposal is ProposalCombinedData => proposal !== null,
   );
 
-  const timestamps = proposalsData.map((proposal) => ({
-    id: proposal.proposalId,
-    submittedAt: proposal.proposalDetails.submittedAt,
-    scheduledAt: proposal.proposalDetails.scheduledAt,
-  }));
-
-  console.debug(`Fetching events for ${timestamps.length} proposals`);
-
-  const allProposalIds = proposalsData.map((proposal) => proposal.proposalId);
-  console.debug(`Fetching events for proposals: ${allProposalIds.join(', ')}`);
-
   const proposalsMap = new Map<number, ProposalCombinedData>();
-
   proposalsData.forEach((proposal) => {
     proposalsMap.set(proposal.proposalId, proposal);
   });
 
-  const eventAbi = findAbiItem({
-    abi: DualGovernance.abi,
-    name: 'ProposalSubmitted',
-    type: 'event',
-  });
+  // Determine which proposals have cached events vs which need RPC fetching
+  const uncachedProposals = proposalsData.filter(
+    (p) => !cachedChainData[p.proposalId.toString()],
+  );
 
-  const averageBlockTime = await calculateAverageBlockTime(publicClient);
+  // Populate DGEvent from cache where available
+  for (const proposal of proposalsData) {
+    const cached = cachedChainData[proposal.proposalId.toString()];
+    if (cached?.proposalSubmittedEvent) {
+      proposalsMap.set(proposal.proposalId, {
+        ...proposal,
+        DGEvent: cached.proposalSubmittedEvent,
+      });
+    }
+  }
 
-  try {
-    for (const proposal of proposalsData) {
+  // Only do RPC getLogs for uncached proposals
+  if (uncachedProposals.length > 0) {
+    const eventAbi = findAbiItem({
+      abi: DualGovernance.abi,
+      name: 'ProposalSubmitted',
+      type: 'event',
+    });
+
+    const averageBlockTime = await calculateAverageBlockTime(publicClient);
+
+    for (const proposal of uncachedProposals) {
       try {
         const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
           proposal.proposalDetails.submittedAt,
@@ -100,7 +119,6 @@ export const fetchProposals = async ({
         // Three ranges for log fetching to expand the search window up to ~15000 blocks
         const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
 
-        // Fetch events from all governance addresses
         const eventPromises = governanceAddresses.flatMap((address) =>
           ranges.map((range) =>
             publicClient.getLogs({
@@ -132,8 +150,6 @@ export const fetchProposals = async ({
         );
       }
     }
-  } catch (error) {
-    console.error(`Error fetching or processing events:`, error);
   }
 
   return proposalsData.map(

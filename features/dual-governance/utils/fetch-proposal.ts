@@ -1,4 +1,5 @@
 import {
+  CachedEventsData,
   ProposalCombinedData,
   ProposalDetails,
   SubmitProposalCall,
@@ -48,6 +49,38 @@ export const fetchProposal = async ({
       },
     };
 
+    // Try cache first
+    let submittedEvent: ProposalSubmittedEvent | null = null;
+    try {
+      const response = await fetch('/proposals-events-data.json');
+      if (response.ok) {
+        const eventsData: CachedEventsData = await response.json();
+        const cached = eventsData[chainId.toString()]?.proposals[id.toString()];
+        if (cached?.proposalSubmittedEvent) {
+          submittedEvent = cached.proposalSubmittedEvent;
+        }
+      }
+    } catch {
+      // Cache unavailable — fall back to RPC below
+    }
+
+    if (submittedEvent) {
+      result.DGEvent = submittedEvent;
+
+      const voteId = await isAragonProposal({
+        client: publicClient,
+        proposalLog: submittedEvent as unknown as Log,
+        chainId,
+      });
+
+      if (voteId) {
+        result.voteId = Number(voteId);
+      }
+
+      return result;
+    }
+
+    // Cache miss — fetch via RPC
     const eventAbi = findAbiItem({
       abi: DualGovernance.abi,
       name: 'ProposalSubmitted',

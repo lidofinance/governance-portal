@@ -31,9 +31,9 @@ import { config } from 'config';
 import { Box, Link } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
-import { getProposalExecutedEvent } from 'features/dual-governance/events/get-proposal-executed-event';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
+import { useProposalEvents } from '../../hooks/use-proposal-events';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useDynamicDualGovernance } from '../../hooks';
@@ -42,14 +42,7 @@ import { useDualGovernanceProposalsContext } from 'providers/dual-governance-pro
 import { useProposals } from '../../hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { Log } from 'viem';
-import { findAbiItem } from 'utils/find-abi-item';
-import invariant from 'tiny-invariant';
 import { getEtherscanTxLink } from 'utils/etherscan';
-import {
-  calculateAverageBlockTime,
-  estimateBlockRangeFromTimestamp,
-} from 'utils/estimate-block-range';
-import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -58,7 +51,6 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
 import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
 
 type Props = {
@@ -138,45 +130,22 @@ export const ProposalFullInfo = ({ id }: Props) => {
     EmergencyProtectedTimelock,
   );
 
-  const { data: proposalExecutedAt } = useQuery({
-    queryKey: ['proposal-executed-event', proposal?.proposalId, chainId],
-    queryFn: async () => {
-      if (!proposal?.proposalId || !rpcProvider || !chainId) {
-        return null;
-      }
-
-      try {
-        const proposalExecutedEvent = await getProposalExecutedEvent({
-          proposalId: proposal.proposalId,
-          client: rpcProvider,
-          chainId: chainId,
-        });
-
-        if (proposalExecutedEvent && proposalExecutedEvent.blockNumber) {
-          const block = await rpcProvider.getBlock({
-            blockNumber: proposalExecutedEvent.blockNumber,
-          });
-          if (block) {
-            const date = getDateFromTimestamp({
-              timestamp: Number(block.timestamp),
-              showYear: true,
-            });
-
-            return `${date.date} ${date.tz}`;
-          }
-        }
-        return null;
-      } catch (error) {
-        console.error('Error fetching proposal executed event:', error);
-        return null;
-      }
-    },
-    enabled:
-      !!proposal?.proposalId &&
-      !!rpcProvider &&
-      !!chainId &&
-      proposal?.proposalDetails.status == ProposalStatus.Executed,
+  const { data: proposalEvents } = useProposalEvents({
+    proposalDetails: proposal?.proposalDetails,
+    fetchExecuted: true,
   });
+
+  const proposalExecutedAt = useMemo(() => {
+    const executedEvent = proposalEvents?.proposalExecutedEvent;
+    if (!executedEvent?.blockTimestamp) {
+      return null;
+    }
+    const date = getDateFromTimestamp({
+      timestamp: Number(executedEvent.blockTimestamp),
+      showYear: true,
+    });
+    return `${date.date} ${date.tz}`;
+  }, [proposalEvents?.proposalExecutedEvent]);
 
   const updateProposalState = useCallback(async () => {
     await refetchProposals();
@@ -326,61 +295,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
-  const { data: proposalScheduledLog } = useQuery({
-    queryKey: [
-      'proposal-scheduled-log',
-      proposal?.proposalId,
-      chainId,
-      proposal?.proposalDetails.submittedAt,
-    ],
-    queryFn: async () => {
-      invariant(proposal, 'Proposal must be defined');
-      invariant(rpcProvider, 'Client must be defined');
-
-      const averageBlockTime = await calculateAverageBlockTime(rpcProvider);
-
-      const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
-        proposal.proposalDetails.scheduledAt,
-        2499n, // Half of the RPC getLogs limit
-        averageBlockTime,
-        rpcProvider,
-      );
-
-      const eventAbi = findAbiItem({
-        abi: EmergencyProtectedTimelock.abi,
-        name: 'ProposalScheduled',
-        type: 'event',
-      });
-
-      // Three ranges for log fetching to expand the search window up to ~15000 blocks
-      const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
-
-      const emergencyProtectedTimelockAddress = getContractAddress(
-        EmergencyProtectedTimelock,
-        chainId,
-      );
-
-      // Fetch logs for each block range
-      const logsPromises = ranges.map((range) => {
-        return rpcProvider.getLogs({
-          address: emergencyProtectedTimelockAddress,
-          event: eventAbi,
-          fromBlock: range.fromBlock,
-          toBlock: range.toBlock,
-          args: {
-            id: BigInt(proposal.proposalId),
-          },
-        });
-      });
-
-      const allLogsResults = await Promise.all(logsPromises);
-      const proposalScheduledLogs = allLogsResults.flat();
-
-      return proposalScheduledLogs[0] || null;
-    },
-    enabled:
-      !!proposal && !!rpcProvider && !!proposal.proposalDetails.scheduledAt,
-  });
+  const proposalScheduledLog = proposalEvents?.proposalScheduledEvent ?? null;
 
   const scheduledAt = useMemo(() => {
     if (!proposal || !proposal.proposalDetails?.scheduledAt) {
@@ -465,7 +380,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
                 <Link
                   href={getEtherscanTxLink(
                     chainId,
-                    proposalScheduledLog.transactionHash,
+                    proposalScheduledLog.transactionHash ?? '',
                   )}
                 >
                   Scheduled
