@@ -33,7 +33,7 @@ export type GridGroup = {
 
 export type PredefinedGroupSetup = {
   label: string;
-  groupShareLimit: number;
+  shareLimit: number;
   tiers: PredefinedTierParams[];
 };
 

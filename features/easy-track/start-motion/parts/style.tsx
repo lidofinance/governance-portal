@@ -38,10 +38,9 @@ export const FieldsHeaderDesc = styled.span`
   line-height: 19px;
 `;
 
-const RemoveItemButtonWrap = styled(Text).attrs({
-  size: 12,
-  weight: 500,
-})`
+const RemoveItemButtonWrap = styled.div`
+  font-size: 12px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +51,6 @@ const RemoveItemButtonWrap = styled(Text).attrs({
   cursor: pointer;
   transition: opacity ease ${({ theme }) => theme.duration.med};
   color: ${({ theme }) => theme.colors.error};
-  font-weight: 700;
 
   & svg {
     display: block;
@@ -97,45 +95,6 @@ export const ErrorBox = styled.div`
   border-radius: ${({ theme }) => theme.borderRadiusesMap.md + 'px'};
 `;
 
-export const RetryHint = styled(Text).attrs({
-  size: 12,
-  weight: 500,
-})`
-  margin-top: 20px;
-  text-align: center;
-  opacity: 0.8;
-
-  & button {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    border: none;
-    font-size: 12px;
-    font-weight: 500;
-    background: none;
-    font-weight: 800;
-    cursor: pointer;
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
-export const RelayInfoRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 0 4px;
-
-  & > div:nth-child(2) {
-    word-break: break-all;
-  }
-`;
-
-export const RelayInfoText = styled(Text).attrs({ size: 14 })`
-  word-break: break-all;
-  &:not(:last-child) {
-    margin-bottom: 20px;
-  }
-`;
-
 export const HashRequests = styled.div`
   display: flex;
   flex-direction: column;
@@ -174,4 +133,5 @@ export const MotionInfoBox = styled.div<{ $variant?: 'error' | 'warning' }>`
   border-radius: ${({ theme }) => theme.borderRadiusesMap.lg}px;
   line-height: 20px;
   margin-bottom: ${({ theme }) => theme.spaceMap.lg}px;
+  color: var(--lido-color-text);
 `;

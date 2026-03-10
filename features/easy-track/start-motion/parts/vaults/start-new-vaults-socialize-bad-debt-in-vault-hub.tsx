@@ -1,8 +1,6 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
 
 import {
   Fieldset,
@@ -18,7 +16,12 @@ import {
   PopulateTxArgs,
 } from '@easy-track/start-motion/parts/create-motion-form-part';
 import { MotionType } from '@easy-track/motion-types';
-import { Address, Hex } from 'viem';
+import {
+  encodeAbiParameters,
+  getAddress,
+  parseAbiParameters,
+  parseEther,
+} from 'viem';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { SocializeBadDebtInVaultHub } from 'shared/blockchain/contracts';
 import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
@@ -27,6 +30,7 @@ import { VaultAddressInputHookForm } from '@easy-track/vaults/ui/vault-address-i
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
 import { validateEtherValue } from 'utils/validate-ether-value';
+import { PageLoader } from 'shared/components/page-loader';
 
 type VaultInput = {
   address: string;
@@ -43,21 +47,19 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     vaults: VaultInput[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['address[]', 'address[]', 'uint256[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('address[], address[], uint256[]'),
       [
-        formData.vaults.map((vault) => utils.getAddress(vault.address)),
-        formData.vaults.map((vault) => utils.getAddress(vault.acceptorAddress)),
-        formData.vaults.map((vault) =>
-          utils.parseEther(vault.maxShareToSocialize),
-        ),
+        formData.vaults.map((vault) => getAddress(vault.address)),
+        formData.vaults.map((vault) => getAddress(vault.acceptorAddress)),
+        formData.vaults.map((vault) => parseEther(vault.maxShareToSocialize)),
       ],
     );
 
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -90,7 +92,7 @@ export const formParts = createMotionFormPart({
       } as VaultInput);
 
     if (isTrustedCallerLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -121,7 +123,7 @@ export const formParts = createMotionFormPart({
                   )}
                 </FieldsHeader>
                 <>
-                  {vaultData?.badDebtEth && (
+                  {vaultData && (
                     <MotionInfoBox>
                       Current vault debt:{' '}
                       {formatVaultParam(vaultData.badDebtEth)}
@@ -175,17 +177,15 @@ export const formParts = createMotionFormPart({
                           return amountError;
                         }
 
-                        const parsedValue = utils.parseEther(value);
-                        if (parsedValue.isZero()) {
+                        const parsedValue = parseEther(value);
+                        if (parsedValue === 0n) {
                           return 'Amount must be greater than 0';
                         }
 
-                        if (vaultData?.badDebtEth) {
-                          if (parsedValue.gt(vaultData.badDebtEth)) {
-                            return `Amount exceeds current vault debt (${formatVaultParam(
-                              vaultData.badDebtEth,
-                            )})`;
-                          }
+                        if (vaultData && parsedValue > vaultData.badDebtEth) {
+                          return `Amount exceeds current vault debt (${formatVaultParam(
+                            vaultData.badDebtEth,
+                          )})`;
                         }
 
                         return true;

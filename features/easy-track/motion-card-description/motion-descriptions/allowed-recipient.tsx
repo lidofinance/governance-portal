@@ -7,9 +7,7 @@ import {
   type AllowedRecipient,
 } from '../../hooks/use-registry-with-limits';
 
-import { formatEther } from 'ethers/lib/utils';
-
-import { AddressPop } from 'shared/components/address-pop';
+import { formatEther } from 'viem';
 
 import {
   MotionDescriptionWithRegistryProps,
@@ -20,6 +18,7 @@ import { MotionTypeDisplayNames } from '../../utils/get-motion-type-display-name
 import { addAllowedRecipientAbi } from 'abi/generated/AddAllowedRecipient';
 import { topUpAllowedRecipientsAbi } from 'abi/generated/TopUpAllowedRecipients';
 import { removeAllowedRecipientAbi } from 'abi/generated/RemoveAllowedRecipient';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const AllowedRecipientAdd = ({
   callData,
@@ -30,7 +29,7 @@ export const AllowedRecipientAdd = ({
   return (
     <div>
       {name} <b>&#34;{callData[1]}&#34;</b> with address{' '}
-      <AddressPop address={callData[0]} />
+      <AddressPopInline address={callData[0]} />
     </div>
   );
 };
@@ -56,7 +55,7 @@ export const AllowedRecipientTopUp = ({
       {name}:
       {callData[0].map((address, i) => (
         <div key={i}>
-          <b>{recipients?.[i]}</b> <AddressPop address={address} /> with{' '}
+          <b>{recipients?.[i]}</b> <AddressPopInline address={address} /> with{' '}
           {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
           {token.label}
         </div>
@@ -88,7 +87,7 @@ export const AllowedRecipientRemove = ({
   return (
     <div>
       {name} <b>{program?.title}</b> with address{' '}
-      <AddressPop address={callData} />
+      <AddressPopInline address={callData} />
     </div>
   );
 };

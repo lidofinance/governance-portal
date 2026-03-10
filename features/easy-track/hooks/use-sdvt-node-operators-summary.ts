@@ -24,7 +24,12 @@ export const useSDVTNodeOperatorsSummaryMap = () => {
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
 
   return useQuery({
-    queryKey: ['nodeOperatorsList', chainId, registry.address],
+    queryKey: [
+      'sdvt-node-operators-summary-map',
+      chainId,
+      registry.address,
+      nodeOperatorsList?.length,
+    ],
     queryFn: async () => {
       if (!Array.isArray(nodeOperatorsList) || nodeOperatorsList.length === 0) {
         return {};

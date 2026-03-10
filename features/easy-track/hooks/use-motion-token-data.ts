@@ -3,8 +3,7 @@ import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract
 import { erc20Abi } from 'abi/generated/ERC20';
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
-
-const DEFAULT_DECIMALS = 18;
+import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
 export const useMotionTokenData = (
   tokenAddress: Address | null | undefined,
@@ -30,7 +29,7 @@ export const useMotionTokenData = (
         return {
           label: 'Unknown token',
           address: tokenAddress,
-          decimals: DEFAULT_DECIMALS,
+          decimals: ETH_DECIMALS,
         };
       }
     },

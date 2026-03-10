@@ -1,5 +1,4 @@
-import { constants, utils } from 'ethers';
-import { Loader } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { useCSMVettedGateInfo } from '../../hooks/use-csm-vetted-gate-info';
 import { Fieldset, MessageBox, MotionInfoBox } from './style';
 import { Text } from 'shared/components/text';
@@ -11,7 +10,14 @@ import { MotionType } from '../../motion-types';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { CSMSetVettedGateTree } from 'shared/blockchain/contracts';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
-import { Address, Hex } from 'viem';
+import {
+  encodeAbiParameters,
+  isHex,
+  keccak256,
+  parseAbiParameters,
+  toBytes,
+  zeroHash,
+} from 'viem';
 import { isValidCID } from '../../utils/validate-cid';
 
 export const formParts = createMotionFormPart({
@@ -24,15 +30,15 @@ export const formParts = createMotionFormPart({
     treeRoot: string;
     treeCid: string;
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['bytes32', 'string'],
-      [formData.treeRoot, formData.treeCid],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('bytes32, string'),
+      [formData.treeRoot as `0x${string}`, formData.treeCid],
     );
 
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -47,7 +53,7 @@ export const formParts = createMotionFormPart({
       useCSMVettedGateInfo();
 
     if (isTrustedCallerLoading || isVettedTreeDataLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -82,11 +88,11 @@ export const formParts = createMotionFormPart({
                   return 'Tree root cannot be empty';
                 }
 
-                if (!utils.isHexString(value)) {
+                if (!isHex(value)) {
                   return 'Tree root must be a valid hex string';
                 }
 
-                if (value === constants.HashZero) {
+                if (value === zeroHash) {
                   return 'Tree root cannot be zero';
                 }
 
@@ -124,11 +130,9 @@ export const formParts = createMotionFormPart({
                 }
 
                 // Check if treeCid hash is the same as current (equivalent to keccak256 comparison)
-                const newTreeCidHash = utils.keccak256(
-                  utils.toUtf8Bytes(trimmed),
-                );
-                const currentTreeCidHash = utils.keccak256(
-                  utils.toUtf8Bytes(vettedTreeData.treeCid),
+                const newTreeCidHash = keccak256(toBytes(trimmed));
+                const currentTreeCidHash = keccak256(
+                  toBytes(vettedTreeData.treeCid),
                 );
 
                 if (newTreeCidHash === currentTreeCidHash) {

@@ -5,10 +5,10 @@ import { OperatorGrid } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
 import { useQuery } from '@tanstack/react-query';
-import { AddressPop } from 'shared/components/address-pop';
 import React from 'react';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { convertSharesToStethString } from '@easy-track/vaults/utils/convert-shares-to-steth-string';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const VaultsRegisterTiersInOperatorGrid = ({
   callData,
@@ -21,17 +21,16 @@ export const VaultsRegisterTiersInOperatorGrid = ({
 
   const { data: tiersCounts } = useQuery({
     queryKey: [`vaults-register-tiers-desc-${nodeOperators.join('-')}`],
-    queryFn: async () => {
-      if (!isOnChain) return;
-      return Promise.all(
+    enabled: isOnChain,
+    queryFn: () =>
+      Promise.all(
         nodeOperators.map(async (nodeOperator) => {
           const group = await operatorGrid.readContract('group', [
             nodeOperator,
           ]);
           return group.tierIds.length;
         }),
-      );
-    },
+      ),
   });
 
   return (
@@ -44,7 +43,7 @@ export const VaultsRegisterTiersInOperatorGrid = ({
         return (
           <li key={index}>
             Tier{s} for a group with node operator{' '}
-            <AddressPop address={nodeOperator} />:
+            <AddressPopInline address={nodeOperator} />:
             <br />
             {tiers[index].map((tier, tierIndex) => (
               <React.Fragment key={`${index}.${tierIndex}`}>

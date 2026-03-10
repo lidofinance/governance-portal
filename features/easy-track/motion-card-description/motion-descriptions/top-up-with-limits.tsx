@@ -5,11 +5,10 @@ import {
   useTokenByTopUpType,
 } from '../../hooks/use-registry-with-limits';
 
-import { AddressPop } from 'shared/components/address-pop';
-
-import { formatEther, isAddress } from 'ethers/lib/utils';
+import { formatEther, isAddress } from 'viem';
 import { topUpWithLimitsAbi } from 'abi/generated/TopUpWithLimits';
 import { MotionDescriptionProps } from '../types';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const TopUpWithLimits = ({
   callData,
@@ -39,7 +38,7 @@ export const TopUpWithLimits = ({
         return (
           <div key={i}>
             {shouldShowName ? <b>{recipientName} </b> : null}
-            <AddressPop address={address} /> with{' '}
+            <AddressPopInline address={address} /> with{' '}
             {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
             {token.label}
           </div>

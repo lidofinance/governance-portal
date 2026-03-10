@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 import { Text } from 'shared/components/text';
+import { SkeletonBar } from 'shared/components/skeleton-bar';
+
+export const MotionTypeSelectSkeleton = styled(SkeletonBar)`
+  height: 56px;
+  border-radius: 10px;
+`;
 
 export const PageTitle = styled(Text).attrs({
   size: 26,

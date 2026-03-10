@@ -1,8 +1,7 @@
-import { BigNumber, utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader, Option } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon, Option } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -17,15 +16,15 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { MotionType } from '../../motion-types';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useSDVTNodeOperatorsSummaryMap } from '../../hooks/use-sdvt-node-operators-summary';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { SDVTTargetValidatorLimitsUpdateV2 } from 'shared/blockchain/contracts';
 import { NodeOperatorSelectControl } from '../../motions/ui/node-operator-select-control/node-operator-select-control';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from 'utils/validate-uint-value';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 type NodeOperator = {
   id: string | undefined;
@@ -33,7 +32,7 @@ type NodeOperator = {
   targetLimit: string;
 };
 
-const UINT_64_MAX = BigNumber.from('0xFFFFFFFFFFFFFFFF');
+const UINT_64_MAX = BigInt('0xFFFFFFFFFFFFFFFF');
 
 const TARGET_LIMIT_MODES: Partial<Record<string, string>> = {
   '0': 'Disabled',
@@ -54,15 +53,15 @@ export const formParts = createMotionFormPart({
       (a, b) => Number(a.id) - Number(b.id),
     );
 
-    const encodedCallData = new utils.AbiCoder().encode(
-      [
-        'tuple(uint256 nodeOperatorId, uint256 targetLimitMode, uint256 targetLimit)[]',
-      ],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters(
+        '(uint256 nodeOperatorId, uint256 targetLimitMode, uint256 targetLimit)[]',
+      ),
       [
         sortedNodeOperators.map((nodeOperator) => ({
-          nodeOperatorId: Number(nodeOperator.id),
-          targetLimitMode: Number(nodeOperator.targetLimitMode),
-          targetLimit: Number(nodeOperator.targetLimit),
+          nodeOperatorId: BigInt(nodeOperator.id as string),
+          targetLimitMode: BigInt(nodeOperator.targetLimitMode),
+          targetLimit: BigInt(nodeOperator.targetLimit),
         })),
       ],
     );
@@ -70,7 +69,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -127,7 +126,7 @@ export const formParts = createMotionFormPart({
       isNodeOperatorsDataLoading ||
       isNodeOperatorsSummaryLoading
     ) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -190,6 +189,7 @@ export const formParts = createMotionFormPart({
                         operatorsSummaryMap[nodeOperator.id];
 
                       fieldsArr.update(fieldIndex, {
+                        id: String(value),
                         targetLimitMode:
                           nodeOperatorSummary.targetLimitMode.toString(),
                         targetLimit:
@@ -242,8 +242,7 @@ export const formParts = createMotionFormPart({
                 </Fieldset>
 
                 <Fieldset>
-                  <InputHookForm
-                    type="number"
+                  <InputNumberHookForm
                     fieldName={`${fieldNames.nodeOperators}.${fieldIndex}.targetLimit`}
                     label={`New limit ${
                       currentTargetLimit
@@ -258,7 +257,7 @@ export const formParts = createMotionFormPart({
                           return uintError;
                         }
 
-                        if (UINT_64_MAX.lt(value)) {
+                        if (BigInt(value) > UINT_64_MAX) {
                           return `Value must be less than or equal to ${UINT_64_MAX}`;
                         }
 

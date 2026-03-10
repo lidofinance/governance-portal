@@ -71,6 +71,12 @@ export const extractCodeFromError = (
     if (error.reason.includes('INVALID_SIGNATURE')) return 'INVALID_SIGNATURE';
   }
 
+  // viem errors surface the RPC reason in a separate `details` field
+  if ('details' in error && typeof (error as any).details === 'string') {
+    const normalizedDetails = (error as any).details.toLowerCase();
+    if (normalizedDetails.includes('user rejected')) return 'ACTION_REJECTED';
+  }
+
   // sometimes we have error message but bad error code
   if ('message' in error && typeof error.message == 'string') {
     const normalizedMessage = error.message.toLowerCase();
@@ -81,7 +87,8 @@ export const extractCodeFromError = (
       normalizedMessage.includes('rejected the request') ||
       normalizedMessage.includes('reject this request') ||
       normalizedMessage.includes('rejected methods') ||
-      normalizedMessage.includes('transaction declined')
+      normalizedMessage.includes('transaction declined') ||
+      normalizedMessage.includes('user rejected')
     )
       return 'ACTION_REJECTED';
   }

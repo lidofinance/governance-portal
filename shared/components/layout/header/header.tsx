@@ -3,7 +3,6 @@ import { HeaderActionsWrapper, HeaderContainer, WalletInfo } from './style';
 import { NoSsrWrapper } from 'shared/components/no-ssr-wrapper';
 import { Nav, NavBurger, NavMobile } from './nav';
 import { useState } from 'react';
-import { HeaderVaultInfo } from './header-vault-info';
 import { DualGovernanceStatusButton } from '../../dual-governance-status-button';
 import { HeaderSettingsButton } from './header-settings-button';
 import { ConnectWalletButton, WalletButton } from 'shared/wallet';
@@ -30,7 +29,6 @@ export const Header = () => {
         <Nav />
         <HeaderActionsWrapper>
           <>
-            <HeaderVaultInfo />
             <DualGovernanceStatusButton />
             <HeaderSettingsButton />
             <WalletInfo>

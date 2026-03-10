@@ -1,31 +1,115 @@
-import { useActiveMotions } from '../hooks/use-motions';
+import { useState, useEffect } from 'react';
+import { useActiveMotions, useArchivedMotions } from '../hooks/use-motions';
 import { MotionCard } from '../motion-card';
+import { MotionCardSkeleton } from '../motion-card-skeleton/motion-card-skeleton';
 import { MotionsGrid } from './style';
-import { InlineLoader, Link } from '@lidofinance/lido-ui';
+import { InlineLoader, Link, Button } from '@lidofinance/lido-ui';
 import { motionPage } from 'constants/urls';
+import styled from 'styled-components';
+
+const INITIAL_TOTAL = 8;
+const ARCHIVE_PAGE_SIZE = 8;
+
+const LoadMoreWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+`;
 
 export const Motions = () => {
-  const { data: motions, isLoading } = useActiveMotions();
+  const { data: activeMotions, isLoading: activeLoading } = useActiveMotions();
+  const {
+    data: archivedData,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching: archiveFetching,
+  } = useArchivedMotions();
 
-  if (isLoading) {
-    return <InlineLoader />;
+  const allArchived = archivedData?.pages.flat() ?? [];
+
+  const [archiveDisplayCount, setArchiveDisplayCount] = useState<number | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (!activeLoading && archiveDisplayCount === null) {
+      const activeCount = activeMotions?.length ?? 0;
+      setArchiveDisplayCount(Math.max(0, INITIAL_TOTAL - activeCount));
+    }
+  }, [activeLoading, activeMotions, archiveDisplayCount]);
+
+  const displayedArchived = allArchived.slice(0, archiveDisplayCount ?? 0);
+
+  const canLoadMore =
+    archiveDisplayCount !== null &&
+    (archiveDisplayCount < allArchived.length || hasNextPage);
+
+  const handleLoadMore = () => {
+    const newLimit = (archiveDisplayCount ?? 0) + ARCHIVE_PAGE_SIZE;
+    setArchiveDisplayCount(newLimit);
+    if (newLimit > allArchived.length && hasNextPage) {
+      void fetchNextPage();
+    }
+  };
+
+  if (activeLoading) {
+    return (
+      <MotionsGrid>
+        {Array.from({ length: INITIAL_TOTAL }, (_, i) => (
+          <MotionCardSkeleton key={i} />
+        ))}
+      </MotionsGrid>
+    );
   }
 
-  if (!motions || motions.length === 0) {
-    return <div>No active motions at the moment</div>;
+  const hasMotions =
+    (activeMotions && activeMotions.length > 0) || displayedArchived.length > 0;
+
+  if (!hasMotions && archiveDisplayCount !== null) {
+    return <div>No motions at the moment</div>;
   }
 
   return (
-    <MotionsGrid>
-      {motions.map((motion) => (
-        <Link
-          target="_self"
-          href={motionPage(motion.id.toString())}
-          key={motion.id.toString()}
-        >
-          <MotionCard key={motion.id} motion={motion} />
-        </Link>
-      ))}
-    </MotionsGrid>
+    <>
+      <MotionsGrid>
+        {activeMotions?.map((motion) => (
+          <Link
+            target="_self"
+            href={motionPage(motion.id.toString())}
+            key={motion.id.toString()}
+          >
+            <MotionCard motion={motion} />
+          </Link>
+        ))}
+        {displayedArchived.map((motion) => (
+          <Link
+            target="_self"
+            href={motionPage(motion.id.toString())}
+            key={motion.id.toString()}
+          >
+            <MotionCard motion={motion} />
+          </Link>
+        ))}
+      </MotionsGrid>
+
+      {canLoadMore && (
+        <LoadMoreWrapper>
+          <Button
+            onClick={handleLoadMore}
+            disabled={isFetchingNextPage}
+            loading={isFetchingNextPage}
+          >
+            Load More
+          </Button>
+        </LoadMoreWrapper>
+      )}
+
+      {archiveFetching && !isFetchingNextPage && (
+        <LoadMoreWrapper>
+          <InlineLoader />
+        </LoadMoreWrapper>
+      )}
+    </>
   );
 };

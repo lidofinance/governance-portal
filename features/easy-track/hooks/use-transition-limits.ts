@@ -1,4 +1,4 @@
-import { constants, utils } from 'ethers';
+import { formatUnits, getAddress, zeroAddress } from 'viem';
 import { processInBatches } from 'utils/process-in-batches';
 import {
   useReadContract,
@@ -13,12 +13,13 @@ import {
 } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { toHex } from 'viem';
+import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
 // Data structure reference
 // https://github.com/lidofinance/scripts/blob/bda3568d1291bdc7ba422fb20150313f2d1778c3/scripts/vote_2024_01_16.py#L106
 const TOKEN_ARG_INDEX = 0;
 const AMOUNT_ARG_INDEX = 2;
-const DEFAULT_DECIMALS = 18;
+
 const MAX_PROVIDER_BATCH = 20;
 
 const decodeLimit = (val: bigint, decimals: number | null) => {
@@ -26,7 +27,7 @@ const decodeLimit = (val: bigint, decimals: number | null) => {
     return null;
   }
 
-  return parseFloat(utils.formatUnits(val, decimals));
+  return parseFloat(formatUnits(val, decimals));
 };
 
 type LimitsMap = Record<string, number | null | undefined>;
@@ -92,10 +93,10 @@ export const useTransitionLimits = () => {
       for (let i = 0; i < paramsArr.length; i += 1) {
         const [argIndex, , value] = paramsArr[i];
         if (argIndex === TOKEN_ARG_INDEX) {
-          let tokenAddress = toHex(value);
+          let tokenAddress = toHex(value, { size: 20 });
           // Handle special case for zero address representation
           if (value === 0n) {
-            tokenAddress = constants.AddressZero;
+            tokenAddress = zeroAddress;
           }
           const limitParam = paramsArr[i + 1];
 
@@ -109,8 +110,8 @@ export const useTransitionLimits = () => {
             continue;
           }
           const limitValue = limitParam[2];
-          if (tokenAddress === constants.AddressZero) {
-            decimals = DEFAULT_DECIMALS;
+          if (tokenAddress === zeroAddress) {
+            decimals = ETH_DECIMALS;
           } else {
             const tokenContract = connectErc20Contract(tokenAddress);
             try {
@@ -120,10 +121,7 @@ export const useTransitionLimits = () => {
             }
           }
 
-          limits[utils.getAddress(tokenAddress)] = decodeLimit(
-            limitValue,
-            decimals,
-          );
+          limits[getAddress(tokenAddress)] = decodeLimit(limitValue, decimals);
           i += 1; // Skip the next param as it's already processed
         }
       }

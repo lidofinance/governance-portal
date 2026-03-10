@@ -1,6 +1,5 @@
 import { Motion, RawMotionSubgraph } from '../types';
 import { decodeCalls, decodeEvmScript } from 'utils/decode-evm-script-calls';
-import { Hex } from 'viem';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Script } from '../../dual-governance/evm-script-parsed';
 
@@ -9,7 +8,10 @@ type Props = {
 };
 export const MotionEvmScript = ({ motion }: Props) => {
   const { chainId } = useLidoSDK();
-  const decoded = decodeEvmScript(motion.evmScriptHash as Hex);
+
+  if (!motion.evmScript) return null;
+
+  const decoded = decodeEvmScript(motion.evmScript);
   const decodedEvmScriptCalls = decodeCalls({
     calls: decoded,
     chainId,
@@ -17,7 +19,7 @@ export const MotionEvmScript = ({ motion }: Props) => {
 
   return (
     <Script
-      rawScript={motion.evmScriptHash as Hex}
+      rawScript={motion.evmScript}
       decodedCalls={decodedEvmScriptCalls || []}
       tabVariant="voting"
     />

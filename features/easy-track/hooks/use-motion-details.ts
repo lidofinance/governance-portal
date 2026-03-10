@@ -18,33 +18,52 @@ export const useMotionDetails = ({ motionId }: Args) => {
   const client = usePublicClient({ chainId });
 
   return useQuery({
-    queryKey: ['motion-details', motionId],
+    enabled: !!client,
+    queryKey: ['motion-details', motionId, chainId],
     queryFn: async () => {
       invariant(client, 'client must be defined');
-      invariant(easyTrackContract, 'easyTrack contract must be defined');
       invariant(motionId, 'motionId contract must be defined');
 
-      try {
-        const onChainMotionData = await easyTrackContract.readContract(
-          'getMotion',
-          [BigInt(motionId)],
-        );
+      const onChainMotionData = await easyTrackContract.readContract(
+        'getMotion',
+        [BigInt(motionId)],
+      );
 
-        if (onChainMotionData) {
-          const event = await getMotionCreatedEvent({
+      if (!onChainMotionData) {
+        const subgraphMotion = await fetchMotionsSubgraphItem(
+          chainId,
+          motionId,
+        );
+        if (!subgraphMotion) {
+          return undefined;
+        }
+
+        let event;
+        try {
+          event = await getMotionCreatedEvent({
             easyTrackContract,
-            motionId: onChainMotionData.id,
-            motionSnapshotBlock: onChainMotionData.snapshotBlock,
+            motionId: BigInt(subgraphMotion.id),
+            motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
             client,
           });
-
-          return formatMotionDataOnchain(event as any, onChainMotionData);
-        } else {
-          return await fetchMotionsSubgraphItem(chainId, motionId);
+        } catch {
+          // evmScript is optional — return subgraph data without it
         }
-      } catch (error) {
-        return await fetchMotionsSubgraphItem(chainId, motionId);
+
+        return {
+          ...subgraphMotion,
+          evmScript: event?.args._evmScript,
+        };
       }
+
+      const event = await getMotionCreatedEvent({
+        easyTrackContract,
+        motionId: onChainMotionData.id,
+        motionSnapshotBlock: onChainMotionData.snapshotBlock,
+        client,
+      });
+
+      return formatMotionDataOnchain(event, onChainMotionData);
     },
   });
 };

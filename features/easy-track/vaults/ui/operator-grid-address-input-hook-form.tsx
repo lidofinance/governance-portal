@@ -9,7 +9,6 @@ import { InputHookForm } from 'shared/hook-form/input-hook-form';
 type Props = {
   groupFieldName: string;
   fieldIndex: number;
-  allowDuplicateAddresses?: boolean;
   allowDefaultOperatorAddress?: boolean;
   getGroupData: (address: string) => Promise<any | null | undefined>;
   onValidOperatorAddressInput?: (groupData: Group) => void;
@@ -24,7 +23,6 @@ type GroupInput = {
 export const OperatorGridAddressInputHookForm = ({
   groupFieldName,
   fieldIndex,
-  allowDuplicateAddresses,
   allowDefaultOperatorAddress = true,
   getGroupData,
   onValidOperatorAddressInput,
@@ -55,17 +53,15 @@ export const OperatorGridAddressInputHookForm = ({
       return `Address can not be the default tier operator address`;
     }
 
-    if (!allowDuplicateAddresses) {
-      const groupsInputs: GroupInput[] = getValues(groupFieldName);
+    const groupsInputs: GroupInput[] = getValues(groupFieldName);
 
-      const addressInGroupInputIndex = groupsInputs.findIndex(
-        ({ nodeOperator }, index) =>
-          nodeOperator.toLowerCase() === lowerAddress && fieldIndex !== index,
-      );
+    const addressInGroupInputIndex = groupsInputs.findIndex(
+      ({ nodeOperator }, index) =>
+        nodeOperator.toLowerCase() === lowerAddress && fieldIndex !== index,
+    );
 
-      if (addressInGroupInputIndex !== -1) {
-        return 'Address is already in use by another group within the motion';
-      }
+    if (addressInGroupInputIndex !== -1) {
+      return 'Address is already in use by another group within the motion';
     }
   };
 

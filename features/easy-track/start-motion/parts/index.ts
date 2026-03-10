@@ -118,7 +118,7 @@ export const formParts = {
       motionType: MotionTypeForms.SandboxNodeOperatorIncreaseLimit,
     }),
   // SDVT Parts
-  [MotionTypeForms.SDVTNodeOperatorsAdd]: StartSDVTNodeOperatorsAdd.formParts(),
+  [MotionTypeForms.SDVTNodeOperatorsAdd]: StartSDVTNodeOperatorsAdd.formParts,
   [MotionTypeForms.SDVTNodeOperatorsActivate]:
     StartNewSDVTNodeOperatorsActivate.formParts,
   [MotionTypeForms.SDVTNodeOperatorsDeactivate]:

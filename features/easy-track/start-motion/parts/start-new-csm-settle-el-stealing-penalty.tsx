@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import {
   createMotionFormPart,
   PopulateTxArgs,
@@ -27,7 +26,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
 import { validateUintValue } from '../../utils/validate-uint-value';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 
 type NodeOperator = {
   id: string;
@@ -46,15 +45,15 @@ export const formParts = createMotionFormPart({
       .map(({ id }) => Number(id))
       .sort((a, b) => a - b);
 
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['uint256[]'],
-      [sortedNodeOperators],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('uint256[]'),
+      [sortedNodeOperators.map(BigInt)],
     );
 
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -94,10 +93,10 @@ export const formParts = createMotionFormPart({
     const handleAddSettle = () =>
       fieldsArr.append({
         id: '',
-      } as NodeOperator);
+      });
 
     if (isTrustedCallerLoading || isNodeOperatorsCountLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Option, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import {
   Fieldset,
   MessageBox,
@@ -21,25 +20,27 @@ import { TierParams } from '@easy-track/vaults/types';
 import {
   DEFAULT_TIER_OPERATOR,
   EMPTY_TIER,
+  PREDEFINED_CONSTANT_TIER_PARAMS,
 } from '@easy-track/vaults/constants';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, parseAbiParameters, parseEther } from 'viem';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { AlterTiersInOperatorGrid } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useOperatorGridInfo } from '@easy-track/vaults/hooks/use-operator-grid-info';
 import { useOperatorGridGroupMap } from '@easy-track/vaults/hooks/use-operator-grid-group-map';
-import { useOperatorGridTierMap } from '@easy-track/vaults/hooks/use-operator-grid-tier-map';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
-import { SelectHookForm } from 'shared/hook-form/select-hook-form';
-import { convertShareLimitToInputValue } from '@easy-track/vaults/utils/convert-share-limit-to-input-value';
-import { OperatorGridTierFieldsets } from '@easy-track/vaults/ui/operator-grid-tier-fieldsets';
 import { OperatorGridAddressInputHookForm } from '@easy-track/vaults/ui/operator-grid-address-input-hook-form';
+import { OperatorGridEditTiersFieldsWrapper } from '@easy-track/vaults/ui/operator-grid-edit-tiers-fields-wrapper';
+import { PredefinedGroupParamsPicker } from '@easy-track/vaults/ui/predefined-group-params-picker';
+import { useOperatorGridTierMap } from '@easy-track/vaults/hooks/use-operator-grid-tier-map';
 
 type TierInput = {
   nodeOperator: string;
-  tierId: string;
-} & TierParams;
+  tiers: ({
+    tierId: string;
+  } & TierParams)[];
+};
 
 export const formParts = createMotionFormPart({
   motionType: MotionType.AlterTiersInOperatorGrid,
@@ -48,45 +49,53 @@ export const formParts = createMotionFormPart({
     formData,
     contract,
   }: PopulateTxArgs<{
-    tiers: TierInput[];
+    groups: TierInput[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['uint256[]', 'tuple(uint256,uint256,uint256,uint256,uint256,uint256)[]'],
+    const flatTiers = formData.groups.flatMap(({ tiers }) => tiers);
+
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters(
+        'uint256[], (uint256,uint256,uint256,uint256,uint256,uint256)[]',
+      ),
       [
-        formData.tiers.map((tier) => Number(tier.tierId)),
-        formData.tiers.map((tier) => {
-          return [
-            utils.parseEther(tier.shareLimit),
-            Number(tier.reserveRatioBP),
-            Number(tier.forcedRebalanceThresholdBP),
-            Number(tier.infraFeeBP),
-            Number(tier.liquidityFeeBP),
-            Number(tier.reservationFeeBP),
-          ];
-        }),
+        flatTiers.map((tier) => BigInt(tier.tierId)),
+        flatTiers.map(
+          (tier) =>
+            [
+              parseEther(tier.shareLimit),
+              BigInt(tier.reserveRatioBP),
+              BigInt(tier.forcedRebalanceThresholdBP),
+              BigInt(tier.infraFeeBP),
+              BigInt(tier.liquidityFeeBP),
+              BigInt(tier.reservationFeeBP),
+            ] as const,
+        ),
       ],
     );
 
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
-    tiers: [{ nodeOperator: '', tierId: '', ...EMPTY_TIER }] as TierInput[],
+    groups: [
+      { nodeOperator: '', tiers: [{ tierId: '', ...EMPTY_TIER }] },
+    ] as TierInput[],
   }),
   Component: ({ fieldNames, submitAction }) => {
     const { chainId } = useLidoSDK();
     const factoryContract = useReadContract(AlterTiersInOperatorGrid);
 
-    const { data: factoryData, isLoading: isFactoryDataLoading } = useQuery({
-      queryKey: ['alter-tiers-factory-data', chainId],
-      queryFn: async () => {
-        return await factoryContract.readContract('defaultTierMaxShareLimit');
-      },
-      staleTime: Infinity,
-    });
+    const { data: defaultTierMaxShareLimit, isLoading: isFactoryDataLoading } =
+      useQuery({
+        queryKey: ['alter-tiers-factory-data', chainId],
+        queryFn: async () => {
+          return await factoryContract.readContract('defaultTierMaxShareLimit');
+        },
+        staleTime: Infinity,
+      });
 
     const { isTrustedCallerConnected, isTrustedCallerLoading } =
       useIsTrustedCaller(AlterTiersInOperatorGrid);
@@ -100,37 +109,22 @@ export const formParts = createMotionFormPart({
       operatorGridInfo?.tiersCount,
     );
 
-    const tiersFieldArray = useFieldArray({ name: fieldNames.tiers });
-    const { watch, setValue, resetField } = useFormContext();
-    const tiersInput: TierInput[] = watch(fieldNames.tiers);
+    const groupsFieldArray = useFieldArray({ name: fieldNames.groups });
+    const { watch, resetField, setValue } = useFormContext();
+    const groupsInput: TierInput[] = watch(fieldNames.groups);
 
     const handleAddTier = () =>
-      tiersFieldArray.append({ nodeOperator: '', tierId: '', ...EMPTY_TIER });
-
-    const setTierParam = (key: string, value: string) => {
-      setValue(key, value, { shouldValidate: true, shouldDirty: true });
-    };
-
-    const getFilteredTierIdOptions = (fieldIdx: number) => {
-      const tierIds =
-        groupMap[tiersInput[fieldIdx]?.nodeOperator.toLowerCase()]?.tierIds;
-      if (!Array.isArray(tierIds)) {
-        return [];
-      }
-      const selectedIds = tiersInput.map(({ tierId }) => parseInt(tierId));
-      const thisId = parseInt(tiersInput[fieldIdx]?.tierId);
-      return tierIds.filter((tierId) => {
-        const tierIdNum = Number(tierId.toString());
-        return tierIdNum === thisId || !selectedIds.includes(tierIdNum);
-      });
-    };
+      groupsFieldArray.append({
+        nodeOperator: '',
+        tiers: [{ tierId: '', ...EMPTY_TIER }],
+      } as TierInput);
 
     if (
       isFactoryDataLoading ||
       isOperatorGridLoading ||
       isTrustedCallerLoading
     ) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -147,96 +141,81 @@ export const formParts = createMotionFormPart({
           Note: to alter default tier with global tierId 0, use default tier
           operator address — {DEFAULT_TIER_OPERATOR}
         </MotionInfoBox>
-        {tiersFieldArray.fields.map((item, tierIndex) => {
+        {groupsFieldArray.fields.map((item, groupIndex) => {
           const groupData =
-            groupMap[tiersInput[tierIndex]?.nodeOperator.toLowerCase()];
+            groupMap[groupsInput[groupIndex]?.nodeOperator.toLowerCase()];
 
           const groupShareLimit =
             groupData?.operator.toLowerCase() === DEFAULT_TIER_OPERATOR
-              ? factoryData
+              ? defaultTierMaxShareLimit
               : groupData?.shareLimit;
 
           return (
             <Fragment key={item.id}>
               <FieldsWrapper>
                 <FieldsHeader>
-                  {tiersFieldArray.fields.length > 1 && (
-                    <FieldsHeaderDesc>Update #{tierIndex + 1}</FieldsHeaderDesc>
+                  {groupsFieldArray.fields.length > 1 && (
+                    <FieldsHeaderDesc>
+                      Update #{groupIndex + 1}
+                    </FieldsHeaderDesc>
                   )}
-                  {tiersFieldArray.fields.length > 1 && (
+                  {groupsFieldArray.fields.length > 1 && (
                     <RemoveItemButton
-                      onClick={() => tiersFieldArray.remove(tierIndex)}
+                      onClick={() => groupsFieldArray.remove(groupIndex)}
                     >
-                      Remove update {tierIndex + 1}
+                      Remove update {groupIndex + 1}
                     </RemoveItemButton>
                   )}
                 </FieldsHeader>
 
                 <Fieldset>
                   <OperatorGridAddressInputHookForm
-                    groupFieldName={fieldNames.tiers}
-                    fieldIndex={tierIndex}
+                    groupFieldName={fieldNames.groups}
+                    fieldIndex={groupIndex}
                     getGroupData={getOperatorGridGroup}
-                    allowDuplicateAddresses
                     onChange={() =>
-                      resetField(`${fieldNames.tiers}.${tierIndex}.tierId`)
+                      resetField(`${fieldNames.groups}.${groupIndex}.tiers`)
                     }
                   />
                 </Fieldset>
 
-                <Fieldset>
-                  <SelectHookForm
-                    label="Tier to alter"
-                    fieldName={`${fieldNames.tiers}.${tierIndex}.tierId`}
-                    rules={{ required: 'Field is required' }}
-                    disabled={!groupData}
-                    onChange={(value) => {
-                      void getOperatorGridTier(String(value)).then((tier) => {
-                        if (tier) {
-                          setTierParam(
-                            `${fieldNames.tiers}.${tierIndex}.shareLimit`,
-                            convertShareLimitToInputValue(tier.shareLimit),
-                          );
-                          setTierParam(
-                            `${fieldNames.tiers}.${tierIndex}.reserveRatioBP`,
-                            tier.reserveRatioBP.toString(),
-                          );
-                          setTierParam(
-                            `${fieldNames.tiers}.${tierIndex}.forcedRebalanceThresholdBP`,
-                            tier.forcedRebalanceThresholdBP.toString(),
-                          );
-                          setTierParam(
-                            `${fieldNames.tiers}.${tierIndex}.infraFeeBP`,
-                            tier.infraFeeBP.toString(),
-                          );
-                          setTierParam(
-                            `${fieldNames.tiers}.${tierIndex}.liquidityFeeBP`,
-                            tier.liquidityFeeBP.toString(),
-                          );
-                          setTierParam(
-                            `${fieldNames.tiers}.${tierIndex}.reservationFeeBP`,
-                            tier.reservationFeeBP.toString(),
-                          );
-                        }
-                      });
-                    }}
-                  >
-                    {getFilteredTierIdOptions(tierIndex).map((tierId, i) => (
-                      <Option key={i} value={Number(tierId.toString())}>
-                        {`#${i + 1} (global tierId = ${tierId})`}
-                      </Option>
-                    ))}
-                  </SelectHookForm>
-                </Fieldset>
-                <>
-                  {groupShareLimit && (
-                    <OperatorGridTierFieldsets
-                      tierArrayFieldName={fieldNames.tiers}
-                      fieldIndex={tierIndex}
-                      maxShareLimit={groupShareLimit}
+                {!!groupData?.tierIds && (
+                  <>
+                    <PredefinedGroupParamsPicker
+                      title={'Predefined tier setups (for up to 5 tiers)'}
+                      upgradeMode
+                      onSelect={(groupOption) => {
+                        const tiersToUpdate = groupOption.tiers.slice(
+                          0,
+                          groupData.tierIds.length,
+                        );
+                        setValue(
+                          `${fieldNames.groups}.${groupIndex}.tiers`,
+                          tiersToUpdate.map((tier, index) => ({
+                            tierId: groupData.tierIds[index].toString(),
+                            shareLimit: tier.shareLimit.toString(),
+                            reserveRatioBP: tier.reserveRatioBP.toString(),
+                            forcedRebalanceThresholdBP:
+                              tier.forcedRebalanceThresholdBP.toString(),
+                            infraFeeBP:
+                              PREDEFINED_CONSTANT_TIER_PARAMS.infraFeeBP.toString(),
+                            liquidityFeeBP:
+                              PREDEFINED_CONSTANT_TIER_PARAMS.liquidityFeeBP.toString(),
+                            reservationFeeBP:
+                              PREDEFINED_CONSTANT_TIER_PARAMS.reservationFeeBP.toString(),
+                          })),
+                          { shouldValidate: true, shouldDirty: true },
+                        );
+                      }}
                     />
-                  )}
-                </>
+                    <OperatorGridEditTiersFieldsWrapper
+                      tierArrayFieldName={`${fieldNames.groups}.${groupIndex}.tiers`}
+                      maxShareLimit={groupShareLimit}
+                      currentTierIds={groupData.tierIds}
+                      getOperatorGridTier={getOperatorGridTier}
+                    />
+                  </>
+                )}
               </FieldsWrapper>
             </Fragment>
           );

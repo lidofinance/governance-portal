@@ -7,14 +7,14 @@ import {
 } from './style';
 
 import { Motion, MotionStatus, RawMotionSubgraph } from '../types';
-import { useMotionProgress } from '../hooks/use-motion-progress';
+import { useMotionContext } from '../providers/motion-detailed-context';
 
 type Props = {
   motion: Motion | RawMotionSubgraph;
 };
 
 export const MotionDetailedObjections = ({ motion }: Props) => {
-  const progress = useMotionProgress(motion);
+  const { progress } = useMotionContext();
 
   const isSucceed = motion.status === MotionStatus.ENACTED;
   const isDangered =
@@ -38,7 +38,9 @@ export const MotionDetailedObjections = ({ motion }: Props) => {
           </>
         )}
       </ObjectionsValue>
-      <ObjectionsPercents>
+      <ObjectionsPercents
+        title={!progress ? undefined : `${progress.objectionsPctFormatted}%`}
+      >
         {!progress ? '...' : `${progress.objectionsPctFormatted}%`}
       </ObjectionsPercents>
     </ObjectionsInfo>

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { MotionDisplayStatus } from '../motion-types';
+import { MotionDisplayStatus } from '../types';
 
 const warnStyles = css`
   color: #de186b;
