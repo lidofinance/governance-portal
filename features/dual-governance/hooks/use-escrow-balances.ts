@@ -141,9 +141,9 @@ export const useEscrowBalances = () => {
 
             return {
               escrowAddress: address,
-              stETHLockedShares: details?.stETHLockedShares,
-              unstETHLockedShares: details?.unstETHLockedShares,
-              lastAssetsLockTimestamp: details?.lastAssetsLockTimestamp,
+              stETHLockedShares: details?.stETHLockedShares ?? 0n,
+              unstETHLockedShares: details?.unstETHLockedShares ?? 0n,
+              lastAssetsLockTimestamp: details?.lastAssetsLockTimestamp ?? 0,
               totalLockedShares:
                 (details?.stETHLockedShares ?? 0n) +
                 activeUnstethRecords.reduce(

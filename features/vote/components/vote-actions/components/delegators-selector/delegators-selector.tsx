@@ -56,12 +56,10 @@ const VotableDelegatorItem = ({
   delegator,
   isChecked,
   onCheckedChange,
-  tokenSymbol,
 }: {
   delegator: EligibleDelegator;
   isChecked: boolean;
   onCheckedChange: (address: Address, isChecked: boolean) => void;
-  tokenSymbol?: string;
 }) => (
   <DelegatorsListItem key={delegator.address} data-testid="delegatorsListRow">
     <AddressWrap>
@@ -87,7 +85,7 @@ const VotableDelegatorItem = ({
       </Text>
     )}
     <DelegatorsVotingPower data-testid="delegatorVP">
-      {formatBalance(BigInt(delegator.votingPower))} {tokenSymbol}
+      {formatBalance(BigInt(delegator.votingPower))} {KnownToken.LDO.symbol}
     </DelegatorsVotingPower>
   </DelegatorsListItem>
 );
