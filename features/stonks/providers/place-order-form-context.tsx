@@ -40,11 +40,8 @@ export const usePlaceOrderFormData = () => {
 const usePlaceOrderFormNetworkData = (
   stonksMetadata: StonksMetadata,
 ): PlaceOrderFormNetworkData => {
-  const {
-    data: isStonksManagerConnected,
-    isLoading: isStonksManagerLoading,
-    isFetched: isStonksManagerFetched,
-  } = useIsStonksManager(stonksMetadata.address);
+  const { data: isStonksManagerConnected, isLoading: isStonksManagerLoading } =
+    useIsStonksManager(stonksMetadata.address);
 
   const {
     data: balanceMap,
@@ -68,8 +65,7 @@ const usePlaceOrderFormNetworkData = (
     estimatedOutputFromBalance,
     isLoading:
       isBalanceMapLoading || isEstimatedOutputLoading || isStonksManagerLoading,
-    isFetched:
-      isBalanceMapFetched && isEstimatedOutputFetched && isStonksManagerFetched,
+    isFetched: isBalanceMapFetched && isEstimatedOutputFetched,
     isStonksManagerConnected,
     fetchEstimatedOutput,
     refetch: async () => {
