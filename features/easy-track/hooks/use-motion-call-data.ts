@@ -41,12 +41,10 @@ export const useMotionCallData = (
 
   const typedCallData = callData as CallDataWithTopUp | null;
 
-  const { data: tokenData } = useMotionTokenData(
-    typedCallData?.token ?? undefined,
-  );
+  const { data: tokenData } = useMotionTokenData(typedCallData?.token);
 
   const motionTopUpAmount = useMemo(
-    () => getTopUpAmount(typedCallData, tokenData?.decimals ?? ETH_DECIMALS),
+    () => getTopUpAmount(typedCallData, tokenData?.decimals),
     [callData, tokenData], // eslint-disable-line react-hooks/exhaustive-deps
   );
 

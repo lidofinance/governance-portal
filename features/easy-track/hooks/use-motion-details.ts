@@ -6,12 +6,7 @@ import { usePublicClient } from 'wagmi';
 import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
 import { fetchMotionsSubgraphItem } from '../subgraph/motions-subgraph-fetchers';
-import {
-  formatMotionDataOnchain,
-  MotionCreatedEventLog,
-} from '../utils/format-motion-data-onchain';
-import { readContract } from 'viem/actions';
-import { easyTrackAbi } from 'abi/generated';
+import { formatMotionDataOnchain } from '../utils/format-motion-data-onchain';
 
 type Args = {
   motionId: string;
@@ -23,70 +18,44 @@ export const useMotionDetails = ({ motionId }: Args) => {
   const client = usePublicClient({ chainId });
 
   return useQuery({
-    queryKey: ['motion-details', motionId],
+    queryKey: ['motion-details', motionId, chainId],
     queryFn: async () => {
       invariant(client, 'client must be defined');
       invariant(easyTrackContract, 'easyTrack contract must be defined');
       invariant(motionId, 'motionId contract must be defined');
 
       try {
-        const onChainMotionData = await readContract(client, {
-          abi: easyTrackAbi,
-          address: easyTrackContract.address,
-          functionName: 'getMotion',
-          args: [BigInt(motionId)],
+        const onChainMotionData = await easyTrackContract.readContract(
+          'getMotion',
+          [BigInt(motionId)],
+        );
+
+        const event = await getMotionCreatedEvent({
+          easyTrackContract,
+          motionId: onChainMotionData.id,
+          motionSnapshotBlock: onChainMotionData.snapshotBlock,
+          client,
         });
 
-        if (onChainMotionData) {
-          const event = await getMotionCreatedEvent({
-            easyTrackContract,
-            motionId: onChainMotionData.id,
-            motionSnapshotBlock: onChainMotionData.snapshotBlock,
-            client,
-          });
-
-          return formatMotionDataOnchain(
-            event as MotionCreatedEventLog,
-            onChainMotionData,
-          );
-        } else {
-          const subgraphMotion = await fetchMotionsSubgraphItem(
-            chainId,
-            motionId,
-          );
-
-          if (subgraphMotion) {
-            const event = (await getMotionCreatedEvent({
-              easyTrackContract,
-              motionId: BigInt(subgraphMotion.id),
-              motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
-              client,
-            })) as MotionCreatedEventLog | undefined;
-            return {
-              evmScript: event?.args._evmScript,
-              ...subgraphMotion,
-            };
-          }
-          return await fetchMotionsSubgraphItem(chainId, motionId);
-        }
+        return formatMotionDataOnchain(event, onChainMotionData);
       } catch {
         const subgraphMotion = await fetchMotionsSubgraphItem(
           chainId,
           motionId,
         );
-        if (subgraphMotion) {
-          const event = (await getMotionCreatedEvent({
-            easyTrackContract,
-            motionId: BigInt(subgraphMotion.id),
-            motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
-            client,
-          })) as MotionCreatedEventLog | undefined;
-          return {
-            evmScript: event?.args._evmScript,
-            ...subgraphMotion,
-          };
+        if (!subgraphMotion) {
+          return undefined;
         }
-        return subgraphMotion;
+        const event = await getMotionCreatedEvent({
+          easyTrackContract,
+          motionId: BigInt(subgraphMotion.id),
+          motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
+          client,
+        });
+        return {
+          ...subgraphMotion,
+          evmScript: event?.args._evmScript,
+        };
       }
     },
   });

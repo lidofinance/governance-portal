@@ -50,10 +50,10 @@ export const fetchMotionsSubgraphList = async (
 export const fetchMotionsSubgraphItem = async (
   chainId: CHAINS,
   id: string | number,
-) => {
+): Promise<RawMotionSubgraph | undefined> => {
   const res = await fetcherGraphql<Response>(
     chainId,
     getQuerySubgraphMotions({ id }),
   );
-  return res.data.motions[0] || null;
+  return res.data.motions[0];
 };

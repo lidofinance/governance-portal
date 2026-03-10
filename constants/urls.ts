@@ -20,10 +20,10 @@ export const VOTE_DELEGATORS_PATH = `${VOTE_DELEGATION_PATH}/delegators`;
 // ET paths
 
 export const EASY_TRACK_PATH = '/easy-track';
-export const EASY_TRACK__MOTIONS_PATH = '/easy-track/active-motions';
-export const EASY_TRACK__START_MOTION_PATH = '/easy-track/start-motion';
+export const EASY_TRACK__MOTIONS_PATH = `${EASY_TRACK_PATH}/motions`;
+export const EASY_TRACK__START_MOTION_PATH = `${EASY_TRACK_PATH}/start-motion`;
 export const motionPage = (motionId: string) =>
-  `/easy-track/motions/${motionId}`;
+  `${EASY_TRACK_PATH}/motions/${motionId}`;
 
 // Stonks paths
 export const STONKS_PATH = '/stonks';

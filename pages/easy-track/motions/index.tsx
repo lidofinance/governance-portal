@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
-import { Motions } from 'features/easy-track/motions';
+import { Motions } from '@easy-track/motions';
 import { Button } from 'shared/components/button';
 import { EASY_TRACK__START_MOTION_PATH } from 'constants/urls';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ const Title = styled.div`
   align-items: center;
 `;
 
-const ActiveMotionsPage = () => {
+const MotionsPage = () => {
   return (
     <Layout containerSize="full">
       <Title>
@@ -31,4 +31,4 @@ const ActiveMotionsPage = () => {
   );
 };
 
-export default ActiveMotionsPage;
+export default MotionsPage;

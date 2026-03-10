@@ -33,7 +33,7 @@ export const CACHE_CONTROL_PAGES = [
   '/dg',
   '/settings',
   '/dg/proposals/:id',
-  '/easy-track/active-motions',
+  '/easy-track/motions',
   '/easy-track/motions/:id',
   '/easy-track/start-motion',
   '/500',
@@ -155,7 +155,7 @@ export default withBundleAnalyzer({
     },
     {
       source: '/easy-track',
-      destination: '/easy-track/active-motions',
+      destination: '/easy-track/motions',
       permanent: false,
     },
   ],

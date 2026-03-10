@@ -11,6 +11,7 @@ import {
 } from './style';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { EASY_TRACK__MOTIONS_PATH } from 'constants/urls';
 
 export const Nav = () => {
   const { asPath } = useRouter();
@@ -37,7 +38,7 @@ export const Nav = () => {
         </Link>
       </NavItem>
       <NavItem $isActive={asPath.startsWith('/easy-track')}>
-        <Link href="/easy-track/active-motions">Easy Track</Link>
+        <Link href={EASY_TRACK__MOTIONS_PATH}>Easy Track</Link>
       </NavItem>
     </NavStyled>
   );
@@ -98,7 +99,7 @@ export const NavMobile = ({ children }: { children: React.ReactNode }) => {
           </Link>
         </NavMobileItem>
         <NavMobileItem $isActive={asPath.startsWith('/easy-track')}>
-          <Link href="/easy-track/active-motions">Easy Track</Link>
+          <Link href={EASY_TRACK__MOTIONS_PATH}>Easy Track</Link>
         </NavMobileItem>
         <NavMobileActions>{children}</NavMobileActions>
       </NavMobileWrapper>
