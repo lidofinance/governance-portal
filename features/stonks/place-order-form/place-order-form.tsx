@@ -16,7 +16,7 @@ export const StonksPlaceOrderForm = ({ stonksMetadata }: Props) => {
   return (
     <PlaceOrderFormProvider stonksMetadata={stonksMetadata}>
       <PlaceOrderFormController>
-        <BackButton label="Stonks" href={STONKS_PATH} />
+        <BackButton label="stonks" href={STONKS_PATH} />
         <PlaceOrderFormControls>
           <PlaceOrderFormAmountInput />
           <PlaceOrderFormMinBuyInput />

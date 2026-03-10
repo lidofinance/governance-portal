@@ -20,13 +20,15 @@ export const useStonksEstimatedOutput = (
       return 0n;
     }
     setIsLoading(true);
-    const result = await stonksContractReader('estimateTradeOutput', [value]);
-    if (result === null) {
-      ToastError(`Error while loading estimated output value`, {});
+    try {
+      const result = await stonksContractReader('estimateTradeOutput', [value]);
+      if (result === null) {
+        ToastError(`Error while loading estimated output value`, {});
+      }
+      return result ?? 0n;
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-
-    return result ?? 0n;
   };
 
   const result = useQuery({

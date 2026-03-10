@@ -8,14 +8,11 @@ type Props = {
 };
 
 export const BackButton = ({ href, label }: Props) => {
-  const canGoBack =
-    typeof window !== 'undefined' && window.history.state?.url !== undefined;
-
   return (
     <Wrap href={href}>
       <Text size={14} color="secondary">
-        <ArrowLeft /> {canGoBack ? `Back to all ` : 'All '}
-        {label}
+        <ArrowLeft />
+        Back to all {label}
       </Text>
     </Wrap>
   );

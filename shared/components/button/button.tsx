@@ -7,14 +7,18 @@ type ButtonLibProps = Omit<React.ComponentProps<typeof ButtonLib>, 'icon'> & {
   buttonStyleVersion?: 'default' | 'dg';
 };
 
-type ButtonStyledProps = Omit<ButtonLibProps, 'variant'> & {
+type ButtonStyledProps = Omit<
+  ButtonLibProps,
+  'variant' | 'buttonStyleVersion'
+> & {
   variant: 'dg-primary' | 'dg-secondary';
+  $buttonStyleVersion?: 'default' | 'dg';
 };
 
 // Restyled version of the Button component from th lido-ui library
 export const ButtonStyled = styled(ButtonLib)<ButtonStyledProps>`
-  ${({ buttonStyleVersion, variant }) =>
-    buttonStyleVersion === 'dg' &&
+  ${({ $buttonStyleVersion, variant }) =>
+    $buttonStyleVersion === 'dg' &&
     css`
       border-radius: 32px;
       font-size: 17px;
@@ -60,7 +64,7 @@ export const Button: FC<ButtonLibProps> = forwardRef<
       ref={ref}
       variant={buttonStyleVersion === 'dg' ? `dg-${variant}` : variant}
       icon={icon ?? <></>}
-      buttonStyleVersion={buttonStyleVersion}
+      $buttonStyleVersion={buttonStyleVersion}
     />
   );
 });
