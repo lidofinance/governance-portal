@@ -14,7 +14,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useConfig } from 'config';
 import { isTestnet as getIsTestnet } from '../utils/is-testnet';
 
-export const useReadContractGetter = <T extends Abi>(abi: T) => {
+export const useReadContractGetter = <T extends Abi>(abi: T | undefined) => {
   const { rpcProvider } = useLidoSDK();
 
   return useCallback(
@@ -27,6 +27,9 @@ export const useReadContractGetter = <T extends Abi>(abi: T) => {
         args?: A,
       ): Promise<ReadContractReturnType<T, F>> => {
         try {
+          if (!abi) {
+            throw new Error('Contract ABI is not defined');
+          }
           if (address === zeroAddress) {
             throw new Error('Contract address is zero address');
           }
