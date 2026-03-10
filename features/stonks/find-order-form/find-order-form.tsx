@@ -36,10 +36,10 @@ export const StonksFindOrderForm = () => {
       if (isAddress(values.txHashOrAddress)) {
         const orderContractReader = getOrderContract(values.txHashOrAddress);
 
-        try {
-          await orderContractReader('stonks');
+        const stonksAddress = await orderContractReader('stonks');
+        if (stonksAddress) {
           await router.push(stonksOrderPage(values.txHashOrAddress));
-        } catch (error) {
+        } else {
           throw new Error('Invalid order address');
         }
       } else {

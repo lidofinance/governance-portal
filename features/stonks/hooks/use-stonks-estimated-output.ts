@@ -1,3 +1,4 @@
+import { ToastError } from '@lidofinance/lido-ui';
 import { useQuery } from '@tanstack/react-query';
 import { stonksV2Abi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -18,17 +19,14 @@ export const useStonksEstimatedOutput = (
     if (!value) {
       return 0n;
     }
-
-    try {
-      setIsLoading(true);
-      const result = await stonksContractReader('estimateTradeOutput', [value]);
-      return result;
-    } catch (error) {
-      console.error('Error fetching estimated output:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+    setIsLoading(true);
+    const result = await stonksContractReader('estimateTradeOutput', [value]);
+    if (result === null) {
+      ToastError(`Error while loading estimated output value`, {});
     }
+    setIsLoading(false);
+
+    return result ?? 0n;
   };
 
   const result = useQuery({
