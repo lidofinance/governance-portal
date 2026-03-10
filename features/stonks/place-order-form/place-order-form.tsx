@@ -5,6 +5,8 @@ import { PlaceOrderFormSubmitButton } from './place-order-form-submit-button';
 import { PlaceOrderFormInfo } from './place-order-form-info';
 import { StonksMetadata } from '@stonks/types';
 import { PlaceOrderFormMinBuyInput } from './place-order-form-min-buy-input';
+import { BackButton } from 'shared/components/back-button';
+import { STONKS_PATH } from 'constants/urls';
 
 type Props = {
   stonksMetadata: StonksMetadata;
@@ -14,6 +16,7 @@ export const StonksPlaceOrderForm = ({ stonksMetadata }: Props) => {
   return (
     <PlaceOrderFormProvider stonksMetadata={stonksMetadata}>
       <PlaceOrderFormController>
+        <BackButton label="Stonks" href={STONKS_PATH} />
         <PlaceOrderFormControls>
           <PlaceOrderFormAmountInput />
           <PlaceOrderFormMinBuyInput />
