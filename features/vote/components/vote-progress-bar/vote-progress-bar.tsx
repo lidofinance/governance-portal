@@ -106,66 +106,64 @@ export const VoteProgressBar = ({
   const objectionPhaseEndTimestamp = startDate + voteTime;
 
   return (
-    <>
-      <Wrap>
-        <LabelWrap>
-          <MainPhaseCountWrap>
-            <Text
-              data-testid="voteBarMainPhase"
-              color={votePhase === VotePhase.Main ? 'primary' : 'secondary'}
-              size="xxs"
-            >
-              Main phase{votePhase === VotePhase.Main ? ' ends in ' : ' ended'}
-            </Text>
-            {votePhase === VotePhase.Main && (
-              <b>
-                <VoteDetailsCountdown
-                  voteTime={mainPhaseEndTimestamp}
-                  isEndedBeforeTime={isEnded}
-                />
-              </b>
-            )}
-          </MainPhaseCountWrap>
+    <Wrap>
+      <LabelWrap>
+        <MainPhaseCountWrap>
           <Text
-            data-testid="voteBarObjectionPhase"
-            color={votePhase === VotePhase.Objection ? 'primary' : 'secondary'}
+            data-testid="voteBarMainPhase"
+            color={votePhase === VotePhase.Main ? 'primary' : 'secondary'}
             size="xxs"
           >
-            {`Objection phase ${
-              votePhase === VotePhase.Objection ? 'ends in ' : ''
-            }`}
-
-            {votePhase === VotePhase.Objection && (
-              <b>
-                <VoteDetailsCountdown
-                  voteTime={objectionPhaseEndTimestamp}
-                  isEndedBeforeTime={isEnded}
-                />
-              </b>
-            )}
+            Main phase{votePhase === VotePhase.Main ? ' ends in ' : ' ended'}
           </Text>
-        </LabelWrap>
-        <ProgressSection>
-          <ProgressBarWrap $alignDescription="flex-start" $width="60%">
-            <ProgressBar
-              progressPercent={mainPhaseProgress}
-              totalPercent={100}
-              variant={mainPhaseProgress > 0 ? 'primary' : 'default'}
-              showProgressInfo={false}
-            />
-            <div data-testid="voteStartDate"> {formattedStartDate} </div>
-          </ProgressBarWrap>
-          <ProgressBarWrap $alignDescription="flex-end" $width="40%">
-            <ProgressBar
-              progressPercent={objectionPhaseProgress}
-              totalPercent={100}
-              variant={objectionPhaseProgress > 0 ? 'primary' : 'default'}
-              showProgressInfo={false}
-            />
-            <div data-testid="voteEndDate">{formattedEndDate}</div>
-          </ProgressBarWrap>
-        </ProgressSection>
-      </Wrap>
-    </>
+          {votePhase === VotePhase.Main && (
+            <b>
+              <VoteDetailsCountdown
+                voteTime={mainPhaseEndTimestamp}
+                isEndedBeforeTime={isEnded}
+              />
+            </b>
+          )}
+        </MainPhaseCountWrap>
+        <Text
+          data-testid="voteBarObjectionPhase"
+          color={votePhase === VotePhase.Objection ? 'primary' : 'secondary'}
+          size="xxs"
+        >
+          {`Objection phase ${
+            votePhase === VotePhase.Objection ? 'ends in ' : ''
+          }`}
+
+          {votePhase === VotePhase.Objection && (
+            <b>
+              <VoteDetailsCountdown
+                voteTime={objectionPhaseEndTimestamp}
+                isEndedBeforeTime={isEnded}
+              />
+            </b>
+          )}
+        </Text>
+      </LabelWrap>
+      <ProgressSection>
+        <ProgressBarWrap $alignDescription="flex-start" $width="60%">
+          <ProgressBar
+            progressPercent={mainPhaseProgress}
+            totalPercent={100}
+            variant={mainPhaseProgress > 0 ? 'primary' : 'default'}
+            showProgressInfo={false}
+          />
+          <div data-testid="voteStartDate"> {formattedStartDate} </div>
+        </ProgressBarWrap>
+        <ProgressBarWrap $alignDescription="flex-end" $width="40%">
+          <ProgressBar
+            progressPercent={objectionPhaseProgress}
+            totalPercent={100}
+            variant={objectionPhaseProgress > 0 ? 'primary' : 'default'}
+            showProgressInfo={false}
+          />
+          <div data-testid="voteEndDate">{formattedEndDate}</div>
+        </ProgressBarWrap>
+      </ProgressSection>
+    </Wrap>
   );
 };

@@ -39,7 +39,7 @@ export type PublicDelegate = {
   avatar: string;
   address: Address;
   lido: string;
-  twitter: string;
+  twitter: string | null;
 };
 
 export type DelegationFormAsyncValidationContext = {
@@ -60,11 +60,16 @@ export type DelegationFormValidationContext = {
   asyncContext: Promise<DelegationFormAsyncValidationContext>;
 };
 
-export type VoteMode = 'yay' | 'nay' | 'enact';
-export type VoteType = 'own' | 'delegated';
+export type VoteMode = 'yay' | 'nay';
 
-export const voteModeDict = {
-  yay: 'Yes',
-  nay: 'No',
-  enact: 'Enact',
+export type EligibleDelegator = {
+  address: Address;
+  votingPower: bigint;
+  delegateVoteMode: VoteMode | 'absent';
+};
+
+export type VoterInfo = {
+  address: Address;
+  supports: boolean;
+  stake: bigint;
 };

@@ -1,6 +1,7 @@
 import styled, { css, keyframes } from 'styled-components';
 
-export const Wrap = styled.span`
+export const Wrap = styled.span<{ $paddingless?: boolean }>`
+  display: flex;
   position: relative;
   cursor: pointer;
   padding: 4px;
@@ -10,6 +11,12 @@ export const Wrap = styled.span`
     border: none;
     padding: 0;
   }
+
+  ${({ $paddingless }) =>
+    $paddingless &&
+    css`
+      padding: 0;
+    `}
 `;
 
 const popIn = keyframes`

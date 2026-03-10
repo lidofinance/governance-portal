@@ -8,14 +8,14 @@ import {
   EmergencyProtectedTimelock,
 } from 'shared/blockchain/contracts';
 import { Address, Log, parseEventLogs } from 'viem';
-import { EventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
+import { EventExecuteVote } from 'shared/votes/types';
 import {
   ProposalDetails,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
 
 type Args = {
-  voteId: number | string;
+  voteId: number | string | undefined;
   eventExecuteVote: EventExecuteVote | null | undefined;
 };
 
@@ -40,11 +40,12 @@ export const useVoteDualGovernanceStatus = ({
     EmergencyProtectedTimelock,
   );
 
-  const isEnabled = !!client && !!eventExecuteVote;
+  const isEnabled = !!client && !!eventExecuteVote && !!voteId;
 
   const query = useQuery({
     queryKey: [
-      `${voteId}-dg-status`,
+      `dg-status`,
+      voteId,
       chainId,
       eventExecuteVote?.event.transactionHash,
     ],

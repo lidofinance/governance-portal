@@ -121,7 +121,7 @@ export const usePeriodLimitsInfoByMotionType = (props: {
   const registry = useReadContract(registryContract as ContractObject);
 
   return useQuery({
-    queryKey: [`${motionType}-period-limits-data`, chainId, motionType],
+    queryKey: [`period-limits-data`, chainId, motionType],
     queryFn: async () => {
       if (motionType === EvmUnrecognized) {
         return null;

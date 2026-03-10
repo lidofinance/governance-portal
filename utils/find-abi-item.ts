@@ -1,20 +1,18 @@
-import { Abi, AbiEvent, AbiFunction } from 'viem';
+import { Abi } from 'viem';
 
-type Props<T extends 'event' | 'function'> = {
-  abi: Abi;
-  name: string;
-  type: T;
-};
-
-type AbiItemType<T> = T extends 'event'
-  ? AbiEvent | undefined
-  : AbiFunction | undefined;
-
-export const findAbiItem = <T extends 'event' | 'function'>({
+export const findAbiItem = <
+  TAbi extends Abi,
+  TName extends string,
+  TType extends 'event' | 'function',
+>({
   abi,
   name,
   type,
-}: Props<T>): AbiItemType<T> => {
+}: {
+  abi: TAbi;
+  name: TName;
+  type: TType;
+}): Extract<TAbi[number], { type: TType; name: TName }> => {
   if (!abi?.length) {
     throw new Error('abi should be a non-empty array.');
   }
@@ -28,9 +26,13 @@ export const findAbiItem = <T extends 'event' | 'function'>({
   }
 
   const abiItem = abi.find(
-    (item): item is AbiEvent | AbiFunction =>
+    (item): item is Extract<TAbi[number], { type: TType; name: TName }> =>
       item.type === type && item.name === name,
   );
 
-  return (abiItem as AbiItemType<T>) || undefined;
+  if (!abiItem) {
+    throw new Error(`ABI item "${name}" of type "${type}" not found.`);
+  }
+
+  return abiItem;
 };

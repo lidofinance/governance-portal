@@ -33,11 +33,7 @@
         "name": "sanityCheckParams",
         "type": "tuple"
       },
-      {
-        "internalType": "address",
-        "name": "adminExecutor",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "adminExecutor", "type": "address" },
       {
         "internalType": "Duration",
         "name": "afterSubmitDelay",
@@ -54,98 +50,58 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "AfterScheduleDelayNotPassed",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "AfterSubmitDelayNotPassed",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotAdminExecutor",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotEmergencyActivationCommittee",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotEmergencyExecutionCommittee",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "caller", "type": "address" }
     ],
     "name": "CallerIsNotGovernance",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "DurationOverflow",
-    "type": "error"
-  },
+  { "inputs": [], "name": "DurationOverflow", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "Timestamp",
-        "name": "protectedTill",
-        "type": "uint40"
-      }
+      { "internalType": "Timestamp", "name": "protectedTill", "type": "uint40" }
     ],
     "name": "EmergencyProtectionExpired",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "EmptyCalls",
-    "type": "error"
-  },
+  { "inputs": [], "name": "EmptyCalls", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "adminExecutor",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "adminExecutor", "type": "address" }
     ],
     "name": "InvalidAdminExecutor",
     "type": "error"
@@ -174,109 +130,70 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "committee",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "committee", "type": "address" }
     ],
     "name": "InvalidEmergencyActivationCommittee",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "committee",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "committee", "type": "address" }
     ],
     "name": "InvalidEmergencyExecutionCommittee",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "governance",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "governance", "type": "address" }
     ],
     "name": "InvalidEmergencyGovernance",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "Duration",
-        "name": "value",
-        "type": "uint32"
-      }
+      { "internalType": "Duration", "name": "value", "type": "uint32" }
     ],
     "name": "InvalidEmergencyModeDuration",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "Timestamp",
-        "name": "value",
-        "type": "uint40"
-      }
+      { "internalType": "Timestamp", "name": "value", "type": "uint40" }
     ],
     "name": "InvalidEmergencyProtectionEndDate",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "Duration",
-        "name": "executionDelay",
-        "type": "uint32"
-      }
+      { "internalType": "Duration", "name": "executionDelay", "type": "uint32" }
     ],
     "name": "InvalidExecutionDelay",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "governance",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "governance", "type": "address" }
     ],
     "name": "InvalidGovernance",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "TimestampOverflow",
+    "inputs": [
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
+    ],
+    "name": "MinExecutionDelayNotPassed",
     "type": "error"
   },
+  { "inputs": [], "name": "TimestampOverflow", "type": "error" },
   {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "state",
-        "type": "bool"
-      }
-    ],
+    "inputs": [{ "internalType": "bool", "name": "state", "type": "bool" }],
     "name": "UnexpectedEmergencyModeState",
     "type": "error"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "enum Status",
-        "name": "status",
-        "type": "uint8"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" },
+      { "internalType": "enum Status", "name": "status", "type": "uint8" }
     ],
     "name": "UnexpectedProposalStatus",
     "type": "error"
@@ -453,21 +370,9 @@
       },
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "uint96",
-            "name": "value",
-            "type": "uint96"
-          },
-          {
-            "internalType": "bytes",
-            "name": "payload",
-            "type": "bytes"
-          }
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "uint96", "name": "value", "type": "uint96" },
+          { "internalType": "bytes", "name": "payload", "type": "bytes" }
         ],
         "indexed": false,
         "internalType": "struct ExternalCall[]",
@@ -494,65 +399,35 @@
   {
     "inputs": [],
     "name": "MAX_AFTER_SCHEDULE_DELAY",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_AFTER_SUBMIT_DELAY",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_EMERGENCY_MODE_DURATION",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_EMERGENCY_PROTECTION_DURATION",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MIN_EXECUTION_DELAY",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -565,39 +440,19 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "canExecute",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "canSchedule",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -617,11 +472,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "emergencyExecute",
     "outputs": [],
@@ -637,11 +488,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "execute",
     "outputs": [],
@@ -651,78 +498,42 @@
   {
     "inputs": [],
     "name": "getAdminExecutor",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getAfterScheduleDelay",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getAfterSubmitDelay",
-    "outputs": [
-      {
-        "internalType": "Duration",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
+    "outputs": [{ "internalType": "Duration", "name": "", "type": "uint32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getEmergencyActivationCommittee",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getEmergencyExecutionCommittee",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getEmergencyGovernance",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -759,38 +570,20 @@
   {
     "inputs": [],
     "name": "getGovernance",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "getProposal",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "executor",
-            "type": "address"
-          },
+          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          { "internalType": "address", "name": "executor", "type": "address" },
           {
             "internalType": "Timestamp",
             "name": "submittedAt",
@@ -801,11 +594,7 @@
             "name": "scheduledAt",
             "type": "uint40"
           },
-          {
-            "internalType": "enum Status",
-            "name": "status",
-            "type": "uint8"
-          }
+          { "internalType": "enum Status", "name": "status", "type": "uint8" }
         ],
         "internalType": "struct ITimelock.ProposalDetails",
         "name": "proposalDetails",
@@ -813,21 +602,9 @@
       },
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "uint96",
-            "name": "value",
-            "type": "uint96"
-          },
-          {
-            "internalType": "bytes",
-            "name": "payload",
-            "type": "bytes"
-          }
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "uint96", "name": "value", "type": "uint96" },
+          { "internalType": "bytes", "name": "payload", "type": "bytes" }
         ],
         "internalType": "struct ExternalCall[]",
         "name": "calls",
@@ -839,31 +616,15 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "getProposalCalls",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "uint96",
-            "name": "value",
-            "type": "uint96"
-          },
-          {
-            "internalType": "bytes",
-            "name": "payload",
-            "type": "bytes"
-          }
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "uint96", "name": "value", "type": "uint96" },
+          { "internalType": "bytes", "name": "payload", "type": "bytes" }
         ],
         "internalType": "struct ExternalCall[]",
         "name": "calls",
@@ -875,26 +636,14 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "getProposalDetails",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "executor",
-            "type": "address"
-          },
+          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          { "internalType": "address", "name": "executor", "type": "address" },
           {
             "internalType": "Timestamp",
             "name": "submittedAt",
@@ -905,11 +654,7 @@
             "name": "scheduledAt",
             "type": "uint40"
           },
-          {
-            "internalType": "enum Status",
-            "name": "status",
-            "type": "uint8"
-          }
+          { "internalType": "enum Status", "name": "status", "type": "uint8" }
         ],
         "internalType": "struct ITimelock.ProposalDetails",
         "name": "proposalDetails",
@@ -923,11 +668,7 @@
     "inputs": [],
     "name": "getProposalsCount",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "count", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -935,36 +676,20 @@
   {
     "inputs": [],
     "name": "isEmergencyModeActive",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "isEmergencyProtectionEnabled",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "proposalId", "type": "uint256" }
     ],
     "name": "schedule",
     "outputs": [],
@@ -1077,11 +802,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "newGovernance",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "newGovernance", "type": "address" }
     ],
     "name": "setGovernance",
     "outputs": [],
@@ -1090,28 +811,12 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "executor", "type": "address" },
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "uint96",
-            "name": "value",
-            "type": "uint96"
-          },
-          {
-            "internalType": "bytes",
-            "name": "payload",
-            "type": "bytes"
-          }
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "uint96", "name": "value", "type": "uint96" },
+          { "internalType": "bytes", "name": "payload", "type": "bytes" }
         ],
         "internalType": "struct ExternalCall[]",
         "name": "calls",
@@ -1120,27 +825,15 @@
     ],
     "name": "submit",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "newProposalId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "newProposalId", "type": "uint256" }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "executor", "type": "address" },
+      { "internalType": "address", "name": "owner", "type": "address" }
     ],
     "name": "transferExecutorOwnership",
     "outputs": [],

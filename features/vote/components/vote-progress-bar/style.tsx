@@ -6,7 +6,7 @@ export const Wrap = styled.div`
   gap: 4px;
   width: 100%;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
 export const LabelWrap = styled.section`

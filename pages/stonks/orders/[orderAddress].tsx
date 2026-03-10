@@ -23,7 +23,6 @@ export default function StonksOrderPage() {
 
   return (
     <Layout
-      pageTitle="Stonks Order "
       title="Stonks Order"
       subtitle={
         orderData

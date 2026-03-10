@@ -2,12 +2,12 @@ import { Vote, RawVote, VotePhase } from '../types';
 import { getVoteState } from './get-vote-state';
 
 export const parseVote = (
-  voteId: number,
+  voteId: bigint | number,
   vote: RawVote,
   canExecute: boolean,
 ): Vote => {
   const voteObject = {
-    id: voteId,
+    id: Number(voteId),
     open: vote[0],
     executed: vote[1],
     startDate: vote[2],

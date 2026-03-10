@@ -8,6 +8,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { getSdvtOperatorManagerAddress } from '../utils/get-sdvt-operator-manager-address';
 import { processInBatches } from 'utils/process-in-batches';
 import { NodeOperator } from '../types';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const MAX_PROVIDER_BATCH = 20;
 
@@ -21,6 +22,7 @@ export const useNodeOperatorsList = (
 
   return useQuery({
     queryKey: [String(chainId), registryType, 'operators-list'],
+    enabled: chainId === CHAINS.Mainnet ? registryType !== 'sandbox' : true,
     queryFn: async () => {
       try {
         const count = await registryContract.readContract(

@@ -20,6 +20,7 @@ type Props = {
   voteEvent: VoteEvent;
   governanceTokenSymbol: string;
   ensMap: Record<string, string | null> | undefined;
+  walletAddress: string | undefined;
   isMobile: boolean;
   isDelegated?: boolean;
 };
@@ -28,6 +29,7 @@ export const VoterItem = ({
   voteEvent,
   governanceTokenSymbol,
   ensMap,
+  walletAddress,
   isDelegated,
   isMobile,
 }: Props) => {
@@ -63,7 +65,7 @@ export const VoterItem = ({
         onClick={handleExpandClick}
       >
         <ListRowCell>
-          <AddressPop address={voter}>
+          <AddressPop address={voter} isPaddingless>
             <AddressWrap data-testid="voterAddress">
               {isDelegated && <TurnArrow />}
               {publicDelegate ? (
@@ -87,7 +89,9 @@ export const VoterItem = ({
           </AddressPop>
         </ListRowCell>
         <ListRowCell data-testid="voteStats">
-          {supports ? 'Yes' : 'No'} {isDelegate && `(${delegatedVotesLength})`}
+          {supports ? 'Yes' : 'No'}{' '}
+          {voter.toLowerCase() === walletAddress?.toLowerCase() ? `(You)` : ''}{' '}
+          {isDelegate && `(${delegatedVotesLength})`}
         </ListRowCell>
         <ListRowCell>
           {Number(stake) > parseEther('1000') ? (
@@ -108,6 +112,7 @@ export const VoterItem = ({
             governanceTokenSymbol={governanceTokenSymbol}
             ensMap={ensMap}
             isMobile={isMobile}
+            walletAddress={walletAddress}
             isDelegated={true}
           />
         ))}

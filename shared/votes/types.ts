@@ -1,4 +1,4 @@
-import type { Address, Log } from 'viem';
+import type { Address, Hex, Log } from 'viem';
 import { aragonVotingAbi } from 'abi/generated';
 import { ContractReadFunctionReturnType } from 'shared/types';
 import { UseFormRegister, UseFormWatch } from 'react-hook-form';
@@ -32,7 +32,7 @@ export type Vote = {
   yea: bigint;
   nay: bigint;
   votingPower: bigint;
-  script: string;
+  script: Hex;
   phase: VotePhase;
   state: { status: VoteStatus; isQuorumReached: boolean };
   canExecute: boolean;
@@ -63,7 +63,7 @@ export type VoteData = {
 
 export type VoteInfo = {
   stake: bigint;
-  voter: string;
+  voter: Address;
   supports: boolean;
 };
 
@@ -97,15 +97,10 @@ export type VoteEvent = VoteInfo & {
   delegatedVotes?: VoteInfo[];
 };
 
-// TODO: define types
-type ExecuteVoteEvent = any;
-type ExecuteVoteEventObject = any;
-
 export type EventExecuteVote = {
-  event: ExecuteVoteEvent;
-  decoded: ExecuteVoteEventObject;
-  executedAt: number | undefined;
-} | null;
+  event: Log;
+  executedAt: bigint | undefined;
+};
 
 export type DelegationInfo = {
   aragonDelegateAddress: string | null | undefined;

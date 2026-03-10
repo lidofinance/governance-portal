@@ -39,7 +39,7 @@ export const useTransitionLimits = () => {
   const EVMScriptExecutorContract = useReadContract(EVMScriptExecutor);
 
   return useQuery({
-    queryKey: [`permission-param-${chainId}`],
+    queryKey: [`permission-param`, chainId],
     queryFn: async () => {
       const evmScriptExecutorAddress = EVMScriptExecutorContract.address;
 

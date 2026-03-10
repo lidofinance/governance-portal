@@ -3,54 +3,35 @@ import invariant from 'tiny-invariant';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
-import { ProcessVoteDelegatedTxArgs, ProcessVoteTxArgs } from './types';
+import { VoteTxArgs } from './types';
+import { useAccount } from 'wagmi';
 
 export const useVoteTxSender = () => {
+  const { isConnected } = useAccount();
   const writeVotingContract = useWriteContract(Voting.abi);
   const votingContractAddress = useContractAddress(Voting);
 
-  const voteOwnTxSender = useCallback(
-    async ({ mode, voteId }: ProcessVoteTxArgs) => {
-      invariant(mode, 'vote mode must be provided');
-      invariant(voteId, 'vote ID must be provided');
+  return useCallback(
+    async ({ mode, voteId, delegatedVoters }: VoteTxArgs) => {
+      invariant(isConnected, 'Wallet must be connected to proceed');
+      invariant(voteId >= 0n, 'Valid vote ID is required to proceed');
+
+      const isSupporting = mode === 'yay';
+
+      if (delegatedVoters?.length) {
+        return writeVotingContract({
+          address: votingContractAddress,
+          functionName: 'attemptVoteForMultiple',
+          args: [voteId, isSupporting, delegatedVoters],
+        });
+      }
 
       return writeVotingContract({
         address: votingContractAddress,
         functionName: 'vote',
-        args: [voteId, mode === 'yay', false],
+        args: [voteId, isSupporting, false],
       });
     },
-    [votingContractAddress, writeVotingContract],
+    [isConnected, votingContractAddress, writeVotingContract],
   );
-
-  const voteDelegatedTxSender = useCallback(
-    ({ mode, voteId, voters }: ProcessVoteDelegatedTxArgs) => {
-      invariant(mode, 'vote mode must be provided');
-      invariant(voteId, 'vote ID must be provided');
-      invariant(voters.length, 'voters list cannot be empty');
-
-      return writeVotingContract({
-        address: votingContractAddress,
-        functionName: 'attemptVoteForMultiple',
-        args: [voteId, mode === 'yay', voters],
-      });
-    },
-
-    [votingContractAddress, writeVotingContract],
-  );
-
-  const voteEnactTxSender = useCallback(
-    ({ voteId }: { voteId: bigint }) => {
-      invariant(voteId, 'vote id must be provided');
-
-      return writeVotingContract({
-        address: votingContractAddress,
-        functionName: 'executeVote',
-        args: [voteId],
-      });
-    },
-    [votingContractAddress, writeVotingContract],
-  );
-
-  return { voteOwnTxSender, voteDelegatedTxSender, voteEnactTxSender };
 };
