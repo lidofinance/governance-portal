@@ -9,7 +9,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EasyTrack, GovernanceToken } from 'shared/blockchain/contracts';
 import { formatEther, Hex } from 'viem';
 import { useConnect } from 'reef-knot/core-react';
-import { useMotions } from '@easy-track/providers/motion-detailed-context';
+import { useMotionContext } from '@easy-track/providers/motion-detailed-context';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
@@ -20,16 +20,37 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
   const { address: walletAddress } = useAccount();
   const { chainId } = useLidoSDK();
   const { data: governanceTokenData } = useGovernanceToken();
-  const { handleObject, handleEnact, isOverPeriodLimit } = useMotions();
+  const { handleObject, handleEnact, isOverPeriodLimit } = useMotionContext();
 
   const governanceTokenContract = useReadContract(GovernanceToken);
   const easyTrackContract = useReadContract(EasyTrack);
 
-  const { data: balanceAt, isLoading: isBalanceDataLoading } = useQuery({
+  const { data: balanceAtFormatted, isLoading: isBalanceDataLoading } =
+    useQuery({
+      queryKey: [
+        'balanceAt',
+        chainId,
+        String(motion.snapshotBlock),
+        walletAddress,
+      ],
+      enabled: !!walletAddress,
+      queryFn: async () => {
+        if (!walletAddress) {
+          throw new Error('walletAddress is required');
+        }
+        const balance = await governanceTokenContract.readContract(
+          'balanceOfAt',
+          [walletAddress, BigInt(motion.snapshotBlock)],
+        );
+        return balance ? formatEther(balance) : null;
+      },
+    });
+
+  const { data: isObjected, isLoading: isIsObjectedLoading } = useQuery({
     queryKey: [
-      'balanceAt',
+      'motion-is-objected-by',
       chainId,
-      String(motion.snapshotBlock),
+      String(motion.id),
       walletAddress,
     ],
     enabled: !!walletAddress,
@@ -37,31 +58,22 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
       if (!walletAddress) {
         throw new Error('walletAddress is required');
       }
-      return await governanceTokenContract.readContract('balanceOfAt', [
-        walletAddress,
-        BigInt(motion.snapshotBlock),
-      ]);
-    },
-  });
-
-  const balanceAtFormatted = balanceAt ? formatEther(balanceAt) : null;
-
-  const { data: isObjected, isLoading: isIsObjectedLoading } = useQuery({
-    queryKey: ['isObjected', chainId, String(motion.id), walletAddress],
-    enabled: !!walletAddress,
-    queryFn: async () => {
-      if (!walletAddress) {
-        throw new Error('walletAddress is required');
-      }
-      return await easyTrackContract.readContract('objections', [
-        BigInt(motion.id),
-        walletAddress,
-      ]);
+      return Boolean(
+        await easyTrackContract.readContract('objections', [
+          BigInt(motion.id),
+          walletAddress,
+        ]),
+      );
     },
   });
 
   const { data: canObject, isLoading: isCanObjectLoading } = useQuery({
-    queryKey: ['canObject', chainId, String(motion.id), walletAddress],
+    queryKey: [
+      'motion-can-object-by',
+      chainId,
+      String(motion.id),
+      walletAddress,
+    ],
     enabled: !!walletAddress,
     queryFn: async () => {
       if (!walletAddress) {
@@ -85,7 +97,7 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
     );
   }
 
-  const showHintObjected = Boolean(isObjected);
+  const showHintObjected = isObjected ?? false;
   const showHintCanObject = !showHintObjected && Boolean(canObject);
   const showHintCanNotObject = !showHintObjected && Boolean(!canObject);
 
@@ -94,13 +106,13 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
       <Hint>
         {showHintObjected && balanceAtFormatted && (
           <>
-            You have objected this motion with{' '}
-            <b>{String(balanceAtFormatted)}</b> {governanceTokenData?.symbol}
+            You have objected this motion with <b>{balanceAtFormatted}</b>{' '}
+            {governanceTokenData?.symbol}
           </>
         )}
         {showHintCanObject && balanceAtFormatted && (
           <>
-            You can object this motion with <b>{String(balanceAtFormatted)}</b>{' '}
+            You can object this motion with <b>{balanceAtFormatted}</b>{' '}
             {governanceTokenData?.symbol}
           </>
         )}
@@ -137,26 +149,21 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
   );
 };
 
-const AuthStub = () => {
-  const { connect } = useConnect();
-
-  return (
-    <>
-      <Hint>Connect your wallet to interact with this motion</Hint>
-      <Actions>
-        <ButtonStyled size="sm" onClick={connect}>
-          Connect wallet
-        </ButtonStyled>
-      </Actions>
-    </>
-  );
-};
-
 export const MotionCardDetailedActions = ({ motion }: Props) => {
   const { isConnected } = useAccount();
+  const { connect } = useConnect();
 
   if (!isConnected) {
-    return <AuthStub />;
+    return (
+      <>
+        <Hint>Connect your wallet to interact with this motion</Hint>
+        <Actions>
+          <ButtonStyled size="sm" onClick={connect}>
+            Connect wallet
+          </ButtonStyled>
+        </Actions>
+      </>
+    );
   }
 
   return <ActionsBody motion={motion} />;

@@ -31,6 +31,7 @@ import { MotionEvmScript } from '../motion-evm-script';
 import { FormattedDate } from '../../vote/components/formatted-date';
 import { MotionDetailedTime } from '../motion-card-detailed-time';
 import { getMotionDisplayStatus } from '../utils/get-motion-status';
+import { useMotionTimeCountdown } from '../hooks/use-motion-time-countdown';
 import { MOTION_ATTENTION_PERIOD } from '../constants';
 import { MotionDetailedObjections } from '../motion-card-detailed-objections';
 import { AddressPop } from 'shared/components/address-pop';
@@ -38,7 +39,7 @@ import { getMotionEnactWarning } from '@easy-track/utils/get-motion-enact-warnin
 import { MotionCardDetailedActions } from '@easy-track/motion-card-detailed-actions';
 import {
   MotionsProvider,
-  useMotions,
+  useMotionContext,
 } from '@easy-track/providers/motion-detailed-context';
 import { MotionDetailedLimits } from '@easy-track/motion-card-detailed-limits';
 
@@ -48,8 +49,9 @@ type Props = {
 
 const MotionCardDetailedInner = () => {
   const { address: walletAddress } = useAccount();
-  const { motion, motionType, isArchived, timeData, progress } = useMotions();
+  const { motion, motionType, isArchived, progress } = useMotionContext();
 
+  const timeData = useMotionTimeCountdown(motion);
   const { isPassed, diff } = timeData;
   const isAttentionTime =
     diff <= Number(motion.duration) * MOTION_ATTENTION_PERIOD;
@@ -113,6 +115,7 @@ const MotionCardDetailedInner = () => {
             motion={motion as RawMotionSubgraph}
             timeData={timeData}
             displayStatus={displayStatus}
+            isArchived={isArchived}
           />
 
           <StartDateCell>

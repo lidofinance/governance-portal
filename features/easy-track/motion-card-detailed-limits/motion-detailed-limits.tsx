@@ -3,7 +3,7 @@ import { Divider } from '@lidofinance/lido-ui';
 import { MotionDetailedLimitsWrapper } from './style';
 import { MotionLimitProgress } from '@easy-track/motion-limit-progress';
 import { MotionInfoBox } from '@easy-track/start-motion/parts/style';
-import { useMotions } from '@easy-track/providers/motion-detailed-context';
+import { useMotionContext } from '@easy-track/providers/motion-detailed-context';
 
 export const MotionDetailedLimits = () => {
   const {
@@ -13,7 +13,7 @@ export const MotionDetailedLimits = () => {
     isOverPeriodLimit,
     canEnactInNextPeriod,
     isArchived,
-  } = useMotions();
+  } = useMotionContext();
 
   if (!periodLimitsData || isArchived) return null;
 

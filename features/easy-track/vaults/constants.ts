@@ -20,6 +20,15 @@ export const EMPTY_GROUP: GridGroup = {
 export const DEFAULT_TIER_OPERATOR =
   '0xffffffffffffffffffffffffffffffffffffffff';
 
+export const TIER_ABI_COMPONENTS = [
+  { type: 'uint256' },
+  { type: 'uint256' },
+  { type: 'uint256' },
+  { type: 'uint256' },
+  { type: 'uint256' },
+  { type: 'uint256' },
+] as const;
+
 export const PREDEFINED_CONSTANT_TIER_PARAMS = {
   infraFeeBP: 100,
   liquidityFeeBP: 650,

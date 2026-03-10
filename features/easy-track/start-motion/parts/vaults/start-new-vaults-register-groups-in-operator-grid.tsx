@@ -24,6 +24,7 @@ import {
   DEFAULT_TIER_OPERATOR,
   EMPTY_GROUP,
   PREDEFINED_CONSTANT_TIER_PARAMS,
+  TIER_ABI_COMPONENTS,
 } from '@easy-track/vaults/constants';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { RegisterGroupsInOperatorGrid } from 'shared/blockchain/contracts';
@@ -53,19 +54,11 @@ export const formParts = createMotionFormPart({
       a.nodeOperator.toLowerCase().localeCompare(b.nodeOperator.toLowerCase()),
     );
 
-    const tierComponents = [
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-    ] as const;
     const encodedCallData = encodeAbiParameters(
       [
         { type: 'address[]' },
         { type: 'uint256[]' },
-        { type: 'tuple[][]', components: tierComponents },
+        { type: 'tuple[][]', components: TIER_ABI_COMPONENTS },
       ] as const,
       [
         sortedGroups.map((group) => getAddress(group.nodeOperator)),

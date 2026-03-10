@@ -21,6 +21,7 @@ import { encodeAbiParameters, getAddress, parseEther } from 'viem';
 import {
   EMPTY_TIER,
   PREDEFINED_CONSTANT_TIER_PARAMS,
+  TIER_ABI_COMPONENTS,
 } from '@easy-track/vaults/constants';
 import { useOperatorGridGroupMap } from '@easy-track/vaults/hooks/use-operator-grid-group-map';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
@@ -40,18 +41,10 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     groups: GroupInput[];
   }>) => {
-    const tierComponents = [
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-      { type: 'uint256' },
-    ] as const;
     const encodedCallData = encodeAbiParameters(
       [
         { type: 'address[]' },
-        { type: 'tuple[][]', components: tierComponents },
+        { type: 'tuple[][]', components: TIER_ABI_COMPONENTS },
       ] as const,
       [
         formData.groups.map((group) => getAddress(group.nodeOperator)),

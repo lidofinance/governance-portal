@@ -121,7 +121,7 @@ export const useAllowedRecipients = ({ registryType }: HookArgs) => {
     queryKey: ['allowed-recipients', chainId, registry.address],
     queryFn: async () => {
       const addresses = (await registry.readContract(
-        'getAllowedRecipients' as any,
+        'getAllowedRecipients',
       )) as Address[];
       return addresses.map((address: Address) => ({ title: address, address }));
     },

@@ -1,25 +1,22 @@
 import { Wrap, Title, Value, Subvalue } from './style';
-import { MotionDisplayStatus } from '../types';
+import { MotionDisplayStatus, MotionStatus, RawMotionSubgraph } from '../types';
 import { MotionTimeData } from '../hooks/use-motion-time-countdown';
-import { MotionStatus, RawMotionSubgraph } from '../types';
 import { FormattedDate } from '../../vote/components/formatted-date';
 
 type Props = {
   motion: RawMotionSubgraph;
   timeData: MotionTimeData;
   displayStatus: MotionDisplayStatus;
+  isArchived: boolean;
 };
 
 export const MotionDetailedTime = ({
   motion,
   timeData,
   displayStatus,
+  isArchived,
 }: Props) => {
   const { isPassed, diffFormatted } = timeData;
-
-  const isArchived =
-    motion.status !== MotionStatus.ACTIVE &&
-    motion.status !== MotionStatus.PENDING;
 
   if (isArchived) {
     let title = 'Ended at:';

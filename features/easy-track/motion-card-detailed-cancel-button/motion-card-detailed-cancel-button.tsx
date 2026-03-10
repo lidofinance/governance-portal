@@ -1,9 +1,9 @@
 import { CancelButton, Wrap } from './style';
 import { TrashIcon } from 'shared/components/icons';
-import { useMotions } from '@easy-track/providers/motion-detailed-context';
+import { useMotionContext } from '@easy-track/providers/motion-detailed-context';
 
 export const MotionCardDetailedCancelButton = () => {
-  const { motion, handleCancel } = useMotions();
+  const { motion, handleCancel } = useMotionContext();
 
   return (
     <Wrap>

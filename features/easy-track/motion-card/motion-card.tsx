@@ -7,11 +7,12 @@ import {
   DescWrapper,
   EnactDate,
 } from './style';
-import { Motion, MotionStatus } from '../types';
+import { Motion } from '../types';
 import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getMotionTypeByScriptFactory } from '../utils/get-motion-type';
 import {
+  getIsMotionArchived,
   getMotionDisplayStatus,
   getMotionStatus,
 } from '../utils/get-motion-status';
@@ -36,9 +37,7 @@ export const MotionCard = ({ motion }: Props) => {
 
   const progress = useMotionProgress(motion);
 
-  const isArchived =
-    motionStatus !== MotionStatus.ACTIVE &&
-    motionStatus !== MotionStatus.PENDING;
+  const isArchived = getIsMotionArchived(motion);
 
   const timeData = useMotionTimeCountdown(motion);
   const { isPassed, diffFormatted } = timeData;

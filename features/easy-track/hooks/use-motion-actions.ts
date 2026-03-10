@@ -78,8 +78,12 @@ export const useMotionActions = () => {
         pending: (txHash: Hex) => txModalStages.pendingObject(motionId, txHash),
         success: (txHash: Hex) => txModalStages.successObject(motionId, txHash),
         extraInvalidations: async () => {
-          await queryClient.invalidateQueries({ queryKey: ['isObjected'] });
-          await queryClient.invalidateQueries({ queryKey: ['canObject'] });
+          await queryClient.invalidateQueries({
+            queryKey: ['motion-is-objected-by'],
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ['motion-can-object-by'],
+          });
         },
       });
     },
