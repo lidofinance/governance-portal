@@ -43,6 +43,7 @@ export const StonksList = () => {
             key={stonks.address}
             target="_self"
             href={stonksInstancePage(stonks.address)}
+            $empty={stonks.balance === 0n}
           >
             <CardTitle>
               <Text size={16}>
