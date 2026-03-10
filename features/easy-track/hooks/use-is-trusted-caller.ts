@@ -31,14 +31,13 @@ export const useIsTrustedCaller = (contractObject: ContractObject) => {
   const result = useQuery({
     queryKey: ['is-trusted-caller', contractInstance.address, address, chainId],
     queryFn: async () => {
-      try {
-        const trustedCaller =
-          await contractInstance.readContract('trustedCaller');
-
-        return trustedCaller.toLowerCase() === address?.toLowerCase();
-      } catch (error) {
+      const trustedCaller =
+        await contractInstance.readContract('trustedCaller');
+      if (trustedCaller === null) {
         return false;
       }
+
+      return trustedCaller.toLowerCase() === address?.toLowerCase();
     },
     enabled: !!address,
   });
