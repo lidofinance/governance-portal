@@ -26,7 +26,7 @@ type MotionsContextValue = {
   motionTopUpAmount: number;
   motionTopUpToken: string | undefined;
   isOverPeriodLimit: boolean;
-  isCanEnactInNextPeriod: boolean;
+  canEnactInNextPeriod: boolean;
   progress: ReturnType<typeof useMotionProgress>;
   timeData: MotionTimeData;
   isPending: boolean;
@@ -70,7 +70,7 @@ export const MotionsProvider: FC<Props> = ({ motion, children }) => {
     motionType,
   );
 
-  const { periodLimitsData, isOverPeriodLimit, isCanEnactInNextPeriod } =
+  const { periodLimitsData, isOverPeriodLimit, canEnactInNextPeriod } =
     useMotionLimitStatus({ motionType, isPending, motionTopUpAmount });
 
   const { handleObject, handleEnact, handleCancel } = useMotionActions();
@@ -84,7 +84,7 @@ export const MotionsProvider: FC<Props> = ({ motion, children }) => {
     motionTopUpAmount,
     motionTopUpToken,
     isOverPeriodLimit,
-    isCanEnactInNextPeriod,
+    canEnactInNextPeriod,
     progress,
     timeData,
     isPending,

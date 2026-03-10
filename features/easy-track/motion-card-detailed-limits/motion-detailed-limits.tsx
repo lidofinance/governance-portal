@@ -11,7 +11,7 @@ export const MotionDetailedLimits = () => {
     motionTopUpAmount,
     motionTopUpToken,
     isOverPeriodLimit,
-    isCanEnactInNextPeriod,
+    canEnactInNextPeriod,
     isArchived,
   } = useMotions();
 
@@ -31,13 +31,13 @@ export const MotionDetailedLimits = () => {
           showAmountChange
         />
       </MotionDetailedLimitsWrapper>
-      {isOverPeriodLimit && !isCanEnactInNextPeriod && (
+      {isOverPeriodLimit && !canEnactInNextPeriod && (
         <MotionInfoBox $variant="error">
           Motion can&apos;t be enacted as the transfer value is greater than the
           period limit.
         </MotionInfoBox>
       )}
-      {isCanEnactInNextPeriod && isOverPeriodLimit && (
+      {canEnactInNextPeriod && isOverPeriodLimit && (
         <MotionInfoBox>
           Motion can&apos;t be enacted before the period limits are replenished.
         </MotionInfoBox>

@@ -15,7 +15,7 @@ type Props = {
 type Result = {
   periodLimitsData: UsePeriodLimitsInfoResultData | null | undefined;
   isOverPeriodLimit: boolean;
-  isCanEnactInNextPeriod: boolean;
+  canEnactInNextPeriod: boolean;
 };
 
 export const useMotionLimitStatus = ({
@@ -36,7 +36,7 @@ export const useMotionLimitStatus = ({
     return newSpentAmount > Number(periodLimitsData.limits.limit);
   }, [periodLimitsData, motionTopUpAmount]);
 
-  const isCanEnactInNextPeriod = periodLimitsData?.isEndInNextPeriod ?? false;
+  const canEnactInNextPeriod = periodLimitsData?.isEndInNextPeriod ?? false;
 
-  return { periodLimitsData, isOverPeriodLimit, isCanEnactInNextPeriod };
+  return { periodLimitsData, isOverPeriodLimit, canEnactInNextPeriod };
 };
