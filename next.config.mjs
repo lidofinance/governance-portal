@@ -27,14 +27,19 @@ export const CACHE_CONTROL_PAGES = [
   '/manifest.json',
   '/favicon:size*',
   '/public/runtime/window-env.js',
-  '/proposals/:id',
   '/vote/dashboard',
   '/vote/:id',
   '/vote/delegation',
+  '/dg',
+  '/settings',
+  '/dg/proposals/:id',
+  '/easy-track/motions',
+  '/easy-track/motions/:id',
+  '/easy-track/start-motion',
   '/500',
 ];
 export const CACHE_CONTROL_VALUE =
-  'public, max-age=15, s-max-age=30, stale-if-error=604800, stale-while-revalidate=172800';
+  'public, max-age=30, stale-if-error=1200, stale-while-revalidate=30';
 
 const withBundleAnalyzer = NextBundleAnalyzer({
   enabled: process.env.ANALYZE_BUNDLE ?? false,
@@ -150,7 +155,7 @@ export default withBundleAnalyzer({
     },
     {
       source: '/easy-track',
-      destination: '/easy-track/active-motions',
+      destination: '/easy-track/motions',
       permanent: false,
     },
   ],

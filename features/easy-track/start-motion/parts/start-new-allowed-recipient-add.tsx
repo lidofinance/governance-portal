@@ -9,11 +9,16 @@ import {
   createMotionFormPart,
   PopulateTxArgs,
 } from './create-motion-form-part';
-import { Address, Hex } from 'viem';
-import { utils } from 'ethers';
+import {
+  Address,
+  encodeAbiParameters,
+  getAddress,
+  isAddress,
+  parseAbiParameters,
+} from 'viem';
 import { useAllowedRecipients } from '../../hooks/use-registry-with-limits';
 import { useMemo } from 'react';
-import { Loader } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { Fieldset, MessageBox } from './style';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
@@ -49,39 +54,38 @@ export const formParts = ({
       formData,
       contract,
     }: PopulateTxArgs<{
-      address: string;
+      address: Address;
       title: string;
     }>) => {
-      const encodedCallData = new utils.AbiCoder().encode(
-        ['address', 'string'],
-        [utils.getAddress(formData.address), formData.title],
+      const encodedCallData = encodeAbiParameters(
+        parseAbiParameters('address, string'),
+        [getAddress(formData.address), formData.title],
       );
 
       return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
-        args: [evmScriptFactory as Address, encodedCallData as Hex],
+        args: [evmScriptFactory, encodedCallData],
       });
     },
     getDefaultFormData: () => ({
-      address: '',
+      address: '' as Address,
       title: '',
     }),
-    Component: function StartNewMotionMotionFormLego({
-      fieldNames,
-      submitAction,
-    }) {
+    Component: ({ fieldNames, submitAction }) => {
       const allowedRecipients = useAllowedRecipients({ registryType });
 
       const { isTrustedCallerConnected, isTrustedCallerLoading } =
         useIsTrustedCaller(ALLOWED_RECIPIENT_ADD_MAP[registryType].evmContract);
 
       const existedAddresses = useMemo(() => {
-        return (allowedRecipients.data || []).map(({ address }) => address);
+        return (allowedRecipients.data || []).map(({ address }) =>
+          getAddress(address),
+        );
       }, [allowedRecipients.data]);
 
       if (isTrustedCallerLoading || allowedRecipients.isLoading) {
-        return <Loader />;
+        return <PageLoader />;
       }
 
       if (!isTrustedCallerConnected) {
@@ -107,8 +111,8 @@ export const formParts = ({
               rules={{
                 required: 'Field is required',
                 validate: (value) => {
-                  if (!utils.isAddress(value)) return 'Address is not valid';
-                  if (existedAddresses.includes(value)) {
+                  if (!isAddress(value)) return 'Address is not valid';
+                  if (existedAddresses.includes(getAddress(value))) {
                     return 'Allowed recipient with this address already exists';
                   }
                   return true;

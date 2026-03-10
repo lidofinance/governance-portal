@@ -48,9 +48,9 @@ export const useAllowedTokens = () => {
           console.error('Failed to fetch token info:', result.reason);
         }
       }
-
       return { allowedTokens, tokensDecimalsMap };
     },
+    enabled: !!tokenRegistry.address,
   });
 
   return {

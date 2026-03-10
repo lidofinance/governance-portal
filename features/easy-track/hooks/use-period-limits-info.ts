@@ -12,7 +12,13 @@ import {
   RccStablesRegistry,
   StethRewardProgramRegistry,
 } from 'shared/blockchain/contracts';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import {
+  useReadContract,
+  useReadContractGetter,
+} from 'shared/blockchain/hooks/use-read-contract';
+import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { useConfig } from 'config';
+import { isTestnet as getIsTestnet } from 'shared/blockchain/utils/is-testnet';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ContractObject } from 'shared/blockchain/types';
@@ -78,16 +84,6 @@ export const usePeriodLimitsInfo: UsePeriodLimitInfo = (props) => {
   });
 };
 
-const isContractWithLimits = (
-  contract: unknown,
-): contract is ContractLimitsMethods => {
-  if (typeof contract !== 'object' || contract === null) return false;
-  return (
-    'readContract' in contract &&
-    typeof (contract as any).readContract === 'function'
-  );
-};
-
 const registryByMotionType: {
   [key in MotionType | EvmUnrecognized]?: ContractObject;
 } = {
@@ -116,22 +112,32 @@ export const usePeriodLimitsInfoByMotionType = (props: {
 }) => {
   const { motionType, isPending } = props;
   const { chainId } = useLidoSDK();
+  const { userConfig } = useConfig();
   const easyTrack = useReadContract(EasyTrack);
+
   const registryContract = registryByMotionType[motionType];
-  const registry = useReadContract(registryContract as ContractObject);
+  const isInTestMode =
+    getIsTestnet(chainId) && userConfig.savedUserConfig.useTestContracts;
+
+  const readRegistryContract = useReadContractGetter(registryContract?.abi);
 
   return useQuery({
-    queryKey: [`period-limits-data`, chainId, motionType],
+    queryKey: [`period-limits-data`, chainId, motionType, isInTestMode],
+    enabled: !!registryContract && motionType !== EvmUnrecognized,
     queryFn: async () => {
-      if (motionType === EvmUnrecognized) {
+      if (!registryContract) {
         return null;
       }
-
-      if (!isContractWithLimits(registry)) {
-        return null;
-      }
-
-      return await getPeriodLimitsInfo(easyTrack, registry, isPending);
+      const address = getContractAddress(
+        registryContract,
+        chainId,
+        isInTestMode,
+      );
+      const registry: ContractLimitsMethods = {
+        address,
+        readContract: readRegistryContract(address),
+      };
+      return getPeriodLimitsInfo(easyTrack, registry, isPending);
     },
     retry: 3,
   });

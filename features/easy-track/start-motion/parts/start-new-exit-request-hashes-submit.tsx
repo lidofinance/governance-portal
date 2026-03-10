@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Button, Loader } from '@lidofinance/lido-ui';
+import { Button } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { Text } from 'shared/components/text';
 import { TextareaHookForm } from 'shared/hook-form/textarea-hook-form';
 import {
@@ -13,7 +12,7 @@ import { useAccount } from 'wagmi';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { SDVTExitRequestHashesSubmit } from 'shared/blockchain/contracts';
 import { MotionType } from 'features/easy-track/motion-types';
-import { Address, Hex } from 'viem';
+import { getAddress, Hex, isHex } from 'viem';
 import {
   Fieldset,
   HashRequestBlock,
@@ -47,7 +46,7 @@ export const formParts = (stakingModuleType: 'curated' | 'sdvt') =>
       return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
-        args: [evmScriptFactory as Address, trimmedCalldata as Hex],
+        args: [evmScriptFactory, trimmedCalldata as Hex],
       });
     },
     getDefaultFormData: () => ({
@@ -78,8 +77,7 @@ export const formParts = (stakingModuleType: 'curated' | 'sdvt') =>
           nodeOperatorsList.findIndex(
             (o) =>
               o.rewardAddress &&
-              utils.getAddress(o.rewardAddress) ===
-                utils.getAddress(connAddress),
+              getAddress(o.rewardAddress) === getAddress(connAddress),
           ) !== -1
         );
       }, [nodeOperatorsList, connAddress]);
@@ -103,7 +101,7 @@ export const formParts = (stakingModuleType: 'curated' | 'sdvt') =>
         return nodeOperatorsList.find(
           (o) =>
             o.rewardAddress &&
-            utils.getAddress(o.rewardAddress) === utils.getAddress(connAddress),
+            getAddress(o.rewardAddress) === getAddress(connAddress),
         );
       }, [nodeOperatorsList, connAddress]);
 
@@ -134,7 +132,7 @@ export const formParts = (stakingModuleType: 'curated' | 'sdvt') =>
       };
 
       if (isNodeOperatorsListLoading || isTrustedCallerLoading) {
-        return <Loader />;
+        return <PageLoader />;
       }
 
       if (stakingModuleType === 'sdvt' && !isTrustedCaller) {
@@ -182,7 +180,7 @@ export const formParts = (stakingModuleType: 'curated' | 'sdvt') =>
                     return 'Calldata cannot be empty';
                   }
 
-                  if (!utils.isHexString(trimmedValue)) {
+                  if (!isHex(trimmedValue)) {
                     return 'Calldata must be a valid hex string';
                   }
 

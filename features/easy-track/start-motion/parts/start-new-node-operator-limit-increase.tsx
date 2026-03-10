@@ -1,9 +1,4 @@
-import {
-  encodeAbiParameters,
-  parseAbiParameters,
-  getAddress,
-  Address,
-} from 'viem';
+import { encodeAbiParameters, parseAbiParameters, getAddress } from 'viem';
 import { useMemo, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { IncreaseLimitMotionType } from '../../constants';
@@ -15,11 +10,12 @@ import { getNodeOperatorRegistryType } from 'features/easy-track/utils/get-node-
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useNodeOperatorKeysInfo } from '../../hooks/use-node-operator-keys-info';
 import { useAccount } from 'wagmi';
-import { Loader } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { Fieldset, MessageBox } from './style';
 import { KeysInfoBlock } from '../../motions/ui/keys-info-block';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateUintValue } from '../../utils/validate-uint-value';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 export const formParts = ({
   motionType,
@@ -43,7 +39,7 @@ export const formParts = ({
       return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
-        args: [evmScriptFactory as Address, encodedCallData],
+        args: [evmScriptFactory, encodedCallData],
       });
     },
     getDefaultFormData: () => ({
@@ -83,7 +79,7 @@ export const formParts = ({
       }, [fieldNames.nodeOperatorId, setValue, currentNodeOperator]);
 
       if (nodeOperators.isLoading || keysInfo.isLoading) {
-        return <Loader />;
+        return <PageLoader />;
       }
 
       if (!isNodeOperatorConnected) {
@@ -134,8 +130,7 @@ export const formParts = ({
           </Fieldset>
 
           <Fieldset>
-            <InputHookForm
-              type="number"
+            <InputNumberHookForm
               fieldName={fieldNames.newLimit}
               label={<>New limit (current limit is {usedSigningKeys})</>}
               rules={{

@@ -1,7 +1,6 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Abi, Address, ContractFunctionArgs, ContractFunctionName } from 'viem';
 import { ABIElement as ABIElementImported } from '@lidofinance/evm-script-decoder/lib/types';
-import { ContractTransaction } from 'ethers';
 
 export const Token = {
   stETH: 'stETH',
@@ -43,16 +42,6 @@ export type SafeTx = {
   safeTxHash: string;
 };
 
-export type ResultTx =
-  | {
-      type: 'safe';
-      tx: SafeTx;
-    }
-  | {
-      type: 'regular';
-      tx: ContractTransaction;
-    };
-
 export type KeyFromValue<V, T extends Record<PropertyKey, PropertyKey>> = {
   [K in keyof T]: V extends T[K] ? K : never;
 }[keyof T];
@@ -60,3 +49,5 @@ export type KeyFromValue<V, T extends Record<PropertyKey, PropertyKey>> = {
 export type Invert<T extends Record<PropertyKey, PropertyKey>> = {
   [V in T[keyof T]]: KeyFromValue<V, T>;
 };
+
+export type TxStatus = 'empty' | 'pending' | 'failed' | 'success';

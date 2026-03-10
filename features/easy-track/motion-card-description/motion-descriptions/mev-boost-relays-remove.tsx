@@ -6,7 +6,9 @@ export const MevBoostRelaysRemove = ({
   callData,
   isOnChain,
 }: MotionDescriptionProps<typeof removeMevBoostRelaysAbi>) => {
-  const { relaysMap, isRelaysDataLoading } = useMEVBoostRelays();
+  const { relaysMap, isRelaysDataLoading } = useMEVBoostRelays({
+    enabled: isOnChain,
+  });
 
   if (isRelaysDataLoading) {
     return <div>Loading...</div>;

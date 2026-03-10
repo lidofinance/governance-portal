@@ -1,4 +1,8 @@
-import { DecodeFunctionResultReturnType, Abi } from 'viem';
+import {
+  DecodeFunctionResultReturnType,
+  Abi,
+  ContractFunctionName,
+} from 'viem';
 import { REGISTRY_WITH_LIMITS_BY_MOTION_TYPE } from '../hooks/use-registry-with-limits';
 import {
   NodeOperatorsRegistry,
@@ -31,8 +35,7 @@ export type NodeOperatorsRegistryType =
  */
 export type DecodeCallData<T extends Abi> = DecodeFunctionResultReturnType<
   T,
-  // @ts-expect-error - bypassing strict function name constraint
-  'decodeEVMScriptCallData'
+  Extract<ContractFunctionName<T>, 'decodeEVMScriptCallData'>
 >;
 
 /**

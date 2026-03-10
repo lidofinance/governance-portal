@@ -69,14 +69,13 @@ export const StatusValue = styled(Text).attrs({
   ${({ isRejected }: StatusValueProps) =>
     isRejected &&
     css`
-      color: #de186b;
+      color: var(--lido-color-error);
     `}
 `;
 
-export const Description = styled(Text).attrs({
-  size: 12,
-  weight: 500,
-})`
+export const Description = styled.div`
+  font-size: 12px;
+  font-weight: 500;
   margin-bottom: 64px;
   color: rgba(39, 56, 82, 0.6);
   word-break: break-all;
@@ -84,6 +83,14 @@ export const Description = styled(Text).attrs({
   ul {
     padding-left: 20px;
   }
+`;
+
+export const DescriptionMeta = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 `;
 
 export const InfoRow = styled.div`
@@ -102,7 +109,8 @@ export const InfoCol = styled.div`
     flex-direction: column;
     justify-content: space-between;
     padding-left: 20px;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
+    min-width: 0;
     border-left: 1px solid rgba(39, 56, 82, 0.1);
   }
 `;
@@ -134,4 +142,14 @@ export const InfoCell = styled.div`
   &:not(:last-child) {
     margin-bottom: 26px;
   }
+`;
+
+export const EnactWarningBox = styled.div`
+  text-align: center;
+  color: ${({ theme }) => theme.colors.warningContrast};
+  background-color: rgba(236, 134, 0, 1);
+  border-radius: ${({ theme }) => theme.borderRadiusesMap.lg}px;
+  font-weight: 500;
+  margin: 20px 0 20px 0;
+  padding: 12px;
 `;

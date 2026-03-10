@@ -4,14 +4,13 @@ import {
   useRewardProgramsMapAll,
 } from '../../hooks/use-reward-programs';
 
-import { AddressPop } from 'shared/components/address-pop';
-
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'viem';
 import { evmAddRewardProgramAbi } from 'abi/generated/EvmAddRewardProgram';
 import { evmRemoveRewardProgramAbi } from 'abi/generated/EvmRemoveRewardProgram';
 import { evmTopUpRewardProgramsAbi } from 'abi/generated/EvmTopUpRewardPrograms';
 import { MotionDescriptionProps } from '../types';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const RewardProgramAdd = ({
   callData,
@@ -19,7 +18,7 @@ export const RewardProgramAdd = ({
   return (
     <div>
       Add reward program <b>&#34;{callData[1]}&#34;</b> with address{' '}
-      <AddressPop address={callData[0]} />
+      <AddressPopInline address={callData[0]} />
     </div>
   );
 };
@@ -40,7 +39,7 @@ export const RewardProgramTopUp = ({
       Top up reward programs:
       {callData[0].map((address, i) => (
         <div key={i}>
-          <b>{programs?.[i]}</b> <AddressPop address={address} /> with{' '}
+          <b>{programs?.[i]}</b> <AddressPopInline address={address} /> with{' '}
           {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
           {governanceToken?.symbol}
         </div>
@@ -62,7 +61,7 @@ export const RewardProgramRemove = ({
   return (
     <div>
       Remove reward program <b>{program?.title}</b> with address{' '}
-      <AddressPop address={callData} />
+      <AddressPopInline address={callData} />
     </div>
   );
 };

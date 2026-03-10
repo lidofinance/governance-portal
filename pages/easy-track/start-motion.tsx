@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Button, Container } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
@@ -10,7 +10,12 @@ import {
   PageSubtitle,
   PageConnectMessageBox,
 } from 'features/easy-track/start-motion/style';
-import { StartMotion } from '../../features/easy-track/start-motion';
+import { StartMotion } from '@easy-track/start-motion';
+import { MotionFormComplete } from '@easy-track/motion-form-complete';
+import { Title } from '@easy-track/style';
+import { Text } from 'shared/components/text';
+import { Box } from 'shared/components/box';
+import { Hex } from 'viem';
 
 export default function StartMotionPage() {
   const { isConnected } = useAccount();
@@ -20,39 +25,39 @@ export default function StartMotionPage() {
     await connect();
   }, [connect]);
 
-  // const [complete, setComplete] = useState<ResultTx | null>(null);
+  const [completeHash, setCompleteHash] = useState<Hex | null>(null);
 
-  // if (complete) {
-  //   return (
-  //     <Container as="main" size="tight">
-  //       <Title
-  //         title="Motion transaction created"
-  //         subtitle="Check out transaction status"
-  //       />
-  //       <MotionFormComplete
-  //         resultTx={complete}
-  //         onReset={() => setComplete(null)}
-  //       />
-  //     </Container>
-  //   );
-  // }
+  if (completeHash) {
+    return (
+      <Layout containerSize="tight">
+        <Box textAlign="center" marginBottom={24}>
+          <Title>Motion transaction created</Title>
+          <Text>Check out transaction status</Text>
+        </Box>
+        <MotionFormComplete
+          txHash={completeHash}
+          onReset={() => setCompleteHash(null)}
+        />
+      </Layout>
+    );
+  }
 
   return (
-    <Layout containerSize="tight">
+    <Layout containerSize="content">
       <PageTitle>Start Motion</PageTitle>
       <PageSubtitle>Fill in the fields below</PageSubtitle>
-      {!isConnected && (
+      {isConnected ? (
+        <StartMotion onComplete={setCompleteHash} />
+      ) : (
         <Container as="main" size="tight">
           <PageConnectMessageBox>
             Connect your wallet first
           </PageConnectMessageBox>
-          <br />
           <Button type="submit" fullwidth onClick={openConnectWalletModal}>
             Connect wallet
           </Button>
         </Container>
       )}
-      {isConnected && <StartMotion />}
     </Layout>
   );
 }

@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import {
   Fieldset,
   MessageBox,
@@ -18,7 +17,12 @@ import {
   PopulateTxArgs,
 } from '@easy-track/start-motion/parts/create-motion-form-part';
 import { MotionType } from '@easy-track/motion-types';
-import { Address, Hex, parseEther } from 'viem';
+import {
+  encodeAbiParameters,
+  getAddress,
+  parseAbiParameters,
+  parseEther,
+} from 'viem';
 import { useOperatorGridGroupMap } from '@easy-track/vaults/hooks/use-operator-grid-group-map';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { UpdateGroupsShareLimit } from 'shared/blockchain/contracts';
@@ -30,6 +34,7 @@ import { Text } from 'shared/components/text';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateEtherValue } from 'utils/validate-ether-value';
+import { PredefinedGroupParamsPicker } from '@easy-track/vaults/ui/predefined-group-params-picker';
 
 type GroupInput = Omit<GridGroup, 'tiers'>;
 
@@ -42,18 +47,18 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     groups: GroupInput[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['address[]', 'uint256[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('address[], uint256[]'),
       [
-        formData.groups.map((group) => utils.getAddress(group.nodeOperator)),
-        formData.groups.map((group) => utils.parseEther(group.shareLimit)),
+        formData.groups.map((group) => getAddress(group.nodeOperator)),
+        formData.groups.map((group) => parseEther(group.shareLimit)),
       ],
     );
 
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -77,14 +82,14 @@ export const formParts = createMotionFormPart({
 
     const groupsFieldArray = useFieldArray({ name: fieldNames.groups });
 
-    const { watch } = useFormContext();
-    const groupsInput: GridGroup[] = watch(fieldNames.groups);
+    const { watch, setValue } = useFormContext();
+    const groupsInput: GroupInput[] = watch(fieldNames.groups);
 
     const handleAddGroup = () =>
       groupsFieldArray.append({ nodeOperator: '', shareLimit: '' });
 
     if (isFactoryDataLoading || isTrustedCallerLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {
@@ -133,6 +138,18 @@ export const formParts = createMotionFormPart({
                     ) : null}
                   </MotionInfoBox>
                 ) : null}
+
+                <PredefinedGroupParamsPicker
+                  onSelect={(groupOption) => {
+                    setValue(
+                      `${fieldNames.groups}.${groupIndex}.shareLimit`,
+                      groupOption.shareLimit.toString(),
+                      {
+                        shouldValidate: true,
+                      },
+                    );
+                  }}
+                />
 
                 <Fieldset>
                   <InputHookForm

@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment } from 'react';
 import { useFieldArray } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -16,7 +15,7 @@ import {
   createMotionFormPart,
   PopulateTxArgs,
 } from '../create-motion-form-part';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, getAddress, parseAbiParameters } from 'viem';
 import { ForceValidatorExitsInVaultHub } from 'shared/blockchain/contracts';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { useVaultsDataMap } from '@easy-track/vaults/hooks/use-vaults-data-map';
@@ -38,17 +37,17 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     vaults: VaultInput[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['address[]', 'bytes[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('address[], bytes[]'),
       [
-        formData.vaults.map((vault) => utils.getAddress(vault.address)),
-        formData.vaults.map((vault) => vault.pubkey),
+        formData.vaults.map((vault) => getAddress(vault.address)),
+        formData.vaults.map((vault) => vault.pubkey as `0x${string}`),
       ],
     );
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -74,7 +73,7 @@ export const formParts = createMotionFormPart({
       } as VaultInput);
 
     if (isTrustedCallerLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

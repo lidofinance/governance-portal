@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment, useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Option, Button, Loader } from '@lidofinance/lido-ui';
+import { Option, Button } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { Text } from 'shared/components/text';
 
 import {
@@ -19,8 +18,9 @@ import {
   createMotionFormPart,
   PopulateTxArgs,
 } from './create-motion-form-part';
-import { MEVBoostRelay, MotionType } from '../../motion-types';
-import { Address, Hex } from 'viem';
+import { MotionType } from '../../motion-types';
+import { MEVBoostRelay } from '../../types';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 import { useMEVBoostRelays } from '../../hooks/use-mev-boost-relays';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { MEVBoostRelaysEdit } from 'shared/blockchain/contracts';
@@ -41,23 +41,24 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     relays: MEVBoostRelay[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('(string, string, bool, string)[]'),
       [
-        'tuple(string uri, string operator, bool is_mandatory, string description)[]',
-      ],
-      [
-        formData.relays.map((relay) => ({
-          uri: relay.uri,
-          operator: relay.name,
-          is_mandatory: relay.isMandatory,
-          description: relay.description,
-        })),
+        formData.relays.map(
+          (relay) =>
+            [
+              relay.uri,
+              relay.name,
+              relay.isMandatory,
+              relay.description,
+            ] as const,
+        ),
       ],
     );
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -119,7 +120,7 @@ export const formParts = createMotionFormPart({
       fieldsArr.remove(fieldIndex);
 
     if (isTrustedCallerLoading || isRelaysDataLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

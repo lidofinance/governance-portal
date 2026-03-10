@@ -2,6 +2,7 @@ import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import GlobalStyle from './global';
 import { useRouter } from 'next/router';
 import { VisibleGovernanceState } from '../features/dual-governance/types';
+import { GOVERNANCE_PATH } from '../constants/urls';
 
 // We use the same gray background for voting and easy-track, DG is getting color based on the DG status
 export const GlobalStyleOverwrite = () => {
@@ -10,7 +11,7 @@ export const GlobalStyleOverwrite = () => {
 
   const { asPath } = useRouter();
 
-  if (asPath.startsWith('/governance')) {
+  if (asPath.startsWith(GOVERNANCE_PATH)) {
     layoutVariant = visibleState;
   }
 

@@ -4,7 +4,7 @@ import { evmSetLiabilitySharesTargetInVaultHubAbi } from 'abi/generated';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
 import { convertSharesToStethString } from '@easy-track/vaults/utils/convert-shares-to-steth-string';
-import { AddressPop } from 'shared/components/address-pop';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 // SetLiabilitySharesTargetInVaultHub
 export const VaultsSetLiabilitySharesTargetInVaultHub = ({
@@ -20,7 +20,8 @@ export const VaultsSetLiabilitySharesTargetInVaultHub = ({
         const liabilitySharesTarget = liabilitySharesTargets[index];
         return (
           <li key={index}>
-            Set liability shares target for vault <AddressPop address={vault} />{' '}
+            Set liability shares target for vault{' '}
+            <AddressPopInline address={vault} trim={4} />
             to{' '}
             <b>
               {formatVaultParam(liabilitySharesTarget)}

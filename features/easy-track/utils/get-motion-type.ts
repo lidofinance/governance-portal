@@ -34,9 +34,6 @@ export const getMotionTypeByScriptFactory = (
     )[lowercaseAddress];
 
     if (!result) {
-      console.debug(
-        `Motion type not found for address: ${lowercaseAddress} on chain ${chainId}`,
-      );
       return EvmUnrecognized;
     }
 

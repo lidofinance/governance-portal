@@ -1,8 +1,20 @@
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { findAbiItem } from 'utils/find-abi-item';
 import { EasyTrack } from 'shared/blockchain/contracts';
-import { PublicClient } from 'viem';
+import { Log, PublicClient } from 'viem';
 import { easyTrackAbi } from 'abi/generated';
+
+type MotionCreatedAbiEvent = Extract<
+  (typeof easyTrackAbi)[number],
+  { type: 'event'; name: 'MotionCreated' }
+>;
+export type MotionCreatedEventLog = Log<
+  bigint,
+  number,
+  false,
+  MotionCreatedAbiEvent,
+  true
+>;
 
 const GET_LOGS_RANGE = 2499n;
 
@@ -33,6 +45,7 @@ export const getMotionCreatedEvent = async ({
     },
     fromBlock: motionSnapshotBlock - GET_LOGS_RANGE,
     toBlock: motionSnapshotBlock + GET_LOGS_RANGE,
+    strict: true,
   });
 
   return events[0];

@@ -1,6 +1,12 @@
 import { Motion, RawMotionSubgraph } from '../types';
-import { MotionDisplayStatus, MotionStatus } from '../motion-types';
+import { MotionDisplayStatus, MotionStatus } from '../types';
 import { MotionProgress } from './get-motion-progress';
+
+export const getIsMotionArchived = (
+  motion: Motion | RawMotionSubgraph,
+): boolean =>
+  motion.status !== MotionStatus.ACTIVE &&
+  motion.status !== MotionStatus.PENDING;
 
 export const getMotionStatus = (motion: Motion) => {
   // If motion already has a final status (from subgraph), return it

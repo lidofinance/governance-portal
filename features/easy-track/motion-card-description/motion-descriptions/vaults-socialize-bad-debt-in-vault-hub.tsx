@@ -3,8 +3,8 @@ import { MotionDescriptionProps } from '@easy-track/motion-card-description/type
 import { evmSocializeBadDebtInVaultHubAbi } from 'abi/generated';
 import { useShareRate } from '@easy-track/vaults/hooks/use-share-rate';
 import { formatVaultParam } from '@easy-track/vaults/utils/format-vault-param';
-import { AddressPop } from 'shared/components/address-pop';
 import { convertSharesToStethString } from '@easy-track/vaults/utils/convert-shares-to-steth-string';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 // SocializeBadDebtInVaultHub
 export const VaultsSocializeBadDebtInVaultHub = ({
@@ -21,12 +21,12 @@ export const VaultsSocializeBadDebtInVaultHub = ({
         const maxShareToSocialize = maxSharesToSocialize[index];
         return (
           <li key={index}>
-            Socialize bad debt in vault <AddressPop address={vault} />:{' '}
+            Socialize bad debt in vault <AddressPopInline address={vault} />:{' '}
             <b>
               {formatVaultParam(maxShareToSocialize)}
               {convertSharesToStethString(maxShareToSocialize, shareRate)}
             </b>{' '}
-            to acceptor <AddressPop address={acceptorAddress} />
+            to acceptor <AddressPopInline address={acceptorAddress} />
           </li>
         );
       })}

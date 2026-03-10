@@ -12,4 +12,5 @@ export const CancelButton = styled.div`
 
 export const Wrap = styled.div`
   margin-left: 64px;
+  cursor: pointer;
 `;

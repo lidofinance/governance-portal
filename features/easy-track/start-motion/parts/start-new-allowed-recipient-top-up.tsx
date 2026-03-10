@@ -1,8 +1,14 @@
-import { utils } from 'ethers';
+import {
+  encodeAbiParameters,
+  getAddress,
+  parseAbiParameters,
+  parseEther,
+} from 'viem';
 
 import { Fragment, useCallback, useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader, Option } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon, Option } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { MotionType } from '../../motion-types';
 import {
   AllowedRecipientTopUpTrpLdo,
@@ -21,7 +27,6 @@ import {
   usePeriodLimitsData,
 } from '../../hooks/use-registry-with-limits';
 import { useTokenByTopUpType } from '../../hooks/use-token-by-top-up-type';
-import { Address, Hex } from 'viem';
 import { useTransitionLimits } from '../../hooks/use-transition-limits';
 import {
   MotionLimitProgress,
@@ -91,17 +96,17 @@ export const formParts = ({
       tokenAddress: string;
       programs: Program[];
     }>) => {
-      const encodedCallData = new utils.AbiCoder().encode(
-        ['address[]', 'uint256[]'],
+      const encodedCallData = encodeAbiParameters(
+        parseAbiParameters('address[], uint256[]'),
         [
-          formData.programs.map((p) => utils.getAddress(p.address)),
-          formData.programs.map((p) => utils.parseEther(p.amount)),
+          formData.programs.map((p) => getAddress(p.address)),
+          formData.programs.map((p) => parseEther(p.amount)),
         ],
       );
       return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
-        args: [evmScriptFactory as Address, encodedCallData as Hex],
+        args: [evmScriptFactory, encodedCallData],
       });
     },
     getDefaultFormData: () => ({
@@ -175,7 +180,7 @@ export const formParts = ({
           : token.address;
 
       const transitionLimit =
-        tokenAddress && limits?.[utils.getAddress(tokenAddress)];
+        tokenAddress && limits?.[getAddress(tokenAddress)];
 
       if (
         isTrustedCallerLoading ||
@@ -183,7 +188,7 @@ export const formParts = ({
         isTransitionLimitsDataLoading ||
         periodLimitsLoading
       ) {
-        return <Loader />;
+        return <PageLoader />;
       }
 
       if (!isTrustedCallerConnected) {

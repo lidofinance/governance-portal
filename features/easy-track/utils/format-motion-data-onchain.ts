@@ -1,15 +1,7 @@
 import { Motion } from '../types';
 import { getMotionStatus } from './get-motion-status';
-
-type MotionCreatedEventLog = {
-  args: {
-    _motionId: bigint;
-    _creator: `0x${string}`;
-    _evmScriptFactory: `0x${string}`;
-    _evmScriptCallData: `0x${string}`;
-    _evmScript: `0x${string}`;
-  };
-};
+import { Address, Hex } from 'viem';
+import { MotionCreatedEventLog } from './get-motion-created-event';
 
 type ContractMotion = {
   id: bigint;
@@ -24,15 +16,15 @@ type ContractMotion = {
 };
 
 export const formatMotionDataOnchain = (
-  event: MotionCreatedEventLog,
+  event: MotionCreatedEventLog | undefined,
   contractMotion: ContractMotion,
 ): Motion => {
   const motion: Motion = {
     ...contractMotion,
-    evmScriptFactory:
-      contractMotion.evmScriptFactory.toLowerCase() as `0x${string}`,
-    creator: contractMotion.creator.toLowerCase() as `0x${string}`,
-    evmScriptCalldata: event.args._evmScriptCallData,
+    evmScriptFactory: contractMotion.evmScriptFactory.toLowerCase() as Address,
+    creator: contractMotion.creator.toLowerCase() as Hex,
+    evmScript: event?.args._evmScript,
+    evmScriptCalldata: event?.args._evmScriptCallData,
     isOnChain: true,
   };
 

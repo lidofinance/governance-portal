@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { getAddress, formatEther } from 'viem';
 import { evmTopUpLegoProgramAbi } from 'abi/generated/EvmTopUpLegoProgram';
 import { MotionDescriptionProps } from '../types';
-import { AddressPop } from 'shared/components/address-pop';
 import { useLegoTokenOptions } from '../../hooks/use-lego-token-options';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const LEGOTopUp = ({
   callData,
@@ -26,7 +26,7 @@ export const LEGOTopUp = ({
           {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
           {formattedTokens[i] || (
             <>
-              token with address <AddressPop address={tokenAddress} />
+              token with address <AddressPopInline address={tokenAddress} />
             </>
           )}
         </div>

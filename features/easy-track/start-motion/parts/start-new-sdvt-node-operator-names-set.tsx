@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment, useMemo } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon, Loader } from '@lidofinance/lido-ui';
+import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -17,7 +16,7 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { MotionType } from '../../motion-types';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { SDVTNodeOperatorNamesSet } from 'shared/blockchain/contracts';
@@ -44,11 +43,11 @@ export const formParts = createMotionFormPart({
       (a, b) => Number(a.id) - Number(b.id),
     );
 
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['tuple(uint256 nodeOperatorId, string name)[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('(uint256 nodeOperatorId, string name)[]'),
       [
         sortedNodeOperators.map((nodeOperator) => ({
-          nodeOperatorId: Number(nodeOperator.id),
+          nodeOperatorId: BigInt(nodeOperator.id),
           name: nodeOperator.name,
         })),
       ],
@@ -57,7 +56,7 @@ export const formParts = createMotionFormPart({
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -119,7 +118,7 @@ export const formParts = createMotionFormPart({
       isNodeOperatorsDataLoading ||
       isNodeOperatorMaxNameLengthLoading
     ) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

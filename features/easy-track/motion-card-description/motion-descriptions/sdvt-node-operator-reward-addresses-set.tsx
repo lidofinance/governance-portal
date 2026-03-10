@@ -1,7 +1,8 @@
 import { setNodeOperatorRewardAddressesAbi } from 'abi/generated/SetNodeOperatorRewardAddresses';
 import { MotionDescriptionProps } from '../types';
-import { AddressPop } from 'shared/components/address-pop';
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
+import { Address } from 'viem';
 
 export const SdvtNodeOperatorRewardAddressesSet = ({
   callData,
@@ -21,10 +22,13 @@ export const SdvtNodeOperatorRewardAddressesSet = ({
             {nodeOperator?.rewardAddress && isOnChain ? (
               <>
                 {' '}
-                from <AddressPop address={nodeOperator.rewardAddress} />
+                from{' '}
+                <AddressPopInline
+                  address={nodeOperator.rewardAddress as Address}
+                />
               </>
             ) : null}{' '}
-            to <AddressPop address={item.rewardAddress} />
+            to <AddressPopInline address={item.rewardAddress} />
             {index === callData.length - 1 ? '.' : '; '}
           </div>
         );

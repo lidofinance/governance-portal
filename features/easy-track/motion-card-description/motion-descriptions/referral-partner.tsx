@@ -7,11 +7,11 @@ import {
 import { MotionDescriptionProps } from '../types';
 import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
-import { AddressPop } from 'shared/components/address-pop';
 
 import { evmAddReferralPartnerAbi } from 'abi/generated/EvmAddReferralPartner';
 import { evmTopUpReferralPartnersAbi } from 'abi/generated/EvmTopUpReferralPartners';
 import { evmRemoveReferralPartnerAbi } from 'abi/generated/EvmRemoveReferralPartner';
+import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const ReferralPartnerAdd = ({
   callData,
@@ -19,7 +19,7 @@ export const ReferralPartnerAdd = ({
   return (
     <div>
       Add LDO referral partner <b>&#34;{callData[1]}&#34;</b> with address{' '}
-      <AddressPop address={callData[0]} />
+      <AddressPopInline address={callData[0]} />
     </div>
   );
 };
@@ -40,7 +40,7 @@ export const ReferralPartnerTopUp = ({
       Top up LDO referral partner:
       {callData[0].map((address, i) => (
         <div key={i}>
-          <b>{programs?.[i]}</b> <AddressPop address={address} /> with{' '}
+          <b>{programs?.[i]}</b> <AddressPopInline address={address} /> with{' '}
           {formatBalance(callData[1][i])} <>{governanceToken?.symbol}</>
         </div>
       ))}
@@ -61,7 +61,7 @@ export const ReferralPartnerRemove = ({
   return (
     <div>
       Remove LDO referral partner <b>{partner?.title}</b> with address{' '}
-      <AddressPop address={callData} />
+      <AddressPopInline address={callData} />
     </div>
   );
 };

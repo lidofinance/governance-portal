@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment, useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Option, Button, Input, Checkbox, Loader } from '@lidofinance/lido-ui';
+import { Option, Button, Input, Checkbox } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 
 import {
   Fieldset,
@@ -18,7 +17,7 @@ import {
   createMotionFormPart,
 } from './create-motion-form-part';
 import { MotionType } from '../../motion-types';
-import { Address, Hex } from 'viem';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 import { useMEVBoostRelays } from '../../hooks/use-mev-boost-relays';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { MEVBoostRelaysRemove } from 'shared/blockchain/contracts';
@@ -37,14 +36,14 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<{
     relayUris: RelayUri[];
   }>) => {
-    const encodedCallData = new utils.AbiCoder().encode(
-      ['string[]'],
+    const encodedCallData = encodeAbiParameters(
+      parseAbiParameters('string[]'),
       [formData.relayUris.map((relay) => relay.uri)],
     );
     return await contract.write({
       address: contract.address,
       functionName: 'createMotion',
-      args: [evmScriptFactory as Address, encodedCallData as Hex],
+      args: [evmScriptFactory, encodedCallData],
     });
   },
   getDefaultFormData: () => ({
@@ -94,7 +93,7 @@ export const formParts = createMotionFormPart({
       fieldsArr.remove(fieldIndex);
 
     if (isTrustedCallerLoading || isRelaysDataLoading) {
-      return <Loader />;
+      return <PageLoader />;
     }
 
     if (!isTrustedCallerConnected) {

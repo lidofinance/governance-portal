@@ -3,7 +3,9 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { MEVBoostRelayList } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 
-export const useMEVBoostRelays = () => {
+export const useMEVBoostRelays = ({
+  enabled = true,
+}: { enabled?: boolean } = {}) => {
   const { chainId } = useLidoSDK();
 
   const readMEVBoostRelayList = useReadContract(MEVBoostRelayList);
@@ -35,6 +37,7 @@ export const useMEVBoostRelays = () => {
         relaysCount: relays.length,
       };
     },
+    enabled: enabled && !!readMEVBoostRelayList.address,
   });
 
   return {

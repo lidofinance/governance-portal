@@ -5,7 +5,6 @@ export const Wrap = styled.span<{ $paddingless?: boolean }>`
   position: relative;
   cursor: pointer;
   padding: 4px;
-  vertical-align: middle;
   button {
     background: none;
     border: none;

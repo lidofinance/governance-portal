@@ -1,8 +1,7 @@
-import { utils } from 'ethers';
-
 import { Fragment, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { ButtonIcon, Loader, Option, Plus } from '@lidofinance/lido-ui';
+import { ButtonIcon, Option, Plus } from '@lidofinance/lido-ui';
+import { PageLoader } from 'shared/components/page-loader';
 import { Text } from 'shared/components/text';
 import {
   useAllowedRecipients,
@@ -27,7 +26,12 @@ import {
   createMotionFormPart,
   PopulateTxArgs,
 } from './create-motion-form-part';
-import { Address, Hex } from 'viem';
+import {
+  encodeAbiParameters,
+  getAddress,
+  parseAbiParameters,
+  parseUnits,
+} from 'viem';
 import { useAllowedTokens } from 'features/easy-track/hooks/use-allowed-tokens-registry';
 import { getScriptFactoryByMotionType } from '../../utils/get-motion-type';
 
@@ -116,10 +120,7 @@ export const formParts = ({
       tokenDecimals: ETH_DECIMALS,
       programs: [{ address: '', amount: '' }] as Program[],
     }),
-    Component: function StartNewMotionMotionFormLego({
-      fieldNames,
-      submitAction,
-    }) {
+    Component: ({ fieldNames, submitAction }) => {
       const { chainId } = useLidoSDK();
 
       const { isTrustedCallerConnected, isTrustedCallerLoading } =
@@ -141,7 +142,7 @@ export const formParts = ({
       const handleAddProgram = () =>
         fieldsArr.append({ address: '', amount: '' });
 
-      const { watch, setValue, trigger } = useFormContext();
+      const { watch, setValue, trigger, getValues } = useFormContext();
       const selectedPrograms: Program[] = watch(fieldNames.programs);
       const selectedTokenAddress: string = watch(fieldNames.tokenAddress);
       const selectedTokenDecimals: number = watch(fieldNames.tokenDecimals);
@@ -162,30 +163,43 @@ export const formParts = ({
 
       const getFilteredOptions = (fieldIdx: number) => {
         if (!actualRecipients) return [];
-        const thatAddress = selectedPrograms[fieldIdx]?.address;
-        const selectedAddresses = selectedPrograms.map(
-          ({ address }) => address,
+        const thatAddress = selectedPrograms[fieldIdx]?.address?.toLowerCase();
+        const selectedAddresses = selectedPrograms.map(({ address }) =>
+          address?.toLowerCase(),
         );
-        return actualRecipients.filter(
-          ({ address }) =>
-            !selectedAddresses.includes(address) || address === thatAddress,
-        );
+        return actualRecipients.filter(({ address }) => {
+          const currentAddress = address.toLowerCase();
+          return (
+            !selectedAddresses.includes(currentAddress) ||
+            currentAddress === thatAddress
+          );
+        });
       };
 
       useEffect(() => {
+        if (selectedTokenAddress && tokensDecimalsMap) {
+          const decimals = tokensDecimalsMap[selectedTokenAddress];
+          if (decimals !== undefined) {
+            setValue(fieldNames.tokenDecimals, decimals);
+          }
+        }
+      }, [
+        selectedTokenAddress,
+        tokensDecimalsMap,
+        setValue,
+        fieldNames.tokenDecimals,
+      ]);
+
+      useEffect(() => {
         if (selectedTokenAddress) {
-          selectedPrograms.forEach((program, idx) => {
+          const programs: Program[] = getValues(fieldNames.programs);
+          programs.forEach((program, idx) => {
             if (program.amount) {
               void trigger(`${fieldNames.programs}.${idx}.amount`);
             }
           });
         }
-      }, [
-        fieldNames.programs,
-        selectedPrograms,
-        selectedTokenAddress,
-        trigger,
-      ]);
+      }, [fieldNames.programs, selectedTokenAddress, trigger, getValues]);
 
       useEffect(() => {
         const recipientsCount = actualRecipients?.length || 0;
@@ -229,7 +243,7 @@ export const formParts = ({
 
       const transitionLimit =
         selectedTokenAddress && limits
-          ? limits[utils.getAddress(selectedTokenAddress)]
+          ? limits[getAddress(selectedTokenAddress)]
           : null;
 
       if (
@@ -240,7 +254,7 @@ export const formParts = ({
         isTokensDataLoading ||
         isFactoryValidationLoading
       ) {
-        return <Loader />;
+        return <PageLoader />;
       }
 
       if (!isTrustedCallerConnected) {
@@ -265,12 +279,6 @@ export const formParts = ({
               label="Top up token"
               fieldName={fieldNames.tokenAddress}
               rules={{ required: 'Field is required' }}
-              onChange={(value) => {
-                const tokenDecimals = tokensDecimalsMap?.[value as string];
-                if (tokenDecimals) {
-                  setValue(fieldNames.tokenDecimals, tokenDecimals);
-                }
-              }}
             >
               {allowedTokens?.map((token, j) => (
                 <Option key={j} value={token.address}>
@@ -418,13 +426,13 @@ export const formParts = ({
       tokenDecimals: number;
       programs: Program[];
     }>) => {
-      const encodedCallData = new utils.AbiCoder().encode(
-        ['address', 'address[]', 'uint256[]'],
+      const encodedCallData = encodeAbiParameters(
+        parseAbiParameters('address, address[], uint256[]'),
         [
-          utils.getAddress(formData.tokenAddress),
-          formData.programs.map((p: Program) => utils.getAddress(p.address)),
+          getAddress(formData.tokenAddress),
+          formData.programs.map((p: Program) => getAddress(p.address)),
           formData.programs.map((p: Program) =>
-            utils.parseUnits(p.amount, formData.tokenDecimals),
+            parseUnits(p.amount, formData.tokenDecimals),
           ),
         ],
       );
@@ -432,7 +440,7 @@ export const formParts = ({
       return await contract.write({
         address: contract.address,
         functionName: 'createMotion',
-        args: [evmScriptFactory as Address, encodedCallData as Hex],
+        args: [evmScriptFactory, encodedCallData],
       });
     },
   });

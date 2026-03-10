@@ -12,7 +12,8 @@ export type Motion = {
   startDate: bigint;
   status?: MotionStatus;
   enacted_at?: number;
-  evmScriptCalldata?: string;
+  evmScript?: Hex;
+  evmScriptCalldata?: Hex;
   isOnChain?: boolean;
 };
 
@@ -53,6 +54,7 @@ export type RawMotionSubgraph = {
   enacted_at?: string;
   canceled_at?: string;
   rejected_at?: string;
+  evmScript?: Hex;
 };
 
 export type KeysInfoOperator = {
@@ -73,3 +75,23 @@ export type KeysInfoOperator = {
 export type KeysInfo = {
   operators?: KeysInfoOperator[];
 };
+
+export type MEVBoostRelay = {
+  uri: string;
+  name: string;
+  description: string;
+  isMandatory: boolean;
+};
+
+export const MotionDisplayStatus = {
+  DEFAULT: 'DEFAULT',
+  DANGER: 'DANGER',
+  ATTENDED: 'ATTENDED',
+  ATTENDED_DANGER: 'ATTENDED_DANGER',
+  ACTIVE: 'ACTIVE',
+  ENACTED: 'ENACTED',
+} as const;
+// intentionally
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type MotionDisplayStatus =
+  (typeof MotionDisplayStatus)[keyof typeof MotionDisplayStatus];
