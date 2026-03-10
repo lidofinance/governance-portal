@@ -25,18 +25,19 @@ import {
 import { openWindow } from 'utils/open-window';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useGovernanceToken } from '../../hooks/use-governance-token';
 import { Text } from 'shared/components/text';
 import { FlexWrapper } from '../../styled-components';
-import { formatBalance } from 'utils/format-balance';
+import { useDaoTokenBalance } from 'features/vote/hooks/use-dao-token-balance';
+import { formatToken } from 'shared/blockchain/utils';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
   const { address } = useAccount();
   const { connectorName } = useConnectorInfo();
   const { disconnect } = useDisconnect();
   const { chainId } = useLidoSDK();
-  const { data: tokenData, isLoading: isTokenDataLoading } =
-    useGovernanceToken();
+  const { data: tokenBalance, isLoading: isTokenDataLoading } =
+    useDaoTokenBalance();
 
   const handleDisconnect = useCallback(() => {
     disconnect?.();
@@ -75,10 +76,10 @@ export const WalletModal: ModalComponentType = ({ onClose, ...props }) => {
               <Text size={12}>
                 {isTokenDataLoading ? 'Loading...' : 'Balance'}
               </Text>
-              {tokenData ? (
+              {typeof tokenBalance === 'bigint' ? (
                 <Text size={12} data-testid="balance">
                   &nbsp;
-                  {`${formatBalance(tokenData.balance)} ${tokenData.symbol}`}
+                  {`${formatToken({ amount: tokenBalance, decimals: KnownToken.LDO.decimals })} ${KnownToken.LDO.symbol}`}
                 </Text>
               ) : null}
             </WalletModalBalanceWrapper>

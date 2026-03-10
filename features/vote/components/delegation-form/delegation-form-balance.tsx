@@ -3,16 +3,15 @@ import { useFormState } from 'react-hook-form';
 import { Balance, CustomizeButton, DelegationFormBalanceStyled } from './style';
 import { useAccount } from 'wagmi';
 import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
-import { formatNumber } from 'shared/blockchain/utils';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
+import { formatToken } from 'shared/blockchain/utils';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {
   onCustomizeClick?: () => void;
 };
 
 export const DelegationFormBalance = ({ onCustomizeClick }: Props) => {
-  const { daoTokenBalance, loading } = useDelegationFormData();
-  const { data: tokenData } = useGovernanceToken();
+  const { daoTokenBalance } = useDelegationFormData();
   const { isConnected } = useAccount();
   const { errors } = useFormState();
 
@@ -25,10 +24,13 @@ export const DelegationFormBalance = ({ onCustomizeClick }: Props) => {
       <Balance>
         <Text>Your voting power</Text>
         <Text weight={700}>
-          {loading.isDaoTokenBalanceLoading
+          {typeof daoTokenBalance !== 'bigint'
             ? 'Loading...'
-            : formatNumber({ value: daoTokenBalance })}{' '}
-          {tokenData?.symbol}
+            : formatToken({
+                amount: daoTokenBalance,
+                decimals: KnownToken.LDO.decimals,
+                symbol: KnownToken.LDO.symbol,
+              })}
         </Text>
       </Balance>
       {onCustomizeClick && (

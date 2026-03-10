@@ -1,8 +1,11 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { Address } from 'viem';
 
+// key type to have a proper type checking when accessing KnownToken properties
+type KnownTokenSymbol = 'DAI' | 'StETH' | 'USDT' | 'USDC' | 'LDO';
+
 export const KnownToken: Record<
-  string,
+  KnownTokenSymbol,
   {
     symbol: string;
     decimals: number;
