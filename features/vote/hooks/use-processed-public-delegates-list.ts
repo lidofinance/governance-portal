@@ -4,9 +4,9 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { DELEGATORS_FETCH_TOTAL } from '../constants';
 import { getDaoTokenMetadata } from 'shared/blockchain/utils/get-dao-token-metadata';
 import { formatToken } from 'shared/blockchain/utils';
+import { fetchDelegateData } from '../utils/fetch-delegate-data';
 
 export type ProcessedDelegate = PublicDelegate & {
   delegatorsCount: number;
@@ -28,41 +28,15 @@ export const useProcessedPublicDelegatesList = () => {
       const daoTokenMetadata = getDaoTokenMetadata(chainId);
       const parsedList: ProcessedDelegate[] = await Promise.all(
         PUBLIC_DELEGATES.map(async (delegate) => {
-          const delegatorsCount = await votingContract.readContract(
-            'getDelegatedVotersCount',
-            [delegate.address],
-          );
-
-          if (delegatorsCount === 0n) {
-            return {
-              ...delegate,
-              delegatorsCount: 0,
-              delegatedVotingPower: 0n,
-              delegatedVotingPowerFormatted: '0',
-            };
-          }
-
-          const delegatorsAddresses = await votingContract.readContract(
-            'getDelegatedVoters',
-            [delegate.address, 0n, BigInt(DELEGATORS_FETCH_TOTAL)],
-          );
-
-          const delegatorsBalances = await votingContract.readContract(
-            'getVotingPowerMultiple',
-            [delegatorsAddresses],
-          );
-
-          const delegatedVotingPower = delegatorsBalances.reduce(
-            (acc, balance) => acc + balance,
-            0n,
-          );
+          const { delegatedVotersCount, totalDelegatedVotingPower } =
+            await fetchDelegateData(votingContract, delegate.address);
 
           return {
             ...delegate,
-            delegatorsCount: Number(delegatorsCount),
-            delegatedVotingPower,
+            delegatorsCount: delegatedVotersCount,
+            delegatedVotingPower: totalDelegatedVotingPower,
             delegatedVotingPowerFormatted: formatToken({
-              amount: delegatedVotingPower,
+              amount: totalDelegatedVotingPower,
               notation: 'compact',
               maxFractionDigits: 2,
               decimals: daoTokenMetadata.decimals,
