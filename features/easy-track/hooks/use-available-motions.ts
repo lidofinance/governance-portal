@@ -35,7 +35,7 @@ export const useAvailableMotions = () => {
 
   const {
     data: sandboxNodeOperators,
-    isPending: isSandboxNodeOperatorsPending,
+    isLoading: isSandboxNodeOperatorsPending,
   } = useNodeOperatorsList('sandbox');
 
   const { data: availableMotions, isPending } = useQuery({
