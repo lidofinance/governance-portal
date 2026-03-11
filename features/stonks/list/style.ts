@@ -8,7 +8,7 @@ export const ListStyled = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Card = styled(Link)`
+export const Card = styled(Link)<{ $empty?: boolean }>`
   display: flex;
   flex-direction: column;
   padding: ${({ theme }) => theme.spaceMap.lg}px;
@@ -17,6 +17,7 @@ export const Card = styled(Link)`
   box-shadow: 0px 4px 32px var(--lido-color-shadowLight);
   color: inherit;
   text-decoration: none;
+  opacity: ${({ $empty }) => ($empty ? 0.6 : 1)};
 `;
 
 export const CardTitle = styled.div`
