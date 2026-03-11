@@ -9,6 +9,7 @@ import {
 } from 'utils-api';
 import Metrics from 'utils-api/metrics';
 import { API_ROUTES } from 'constants/api';
+import { ETHERSCAN_REMOTE_API_URL } from 'constants/network';
 import { config, secretConfig } from 'config';
 
 type EtherscanResponse = {
@@ -79,7 +80,7 @@ const queuedEtherscanRequest = async (
   timestamp: string,
 ): Promise<EtherscanResponse> => {
   return etherscanQueue.add(async () => {
-    const url = `https://api.etherscan.io/v2/api?chainid=${chainId}&module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=${secretConfig.etherscanApiKey}`;
+    const url = `${ETHERSCAN_REMOTE_API_URL}?chainid=${chainId}&module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=${secretConfig.etherscanApiKey}`;
 
     const response = await fetch(url);
 
