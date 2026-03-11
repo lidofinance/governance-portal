@@ -1,10 +1,18 @@
 import { SubmitButtonHookForm } from 'shared/hook-form/submit-button-hook-form';
 import { usePlaceOrderFormData } from '@stonks/providers/place-order-form-context';
 import { useFormContext } from 'react-hook-form';
+import { ConnectWalletButton } from 'shared/wallet';
+import { useAccount } from 'wagmi';
 
 export const PlaceOrderFormSubmitButton = () => {
+  const { isConnected } = useAccount();
   const { formState } = useFormContext();
   const { isLoading, isStonksManagerConnected } = usePlaceOrderFormData();
+
+  if (!isConnected) {
+    return <ConnectWalletButton />;
+  }
+
   return (
     <SubmitButtonHookForm
       loading={isLoading}
