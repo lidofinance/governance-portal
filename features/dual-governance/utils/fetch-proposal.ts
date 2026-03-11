@@ -2,10 +2,11 @@ import {
   CachedEventsData,
   ProposalCombinedData,
   ProposalDetails,
+  ProposalSubmittedLog,
   SubmitProposalCall,
 } from '../proposals/types';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { Address, Log, PublicClient } from 'viem';
+import { Address, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
   calculateAverageBlockTime,
@@ -13,8 +14,6 @@ import {
 } from 'utils/estimate-block-range';
 import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernance } from 'shared/blockchain/contracts';
-// TODO: Generate proper event types from ABI
-type ProposalSubmittedEvent = any;
 import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
@@ -23,6 +22,7 @@ type Props = {
   publicClient: PublicClient;
   governanceAddresses: Address[];
   chainId: CHAINS;
+  isInTestMode?: boolean;
 };
 
 type ProposalDataResult = [ProposalDetails, SubmitProposalCall[]];
@@ -33,6 +33,7 @@ export const fetchProposal = async ({
   publicClient,
   governanceAddresses,
   chainId,
+  isInTestMode,
 }: Props) => {
   const proposalId = BigInt(id);
 
@@ -50,7 +51,7 @@ export const fetchProposal = async ({
     };
 
     // Try cache first
-    let submittedEvent: ProposalSubmittedEvent | null = null;
+    let submittedEvent: ProposalSubmittedLog | null = null;
     try {
       const response = await fetch('/proposals-events-data.json');
       if (response.ok) {
@@ -69,8 +70,9 @@ export const fetchProposal = async ({
 
       const voteId = await isAragonProposal({
         client: publicClient,
-        proposalLog: submittedEvent as unknown as Log,
+        proposalLog: submittedEvent,
         chainId,
+        isInTestMode,
       });
 
       if (voteId) {
@@ -115,16 +117,16 @@ export const fetchProposal = async ({
       );
 
       const eventsResults = await Promise.all(eventPromises);
-      const events =
-        eventsResults.flat() as unknown as ProposalSubmittedEvent[];
+      const events = eventsResults.flat() as unknown as ProposalSubmittedLog[];
 
       if (events.length > 0) {
         result.DGEvent = events[0];
 
         const voteId = await isAragonProposal({
           client: publicClient,
-          proposalLog: events[0] as unknown as Log,
+          proposalLog: events[0],
           chainId,
+          isInTestMode,
         });
 
         if (voteId) {

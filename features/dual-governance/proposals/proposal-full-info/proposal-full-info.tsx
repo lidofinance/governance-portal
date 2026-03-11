@@ -23,11 +23,11 @@ import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useScheduleProposalAction } from 'features/dual-governance/write-actions/schedule-proposal';
 import { useExecuteProposalAction } from 'features/dual-governance/write-actions/execute-proposal';
+import { useConfig } from 'config';
+import { isTestnet as getIsTestnet } from 'shared/blockchain/utils/is-testnet';
 import { ArrowRight } from 'shared/components/icons';
-import { useRouter } from 'next/router';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
-import { config } from 'config';
 import { Box, Link } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
@@ -41,7 +41,6 @@ import { ProposalStatus } from '../types';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { useProposals } from '../../hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
-import { Log } from 'viem';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -52,14 +51,13 @@ import {
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
 import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
+import { GOVERNANCE_PATH, votePage } from 'constants/urls';
 
 type Props = {
   id: number;
 };
 
 export const ProposalFullInfo = ({ id }: Props) => {
-  const router = useRouter();
-
   const [proposal, setProposal] = useState<ProposalCombinedData | null>(null);
   const [voteId, setVoteId] = useState<number | null>(null);
 
@@ -69,6 +67,15 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
+  const { userConfig } = useConfig();
+  const { readDynamicContract } = useDynamicDualGovernance();
+  const emergencyProtectedTimelock = useReadContract(
+    EmergencyProtectedTimelock,
+  );
+
+  const isInTestMode =
+    userConfig.savedUserConfig.useTestContracts && getIsTestnet(chainId);
+
   const {
     getProposalById,
     isLoading: isProposalsLoading,
@@ -77,15 +84,38 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const cachedProposal = getProposalById(id);
 
+  const { data: fetchedProposal, isLoading: isFetchLoading } = useProposals({
+    id,
+    enabled: !cachedProposal && !isProposalsLoading,
+  }) as UseQueryResult<ProposalCombinedData>;
+
+  const isLoading = isProposalsLoading || isFetchLoading;
+
+  const resolvedProposalDetails =
+    cachedProposal?.proposalDetails ?? fetchedProposal?.proposalDetails;
+
+  const { data: proposalEvents } = useProposalEvents({
+    proposalDetails: resolvedProposalDetails,
+    fetchExecuted: true,
+  });
+
   const { data: queryVoteId, isLoading: isVoteIdLoading } = useQuery({
-    queryKey: ['proposal-vote-id', chainId, cachedProposal?.proposalId],
+    queryKey: [
+      'proposal-vote-id',
+      chainId,
+      proposalEvents?.proposalSubmittedEvent?.transactionHash,
+      isInTestMode,
+    ],
     queryFn: async () => {
+      if (!proposalEvents?.proposalSubmittedEvent) return null;
       return await isAragonProposal({
         client: rpcProvider,
-        proposalLog: cachedProposal?.DGEvent as unknown as Log,
+        proposalLog: proposalEvents.proposalSubmittedEvent,
         chainId,
+        isInTestMode,
       });
     },
+    enabled: !!proposalEvents?.proposalSubmittedEvent,
   });
 
   useEffect(() => {
@@ -95,13 +125,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
       setVoteId(proposal.voteId);
     }
   }, [isVoteIdLoading, proposal, queryVoteId, voteId]);
-
-  const { data: fetchedProposal, isLoading: isFetchLoading } = useProposals({
-    id,
-    enabled: !cachedProposal && !isProposalsLoading,
-  }) as UseQueryResult<ProposalCombinedData>;
-
-  const isLoading = isProposalsLoading || isFetchLoading;
 
   useEffect(() => {
     if (!cachedProposal && !fetchedProposal) {
@@ -123,16 +146,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
     proposalStatus: proposal?.proposalDetails?.status || 0,
     submittedAt: proposal?.proposalDetails?.submittedAt || 0,
     scheduledAt: proposal?.proposalDetails?.scheduledAt || 0,
-  });
-
-  const { readDynamicContract } = useDynamicDualGovernance();
-  const emergencyProtectedTimelock = useReadContract(
-    EmergencyProtectedTimelock,
-  );
-
-  const { data: proposalEvents } = useProposalEvents({
-    proposalDetails: proposal?.proposalDetails,
-    fetchExecuted: true,
   });
 
   const proposalExecutedAt = useMemo(() => {
@@ -327,7 +340,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   return (
     <ProposalContainer>
       <ProposalHeader>
-        <ArrowIconWrapper onClick={router.back}>
+        <ArrowIconWrapper target="_self" href={GOVERNANCE_PATH}>
           <ArrowRight />
         </ArrowIconWrapper>
         {proposalStatusInfo && proposalStatusInfo.badge && (
@@ -359,17 +372,28 @@ export const ProposalFullInfo = ({ id }: Props) => {
                   <span>Submitted</span>
                 )}{' '}
                 from{' '}
-                <ProposalLink
-                  href={`${config.voteOrigin}/vote/${voteId}`}
-                  target="_blank"
-                >
-                  Aragon {voteId}
+                <ProposalLink href={votePage(voteId)} target="_blank">
+                  Vote #{voteId}
                 </ProposalLink>{' '}
                 on {submittedAt}
               </SubmitDate>
             )}
             {!voteId && (
-              <SubmitDate as="span">Submitted on {submittedAt}</SubmitDate>
+              <SubmitDate as="span">
+                {proposal.DGEvent?.transactionHash ? (
+                  <Link
+                    href={getEtherscanTxLink(
+                      chainId,
+                      proposal.DGEvent.transactionHash,
+                    )}
+                  >
+                    Submitted
+                  </Link>
+                ) : (
+                  <span>Submitted</span>
+                )}{' '}
+                on {submittedAt}
+              </SubmitDate>
             )}
           </>
         )}
@@ -393,7 +417,21 @@ export const ProposalFullInfo = ({ id }: Props) => {
           </>
         )}
         {proposalExecutedAt && (
-          <SubmitDate as="span">Executed on {proposalExecutedAt}</SubmitDate>
+          <SubmitDate as="span">
+            {proposalEvents?.proposalExecutedEvent?.transactionHash ? (
+              <Link
+                href={getEtherscanTxLink(
+                  chainId,
+                  proposalEvents.proposalExecutedEvent.transactionHash ?? '',
+                )}
+              >
+                Executed
+              </Link>
+            ) : (
+              <span>Executed</span>
+            )}{' '}
+            on {proposalExecutedAt}
+          </SubmitDate>
         )}
       </ProposalStateLogWrapper>
       <Box marginTop={'30px'}>

@@ -1,10 +1,4 @@
-import {
-  decodeEventLog,
-  keccak256,
-  Log,
-  PublicClient,
-  stringToBytes,
-} from 'viem';
+import { decodeEventLog, keccak256, PublicClient, stringToBytes } from 'viem';
 import { Voting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { findAbiItem } from '../find-abi-item';
@@ -13,14 +7,16 @@ import { getContractAddress } from 'shared/blockchain/get-contract-address';
 
 type Props = {
   client: PublicClient;
-  proposalLog: Log;
+  proposalLog: { transactionHash: `0x${string}` | null };
   chainId: CHAINS;
+  isInTestMode?: boolean;
 };
 
 export const isAragonProposal = async ({
   client,
   proposalLog,
   chainId,
+  isInTestMode,
 }: Props): Promise<bigint | false> => {
   invariant(proposalLog, 'Proposal log is required');
   if (!proposalLog.transactionHash) return false;
@@ -29,7 +25,7 @@ export const isAragonProposal = async ({
     hash: proposalLog.transactionHash,
   });
 
-  const aragonAddress = getContractAddress(Voting, chainId);
+  const aragonAddress = getContractAddress(Voting, chainId, isInTestMode);
 
   if (!aragonAddress) {
     console.warn(`No Aragon voting contract address for chainId: ${chainId}`);
@@ -37,7 +33,7 @@ export const isAragonProposal = async ({
   }
 
   const aragonEvents = receipt.logs.filter(
-    (log) => log.address.toLowerCase() === aragonAddress,
+    (log) => log.address.toLowerCase() === aragonAddress.toLowerCase(),
   );
 
   if (aragonEvents.length === 0) return false;
@@ -70,7 +66,7 @@ export const isAragonProposal = async ({
           decoded.eventName === 'ExecuteVote' &&
           'voteId' in decoded.args
         ) {
-          return decoded.args.voteId as bigint;
+          return decoded.args.voteId;
         }
       } catch (error) {
         console.error(`isAragonProposal error: ${error}`);
