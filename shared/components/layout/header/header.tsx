@@ -28,7 +28,7 @@ export const Header = () => {
     <HeaderContainer>
       <LogoLido />
       <NoSsrWrapper>
-        <Nav shouldShowStonks={shouldShowStonks || true} />
+        <Nav shouldShowStonks={shouldShowStonks} />
         <HeaderActionsWrapper>
           <>
             <DualGovernanceStatusButton />
