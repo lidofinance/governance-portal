@@ -8,7 +8,6 @@ import {
 } from '../proposals/types';
 import { usePublicClient } from 'wagmi';
 import {
-  fetchExecutedEvent,
   fetchScheduledEvent,
   fetchSubmittedEvent,
 } from 'utils/proposals/fetch-proposal-events.mjs';
@@ -16,7 +15,6 @@ import { fetchCachedEventsData } from '../utils/fetch-cached-events-data';
 
 type Args = {
   proposalDetails?: ProposalDetails;
-  fetchExecuted?: boolean; // Avoid fetching the heavy executed event on the main page; use only on proposal page
 };
 
 const isEventMissing = (
@@ -29,17 +27,14 @@ const isEventMissing = (
     case ProposalStatus.Scheduled:
       return !events.proposalSubmittedEvent || !events.proposalScheduledEvent;
     case ProposalStatus.Executed:
-      return (
-        !events.proposalSubmittedEvent ||
-        !events.proposalScheduledEvent ||
-        !events.proposalExecutedEvent
-      );
+      // proposalExecutedEvent is only populated by the build script, not at runtime
+      return !events.proposalSubmittedEvent || !events.proposalScheduledEvent;
     default:
       return false;
   }
 };
 
-export const useProposalEvents = ({ proposalDetails, fetchExecuted }: Args) => {
+export const useProposalEvents = ({ proposalDetails }: Args) => {
   const { chainId } = useLidoSDK();
   const publicClient = usePublicClient();
 
@@ -49,7 +44,6 @@ export const useProposalEvents = ({ proposalDetails, fetchExecuted }: Args) => {
       chainId,
       proposalDetails?.id.toString(),
       proposalDetails?.status,
-      fetchExecuted,
     ],
     queryFn: async () => {
       if (!proposalDetails || !publicClient) {
@@ -95,17 +89,10 @@ export const useProposalEvents = ({ proposalDetails, fetchExecuted }: Args) => {
             );
           }
 
-          if (
-            !updatedEvents.proposalExecutedEvent &&
-            proposalStatus === ProposalStatus.Executed &&
-            fetchExecuted
-          ) {
-            updatedEvents.proposalExecutedEvent = await fetchExecutedEvent(
-              proposalDetails,
-              publicClient,
-              chainId,
-            );
-          }
+          // fetchExecutedEvent scans from scheduledAt to current block (potentially
+          // millions of blocks). This is only safe to run in the build script, not
+          // at runtime. If the event is missing from the cache, we skip it here —
+          // the build script will populate it on the next run.
 
           return updatedEvents;
         } catch (error) {

@@ -100,13 +100,14 @@ const getBlockByTimestamp = async (
 
     const data = await response.json();
 
-    if (data.error || !data.result) {
-      throw new Error(`Etherscan API error: ${data.error || 'No result'}`);
+    if (data.status !== '1' || !data.result) {
+      throw new Error(`Etherscan API error: ${data.message || 'No result'}`);
     }
 
+    const block = BigInt(data.result);
     return {
-      fromBlock: BigInt(data.result) - GET_LOGS_BLOCK_RANGE,
-      toBlock: BigInt(data.result) + GET_LOGS_BLOCK_RANGE,
+      fromBlock: block > GET_LOGS_BLOCK_RANGE ? block - GET_LOGS_BLOCK_RANGE : 0n,
+      toBlock: block + GET_LOGS_BLOCK_RANGE,
     };
   } catch (error) {
     console.debug(
@@ -120,7 +121,7 @@ const getBlockByTimestamp = async (
     );
 
     return {
-      fromBlock: exactBlock - GET_LOGS_BLOCK_RANGE,
+      fromBlock: exactBlock > GET_LOGS_BLOCK_RANGE ? exactBlock - GET_LOGS_BLOCK_RANGE : 0n,
       toBlock: exactBlock + GET_LOGS_BLOCK_RANGE,
     };
   }
@@ -251,5 +252,11 @@ export const fetchExecutedEvent = async (
       toBlock: chunk.to,
     }),
   );
-  return results[0] || null;
+
+  const executedLog = results[0] || null;
+  if (executedLog) {
+    const block = await publicClient.getBlock({ blockNumber: executedLog.blockNumber });
+    return { ...executedLog, blockTimestamp: Number(block.timestamp) };
+  }
+  return executedLog;
 };

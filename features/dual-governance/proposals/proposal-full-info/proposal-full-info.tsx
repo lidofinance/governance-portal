@@ -96,7 +96,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   const { data: proposalEvents } = useProposalEvents({
     proposalDetails: resolvedProposalDetails,
-    fetchExecuted: true,
   });
 
   const { data: queryVoteId, isLoading: isVoteIdLoading } = useQuery({
@@ -107,7 +106,9 @@ export const ProposalFullInfo = ({ id }: Props) => {
       isInTestMode,
     ],
     queryFn: async () => {
-      if (!proposalEvents?.proposalSubmittedEvent) return null;
+      if (!proposalEvents?.proposalSubmittedEvent) {
+        return null;
+      }
       return await isAragonProposal({
         client: rpcProvider,
         proposalLog: proposalEvents.proposalSubmittedEvent,

@@ -19,15 +19,18 @@ export const isAragonProposal = async ({
   isInTestMode,
 }: Props): Promise<bigint | false> => {
   invariant(proposalLog, 'Proposal log is required');
-  if (!proposalLog.transactionHash) return false;
+  if (!proposalLog.transactionHash) {
+    return false;
+  }
 
   const receipt = await client.getTransactionReceipt({
     hash: proposalLog.transactionHash,
   });
 
-  const aragonAddress = getContractAddress(Voting, chainId, isInTestMode);
-
-  if (!aragonAddress) {
+  let aragonAddress: `0x${string}`;
+  try {
+    aragonAddress = getContractAddress(Voting, chainId, isInTestMode);
+  } catch {
     console.warn(`No Aragon voting contract address for chainId: ${chainId}`);
     return false;
   }
@@ -36,7 +39,9 @@ export const isAragonProposal = async ({
     (log) => log.address.toLowerCase() === aragonAddress.toLowerCase(),
   );
 
-  if (aragonEvents.length === 0) return false;
+  if (aragonEvents.length === 0) {
+    return false;
+  }
 
   const executeVoteEventSignature = keccak256(
     stringToBytes('ExecuteVote(uint256)'),

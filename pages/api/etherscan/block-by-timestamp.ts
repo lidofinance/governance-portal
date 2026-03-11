@@ -128,7 +128,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
     res.status(200).json(result);
   } catch (error) {
-    res.status(200).json({
+    res.status(502).json({
       error: 'Failed to fetch block number from Etherscan',
       details: error instanceof Error ? error.message : 'Unknown error',
     });
