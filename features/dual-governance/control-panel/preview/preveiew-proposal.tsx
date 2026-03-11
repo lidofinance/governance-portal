@@ -5,10 +5,9 @@ import { IconWrapper, ProposalWrapper, VoteWrapper } from '../style';
 import { AragonLogo, ProposalsIcon } from 'shared/components/icons';
 import { Text } from 'shared/components/text';
 import Link from 'next/link';
-import { config } from 'config';
 import { DGTooltip } from 'features/dual-governance/tooltips';
 import { ReactNode } from 'react';
-import { PROPOSALS_PATH } from 'constants/urls';
+import { PROPOSALS_PATH, votePage } from 'constants/urls';
 import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
 
 type Props = {
@@ -59,7 +58,7 @@ export const PreviewProposal = ({ proposal }: Props) => {
       <VoteWrapper>
         <AragonLogo />
         <Text size={22}>
-          <Link href={`${config.voteOrigin}/vote/${proposal.proposalId}`}>
+          <Link href={votePage(proposal.proposalId)}>
             {`LDO Vote #${proposal.proposalId} `}
           </Link>
           &mdash; Not submitted to Dual Governance yet

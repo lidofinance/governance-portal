@@ -9,7 +9,6 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
-import { Address } from 'viem';
 import { dualGovernanceAbi } from 'abi/generated';
 
 /**
@@ -35,9 +34,7 @@ export const useDynamicDualGovernance = () => {
       if (!emergencyProtectedTimelock) return null;
 
       try {
-        const governanceAddress =
-          await emergencyProtectedTimelock.readContract('getGovernance');
-        return governanceAddress as Address;
+        return await emergencyProtectedTimelock.readContract('getGovernance');
       } catch (error) {
         console.error('Error fetching DualGovernance address:', error);
       }

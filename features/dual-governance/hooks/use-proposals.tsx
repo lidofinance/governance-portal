@@ -8,6 +8,8 @@ import { Address } from 'viem';
 import { fetchProposals } from 'features/dual-governance/utils/fetch-proposals';
 import { fetchProposal } from '../utils';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useConfig } from 'config';
+import { isTestnet as getIsTestnet } from 'shared/blockchain/utils/is-testnet';
 
 export type ProposalsQueryResult = {
   proposalsCount: bigint;
@@ -26,6 +28,9 @@ export const useProposals = ({
   ProposalsQueryResult | ProposalCombinedData
 > => {
   const { chainId, rpcProvider } = useLidoSDK();
+  const { userConfig } = useConfig();
+  const isInTestMode =
+    userConfig.savedUserConfig.useTestContracts && getIsTestnet(chainId);
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
@@ -48,7 +53,7 @@ export const useProposals = ({
   });
 
   return useQuery({
-    queryKey: ['get-proposals', chainId, Number(proposalsCount)],
+    queryKey: ['get-proposals', chainId, Number(proposalsCount), isInTestMode],
     staleTime: 30000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -67,6 +72,7 @@ export const useProposals = ({
             EPTContract: emergencyProtectedTimelock,
             chainId,
             governanceAddresses,
+            isInTestMode,
           });
         }
 

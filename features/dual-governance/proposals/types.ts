@@ -1,4 +1,4 @@
-import { Address } from 'viem';
+import { Address, Log } from 'viem';
 // TODO: Generate proper event types from ABI
 type DGProposalSubmittedEvent = any;
 import { BigNumber } from 'ethers';
@@ -25,6 +25,41 @@ export type ProposalCombinedData = {
   voteId?: number;
   DGEvent?: DGProposalSubmittedEvent;
   proposalDetails: ProposalDetails;
+};
+
+export type ProposalSubmittedLog = Log & {
+  args: {
+    proposerAccount: string;
+    proposalId: bigint;
+    metadata: string;
+  };
+};
+
+export type ProposalScheduledLog = Log & {
+  args: {
+    id: bigint;
+  };
+};
+
+export type ProposalExecutedLog = Log & {
+  args: {
+    id: bigint;
+  };
+  blockTimestamp?: number;
+};
+
+export type EventsLogs = {
+  proposalSubmittedEvent: ProposalSubmittedLog | null;
+  proposalScheduledEvent: ProposalScheduledLog | null;
+  proposalExecutedEvent: ProposalExecutedLog | null;
+};
+
+export type CachedEventsData = {
+  [chainId: string]: {
+    proposals: {
+      [proposalId: string]: EventsLogs & { details?: ProposalDetails };
+    };
+  };
 };
 
 export enum ProposalStatus {

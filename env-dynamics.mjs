@@ -25,11 +25,6 @@ export const selfOrigin =
 // Fix in the build time (build time don't have env vars)
 
 /** @type string */
-export const voteOrigin =
-  process.env.VOTE_ORIGIN || 'https://vote-hoodi.testnet.fi';
-// Fix in the build time (build time don't have env vars)
-
-/** @type string */
 export const stakeOrigin = process.env.STAKE_ORIGIN || 'https://stake.lido.fi';
 // Fix in the build time (build time don't have env vars)
 
