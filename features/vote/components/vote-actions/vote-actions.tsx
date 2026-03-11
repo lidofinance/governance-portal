@@ -2,7 +2,6 @@ import { PopupMenu, PopupMenuItem } from '@lidofinance/lido-ui';
 import { Actions } from './style';
 import { VoteMode } from '../../types';
 import React, { useMemo, useRef, useState } from 'react';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VotePhase } from 'shared/votes/types';
 import { ActionButtons } from './action-buttons';
 import { useVoteContext } from 'features/vote/providers/vote-context';
@@ -12,6 +11,7 @@ import { FlexWrapper } from 'shared/styled-components';
 import { Address } from 'viem';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useVoteAction } from 'features/vote/write-actions/vote/action';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 export const VoteActions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,8 +43,6 @@ export const VoteActions = () => {
   const nayButtonRef = useRef(null);
   const yayButtonRef = useRef(null);
 
-  const { data: tokenData } = useGovernanceToken();
-
   // Calculate value to show in popup for delegated vp filtered by current mode
   const availableDelegatedVotingPower = useMemo(() => {
     if (!eligibleDelegatedVotingPower) {
@@ -68,9 +66,9 @@ export const VoteActions = () => {
     return result;
   }, [currentMode, eligibleDelegatedVotingPower, eligibleDelegators]);
 
-  const formattedOwnVP = `${formatBalance(voterDaoTokenBalance || 0n)} ${tokenData?.symbol}`;
+  const formattedOwnVP = `${formatBalance(voterDaoTokenBalance || 0n)} ${KnownToken.LDO.symbol}`;
 
-  const formattedDelegatedVP = `${formatBalance(availableDelegatedVotingPower)} ${tokenData?.symbol}`;
+  const formattedDelegatedVP = `${formatBalance(availableDelegatedVotingPower)} ${KnownToken.LDO.symbol}`;
 
   const handleSelectionChange = (selectedAddresses: Address[]) => {
     setSelectedDelegators(selectedAddresses);

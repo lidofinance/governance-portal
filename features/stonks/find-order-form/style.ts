@@ -10,8 +10,4 @@ export const Fieldset = styled.div`
   & > * {
     width: 100%;
   }
-
-  button {
-    margin-top: 20px;
-  }
 `;

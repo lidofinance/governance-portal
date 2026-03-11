@@ -22,8 +22,8 @@ import { ExternalLink } from 'shared/components/external-link/external-link';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
-import { getDaoTokenMetadata } from 'shared/blockchain/utils/get-dao-token-metadata';
 import { formatBalance } from 'utils/format-balance';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 export const DelegatorsList = () => {
   const { chainId } = useLidoSDK();
@@ -72,14 +72,12 @@ export const DelegatorsList = () => {
     );
   }
 
-  const daoToken = getDaoTokenMetadata(chainId).symbol;
-
   return (
     <Wrap>
       <TitleWrap>
         <InfoLabel>Delegated</InfoLabel>
         <CounterBadge>
-          {formatBalance(data.totalVotingPower)} {daoToken}
+          {formatBalance(data.totalVotingPower)} {KnownToken.LDO.symbol}
         </CounterBadge>
         <InfoLabel>
           from {nonZeroDelegatorsCount} address
@@ -93,7 +91,6 @@ export const DelegatorsList = () => {
             address={delegator.address}
             balance={delegator.balance}
             ensName={delegator.ensName}
-            governanceSymbol={daoToken}
           />
         ))}
         {nonZeroDelegatorsCount > pageCount * DELEGATORS_PAGE_SIZE && (
@@ -104,8 +101,8 @@ export const DelegatorsList = () => {
       </DelegatorsListStyled>
       {data.notFetchedDelegatorsCount > 0 && (
         <Text size="xxs" color="secondary">
-          This list displays addresses with a positive {daoToken} balance from
-          the first {DELEGATORS_FETCH_TOTAL} delegators. You have{' '}
+          This list displays addresses with a positive {KnownToken.LDO.symbol}{' '}
+          balance from the first {DELEGATORS_FETCH_TOTAL} delegators. You have{' '}
           {data.notFetchedDelegatorsCount} more delegator
           {data.notFetchedDelegatorsCount > 1 ? 's' : ''} who were not included
           in the list. To see all your delegators, use the{' '}

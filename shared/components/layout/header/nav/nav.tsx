@@ -18,9 +18,14 @@ import {
   VOTE_DASHBOARD_INDEX_PATH,
   VOTE_DELEGATION_PATH,
   VOTE_PATH,
+  STONKS_PATH,
 } from 'constants/urls';
 
-export const Nav = () => {
+type Props = {
+  shouldShowStonks?: boolean;
+};
+
+export const Nav = ({ shouldShowStonks }: Props) => {
   const { asPath } = useRouter();
 
   return (
@@ -48,6 +53,11 @@ export const Nav = () => {
       <NavItem $isActive={asPath.startsWith(EASY_TRACK_PATH)}>
         <Link href={EASY_TRACK__MOTIONS_PATH}>Easy Track</Link>
       </NavItem>
+      {shouldShowStonks && (
+        <NavItem $isActive={asPath.startsWith(STONKS_PATH)}>
+          <Link href={STONKS_PATH}>Stonks</Link>
+        </NavItem>
+      )}
     </NavStyled>
   );
 };
@@ -81,7 +91,12 @@ export const NavBurger = ({
   );
 };
 
-export const NavMobile = ({ children }: { children: React.ReactNode }) => {
+type NavMobileProps = {
+  children: React.ReactNode;
+  shouldShowStonks?: boolean;
+};
+
+export const NavMobile = ({ children, shouldShowStonks }: NavMobileProps) => {
   const { asPath } = useRouter();
 
   return (
@@ -110,6 +125,11 @@ export const NavMobile = ({ children }: { children: React.ReactNode }) => {
         <NavMobileItem $isActive={asPath.startsWith(EASY_TRACK_PATH)}>
           <Link href={EASY_TRACK__MOTIONS_PATH}>Easy Track</Link>
         </NavMobileItem>
+        {shouldShowStonks && (
+          <NavMobileItem $isActive={asPath.startsWith(STONKS_PATH)}>
+            <Link href={STONKS_PATH}>Stonks</Link>
+          </NavMobileItem>
+        )}
         <NavMobileActions>{children}</NavMobileActions>
       </NavMobileWrapper>
     </NavMobileStyled>

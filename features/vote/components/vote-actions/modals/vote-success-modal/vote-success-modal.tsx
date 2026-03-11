@@ -7,12 +7,12 @@ import { VoteEvent } from 'shared/votes/types';
 import { useAccount } from 'wagmi';
 import React, { useMemo, useState } from 'react';
 import { AddonSection } from './style';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { Address } from 'viem';
 import { DelegatorsSelector } from '../../components/delegators-selector';
 import { Box } from 'shared/components/box';
 import { formatBalance } from 'utils/format-balance';
 import { VOTE_MODE_MAP } from 'features/vote/constants';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {
   mode: VoteMode;
@@ -34,7 +34,6 @@ export const VoteSuccessModal = ({
   onVoteWithRemainingDelegated,
 }: Props) => {
   const { address } = useAccount();
-  const { data: tokenData } = useGovernanceToken();
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
 
@@ -99,7 +98,7 @@ export const VoteSuccessModal = ({
                   onClick={onVoteWithOwnTokens}
                   style={{ flex: 1 }}
                 >
-                  My own ({formatBalance(votePower)} {tokenData?.symbol})
+                  My own ({formatBalance(votePower)} {KnownToken.LDO.symbol})
                 </Button>
 
                 <Button
@@ -123,7 +122,7 @@ export const VoteSuccessModal = ({
             <AddonSection>
               <Text strong>
                 Vote with your own {formatBalance(votePower)}{' '}
-                {tokenData?.symbol}
+                {KnownToken.LDO.symbol}
               </Text>
               <Button onClick={onVoteWithOwnTokens} fullwidth>
                 Vote {voteModeLabel}

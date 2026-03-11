@@ -4,7 +4,7 @@ import { EvmUnrecognized } from '../evm-addresses';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { GovernanceToken } from 'shared/blockchain/contracts';
 import { DAI, StETH } from 'shared/blockchain/contract-addresses';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 const TOKEN = {
   [MotionType.LegoLDOTopUp]: {
@@ -96,15 +96,13 @@ export const useTokenByTopUpType = ({
   registryType: MotionType | EvmUnrecognized;
 }) => {
   const { chainId } = useLidoSDK();
-  const { data: tokenData } = useGovernanceToken();
-
   const governanceAddress = GovernanceToken.chainAddressMap[chainId];
 
   if (
     registryType === MotionType.LegoLDOTopUp ||
     registryType === MotionType.AllowedRecipientTopUp
   )
-    return { label: tokenData?.symbol, address: governanceAddress };
+    return { label: KnownToken.LDO.symbol, address: governanceAddress };
 
   if (!isTopUpType(registryType)) return { label: '', address: '' };
 

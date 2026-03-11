@@ -26,12 +26,11 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
         throw new Error(`Invalid order address`);
       }
       const orderContractReader = getOrderContract(orderAddress);
-      let stonksAddress: Address;
-
-      try {
-        stonksAddress = await orderContractReader('stonks');
-      } catch (error) {
-        throw new Error(`Could not fetch stonks address for order: ${error}`);
+      const stonksAddress = await orderContractReader('stonks');
+      if (stonksAddress === null) {
+        throw new Error(
+          `Could not fetch stonks address for order ${orderAddress}`,
+        );
       }
 
       const stonksMetadata = STONKS_MAP[chainId]?.find(

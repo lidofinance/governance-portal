@@ -4,10 +4,10 @@ import { DelegatorsSelector } from '../../components/delegators-selector';
 import { Text } from 'shared/components/text';
 import { ComponentProps, useState } from 'react';
 import { Address } from 'viem';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { Box } from 'shared/components/box';
 import { VOTE_MODE_MAP } from 'features/vote/constants';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {
   mode: VoteMode;
@@ -22,8 +22,6 @@ export const VoteConfirmDelegatedModal = ({
 }: Props) => {
   const [selectedAddresses, setSelectedAddresses] = useState<Address[]>([]);
   const [selectedBalance, setSelectedBalance] = useState<bigint>(0n);
-
-  const { data: tokenData } = useGovernanceToken();
 
   const handleSelectionChange = (
     selectedAddresses: Address[],
@@ -44,7 +42,7 @@ export const VoteConfirmDelegatedModal = ({
       </Box>
       <Box margin="10px 0">
         <Button color="secondary" onClick={handleSubmit} fullwidth>
-          {`"${VOTE_MODE_MAP[mode]}" (${formatBalance(selectedBalance)} ${tokenData?.symbol})`}
+          {`"${VOTE_MODE_MAP[mode]}" (${formatBalance(selectedBalance)} ${KnownToken.LDO.symbol})`}
         </Button>
       </Box>
       <DelegatorsSelector
