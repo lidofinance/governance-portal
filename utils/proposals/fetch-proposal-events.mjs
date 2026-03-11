@@ -200,8 +200,7 @@ export const fetchScheduledEvent = async (
   );
 
   const scheduledEvents = await publicClient.getLogs({
-    address:
-      HISTORICAL_ADDRESSES[chainId].emergencyProtectedTimelockAddress,
+    address: HISTORICAL_ADDRESSES[chainId].emergencyProtectedTimelockAddress,
     fromBlock: scheduledBlockRange.fromBlock,
     toBlock: scheduledBlockRange.toBlock,
     event: proposalScheduledEventAbi,
@@ -224,6 +223,7 @@ export const fetchExecutedEvent = async (
     return null;
   }
 
+  // ProposalStatus.Executed = 3
   if (proposalDetails.status !== 3) {
     console.warn(
       'Proposal is not executed, skipping "executed" event fetch',
@@ -244,8 +244,7 @@ export const fetchExecutedEvent = async (
   const chunks = createChunks(scheduledBlockRange.fromBlock, toBlock);
   const results = await processChunksInBatches(chunks, (chunk) =>
     publicClient.getLogs({
-      address:
-        HISTORICAL_ADDRESSES[chainId].emergencyProtectedTimelockAddress,
+      address: HISTORICAL_ADDRESSES[chainId].emergencyProtectedTimelockAddress,
       event: proposalExecutedEventAbi,
       args: { id: BigInt(proposalDetails.id) },
       fromBlock: chunk.from,

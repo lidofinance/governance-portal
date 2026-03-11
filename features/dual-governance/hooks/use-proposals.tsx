@@ -53,7 +53,7 @@ export const useProposals = ({
   });
 
   return useQuery({
-    queryKey: ['get-proposals', chainId, Number(proposalsCount)],
+    queryKey: ['get-proposals', chainId, Number(proposalsCount), isInTestMode],
     staleTime: 30000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

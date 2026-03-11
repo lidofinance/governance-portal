@@ -399,12 +399,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
         {scheduledAt && (
           <>
-            {proposalScheduledLog ? (
+            {proposalScheduledLog && proposalScheduledLog.transactionHash ? (
               <SubmitDate as="span">
                 <Link
                   href={getEtherscanTxLink(
                     chainId,
-                    proposalScheduledLog.transactionHash ?? '',
+                    proposalScheduledLog.transactionHash,
                   )}
                 >
                   Scheduled
@@ -422,7 +422,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
               <Link
                 href={getEtherscanTxLink(
                   chainId,
-                  proposalEvents.proposalExecutedEvent.transactionHash ?? '',
+                  proposalEvents.proposalExecutedEvent.transactionHash,
                 )}
               >
                 Executed

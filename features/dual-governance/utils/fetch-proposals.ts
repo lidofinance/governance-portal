@@ -1,9 +1,10 @@
 import {
-  CachedEventsData,
   ProposalCombinedData,
   ProposalDetails,
+  ProposalSubmittedLog,
   SubmitProposalCall,
 } from 'features/dual-governance/proposals/types';
+import { fetchCachedEventsData } from './fetch-cached-events-data';
 import { Address, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
@@ -12,8 +13,6 @@ import {
 } from 'utils/estimate-block-range';
 import { findAbiItem } from 'utils/find-abi-item';
 import { DualGovernance } from 'shared/blockchain/contracts';
-// TODO: Generate proper event types from ABI
-type ProposalSubmittedEvent = any;
 import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
 
 type Props = {
@@ -34,15 +33,7 @@ export const fetchProposals = async ({
   chainId,
 }: Props): Promise<(ProposalCombinedData | null)[]> => {
   // Load cached events data to avoid RPC getLogs calls for known proposals
-  let cachedEventsData: CachedEventsData = {};
-  try {
-    const response = await fetch('/proposals-events-data.json');
-    if (response.ok) {
-      cachedEventsData = await response.json();
-    }
-  } catch {
-    // Cache unavailable — will fall back to on-demand event fetching below
-  }
+  const cachedEventsData = await fetchCachedEventsData();
   const cachedChainData = cachedEventsData[chainId.toString()]?.proposals || {};
 
   const proposalIds = Array.from({ length: Number(proposalsCount) }, (_, i) =>
@@ -135,7 +126,7 @@ export const fetchProposals = async ({
 
         const eventsResults = await Promise.all(eventPromises);
         const events =
-          eventsResults.flat() as unknown as ProposalSubmittedEvent[];
+          eventsResults.flat() as unknown as ProposalSubmittedLog[];
 
         if (events.length > 0) {
           proposalsMap.set(proposal.proposalId, {

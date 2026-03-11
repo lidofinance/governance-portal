@@ -1,10 +1,10 @@
 import {
-  CachedEventsData,
   ProposalCombinedData,
   ProposalDetails,
   ProposalSubmittedLog,
   SubmitProposalCall,
 } from '../proposals/types';
+import { fetchCachedEventsData } from './fetch-cached-events-data';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { Address, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
@@ -51,19 +51,10 @@ export const fetchProposal = async ({
     };
 
     // Try cache first
-    let submittedEvent: ProposalSubmittedLog | null = null;
-    try {
-      const response = await fetch('/proposals-events-data.json');
-      if (response.ok) {
-        const eventsData: CachedEventsData = await response.json();
-        const cached = eventsData[chainId.toString()]?.proposals[id.toString()];
-        if (cached?.proposalSubmittedEvent) {
-          submittedEvent = cached.proposalSubmittedEvent;
-        }
-      }
-    } catch {
-      // Cache unavailable — fall back to RPC below
-    }
+    const eventsData = await fetchCachedEventsData();
+    const cached = eventsData[chainId.toString()]?.proposals[id.toString()];
+    const submittedEvent: ProposalSubmittedLog | null =
+      cached?.proposalSubmittedEvent ?? null;
 
     if (submittedEvent) {
       result.DGEvent = submittedEvent;

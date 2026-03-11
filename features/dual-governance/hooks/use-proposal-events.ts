@@ -12,6 +12,7 @@ import {
   fetchScheduledEvent,
   fetchSubmittedEvent,
 } from 'utils/proposals/fetch-proposal-events.mjs';
+import { fetchCachedEventsData } from '../utils/fetch-cached-events-data';
 
 type Args = {
   proposalDetails?: ProposalDetails;
@@ -48,9 +49,10 @@ export const useProposalEvents = ({ proposalDetails, fetchExecuted }: Args) => {
       chainId,
       proposalDetails?.id.toString(),
       proposalDetails?.status,
+      fetchExecuted,
     ],
     queryFn: async () => {
-      if (!proposalDetails) {
+      if (!proposalDetails || !publicClient) {
         return {
           proposalSubmittedEvent: null,
           proposalScheduledEvent: null,
@@ -58,31 +60,7 @@ export const useProposalEvents = ({ proposalDetails, fetchExecuted }: Args) => {
         };
       }
 
-      let eventsData: CachedEventsData = {};
-      try {
-        const response = await fetch('/proposals-events-data.json');
-        if (response.ok) {
-          try {
-            eventsData = await response.json();
-          } catch (err) {
-            console.warn(
-              'proposals-events-data.json is not valid JSON, falling back to on-demand fetch',
-              err,
-            );
-          }
-        } else if (response.status !== 404) {
-          console.debug(
-            'Failed to fetch proposals-events-data.json, status:',
-            response.status,
-            response.statusText,
-          );
-        }
-      } catch (err) {
-        console.debug(
-          'Network error while fetching proposals-events-data.json, falling back to on-demand fetch',
-          err,
-        );
-      }
+      const eventsData: CachedEventsData = await fetchCachedEventsData();
 
       const proposalStatus = proposalDetails.status;
       const chainData = eventsData[chainId.toString()];

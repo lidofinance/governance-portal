@@ -9,7 +9,7 @@ import {
 } from 'utils-api';
 import Metrics from 'utils-api/metrics';
 import { API_ROUTES } from 'constants/api';
-import { secretConfig } from 'config';
+import { config, secretConfig } from 'config';
 
 type EtherscanResponse = {
   status: string;
@@ -100,20 +100,34 @@ const queuedEtherscanRequest = async (
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { timestamp, chainId } = req.query;
 
-  if (!timestamp || timestamp === '0' || !chainId) {
-    return res.status(200).json({
-      message: 'Missing required parameters: timestamp and chainId',
-    });
+  const chainIdNum = parseInt(chainId as string, 10);
+  if (
+    !chainId ||
+    typeof chainId !== 'string' ||
+    isNaN(chainIdNum) ||
+    !config.supportedChains.includes(chainIdNum)
+  ) {
+    return res.status(400).json({ message: 'Invalid chainId' });
+  }
+
+  const timestampNum = parseInt(timestamp as string, 10);
+  if (
+    !timestamp ||
+    typeof timestamp !== 'string' ||
+    isNaN(timestampNum) ||
+    timestampNum <= 0 ||
+    !Number.isSafeInteger(timestampNum)
+  ) {
+    return res.status(400).json({ message: 'Invalid timestamp' });
   }
 
   try {
     const result = await queuedEtherscanRequest(
-      chainId as string,
-      timestamp as string,
+      chainIdNum.toString(),
+      timestampNum.toString(),
     );
     res.status(200).json(result);
   } catch (error) {
-    console.debug('Error fetching block by timestamp:', error);
     res.status(200).json({
       error: 'Failed to fetch block number from Etherscan',
       details: error instanceof Error ? error.message : 'Unknown error',

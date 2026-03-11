@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
-import { CachedEventsData, ProposalStatus } from '../proposals/types';
+import { ProposalStatus } from '../proposals/types';
+import { fetchCachedEventsData } from '../utils/fetch-cached-events-data';
 
 type Args = {
   proposalsCount?: bigint;
@@ -25,20 +26,11 @@ export const useActiveProposals = ({ proposalsCount }: Args) => {
         return [] as number[];
       }
 
-      let cachedProposals: CachedEventsData | null = null;
-
-      try {
-        const response = await fetch('/proposals-events-data.json');
-        if (response.ok) {
-          cachedProposals = await response.json();
-        }
-      } catch (error) {
-        console.warn('Failed to load cached proposals data:', error);
-      }
+      const cachedProposals = await fetchCachedEventsData();
 
       const activeProposalIds: number[] = [];
       const chainIdStr = chainId.toString();
-      const cachedChainData = cachedProposals?.[chainIdStr]?.proposals || {};
+      const cachedChainData = cachedProposals[chainIdStr]?.proposals || {};
 
       for (
         let proposalId = 1;
