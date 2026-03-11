@@ -15,10 +15,10 @@ import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { TurnArrow, UnionIcon } from 'shared/components/icons';
 import { getPublicDelegate } from '../../utils/get-public-delegate';
 import { formatBalance } from 'utils/format-balance';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {
   voteEvent: VoteEvent;
-  governanceTokenSymbol: string;
   ensMap: Record<string, string | null> | undefined;
   walletAddress: string | undefined;
   isMobile: boolean;
@@ -27,7 +27,6 @@ type Props = {
 
 export const VoterItem = ({
   voteEvent,
-  governanceTokenSymbol,
   ensMap,
   walletAddress,
   isDelegated,
@@ -51,7 +50,7 @@ export const VoterItem = ({
 
   const vpElement = (
     <Text weight={isDelegate ? 700 : 400} size="xxs" data-testid="votingPower">
-      {formatBalance(stake, 1)} {isMobile ? '' : governanceTokenSymbol}
+      {formatBalance(stake, 1)} {isMobile ? '' : KnownToken.LDO.symbol}
     </Text>
   );
 
@@ -109,7 +108,6 @@ export const VoterItem = ({
           <VoterItem
             key={vote.voter}
             voteEvent={vote}
-            governanceTokenSymbol={governanceTokenSymbol}
             ensMap={ensMap}
             isMobile={isMobile}
             walletAddress={walletAddress}

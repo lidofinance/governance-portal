@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Tooltip, PopoverPlacements } from '@lidofinance/lido-ui';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { TooltipText } from '../vote-phases-tooltip/style';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {
   placement: PopoverPlacements;
@@ -16,15 +16,13 @@ export const VoteQuorumStatusTooltip = ({
   minQuorumSupply,
   children,
 }: Props) => {
-  const { data: tokenData } = useGovernanceToken();
-
   return (
     <Tooltip
       placement={placement}
       title={
         <TooltipText>
-          To reach quorum, more than 5% of the total {tokenData?.symbol} supply
-          must vote for one option.
+          To reach quorum, more than 5% of the total {KnownToken.LDO.symbol}{' '}
+          supply must vote for one option.
           <br />
           Total Supply: {totalSupply.toLocaleString()}
           <br />

@@ -4,7 +4,6 @@ import { Address } from 'viem';
 
 import { AddressPop } from 'shared/components/address-pop';
 import { Text } from 'shared/components/text';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 
 import {
   AccordionWrap,
@@ -19,6 +18,7 @@ import {
 } from './style';
 import { formatBalance } from 'utils/format-balance';
 import { EligibleDelegator, VoteMode, VoterInfo } from 'features/vote/types';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 const TRANSACTION_LIMIT = 100;
 
@@ -31,21 +31,19 @@ const DelegatorsSummary = ({
   selectedBalance,
   totalVotingPower,
   delegatorCount,
-  tokenSymbol,
 }: {
   selectedBalance: bigint;
   totalVotingPower: bigint;
   delegatorCount: number;
-  tokenSymbol?: string;
 }) => (
   <SummaryWrap data-testid="delegatorsInfo">
     <Text size={12}>Selected</Text>
     <SummaryAmount data-testid="delegatorsVPAmount">
       <Text size={12} strong>
-        {formatBalance(selectedBalance)} {tokenSymbol}
+        {formatBalance(selectedBalance)} {KnownToken.LDO.symbol}
       </Text>
       <Text size={12}>
-        {` / ${formatBalance(totalVotingPower)} ${tokenSymbol}`}
+        {` / ${formatBalance(totalVotingPower)} ${KnownToken.LDO.symbol}`}
       </Text>
     </SummaryAmount>
     <Text size={12} data-testid="delegatorsNumber">
@@ -58,12 +56,10 @@ const VotableDelegatorItem = ({
   delegator,
   isChecked,
   onCheckedChange,
-  tokenSymbol,
 }: {
   delegator: EligibleDelegator;
   isChecked: boolean;
   onCheckedChange: (address: Address, isChecked: boolean) => void;
-  tokenSymbol?: string;
 }) => (
   <DelegatorsListItem key={delegator.address} data-testid="delegatorsListRow">
     <AddressWrap>
@@ -89,7 +85,7 @@ const VotableDelegatorItem = ({
       </Text>
     )}
     <DelegatorsVotingPower data-testid="delegatorVP">
-      {formatBalance(BigInt(delegator.votingPower))} {tokenSymbol}
+      {formatBalance(BigInt(delegator.votingPower))} {KnownToken.LDO.symbol}
     </DelegatorsVotingPower>
   </DelegatorsListItem>
 );
@@ -110,10 +106,6 @@ export const DelegatorsSelector = ({
   currentMode,
   delegatorsVotedThemselves,
 }: DelegatorsSelectorProps) => {
-  const { data: governanceTokenData } = useGovernanceToken();
-
-  const tokenSymbol = governanceTokenData?.symbol;
-
   const totalVotingPower = useMemo(
     () => delegators.reduce((acc, d) => acc + d.votingPower, 0n),
     [delegators],
@@ -197,7 +189,6 @@ export const DelegatorsSelector = ({
             selectedBalance={selectionData.selectedBalance}
             totalVotingPower={totalVotingPower}
             delegatorCount={selectionData.selectedAddresses.length}
-            tokenSymbol={tokenSymbol}
           />
         ) : (
           'Voted by holder'
@@ -212,7 +203,6 @@ export const DelegatorsSelector = ({
               delegator={delegator}
               isChecked={finalCheckedItems[delegator.address] || false}
               onCheckedChange={handleCheckboxChange}
-              tokenSymbol={tokenSymbol}
             />
           ))}
         </ListWrap>
@@ -240,7 +230,7 @@ export const DelegatorsSelector = ({
                   {voter.supports ? 'Yes' : 'No'}
                 </Text>
                 <DelegatorsVotingPower>
-                  {formatBalance(voter.stake)} {tokenSymbol}
+                  {formatBalance(voter.stake)} {KnownToken.LDO.symbol}
                 </DelegatorsVotingPower>
               </DelegatorsListItem>
             ))}

@@ -5,8 +5,8 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { DELEGATORS_FETCH_TOTAL } from '../constants';
-import { getDaoTokenMetadata } from 'shared/blockchain/utils/get-dao-token-metadata';
 import { formatToken } from 'shared/blockchain/utils';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 export type ProcessedDelegate = PublicDelegate & {
   delegatorsCount: number;
@@ -25,7 +25,6 @@ export const useProcessedPublicDelegatesList = () => {
       votingContract.address,
     ],
     queryFn: async () => {
-      const daoTokenMetadata = getDaoTokenMetadata(chainId);
       const parsedList: ProcessedDelegate[] = await Promise.all(
         PUBLIC_DELEGATES.map(async (delegate) => {
           const delegatorsCount = await votingContract.readContract(
@@ -65,7 +64,7 @@ export const useProcessedPublicDelegatesList = () => {
               amount: delegatedVotingPower,
               notation: 'compact',
               maxFractionDigits: 2,
-              decimals: daoTokenMetadata.decimals,
+              decimals: KnownToken.LDO.decimals,
             }),
           };
         }),

@@ -18,7 +18,7 @@ export type DelegationFormLoading = {
 };
 
 export type DelegationFormNetworkData = {
-  daoTokenBalance: number | undefined;
+  daoTokenBalance: bigint | undefined;
   loading: DelegationFormLoading;
   refetch: () => Promise<void>;
 } & DelegationInfo;

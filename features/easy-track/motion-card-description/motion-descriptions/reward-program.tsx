@@ -9,7 +9,7 @@ import { evmAddRewardProgramAbi } from 'abi/generated/EvmAddRewardProgram';
 import { evmRemoveRewardProgramAbi } from 'abi/generated/EvmRemoveRewardProgram';
 import { evmTopUpRewardProgramsAbi } from 'abi/generated/EvmTopUpRewardPrograms';
 import { MotionDescriptionProps } from '../types';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
+import { KnownToken } from 'shared/blockchain/tokens';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const RewardProgramAdd = ({
@@ -26,7 +26,6 @@ export const RewardProgramAdd = ({
 export const RewardProgramTopUp = ({
   callData,
 }: MotionDescriptionProps<typeof evmTopUpRewardProgramsAbi>) => {
-  const { data: governanceToken } = useGovernanceToken();
   const { data: rewardProgramsMap } = useRewardProgramsMapAll();
 
   const programs = useMemo(() => {
@@ -41,7 +40,7 @@ export const RewardProgramTopUp = ({
         <div key={i}>
           <b>{programs?.[i]}</b> <AddressPopInline address={address} /> with{' '}
           {Number(formatEther(callData[1][i])).toLocaleString('en-EN')}{' '}
-          {governanceToken?.symbol}
+          {KnownToken.LDO.symbol}
         </div>
       ))}
     </div>
