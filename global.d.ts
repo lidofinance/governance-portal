@@ -35,6 +35,7 @@ declare module 'next/config' {
 
       rateLimit: string;
       rateLimitTimeFrame: string;
+      etherscanApiKey: string | undefined;
       subgraphMainnet: string;
       subgraphHoodi: string;
     };

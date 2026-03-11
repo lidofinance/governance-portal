@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { Block, InlineLoader, Text } from '@lidofinance/lido-ui';
-import Link from 'next/link';
+import { Block, InlineLoader, Text, Link } from '@lidofinance/lido-ui';
 import { devicesHeaderMedia } from 'styles/global';
 
 export const ProposalContainer = styled(Block)`
@@ -65,7 +64,7 @@ export const InlineLoaderStyled = styled(InlineLoader)`
   border-radius: 20px;
 `;
 
-export const ArrowIconWrapper = styled.div`
+export const ArrowIconWrapper = styled(Link)`
   width: 40px;
   height: 40px;
   display: flex;
