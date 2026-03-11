@@ -18,7 +18,6 @@ export const Card = styled(Link)<{ $empty?: boolean }>`
   color: inherit;
   text-decoration: none;
   opacity: ${({ $empty }) => ($empty ? 0.6 : 1)};
-  cursor: ${({ $empty }) => ($empty ? 'default' : 'pointer')};
 `;
 
 export const CardTitle = styled.div`

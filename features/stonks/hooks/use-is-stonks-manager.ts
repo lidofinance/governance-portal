@@ -10,6 +10,7 @@ export const useIsStonksManager = (stonksOrOrderAddress: Address) => {
   const { chainId } = useLidoSDK();
 
   const getStonksContract = useReadContractGetter(stonksV2Abi);
+  const stonksContractReader = getStonksContract(stonksOrOrderAddress);
 
   return useQuery({
     queryKey: [
@@ -20,11 +21,9 @@ export const useIsStonksManager = (stonksOrOrderAddress: Address) => {
     ],
     enabled: !!walletAddress,
     queryFn: async () => {
-      const stonksContractReader = getStonksContract(stonksOrOrderAddress);
-
       const stonksManager = await stonksContractReader('manager');
 
-      return stonksManager.toLowerCase() === walletAddress?.toLowerCase();
+      return stonksManager?.toLowerCase() === walletAddress?.toLowerCase();
     },
   });
 };
