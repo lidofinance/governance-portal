@@ -6,6 +6,120 @@ export const validatorsExitBusOracleAbi = [
   {
     type: 'constructor',
     inputs: [
+      { name: 'implementation_', internalType: 'address', type: 'address' },
+      { name: 'admin_', internalType: 'address', type: 'address' },
+      { name: 'data_', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'error', inputs: [], name: 'NotAdmin' },
+  { type: 'error', inputs: [], name: 'ProxyIsOssified' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  { type: 'event', anonymous: false, inputs: [], name: 'ProxyOssified' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
+  },
+  { type: 'fallback', stateMutability: 'payable' },
+  {
+    type: 'function',
+    inputs: [{ name: 'newAdmin_', internalType: 'address', type: 'address' }],
+    name: 'proxy__changeAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getAdmin',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getImplementation',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getIsOssified',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__ossify',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation_', internalType: 'address', type: 'address' },
+    ],
+    name: 'proxy__upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation_', internalType: 'address', type: 'address' },
+      { name: 'setupCalldata_', internalType: 'bytes', type: 'bytes' },
+      { name: 'forceCall_', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'proxy__upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'receive', stateMutability: 'payable' },
+  {
+    type: 'constructor',
+    inputs: [
       { name: 'secondsPerSlot', internalType: 'uint256', type: 'uint256' },
       { name: 'genesisTime', internalType: 'uint256', type: 'uint256' },
       { name: 'lidoLocator', internalType: 'address', type: 'address' },
@@ -15,7 +129,24 @@ export const validatorsExitBusOracleAbi = [
   { type: 'error', inputs: [], name: 'AddressCannotBeSame' },
   { type: 'error', inputs: [], name: 'AddressCannotBeZero' },
   { type: 'error', inputs: [], name: 'AdminCannotBeZero' },
-  { type: 'error', inputs: [], name: 'ArgumentOutOfBounds' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'exitDataIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'requestsCount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ExitDataIndexOutOfRange',
+  },
+  { type: 'error', inputs: [], name: 'ExitHashAlreadySubmitted' },
+  { type: 'error', inputs: [], name: 'ExitHashNotSubmitted' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'requestsCount', internalType: 'uint256', type: 'uint256' },
+      { name: 'remainingLimit', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ExitRequestsLimitExceeded',
+  },
   { type: 'error', inputs: [], name: 'HashCannotBeZero' },
   {
     type: 'error',
@@ -26,28 +157,12 @@ export const validatorsExitBusOracleAbi = [
     name: 'InitialRefSlotCannotBeLessThanProcessingOne',
   },
   { type: 'error', inputs: [], name: 'InvalidContractVersionIncrement' },
-  { type: 'error', inputs: [], name: 'InvalidRequestsData' },
+  { type: 'error', inputs: [], name: 'InvalidExitDataIndexSortOrder' },
+  { type: 'error', inputs: [], name: 'InvalidModuleId' },
   { type: 'error', inputs: [], name: 'InvalidRequestsDataLength' },
   { type: 'error', inputs: [], name: 'InvalidRequestsDataSortOrder' },
+  { type: 'error', inputs: [], name: 'LimitExceeded' },
   { type: 'error', inputs: [], name: 'NoConsensusReportToProcess' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'moduleId', internalType: 'uint256', type: 'uint256' },
-      { name: 'nodeOpId', internalType: 'uint256', type: 'uint256' },
-      {
-        name: 'prevRequestedValidatorIndex',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-      {
-        name: 'requestedValidatorIndex',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'NodeOpValidatorIndexMustIncrease',
-  },
   { type: 'error', inputs: [], name: 'NonZeroContractVersionOnInit' },
   { type: 'error', inputs: [], name: 'PauseUntilMustBeInFuture' },
   { type: 'error', inputs: [], name: 'PausedExpected' },
@@ -73,10 +188,27 @@ export const validatorsExitBusOracleAbi = [
     ],
     name: 'RefSlotMustBeGreaterThanProcessingOne',
   },
+  { type: 'error', inputs: [], name: 'RequestsAlreadyDelivered' },
+  { type: 'error', inputs: [], name: 'RequestsNotDelivered' },
   { type: 'error', inputs: [], name: 'ResumedExpected' },
   { type: 'error', inputs: [], name: 'SecondsPerSlotCannotBeZero' },
   { type: 'error', inputs: [], name: 'SenderIsNotTheConsensusContract' },
   { type: 'error', inputs: [], name: 'SenderNotAllowed' },
+  { type: 'error', inputs: [], name: 'TooLargeExitsPerFrame' },
+  { type: 'error', inputs: [], name: 'TooLargeFrameDuration' },
+  { type: 'error', inputs: [], name: 'TooLargeMaxExitRequestsLimit' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'requestsCount', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'maxRequestsPerReport',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'TooManyExitRequestsInReport',
+  },
   { type: 'error', inputs: [], name: 'UnexpectedChainConfig' },
   {
     type: 'error',
@@ -117,6 +249,12 @@ export const validatorsExitBusOracleAbi = [
     name: 'UnsupportedRequestsDataFormat',
   },
   { type: 'error', inputs: [], name: 'VersionCannotBeSame' },
+  {
+    type: 'error',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'ZeroArgument',
+  },
+  { type: 'error', inputs: [], name: 'ZeroFrameDuration' },
   { type: 'error', inputs: [], name: 'ZeroPauseDuration' },
   {
     type: 'event',
@@ -163,6 +301,44 @@ export const validatorsExitBusOracleAbi = [
       },
     ],
     name: 'ContractVersionSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'exitRequestsHash',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+    ],
+    name: 'ExitDataProcessing',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'maxExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'exitsPerFrame',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'frameDurationInSec',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'ExitRequestsLimitSet',
   },
   {
     type: 'event',
@@ -240,6 +416,19 @@ export const validatorsExitBusOracleAbi = [
     ],
     name: 'ReportSubmitted',
   },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'exitRequestsHash',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+    ],
+    name: 'RequestsHashSubmitted',
+  },
   { type: 'event', anonymous: false, inputs: [], name: 'Resumed' },
   {
     type: 'event',
@@ -300,6 +489,19 @@ export const validatorsExitBusOracleAbi = [
       },
     ],
     name: 'RoleRevoked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'maxValidatorsPerReport',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'SetMaxValidatorsPerReport',
   },
   {
     type: 'event',
@@ -393,6 +595,20 @@ export const validatorsExitBusOracleAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'EXIT_REQUEST_LIMIT_MANAGER_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'EXIT_TYPE',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'GENESIS_TIME',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
@@ -448,8 +664,35 @@ export const validatorsExitBusOracleAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'SUBMIT_REPORT_HASH_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'refSlot', internalType: 'uint256', type: 'uint256' }],
     name: 'discardConsensusReport',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'maxValidatorsPerReport',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'maxExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'exitsPerFrame', internalType: 'uint256', type: 'uint256' },
+      { name: 'frameDurationInSec', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'finalizeUpgrade_v2',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -492,6 +735,46 @@ export const validatorsExitBusOracleAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: 'exitRequestsHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'getDeliveryTimestamp',
+    outputs: [
+      {
+        name: 'deliveryDateTimestamp',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getExitRequestLimitFullInfo',
+    outputs: [
+      {
+        name: 'maxExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'exitsPerFrame', internalType: 'uint256', type: 'uint256' },
+      { name: 'frameDurationInSec', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'prevExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'currentExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'getLastProcessingRefSlot',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -499,12 +782,9 @@ export const validatorsExitBusOracleAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      { name: 'moduleId', internalType: 'uint256', type: 'uint256' },
-      { name: 'nodeOpIds', internalType: 'uint256[]', type: 'uint256[]' },
-    ],
-    name: 'getLastRequestedValidatorIndices',
-    outputs: [{ name: '', internalType: 'int256[]', type: 'int256[]' }],
+    inputs: [],
+    name: 'getMaxValidatorsPerReport',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -610,6 +890,18 @@ export const validatorsExitBusOracleAbi = [
         internalType: 'uint256',
         type: 'uint256',
       },
+      {
+        name: 'maxValidatorsPerRequest',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'maxExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'exitsPerFrame', internalType: 'uint256', type: 'uint256' },
+      { name: 'frameDurationInSec', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'initialize',
     outputs: [],
@@ -686,11 +978,59 @@ export const validatorsExitBusOracleAbi = [
   {
     type: 'function',
     inputs: [
+      {
+        name: 'maxExitRequestsLimit',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: 'exitsPerFrame', internalType: 'uint256', type: 'uint256' },
+      { name: 'frameDurationInSec', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setExitRequestLimit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'maxRequests', internalType: 'uint256', type: 'uint256' }],
+    name: 'setMaxValidatorsPerReport',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
       { name: 'reportHash', internalType: 'bytes32', type: 'bytes32' },
       { name: 'refSlot', internalType: 'uint256', type: 'uint256' },
       { name: 'deadline', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'submitConsensusReport',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'request',
+        internalType: 'struct ValidatorsExitBus.ExitRequestsData',
+        type: 'tuple',
+        components: [
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'dataFormat', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'submitExitRequestsData',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'exitRequestsHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'submitExitRequestsHash',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -729,10 +1069,36 @@ export const validatorsExitBusOracleAbi = [
   {
     type: 'function',
     inputs: [
-      { name: 'exitRequestsHash', internalType: 'bytes32', type: 'bytes32' },
+      {
+        name: 'exitsData',
+        internalType: 'struct ValidatorsExitBus.ExitRequestsData',
+        type: 'tuple',
+        components: [
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'dataFormat', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      { name: 'exitDataIndexes', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'refundRecipient', internalType: 'address', type: 'address' },
     ],
-    name: 'submitExitRequestsHash',
+    name: 'triggerExits',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
   },
-] as const
+  {
+    type: 'function',
+    inputs: [
+      { name: 'exitRequests', internalType: 'bytes', type: 'bytes' },
+      { name: 'dataFormat', internalType: 'uint256', type: 'uint256' },
+      { name: 'index', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'unpackExitRequest',
+    outputs: [
+      { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+      { name: 'nodeOpId', internalType: 'uint256', type: 'uint256' },
+      { name: 'moduleId', internalType: 'uint256', type: 'uint256' },
+      { name: 'valIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'pure',
+  },
+] as const;
