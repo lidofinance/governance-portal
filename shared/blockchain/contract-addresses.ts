@@ -172,9 +172,13 @@ export const ExecutionLayerRewardsVault: ChainAddressMap = {
 };
 
 export const Burner: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xD15a672319Cf0352560eE76d9e89eAB0889046D3',
+  [CHAINS.Mainnet]: '0xE76c52750019b80B43E36DF30bf4060EB73F573a',
   [CHAINS.Holesky]: '0x4E46BD7147ccf666E1d73A3A456fC7a68de82eCA',
   [CHAINS.Hoodi]: '0x4e9A9ea2F154bA34BE919CD16a4A953DCd888165',
+};
+
+export const BurnerLegacy: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xD15a672319Cf0352560eE76d9e89eAB0889046D3',
 };
 
 export const SimpleDVT: ChainAddressMap = {

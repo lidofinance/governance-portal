@@ -42,6 +42,7 @@ export const ABI_EXCEPTIONS = {
   LabsOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   EcosystemOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   LabsOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
+  BurnerLegacy: abis.burnerAbi,
 } as const;
 
 export type AbiExceptionContractName = keyof typeof ABI_EXCEPTIONS;
