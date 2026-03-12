@@ -24,7 +24,7 @@ export const parseChainId = (chainId: number | string) => {
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '100kb',
+      sizeLimit: '10kb',
     },
   },
 };
@@ -70,6 +70,11 @@ const subgraph = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!parsedBody?.query) {
     console.error('Subgraph API: query is empty');
     res.status(400).json({ status: 'Error: query is empty' });
+    return;
+  }
+
+  if (parsedBody.query.length > 2000) {
+    res.status(400).json({ status: 'Error: query is too long' });
     return;
   }
 
