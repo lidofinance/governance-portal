@@ -37,6 +37,7 @@ export const ABI_EXCEPTIONS = {
   StonksStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   StonksStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   AllianceOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
+  AllianceOpsAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   EcosystemOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   LabsOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   EcosystemOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
