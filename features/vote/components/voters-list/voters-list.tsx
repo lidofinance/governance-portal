@@ -3,12 +3,12 @@ import { useMemo, useState } from 'react';
 import { Wrap, ListRow, ListRowCell, ShowMoreBtn } from './style';
 
 import { Text, useBreakpoint } from '@lidofinance/lido-ui';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { VoterItem } from './voter-item';
 import { useEnsNames } from 'shared/hooks/use-ens-names';
 import { Address } from 'viem';
 import { useVoteContext } from 'features/vote/providers/vote-context';
 import { ONE_LDO } from 'features/vote/constants';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 const INITIAL_PAGE_SIZE = 5;
 
@@ -18,7 +18,6 @@ type Props = {
 
 export const VotersList = ({ walletAddress }: Props) => {
   const { vote, voteEvents } = useVoteContext();
-  const { data: tokenData } = useGovernanceToken();
   const isMobile = useBreakpoint('md');
 
   const votersAddressesForEns = useMemo(() => {
@@ -69,14 +68,13 @@ export const VotersList = ({ walletAddress }: Props) => {
         </ListRowCell>
         <ListRowCell>
           <Text size="xxs" strong>
-            {isMobile ? `VP (${tokenData?.symbol})` : 'Voting Power'}
+            {isMobile ? `VP (${KnownToken.LDO.symbol})` : 'Voting Power'}
           </Text>
         </ListRowCell>
       </ListRow>
       {voteEvents.slice(0, limit).map((event, i) => (
         <VoterItem
           voteEvent={event}
-          governanceTokenSymbol={tokenData?.symbol || ''}
           ensMap={ensMap}
           isMobile={isMobile}
           key={`${event.voter}-${i}`}

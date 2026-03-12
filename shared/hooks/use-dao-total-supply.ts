@@ -3,13 +3,11 @@ import { useLidoSDK } from '../../providers/lido-sdk';
 import { useReadContract } from '../blockchain/hooks/use-read-contract';
 import { DaoToken } from '../blockchain/contracts';
 
-export const useGovernanceTotalSupply = () => {
+export const useDaoTokenTotalSupply = () => {
   const { chainId } = useLidoSDK();
   const governanceToken = useReadContract(DaoToken);
   return useQuery({
-    queryKey: ['governanceTotalSupply', chainId],
-    queryFn: () => {
-      return governanceToken.readContract('totalSupply');
-    },
+    queryKey: ['dao-token-total-supply', chainId],
+    queryFn: () => governanceToken.readContract('totalSupply'),
   });
 };

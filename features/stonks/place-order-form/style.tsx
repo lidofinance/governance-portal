@@ -5,7 +5,6 @@ import styled from 'styled-components';
 export const PlaceOrderFormController = styled(FormController)`
   display: flex;
   flex-direction: column;
-  gap: 20px;
 `;
 
 export const PlaceOrderFormInfoWrapper = styled(Block)`
@@ -23,4 +22,6 @@ export const PlaceOrderFormControls = styled(Block)`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  margin-bottom: 20px;
 `;

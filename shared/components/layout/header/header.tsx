@@ -13,20 +13,22 @@ import { Text } from 'shared/components/text';
 import { FlexWrapper } from 'shared/styled-components';
 import { Box } from 'shared/components/box';
 import { useScrollLock } from 'shared/hooks/use-scroll-lock';
+import { TMC_MULTISIG_ADDRESS } from 'shared/blockchain/multisig-addresses';
 
 export const Header = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const isSupportedChain = useIsSupportedChain();
 
   const [isBurgerOpened, setBurgerOpened] = useState(false);
 
   useScrollLock(isBurgerOpened);
 
+  const shouldShowStonks = address?.toLowerCase() === TMC_MULTISIG_ADDRESS;
   return (
     <HeaderContainer>
       <LogoLido />
       <NoSsrWrapper>
-        <Nav />
+        <Nav shouldShowStonks={shouldShowStonks} />
         <HeaderActionsWrapper>
           <>
             <DualGovernanceStatusButton />
@@ -43,28 +45,24 @@ export const Header = () => {
           onClick={() => setBurgerOpened(!isBurgerOpened)}
         />
         {isBurgerOpened && (
-          <NavMobile>
-            {
-              <FlexWrapper $flexDirection="column" $gap="12px">
-                <FlexWrapper $gap="12px">
-                  <DualGovernanceStatusButton />{' '}
-                  <Text>Dual Governance state</Text>
-                </FlexWrapper>
-                <FlexWrapper $gap="12px">
-                  <HeaderSettingsButton /> <Text>Settings</Text>
-                </FlexWrapper>
-                <Box width="100%" marginTop={32}>
-                  {isConnected ? (
-                    <WalletButton />
-                  ) : (
-                    <ConnectWalletButton style={{ width: '100%' }} />
-                  )}
-                  {isConnected && !isSupportedChain && (
-                    <UnsupportedChainBanner />
-                  )}
-                </Box>
+          <NavMobile shouldShowStonks={shouldShowStonks}>
+            <FlexWrapper $flexDirection="column" $gap="12px">
+              <FlexWrapper $gap="12px">
+                <DualGovernanceStatusButton />{' '}
+                <Text>Dual Governance state</Text>
               </FlexWrapper>
-            }
+              <FlexWrapper $gap="12px">
+                <HeaderSettingsButton /> <Text>Settings</Text>
+              </FlexWrapper>
+              <Box width="100%" marginTop={32}>
+                {isConnected ? (
+                  <WalletButton />
+                ) : (
+                  <ConnectWalletButton style={{ width: '100%' }} />
+                )}
+                {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
+              </Box>
+            </FlexWrapper>
           </NavMobile>
         )}
       </NoSsrWrapper>

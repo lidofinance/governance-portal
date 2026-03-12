@@ -141,14 +141,16 @@ export const useEscrowBalances = () => {
 
             return {
               escrowAddress: address,
-              ...details,
+              stETHLockedShares: details?.stETHLockedShares ?? 0n,
+              unstETHLockedShares: details?.unstETHLockedShares ?? 0n,
+              lastAssetsLockTimestamp: details?.lastAssetsLockTimestamp ?? 0,
               totalLockedShares:
-                details.stETHLockedShares +
+                (details?.stETHLockedShares ?? 0n) +
                 activeUnstethRecords.reduce(
                   (sum, record) => sum + record.shares,
                   0n,
                 ),
-              unstETHIdsCount: details.unstETHIdsCount || 0n,
+              unstETHIdsCount: details?.unstETHIdsCount ?? 0n,
               activeUnstethRecords,
             };
           } catch (error) {

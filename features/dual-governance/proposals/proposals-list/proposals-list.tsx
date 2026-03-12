@@ -12,8 +12,7 @@ import { isVoteItem } from 'features/dual-governance/types';
 import { useEffect, useState, useMemo } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
 import Link from 'next/link';
-import { config } from 'config';
-import { PROPOSALS_PATH } from 'constants/urls';
+import { PROPOSALS_PATH, votePage } from 'constants/urls';
 import { Address } from 'viem';
 
 const INITIAL_DISPLAY_LIMIT = 4;
@@ -63,7 +62,7 @@ export const ProposalsList = () => {
     return itemsToShow.map((dataItem, index) => {
       return isVoteItem(dataItem) ? (
         <Link
-          href={`${config.voteOrigin}/vote/${dataItem.voteId}`}
+          href={votePage(dataItem.voteId)}
           key={`vote-${dataItem.voteId}-${index}`}
           target="_blank"
         >

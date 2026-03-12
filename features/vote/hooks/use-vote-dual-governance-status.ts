@@ -9,10 +9,6 @@ import {
 } from 'shared/blockchain/contracts';
 import { Address, Log, parseEventLogs } from 'viem';
 import { EventExecuteVote } from 'shared/votes/types';
-import {
-  ProposalDetails,
-  SubmitProposalCall,
-} from 'features/dual-governance/proposals/types';
 
 type Args = {
   voteId: number | string | undefined;
@@ -26,8 +22,6 @@ type DualGovernanceProposalSubmittedLog = Log & {
     proposerAccount: Address;
   };
 };
-
-type ProposalDataResult = [ProposalDetails, SubmitProposalCall[]];
 
 export const useVoteDualGovernanceStatus = ({
   voteId,
@@ -78,16 +72,18 @@ export const useVoteDualGovernanceStatus = ({
 
         const proposalId = proposalSubmittedLog.args.proposalId;
 
-        const proposalInfo = (await emergencyProtectedTimelock.readContract(
+        const proposalInfo = await emergencyProtectedTimelock.readContract(
           'getProposal',
           [proposalId],
-        )) as unknown as ProposalDataResult;
+        );
 
-        const proposalStatus = proposalInfo[0].status;
+        if (proposalInfo === null) {
+          return null;
+        }
 
         return {
           proposalId: Number(proposalId),
-          proposalStatus,
+          proposalStatus: proposalInfo[0].status,
         };
       } catch (e) {
         console.error(e);

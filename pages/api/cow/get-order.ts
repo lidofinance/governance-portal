@@ -32,16 +32,23 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  // There is no CoW API instance for Hoodi testnet
-  if (chainId !== CHAINS.Mainnet) {
-    res.json(null);
-    return;
-  }
-
   const address = req.query.address;
 
   if (typeof address !== 'string' || !isAddress(address)) {
     res.status(400).json({ message: 'Invalid address' });
+    return;
+  }
+
+  // There is no CoW API instance for Hoodi testnet, return mock order
+  if (chainId !== CHAINS.Mainnet) {
+    const mockOrder: CowApiOrder = {
+      creationDate: new Date().toISOString(),
+      uid: `mock-order-${address.toLowerCase()}-testnet`,
+      executedSellAmount: '0',
+      executedBuyAmount: '0',
+      status: 'open',
+    };
+    res.json(mockOrder);
     return;
   }
 

@@ -1,11 +1,10 @@
 import { Text } from '@lidofinance/lido-ui';
 import { InfoWrap, VotingPower, Amount } from './style';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 import { useVoteContext } from 'features/vote/providers/vote-context';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 export const VotePowerInfo = () => {
-  const { data: tokenData } = useGovernanceToken();
   const { voterDaoTokenBalance, totalDelegatedVotingPower } = useVoteContext();
 
   return (
@@ -15,7 +14,7 @@ export const VotePowerInfo = () => {
           Your voting power
         </Text>
         <Amount data-testid="myVPAmount">
-          {formatBalance(voterDaoTokenBalance ?? 0n)} {tokenData?.symbol}
+          {formatBalance(voterDaoTokenBalance ?? 0n)} {KnownToken.LDO.symbol}
         </Amount>
       </VotingPower>
       {totalDelegatedVotingPower > 0n && (
@@ -24,7 +23,7 @@ export const VotePowerInfo = () => {
             Total delegated voting power
           </Text>
           <Amount data-testid="delegatedVPAmount">
-            {formatBalance(totalDelegatedVotingPower)} {tokenData?.symbol}
+            {formatBalance(totalDelegatedVotingPower)} {KnownToken.LDO.symbol}
           </Amount>
         </VotingPower>
       )}

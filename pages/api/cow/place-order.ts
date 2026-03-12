@@ -47,12 +47,6 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  // There is no CoW API instance for Hoodi testnet
-  if (parsedChainId !== CHAINS.Mainnet) {
-    res.status(400).json({ message: 'Unsupported chainId' });
-    return;
-  }
-
   if (
     !isAddress(from) ||
     !isAddress(sellToken) ||
@@ -82,6 +76,13 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     typeof buyAmount !== 'string'
   ) {
     res.status(400).json({ message: 'Invalid amount or validTo' });
+    return;
+  }
+
+  // There is no CoW API instance for Hoodi testnet, return mock UID
+  if (parsedChainId !== CHAINS.Mainnet) {
+    const mockUid = `mock-order-${from.toLowerCase()}-${Date.now()}`;
+    res.status(201).json(mockUid);
     return;
   }
 

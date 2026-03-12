@@ -5,12 +5,12 @@ import {
 } from '../../hooks/use-referral-partners';
 
 import { MotionDescriptionProps } from '../types';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { formatBalance } from 'utils/format-balance';
 
 import { evmAddReferralPartnerAbi } from 'abi/generated/EvmAddReferralPartner';
 import { evmTopUpReferralPartnersAbi } from 'abi/generated/EvmTopUpReferralPartners';
 import { evmRemoveReferralPartnerAbi } from 'abi/generated/EvmRemoveReferralPartner';
+import { KnownToken } from 'shared/blockchain/tokens';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const ReferralPartnerAdd = ({
@@ -27,7 +27,6 @@ export const ReferralPartnerAdd = ({
 export const ReferralPartnerTopUp = ({
   callData,
 }: MotionDescriptionProps<typeof evmTopUpReferralPartnersAbi>) => {
-  const { data: governanceToken } = useGovernanceToken();
   const { data: referralPartnersMap } = useReferralPartnersMapAll();
 
   const programs = useMemo(() => {
@@ -41,7 +40,7 @@ export const ReferralPartnerTopUp = ({
       {callData[0].map((address, i) => (
         <div key={i}>
           <b>{programs?.[i]}</b> <AddressPopInline address={address} /> with{' '}
-          {formatBalance(callData[1][i])} <>{governanceToken?.symbol}</>
+          {formatBalance(callData[1][i])} <>{KnownToken.LDO.symbol}</>
         </div>
       ))}
     </div>

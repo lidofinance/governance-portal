@@ -10,15 +10,13 @@ import {
 } from './style';
 import { DelegatorsListItem } from './delegators-list-item';
 import { useAccount } from 'wagmi';
-import { useLidoSDK } from 'providers/lido-sdk';
 import { useDelegators } from 'features/vote/hooks/use-delegators';
 import { DELEGATORS_PAGE_SIZE } from 'features/vote/constants';
 import { InfoLabel } from '../info-row';
-import { getDaoTokenMetadata } from 'shared/blockchain/utils/get-dao-token-metadata';
 import { formatBalance } from 'utils/format-balance';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 export const DelegatorsList = () => {
-  const { chainId } = useLidoSDK();
   const { isConnected } = useAccount();
   const [pageCount, setPageCount] = useState(1);
 
@@ -60,7 +58,6 @@ export const DelegatorsList = () => {
     );
   }
 
-  const daoToken = getDaoTokenMetadata(chainId).symbol;
   const delegatedVotersCount = data.delegatedVoters.length;
 
   return (
@@ -68,7 +65,8 @@ export const DelegatorsList = () => {
       <TitleWrap>
         <InfoLabel>Delegated</InfoLabel>
         <CounterBadge>
-          {formatBalance(data.totalDelegatedVotingPower)} {daoToken}
+          {formatBalance(data.totalDelegatedVotingPower)}{' '}
+          {KnownToken.LDO.symbol}
         </CounterBadge>
         <InfoLabel>
           from {delegatedVotersCount} address
@@ -82,7 +80,6 @@ export const DelegatorsList = () => {
             address={delegator.address}
             balance={delegator.balance}
             ensName={delegator.ensName}
-            governanceSymbol={daoToken}
           />
         ))}
         {delegatedVotersCount > pageCount * DELEGATORS_PAGE_SIZE && (

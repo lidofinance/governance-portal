@@ -2,7 +2,6 @@ import { Text } from 'shared/components/text';
 
 import { Actions, Hint, ButtonStyled } from './style';
 import { useAccount } from 'wagmi';
-import { useGovernanceToken } from 'shared/hooks/use-governance-token';
 import { Motion, MotionStatus, RawMotionSubgraph } from '@easy-track/types';
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
@@ -11,6 +10,7 @@ import { formatEther, Hex } from 'viem';
 import { useConnect } from 'reef-knot/core-react';
 import { useMotionContext } from '@easy-track/providers/motion-detailed-context';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {
   motion: Motion | RawMotionSubgraph;
@@ -19,7 +19,6 @@ type Props = {
 const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
   const { address: walletAddress } = useAccount();
   const { chainId } = useLidoSDK();
-  const { data: governanceTokenData } = useGovernanceToken();
   const { handleObject, handleEnact, isOverPeriodLimit } = useMotionContext();
 
   const governanceTokenContract = useReadContract(GovernanceToken);
@@ -107,19 +106,19 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
         {showHintObjected && balanceAtFormatted && (
           <>
             You have objected this motion with <b>{balanceAtFormatted}</b>{' '}
-            {governanceTokenData?.symbol}
+            {KnownToken.LDO?.symbol}
           </>
         )}
         {showHintCanObject && balanceAtFormatted && (
           <>
             You can object this motion with <b>{balanceAtFormatted}</b>{' '}
-            {governanceTokenData?.symbol}
+            {KnownToken.LDO?.symbol}
           </>
         )}
         {showHintCanNotObject && (
           <>
-            You didn&#39;t have {governanceTokenData?.symbol} when the motion
-            started to object it
+            You didn&#39;t have {KnownToken.LDO?.symbol} when the motion started
+            to object it
           </>
         )}
       </Hint>

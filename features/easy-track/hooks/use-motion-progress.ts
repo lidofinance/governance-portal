@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import type { Motion, RawMotionSubgraph } from '../types';
 import { getMotionProgress } from '../utils/get-motion-progress';
-import { useGovernanceTotalSupply } from 'shared/hooks/use-governance-total-supply';
+import { useDaoTokenTotalSupply } from 'shared/hooks/use-dao-total-supply';
 
 export const useMotionProgress = (
   motion: Motion | RawMotionSubgraph | null,
 ) => {
   const { data: totalSupply, isLoading: isLoadingSupply } =
-    useGovernanceTotalSupply();
+    useDaoTokenTotalSupply();
 
   return useMemo(() => {
     if (!motion || isLoadingSupply || !totalSupply) {
