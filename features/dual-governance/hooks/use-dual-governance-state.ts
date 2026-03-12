@@ -19,7 +19,6 @@ export const useDualGovernanceState = ({
 
   return useQuery<DualGovernanceDetailedState>({
     queryKey: ['dg-current-state', chainId],
-    staleTime: 5000,
     enabled: isEnabled,
     queryFn: async () => {
       try {

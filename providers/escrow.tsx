@@ -151,7 +151,6 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
       };
     },
     enabled: !!vetoSignallingAddress,
-    staleTime: 0,
     retry: 2,
   });
 
@@ -176,7 +175,6 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
       ]);
     },
     enabled: !!unfinalizedShares,
-    staleTime: 0,
     retry: 2,
   });
 
@@ -189,7 +187,6 @@ export const EscrowProvider: FC<PropsWithChildren> = ({ children }) => {
     queryFn: async () => {
       return await stEthContract.readContract('totalSupply');
     },
-    staleTime: 0,
     retry: 2,
   });
 

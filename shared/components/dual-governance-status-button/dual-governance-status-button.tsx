@@ -13,7 +13,7 @@ export const DualGovernanceStatusButton = () => {
   const { data, isLoading } = useDualGovernanceWidgetState();
 
   const handleButtonClick = () => {
-    if (!data) return;
+    if (isLoading) return;
     setIsPopupOpen(true);
   };
 
@@ -27,7 +27,7 @@ export const DualGovernanceStatusButton = () => {
         icon={isLoading ? <Loader /> : <DualGovernancePlainIcon />}
         data-testid="dgBtn"
       />
-      {!!data && (
+      {!isLoading && (
         <PopoverStyled
           placement="bottomRight"
           open={isPopupOpen}

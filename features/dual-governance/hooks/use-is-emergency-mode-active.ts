@@ -8,14 +8,12 @@ export const useIsEmergencyModeActive = () => {
   const { chainId } = useLidoSDK();
   const isSupportedChain = useIsSupportedChain();
 
-  const governanceAddress = null;
   const emergencyProtectedTimelockContract = useReadContract(
     EmergencyProtectedTimelock,
   );
 
   const { data: isEmergencyModeActive, isLoading } = useQuery<boolean>({
     queryKey: ['isEmergencyModeActive', chainId],
-    staleTime: 5000,
     enabled: isSupportedChain,
     queryFn: async () => {
       try {
@@ -30,5 +28,5 @@ export const useIsEmergencyModeActive = () => {
     },
   });
 
-  return { isEmergencyModeActive, governanceAddress, isLoading };
+  return { isEmergencyModeActive, isLoading };
 };
