@@ -177,6 +177,10 @@ export const Burner: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x4e9A9ea2F154bA34BE919CD16a4A953DCd888165',
 };
 
+export const BurnerLegacy: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xD15a672319Cf0352560eE76d9e89eAB0889046D3',
+};
+
 export const SimpleDVT: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xaE7B191A31f627b4eB1d4DaC64eaB9976995b433',
   [CHAINS.Holesky]: '0x11a93807078f8BB880c1BD0ee4C387537de4b4b6',
@@ -227,12 +231,6 @@ export const CSHashConsensus: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x71093efF8D8599b5fA340D665Ad60fA7C80688e4',
   [CHAINS.Holesky]: '0xbF38618Ea09B503c1dED867156A0ea276Ca1AE37',
   [CHAINS.Hoodi]: '0x54f74a10e4397dDeF85C4854d9dfcA129D72C637',
-};
-
-export const CSModule: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F',
-  [CHAINS.Holesky]: '0x4562c3e63c2e586cD1651B958C22F88135aCAd4f',
-  [CHAINS.Hoodi]: '0x79CEf36D84743222f37765204Bec41E92a93E59d',
 };
 
 export const CSMRegistry: ChainAddressMap = {
@@ -596,4 +594,23 @@ export const OperatorGrid: ChainAddressMap = {
 export const PredepositGuarantee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xf4bf42c6d6a0e38825785048124dbad6c9eaaac3',
   [CHAINS.Hoodi]: '0xa5F55f3402beA2B14AE15Dae1b6811457D43581d',
+};
+
+export const TriggerableWithdrawalsGateway: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xDC00116a0D3E064427dA2600449cfD2566B3037B',
+  [CHAINS.Hoodi]: '0x6679090D92b08a2a686eF8614feECD8cDFE209db',
+};
+
+export const LidoV3Template: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x34E01ecFebd403370b0879C628f8A5319dDb8507',
+};
+
+export const DualGovernanceLegacy: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xcdF49b058D606AD34c5789FD8c3BF8B3E54bA2db',
+  [CHAINS.Hoodi]: '0x4d12b9f6acab54ff6a3a776ba3b8724d9b77845f',
+};
+
+export const DualGovernanceUpgradeStateVerifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x487b764a2085ffd595D9141BAec0A766B7904786',
+  [CHAINS.Hoodi]: '0x46862627C20b28AE79E25a0E06C5c66D07f8aa43',
 };

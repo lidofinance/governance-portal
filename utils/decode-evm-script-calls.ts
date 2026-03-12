@@ -3,8 +3,10 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import * as abis from 'abi/generated';
 import { ABIElement } from '../shared/blockchain/types';
 import { getContractName } from './get-contract-name';
-
-type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
+import {
+  ABI_EXCEPTIONS,
+  AbiExceptionContractName,
+} from 'constants/abi-exceptions';
 
 export type BaseCall = {
   target: Address;
@@ -30,41 +32,6 @@ export type DecodedCall = {
   args: readonly unknown[] | undefined;
   nestedCalls: DecodedCall[];
 } | null;
-
-const ABI_EXCEPTIONS = {
-  HashConsensusAccountingOracle: abis.hashConsensusAbi,
-  HashConsensusValidatorsExitBus: abis.hashConsensusAbi,
-  LidoAppRepo: abis.repoAbi,
-  NodeOperatorsRegistryRepo: abis.repoAbi,
-  OracleRepo: abis.repoAbi,
-  SimpleDVT: abis.nodeOperatorsRegistryAbi,
-  DualGovernanceLegacy: abis.dualGovernanceAbi,
-  AllowedRecipientRegistry: abis.allowedRecipientsRegistryAbi,
-  AllowedRecipientReferralDaiRegistry: abis.allowedRecipientsRegistryAbi,
-  AllowedRecipientTrpLdoRegistry: abis.allowedRecipientsRegistryAbi,
-  StethRewardProgramRegistry: abis.allowedRecipientsRegistryAbi,
-  StethGasSupplyRegistry: abis.allowedRecipientsRegistryAbi,
-  RewardsShareProgramRegistry: abis.allowedRecipientsRegistryAbi,
-  SandboxAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  LegoStablesRegistry: abis.registryWithLimitsAbi,
-  LegoLDORegistry: abis.registryWithLimitsAbi,
-  GasFunderETHRegistry: abis.registryWithLimitsAbi,
-  RccStablesRegistry: abis.registryWithLimitsAbi,
-  PmlStablesRegistry: abis.registryWithLimitsAbi,
-  AtcStablesRegistry: abis.registryWithLimitsAbi,
-  SandboxStablesAllowedRecipientRegistry: abis.registryWithLimitsAbi,
-  SandboxStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  RccStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  PmlStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  AtcStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  StonksStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  StonksStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  AllianceOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  EcosystemOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  LabsOpsStablesAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  EcosystemOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-  LabsOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
-};
 
 const EVM_SCRIPT_VERSION = '00000001';
 
@@ -103,7 +70,7 @@ export const getContractAbi = (
   try {
     if (contractName in ABI_EXCEPTIONS) {
       return ABI_EXCEPTIONS[
-        contractName as ExceptionContractName
+        contractName as AbiExceptionContractName
       ] as unknown as ABIElement[];
     } else {
       const abiKey = getAbiKey(contractName) as keyof typeof abis;

@@ -132,6 +132,14 @@ export const accountingOracleAbi = [
   { type: 'error', inputs: [], name: 'AddressCannotBeZero' },
   { type: 'error', inputs: [], name: 'AdminCannotBeZero' },
   { type: 'error', inputs: [], name: 'CannotSubmitExtraDataBeforeMainData' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'itemIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'dataType', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'DeprecatedExtraDataType',
+  },
   { type: 'error', inputs: [], name: 'ExtraDataAlreadyProcessed' },
   {
     type: 'error',
@@ -143,7 +151,6 @@ export const accountingOracleAbi = [
     inputs: [],
     name: 'ExtraDataItemsCountCannotBeZeroForNonEmptyData',
   },
-  { type: 'error', inputs: [], name: 'ExtraDataListOnlySupportsSingleTx' },
   { type: 'error', inputs: [], name: 'HashCannotBeZero' },
   {
     type: 'error',
@@ -197,6 +204,7 @@ export const accountingOracleAbi = [
     ],
     name: 'RefSlotMustBeGreaterThanProcessingOne',
   },
+  { type: 'error', inputs: [], name: 'SecondsPerSlotCannotBeZero' },
   { type: 'error', inputs: [], name: 'SenderIsNotTheConsensusContract' },
   { type: 'error', inputs: [], name: 'SenderNotAllowed' },
   { type: 'error', inputs: [], name: 'UnexpectedChainConfig' },
@@ -612,6 +620,22 @@ export const accountingOracleAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: 'consensusVersion', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'finalizeUpgrade_v2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'finalizeUpgrade_v3',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'getConsensusContract',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -886,7 +910,7 @@ export const accountingOracleAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'items', internalType: 'bytes', type: 'bytes' }],
+    inputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
     name: 'submitReportExtraDataList',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -898,4 +922,4 @@ export const accountingOracleAbi = [
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

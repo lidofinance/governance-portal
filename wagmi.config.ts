@@ -1,36 +1,35 @@
 import { defineConfig } from '@wagmi/cli';
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
-/**
- * Dynamically creates a config object for each ABI JSON file in a directory.
- */
-const generateContractConfigs = () => {
-  const abiDir = path.resolve(__dirname, 'abi');
+const abiDir = path.resolve(__dirname, 'abi');
+const outDir = path.resolve(__dirname, 'abi/generated');
 
-  const outDir = path.resolve(__dirname, 'abi/generated');
-  if (!readdirSync(path.resolve(__dirname, 'abi')).includes('generated')) {
-    readdirSync(path.resolve(__dirname, 'abi')).push('generated');
-  }
+const contractNames = readdirSync(abiDir)
+  .filter((file) => file.endsWith('.json'))
+  .map((file) => path.basename(file, '.abi.json'))
+  .sort();
 
-  const filenames = readdirSync(abiDir).filter((file) =>
-    file.endsWith('.json'),
-  );
+// Regenerate index.ts whenever wagmi loads this config.
+writeFileSync(
+  path.join(outDir, 'index.ts'),
+  '// Auto-generated exports for all ABIs\n' +
+    contractNames.map((name) => `export * from './${name}';`).join('\n') +
+    '\n',
+  'utf-8',
+);
 
-  return filenames.map((file) => {
-    const fileContent = readFileSync(path.join(abiDir, file), 'utf-8');
-    const abi = JSON.parse(fileContent);
-    const contract = {
-      name: path.basename(file, '.abi.json'),
-      abi: abi,
-    };
-
-    return {
-      out: path.join(outDir, `${contract.name}.ts`),
-      contracts: [contract],
-      plugins: [],
-    };
-  });
-};
-
-export default defineConfig(generateContractConfigs());
+export default defineConfig(
+  contractNames.map((name) => ({
+    out: path.join(outDir, `${name}.ts`),
+    contracts: [
+      {
+        name,
+        abi: JSON.parse(
+          readFileSync(path.join(abiDir, `${name}.abi.json`), 'utf-8'),
+        ),
+      },
+    ],
+    plugins: [],
+  })),
+);

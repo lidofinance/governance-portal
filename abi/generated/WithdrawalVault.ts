@@ -3,7 +3,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const withdrawalVaultAbi = [
-  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
+  {
+    type: 'constructor',
+    inputs: [
+      { name: 'voting', internalType: 'address', type: 'address' },
+      { name: 'impl', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
   {
     type: 'event',
     anonymous: false,
@@ -79,13 +86,35 @@ export const withdrawalVaultAbi = [
   {
     type: 'constructor',
     inputs: [
-      { name: '_lido', internalType: 'contract ILido', type: 'address' },
+      { name: '_lido', internalType: 'address', type: 'address' },
       { name: '_treasury', internalType: 'address', type: 'address' },
+      {
+        name: '_triggerableWithdrawalsGateway',
+        internalType: 'address',
+        type: 'address',
+      },
     ],
     stateMutability: 'nonpayable',
   },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'firstArrayLength', internalType: 'uint256', type: 'uint256' },
+      { name: 'secondArrayLength', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ArraysLengthMismatch',
+  },
+  { type: 'error', inputs: [], name: 'FeeInvalidData' },
+  { type: 'error', inputs: [], name: 'FeeReadFailed' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'requiredFee', internalType: 'uint256', type: 'uint256' },
+      { name: 'providedFee', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'IncorrectFee',
+  },
   { type: 'error', inputs: [], name: 'InvalidContractVersionIncrement' },
-  { type: 'error', inputs: [], name: 'LidoZeroAddress' },
   { type: 'error', inputs: [], name: 'NonZeroContractVersionOnInit' },
   {
     type: 'error',
@@ -96,7 +125,12 @@ export const withdrawalVaultAbi = [
     name: 'NotEnoughEther',
   },
   { type: 'error', inputs: [], name: 'NotLido' },
-  { type: 'error', inputs: [], name: 'TreasuryZeroAddress' },
+  { type: 'error', inputs: [], name: 'NotTriggerableWithdrawalsGateway' },
+  {
+    type: 'error',
+    inputs: [{ name: 'callData', internalType: 'bytes', type: 'bytes' }],
+    name: 'RequestAdditionFailed',
+  },
   {
     type: 'error',
     inputs: [
@@ -105,7 +139,13 @@ export const withdrawalVaultAbi = [
     ],
     name: 'UnexpectedContractVersion',
   },
+  { type: 'error', inputs: [], name: 'ZeroAddress' },
   { type: 'error', inputs: [], name: 'ZeroAmount' },
+  {
+    type: 'error',
+    inputs: [{ name: 'name', internalType: 'string', type: 'string' }],
+    name: 'ZeroArgument',
+  },
   {
     type: 'event',
     anonymous: false,
@@ -170,6 +210,14 @@ export const withdrawalVaultAbi = [
     name: 'ERC721Recovered',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'request', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'WithdrawalRequestAdded',
+  },
+  {
     type: 'function',
     inputs: [],
     name: 'LIDO',
@@ -186,7 +234,45 @@ export const withdrawalVaultAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'TRIGGERABLE_WITHDRAWALS_GATEWAY',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'WITHDRAWAL_REQUEST',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'pubkeys', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'amounts', internalType: 'uint64[]', type: 'uint64[]' },
+    ],
+    name: 'addWithdrawalRequests',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'finalizeUpgrade_v2',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'getContractVersion',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getWithdrawalRequestFee',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
@@ -224,4 +310,4 @@ export const withdrawalVaultAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

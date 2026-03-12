@@ -741,12 +741,6 @@ export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {
   chainAddressMap: addr.CSMRegistry,
 };
 
-export const CSModule: ContractObject<typeof abi.csmRegistryAbi> = {
-  name: 'CSModule',
-  abi: abi.csmRegistryAbi,
-  chainAddressMap: addr.CSModule,
-};
-
 export const AllianceOpsStablesAllowedRecipientsRegistry: ContractObject<
   typeof abi.registryWithLimitsAbi
 > = {
