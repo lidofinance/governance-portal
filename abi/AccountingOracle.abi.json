@@ -6,14 +6,30 @@
         "name": "implementation_",
         "type": "address"
       },
-      { "internalType": "address", "name": "admin_", "type": "address" },
-      { "internalType": "bytes", "name": "data_", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "admin_",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data_",
+        "type": "bytes"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
-  { "inputs": [], "name": "NotAdmin", "type": "error" },
-  { "inputs": [], "name": "ProxyIsOssified", "type": "error" },
+  {
+    "inputs": [],
+    "name": "NotAdmin",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ProxyIsOssified",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -65,10 +81,17 @@
     "name": "Upgraded",
     "type": "event"
   },
-  { "stateMutability": "payable", "type": "fallback" },
+  {
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "newAdmin_", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newAdmin_",
+        "type": "address"
+      }
     ],
     "name": "proxy__changeAdmin",
     "outputs": [],
@@ -78,21 +101,39 @@
   {
     "inputs": [],
     "name": "proxy__getAdmin",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxy__getImplementation",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxy__getIsOssified",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -123,15 +164,26 @@
         "name": "newImplementation_",
         "type": "address"
       },
-      { "internalType": "bytes", "name": "setupCalldata_", "type": "bytes" },
-      { "internalType": "bool", "name": "forceCall_", "type": "bool" }
+      {
+        "internalType": "bytes",
+        "name": "setupCalldata_",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bool",
+        "name": "forceCall_",
+        "type": "bool"
+      }
     ],
     "name": "proxy__upgradeToAndCall",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  { "stateMutability": "payable", "type": "receive" },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  },
   {
     "inputs": [
       { "internalType": "address", "name": "lidoLocator", "type": "address" },
@@ -155,6 +207,14 @@
     "name": "CannotSubmitExtraDataBeforeMainData",
     "type": "error"
   },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "itemIndex", "type": "uint256" },
+      { "internalType": "uint256", "name": "dataType", "type": "uint256" }
+    ],
+    "name": "DeprecatedExtraDataType",
+    "type": "error"
+  },
   { "inputs": [], "name": "ExtraDataAlreadyProcessed", "type": "error" },
   {
     "inputs": [],
@@ -164,11 +224,6 @@
   {
     "inputs": [],
     "name": "ExtraDataItemsCountCannotBeZeroForNonEmptyData",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ExtraDataListOnlySupportsSingleTx",
     "type": "error"
   },
   { "inputs": [], "name": "HashCannotBeZero", "type": "error" },
@@ -244,6 +299,7 @@
     "name": "RefSlotMustBeGreaterThanProcessingOne",
     "type": "error"
   },
+  { "inputs": [], "name": "SecondsPerSlotCannotBeZero", "type": "error" },
   { "inputs": [], "name": "SenderIsNotTheConsensusContract", "type": "error" },
   { "inputs": [], "name": "SenderNotAllowed", "type": "error" },
   { "inputs": [], "name": "UnexpectedChainConfig", "type": "error" },
@@ -698,6 +754,26 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "consensusVersion",
+        "type": "uint256"
+      }
+    ],
+    "name": "finalizeUpgrade_v2",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "finalizeUpgrade_v3",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getConsensusContract",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -1036,7 +1112,7 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "bytes", "name": "items", "type": "bytes" }],
+    "inputs": [{ "internalType": "bytes", "name": "data", "type": "bytes" }],
     "name": "submitReportExtraDataList",
     "outputs": [],
     "stateMutability": "nonpayable",

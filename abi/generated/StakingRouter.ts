@@ -216,11 +216,6 @@ export const stakingRouterAbi = [
         internalType: 'uint256',
         type: 'uint256',
       },
-      {
-        name: 'currentNodeOpStuckValidatorsCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
     ],
     name: 'UnexpectedCurrentValidatorsCount',
   },
@@ -380,6 +375,31 @@ export const stakingRouterAbi = [
       },
     ],
     name: 'StakingModuleAdded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'stakingModuleId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: '_publicKey',
+        internalType: 'bytes',
+        type: 'bytes',
+        indexed: false,
+      },
+    ],
+    name: 'StakingModuleExitNotificationFailed',
   },
   {
     type: 'event',
@@ -655,6 +675,20 @@ export const stakingRouterAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'REPORT_VALIDATOR_EXITING_STATUS_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'REPORT_VALIDATOR_EXIT_TRIGGERED_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'STAKING_MODULE_MANAGE_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
@@ -740,24 +774,8 @@ export const stakingRouterAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      {
-        name: '_priorityExitShareThresholds',
-        internalType: 'uint256[]',
-        type: 'uint256[]',
-      },
-      {
-        name: '_maxDepositsPerBlock',
-        internalType: 'uint256[]',
-        type: 'uint256[]',
-      },
-      {
-        name: '_minDepositBlockDistances',
-        internalType: 'uint256[]',
-        type: 'uint256[]',
-      },
-    ],
-    name: 'finalizeUpgrade_v2',
+    inputs: [],
+    name: 'finalizeUpgrade_v3',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1633,6 +1651,30 @@ export const stakingRouterAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      {
+        name: 'validatorExitData',
+        internalType: 'struct StakingRouter.ValidatorExitData[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'stakingModuleId', internalType: 'uint256', type: 'uint256' },
+          { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+          { name: 'pubkey', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      {
+        name: '_withdrawalRequestPaidFee',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: '_exitType', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'onValidatorExitTriggered',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'onValidatorsCountsByNodeOperatorReportingFinished',
     outputs: [],
@@ -1677,10 +1719,16 @@ export const stakingRouterAbi = [
     type: 'function',
     inputs: [
       { name: '_stakingModuleId', internalType: 'uint256', type: 'uint256' },
-      { name: '_nodeOperatorIds', internalType: 'bytes', type: 'bytes' },
-      { name: '_stuckValidatorsCounts', internalType: 'bytes', type: 'bytes' },
+      { name: '_nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: '_proofSlotTimestamp', internalType: 'uint256', type: 'uint256' },
+      { name: '_publicKey', internalType: 'bytes', type: 'bytes' },
+      {
+        name: '_eligibleToExitInSec',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
     ],
-    name: 'reportStakingModuleStuckValidatorsCountByNodeOperator',
+    name: 'reportValidatorExitDelay',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1750,22 +1798,12 @@ export const stakingRouterAbi = [
             type: 'uint256',
           },
           {
-            name: 'currentNodeOperatorStuckValidatorsCount',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
             name: 'newModuleExitedValidatorsCount',
             internalType: 'uint256',
             type: 'uint256',
           },
           {
             name: 'newNodeOperatorExitedValidatorsCount',
-            internalType: 'uint256',
-            type: 'uint256',
-          },
-          {
-            name: 'newNodeOperatorStuckValidatorsCount',
             internalType: 'uint256',
             type: 'uint256',
           },
@@ -1792,21 +1830,6 @@ export const stakingRouterAbi = [
     ],
     name: 'updateExitedValidatorsCountByStakingModule',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: '_stakingModuleId', internalType: 'uint256', type: 'uint256' },
-      { name: '_nodeOperatorId', internalType: 'uint256', type: 'uint256' },
-      {
-        name: '_refundedValidatorsCount',
-        internalType: 'uint256',
-        type: 'uint256',
-      },
-    ],
-    name: 'updateRefundedValidatorsCount',
-    outputs: [],
     stateMutability: 'nonpayable',
   },
   {
@@ -1849,4 +1872,4 @@ export const stakingRouterAbi = [
     stateMutability: 'nonpayable',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

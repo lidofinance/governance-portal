@@ -2,6 +2,191 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "implementation_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "admin_",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data_",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "NotAdmin",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ProxyIsOssified",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "previousAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "AdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "beacon",
+        "type": "address"
+      }
+    ],
+    "name": "BeaconUpgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "ProxyOssified",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newAdmin_",
+        "type": "address"
+      }
+    ],
+    "name": "proxy__changeAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__getAdmin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__getImplementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__getIsOssified",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__ossify",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation_",
+        "type": "address"
+      }
+    ],
+    "name": "proxy__upgradeTo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation_",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "setupCalldata_",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bool",
+        "name": "forceCall_",
+        "type": "bool"
+      }
+    ],
+    "name": "proxy__upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "secondsPerSlot",
         "type": "uint256"
@@ -15,7 +200,24 @@
   { "inputs": [], "name": "AddressCannotBeSame", "type": "error" },
   { "inputs": [], "name": "AddressCannotBeZero", "type": "error" },
   { "inputs": [], "name": "AdminCannotBeZero", "type": "error" },
-  { "inputs": [], "name": "ArgumentOutOfBounds", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "exitDataIndex", "type": "uint256" },
+      { "internalType": "uint256", "name": "requestsCount", "type": "uint256" }
+    ],
+    "name": "ExitDataIndexOutOfRange",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ExitHashAlreadySubmitted", "type": "error" },
+  { "inputs": [], "name": "ExitHashNotSubmitted", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "requestsCount", "type": "uint256" },
+      { "internalType": "uint256", "name": "remainingLimit", "type": "uint256" }
+    ],
+    "name": "ExitRequestsLimitExceeded",
+    "type": "error"
+  },
   { "inputs": [], "name": "HashCannotBeZero", "type": "error" },
   {
     "inputs": [
@@ -34,28 +236,12 @@
     "type": "error"
   },
   { "inputs": [], "name": "InvalidContractVersionIncrement", "type": "error" },
-  { "inputs": [], "name": "InvalidRequestsData", "type": "error" },
+  { "inputs": [], "name": "InvalidExitDataIndexSortOrder", "type": "error" },
+  { "inputs": [], "name": "InvalidModuleId", "type": "error" },
   { "inputs": [], "name": "InvalidRequestsDataLength", "type": "error" },
   { "inputs": [], "name": "InvalidRequestsDataSortOrder", "type": "error" },
+  { "inputs": [], "name": "LimitExceeded", "type": "error" },
   { "inputs": [], "name": "NoConsensusReportToProcess", "type": "error" },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "moduleId", "type": "uint256" },
-      { "internalType": "uint256", "name": "nodeOpId", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "prevRequestedValidatorIndex",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "requestedValidatorIndex",
-        "type": "uint256"
-      }
-    ],
-    "name": "NodeOpValidatorIndexMustIncrease",
-    "type": "error"
-  },
   { "inputs": [], "name": "NonZeroContractVersionOnInit", "type": "error" },
   { "inputs": [], "name": "PauseUntilMustBeInFuture", "type": "error" },
   { "inputs": [], "name": "PausedExpected", "type": "error" },
@@ -87,10 +273,27 @@
     "name": "RefSlotMustBeGreaterThanProcessingOne",
     "type": "error"
   },
+  { "inputs": [], "name": "RequestsAlreadyDelivered", "type": "error" },
+  { "inputs": [], "name": "RequestsNotDelivered", "type": "error" },
   { "inputs": [], "name": "ResumedExpected", "type": "error" },
   { "inputs": [], "name": "SecondsPerSlotCannotBeZero", "type": "error" },
   { "inputs": [], "name": "SenderIsNotTheConsensusContract", "type": "error" },
   { "inputs": [], "name": "SenderNotAllowed", "type": "error" },
+  { "inputs": [], "name": "TooLargeExitsPerFrame", "type": "error" },
+  { "inputs": [], "name": "TooLargeFrameDuration", "type": "error" },
+  { "inputs": [], "name": "TooLargeMaxExitRequestsLimit", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "requestsCount", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "maxRequestsPerReport",
+        "type": "uint256"
+      }
+    ],
+    "name": "TooManyExitRequestsInReport",
+    "type": "error"
+  },
   { "inputs": [], "name": "UnexpectedChainConfig", "type": "error" },
   {
     "inputs": [
@@ -145,6 +348,12 @@
     "type": "error"
   },
   { "inputs": [], "name": "VersionCannotBeSame", "type": "error" },
+  {
+    "inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
+    "name": "ZeroArgument",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ZeroFrameDuration", "type": "error" },
   { "inputs": [], "name": "ZeroPauseDuration", "type": "error" },
   {
     "anonymous": false,
@@ -195,6 +404,44 @@
       }
     ],
     "name": "ContractVersionSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "exitRequestsHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ExitDataProcessing",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxExitRequestsLimit",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "exitsPerFrame",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "frameDurationInSec",
+        "type": "uint256"
+      }
+    ],
+    "name": "ExitRequestsLimitSet",
     "type": "event"
   },
   {
@@ -273,6 +520,19 @@
     "name": "ReportSubmitted",
     "type": "event"
   },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "exitRequestsHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RequestsHashSubmitted",
+    "type": "event"
+  },
   { "anonymous": false, "inputs": [], "name": "Resumed", "type": "event" },
   {
     "anonymous": false,
@@ -347,6 +607,19 @@
       }
     ],
     "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxValidatorsPerReport",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetMaxValidatorsPerReport",
     "type": "event"
   },
   {
@@ -440,6 +713,20 @@
   },
   {
     "inputs": [],
+    "name": "EXIT_REQUEST_LIMIT_MANAGER_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "EXIT_TYPE",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "GENESIS_TIME",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -495,10 +782,41 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "SUBMIT_REPORT_HASH_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "uint256", "name": "refSlot", "type": "uint256" }
     ],
     "name": "discardConsensusReport",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxValidatorsPerReport",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxExitRequestsLimit",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "exitsPerFrame", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "frameDurationInSec",
+        "type": "uint256"
+      }
+    ],
+    "name": "finalizeUpgrade_v2",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -541,6 +859,54 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "exitRequestsHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getDeliveryTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "deliveryDateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getExitRequestLimitFullInfo",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxExitRequestsLimit",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "exitsPerFrame", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "frameDurationInSec",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "prevExitRequestsLimit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "currentExitRequestsLimit",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getLastProcessingRefSlot",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -548,12 +914,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "moduleId", "type": "uint256" },
-      { "internalType": "uint256[]", "name": "nodeOpIds", "type": "uint256[]" }
-    ],
-    "name": "getLastRequestedValidatorIndices",
-    "outputs": [{ "internalType": "int256[]", "name": "", "type": "int256[]" }],
+    "inputs": [],
+    "name": "getMaxValidatorsPerReport",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -678,6 +1041,22 @@
         "internalType": "uint256",
         "name": "lastProcessingRefSlot",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxValidatorsPerRequest",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxExitRequestsLimit",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "exitsPerFrame", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "frameDurationInSec",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -761,11 +1140,69 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxExitRequestsLimit",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "exitsPerFrame", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "frameDurationInSec",
+        "type": "uint256"
+      }
+    ],
+    "name": "setExitRequestLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "maxRequests", "type": "uint256" }
+    ],
+    "name": "setMaxValidatorsPerReport",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "bytes32", "name": "reportHash", "type": "bytes32" },
       { "internalType": "uint256", "name": "refSlot", "type": "uint256" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
     "name": "submitConsensusReport",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
+          { "internalType": "uint256", "name": "dataFormat", "type": "uint256" }
+        ],
+        "internalType": "struct ValidatorsExitBus.ExitRequestsData",
+        "name": "request",
+        "type": "tuple"
+      }
+    ],
+    "name": "submitExitRequestsData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "exitRequestsHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "submitExitRequestsHash",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -819,14 +1256,44 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "exitRequestsHash",
-        "type": "bytes32"
+        "components": [
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
+          { "internalType": "uint256", "name": "dataFormat", "type": "uint256" }
+        ],
+        "internalType": "struct ValidatorsExitBus.ExitRequestsData",
+        "name": "exitsData",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "exitDataIndexes",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address",
+        "name": "refundRecipient",
+        "type": "address"
       }
     ],
-    "name": "submitExitRequestsHash",
+    "name": "triggerExits",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes", "name": "exitRequests", "type": "bytes" },
+      { "internalType": "uint256", "name": "dataFormat", "type": "uint256" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "unpackExitRequest",
+    "outputs": [
+      { "internalType": "bytes", "name": "pubkey", "type": "bytes" },
+      { "internalType": "uint256", "name": "nodeOpId", "type": "uint256" },
+      { "internalType": "uint256", "name": "moduleId", "type": "uint256" },
+      { "internalType": "uint256", "name": "valIndex", "type": "uint256" }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   }
 ]
