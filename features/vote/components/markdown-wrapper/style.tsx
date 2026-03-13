@@ -13,7 +13,8 @@ export const MarkdownWrap = styled.div`
   & img {
     max-width: 100%;
   }
-  & ol {
+  & ol,
+  & ul {
     padding-left: 20px;
   }
   & blockquote {
