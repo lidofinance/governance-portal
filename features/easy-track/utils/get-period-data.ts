@@ -1,4 +1,4 @@
-import { formatBalance } from 'utils/format-balance';
+import { formatRawBalance } from 'utils/format-balance';
 import { DecodeFunctionResultReturnType } from 'viem';
 import { limitCheckerAbi } from 'abi/generated/LimitChecker';
 
@@ -29,8 +29,8 @@ export const getPeriodData = async <
   ] = (await contract.readContract('getPeriodState')) as GetPeriodState;
 
   return {
-    alreadySpentAmount: formatBalance(alreadySpentAmount),
-    spendableBalanceInPeriod: formatBalance(spendableBalanceInPeriod),
+    alreadySpentAmount: formatRawBalance(alreadySpentAmount),
+    spendableBalanceInPeriod: formatRawBalance(spendableBalanceInPeriod),
     periodStartTimestamp: Number(periodStartTimestamp),
     periodEndTimestamp: Number(periodEndTimestamp),
   };
