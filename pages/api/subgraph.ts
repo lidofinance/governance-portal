@@ -16,6 +16,8 @@ export const ChainNames = {
   [CHAINS.Hoodi]: 'Hoodi',
 } as const;
 
+const MAX_RESPONSE_BYTES = 5242880; // 5mb
+
 export const parseChainId = (chainId: number | string) => {
   return Number(chainId) as keyof typeof ChainNames;
 };
@@ -42,6 +44,7 @@ const webStreamToNodeStream = (
   webStream: ReadableStream<Uint8Array>,
 ): Readable => {
   const reader = webStream.getReader();
+  let totalBytes = 0;
   return new Readable({
     async read() {
       try {
@@ -49,6 +52,11 @@ const webStreamToNodeStream = (
         if (done) {
           this.push(null);
         } else {
+          totalBytes += value.byteLength;
+          if (totalBytes > MAX_RESPONSE_BYTES) {
+            this.destroy(new Error('Subgraph API: response too large'));
+            return;
+          }
           this.push(Buffer.from(value));
         }
       } catch (err) {
@@ -94,6 +102,7 @@ const subgraph = async (req: NextApiRequest, res: NextApiResponse) => {
       'Content-Type': 'application/json',
     },
     body: req.body,
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!upstream.ok) {

@@ -44,6 +44,7 @@ export type KeysInfoNew = {
 const requestTestnetOperators = async (chainId: number) => {
   const data = await fetch(
     `https://operators.testnet.fi/api/operators?chainId=${chainId}`,
+    { signal: AbortSignal.timeout(7_000) },
   );
   return data.json();
 };
@@ -57,7 +58,9 @@ const requestOperators = async (
   moduleAddress: string,
   walletAddress: string,
 ) => {
-  const modulesResp = await fetch(`${api}/modules?chainId=${chainId}`);
+  const modulesResp = await fetch(`${api}/modules?chainId=${chainId}`, {
+    signal: AbortSignal.timeout(7_000),
+  });
   const modules: Module[] = await modulesResp.json();
 
   const stakingModule = modules.find(
@@ -71,6 +74,7 @@ const requestOperators = async (
   }
   const moduleStatisticsResp = await fetch(
     `${api}/moduleStatistics?moduleId=${stakingModule.id}&chainId=${chainId}`,
+    { signal: AbortSignal.timeout(7_000) },
   );
   const moduleStatistics: KeysInfoNew = await moduleStatisticsResp.json();
 
@@ -84,6 +88,7 @@ const requestOperators = async (
 
   const operatorStatisticsResp = await fetch(
     `${api}/operatorStatistics?moduleId=${stakingModule.id}&operatorId=${operator.id}&chainId=${chainId}`,
+    { signal: AbortSignal.timeout(7_000) },
   );
   const operatorStatistics: KeysInfoOperatorNew =
     await operatorStatisticsResp.json();
@@ -107,10 +112,21 @@ const requestOperators = async (
   return result;
 };
 
+const ALLOWED_CHAIN_IDS: CHAINS[] = [
+  CHAINS.Mainnet,
+  CHAINS.Holesky,
+  CHAINS.Hoodi,
+];
+
 const keysInfo = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId = parseChainId(String(req.query.chainId)) as CHAINS;
   const walletAddress = String(req.query.walletAddress);
   const moduleAddress = String(req.query.moduleAddress);
+
+  if (!ALLOWED_CHAIN_IDS.includes(chainId)) {
+    res.status(400).json({ status: 'Error: unsupported chain' });
+    return;
+  }
 
   let result;
   switch (chainId) {
