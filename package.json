@@ -108,7 +108,8 @@
   },
   "resolutions": {
     "postcss": "^8.4.31",
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "preact": "^10.28.2"
   },
   "lint-staged": {
     "./**/*.{ts,tsx}": [
