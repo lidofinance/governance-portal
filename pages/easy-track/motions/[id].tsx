@@ -9,7 +9,7 @@ type Props = {
 
 const MotionPage = ({ id }: Props) => {
   return (
-    <Layout containerSize="full">
+    <Layout containerSize="full" metaTitle={`Motion #${id}`}>
       <MotionCardDetailed motionId={id} />
     </Layout>
   );

@@ -34,8 +34,8 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
       </Head>
       <Header />
       <ContainerStyled size={containerSize}>
-        <LayoutTitleStyle>{title}</LayoutTitleStyle>
-        <LayoutSubTitleStyle>{subtitle}</LayoutSubTitleStyle>
+        {title && <LayoutTitleStyle>{title}</LayoutTitleStyle>}
+        {subtitle && <LayoutSubTitleStyle>{subtitle}</LayoutSubTitleStyle>}
         {children}
       </ContainerStyled>
       <Footer />

@@ -437,7 +437,11 @@ export const MotionDescription = ({ motion, textSize }: Props) => {
   });
 
   if (motionType === EvmUnrecognized) {
-    return <>Unrecognized motion type</>;
+    return (
+      <Text size={12} color="warning">
+        Unrecognized motion type
+      </Text>
+    );
   }
 
   if (!callData || isLoading) {

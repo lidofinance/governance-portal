@@ -10,6 +10,7 @@ import {
   TitleSkeleton,
 } from './style';
 import { DashboardCard } from 'shared/components/dashboard-card';
+import { MotionDisplayStatus } from '@easy-track/types';
 
 export const MotionCardSkeleton = () => {
   return (
@@ -17,8 +18,8 @@ export const MotionCardSkeleton = () => {
       <TitleSkeleton width="70%" size={14} />
       <DescSkeleton width="100%" size={12} />
       <TailingSkeleton width="55%" size={12} />
-      <CardStatusWrapper>
-        <StatusLabelSkeleton width={50} size={10} />
+      <CardStatusWrapper $displayStatus={MotionDisplayStatus.DEFAULT}>
+        <StatusLabelSkeleton width={50} size={12} />
         <StatusValueSkeleton width={110} size={26} />
       </CardStatusWrapper>
       <Box display="flex" justifyContent="space-between" alignItems="center">

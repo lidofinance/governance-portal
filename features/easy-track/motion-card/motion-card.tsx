@@ -1,6 +1,5 @@
 import {
   BadgeWrapper,
-  Card,
   CardStatusWrapper,
   CardTitle,
   DescWrapper,
@@ -25,6 +24,7 @@ import { MotionDescription } from '../motion-card-description';
 import { Box } from 'shared/components/box';
 import { motionPage } from 'constants/urls';
 import Link from 'next/link';
+import { DashboardCard } from 'shared/components/dashboard-card';
 
 type Props = {
   motion: Motion;
@@ -53,7 +53,7 @@ export const MotionCard = ({ motion }: Props) => {
 
   return (
     <Link passHref href={motionPage(motion.id.toString())}>
-      <Card $displayStatus={displayStatus}>
+      <DashboardCard>
         <CardTitle>
           #{motion.id.toString()}{' '}
           {getMotionTypeDisplayName(
@@ -63,7 +63,7 @@ export const MotionCard = ({ motion }: Props) => {
         <DescWrapper>
           <MotionDescription motion={motion} textSize="small" />
         </DescWrapper>
-        <CardStatusWrapper>
+        <CardStatusWrapper $displayStatus={displayStatus}>
           <Text size={12} weight={800}>
             {motionStatus}
           </Text>
@@ -102,7 +102,7 @@ export const MotionCard = ({ motion }: Props) => {
             </BadgeWrapper>
           </AddressPop>
         </Box>
-      </Card>
+      </DashboardCard>
     </Link>
   );
 };
