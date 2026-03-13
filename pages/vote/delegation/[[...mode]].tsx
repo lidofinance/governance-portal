@@ -11,7 +11,7 @@ const DelegationPage: FC<DelegationTabsLayoutProps> = ({ mode }) => {
   return (
     <>
       <VoteMeta />
-      <Layout containerSize="full">
+      <Layout containerSize="full" metaTitle="Delegation">
         <DelegationTabs mode={mode} />
       </Layout>
     </>

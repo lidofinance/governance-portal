@@ -1,18 +1,17 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Text } from 'shared/components/text';
-import { Block } from '@lidofinance/lido-ui';
-import { MotionDisplayStatus, MotionStatus } from '../types';
+import { MotionDisplayStatus } from '../types';
+import { DashboardCard } from 'shared/components/dashboard-card';
 
 export const CardTitle = styled(Text).attrs({
   size: 14,
-  weight: 800,
-  as: 'h3',
+  weight: 700,
 })`
-  margin-bottom: 8px;
+  color: rgb(39, 56, 82);
+  margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
 `;
 
 export const DescWrapper = styled.div`
-  margin-bottom: auto;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -33,80 +32,26 @@ export const BadgeWrapper = styled.div`
   background: rgba(39, 56, 82, 0.1);
 `;
 
-const warnStyles = css`
-  p {
-    color: var(--lido-color-error);
-  }
-  ${DescWrapper} div {
-    color: var(--lido-color-error);
-  }
-  ${BadgeWrapper} p {
-    color: var(--primary-color-black-50);
-  }
-`;
-
-const succeedStyles = css`
-  p {
-    color: var(--accent-color-leaf);
-  }
-  ${BadgeWrapper} p {
-    color: var(--primary-color-black-50);
-  }
-`;
-
-const statusStyles = {
-  [MotionDisplayStatus.ACTIVE]: undefined,
-  [MotionDisplayStatus.ATTENDED]: undefined,
-  [MotionDisplayStatus.DANGER]: warnStyles,
-  [MotionDisplayStatus.ATTENDED_DANGER]: warnStyles,
-  [MotionDisplayStatus.ENACTED]: succeedStyles,
-  [MotionDisplayStatus.DEFAULT]: undefined,
-} as const;
-
-type CardProps = {
-  $displayStatus?: MotionDisplayStatus;
+const statusColorMap: Record<MotionDisplayStatus, string> = {
+  [MotionDisplayStatus.ACTIVE]: 'var(--lido-color-primary)',
+  [MotionDisplayStatus.ATTENDED]: 'var(--accent-color-coral)',
+  [MotionDisplayStatus.DANGER]: 'var(--accent-color-berry-light)',
+  [MotionDisplayStatus.ATTENDED_DANGER]: 'var(--accent-color-berry)',
+  [MotionDisplayStatus.ENACTED]: 'var(--accent-color-leaf)',
+  [MotionDisplayStatus.DEFAULT]: 'var(--primary-color-black-50)',
 };
 
-export const Card = styled(Block)<CardProps>`
-  padding: 16px;
+export const CardStatusWrapper = styled.section`
   display: flex;
   flex-direction: column;
-  height: 250px;
-
-  ${({ $displayStatus }) => $displayStatus && statusStyles[$displayStatus]}
+  margin-top: auto;
+  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
 `;
 
-export const CardStatusWrapper = styled.section<{ $status?: string }>`
-  display: flex;
-  flex-direction: column;
-
-  ${({ $status }) =>
-    $status === MotionStatus.ENACTED &&
-    css`
-      p {
-        color: var(--accent-color-leaf);
-      }
-    `}
-
-  ${({ $status }) =>
-    $status === MotionStatus.CANCELED &&
-    css`
-      p {
-        color: var(--primary-color-black-50);
-      }
-    `}
-`;
-
-export const CardStatus = styled(Text).attrs({
-  size: 10,
-  weight: 600,
-})`
-  margin-top: 12px;
-`;
-
-export const EnactDate = styled(Text).attrs({
-  size: 26,
-  weight: 600,
-})`
-  margin: 0 0 12px;
+export const Card = styled(DashboardCard)<{
+  $displayStatus: MotionDisplayStatus;
+}>`
+  & > ${CardStatusWrapper} > * {
+    color: ${({ $displayStatus }) => statusColorMap[$displayStatus]};
+  }
 `;

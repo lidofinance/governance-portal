@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from 'styled-components';
 
-export const Wrap = styled.span<{ $paddingless?: boolean }>`
+export const Wrap = styled.span<{ $paddingless?: boolean; $inline?: boolean }>`
   display: flex;
   position: relative;
   cursor: pointer;
@@ -15,6 +15,12 @@ export const Wrap = styled.span<{ $paddingless?: boolean }>`
     $paddingless &&
     css`
       padding: 0;
+    `}
+
+  ${({ $inline }) =>
+    $inline &&
+    css`
+      display: inline-flex;
     `}
 `;
 

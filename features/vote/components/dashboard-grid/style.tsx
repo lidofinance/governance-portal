@@ -18,7 +18,7 @@ export const DashboardGridHeading = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 0;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
 
   @media ${devicesHeaderMedia.tablet} {
     p {

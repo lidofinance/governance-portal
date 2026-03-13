@@ -1,4 +1,4 @@
-import { Card, CardStatusWrapper } from '../motion-card/style';
+import { CardStatusWrapper } from '../motion-card/style';
 import { SkeletonText } from 'shared/components/skeleton-text';
 import { Box } from 'shared/components/box';
 import {
@@ -9,10 +9,11 @@ import {
   TailingSkeleton,
   TitleSkeleton,
 } from './style';
+import { DashboardCard } from 'shared/components/dashboard-card';
 
 export const MotionCardSkeleton = () => {
   return (
-    <Card>
+    <DashboardCard>
       <TitleSkeleton width="70%" size={14} />
       <DescSkeleton width="100%" size={12} />
       <TailingSkeleton width="55%" size={12} />
@@ -27,6 +28,6 @@ export const MotionCardSkeleton = () => {
         </Box>
         <ActionBarSkeleton />
       </Box>
-    </Card>
+    </DashboardCard>
   );
 };

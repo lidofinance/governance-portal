@@ -37,7 +37,7 @@ export const DualGovernancePage = () => {
         <meta name="twitter:site" content="@lidofinance" />
         <meta name="description" content={metaDescription} />
       </Head>
-      <Layout containerSize="full">
+      <Layout containerSize="full" metaTitle="Dual Governance">
         <DualGovernanceProposalsProvider>
           {visibleState !== VisibleGovernanceState.Loading && (
             <BackgroundGradient

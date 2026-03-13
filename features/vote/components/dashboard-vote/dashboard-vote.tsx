@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import Link from 'next/link';
 import { Text } from '@lidofinance/lido-ui';
 import {
-  Wrap,
   VoteBody,
   VoteTitle,
   VoteDescriptionWrap,
@@ -28,6 +27,7 @@ import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { formatEther } from 'viem';
 import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
+import { DashboardCard } from 'shared/components/dashboard-card';
 
 type Props = {
   vote: Vote;
@@ -103,7 +103,7 @@ export const DashboardVote = ({
 
   return (
     <Link passHref href={votePage(vote.id)}>
-      <Wrap data-testid={`voteCardPreview-${vote.id}`}>
+      <DashboardCard data-testid={`voteCardPreview-${vote.id}`}>
         {!isLoading && (
           <VoteStatusBanner
             executedAt={executedAt}
@@ -153,7 +153,7 @@ export const DashboardVote = ({
             />
           </VotesBarWrap>
         </Footer>
-      </Wrap>
+      </DashboardCard>
     </Link>
   );
 };

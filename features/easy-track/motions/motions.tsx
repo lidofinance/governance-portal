@@ -3,8 +3,7 @@ import { useActiveMotions, useArchivedMotions } from '../hooks/use-motions';
 import { MotionCard } from '../motion-card';
 import { MotionCardSkeleton } from '../motion-card-skeleton/motion-card-skeleton';
 import { MotionsGrid } from './style';
-import { InlineLoader, Link, Button } from '@lidofinance/lido-ui';
-import { motionPage } from 'constants/urls';
+import { InlineLoader, Button } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 
 const INITIAL_TOTAL = 8;
@@ -39,8 +38,6 @@ export const Motions = () => {
     }
   }, [activeLoading, activeMotions, archiveDisplayCount]);
 
-  const displayedArchived = allArchived.slice(0, archiveDisplayCount ?? 0);
-
   const canLoadMore =
     archiveDisplayCount !== null &&
     (archiveDisplayCount < allArchived.length || hasNextPage);
@@ -53,6 +50,11 @@ export const Motions = () => {
     }
   };
 
+  const motionsToShow = [
+    ...(activeMotions ?? []),
+    ...allArchived.slice(0, archiveDisplayCount ?? 0),
+  ];
+
   if (activeLoading) {
     return (
       <MotionsGrid>
@@ -63,8 +65,7 @@ export const Motions = () => {
     );
   }
 
-  const hasMotions =
-    (activeMotions && activeMotions.length > 0) || displayedArchived.length > 0;
+  const hasMotions = motionsToShow.length > 0;
 
   if (!hasMotions && archiveDisplayCount !== null) {
     return <div>No motions at the moment</div>;
@@ -73,23 +74,8 @@ export const Motions = () => {
   return (
     <>
       <MotionsGrid>
-        {activeMotions?.map((motion) => (
-          <Link
-            target="_self"
-            href={motionPage(motion.id.toString())}
-            key={motion.id.toString()}
-          >
-            <MotionCard motion={motion} />
-          </Link>
-        ))}
-        {displayedArchived.map((motion) => (
-          <Link
-            target="_self"
-            href={motionPage(motion.id.toString())}
-            key={motion.id.toString()}
-          >
-            <MotionCard motion={motion} />
-          </Link>
+        {motionsToShow.map((motion) => (
+          <MotionCard motion={motion} key={motion.id.toString()} />
         ))}
       </MotionsGrid>
 
