@@ -10,7 +10,7 @@ import { SearchInput } from './search-input';
 import { useRouter } from 'next/router';
 import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals-list/proposal-search-item';
 import { ProposalFlowBanner } from '../proposal-flow-banner';
-import { useIsEmergencyModeActive } from 'features/dual-governance/hooks/use-is-emergency-mode-active';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useEffect, useState } from 'react';
 import { useIsEmergencyGovernanceActive } from '../../hooks/use-is-emergency-governance-active';
 
@@ -18,7 +18,7 @@ const MAX_SCREEN_WIDTH_PROPOSAL_FLOW = 1270;
 
 export const ProposalsSection = () => {
   const router = useRouter();
-  const { isEmergencyModeActive } = useIsEmergencyModeActive();
+  const { isEmergencyModeActive } = useDualGovernanceStateContext();
   const { isEmergencyGovernanceActive } = useIsEmergencyGovernanceActive();
   const [showBanner, setShowBanner] = useState(true);
 

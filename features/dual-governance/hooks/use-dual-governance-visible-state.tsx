@@ -36,7 +36,6 @@ export const useDualGovernanceVisibleState = ({
 
   const { data: currentRageQuitSupport } = useQuery<bigint>({
     queryKey: ['currentRageQuitSupport', chainId],
-    staleTime: 5000,
     enabled:
       !isEmergencyModeActiveLoading &&
       !!currentVetoSignallingAddress &&

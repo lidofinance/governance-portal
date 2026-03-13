@@ -32,7 +32,7 @@ import { Box, Link } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useProposalEvents } from '../../hooks/use-proposal-events';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
@@ -65,7 +65,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const isSupportedChain = useIsSupportedChain();
   const { chainId, rpcProvider } = useLidoSDK();
 
-  const { isEmergencyModeActive } = useIsEmergencyModeActive();
+  const { isEmergencyModeActive } = useDualGovernanceStateContext();
 
   const { userConfig } = useConfig();
   const { readDynamicContract } = useDynamicDualGovernance();

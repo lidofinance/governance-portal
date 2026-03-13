@@ -1,10 +1,7 @@
 import { parseEther } from 'viem';
 import { VoteMode } from './types';
 
-export const DELEGATORS_PAGE_SIZE = 10;
-export const DELEGATORS_FETCH_SIZE = 50;
-export const DELEGATORS_FETCH_TOTAL = 200;
-export const DELEGATED_VOTERS_ADDRESSES_LIMIT = 100;
+export const DELEGATORS_PAGE_SIZE = 20;
 export const DAO_OPS_FORUM_LINK =
   'https://research.lido.fi/new-message?groupname=DAO_Ops';
 
