@@ -152,15 +152,6 @@ export const useWeb3Transport = (
             retryCount: 0,
             timeout: 10000,
           }),
-          http(undefined, {
-            batch: {
-              wait: config.PROVIDER_BATCH_TIME,
-              batchSize: config.PROVIDER_MAX_BATCH,
-            },
-            name: 'default HTTP RPC',
-            retryCount: 0,
-            timeout: 10000,
-          }),
         ]);
         return {
           transportMap: {
