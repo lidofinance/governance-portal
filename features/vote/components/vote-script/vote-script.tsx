@@ -2,8 +2,9 @@
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Hex } from 'viem';
-import { decodeCalls, decodeEvmScript } from 'utils/decode-evm-script-calls';
+import { decodeEvmScript } from 'utils/decode-evm-script-calls';
 import { useMemo } from 'react';
+import { useDecodedCalls } from 'shared/hooks';
 
 type Props = {
   script: Hex;
@@ -12,14 +13,8 @@ type Props = {
 export const VoteScript = ({ script, metadata }: Props) => {
   const { chainId } = useLidoSDK();
 
-  const decodedCalls = useMemo(
-    () =>
-      decodeCalls({
-        calls: decodeEvmScript(script),
-        chainId,
-      }),
-    [script, chainId],
-  );
+  const calls = useMemo(() => decodeEvmScript(script), [script]);
+  const decodedCalls = useDecodedCalls(calls, chainId);
 
   return (
     <Script

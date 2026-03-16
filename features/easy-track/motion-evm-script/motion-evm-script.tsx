@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { Motion, RawMotionSubgraph } from '../types';
-import { decodeCalls, decodeEvmScript } from 'utils/decode-evm-script-calls';
+import { decodeEvmScript } from 'utils/decode-evm-script-calls';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Script } from '../../dual-governance/evm-script-parsed';
+import { useDecodedCalls } from 'shared/hooks';
 
 type Props = {
   motion: Motion | RawMotionSubgraph;
@@ -9,13 +11,15 @@ type Props = {
 export const MotionEvmScript = ({ motion }: Props) => {
   const { chainId } = useLidoSDK();
 
-  if (!motion.evmScript) return null;
+  const decoded = useMemo(
+    () => (motion.evmScript ? decodeEvmScript(motion.evmScript) : []),
+    [motion.evmScript],
+  );
+  const decodedEvmScriptCalls = useDecodedCalls(decoded, chainId);
 
-  const decoded = decodeEvmScript(motion.evmScript);
-  const decodedEvmScriptCalls = decodeCalls({
-    calls: decoded,
-    chainId,
-  });
+  if (!motion.evmScript) {
+    return null;
+  }
 
   return (
     <Script

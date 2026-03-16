@@ -13,7 +13,8 @@ import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { Script } from 'features/dual-governance/evm-script-parsed';
 import { CommitteeProposalSignersInfo } from '../signers-info/committee-proposal-signers-info';
 import { TiebreakerQuorum } from '../tiebreaker-quorum';
-import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
+import { BaseCall } from 'utils/decode-evm-script-calls';
+import { useDecodedCalls } from 'shared/hooks';
 import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
@@ -29,12 +30,12 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
     [proposalId, proposals],
   );
 
+  const calls = (proposal?.proposalDetails.calls as BaseCall[]) ?? [];
+  const decodedEvmScriptCalls = useDecodedCalls(calls, chainId);
+
   if (!proposal) {
     return null;
   }
-
-  const calls = proposal.proposalDetails.calls as BaseCall[];
-  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
 
   return (
     <CommitteeCardWrapper>
