@@ -1,5 +1,4 @@
 import { formatUnits, getAddress, zeroAddress } from 'viem';
-import { processInBatches } from 'utils/process-in-batches';
 import {
   useReadContract,
   useReadContractGetter,
@@ -19,8 +18,6 @@ import { ETH_DECIMALS } from 'shared/blockchain/constants';
 // https://github.com/lidofinance/scripts/blob/bda3568d1291bdc7ba422fb20150313f2d1778c3/scripts/vote_2024_01_16.py#L106
 const TOKEN_ARG_INDEX = 0;
 const AMOUNT_ARG_INDEX = 2;
-
-const MAX_PROVIDER_BATCH = 20;
 
 const decodeLimit = (val: bigint, decimals: number | null) => {
   if (decimals === null) {
@@ -59,16 +56,15 @@ export const useTransitionLimits = () => {
 
       const indexes = Array.from({ length: Number(paramsLength) }, (_, i) => i);
 
-      const batchResults = await processInBatches(
-        indexes,
-        MAX_PROVIDER_BATCH,
-        async (i) =>
+      const batchResults = await Promise.allSettled(
+        indexes.map((i) =>
           aragonAcl.readContract('getPermissionParam', [
             evmScriptExecutorAddress,
             finance.address,
             role,
             BigInt(i),
           ]),
+        ),
       );
 
       // Build the params map directly from fulfilled results
