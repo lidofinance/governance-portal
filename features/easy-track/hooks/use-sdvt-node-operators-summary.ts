@@ -2,7 +2,6 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { SDVTRegistry } from 'shared/blockchain/contracts';
 import { useNodeOperatorsList } from './use-node-operators-list';
-import { processInBatches } from 'utils/process-in-batches';
 import { useQuery } from '@tanstack/react-query';
 
 type NodeOperatorSummary = {
@@ -15,8 +14,6 @@ type NodeOperatorSummary = {
   depositableValidatorsCount: bigint;
   targetLimitMode: bigint;
 };
-
-const MAX_PROVIDER_BATCH = 20;
 
 export const useSDVTNodeOperatorsSummaryMap = () => {
   const { chainId } = useLidoSDK();
@@ -34,10 +31,8 @@ export const useSDVTNodeOperatorsSummaryMap = () => {
       if (!Array.isArray(nodeOperatorsList) || nodeOperatorsList.length === 0) {
         return {};
       }
-      const results = await processInBatches(
-        nodeOperatorsList,
-        MAX_PROVIDER_BATCH,
-        async (nodeOperator) => {
+      const results = await Promise.allSettled(
+        nodeOperatorsList.map(async (nodeOperator) => {
           const summaryTuple = await registry.readContract(
             'getNodeOperatorSummary',
             [BigInt(nodeOperator.id)],
@@ -63,7 +58,7 @@ export const useSDVTNodeOperatorsSummaryMap = () => {
             targetLimitMode,
           };
           return { id: nodeOperator.id, summary };
-        },
+        }),
       );
 
       const summaryMap: Record<number, NodeOperatorSummary> = {};

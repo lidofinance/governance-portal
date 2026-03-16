@@ -6,11 +6,8 @@ import {
 } from '../motion-card-description/types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { getSdvtOperatorManagerAddress } from '../utils/get-sdvt-operator-manager-address';
-import { processInBatches } from 'utils/process-in-batches';
 import { NodeOperator } from '../types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-
-const MAX_PROVIDER_BATCH = 20;
 
 export const useNodeOperatorsList = (
   registryType: NodeOperatorsRegistryType,
@@ -44,10 +41,8 @@ export const useNodeOperatorsList = (
           return { ...nodeOperator, id: i, managerAddress };
         };
 
-        const results = await processInBatches(
-          indexes,
-          MAX_PROVIDER_BATCH,
-          fetchNodeOperator,
+        const results = await Promise.allSettled(
+          indexes.map(fetchNodeOperator),
         );
 
         return results
