@@ -15,7 +15,7 @@ const Title = styled.div`
 
 const MotionsPage = () => {
   return (
-    <Layout containerSize="full">
+    <Layout containerSize="full" metaTitle="Easy Track">
       <Title>
         <Text size={26} weight={700}>
           All motions
