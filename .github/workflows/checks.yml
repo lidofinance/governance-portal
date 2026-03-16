@@ -2,13 +2,13 @@ name: Checks
 on: push
 jobs:
   security:
-    uses: lidofinance/linters/.github/workflows/security.yml@master
+    uses: lidofinance/linters/.github/workflows/security.yml@3b91bdb6e6078574c4f436509af2193e293c1e43
     permissions:
       security-events: write
       contents: read
 
   docker:
-    uses: lidofinance/linters/.github/workflows/docker.yml@master
+    uses: lidofinance/linters/.github/workflows/docker.yml@3b91bdb6e6078574c4f436509af2193e293c1e43
 
   actions:
-    uses: lidofinance/linters/.github/workflows/actions.yml@master
+    uses: lidofinance/linters/.github/workflows/actions.yml@3b91bdb6e6078574c4f436509af2193e293c1e43

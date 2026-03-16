@@ -5,9 +5,9 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
-import { DELEGATED_VOTERS_ADDRESSES_LIMIT } from '../constants';
 import { Address } from 'viem';
 import { EligibleDelegator, VoteMode, VoterInfo } from '../types';
+import { fetchDelegateData } from '../utils/fetch-delegate-data';
 
 const convertVoterStateToVoteMode = (
   voterState:
@@ -25,7 +25,7 @@ const convertVoterStateToVoteMode = (
   }
 };
 
-const processEligibleDelegators = (
+const processEligibleDelegatedVoters = (
   addresses: Address[],
   votingPowers: bigint[],
   voterStates: VoterState[],
@@ -92,72 +92,21 @@ export const useVoteDelegators = (voteId: number | undefined) => {
       invariant(walletAddress, 'Wallet address is required');
       invariant(typeof voteId === 'number', 'Vote ID is required');
 
-      const totalCount = await voting.readContract('getDelegatedVotersCount', [
-        walletAddress,
-      ]);
-
-      if (totalCount === 0n) {
-        return {
-          eligibleDelegatedVoters: [],
-          eligibleDelegatedVotingPower: 0n,
-          totalDelegatedVotingPower: 0n,
-          delegatedVotersVotedThemselves: [],
-        };
-      }
-
-      const batchCount = Math.ceil(
-        Number(totalCount) / DELEGATED_VOTERS_ADDRESSES_LIMIT,
-      );
-
-      const addressBatches = await Promise.all(
-        Array.from({ length: batchCount }, (_, i) =>
-          voting.readContract('getDelegatedVoters', [
-            walletAddress,
-            BigInt(i * DELEGATED_VOTERS_ADDRESSES_LIMIT),
-            BigInt(DELEGATED_VOTERS_ADDRESSES_LIMIT),
-          ]),
-        ),
-      );
-
-      const delegatedVotersAddresses = addressBatches.flat();
-
-      const voteIdBigInt = BigInt(voteId);
-
-      const [votingPowerBatches, voterStateBatches] = await Promise.all([
-        Promise.all(
-          addressBatches.map((batch) =>
-            voting.readContract('getVotingPowerMultipleAtVote', [
-              voteIdBigInt,
-              batch,
-            ]),
-          ),
-        ),
-        Promise.all(
-          addressBatches.map((batch) =>
-            voting.readContract('getVoterStateMultipleAtVote', [
-              voteIdBigInt,
-              batch,
-            ]),
-          ),
-        ),
-      ]);
-
-      const delegatedVotersVotingPower = votingPowerBatches.flat();
-      const delegatedVotersState = voterStateBatches.flat();
-
-      const totalDelegatedVotingPower = delegatedVotersVotingPower.reduce(
-        (acc, power) => acc + power,
-        0n,
-      );
+      const {
+        delegatedVotersAddresses,
+        delegatedVotersVotingPower,
+        delegatedVotersVoterState,
+        totalDelegatedVotingPower,
+      } = await fetchDelegateData(voting, walletAddress, BigInt(voteId));
 
       const {
         eligibleDelegatedVoters,
         eligibleDelegatedVotingPower,
         delegatedVotersVotedThemselves,
-      } = processEligibleDelegators(
+      } = processEligibleDelegatedVoters(
         delegatedVotersAddresses,
         delegatedVotersVotingPower,
-        delegatedVotersState,
+        delegatedVotersVoterState,
       );
 
       eligibleDelegatedVoters.sort((a, b) =>

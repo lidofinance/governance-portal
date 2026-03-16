@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { BadgeVariant } from '../proposals/shared-components/vote-status-badge/types';
 import { Text } from 'shared/components/text';
 import { useDualGovernanceConfig } from './use-dual-governance-config';
-import { useIsEmergencyModeActive } from './use-is-emergency-mode-active';
 import { parsePercent16 } from 'shared/blockchain/utils';
 import { Link } from '@lidofinance/lido-ui';
 
@@ -61,7 +60,8 @@ export const useProposalStatus = ({
     enabled: !!proposalStatus,
   });
 
-  const { visibleState, detailedState } = useDualGovernanceStateContext();
+  const { visibleState, detailedState, isEmergencyModeActive } =
+    useDualGovernanceStateContext();
   const { data: dgConfig } = useDualGovernanceConfig();
   const vetoSignallingDeactivationMaxDuration =
     dgConfig?.vetoSignallingDeactivationMaxDuration;
@@ -72,8 +72,6 @@ export const useProposalStatus = ({
 
   const { timeFormatted: targetCountdown, isFinished: isCountdownFinished } =
     useCountdown(targetTime);
-
-  const { isEmergencyModeActive } = useIsEmergencyModeActive();
 
   const deactivationTargetTimestamp =
     detailedState?.persistedStateEnteredAt &&

@@ -1,4 +1,4 @@
-import { Link, Loader, Text } from '@lidofinance/lido-ui';
+import { Loader, Text } from '@lidofinance/lido-ui';
 import { useMemo, useState } from 'react';
 import {
   CounterBadge,
@@ -10,37 +10,25 @@ import {
 } from './style';
 import { DelegatorsListItem } from './delegators-list-item';
 import { useAccount } from 'wagmi';
-import { useLidoSDK } from 'providers/lido-sdk';
 import { useDelegators } from 'features/vote/hooks/use-delegators';
-import {
-  DAO_OPS_FORUM_LINK,
-  DELEGATORS_FETCH_TOTAL,
-  DELEGATORS_PAGE_SIZE,
-} from 'features/vote/constants';
+import { DELEGATORS_PAGE_SIZE } from 'features/vote/constants';
 import { InfoLabel } from '../info-row';
-import { ExternalLink } from 'shared/components/external-link/external-link';
-import { getEtherscanAddressLink } from 'utils/etherscan';
-import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
-import { Voting } from 'shared/blockchain/contracts';
 import { formatBalance } from 'utils/format-balance';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 export const DelegatorsList = () => {
-  const { chainId } = useLidoSDK();
   const { isConnected } = useAccount();
   const [pageCount, setPageCount] = useState(1);
-
-  const votingContractAddress = useContractAddress(Voting);
 
   const { data, isLoading } = useDelegators();
 
   const delegatorsToShow = useMemo(() => {
-    if (data.nonZeroDelegators.length === 0) {
+    if (!data?.delegatedVoters.length) {
       return [];
     }
 
-    return data.nonZeroDelegators.slice(0, pageCount * DELEGATORS_PAGE_SIZE);
-  }, [data.nonZeroDelegators, pageCount]);
+    return data.delegatedVoters.slice(0, pageCount * DELEGATORS_PAGE_SIZE);
+  }, [data?.delegatedVoters, pageCount]);
 
   if (!isConnected) {
     return (
@@ -60,9 +48,7 @@ export const DelegatorsList = () => {
     );
   }
 
-  const nonZeroDelegatorsCount = data.nonZeroDelegators.length;
-
-  if (nonZeroDelegatorsCount === 0) {
+  if (!data?.totalDelegatedVotingPower) {
     return (
       <Wrap $empty={true}>
         <Text size="sm" color="secondary">
@@ -72,16 +58,19 @@ export const DelegatorsList = () => {
     );
   }
 
+  const delegatedVotersCount = data.delegatedVoters.length;
+
   return (
     <Wrap>
       <TitleWrap>
         <InfoLabel>Delegated</InfoLabel>
         <CounterBadge>
-          {formatBalance(data.totalVotingPower)} {KnownToken.LDO.symbol}
+          {formatBalance(data.totalDelegatedVotingPower)}{' '}
+          {KnownToken.LDO.symbol}
         </CounterBadge>
         <InfoLabel>
-          from {nonZeroDelegatorsCount} address
-          {nonZeroDelegatorsCount > 1 ? 'es' : ''} on-chain
+          from {delegatedVotersCount} address
+          {delegatedVotersCount > 1 ? 'es' : ''} on-chain
         </InfoLabel>
       </TitleWrap>
       <DelegatorsListStyled>
@@ -93,36 +82,12 @@ export const DelegatorsList = () => {
             ensName={delegator.ensName}
           />
         ))}
-        {nonZeroDelegatorsCount > pageCount * DELEGATORS_PAGE_SIZE && (
+        {delegatedVotersCount > pageCount * DELEGATORS_PAGE_SIZE && (
           <ShowMoreButton onClick={() => setPageCount((count) => count + 1)}>
             Show More
           </ShowMoreButton>
         )}
       </DelegatorsListStyled>
-      {data.notFetchedDelegatorsCount > 0 && (
-        <Text size="xxs" color="secondary">
-          This list displays addresses with a positive {KnownToken.LDO.symbol}{' '}
-          balance from the first {DELEGATORS_FETCH_TOTAL} delegators. You have{' '}
-          {data.notFetchedDelegatorsCount} more delegator
-          {data.notFetchedDelegatorsCount > 1 ? 's' : ''} who were not included
-          in the list. To see all your delegators, use the{' '}
-          {votingContractAddress ? (
-            <Link
-              href={
-                getEtherscanAddressLink(chainId, votingContractAddress) +
-                '#readProxyContract'
-              }
-            >
-              Voting contract
-            </Link>
-          ) : (
-            'Voting contract'
-          )}
-          . If needed, contact the{' '}
-          <ExternalLink href={DAO_OPS_FORUM_LINK}>DAO Ops </ExternalLink> on the
-          forum for assistance.
-        </Text>
-      )}
     </Wrap>
   );
 };

@@ -13,7 +13,7 @@ const ProposalPage: FC<Props> = ({ id }) => {
   const numericId = Number(id);
 
   return (
-    <Layout containerSize="full" metaTitle={`Proposal #${id}`}>
+    <Layout containerSize="full" metaTitle={`Proposal #${numericId}`}>
       <DualGovernanceProposalsProvider id={numericId}>
         <ProposalPageComponent id={numericId} />
       </DualGovernanceProposalsProvider>

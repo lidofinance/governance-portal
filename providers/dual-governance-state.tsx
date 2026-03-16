@@ -19,6 +19,7 @@ type DualGovernanceStateContextValue = {
   isAssetManagementLocked: boolean;
   visibleState: VisibleGovernanceState;
   detailedState: DualGovernanceDetailedState;
+  isEmergencyModeActive: boolean;
   isLoading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
@@ -39,6 +40,7 @@ export const DualGovernanceStateContext =
   createContext<DualGovernanceStateContextValue>({
     visibleState: VisibleGovernanceState.Loading,
     isAssetManagementLocked: false,
+    isEmergencyModeActive: false,
     detailedState: {
       effectiveState: 0,
       persistedState: 0,
@@ -109,6 +111,7 @@ export const DualGovernanceStateProvider: FC<PropsWithChildren> = ({
   const value: DualGovernanceStateContextValue = {
     visibleState,
     isAssetManagementLocked,
+    isEmergencyModeActive: Boolean(isEmergencyModeActive),
     detailedState: actualDetailedState,
     isLoading: isDualGovernanceStateLoading,
     error: dualGovernanceStateError,

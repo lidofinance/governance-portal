@@ -65,7 +65,7 @@ export const Snapshot: ContractObject<typeof abi.snapshotAbi> = {
 };
 
 export const EasyTrack: ContractObject<typeof abi.easyTrackAbi> = {
-  name: 'Snapshot',
+  name: 'EasyTrack',
   abi: abi.easyTrackAbi,
   chainAddressMap: addr.EasyTrack,
 };
@@ -186,7 +186,7 @@ export const AllowedRecipientTrpLdoRegistry: ContractObject<
 export const AllowedRecipientTopUpTrpLdo: ContractObject<
   typeof abi.topUpAllowedRecipientsAbi
 > = {
-  name: 'EvmAllowedRecipientTopUpTrpLdo',
+  name: 'AllowedRecipientTopUpTrpLdo',
   abi: abi.topUpAllowedRecipientsAbi,
   chainAddressMap: EvmAddressesByType[MotionType.AllowedRecipientTopUpTrpLdo],
 };

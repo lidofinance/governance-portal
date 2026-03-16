@@ -18,6 +18,9 @@ type Props = {
   metaTitle?: string;
 };
 
+const META_DESCRIPTION =
+  'Lido Governance Portal: follow Lido DAO governance, votes, decisions, on-chain voting, Aragon proposals, and Dual Governance.';
+
 export const Layout: FC<PropsWithChildren<Props>> = (props) => {
   const {
     title,
@@ -31,6 +34,20 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
     <>
       <Head>
         <title>{`${metaTitleProp ?? title ?? 'Governance Portal'} | Lido`}</title>
+        <meta name="description" content={META_DESCRIPTION} />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={`${metaTitleProp ?? title ?? 'Governance Portal'} | Lido`}
+        />
+        <meta property="og:description" content={META_DESCRIPTION} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@lidofinance" />
+        <meta
+          name="twitter:title"
+          content={`${metaTitleProp ?? title ?? 'Governance Portal'} | Lido`}
+        />
+        <meta name="twitter:description" content={META_DESCRIPTION} />
       </Head>
       <Header />
       <ContainerStyled size={containerSize}>

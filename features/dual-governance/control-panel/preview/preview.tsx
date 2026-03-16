@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { DGTooltip } from 'features/dual-governance/tooltips';
-import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { Link } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 
@@ -27,7 +27,7 @@ export const DualGovernanceControlPanelPreview = ({ onContinue }: Props) => {
   const { isConnected } = useAccount();
   const { activeProposals, isLoading } = useDualGovernanceProposalsContext();
 
-  const { isEmergencyModeActive } = useIsEmergencyModeActive();
+  const { isEmergencyModeActive } = useDualGovernanceStateContext();
 
   const restProposalsAmount = activeProposals.length - PROPOSALS_TO_SHOW;
 
