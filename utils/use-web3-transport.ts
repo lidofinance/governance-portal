@@ -149,7 +149,7 @@ export const useWeb3Transport = (
               batchSize: config.PROVIDER_MAX_BATCH,
             },
             name: backendRpcMap[chain.id],
-            retryCount: 0,
+            retryCount: 3,
             timeout: 10000,
           }),
         ]);
