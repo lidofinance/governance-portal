@@ -57,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const data = await etherscanQueue.add(async () => {
-      const response = await fetch(url, { method: 'POST' });
+      const response = await fetch(url, { method: 'GET' });
       if (!response.ok) {
         throw new Error(`Etherscan API error: ${response.status}`);
       }

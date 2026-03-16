@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import {
   Address,
@@ -235,32 +236,34 @@ export const useDecodedCalls = <TCall extends BaseCall>(
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
   const rpcUrl = getRpcUrlByChainId(chainId as unknown as number);
 
-  const ctx: AddressCollectorContext = {
-    seen: new Set(),
-    addresses: [],
-    chainId,
-    useBundledAbi,
-  };
-
-  collectEtherscanAddresses(calls, ctx);
+  const addresses = useMemo(() => {
+    const ctx: AddressCollectorContext = {
+      seen: new Set(),
+      addresses: [],
+      chainId,
+      useBundledAbi,
+    };
+    collectEtherscanAddresses(calls, ctx);
+    return ctx.addresses;
+  }, [calls, chainId, useBundledAbi]);
 
   const { data: etherscanAbis } = useQuery({
     queryKey: [
       'useDecodedCalls-etherscan',
       chainId,
-      ctx.addresses,
+      addresses,
       etherscanApiKey,
       rpcUrl,
     ],
     queryFn: () =>
       fetchEtherscanAbis({
-        addresses: ctx.addresses,
+        addresses,
         chainId,
         etherscanApiKey,
         rpcUrl,
       }),
     staleTime: Infinity,
-    enabled: ctx.addresses.length > 0,
+    enabled: addresses.length > 0,
   });
 
   return decodeCalls({ calls, chainId, abiOverrides: etherscanAbis ?? {} });

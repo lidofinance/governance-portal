@@ -30,7 +30,7 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
     [proposalId, proposals],
   );
 
-  const calls = (proposal?.proposalDetails.calls as BaseCall[]) ?? [];
+  const calls = (proposal?.proposalDetails?.calls as BaseCall[]) ?? [];
   const decodedEvmScriptCalls = useDecodedCalls(calls, chainId);
 
   if (!proposal) {

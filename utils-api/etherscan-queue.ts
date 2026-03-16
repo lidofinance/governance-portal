@@ -32,8 +32,8 @@ class RequestQueue {
       if (queueItem) {
         this.activeRequests++;
 
-        queueItem
-          .requestFn()
+        Promise.resolve()
+          .then(() => queueItem.requestFn())
           .then((result) => {
             queueItem.resolve(result);
           })
