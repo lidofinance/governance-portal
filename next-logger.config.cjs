@@ -9,7 +9,15 @@ const loadEnvConfig = require('@next/env').loadEnvConfig;
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
 
-const patterns = [...commonPatterns];
+const patterns = [
+  ...commonPatterns,
+  process.env.ETHERSCAN_API_KEY,
+  process.env.SUBGRAPH_HOODI,
+  process.env.SUBGRAPH_MAINNET,
+  process.env.WALLETCONNECT_PROJECT_ID,
+  ...(process.env.EL_RPC_URLS_1 || 'NO_EL_RPC_URLS_1').split(','),
+  ...(process.env.EL_RPC_URLS_560048 || 'NO_EL_RPC_URLS_560048').split(','),
+];
 const mask = satanizer(patterns);
 
 const logger = (defaultConfig) =>
