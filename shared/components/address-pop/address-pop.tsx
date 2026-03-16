@@ -10,11 +10,13 @@ import { CopyOpenActions } from '../copy-open-actions';
 
 type Props = {
   isPaddingless?: boolean;
+  isInline?: boolean;
 } & React.ComponentProps<typeof IdenticonBadge>;
 
 export const AddressPop = ({
   children,
   isPaddingless,
+  isInline,
   ...badgeProps
 }: Props) => {
   const { address } = badgeProps;
@@ -54,7 +56,7 @@ export const AddressPop = ({
   );
 
   return (
-    <Wrap ref={wrapRef} $paddingless={isPaddingless}>
+    <Wrap ref={wrapRef} $paddingless={isPaddingless} $inline={isInline}>
       <button onClick={handleOpen}>{children}</button>
       {isOpened && (
         <Pop ref={popRef} isVisible={Boolean(position)} style={position}>

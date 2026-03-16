@@ -31,7 +31,7 @@ export const MotionDetailedObjections = ({ motion }: Props) => {
         ) : (
           <>
             <span>
-              {progress.objectionsAmount.toLocaleString('en-EN')}/
+              {progress.objectionsAmountFormatted}/
               {progress.thresholdAmount.toLocaleString('en-EN')}
             </span>
             <ObjectionsThreshold />

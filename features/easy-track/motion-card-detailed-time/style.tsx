@@ -1,28 +1,9 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { MotionDisplayStatus } from '../types';
+import { MOTION_STATUS_COLOR_MAP } from '@easy-track/constants';
 
-const warnStyles = css`
-  color: #de186b;
-`;
-
-const succeedStyles = css`
-  color: #53ba95;
-`;
-
-const statusStyles = {
-  [MotionDisplayStatus.ACTIVE]: undefined,
-  [MotionDisplayStatus.ATTENDED]: undefined,
-  [MotionDisplayStatus.DANGER]: warnStyles,
-  [MotionDisplayStatus.ATTENDED_DANGER]: warnStyles,
-  [MotionDisplayStatus.ENACTED]: succeedStyles,
-  [MotionDisplayStatus.DEFAULT]: undefined,
-} as const;
-
-type WrapProps = {
-  displayStatus: MotionDisplayStatus;
-};
-export const Wrap = styled.div<WrapProps>`
-  ${({ displayStatus }) => statusStyles[displayStatus]}
+export const Wrap = styled.div<{ $displayStatus: MotionDisplayStatus }>`
+  color: ${({ $displayStatus }) => MOTION_STATUS_COLOR_MAP[$displayStatus]};
 `;
 
 export const Title = styled.div`

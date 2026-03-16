@@ -42,6 +42,8 @@ import {
   useMotionContext,
 } from '@easy-track/providers/motion-detailed-context';
 import { MotionDetailedLimits } from '@easy-track/motion-card-detailed-limits';
+import { BackButton } from 'shared/components/back-button';
+import { EASY_TRACK__MOTIONS_PATH } from 'constants/urls';
 
 type Props = {
   motionId: string;
@@ -85,10 +87,7 @@ const MotionCardDetailedInner = () => {
         <HeaderAside>
           <div>
             <StatusLabel>Status</StatusLabel>
-            <StatusValue
-              isActive={motion.status === MotionStatus.ACTIVE}
-              isRejected={motion.status === MotionStatus.REJECTED}
-            >
+            <StatusValue $displayStatus={displayStatus}>
               {motion.status === MotionStatus.ACTIVE && isPassed
                 ? MotionStatus.PENDING
                 : motion.status}
@@ -171,6 +170,7 @@ export const MotionCardDetailed = ({ motionId }: Props) => {
   if (!motion) {
     return (
       <Container as="main" size="tight" key={motionId}>
+        <BackButton href={EASY_TRACK__MOTIONS_PATH} label="motions" />
         <Box textAlign="center">
           <Text size={18} strong>
             No results found for motion #{motionId}
@@ -187,6 +187,7 @@ export const MotionCardDetailed = ({ motionId }: Props) => {
   return (
     <MotionsProvider motion={motion}>
       <MotionContainer key={motionId}>
+        <BackButton href={EASY_TRACK__MOTIONS_PATH} label="motions" />
         <MotionCardDetailedInner />
       </MotionContainer>
     </MotionsProvider>
