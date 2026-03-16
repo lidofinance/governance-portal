@@ -6,7 +6,11 @@ import { DualGovernanceWidget } from 'features/dual-governance/dual-governance-w
 import { useDualGovernanceWidgetState } from 'features/dual-governance/dual-governance-widget/use-dual-governance-widget-state';
 import { VisibleGovernanceState } from 'features/dual-governance/types';
 
-export const DualGovernanceStatusButton = () => {
+type Props = {
+  isMobile?: boolean;
+};
+
+export const DualGovernanceStatusButton = ({ isMobile }: Props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -29,7 +33,7 @@ export const DualGovernanceStatusButton = () => {
       />
       {!!data && (
         <PopoverStyled
-          placement="bottomRight"
+          placement={isMobile ? 'bottomLeft' : 'bottomRight'}
           open={isPopupOpen}
           onClose={() => setIsPopupOpen(false)}
           anchorRef={anchorRef}

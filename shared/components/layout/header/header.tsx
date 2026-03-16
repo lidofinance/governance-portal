@@ -48,7 +48,7 @@ export const Header = () => {
           <NavMobile shouldShowStonks={shouldShowStonks}>
             <FlexWrapper $flexDirection="column" $gap="12px">
               <FlexWrapper $gap="12px">
-                <DualGovernanceStatusButton />{' '}
+                <DualGovernanceStatusButton isMobile />{' '}
                 <Text>Dual Governance state</Text>
               </FlexWrapper>
               <FlexWrapper $gap="12px">
