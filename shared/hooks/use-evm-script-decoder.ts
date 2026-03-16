@@ -19,6 +19,7 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { fetcherEtherscan } from 'utils/fetcher-etherscan';
 import { useConfig } from 'config';
 import { Address, createPublicClient, getContract, http } from 'viem';
+import { ABI_EXCEPTIONS } from 'constants/abi-exceptions';
 
 type ContractName = keyof typeof ADDR;
 
@@ -28,17 +29,6 @@ type ABIElement = Omit<ABIElementImported, 'name' | 'type'> & {
   name?: string;
   type?: string;
 };
-
-// This object contains ABIs of contracts that are using the same ABI
-// but have different names than the ABI file
-const ABI_EXCEPTIONS = {
-  HashConsensusAccountingOracle: abis.hashConsensusAbi,
-  HashConsensusValidatorsExitBus: abis.hashConsensusAbi,
-  LidoAppRepo: abis.repoAbi,
-  NodeOperatorsRegistryRepo: abis.repoAbi,
-  OracleRepo: abis.repoAbi,
-  SimpleDVT: abis.nodeOperatorsRegistryAbi,
-} as const;
 
 type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
 type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
