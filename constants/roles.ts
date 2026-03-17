@@ -124,6 +124,22 @@ export const LIDO_ROLES: Partial<Record<string, string>> = {
   [keccakRole('REMOVE_TOKEN_FROM_ALLOWED_LIST_ROLE')]:
     'REMOVE TOKEN FROM ALLOWED LIST ROLE',
   [keccakRole('MODULE_MANAGER_ROLE')]: 'MODULE MANAGER ROLE',
+  [keccakRole('SUBMIT_REPORT_HASH_ROLE')]: 'SUBMIT REPORT HASH ROLE',
+  [keccakRole('ADD_FULL_WITHDRAWAL_REQUEST_ROLE')]:
+    'ADD FULL WITHDRAWAL REQUEST ROLE',
+  [keccakRole('REPORT_VALIDATOR_EXITING_STATUS_ROLE')]:
+    'REPORT VALIDATOR EXITING STATUS ROLE',
+  [keccakRole('REPORT_VALIDATOR_EXIT_TRIGGERED_ROLE')]:
+    'REPORT VALIDATOR EXIT TRIGGERED ROLE',
+  [keccakRole('CREATE_NODE_OPERATOR_ROLE')]: 'CREATE NODE OPERATOR ROLE',
+  [keccakRole('vaults.OperatorsGrid.Registry')]:
+    'vaults.OperatorsGrid.Registry',
+  [keccakRole('vaults.VaultHub.ValidatorExitRole')]:
+    'vaults.VaultHub.ValidatorExitRole',
+  [keccakRole('vaults.VaultHub.BadDebtMasterRole')]:
+    'vaults.VaultHub.BadDebtMasterRole',
+  [keccakRole('PausableUntilWithRoles.ResumeRole')]:
+    'PausableUntilWithRoles.ResumeRole',
 };
 
 export const DEFAULT_ADMIN_ROLE =
