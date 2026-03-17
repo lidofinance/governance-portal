@@ -1,22 +1,19 @@
-import { Address, decodeFunctionData, Hex } from 'viem';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import * as abis from 'abi/generated';
-import { ABIElement } from '../shared/blockchain/types';
-import { getContractName } from './get-contract-name';
 import {
-  ABI_EXCEPTIONS,
-  AbiExceptionContractName,
-} from 'constants/abi-exceptions';
+  Address,
+  decodeFunctionData,
+  getAddress,
+  Hex,
+  isAddress,
+  PublicClient,
+} from 'viem';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { fetchContractMetadata } from 'shared/blockchain/utils/abi';
+import { decodeEvmScript } from 'shared/blockchain/utils/decode-evm-script';
+import { AragonAgent } from 'shared/blockchain/contract-addresses';
 
 export type BaseCall = {
   target: Address;
   payload: Hex;
-};
-
-type DecodeCallArgs<TCall extends BaseCall> = {
-  calls: TCall[];
-  chainId: CHAINS;
-  abiOverrides?: Record<string, ABIElement[]>;
 };
 
 type SubmitProposalCall = {
@@ -32,183 +29,103 @@ export type DecodedCall = {
   functionName: string;
   args: readonly unknown[] | undefined;
   nestedCalls: DecodedCall[];
-} | null;
-
-const EVM_SCRIPT_VERSION = '00000001';
-
-/**
- * Converts PascalCase contract name to camelCase ABI key
- * e.g., AccountingOracle → accountingOracleAbi
- * e.g., AragonACL → aragonAclAbi
- */
-const getAbiKey = (contractName: string): string => {
-  const parts =
-    contractName.match(/([A-Z][a-z0-9]+)|([A-Z]+(?=[A-Z][a-z0-9]|$))/g) || [];
-  if (parts.length === 0) return `${contractName}Abi`;
-
-  const camelCase = parts
-    .map((part, index) => {
-      const lower = part.toLowerCase();
-      return index === 0
-        ? lower
-        : lower.charAt(0).toUpperCase() + lower.slice(1);
-    })
-    .join('');
-
-  return `${camelCase}Abi`;
 };
 
-export const getContractAbi = (
-  contractAddress: Address,
+export const decodeCalls = async (
+  calls: BaseCall[],
   chainId: CHAINS,
-): ABIElement[] | undefined => {
-  const contractName = getContractName(chainId, contractAddress);
+  useBundledAbi: boolean,
+  etherscanApiKey: string | undefined,
+  client: PublicClient,
+  // Mutable ref to share auto-incrementing ID across recursive calls
+  counter?: number[],
+): Promise<DecodedCall[]> => {
+  const idCounter = counter ?? [1];
+  const result: DecodedCall[] = [];
 
-  if (!contractName) {
-    return;
-  }
-
-  try {
-    if (contractName in ABI_EXCEPTIONS) {
-      return ABI_EXCEPTIONS[
-        contractName as AbiExceptionContractName
-      ] as unknown as ABIElement[];
-    } else {
-      const abiKey = getAbiKey(contractName) as keyof typeof abis;
-      return abis[abiKey] as unknown as ABIElement[];
-    }
-  } catch (error) {
-    console.warn(`Failed to load ABI for contract ${contractName}:`, error);
-  }
-};
-
-export const decodeEvmScript = (script: Hex) => {
-  if (!script.startsWith('0x')) return [];
-
-  const data = script.slice(2);
-  const calls: BaseCall[] = [];
-
-  let offset = 0;
-
-  if (data.slice(0, 8) !== EVM_SCRIPT_VERSION) {
-    console.warn('Unsupported EVM script version');
-    return [];
-  }
-  offset += 8;
-
-  while (offset < data.length) {
-    const target: Address = `0x${data.slice(offset, offset + 40)}`;
-
-    offset += 40;
-
-    const lengthHex = data.slice(offset, offset + 8);
-    const length = parseInt(lengthHex, 16);
-    offset += 8;
-
-    const payload: Hex = `0x${data.slice(offset, offset + length * 2)}`;
-    offset += length * 2;
-
-    calls.push({ target, payload });
-  }
-
-  return calls;
-};
-
-export const decodeCalls = <TCall extends BaseCall>({
-  calls,
-  chainId,
-  abiOverrides,
-}: DecodeCallArgs<TCall>): DecodedCall[] => {
-  if (calls.length === 0) return [];
-  const decoded = calls.reduce<DecodedCall[]>((result, call, index) => {
-    const contractAddress = call.target;
-
-    const contractName = getContractName(chainId, contractAddress);
-    const abiFromOverride = abiOverrides?.[contractAddress.toLowerCase()];
-    const abiFromBundled = getContractAbi(contractAddress, chainId);
-
-    let decodedCall: DecodedCall = {
-      contractAddress,
-      id: index,
-      contractName,
+  for (const call of calls) {
+    const decodedCall: DecodedCall = {
+      contractAddress: call.target,
+      id: idCounter[0]++,
+      contractName: null,
       functionName: 'unknown',
       args: undefined,
       nestedCalls: [],
     };
 
-    const tryDecode = (abi: ABIElement[]) => {
-      const decodedData = decodeFunctionData({
-        abi: abi,
+    if (!isAddress(call.target)) {
+      result.push(decodedCall);
+      continue;
+    }
+
+    // metadata is name + abi (abi is from local/etherscan)
+    const metadata = await fetchContractMetadata(
+      call.target,
+      chainId,
+      useBundledAbi,
+      etherscanApiKey,
+      client,
+    );
+
+    if (!metadata) {
+      result.push(decodedCall);
+      continue;
+    }
+
+    const { abi, name } = metadata;
+    decodedCall.contractName = name;
+    try {
+      const decoded = decodeFunctionData({
+        abi,
         data: call.payload,
       });
 
-      decodedCall = {
-        ...decodedData,
-        contractAddress,
-        contractName,
-        id: 0,
-        nestedCalls: [],
-      };
+      decodedCall.functionName = decoded.functionName;
+      decodedCall.args = decoded.args;
 
-      if (decodedData.functionName === 'submitProposal' && decodedData.args) {
-        const submitProposalCalls = (
-          decodedData.args[0] as SubmitProposalCall[]
-        ).map((call) => ({
-          ...call,
-          value: String(call.value),
-        })) as SubmitProposalCall[];
-        const nestedCalls = decodeCalls({
-          calls: submitProposalCalls,
-          chainId,
-          abiOverrides,
-        });
-        decodedCall.nestedCalls = nestedCalls.map(
-          (nestedCall) =>
-            ({
-              ...nestedCall,
-              id: undefined,
-            }) as unknown as DecodedCall,
-        );
-      }
-    };
-
-    if (call.payload.startsWith('0x')) {
-      // Try ABIs in order: Etherscan override first, then bundled as fallback.
-      // The bundled fallback matters when the Etherscan ABI is for a proxy
-      // whose implementation couldn't be resolved (e.g. Aragon kernel proxies).
-      const abiCandidates = [abiFromOverride, abiFromBundled].filter(
-        Boolean,
-      ) as ABIElement[][];
-
-      for (const abi of abiCandidates) {
-        try {
-          tryDecode(abi);
-          break;
-        } catch {
-          // try next candidate
+      if (decoded.functionName === 'submitProposal') {
+        const innerCalls = decoded.args?.[0] as
+          | SubmitProposalCall[]
+          | undefined;
+        if (Array.isArray(innerCalls)) {
+          const parsedInnerCalls: BaseCall[] = innerCalls.map((innerCall) => ({
+            target: getAddress(innerCall.target),
+            payload: innerCall.payload,
+          }));
+          decodedCall.nestedCalls = await decodeCalls(
+            parsedInnerCalls,
+            chainId,
+            useBundledAbi,
+            etherscanApiKey,
+            client,
+            [1],
+          );
+        }
+      } else if (decoded.functionName === 'forward') {
+        const evmScriptData = decoded.args?.[0] as Hex | undefined;
+        const aragonAgentAddress = AragonAgent[chainId] as string;
+        if (
+          typeof evmScriptData === 'string' &&
+          decodedCall.contractAddress.toLowerCase() ===
+            aragonAgentAddress.toLowerCase()
+        ) {
+          const evmScriptCalls = decodeEvmScript(evmScriptData);
+          decodedCall.nestedCalls = await decodeCalls(
+            evmScriptCalls,
+            chainId,
+            useBundledAbi,
+            etherscanApiKey,
+            client,
+            idCounter,
+          );
         }
       }
-
-      // Flatten calls for `forward` function
-      if (decodedCall.functionName === 'forward' && decodedCall.args) {
-        const forwardDecodedData = decodeEvmScript(decodedCall.args[0] as Hex);
-        const rawForwardDecodedData = forwardDecodedData.map((callData) => ({
-          target: callData.target,
-          payload: callData.payload,
-        }));
-        const innerCalls = decodeCalls({
-          calls: rawForwardDecodedData,
-          chainId,
-          abiOverrides,
-        });
-        result.push(...innerCalls);
-        return result;
-      }
+      result.push(decodedCall);
+    } catch {
+      // If decoding fails, we can still add the original call with functionName 'unknown'
+      result.push(decodedCall);
     }
+  }
 
-    result.push(decodedCall);
-    return result;
-  }, []);
-
-  return decoded.map((call, i) => (call ? { ...call, id: i + 1 } : call));
+  return result;
 };

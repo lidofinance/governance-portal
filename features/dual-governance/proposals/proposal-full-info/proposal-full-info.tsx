@@ -326,7 +326,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   }, [proposal]);
 
   const calls = (proposal?.proposalDetails?.calls as BaseCall[]) || [];
-  const decodedEvmScriptCalls = useDecodedCalls(calls, chainId);
+  const decodedEvmScriptCalls = useDecodedCalls(calls, `dg-proposal-${id}`);
 
   if (!proposal || isLoading) {
     return (

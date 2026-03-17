@@ -15,7 +15,6 @@ import { CommitteeProposalSignersInfo } from '../signers-info/committee-proposal
 import { TiebreakerQuorum } from '../tiebreaker-quorum';
 import { BaseCall } from 'utils/decode-evm-script-calls';
 import { useDecodedCalls } from 'shared/hooks';
-import { useLidoSDK } from 'providers/lido-sdk';
 
 type Props = {
   proposalId: number;
@@ -23,7 +22,6 @@ type Props = {
 };
 
 export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
-  const { chainId } = useLidoSDK();
   const { proposals } = useDualGovernanceProposalsContext();
   const proposal = useMemo(
     () => proposals.find((proposal) => proposal.proposalId === proposalId),
@@ -31,7 +29,10 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
   );
 
   const calls = (proposal?.proposalDetails?.calls as BaseCall[]) ?? [];
-  const decodedEvmScriptCalls = useDecodedCalls(calls, chainId);
+  const decodedEvmScriptCalls = useDecodedCalls(
+    calls,
+    `dg-proposal-${proposalId}`,
+  );
 
   if (!proposal) {
     return null;

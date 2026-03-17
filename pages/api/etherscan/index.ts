@@ -12,9 +12,13 @@ import { API_ROUTES } from 'constants/api';
 import { ETHERSCAN_REMOTE_API_URL } from 'constants/network';
 import { config, secretConfig } from 'config';
 import { etherscanQueue } from 'utils-api/etherscan-queue';
+import { Cache } from 'memory-cache';
 
 const ALLOWED_MODULES = ['contract'] as const;
 const ALLOWED_ACTIONS = ['getabi'] as const;
+
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const etherscanCache = new Cache<string, unknown>();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { chainId, module, action, address } = req.query;
@@ -53,6 +57,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ message: 'Invalid address' });
   }
 
+  const cacheKey = `${chainIdNum}-${module}-${action}-${address}`;
+  const cached = etherscanCache.get(cacheKey);
+  if (cached) {
+    return res.status(200).json(cached);
+  }
+
   const url = `${ETHERSCAN_REMOTE_API_URL}?chainid=${chainIdNum}&module=${module}&action=${action}&address=${address}&apikey=${secretConfig.etherscanApiKey}`;
 
   try {
@@ -63,6 +73,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       return response.json();
     });
+    if (data && Number(data.status) === 1) {
+      etherscanCache.put(cacheKey, data, CACHE_TTL);
+    }
     return res.status(200).json(data);
   } catch {
     return res.status(502).json({ message: 'Etherscan API error' });
