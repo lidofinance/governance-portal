@@ -3,7 +3,7 @@ import * as abi from 'abi/generated';
 import { MotionType } from '../motion-types';
 
 // Map motion types to their corresponding ABIs
-const MOTION_TYPE_ABI_MAP = {
+export const MOTION_TYPE_ABI_MAP = {
   [MotionType.NodeOperatorIncreaseLimit]:
     abi.evmIncreaseNodeOperatorStakingLimitAbi,
   [MotionType.LEGOTopUp]: abi.evmTopUpLegoProgramAbi,
