@@ -10,7 +10,7 @@ type Props = {
 
 export const AddressPopInline = ({ address, trim = 4 }: Props) => {
   return (
-    <AddressPop address={address}>
+    <AddressPop address={address} isPaddingless isInline>
       <Wrap>{trim ? trimAddress(address, trim) : address}</Wrap>
     </AddressPop>
   );

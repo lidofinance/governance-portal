@@ -1,4 +1,4 @@
-import { IconWrap, StyledInput } from './style';
+import { StyledInput } from './style';
 import { VoteSearchIcon } from 'shared/components/icons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { votePage } from 'constants/urls';
@@ -55,11 +55,7 @@ export const VoteSearch = () => {
       placeholder="DAO vote #"
       onChange={handleVoteIdChange}
       onKeyDown={handleKeyDown}
-      leftDecorator={
-        <IconWrap>
-          <VoteSearchIcon />
-        </IconWrap>
-      }
+      leftDecorator={<VoteSearchIcon />}
     />
   );
 };

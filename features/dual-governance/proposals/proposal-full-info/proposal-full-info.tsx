@@ -32,7 +32,7 @@ import { Box, Link } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useIsEmergencyModeActive } from '../../hooks/use-is-emergency-mode-active';
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useProposalEvents } from '../../hooks/use-proposal-events';
 import { DGTooltip } from '../../tooltips';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
@@ -50,7 +50,8 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
-import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
+import { BaseCall } from 'utils/decode-evm-script-calls';
+import { useDecodedCalls } from 'shared/hooks';
 import { GOVERNANCE_PATH, votePage } from 'constants/urls';
 
 type Props = {
@@ -65,7 +66,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
   const isSupportedChain = useIsSupportedChain();
   const { chainId, rpcProvider } = useLidoSDK();
 
-  const { isEmergencyModeActive } = useIsEmergencyModeActive();
+  const { isEmergencyModeActive } = useDualGovernanceStateContext();
 
   const { userConfig } = useConfig();
   const { readDynamicContract } = useDynamicDualGovernance();
@@ -324,6 +325,9 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
+  const calls = (proposal?.proposalDetails?.calls as BaseCall[]) || [];
+  const decodedEvmScriptCalls = useDecodedCalls(calls, `dg-proposal-${id}`);
+
   if (!proposal || isLoading) {
     return (
       <>
@@ -334,9 +338,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
       </>
     );
   }
-
-  const calls = (proposal.proposalDetails?.calls as BaseCall[]) || [];
-  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
 
   return (
     <ProposalContainer>

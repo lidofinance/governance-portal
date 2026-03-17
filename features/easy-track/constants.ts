@@ -6,6 +6,7 @@ import {
   SandboxNodeOperatorsRegistry,
   SDVTRegistry,
 } from 'shared/blockchain/contracts';
+import { MotionDisplayStatus } from './types';
 
 export const MOTION_ATTENTION_PERIOD = 1 / 24;
 
@@ -55,3 +56,12 @@ export const nodeOperatorsKeysInfo = (
   moduleAddress: string,
 ) =>
   `/api/node-operators/keys-info?chainId=${chainId}&walletAddress=${walletAddress}&moduleAddress=${moduleAddress}`;
+
+export const MOTION_STATUS_COLOR_MAP: Record<MotionDisplayStatus, string> = {
+  [MotionDisplayStatus.ACTIVE]: 'var(--lido-color-primary)',
+  [MotionDisplayStatus.ATTENDED]: 'var(--accent-color-coral)',
+  [MotionDisplayStatus.DANGER]: 'var(--accent-color-berry-light)',
+  [MotionDisplayStatus.ATTENDED_DANGER]: 'var(--accent-color-berry)',
+  [MotionDisplayStatus.ENACTED]: 'var(--accent-color-leaf)',
+  [MotionDisplayStatus.DEFAULT]: 'var(--primary-color-black-50)',
+};

@@ -614,3 +614,7 @@ export const DualGovernanceUpgradeStateVerifier: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x487b764a2085ffd595D9141BAec0A766B7904786',
   [CHAINS.Hoodi]: '0x46862627C20b28AE79E25a0E06C5c66D07f8aa43',
 };
+
+export const OracleReportSanityCheckerLegacy: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x6232397ebac4f5772e53285b26c47914e9461e75',
+};

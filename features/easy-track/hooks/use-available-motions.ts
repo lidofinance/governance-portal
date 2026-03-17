@@ -9,7 +9,6 @@ import {
 } from 'features/easy-track/evm-addresses';
 import { getIsTrustedCaller } from 'shared/blockchain/utils/get-is-trusted-caller';
 import { Address, getAddress } from 'viem';
-import { processInBatches } from 'utils/process-in-batches';
 import { useNodeOperatorsList } from './use-node-operators-list';
 
 type NodeOperatorsList = ReturnType<typeof useNodeOperatorsList>['data'];
@@ -92,10 +91,8 @@ export const useAvailableMotions = () => {
         [] as Array<{ motionType: MotionTypeForms; address: Address }>,
       );
 
-      const results = await processInBatches(
-        relevantContracts,
-        10,
-        async (contract) => {
+      const results = await Promise.allSettled(
+        relevantContracts.map(async (contract) => {
           const isTrusted = await getIsTrustedCaller({
             contract,
             callerAddress: walletAddress,
@@ -107,7 +104,7 @@ export const useAvailableMotions = () => {
             ...contract,
             isTrusted,
           };
-        },
+        }),
       );
 
       return results

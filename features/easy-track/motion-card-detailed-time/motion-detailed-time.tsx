@@ -32,7 +32,7 @@ export const MotionDetailedTime = ({
       date = motion.rejected_at || '';
     }
     return (
-      <Wrap displayStatus={displayStatus}>
+      <Wrap $displayStatus={displayStatus}>
         <Title>{title}</Title>
         <Value>
           <FormattedDate format="MMM DD, YYYY" date={Number(date)} />
@@ -46,7 +46,7 @@ export const MotionDetailedTime = ({
 
   if (isPassed) {
     return (
-      <Wrap displayStatus={displayStatus}>
+      <Wrap $displayStatus={displayStatus}>
         <Title>Time left:</Title>
         <Value>—</Value>
       </Wrap>
@@ -54,7 +54,7 @@ export const MotionDetailedTime = ({
   }
 
   return (
-    <Wrap displayStatus={displayStatus}>
+    <Wrap $displayStatus={displayStatus}>
       <Title>Time left:</Title>
       <Value>{diffFormatted}</Value>
     </Wrap>

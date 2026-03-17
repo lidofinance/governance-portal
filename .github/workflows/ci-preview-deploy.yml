@@ -29,7 +29,7 @@ jobs:
     outputs:
       stand_url: ${{ steps.stand.outputs.url }}
     steps:
-      - uses: lidofinance/gh-find-current-pr@v1
+      - uses: lidofinance/gh-find-current-pr@3271089c463234f68c95dc018a5de99a6ed84884
         id: pr
 
       - name: Set ref
@@ -37,7 +37,7 @@ jobs:
         run: echo "short_ref=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
       - name: Preview stand deploying
-        uses: lidofinance/dispatch-workflow@v1
+        uses: lidofinance/dispatch-workflow@f6160026f09afc4076f8350b5e23a1a12e2c36b6
         env:
           APP_ID: ${{ secrets.APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}

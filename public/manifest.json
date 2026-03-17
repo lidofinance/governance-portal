@@ -1,7 +1,7 @@
 {
-  "name": "Dual Governance | Lido",
-  "short_name": "Dual Governance | Lido",
-  "description": "Lido Dual Governance uses a Dynamic Timelock so stETH holders can delay execution until withdrawal—enhancing protocol safety and stETH oversight.",
+  "name": "Governance Portal | Lido",
+  "short_name": "Governance Portal | Lido",
+  "description": "Lido Governance Portal: follow Lido DAO governance, votes, decisions, on-chain voting, Aragon proposals, and Dual Governance.",
   "iconPath": "favicon-1080x1080.svg",
   "icons": [
     {

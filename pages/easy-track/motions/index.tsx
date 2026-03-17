@@ -7,7 +7,8 @@ import { EASY_TRACK__START_MOTION_PATH } from 'constants/urls';
 import Link from 'next/link';
 
 const Title = styled.div`
-  margin-bottom: 16px;
+  height: 48px;
+  margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,13 +16,13 @@ const Title = styled.div`
 
 const MotionsPage = () => {
   return (
-    <Layout containerSize="full">
+    <Layout containerSize="full" metaTitle="Easy Track">
       <Title>
         <Text size={26} weight={700}>
           All motions
         </Text>
         <Link href={EASY_TRACK__START_MOTION_PATH}>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" buttonStyleVersion="default">
             Start Motion
           </Button>
         </Link>

@@ -1,12 +1,9 @@
-import styled, { css } from 'styled-components';
-import { Block, Container, Theme } from '@lidofinance/lido-ui';
+import styled from 'styled-components';
+import { Block, Container } from '@lidofinance/lido-ui';
 import { BREAKPOINT_MOBILE } from 'styles/global';
 import { Text } from 'shared/components/text';
-
-type StatusValueProps = {
-  isActive: boolean;
-  isRejected: boolean;
-};
+import { MotionDisplayStatus } from '@easy-track/types';
+import { MOTION_STATUS_COLOR_MAP } from '@easy-track/constants';
 
 export const MotionContainer = styled(Container).attrs({
   as: 'main',
@@ -18,7 +15,8 @@ export const MotionContainer = styled(Container).attrs({
 export const MotionCard = styled(Block)`
   padding: 50px 60px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.5);
+  box-shadow: ${({ theme }) => theme.boxShadows.xl}
+    var(--lido-color-shadowLight);
 
   @media (max-width: ${BREAKPOINT_MOBILE}) {
     margin: 0 20px;
@@ -56,21 +54,11 @@ export const StatusLabel = styled(Text).attrs({
 export const StatusValue = styled(Text).attrs({
   size: 14,
   weight: 800,
-})`
+})<{ $displayStatus: MotionDisplayStatus }>`
   text-transform: uppercase;
   letter-spacing: 0.4px;
 
-  ${({ isActive, theme }: StatusValueProps & { theme: Theme }) =>
-    isActive &&
-    css`
-      color: ${theme.colors.primary};
-    `}
-
-  ${({ isRejected }: StatusValueProps) =>
-    isRejected &&
-    css`
-      color: var(--lido-color-error);
-    `}
+  color: ${({ $displayStatus }) => MOTION_STATUS_COLOR_MAP[$displayStatus]};
 `;
 
 export const Description = styled.div`
@@ -89,7 +77,7 @@ export const DescriptionMeta = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 32px;
   margin-bottom: 16px;
 `;
 

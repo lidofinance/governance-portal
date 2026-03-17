@@ -18,10 +18,13 @@ import {
   ObjectionsSubLabelSkeleton,
   TimerBarSkeleton,
 } from './style';
+import { BackButton } from 'shared/components/back-button';
+import { EASY_TRACK__MOTIONS_PATH } from 'constants/urls';
 
 export const MotionCardDetailedSkeleton = () => {
   return (
     <MotionContainer>
+      <BackButton href={EASY_TRACK__MOTIONS_PATH} label="motions" />
       <MotionCard>
         {/* Header */}
         <Header>

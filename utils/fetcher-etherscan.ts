@@ -9,6 +9,16 @@ import { standardFetcher } from './standard-fetcher';
 
 const cache = new Cache<string, unknown>();
 
+const MIN_REQUEST_INTERVAL = 350;
+let pending: Promise<void> = Promise.resolve();
+
+const throttle = () => {
+  pending = pending.then(
+    () => new Promise((resolve) => setTimeout(resolve, MIN_REQUEST_INTERVAL)),
+  );
+  return pending;
+};
+
 type Args = {
   chainId: CHAINS;
   module: string;
@@ -43,6 +53,8 @@ export const fetcherEtherscan = async <T>({
     const cached = cache.get(url);
     if (cached) return cached as T;
   }
+
+  await throttle(); // Client side throttling to respect rate limits
 
   const { status, result } = await standardFetcher<{
     status: number;

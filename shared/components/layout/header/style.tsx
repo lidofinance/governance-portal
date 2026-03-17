@@ -1,8 +1,8 @@
 import { InlineLoader } from '@lidofinance/lido-ui';
-import { Button } from 'shared/components/button';
 import { Text } from 'shared/components/text';
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
+import Link from 'next/link';
 
 export const HeaderContainer = styled.section`
   background: white;
@@ -76,10 +76,7 @@ export const VaultInfoPopupTitle = styled.div`
     text-align: center;
   }
 `;
-export const HeaderControlButton = styled(Button).attrs({
-  variant: 'outlined',
-  size: 'xs',
-})`
+export const HeaderControlButton = styled(Link)`
   border-radius: 50%;
   flex-shrink: 0;
   min-width: 0;

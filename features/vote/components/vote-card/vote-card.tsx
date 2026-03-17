@@ -172,6 +172,7 @@ export const VoteCard = () => {
       )}
       <DetailsBoxWrap data-testid="voteScript">
         <VoteScript
+          voteId={vote.id}
           script={vote.script}
           metadata={eventStart?.args.metadata || ''}
         />

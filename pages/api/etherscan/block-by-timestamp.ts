@@ -11,69 +11,13 @@ import Metrics from 'utils-api/metrics';
 import { API_ROUTES } from 'constants/api';
 import { ETHERSCAN_REMOTE_API_URL } from 'constants/network';
 import { config, secretConfig } from 'config';
+import { etherscanQueue } from 'utils-api/etherscan-queue';
 
 type EtherscanResponse = {
   status: string;
   message: string;
   result: string;
 };
-
-class RequestQueue {
-  private queue: Array<{
-    requestFn: () => Promise<unknown>;
-    resolve: (value: unknown) => void;
-    reject: (error: unknown) => void;
-  }> = [];
-  private processing = false;
-  private readonly maxConcurrent = 1;
-  private readonly delayBetweenRequests = 1000;
-  private activeRequests = 0;
-
-  async add<T>(requestFn: () => Promise<T>): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      this.queue.push({
-        requestFn,
-        resolve: resolve as (value: unknown) => void,
-        reject,
-      });
-      void this.processQueue();
-    });
-  }
-
-  private async processQueue(): Promise<void> {
-    if (this.processing) {
-      return;
-    }
-
-    this.processing = true;
-
-    while (this.queue.length > 0 && this.activeRequests < this.maxConcurrent) {
-      const queueItem = this.queue.shift();
-      if (queueItem) {
-        this.activeRequests++;
-
-        queueItem
-          .requestFn()
-          .then((result) => {
-            queueItem.resolve(result);
-          })
-          .catch((error) => {
-            queueItem.reject(error);
-          })
-          .finally(() => {
-            this.activeRequests--;
-            setTimeout(() => {
-              void this.processQueue();
-            }, this.delayBetweenRequests);
-          });
-      }
-    }
-
-    this.processing = false;
-  }
-}
-
-const etherscanQueue = new RequestQueue();
 
 const queuedEtherscanRequest = async (
   chainId: string,

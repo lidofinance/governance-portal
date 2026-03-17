@@ -6,6 +6,7 @@ import { devicesHeaderMedia } from 'styles/global';
 export const StyledInput = styled(InputNumber)`
   width: 300px;
   span {
+    padding: 13px 15px 13px 10px;
     background: transparent;
     span {
       padding-right: 8px;
@@ -18,15 +19,5 @@ export const StyledInput = styled(InputNumber)`
 
   @media ${devicesHeaderMedia.tablet} {
     width: 195px;
-  }
-`;
-
-export const IconWrap = styled.div`
-  display: flex;
-  align-items: center;
-  svg {
-    width: 24px;
-    height: 24px;
-    margin-top: 8px;
   }
 `;

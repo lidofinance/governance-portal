@@ -5,21 +5,40 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { Motion, RawMotionSubgraph } from '@easy-track/types';
 import { MotionType } from '@easy-track/motion-types';
 import { EvmUnrecognized } from '@easy-track/evm-addresses';
-import { decodeEvmScriptCallData } from '@easy-track/hooks/use-decode-evm-script-call-data';
+import {
+  MOTION_TYPE_ABI_MAP,
+  decodeEvmScriptCallData,
+} from '@easy-track/hooks/use-decode-evm-script-call-data';
 import { useMotionTokenData } from '@easy-track/hooks/use-motion-token-data';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
+import { topUpWithLimitsAbi } from 'abi/generated/TopUpWithLimits';
+import { topUpWithLimitsStablesAbi } from 'abi/generated/TopUpWithLimitsStables';
+import { topUpAllowedRecipientsAbi } from 'abi/generated/TopUpAllowedRecipients';
 
-type CallDataWithTopUp = {
-  amounts?: bigint[];
-  token?: Address;
+// viem returns a positional tuple at runtime, not named properties.
+// topUpWithLimitsStablesAbi: [token, recipients, amounts]
+// all other top-up ABIs:     [recipients, amounts]
+// Non-top-up ABIs (e.g. SetJailStatus) have bool[] at index 1 — never extract amounts from those.
+const isTopUpMotion = (motionType: MotionType) => {
+  const motionAbi = MOTION_TYPE_ABI_MAP[motionType];
+  return (
+    motionAbi === topUpWithLimitsAbi ||
+    motionAbi === topUpAllowedRecipientsAbi ||
+    motionAbi === topUpWithLimitsStablesAbi
+  );
 };
 
+const isStablesTopUp = (motionType: MotionType) =>
+  MOTION_TYPE_ABI_MAP[motionType] === topUpWithLimitsStablesAbi;
+
 const getTopUpAmount = (
-  callData: CallDataWithTopUp | null | undefined,
+  amounts: bigint[] | undefined,
   tokenDecimals = ETH_DECIMALS,
 ): number => {
-  if (!callData?.amounts?.length) return 0;
-  const amountsSum = callData.amounts.reduce((acc, amount) => acc + amount, 0n);
+  if (!Array.isArray(amounts) || amounts.length === 0) {
+    return 0;
+  }
+  const amountsSum = amounts.reduce((acc, amount) => acc + amount, 0n);
   return Number(formatUnits(amountsSum, tokenDecimals));
 };
 
@@ -39,13 +58,20 @@ export const useMotionCallData = (
     enabled: !!motion.evmScriptCalldata && motionType !== EvmUnrecognized,
   });
 
-  const typedCallData = callData as CallDataWithTopUp | null;
+  const tuple = callData as readonly unknown[] | null;
+  const isTopUp = motionType !== EvmUnrecognized && isTopUpMotion(motionType);
+  const stables = isTopUp && isStablesTopUp(motionType);
 
-  const { data: tokenData } = useMotionTokenData(typedCallData?.token);
+  const amounts = (
+    isTopUp ? (stables ? tuple?.[2] : tuple?.[1]) : undefined
+  ) as bigint[] | undefined;
+  const token = (stables ? tuple?.[0] : undefined) as Address | undefined;
+
+  const { data: tokenData } = useMotionTokenData(token);
 
   const motionTopUpAmount = useMemo(
-    () => getTopUpAmount(typedCallData, tokenData?.decimals),
-    [callData, tokenData], // eslint-disable-line react-hooks/exhaustive-deps
+    () => getTopUpAmount(amounts, tokenData?.decimals),
+    [amounts, tokenData],
   );
 
   return {

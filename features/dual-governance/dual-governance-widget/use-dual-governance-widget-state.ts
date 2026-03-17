@@ -1,25 +1,14 @@
 import { useLidoSDK } from 'providers/lido-sdk';
-import {
-  useReadContract,
-  useReadContractGetter,
-} from 'shared/blockchain/hooks/use-read-contract';
-import {
-  DualGovernance,
-  StETH,
-  EmergencyProtectedTimelock,
-} from 'shared/blockchain/contracts';
+import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { dgConfigProviderAbi, dgEscrowAbi } from 'abi/generated';
 import { ProposalStatus } from '../proposals/types';
-import {
-  DualGovernanceConfig,
-  DualGovernanceDetailedState,
-  GovernanceState,
-  VisibleGovernanceState,
-} from '../types';
+import { GovernanceState, VisibleGovernanceState } from '../types';
 import { getAmountUntilVetoSignalling } from '../utils/get-amount-till-vetosignalling';
-
-const WARNING_STATE_THRESHOLD_PERCENT = 33n;
+import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
+import { useEscrowContext } from 'providers/escrow';
+import { useDualGovernanceConfig } from '../hooks/use-dual-governance-config';
+import { useMemo } from 'react';
 
 export type DualGovernanceWidgetState = {
   status: GovernanceState;
@@ -27,70 +16,40 @@ export type DualGovernanceWidgetState = {
   visibleStatus: VisibleGovernanceState;
   totalStEthInEscrow: bigint;
   totalSupply: bigint;
-  rageQuitSupportPercent: bigint;
   activeProposalsCount: number;
   secondSealRageQuitSupport: bigint;
-  config: DualGovernanceConfig;
-  stateDetails: DualGovernanceDetailedState;
   amountUntilVetoSignalling: { percentage: string; value: string } | null;
-  firstSealRageQuitSupport: bigint;
 };
 
-export const useDualGovernanceWidgetState = () => {
+type Result = {
+  data: DualGovernanceWidgetState;
+  isLoading: boolean;
+};
+
+export const useDualGovernanceWidgetState = (): Result => {
   const { chainId } = useLidoSDK();
-  const dualGovernance = useReadContract(DualGovernance);
-  const stEth = useReadContract(StETH);
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
 
-  const vetoSignallingEscrowGetter = useReadContractGetter(dgEscrowAbi);
-  const dualGovernanceConfigProviderGetter =
-    useReadContractGetter(dgConfigProviderAbi);
+  const { data: dgConfig, isLoading: isConfigLoading } =
+    useDualGovernanceConfig();
+  const {
+    visibleState,
+    detailedState,
+    isLoading: isStateContextLoading,
+  } = useDualGovernanceStateContext();
+  const {
+    totalStEthInEscrow,
+    stEthTotalSupply,
+    isLoading: isEscrowContextLoading,
+  } = useEscrowContext();
 
-  return useQuery({
-    queryKey: ['dual-governance-widget-data', chainId],
+  const { data, isLoading } = useQuery({
+    queryKey: ['dg-widget-active-proposals-count', chainId],
     queryFn: async () => {
-      const [
-        isEmergencyModeActive,
-        vetoSignallingAddress,
-        configAddress,
-        stateDetails,
-      ] = await Promise.all([
-        emergencyProtectedTimelock.readContract('isEmergencyModeActive'),
-        dualGovernance.readContract('getVetoSignallingEscrow'),
-        dualGovernance.readContract('getConfigProvider'),
-        dualGovernance.readContract('getStateDetails'),
-      ]);
-
-      const vetoSignallingEscrow = vetoSignallingEscrowGetter(
-        vetoSignallingAddress,
-      );
-
-      const dualGovernanceConfigProvider =
-        dualGovernanceConfigProviderGetter(configAddress);
-
-      const [lockedAssets, rageQuitSupportPercent] = await Promise.all([
-        vetoSignallingEscrow('getSignallingEscrowDetails'),
-        vetoSignallingEscrow('getRageQuitSupport'),
-      ]);
-
-      const unfinalizedShares =
-        lockedAssets.totalStETHLockedShares +
-        lockedAssets.totalUnstETHUnfinalizedShares;
-
-      const [totalSupply, pooledEthByShares] = await Promise.all([
-        stEth.readContract('totalSupply'),
-        stEth.readContract('getPooledEthByShares', [unfinalizedShares]),
-      ]);
-
-      const totalStEthInEscrow =
-        pooledEthByShares + lockedAssets.totalUnstETHFinalizedETH;
-
-      const [config, proposalsCount] = await Promise.all([
-        dualGovernanceConfigProvider('getDualGovernanceConfig'),
-        emergencyProtectedTimelock.readContract('getProposalsCount'),
-      ]);
+      const proposalsCount =
+        await emergencyProtectedTimelock.readContract('getProposalsCount');
 
       const proposalIds = Array.from(
         { length: Number(proposalsCount) },
@@ -103,58 +62,45 @@ export const useDualGovernanceWidgetState = () => {
         ),
       );
 
-      const activeProposalsCount = proposals.filter(
+      return proposals.filter(
         (proposal) =>
           proposal[0].status === ProposalStatus.Submitted ||
           proposal[0].status === ProposalStatus.Scheduled,
       ).length;
-
-      const { firstSealRageQuitSupport, secondSealRageQuitSupport } = config;
-
-      const warningStateThreshold =
-        (firstSealRageQuitSupport * WARNING_STATE_THRESHOLD_PERCENT) / 100n;
-
-      let visibleStatus: VisibleGovernanceState = VisibleGovernanceState.Normal;
-
-      if (
-        stateDetails.persistedState === GovernanceState.Normal &&
-        rageQuitSupportPercent >= warningStateThreshold
-      ) {
-        visibleStatus = VisibleGovernanceState.Warning;
-      }
-
-      if (isEmergencyModeActive) {
-        visibleStatus = VisibleGovernanceState.Emergency;
-      }
-
-      let amountUntilVetoSignalling: {
-        percentage: string;
-        value: string;
-      } | null = null;
-      if (
-        stateDetails.persistedState ===
-        GovernanceState.VetoSignallingDeactivation
-      ) {
-        amountUntilVetoSignalling = getAmountUntilVetoSignalling(
-          stateDetails,
-          config,
-          totalSupply,
-        );
-      }
-      return {
-        visibleStatus,
-        status: stateDetails.persistedState,
-        nextStatus: stateDetails.effectiveState,
-        totalStEthInEscrow,
-        totalSupply,
-        rageQuitSupportPercent,
-        activeProposalsCount,
-        config,
-        stateDetails,
-        amountUntilVetoSignalling,
-        firstSealRageQuitSupport,
-        secondSealRageQuitSupport,
-      };
     },
   });
+
+  const amountUntilVetoSignalling = useMemo(() => {
+    if (
+      detailedState.persistedState !==
+        GovernanceState.VetoSignallingDeactivation ||
+      !dgConfig ||
+      !stEthTotalSupply
+    ) {
+      return null;
+    }
+    return getAmountUntilVetoSignalling(
+      detailedState,
+      dgConfig,
+      stEthTotalSupply,
+    );
+  }, [detailedState, dgConfig, stEthTotalSupply]);
+
+  return {
+    data: {
+      visibleStatus: visibleState,
+      status: detailedState.persistedState,
+      nextStatus: detailedState.effectiveState,
+      activeProposalsCount: data ?? 0,
+      totalStEthInEscrow,
+      amountUntilVetoSignalling,
+      totalSupply: stEthTotalSupply ?? 0n,
+      secondSealRageQuitSupport: dgConfig?.secondSealRageQuitSupport ?? 0n,
+    },
+    isLoading:
+      isConfigLoading ||
+      isStateContextLoading ||
+      isEscrowContextLoading ||
+      isLoading,
+  };
 };

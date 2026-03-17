@@ -29,7 +29,7 @@ export default function StartMotionPage() {
 
   if (completeHash) {
     return (
-      <Layout containerSize="tight">
+      <Layout containerSize="tight" metaTitle="Start Motion">
         <Box textAlign="center" marginBottom={24}>
           <Title>Motion transaction created</Title>
           <Text>Check out transaction status</Text>
@@ -43,7 +43,7 @@ export default function StartMotionPage() {
   }
 
   return (
-    <Layout containerSize="content">
+    <Layout containerSize="content" metaTitle="Start Motion">
       <PageTitle>Start Motion</PageTitle>
       <PageSubtitle>Fill in the fields below</PageSubtitle>
       {isConnected ? (

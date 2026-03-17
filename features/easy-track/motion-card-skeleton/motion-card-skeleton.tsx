@@ -1,4 +1,4 @@
-import { Card, CardStatusWrapper } from '../motion-card/style';
+import { CardStatusWrapper } from '../motion-card/style';
 import { SkeletonText } from 'shared/components/skeleton-text';
 import { Box } from 'shared/components/box';
 import {
@@ -9,15 +9,17 @@ import {
   TailingSkeleton,
   TitleSkeleton,
 } from './style';
+import { DashboardCard } from 'shared/components/dashboard-card';
+import { MotionDisplayStatus } from '@easy-track/types';
 
 export const MotionCardSkeleton = () => {
   return (
-    <Card>
+    <DashboardCard>
       <TitleSkeleton width="70%" size={14} />
       <DescSkeleton width="100%" size={12} />
       <TailingSkeleton width="55%" size={12} />
-      <CardStatusWrapper>
-        <StatusLabelSkeleton width={50} size={10} />
+      <CardStatusWrapper $displayStatus={MotionDisplayStatus.DEFAULT}>
+        <StatusLabelSkeleton width={50} size={12} />
         <StatusValueSkeleton width={110} size={26} />
       </CardStatusWrapper>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -27,6 +29,6 @@ export const MotionCardSkeleton = () => {
         </Box>
         <ActionBarSkeleton />
       </Box>
-    </Card>
+    </DashboardCard>
   );
 };

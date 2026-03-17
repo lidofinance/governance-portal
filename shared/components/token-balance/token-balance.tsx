@@ -9,7 +9,7 @@ import {
 import { InlineLoader, Tooltip } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 import { Text } from '../text';
-import { isBigInt } from 'shared/blockchain/isBigInt';
+import { isBigInt } from 'shared/blockchain/is-bigint';
 import { useEffect, useState } from 'react';
 import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
 

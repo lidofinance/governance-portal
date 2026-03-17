@@ -156,6 +156,7 @@ export const DelegateNameAndAddress = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+    padding: 0;
   }
 
   @media (max-width: ${BREAKPOINT_MD}) {
