@@ -11,11 +11,23 @@ import {
 } from '@easy-track/hooks/use-decode-evm-script-call-data';
 import { useMotionTokenData } from '@easy-track/hooks/use-motion-token-data';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
+import { topUpWithLimitsAbi } from 'abi/generated/TopUpWithLimits';
 import { topUpWithLimitsStablesAbi } from 'abi/generated/TopUpWithLimitsStables';
+import { topUpAllowedRecipientsAbi } from 'abi/generated/TopUpAllowedRecipients';
 
 // viem returns a positional tuple at runtime, not named properties.
 // topUpWithLimitsStablesAbi: [token, recipients, amounts]
 // all other top-up ABIs:     [recipients, amounts]
+// Non-top-up ABIs (e.g. SetJailStatus) have bool[] at index 1 — never extract amounts from those.
+const isTopUpMotion = (motionType: MotionType) => {
+  const motionAbi = MOTION_TYPE_ABI_MAP[motionType];
+  return (
+    motionAbi === topUpWithLimitsAbi ||
+    motionAbi === topUpAllowedRecipientsAbi ||
+    motionAbi === topUpWithLimitsStablesAbi
+  );
+};
+
 const isStablesTopUp = (motionType: MotionType) =>
   MOTION_TYPE_ABI_MAP[motionType] === topUpWithLimitsStablesAbi;
 
@@ -47,9 +59,12 @@ export const useMotionCallData = (
   });
 
   const tuple = callData as readonly unknown[] | null;
-  const stables = motionType !== EvmUnrecognized && isStablesTopUp(motionType);
+  const isTopUp = motionType !== EvmUnrecognized && isTopUpMotion(motionType);
+  const stables = isTopUp && isStablesTopUp(motionType);
 
-  const amounts = (stables ? tuple?.[2] : tuple?.[1]) as bigint[] | undefined;
+  const amounts = (
+    isTopUp ? (stables ? tuple?.[2] : tuple?.[1]) : undefined
+  ) as bigint[] | undefined;
   const token = (stables ? tuple?.[0] : undefined) as Address | undefined;
 
   const { data: tokenData } = useMotionTokenData(token);
