@@ -1,8 +1,9 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import React, { useMemo } from 'react';
+import { AbiFunction } from 'viem';
 import { getContractName } from 'utils/get-contract-name';
-import { getContractAbi } from 'utils/decode-evm-script-calls';
+import { getLocalContractAbi } from 'shared/blockchain/utils/abi';
 import { DEFAULT_ADMIN_ROLE, LIDO_ROLES } from 'constants/roles';
 import { Link, Text } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
@@ -19,6 +20,7 @@ import { DecodedCall } from 'utils/decode-evm-script-calls';
 import { DualGovernancePlainIcon } from 'shared/components/icons';
 import { DualGovernance } from 'shared/blockchain/contract-addresses';
 import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
+import { EVM_SCRIPT_SPEC_ID } from 'shared/blockchain/utils/decode-evm-script';
 
 interface FormatOptions {
   chainId: CHAINS;
@@ -43,6 +45,11 @@ const formatArg = (
     if (arg.startsWith('0x') && arg.length === 66 && LIDO_ROLES[arg]) {
       return `[${LIDO_ROLES[arg]}] ${arg}`;
     }
+
+    if (arg.startsWith(`0x${EVM_SCRIPT_SPEC_ID}`)) {
+      const itemLocation = parentId ? `at ${parentId}.1` : 'below';
+      return `See parsed evm script ${itemLocation}`;
+    }
   }
   if (Array.isArray(arg)) {
     // Check if it's an array of call objects (nested calls)
@@ -64,11 +71,12 @@ const getFunctionInputs = (
   contractAddress: string,
   chainId: CHAINS,
 ) => {
-  const abi = getContractAbi(contractAddress as any, chainId);
+  const abi = getLocalContractAbi(contractAddress, chainId);
   if (!abi) return null;
 
   const functionAbi = abi.find(
-    (item: any) => item.type === 'function' && item.name === functionName,
+    (item): item is AbiFunction =>
+      item.type === 'function' && item.name === functionName,
   );
 
   return functionAbi?.inputs || null;

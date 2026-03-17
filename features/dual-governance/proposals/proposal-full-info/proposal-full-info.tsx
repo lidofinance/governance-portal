@@ -50,7 +50,8 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { MarkdownWrap } from '../proposals-list/style';
-import { BaseCall, decodeCalls } from 'utils/decode-evm-script-calls';
+import { BaseCall } from 'utils/decode-evm-script-calls';
+import { useDecodedCalls } from 'shared/hooks';
 import { GOVERNANCE_PATH, votePage } from 'constants/urls';
 
 type Props = {
@@ -324,6 +325,9 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
+  const calls = (proposal?.proposalDetails?.calls as BaseCall[]) || [];
+  const decodedEvmScriptCalls = useDecodedCalls(calls, `dg-proposal-${id}`);
+
   if (!proposal || isLoading) {
     return (
       <>
@@ -334,9 +338,6 @@ export const ProposalFullInfo = ({ id }: Props) => {
       </>
     );
   }
-
-  const calls = (proposal.proposalDetails?.calls as BaseCall[]) || [];
-  const decodedEvmScriptCalls = decodeCalls({ calls: calls, chainId });
 
   return (
     <ProposalContainer>
