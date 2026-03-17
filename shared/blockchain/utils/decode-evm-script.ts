@@ -4,7 +4,9 @@ import { Address, Hex } from 'viem';
 export const EVM_SCRIPT_SPEC_ID = '00000001';
 
 export const decodeEvmScript = (script: Hex) => {
-  if (!script.startsWith('0x')) return [];
+  if (!script.startsWith('0x')) {
+    return [];
+  }
 
   const data = script.slice(2);
   const calls: BaseCall[] = [];
