@@ -10,7 +10,7 @@ export const PlaceOrderFormSubmitButton = () => {
   const { isLoading, isStonksManagerConnected } = usePlaceOrderFormData();
 
   if (!isConnected) {
-    return <ConnectWalletButton />;
+    return <ConnectWalletButton buttonStyleVersion="default" />;
   }
 
   return (

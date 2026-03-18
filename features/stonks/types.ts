@@ -43,6 +43,7 @@ export type OrderData = {
   hasBalance: boolean;
 };
 
+// Statuses from CoW API
 export type OffChainOrderStatus =
   | 'presignaturePending'
   | 'open'
@@ -50,7 +51,7 @@ export type OffChainOrderStatus =
   | 'cancelled'
   | 'expired';
 
-export type OrderStatus = 'not-created' | OffChainOrderStatus;
+export type OrderStatus = OffChainOrderStatus | 'not-created';
 
 export type CowOrder = {
   uid: string;
