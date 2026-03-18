@@ -11,24 +11,25 @@ import {
 import { FormProvider, useForm } from 'react-hook-form';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { CheckboxHookForm } from 'shared/hook-form/checkbox-hook-form';
-import { Box } from 'shared/components/box';
-
 import { fetcherEtherscan } from 'utils/fetcher-etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useConfig } from 'config';
 import { isUrl } from 'utils/is-url';
 import { isTestnet as getIsTestnet } from 'shared/blockchain/utils/is-testnet';
 import { SettingsFormData, SettingsFormValues } from '../../types';
-import { CheckboxWrapper, DescriptionText, DescriptionTitle } from './style';
+import {
+  CheckboxWrapper,
+  DescriptionText,
+  DescriptionTitle,
+  StyledActions,
+} from './style';
 import { useTestContractsInfo } from './use-test-contracts-info';
 import { Text } from 'shared/components/text';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const Actions = ({ children }: { children: React.ReactNode }) => (
-  <Box display="flex" gap={12} marginTop="24px">
-    {children}
-  </Box>
+  <StyledActions>{children}</StyledActions>
 );
 
 export const SettingsForm = () => {
