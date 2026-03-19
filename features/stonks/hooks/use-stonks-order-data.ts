@@ -34,7 +34,7 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
       }
 
       const stonksMetadata = STONKS_MAP[chainId]?.find(
-        (s) => s.address === stonksAddress.toLowerCase(),
+        (s) => s.address.toLowerCase() === stonksAddress.toLowerCase(),
       );
 
       if (!stonksMetadata) {

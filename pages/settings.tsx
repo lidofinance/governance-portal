@@ -6,7 +6,11 @@ export default function SettingsPage() {
   const { chainId } = useLidoSDK();
 
   return (
-    <Layout containerSize="full">
+    <Layout
+      containerSize="full"
+      title="Settings"
+      subtitle="Customize your experience"
+    >
       <ClientOnlySettingsForm key={chainId} />
     </Layout>
   );

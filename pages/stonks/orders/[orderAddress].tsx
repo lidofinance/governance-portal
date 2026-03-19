@@ -14,12 +14,20 @@ export default function StonksOrderPage() {
     data: orderData,
     isLoading: isStonksDataLoading,
     error,
+    refetch,
   } = useStonksOrderData(orderAddress);
 
-  const { data: cowOrderData, isLoading: isCowDataLoading } =
-    useCowOrderData(orderData);
+  const {
+    data: cowOrderData,
+    isLoading: isCowDataLoading,
+    refetch: cowRefetch,
+  } = useCowOrderData(orderData);
 
   const isLoading = isStonksDataLoading || isCowDataLoading;
+
+  const handleInvalidate = async () => {
+    await Promise.all([refetch(), cowRefetch()]);
+  };
 
   return (
     <Layout
@@ -41,6 +49,7 @@ export default function StonksOrderPage() {
           order={orderData}
           cowOrderData={cowOrderData}
           isLoading={isLoading}
+          onInvalidate={handleInvalidate}
         />
       ) : isLoading && !error ? (
         <Loader />

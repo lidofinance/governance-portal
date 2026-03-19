@@ -23,6 +23,7 @@ export const useRecoverOrderAction = ({
 
   return useCallback(async () => {
     try {
+      txModalStages.sign();
       const txHash = await sendRecoverOrderTx();
 
       if (isMultisig) {

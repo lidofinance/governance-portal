@@ -88,7 +88,7 @@ export const STONKS_MAP: Partial<Record<CHAINS, StonksMetadata[]>> = {
   ],
   [CHAINS.Hoodi]: [
     {
-      address: '0x166aefe34e00a200b20f704db24ddb731e7b4699',
+      address: '0xDc86BF6E2B45f815986FAc79a60C3163329A7C85',
       tokenFrom: KnownToken.StETH,
       tokenTo: KnownToken.LDO,
       version: 2,

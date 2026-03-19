@@ -9,7 +9,7 @@ import { keccak256, stringToHex } from 'viem';
 type Props = {
   order: OrderData;
   isLoading?: boolean;
-  onSuccess?: () => void;
+  onSuccess?: () => Promise<void>;
 };
 
 export const StonksOrderCardCreateButton = ({
@@ -53,7 +53,9 @@ export const StonksOrderCardCreateButton = ({
         return data as string;
       }
     },
-    onSuccess: () => onSuccess?.(),
+    onSuccess: async () => {
+      await onSuccess?.();
+    },
     onError: (error: any) => {
       console.error(error);
       ToastError(error?.message ?? 'Something went wrong', {});

@@ -12,7 +12,7 @@ import {
   NumberValue,
   StatusValue,
 } from './style';
-import { CowOrder, OrderData } from '@stonks/types';
+import { CowOrder, OrderData, OrderStatus } from '@stonks/types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getCowOrderUrl } from '@stonks/utils/get-cow-order-url';
 // TODO: move to shared components
@@ -24,12 +24,13 @@ import { AddressPop } from 'shared/components/address-pop';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { getOrderStatusText } from '@stonks/utils/get-order-status-text';
+import { useMemo } from 'react';
 
 type Props = {
   order: OrderData;
   cowOrderData: CowOrder | null | undefined;
   isLoading?: boolean;
-  onInvalidate?: () => void;
+  onInvalidate?: () => Promise<void>;
 };
 
 export const StonksOrderCard = ({
@@ -58,16 +59,31 @@ export const StonksOrderCard = ({
   const canCreateOffChainOrder =
     !order.isExpired && order.hasBalance && !cowOrderData?.uid;
 
+  const orderStatus: OrderStatus = useMemo(() => {
+    if (cowOrderData) {
+      return cowOrderData.status;
+    }
+    // expired and has non zero balance
+    if (order.isRecoverable) {
+      return 'expired';
+    }
+
+    // expired and has zero balance, hence was recovered
+    if (order.isExpired) {
+      return 'cancelled';
+    }
+
+    return 'not-created';
+  }, [cowOrderData, order.isExpired, order.isRecoverable]);
+
   return (
     <OrderCardWrapper>
-      {cowOrderData && (
-        <Row>
-          <Label>Status</Label>
-          <StatusValue value={cowOrderData.status}>
-            {getOrderStatusText(cowOrderData?.status)}
-          </StatusValue>
-        </Row>
-      )}
+      <Row>
+        <Label>Status</Label>
+        <StatusValue value={orderStatus}>
+          {getOrderStatusText(orderStatus)}
+        </StatusValue>
+      </Row>
       <Row>
         <Label>Order address</Label>
         <AddressPop address={order.address}>
@@ -104,7 +120,7 @@ export const StonksOrderCard = ({
         </Row>
       ) : null}
       <Row>
-        <Label>Valid to</Label>
+        <Label>Valid until</Label>
         <Value>
           <FormattedDate date={order.validTo} format="MMM DD, YYYY hh:mma" />
         </Value>
@@ -146,7 +162,7 @@ export const StonksOrderCard = ({
             </>
           ) : (
             <Row>
-              <Label>Swap tx</Label>{' '}
+              <Label>Swap tx</Label>
               <Link
                 href={getEtherscanLink(
                   chainId,
@@ -166,14 +182,14 @@ export const StonksOrderCard = ({
       ) : null}
       {order.isRecoverable && (
         <Row>
-          <div>Recoverable amount</div>
-          <div>
+          <Label>Recoverable amount</Label>
+          <NumberValue>
             {formatToken({
               amount: order.recoverableAmount,
               decimals: order.stonksMetadata.tokenFrom.decimals,
               symbol: tokenFrom.symbol,
             })}
-          </div>
+          </NumberValue>
         </Row>
       )}
 

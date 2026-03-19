@@ -213,6 +213,7 @@ export const StartMotion = ({ onComplete }: Props) => {
                     fullwidth
                     loading={isSubmitting}
                     disabled={!isValid}
+                    buttonStyleVersion="default"
                   >
                     Submit Motion
                   </Button>
