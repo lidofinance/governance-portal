@@ -17,15 +17,15 @@ export const NavMobileStyled = styled.nav`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: 90px;
   position: fixed;
   overflow: auto;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 4;
   background: #eff2f6;
-  padding: 0 18px;
+  padding: 90px 18px 0;
 `;
 
 export const NavMobileWrapper = styled.div`
@@ -85,6 +85,8 @@ export const NavBurgerStyled = styled.div<BurgerProps>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
+  z-index: 5;
 
   @media ${devicesHeaderMedia.tablet} {
     margin-left: auto;

@@ -25,7 +25,7 @@ export const Header = () => {
 
   const shouldShowStonks = address?.toLowerCase() === TMC_MULTISIG_ADDRESS;
   return (
-    <HeaderContainer>
+    <HeaderContainer $isMenuOpen={isBurgerOpened}>
       <LogoLido />
       <NoSsrWrapper>
         <Nav shouldShowStonks={shouldShowStonks} />

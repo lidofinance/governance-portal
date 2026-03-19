@@ -4,13 +4,14 @@ import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 import Link from 'next/link';
 
-export const HeaderContainer = styled.section`
+export const HeaderContainer = styled.section<{ $isMenuOpen?: boolean }>`
   background: white;
   border-bottom: 1px solid #000a3d1f;
-  position: sticky;
+  position: ${({ $isMenuOpen }) => ($isMenuOpen ? 'fixed' : 'sticky')};
   left: 0;
   top: 0;
   right: 0;
+  width: 100%;
   z-index: 5;
   padding: 0 60px;
   display: flex;

@@ -57,13 +57,6 @@ export const Footer: FC = () => {
           Privacy Notice
         </FooterLink>
         <LinkDivider />
-        <FooterLink
-          data-testid="Specification"
-          href="https://github.com/lidofinance/dual-governance/blob/3e0f1ae5740ef8410e928f6cc106e3a5f45a5a75/docs/specification.md"
-        >
-          Specification
-        </FooterLink>
-        <LinkDivider />
         <Version data-testid="appVersion" href={link}>
           {label}
         </Version>

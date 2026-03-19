@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { devicesHeaderMedia } from 'styles/global';
 
 export const CheckboxWrapper = styled.div`
   margin-top: 16px;
@@ -31,5 +32,15 @@ export const DescriptionTitle = styled.div`
 
   &:not(:first-child) {
     margin-top: ${({ theme }) => theme.spaceMap.md}px;
+  }
+`;
+
+export const StyledActions = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+
+  @media ${devicesHeaderMedia.mobile} {
+    flex-direction: column;
   }
 `;

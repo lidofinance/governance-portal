@@ -3,8 +3,6 @@ import { Container, Link } from '@lidofinance/lido-ui';
 
 import { LogoLido } from 'shared/components/logos/logos';
 
-import { ExternalLinkIcon } from 'shared/components/icons';
-
 import { devicesHeaderMedia } from 'styles/global';
 
 export const FooterStyle = styled(Container)`
@@ -20,7 +18,6 @@ export const FooterStyle = styled(Container)`
   padding: var(--footer-desktop-padding-y) var(--footer-desktop-padding-x);
 
   @media ${devicesHeaderMedia.tablet} {
-    margin-bottom: var(--footer-mobile-margin-bottom);
     padding: var(--footer-mobile-padding-x) var(--footer-mobile-padding-y);
     justify-content: center;
   }
@@ -79,22 +76,7 @@ export const LogoLidoStyle = styled(LogoLido)`
 `;
 
 export const Version = styled(FooterLink)`
-  margin-left: 20px;
   padding: 2px 5px;
   border-radius: ${({ theme }) => theme.borderRadiusesMap.xs}px;
   background: rgba(122, 138, 160, 0.1);
-`;
-
-export const ExternalLinkIconFooter = styled(ExternalLinkIcon).attrs({
-  width: 10,
-  height: 10,
-  viewBox: '0 0 12 12',
-})`
-  padding: 5px;
-  width: 20px;
-  height: 20px;
-  box-sizing: border-box;
-  path {
-    fill: var(--lido-color-textSecondary);
-  }
 `;
