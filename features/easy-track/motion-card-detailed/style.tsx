@@ -19,7 +19,6 @@ export const MotionCard = styled(Block)`
     var(--lido-color-shadowLight);
 
   @media (max-width: ${BREAKPOINT_MOBILE}) {
-    margin: 0 20px;
     padding: 20px;
   }
 `;

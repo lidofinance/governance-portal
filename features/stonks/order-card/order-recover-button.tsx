@@ -7,7 +7,7 @@ import { useIsStonksManager } from '@stonks/hooks/use-is-stonks-manager';
 
 type Props = {
   orderAddress: Address;
-  onFinish?: () => void;
+  onFinish?: () => Promise<void>;
 };
 
 export const StonksOrderCardRecoverButton = ({
@@ -19,13 +19,13 @@ export const StonksOrderCardRecoverButton = ({
 
   const recoverOrder = useRecoverOrderAction({
     orderAddress,
-    onConfirm: () => {
-      onFinish?.();
+    onConfirm: async () => {
+      await onFinish?.();
     },
   });
 
   if (!isConnected) {
-    return <ConnectWalletButton />;
+    return <ConnectWalletButton buttonStyleVersion="default" />;
   }
 
   return (

@@ -15,6 +15,7 @@ import { standardFetcher } from 'utils/standard-fetcher';
 import { API } from 'types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { COW_API_URL } from 'shared/external-urls';
+import { setTestnetOrder } from 'utils-api/testnet-mock-store';
 
 const ALLOWED_KIND = 'sell';
 const ALLOWED_SIGNING_SCHEME = 'eip1271';
@@ -79,9 +80,16 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  // There is no CoW API instance for Hoodi testnet, return mock UID
+  // There is no CoW API instance for Hoodi testnet, store mock and return UID
   if (parsedChainId !== CHAINS.Mainnet) {
     const mockUid = `mock-order-${from.toLowerCase()}-${Date.now()}`;
+    setTestnetOrder(from, {
+      creationDate: new Date().toISOString(),
+      uid: mockUid,
+      executedSellAmount: '0',
+      executedBuyAmount: '0',
+      status: 'open',
+    });
     res.status(201).json(mockUid);
     return;
   }
