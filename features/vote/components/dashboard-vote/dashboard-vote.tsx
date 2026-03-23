@@ -34,7 +34,6 @@ type Props = {
   startEvent: EventStartVote | null;
   voteTime: number;
   objectionPhaseTime: number;
-  executedAt?: number;
   onPass: () => void;
   executeEvent: EventExecuteVote | null;
 };
@@ -44,7 +43,6 @@ export const DashboardVote = ({
   startEvent,
   voteTime,
   objectionPhaseTime,
-  executedAt,
   onPass,
   executeEvent,
 }: Props) => {
@@ -106,7 +104,7 @@ export const DashboardVote = ({
       <DashboardCard data-testid={`voteCardPreview-${vote.id}`}>
         {!isLoading && (
           <VoteStatusBanner
-            executedAt={executedAt}
+            executedAt={executeEvent?.executedAt}
             voteTime={voteTime}
             objectionPhaseTime={objectionPhaseTime}
             status={vote.state.status}
