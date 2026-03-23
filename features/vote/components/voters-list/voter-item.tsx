@@ -15,6 +15,10 @@ import { TurnArrow, UnionIcon } from 'shared/components/icons';
 import { getPublicDelegate } from '../../utils/get-public-delegate';
 import { formatVp } from 'features/vote/utils/format-vp';
 
+const getShouldShowTooltip = (stake: bigint) => {
+  return stake > parseEther('1000') || stake < parseEther('0.1');
+};
+
 type Props = {
   voteEvent: VoteEvent;
   ensMap: Record<string, string | null> | undefined;
@@ -91,7 +95,7 @@ export const VoterItem = ({
           {isDelegate && `(${delegatedVotesLength})`}
         </ListRowCell>
         <ListRowCell>
-          {Number(stake) > parseEther('1000') ? (
+          {getShouldShowTooltip(stake) ? (
             <Tooltip
               placement="top"
               title={formatVp({ stake, showFullValue: true })}
