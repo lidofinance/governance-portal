@@ -10,12 +10,10 @@ import {
 import { VoteEvent } from 'shared/votes/types';
 import { AddressPop } from 'shared/components/address-pop/address-pop';
 import { parseEther } from 'viem';
-import { formatEth } from 'shared/blockchain/utils';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { TurnArrow, UnionIcon } from 'shared/components/icons';
 import { getPublicDelegate } from '../../utils/get-public-delegate';
-import { formatBalance } from 'utils/format-balance';
-import { KnownToken } from 'shared/blockchain/tokens';
+import { formatVp } from 'features/vote/utils/format-vp';
 
 type Props = {
   voteEvent: VoteEvent;
@@ -50,7 +48,7 @@ export const VoterItem = ({
 
   const vpElement = (
     <Text weight={isDelegate ? 700 : 400} size="xxs" data-testid="votingPower">
-      {formatBalance(stake, 1)} {isMobile ? '' : KnownToken.LDO.symbol}
+      {formatVp({ stake, showSymbol: !isMobile })}
     </Text>
   );
 
@@ -94,7 +92,10 @@ export const VoterItem = ({
         </ListRowCell>
         <ListRowCell>
           {Number(stake) > parseEther('1000') ? (
-            <Tooltip placement="top" title={formatEth(stake)}>
+            <Tooltip
+              placement="top"
+              title={formatVp({ stake, showFullValue: true })}
+            >
               {vpElement}
             </Tooltip>
           ) : (
