@@ -22,7 +22,7 @@ import {
 import { FormattedDate } from '../formatted-date';
 
 type Props = {
-  executedAt: number | undefined;
+  executedAt: bigint | undefined;
   voteTime: number;
   objectionPhaseTime: number;
   startDate: number;
@@ -68,7 +68,7 @@ export const VoteStatusBanner = ({
 
   const endDateEl = executedAt ? (
     <InfoText variant={variant}>
-      <FormattedDate date={executedAt} format="DD MMM YYYY" />
+      <FormattedDate date={Number(executedAt)} format="DD MMM YYYY" />
     </InfoText>
   ) : null;
 
