@@ -6,14 +6,18 @@ import { parseVote } from 'shared/votes/utils/parse-vote';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { getEventExecuteVote } from 'shared/votes/utils/get-event-execute-vote';
 
-export const useVote = (voteId: string, voteTime: number | undefined) => {
+export const useVote = (
+  voteId: number,
+  voteTime: number | undefined,
+  votesLength: number | undefined,
+) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const votingContract = useReadContract(Voting);
 
   return useQuery({
     queryKey: ['vote', voteId, chainId],
     staleTime: 5 * 60_000, // 5 minutes
-    enabled: !!voteTime,
+    enabled: !!voteTime && votesLength !== undefined && voteId < votesLength,
     queryFn: async () => {
       const voteIdBigInt = BigInt(voteId);
 
