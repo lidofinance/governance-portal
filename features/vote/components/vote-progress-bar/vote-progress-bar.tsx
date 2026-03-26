@@ -56,25 +56,23 @@ export const VoteProgressBar = ({
     objectionPhaseTime,
   );
 
+  // Derive effective phase from time so the UI updates immediately at the
+  // phase boundary, without waiting for a contract refetch.
+  const isMainPhaseOver =
+    timeDeltaMainPhase.isPassed || votePhase === VotePhase.Objection;
+  const isObjectionPhaseActive =
+    isMainPhaseOver && !isEnded && !timeDeltaObjectionPhase.isPassed;
+
   const mainPhaseProgress = useMemo(() => {
-    if (
-      votePhase === VotePhase.Objection ||
-      votePhase === VotePhase.Closed ||
-      isEnded
-    ) {
+    if (isMainPhaseOver || isEnded) {
       return 100;
     }
 
-    if (votePhase === VotePhase.Main) {
-      const mainPhaseDuration = voteTime - objectionPhaseTime;
-      const _progress =
-        100 - (timeDeltaMainPhase.diff / mainPhaseDuration) * 100;
-      return Math.max(0, Math.min(_progress, 100));
-    }
-
-    return 0;
+    const mainPhaseDuration = voteTime - objectionPhaseTime;
+    const _progress = 100 - (timeDeltaMainPhase.diff / mainPhaseDuration) * 100;
+    return Math.max(0, Math.min(_progress, 100));
   }, [
-    votePhase,
+    isMainPhaseOver,
     timeDeltaMainPhase.diff,
     voteTime,
     objectionPhaseTime,
@@ -86,14 +84,20 @@ export const VoteProgressBar = ({
       return 100;
     }
 
-    if (votePhase === VotePhase.Objection) {
+    if (isObjectionPhaseActive) {
       const _progress =
         100 - (timeDeltaObjectionPhase.diff / objectionPhaseTime) * 100;
       return Math.max(0, Math.min(_progress, 100));
     }
 
     return 0;
-  }, [votePhase, timeDeltaObjectionPhase.diff, objectionPhaseTime, isEnded]);
+  }, [
+    votePhase,
+    isObjectionPhaseActive,
+    timeDeltaObjectionPhase.diff,
+    objectionPhaseTime,
+    isEnded,
+  ]);
 
   const formattedStartDate = useMemo(() => formatDate(startDate), [startDate]);
   const formattedEndDate = useMemo(() => {
@@ -111,12 +115,12 @@ export const VoteProgressBar = ({
         <MainPhaseCountWrap>
           <Text
             data-testid="voteBarMainPhase"
-            color={votePhase === VotePhase.Main ? 'primary' : 'secondary'}
+            color={!isMainPhaseOver ? 'primary' : 'secondary'}
             size="xxs"
           >
-            Main phase{votePhase === VotePhase.Main ? ' ends in ' : ' ended'}
+            Main phase{!isMainPhaseOver ? ' ends in ' : ' ended'}
           </Text>
-          {votePhase === VotePhase.Main && (
+          {!isMainPhaseOver && (
             <b>
               <VoteDetailsCountdown
                 voteTime={mainPhaseEndTimestamp}
@@ -127,14 +131,12 @@ export const VoteProgressBar = ({
         </MainPhaseCountWrap>
         <Text
           data-testid="voteBarObjectionPhase"
-          color={votePhase === VotePhase.Objection ? 'primary' : 'secondary'}
+          color={isObjectionPhaseActive ? 'primary' : 'secondary'}
           size="xxs"
         >
-          {`Objection phase ${
-            votePhase === VotePhase.Objection ? 'ends in ' : ''
-          }`}
+          {`Objection phase ${isObjectionPhaseActive ? 'ends in ' : ''}`}
 
-          {votePhase === VotePhase.Objection && (
+          {isObjectionPhaseActive && (
             <b>
               <VoteDetailsCountdown
                 voteTime={objectionPhaseEndTimestamp}
