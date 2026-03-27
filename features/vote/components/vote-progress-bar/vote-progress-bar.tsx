@@ -90,11 +90,16 @@ export const VoteProgressBar = ({
       return Math.max(0, Math.min(_progress, 100));
     }
 
+    if (timeDeltaObjectionPhase.isPassed) {
+      return 100;
+    }
+
     return 0;
   }, [
     votePhase,
     isObjectionPhaseActive,
     timeDeltaObjectionPhase.diff,
+    timeDeltaObjectionPhase.isPassed,
     objectionPhaseTime,
     isEnded,
   ]);

@@ -11,16 +11,14 @@ export const useVotingConfig = () => {
     queryKey: ['voting-config', chainId],
     staleTime: Infinity,
     queryFn: async () => {
-      const [voteTime, objectionPhaseTime, votesLength] = await Promise.all([
+      const [voteTime, objectionPhaseTime] = await Promise.all([
         readVotingContract('voteTime'),
         readVotingContract('objectionPhaseTime'),
-        readVotingContract('votesLength'),
       ]);
 
       return {
         voteTime: Number(voteTime),
         objectionPhaseTime: Number(objectionPhaseTime),
-        votesLength: Number(votesLength),
       };
     },
   });
