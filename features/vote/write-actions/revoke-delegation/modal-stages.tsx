@@ -1,4 +1,4 @@
-import { DelegationType } from 'features/vote/types';
+import { DelegationType } from '@vote/types';
 import { getGeneralTransactionModalStages } from 'shared/blockchain/transaction-modal/hooks/get-general-transaction-modal-stages';
 import {
   TransactionModalTransitStage,

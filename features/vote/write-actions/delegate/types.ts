@@ -1,4 +1,4 @@
-import { DelegationFormInput, DelegationType } from 'features/vote/types';
+import { DelegationFormInput, DelegationType } from '@vote/types';
 
 export type DelegateTxArgs = {
   type: DelegationType;

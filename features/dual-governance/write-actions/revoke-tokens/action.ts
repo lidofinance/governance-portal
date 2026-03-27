@@ -7,9 +7,9 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { ActionArgs } from 'shared/types';
 import { useRevokeTokensModalStages } from './modal-stages';
 import { useRevokeTokensTxSender } from './tx-sender';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionArgs } from '@dg/types';
 import { Token } from 'shared/blockchain/types';
-import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
+import { useRefetchEscrowData } from '@dg/hooks/use-refetch-escrow-data';
 
 export const useRevokeTokensAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const { address } = useAccount();

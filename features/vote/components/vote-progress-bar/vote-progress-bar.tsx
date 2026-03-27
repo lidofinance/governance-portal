@@ -9,7 +9,7 @@ import {
 } from './style';
 import { useMemo } from 'react';
 import { VotePhase } from 'shared/votes/types';
-import { useVoteTimeCountdown } from '../../hooks/use-vote-time-countdown';
+import { useVoteTimeCountdown } from '@vote/hooks/use-vote-time-countdown';
 import { VoteDetailsCountdown } from '../vote-details-countdown';
 import { ProgressBar } from 'shared/components/progress-bar';
 

@@ -1,4 +1,4 @@
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { VisibleGovernanceState } from '@dg/types';
 import styled, { css } from 'styled-components';
 
 export const BackgroundGradientSvgStyle = styled.svg`

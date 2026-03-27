@@ -17,7 +17,9 @@
     "incremental": true,
     "paths": {
       "@easy-track/*": ["features/easy-track/*"],
-      "@stonks/*": ["features/stonks/*"]
+      "@stonks/*": ["features/stonks/*"],
+      "@dg/*": ["features/dual-governance/*"],
+      "@vote/*": ["features/vote/*"]
     }
   },
   "include": ["**/*"],

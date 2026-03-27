@@ -1,6 +1,6 @@
 import { Text, useBreakpoint } from '@lidofinance/lido-ui';
 import { DelegationSubtitleStyled } from './style';
-import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { AragonSmallLogo, SnapshotLogo } from 'shared/components/icons';
 
 export const DelegationFormSubtitle = () => {

@@ -1,16 +1,13 @@
-import {
-  GovernanceState,
-  VisibleGovernanceState,
-} from 'features/dual-governance/types';
+import { GovernanceState, VisibleGovernanceState } from '@dg/types';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
 import { DeactivationAdditionalSupportInfo } from './deactivation-additional-support-info';
 import { VetoSignallingAdditionalSupportInfo } from './veto-signalling-additional-support-info';
 import { CooldownAdditionalSupportInfo } from './cooldown-additional-support-info';
-import { DGTooltip } from '../../tooltips';
+import { DGTooltip } from '@dg/tooltips';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
-import { useThresholdValue } from 'features/dual-governance/hooks';
-import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
+import { useThresholdValue } from '@dg/hooks';
+import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 import { useEscrowContext } from 'providers/escrow';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useMemo } from 'react';

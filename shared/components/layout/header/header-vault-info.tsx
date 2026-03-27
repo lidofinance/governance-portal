@@ -10,7 +10,7 @@ import {
   VaultInfoSubtitle,
 } from './style';
 import { Token } from 'shared/blockchain/types';
-import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
+import { useEscrowBalances } from '@dg/hooks/use-escrow-balances';
 import { formatEth } from 'shared/blockchain/utils';
 import { TokenBalance } from 'shared/components/token-balance';
 import { Text } from 'shared/components/text';
@@ -18,7 +18,7 @@ import { useEscrowContext } from 'providers/escrow';
 import Link from 'next/link';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
+import { useStETHConversion } from '@dg/hooks/use-steth-conversion';
 
 export const HeaderVaultInfo = () => {
   const [isVaultInfoMenuOpen, setVaultInfoMenuOpen] = useState(false);

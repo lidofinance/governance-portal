@@ -2,8 +2,8 @@ import { TxStageSign } from '../tx-stages-basic';
 import { TxStagePending } from '../tx-stages-basic';
 import { TxAmount } from '../tx-stages-parts/tx-amount';
 import { Token } from 'shared/blockchain/types';
-import { EscrowActionWithEthArgs } from 'features/dual-governance/types';
-import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
+import { EscrowActionWithEthArgs } from '@dg/types';
+import { useStETHConversion } from '@dg/hooks/use-steth-conversion';
 import { InlineLoader } from '@lidofinance/lido-ui';
 
 type CommonProps = {

@@ -1,5 +1,5 @@
 import { useAccount } from 'wagmi';
-import { useDelegationFormData } from '../../providers/delegation-form-context';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 
 export const DelegationAddressInput = () => {

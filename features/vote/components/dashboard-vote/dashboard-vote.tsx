@@ -16,16 +16,16 @@ import {
   VotePhase,
   VoteStatus,
 } from 'shared/votes/types';
-import { getVoteDetailsFormatted } from 'features/vote/utils/get-vote-details-formatted';
-import { useVotePassedCallback } from 'features/vote/hooks/use-vote-passed-callback';
-import { formatFloatPct } from 'features/vote/utils/format-float-pct';
+import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
+import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
+import { formatFloatPct } from '@vote/utils/format-float-pct';
 import { votePage } from 'constants/urls';
 import { VoteStatusBanner } from '../vote-status-banner';
 import { VoteDescription } from '../vote-description';
 import { VoteYesNoBar } from '../vote-yes-no-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { formatEther } from 'viem';
-import { useVoteDualGovernanceStatus } from '../../hooks/use-vote-dual-governance-status';
+import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 import { DashboardCard } from 'shared/components/dashboard-card';
 

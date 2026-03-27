@@ -3,7 +3,7 @@ import { useSupportFormDataContext } from './support-form-context';
 import { TokenAmountInputHookForm } from 'shared/hook-form/token-amount-input-hook-form';
 import { useDappStatus } from 'shared/hooks';
 import { Token } from 'shared/blockchain/types';
-import { NftMultiselectHookForm } from 'features/dual-governance/nft-multiselect';
+import { NftMultiselectHookForm } from '@dg/nft-multiselect';
 import { useMemo } from 'react';
 
 export const VetoSupportFormControls = () => {

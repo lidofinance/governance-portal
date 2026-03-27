@@ -1,7 +1,4 @@
-import {
-  GovernanceState,
-  VisibleGovernanceState,
-} from 'features/dual-governance/types';
+import { GovernanceState, VisibleGovernanceState } from '@dg/types';
 import {
   StateIndicator,
   StateInfoStyled,
@@ -10,10 +7,10 @@ import {
 } from './style';
 import { Text } from 'shared/components/text';
 import { useEscrowContext } from 'providers/escrow';
-import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
+import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 import { FlexWrapper } from 'shared/styled-components';
-import { getNextGovernanceState } from 'features/dual-governance/utils/get-next-dg-state';
-import { calculateCurrentThresholdProgress } from 'features/dual-governance/utils/calculate-current-threshold-progress';
+import { getNextGovernanceState } from '@dg/utils/get-next-dg-state';
+import { calculateCurrentThresholdProgress } from '@dg/utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
 import { Link } from '@lidofinance/lido-ui';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';

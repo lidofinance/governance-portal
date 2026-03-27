@@ -1,14 +1,14 @@
 import { format, fromUnixTime } from 'date-fns';
-import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
+import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useEscrowContext } from 'providers/escrow';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
-import { DGTooltip } from '../../tooltips';
+import { DGTooltip } from '@dg/tooltips';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
-import { useThresholdValue } from 'features/dual-governance/hooks';
-import { GovernanceState } from '../../types';
+import { useThresholdValue } from '@dg/hooks';
+import { GovernanceState } from '@dg/types';
 
 type Props = {
   amountTillVSPhaseWei: bigint;

@@ -1,5 +1,5 @@
 // TODO: move to shared components
-import { Script } from 'features/dual-governance/evm-script-parsed';
+import { Script } from '@dg/evm-script-parsed';
 import { Hex } from 'viem';
 import { decodeEvmScript } from 'shared/blockchain/utils/decode-evm-script';
 import { useMemo } from 'react';

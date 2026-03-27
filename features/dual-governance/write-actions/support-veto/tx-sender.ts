@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 import { dgEscrowAbi } from 'abi/generated';
 import { Token } from 'shared/blockchain/types';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionArgs } from '@dg/types';
 
 export const useSupportVetoTxSender = () => {
   const writeEscrowContract = useWriteContract(dgEscrowAbi);

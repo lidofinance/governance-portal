@@ -1,7 +1,7 @@
 import { Text } from '@lidofinance/lido-ui';
 import { InfoWrap, VotingPower, Amount } from './style';
 import { formatBalance } from 'utils/format-balance';
-import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteContext } from '@vote/providers/vote-context';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 export const VotePowerInfo = () => {

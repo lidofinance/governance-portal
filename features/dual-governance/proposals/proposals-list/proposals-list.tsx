@@ -1,14 +1,14 @@
-import { ProposalsListItem } from 'features/dual-governance/proposals/proposals-list/proposals-list-item';
-import { VoteItem } from 'features/dual-governance/proposals/proposals-list/vote-item';
+import { ProposalsListItem } from '@dg/proposals/proposals-list/proposals-list-item';
+import { VoteItem } from '@dg/proposals/proposals-list/vote-item';
 import {
   InlineLoaderStyled,
   ProposalsListWrapper,
   ShowMoreWrapper,
-} from 'features/dual-governance/proposals/proposals-list/style';
+} from '@dg/proposals/proposals-list/style';
 
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 import { Button } from 'shared/components/button';
-import { isVoteItem } from 'features/dual-governance/types';
+import { isVoteItem } from '@dg/types';
 import { useEffect, useState, useMemo } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
 import Link from 'next/link';

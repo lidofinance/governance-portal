@@ -5,7 +5,7 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { ActionArgs } from 'shared/types';
 import { useTxModalRevokeDelegation } from './modal-stages';
 import { useRevokeDelegationTxSender } from './tx-sender';
-import { DelegationType } from 'features/vote/types';
+import { DelegationType } from '@vote/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
 
 export const useRevokeDelegationAction = ({

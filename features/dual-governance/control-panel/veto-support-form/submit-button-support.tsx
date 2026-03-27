@@ -3,7 +3,7 @@ import { useSupportFormDataContext } from './support-form-context';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { useFormContext } from 'react-hook-form';
-import { NftMultiselectValuesMap } from '../../nft-multiselect';
+import { NftMultiselectValuesMap } from '@dg/nft-multiselect';
 
 export const SubmitButtonSupport = () => {
   const {

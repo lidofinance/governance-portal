@@ -1,16 +1,16 @@
 import { PopupMenu, PopupMenuItem } from '@lidofinance/lido-ui';
 import { Actions } from './style';
-import { VoteMode } from '../../types';
+import { VoteMode } from '@vote/types';
 import React, { useMemo, useRef, useState } from 'react';
 import { VotePhase } from 'shared/votes/types';
 import { ActionButtons } from './action-buttons';
-import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteContext } from '@vote/providers/vote-context';
 import { formatBalance } from 'utils/format-balance';
 import { DelegatorsSelector } from './components/delegators-selector';
 import { FlexWrapper } from 'shared/styled-components';
 import { Address } from 'viem';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
-import { useVoteAction } from 'features/vote/write-actions/vote/action';
+import { useVoteAction } from '@vote/write-actions/vote/action';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 export const VoteActions = () => {

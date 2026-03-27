@@ -24,14 +24,11 @@ import {
   UseApproveResponse,
   useApprove,
 } from 'shared/blockchain/hooks/use-approve';
-import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
-import {
-  EscrowActionArgs,
-  VetoSupportedTokens,
-} from 'features/dual-governance/types';
+import { useEscrowBalances } from '@dg/hooks/use-escrow-balances';
+import { EscrowActionArgs, VetoSupportedTokens } from '@dg/types';
 import { useUnstEthBalance } from 'shared/blockchain/hooks/use-unsteth-balance';
-import { NftMultiselectValuesMap } from 'features/dual-governance/nft-multiselect';
-import { useSupportVetoAction } from 'features/dual-governance/write-actions/support-veto/action';
+import { NftMultiselectValuesMap } from '@dg/nft-multiselect';
+import { useSupportVetoAction } from '@dg/write-actions/support-veto/action';
 import { useEscrowContext } from 'providers/escrow';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 
