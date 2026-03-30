@@ -71,7 +71,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch: refetchVote,
-  } = useVote(voteId, votingConfig?.voteTime);
+  } = useVote(Number(voteId), votingConfig?.voteTime);
 
   const {
     data: voteEvents,
