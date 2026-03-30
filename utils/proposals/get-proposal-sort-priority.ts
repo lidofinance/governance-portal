@@ -1,8 +1,5 @@
-import {
-  ProposalCombinedData,
-  ProposalStatus,
-} from 'features/dual-governance/proposals/types';
-import { isVoteItem } from 'features/dual-governance/types';
+import { ProposalCombinedData, ProposalStatus } from '@dg/proposals/types';
+import { isVoteItem } from '@dg/types';
 import { VoteData } from 'shared/votes/types';
 
 type Props = {

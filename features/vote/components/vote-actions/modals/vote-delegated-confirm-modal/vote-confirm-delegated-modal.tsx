@@ -1,12 +1,12 @@
 import { Button } from '@lidofinance/lido-ui';
-import { VoteMode } from 'features/vote/types';
-import { DelegatorsSelector } from '../../components/delegators-selector';
+import { VoteMode } from '@vote/types';
+import { DelegatorsSelector } from '@vote/components/vote-actions/components/delegators-selector';
 import { Text } from 'shared/components/text';
 import { ComponentProps, useState } from 'react';
 import { Address } from 'viem';
 import { formatBalance } from 'utils/format-balance';
 import { Box } from 'shared/components/box';
-import { VOTE_MODE_MAP } from 'features/vote/constants';
+import { VOTE_MODE_MAP } from '@vote/constants';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {

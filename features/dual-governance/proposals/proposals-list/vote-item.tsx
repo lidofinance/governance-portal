@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
-import { VoteStatusBadge } from 'features/dual-governance/proposals/shared-components/vote-status-badge';
+import { VoteStatusBadge } from '@dg/proposals/shared-components/vote-status-badge';
 
 import {
   ProposalListItemWrapper,
@@ -12,7 +12,7 @@ import {
   DescriptionContent,
   UnknownContract,
 } from './style';
-import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
+import { ProposalName } from '@dg/proposals/shared-components/proposal-name/proposal-name';
 import { VoteData } from 'shared/votes/types';
 import { useDecodedScript } from 'shared/hooks';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';

@@ -15,7 +15,7 @@ import {
   CallDataItem,
   NestedCallWrapper,
   DGBadge,
-} from 'features/dual-governance/evm-script-parsed/style';
+} from '@dg/evm-script-parsed/style';
 import { DecodedCall } from 'utils/decode-evm-script-calls';
 import { DualGovernancePlainIcon } from 'shared/components/icons';
 import { DualGovernance } from 'shared/blockchain/contract-addresses';

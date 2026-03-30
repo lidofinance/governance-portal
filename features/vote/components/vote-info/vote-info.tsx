@@ -4,9 +4,9 @@ import { InfoWrap, VoteStatus, AddressBadgeWrap } from './style';
 import { VotePhase } from 'shared/votes/types';
 import { AddressPop } from 'shared/components/address-pop';
 import { useMemo } from 'react';
-import { getPublicDelegate } from 'features/vote/utils/get-public-delegate';
+import { getPublicDelegate } from '@vote/utils/get-public-delegate';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
-import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteContext } from '@vote/providers/vote-context';
 
 interface Props {
   walletAddress: string | null | undefined;

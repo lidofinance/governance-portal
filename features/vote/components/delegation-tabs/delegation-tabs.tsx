@@ -1,5 +1,5 @@
 import { VOTE_DELEGATION_PATH, VOTE_DELEGATORS_PATH } from 'constants/urls';
-import { useIsDelegate } from 'features/vote/hooks/use-is-delegate';
+import { useIsDelegate } from '@vote/hooks/use-is-delegate';
 import { NoSsrWrapper } from 'shared/components/no-ssr-wrapper';
 import { Switch } from '../switch';
 import { DelegatorsList } from '../delegators-list';

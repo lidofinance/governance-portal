@@ -8,13 +8,13 @@ import { useAccount } from 'wagmi';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useEscrowContext } from 'providers/escrow';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionArgs } from '@dg/types';
 import { Token } from 'shared/blockchain/types';
 import { ActionArgs } from 'shared/types';
 import { useSupportVetoTxSender } from './tx-sender';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { VisibleGovernanceState } from '@dg/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
-import { useRefetchEscrowData } from '../../hooks/use-refetch-escrow-data';
+import { useRefetchEscrowData } from '@dg/hooks/use-refetch-escrow-data';
 
 const SHOULD_CONVERT_SHARES = false;
 

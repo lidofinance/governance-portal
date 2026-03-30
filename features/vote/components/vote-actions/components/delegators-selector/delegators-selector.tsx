@@ -17,7 +17,7 @@ import {
   VotedByHolderWrap,
 } from './style';
 import { formatBalance } from 'utils/format-balance';
-import { EligibleDelegator, VoteMode, VoterInfo } from 'features/vote/types';
+import { EligibleDelegator, VoteMode, VoterInfo } from '@vote/types';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 const TRANSACTION_LIMIT = 100;

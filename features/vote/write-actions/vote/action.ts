@@ -4,9 +4,9 @@ import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useVoteTxSender } from './tx-sender';
 import { useTxModalVote } from './modal-stages';
-import { VoteMode } from 'features/vote/types';
+import { VoteMode } from '@vote/types';
 import { Address } from 'viem';
-import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteContext } from '@vote/providers/vote-context';
 
 type VoteActionArgs = {
   mode: VoteMode;

@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import { Layout } from 'shared/components';
-import { VoteCard } from 'features/vote/components/vote-card';
-import { VoteProvider } from '../../features/vote/providers/vote-context';
-import { VoteMeta } from '../../features/vote/meta';
+import { VoteCard } from '@vote/components/vote-card';
+import { VoteProvider } from '@vote/providers/vote-context';
+import { VoteMeta } from '@vote/meta';
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
 import { BackButton } from 'shared/components/back-button';
 

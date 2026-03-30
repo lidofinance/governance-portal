@@ -9,8 +9,8 @@ import {
 import { PublicDelegateListItem } from './public-delegate-list-item';
 import { useAccount } from 'wagmi';
 import { AragonSmallLogo } from 'shared/components/icons';
-import { useProcessedPublicDelegatesList } from 'features/vote/hooks/use-processed-public-delegates-list';
-import { useDelegateFromPublicList } from 'features/vote/providers/delegate-form-public-list-context';
+import { useProcessedPublicDelegatesList } from '@vote/hooks/use-processed-public-delegates-list';
+import { useDelegateFromPublicList } from '@vote/providers/delegate-form-public-list-context';
 
 export const PublicDelegateList = () => {
   const { isConnected } = useAccount();

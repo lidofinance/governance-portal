@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Text, useBreakpoint } from '@lidofinance/lido-ui';
 
 import { FormTitle, FormWrap, Wrap } from './style';
-import { DelegateFromPublicListProvider } from 'features/vote/providers/delegate-form-public-list-context';
+import { DelegateFromPublicListProvider } from '@vote/providers/delegate-form-public-list-context';
 import { DelegationForm } from '../delegation-form';
 import { PublicDelegateList } from '../public-delegate-list';
 

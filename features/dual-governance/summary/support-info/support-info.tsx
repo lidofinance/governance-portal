@@ -1,18 +1,18 @@
 import { Text } from 'shared/components/text';
 import { AdditionalSupportInfo } from './additional-support-info';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { VisibleGovernanceState } from '@dg/types';
 import { InlineLoader } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
 import { ProgressBar } from 'shared/components/progress-bar';
 import { RageQuitProgress } from './rage-quit-progress';
-import { DGTooltip } from 'features/dual-governance/tooltips';
+import { DGTooltip } from '@dg/tooltips';
 import { FlexWrapper } from 'shared/styled-components';
-import { calculateCurrentThresholdProgress } from '../../utils';
+import { calculateCurrentThresholdProgress } from '@dg/utils';
 import { useMemo } from 'react';
 import { useEscrowContext } from 'providers/escrow';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
-import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
+import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 
 const InlineLoaderStyled = styled(InlineLoader)`
   margin-top: 20px;

@@ -1,5 +1,5 @@
 import { Address } from 'viem';
-import { VoteMode } from '../../types';
+import { VoteMode } from '@vote/types';
 
 export type VoteTxArgs = {
   voteId: bigint;

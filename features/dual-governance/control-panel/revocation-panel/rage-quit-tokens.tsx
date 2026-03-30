@@ -4,22 +4,22 @@ import { RevocableTokenItem } from './revocable-token-item';
 import { Token } from 'shared/blockchain/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import invariant from 'tiny-invariant';
-import { useWithdrawEthAction } from 'features/dual-governance/write-actions/withdraw-eth';
-import { useRageQuitEscrowDetails } from 'features/dual-governance/hooks/use-rage-quit-escrow-details';
+import { useWithdrawEthAction } from '@dg/write-actions/withdraw-eth';
+import { useRageQuitEscrowDetails } from '@dg/hooks/use-rage-quit-escrow-details';
 import { useCountdown } from 'shared/hooks/use-countdown';
-import { useSelectUnstethModal } from 'features/dual-governance/modals/modal-manager';
+import { useSelectUnstethModal } from '@dg/modals/modal-manager';
 import { Box } from 'shared/components/box';
 import { Address } from 'viem';
 import { Link } from '@lidofinance/lido-ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { ExternalLinkIcon } from 'shared/components/icons';
-import { UnstETHRecordStatus } from '../../types';
+import { UnstETHRecordStatus } from '@dg/types';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import {
   EscrowBalance,
   RageQuitEscrowUnstETHRecord,
-} from '../../hooks/use-escrow-balances';
+} from '@dg/hooks/use-escrow-balances';
 
 type Props = {
   onConfirm: () => Promise<void>;

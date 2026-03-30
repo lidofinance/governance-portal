@@ -1,14 +1,14 @@
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
+import { ProposalCombinedData } from '@dg/proposals/types';
 import { VoteData } from 'shared/votes/types';
-import { isVoteItem } from '../../types';
+import { isVoteItem } from '@dg/types';
 import { IconWrapper, ProposalWrapper, VoteWrapper } from '../style';
 import { AragonLogo, ProposalsIcon } from 'shared/components/icons';
 import { Text } from 'shared/components/text';
 import Link from 'next/link';
-import { DGTooltip } from 'features/dual-governance/tooltips';
+import { DGTooltip } from '@dg/tooltips';
 import { ReactNode } from 'react';
 import { PROPOSALS_PATH, votePage } from 'constants/urls';
-import { useProposalStatus } from 'features/dual-governance/hooks/use-proposal-status';
+import { useProposalStatus } from '@dg/hooks/use-proposal-status';
 
 type Props = {
   proposal: ProposalCombinedData | VoteData;

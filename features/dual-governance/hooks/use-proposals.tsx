@@ -2,10 +2,10 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 
-import { ProposalCombinedData } from 'features/dual-governance/proposals/types';
+import { ProposalCombinedData } from '@dg/proposals/types';
 import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
 import { Address } from 'viem';
-import { fetchProposals } from 'features/dual-governance/utils/fetch-proposals';
+import { fetchProposals } from '@dg/utils/fetch-proposals';
 import { fetchProposal } from '../utils';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useConfig } from 'config';

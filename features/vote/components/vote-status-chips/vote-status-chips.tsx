@@ -2,7 +2,7 @@ import { Chip } from 'shared/components/chip';
 import { VoteStatusWrap } from './style';
 import { InfoIcon, ExternalLinkIcon } from 'shared/components/icons';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { ProposalStatus } from '@dg/proposals/types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { VotePhasesTooltip } from '../vote-phases-tooltip';
 import { Link, Tooltip } from '@lidofinance/lido-ui';

@@ -2,7 +2,7 @@ import {
   EscrowActionWithEthArgs,
   isTokenAmountArgs,
   isWithdrawalNFTArgs,
-} from 'features/dual-governance/types';
+} from '@dg/types';
 import { getGeneralTransactionModalStages } from './get-general-transaction-modal-stages';
 import { TransactionModalTransitStage } from './use-transaction-modal-stage';
 import { TxStageSignOperationAmount } from '../tx-stages-composed/tx-stage-amount-operation';

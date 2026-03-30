@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Layout } from 'shared/components';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ProposalPage as ProposalPageComponent } from 'features/dual-governance/pages/proposal-page';
+import { ProposalPage as ProposalPageComponent } from '@dg/pages/proposal-page';
 import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 

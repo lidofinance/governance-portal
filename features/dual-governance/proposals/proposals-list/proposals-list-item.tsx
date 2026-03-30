@@ -7,18 +7,15 @@ import {
   TimelockWrapper,
   UnknownContract,
 } from './style';
-import { ProposalName } from 'features/dual-governance/proposals/shared-components/proposal-name/proposal-name';
-import {
-  ProposalCombinedData,
-  SubmitProposalCall,
-} from 'features/dual-governance/proposals/types';
+import { ProposalName } from '@dg/proposals/shared-components/proposal-name/proposal-name';
+import { ProposalCombinedData, SubmitProposalCall } from '@dg/proposals/types';
 import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WarningIconTransparent } from 'shared/components/icons';
-import { useProposalStatus } from '../../hooks/use-proposal-status';
+import { useProposalStatus } from '@dg/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
-import { DGTooltip } from '../../tooltips';
+import { DGTooltip } from '@dg/tooltips';
 import { Address } from 'viem';
 import { ChainAddressMap } from 'shared/blockchain/types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';

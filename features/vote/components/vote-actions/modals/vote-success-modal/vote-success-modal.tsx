@@ -1,6 +1,6 @@
 import { TxStageSuccess } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts/success-text';
-import { EligibleDelegator, VoteMode } from 'features/vote/types';
+import { EligibleDelegator, VoteMode } from '@vote/types';
 import { Text } from 'shared/components/text';
 import { Button } from '@lidofinance/lido-ui';
 import { VoteEvent } from 'shared/votes/types';
@@ -8,10 +8,10 @@ import { useAccount } from 'wagmi';
 import React, { useMemo, useState } from 'react';
 import { AddonSection } from './style';
 import { Address } from 'viem';
-import { DelegatorsSelector } from '../../components/delegators-selector';
+import { DelegatorsSelector } from '@vote/components/vote-actions/components/delegators-selector';
 import { Box } from 'shared/components/box';
 import { formatBalance } from 'utils/format-balance';
-import { VOTE_MODE_MAP } from 'features/vote/constants';
+import { VOTE_MODE_MAP } from '@vote/constants';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 type Props = {

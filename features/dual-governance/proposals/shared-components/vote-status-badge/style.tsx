@@ -1,5 +1,5 @@
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
-import { BadgeVariant } from 'features/dual-governance/proposals/shared-components/vote-status-badge/types';
+import { BadgeVariant } from '@dg/proposals/shared-components/vote-status-badge/types';
 
 const variantStyles: Record<BadgeVariant, FlattenSimpleInterpolation> = {
   warning: css`

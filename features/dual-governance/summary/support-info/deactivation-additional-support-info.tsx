@@ -1,5 +1,5 @@
 import { format, fromUnixTime } from 'date-fns';
-import { useDualGovernanceConfig } from 'features/dual-governance/hooks/use-dual-governance-config';
+import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
@@ -9,7 +9,7 @@ import {
   parsePercent16,
 } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
-import { DGTooltip } from 'features/dual-governance/tooltips';
+import { DGTooltip } from '@dg/tooltips';
 
 type Props = {
   amountTillRQPhaseWei: bigint;
