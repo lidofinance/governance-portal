@@ -51,11 +51,14 @@ export const DeactivationAdditionalSupportInfo = ({
     const durationDiff = vetoSignallingMaxDuration - vetoSignallingMinDuration;
 
     const result =
+      firstThreshold +
       (thresholdDiff *
-        (currentTimestamp + futureTimestamp + persistedStateEnteredAt)) /
-      durationDiff;
+        (futureTimestamp -
+          persistedStateEnteredAt -
+          vetoSignallingMinDuration)) /
+        durationDiff;
 
-    if (result > secondThreshold || result < 0) {
+    if (result > secondThreshold) {
       // edge case
       return null;
     }

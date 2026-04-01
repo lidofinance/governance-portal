@@ -1,3 +1,6 @@
+import { GovernanceState } from '../../types';
+import { getAmountUntilVetoSignalling } from '../get-amount-till-vetosignalling';
+
 // Real values from DualGovernanceConfigProvider (mainnet)
 const DG_CONFIG = {
   firstSealRageQuitSupport: 10000000000000000n, // 1%
@@ -29,13 +32,11 @@ jest.mock('viem', () => ({
   formatEther: (value: bigint): string => String(Number(value) / 1e18),
 }));
 
-import { getAmountUntilVetoSignalling } from '../get-amount-till-vetosignalling';
-
 const NOW = 1_743_500_000;
 
 const makeState = (persistedStateEnteredAt: number) => ({
-  effectiveState: 3,
-  persistedState: 3,
+  effectiveState: GovernanceState.VetoSignallingDeactivation,
+  persistedState: GovernanceState.VetoSignallingDeactivation,
   persistedStateEnteredAt,
   vetoSignallingActivatedAt: 0,
   vetoSignallingReactivationTime: 0,
