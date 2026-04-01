@@ -123,5 +123,32 @@
   "browserslist": [
     "> 1%, last 2 versions, not dead",
     "last 1 ios_saf major versions"
-  ]
+  ],
+  "jest": {
+    "transform": {
+      "^.+\\.(ts|tsx)$": [
+        "babel-jest",
+        {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets": {
+                  "node": "current"
+                }
+              }
+            ],
+            "@babel/preset-typescript"
+          ]
+        }
+      ]
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "."
+    ],
+    "moduleNameMapper": {
+      "^expect$": "<rootDir>/node_modules/expect/build/index.js"
+    }
+  }
 }
