@@ -34,18 +34,20 @@ export const getAmountUntilVetoSignalling = (
   const durationDiff = vetoSignallingMaxDuration - vetoSignallingMinDuration;
 
   const totalSupplyPercentage =
+    firstThreshold +
     (thresholdDiff *
-      (currentTimestamp + futureTimestamp + persistedStateEnteredAt)) /
-    durationDiff;
+      (futureTimestamp - persistedStateEnteredAt - vetoSignallingMinDuration)) /
+      durationDiff;
 
-  if (totalSupplyPercentage > secondThreshold || totalSupplyPercentage < 0) {
+  if (totalSupplyPercentage > secondThreshold) {
     // edge case
     return null;
   }
 
   const formattedValue = formatNumber({
     value: formatEther(
-      (stEthTotalSupply * BigInt(totalSupplyPercentage)) / 100n,
+      (stEthTotalSupply * BigInt(Math.round(totalSupplyPercentage * 100))) /
+        10000n,
     ),
   });
   const formattedPercentage = formatNumber({ value: totalSupplyPercentage });
