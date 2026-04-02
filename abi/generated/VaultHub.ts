@@ -1675,4 +1675,11 @@ export const vaultHubAbi = [
     stateMutability: 'view',
   },
   { type: 'receive', stateMutability: 'payable' },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'badDebtToInternalizeForLastRefSlot',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
 ] as const;
