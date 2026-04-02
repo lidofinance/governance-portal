@@ -1,18 +1,18 @@
-import { ProposalsList } from 'features/dual-governance/proposals/proposals-list';
+import { ProposalsList } from '@dg/proposals/proposals-list';
 import { FlexWrapper } from 'shared/styled-components';
 import {
   ProposalsDisclaimer,
   ProposalsTitle,
   ProposalsWrapper,
   ProposalsDisclaimerWrapper,
-} from 'features/dual-governance/proposals/proposals-section/style';
+} from '@dg/proposals/proposals-section/style';
 import { SearchInput } from './search-input';
 import { useRouter } from 'next/router';
-import { ProposalSearchItem } from 'features/dual-governance/proposals/proposals-list/proposal-search-item';
+import { ProposalSearchItem } from '@dg/proposals/proposals-list/proposal-search-item';
 import { ProposalFlowBanner } from '../proposal-flow-banner';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';
 import { useEffect, useState } from 'react';
-import { useIsEmergencyGovernanceActive } from '../../hooks/use-is-emergency-governance-active';
+import { useIsEmergencyGovernanceActive } from '@dg/hooks/use-is-emergency-governance-active';
 
 const MAX_SCREEN_WIDTH_PROPOSAL_FLOW = 1270;
 

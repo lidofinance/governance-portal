@@ -6,8 +6,8 @@ import { Text, useBreakpoint } from '@lidofinance/lido-ui';
 import { VoterItem } from './voter-item';
 import { useEnsNames } from 'shared/hooks/use-ens-names';
 import { Address } from 'viem';
-import { useVoteContext } from 'features/vote/providers/vote-context';
-import { ONE_LDO } from 'features/vote/constants';
+import { useVoteContext } from '@vote/providers/vote-context';
+import { ONE_LDO } from '@vote/constants';
 import { KnownToken } from 'shared/blockchain/tokens';
 
 const INITIAL_PAGE_SIZE = 5;

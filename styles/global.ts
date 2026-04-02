@@ -6,7 +6,7 @@ import {
   NAV_TABLET_MAX_WIDTH,
 } from './constants';
 import { ThemeName } from '@lidofinance/lido-ui';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { VisibleGovernanceState } from '@dg/types';
 import { themeDefault } from '@lidofinance/lido-ui';
 
 export const BREAKPOINT_MOBILE = '960px';

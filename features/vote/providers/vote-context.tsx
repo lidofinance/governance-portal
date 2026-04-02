@@ -16,7 +16,7 @@ import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { useVoteDelegators } from '../hooks/use-vote-delegators';
 import { EligibleDelegator, VoterInfo } from '../types';
-import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { ProposalStatus } from '@dg/proposals/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 
@@ -71,7 +71,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch: refetchVote,
-  } = useVote(voteId, votingConfig?.voteTime);
+  } = useVote(Number(voteId), votingConfig?.voteTime);
 
   const {
     data: voteEvents,

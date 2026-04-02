@@ -1,4 +1,4 @@
-import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { DelegationFormFootNoteStyled } from './style';
 
 export const DelegationFormFootNote = () => {

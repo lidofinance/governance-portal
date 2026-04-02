@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 import { dgEscrowAbi } from 'abi/generated';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useEscrowContext } from 'providers/escrow';
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionArgs } from '@dg/types';
 import { Token } from 'shared/blockchain/types';
 
 export const useRevokeTokensTxSender = () => {

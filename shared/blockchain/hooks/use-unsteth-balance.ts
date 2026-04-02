@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { useReadContract } from './use-read-contract';
-import { WithdrawalsMap } from 'features/dual-governance/types';
+import { WithdrawalsMap } from '@dg/types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { WithdrawalQueue } from '../contracts';
 

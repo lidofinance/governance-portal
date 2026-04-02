@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { DelegationFormFootNoteStyled } from './style';
-import { PublicDelegate } from 'features/vote/types';
-import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
+import { PublicDelegate } from '@vote/types';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { isAddress } from 'viem';
-import { getPublicDelegate } from 'features/vote/utils/get-public-delegate';
+import { getPublicDelegate } from '@vote/utils/get-public-delegate';
 
 export const DelegationFormPublicDelegateTooltip = () => {
   const { watch } = useDelegationFormData();

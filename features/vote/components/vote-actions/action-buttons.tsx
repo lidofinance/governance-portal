@@ -3,7 +3,7 @@ import { Tooltip } from '@lidofinance/lido-ui';
 import { CheckIcon, CrossIcon } from 'shared/components/icons';
 import { VotePhase } from 'shared/votes/types';
 import { ActionButtonsStyled, VoteButton } from './style';
-import { VoteMode } from '../../types';
+import { VoteMode } from '@vote/types';
 
 type Props = {
   onVote: (mode: VoteMode) => void;

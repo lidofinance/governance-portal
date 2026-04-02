@@ -8,7 +8,7 @@ import {
 } from './style';
 import { Text } from 'shared/components/text';
 import { FlexWrapper } from 'shared/styled-components';
-import { useProposalDelaysQuery } from '../../hooks/use-proposal-timelock';
+import { useProposalDelaysQuery } from '@dg/hooks/use-proposal-timelock';
 
 export const ProposalFlowBanner = () => {
   const { data: delays } = useProposalDelaysQuery({

@@ -27,7 +27,7 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Text } from 'shared/components/text';
 import { FlexWrapper } from '../../styled-components';
-import { useDaoTokenBalance } from 'features/vote/hooks/use-dao-token-balance';
+import { useDaoTokenBalance } from '@vote/hooks/use-dao-token-balance';
 import { formatToken } from 'shared/blockchain/utils';
 import { KnownToken } from 'shared/blockchain/tokens';
 

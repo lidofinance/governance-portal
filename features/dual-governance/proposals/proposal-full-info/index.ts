@@ -1,1 +1,1 @@
-export * from 'features/dual-governance/proposals/proposal-full-info/proposal-full-info';
+export * from '@dg/proposals/proposal-full-info/proposal-full-info';

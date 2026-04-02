@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { DashboardGrid } from 'features/vote/components/dashboard-grid';
+import { DashboardGrid } from '@vote/components/dashboard-grid';
 import { Layout } from 'shared/components';
-import { VoteMeta } from 'features/vote/meta';
+import { VoteMeta } from '@vote/meta';
 
 const DashboardPage = () => {
   const router = useRouter();

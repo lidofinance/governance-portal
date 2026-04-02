@@ -12,8 +12,8 @@ import { AddressPop } from 'shared/components/address-pop/address-pop';
 import { parseEther } from 'viem';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { TurnArrow, UnionIcon } from 'shared/components/icons';
-import { getPublicDelegate } from '../../utils/get-public-delegate';
-import { formatVp } from 'features/vote/utils/format-vp';
+import { getPublicDelegate } from '@vote/utils/get-public-delegate';
+import { formatVp } from '@vote/utils/format-vp';
 
 const getShouldShowTooltip = (stake: bigint) => {
   return stake > parseEther('1000') || stake < parseEther('0.1');

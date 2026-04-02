@@ -1,4 +1,4 @@
-import { ProcessedDelegate } from 'features/vote/hooks/use-processed-public-delegates-list';
+import { ProcessedDelegate } from '@vote/hooks/use-processed-public-delegates-list';
 import {
   DelegateInfo,
   DelegateNameAndAddress,

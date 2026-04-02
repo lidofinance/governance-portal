@@ -10,8 +10,8 @@ import {
 } from './style';
 import { DelegatorsListItem } from './delegators-list-item';
 import { useAccount } from 'wagmi';
-import { useDelegators } from 'features/vote/hooks/use-delegators';
-import { DELEGATORS_PAGE_SIZE } from 'features/vote/constants';
+import { useDelegators } from '@vote/hooks/use-delegators';
+import { DELEGATORS_PAGE_SIZE } from '@vote/constants';
 import { InfoLabel } from '../info-row';
 import { formatBalance } from 'utils/format-balance';
 import { KnownToken } from 'shared/blockchain/tokens';

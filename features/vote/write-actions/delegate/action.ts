@@ -6,7 +6,7 @@ import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { ActionArgs } from 'shared/types';
 import { useTxModalDelegate } from './modal-stages';
 import { useDelegateTxSender } from './tx-sender';
-import { DelegationFormInput, DelegationFormMode } from 'features/vote/types';
+import { DelegationFormInput, DelegationFormMode } from '@vote/types';
 import { DelegateTxArgs } from './types';
 
 type Args = {

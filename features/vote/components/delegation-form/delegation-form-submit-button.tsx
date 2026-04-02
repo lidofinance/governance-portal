@@ -4,7 +4,7 @@ import { Text } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
 import { useFormContext } from 'react-hook-form';
 import { useFormControllerContext } from 'shared/hook-form/form-controller-context';
-import { useDelegationFormData } from '../../providers/delegation-form-context';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { DelegateButton } from './style';
 import { useConfirmReDelegateModal } from './confirm-re-delegate-modal';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';

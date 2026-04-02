@@ -3,7 +3,7 @@ import {
   ProposalDetails,
   ProposalSubmittedLog,
   SubmitProposalCall,
-} from 'features/dual-governance/proposals/types';
+} from '@dg/proposals/types';
 import { fetchCachedEventsData } from './fetch-cached-events-data';
 import { Address, PublicClient } from 'viem';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';

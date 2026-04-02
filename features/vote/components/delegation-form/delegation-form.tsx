@@ -9,7 +9,7 @@ import { DelegationFormPublicDelegateTooltip } from './delegation-form-public-de
 import {
   DelegationFormProvider,
   DelegationFormProviderProps,
-} from 'features/vote/providers/delegation-form-context';
+} from '@vote/providers/delegation-form-context';
 
 type Props = DelegationFormProviderProps & {
   onCustomizeClick?: () => void;

@@ -2,9 +2,9 @@ import { useRef, useState } from 'react';
 import { DualGovernanceStatusButtonStyled, PopoverStyled } from './style';
 import { Box, Loader } from '@lidofinance/lido-ui';
 import { DualGovernancePlainIcon } from '../icons';
-import { DualGovernanceWidget } from 'features/dual-governance/dual-governance-widget';
-import { useDualGovernanceWidgetState } from 'features/dual-governance/dual-governance-widget/use-dual-governance-widget-state';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { DualGovernanceWidget } from '@dg/dual-governance-widget';
+import { useDualGovernanceWidgetState } from '@dg/dual-governance-widget/use-dual-governance-widget-state';
+import { VisibleGovernanceState } from '@dg/types';
 
 type Props = {
   isMobile?: boolean;

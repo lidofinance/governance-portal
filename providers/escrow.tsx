@@ -7,7 +7,7 @@ import {
   FC,
 } from 'react';
 import invariant from 'tiny-invariant';
-import { useEscrowAddresses } from 'features/dual-governance/hooks';
+import { useEscrowAddresses } from '@dg/hooks';
 import { Address } from 'viem';
 import {
   useReadContract,

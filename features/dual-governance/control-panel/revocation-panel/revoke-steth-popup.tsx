@@ -2,7 +2,7 @@ import { Token } from 'shared/blockchain/types';
 import { RevokeStEthPopupItem, RevokeStEthPopupStyled } from './style';
 import { formatEth, getTokenIcon } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';
-import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
+import { useStETHConversion } from '@dg/hooks/use-steth-conversion';
 
 type Props = {
   anchorRef: React.RefObject<HTMLDivElement>;
