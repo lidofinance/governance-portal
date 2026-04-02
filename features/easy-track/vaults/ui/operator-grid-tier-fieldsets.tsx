@@ -4,20 +4,24 @@ import { BpValueFormatted } from './bp-value-formatted';
 import { Fieldset } from '../../start-motion/parts/style';
 import { validateUintValue } from '../../utils/validate-uint-value';
 import { validateEtherValue } from 'utils/validate-ether-value';
-import { MAX_FEE_BP, MAX_RESERVE_RATIO_BP } from '../../constants';
+import {
+  MAX_FEE_BP,
+  MAX_RESERVE_RATIO_BP,
+  MAX_SHARE_LIMIT,
+} from '../../constants';
 import { parseEther } from 'viem';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 
 type Props = {
   tierArrayFieldName: string;
   fieldIndex: number;
-  maxShareLimit: bigint;
+  maxShareLimit?: bigint | undefined;
 };
 
 export const OperatorGridTierFieldsets = ({
   tierArrayFieldName,
   fieldIndex,
-  maxShareLimit,
+  maxShareLimit = MAX_SHARE_LIMIT,
 }: Props) => {
   const { getValues } = useFormContext();
 
@@ -37,7 +41,7 @@ export const OperatorGridTierFieldsets = ({
               }
 
               const valueBn = parseEther(value);
-              if (maxShareLimit < valueBn) {
+              if (valueBn > maxShareLimit) {
                 return `Value must be less than or equal to ${formatVaultParam(
                   maxShareLimit,
                 )}`;

@@ -34,6 +34,7 @@ import { OperatorGridAddressInputHookForm } from '@easy-track/vaults/ui/operator
 import { OperatorGridEditTiersFieldsWrapper } from '@easy-track/vaults/ui/operator-grid-edit-tiers-fields-wrapper';
 import { PredefinedGroupParamsPicker } from '@easy-track/vaults/ui/predefined-group-params-picker';
 import { useOperatorGridTierMap } from '@easy-track/vaults/hooks/use-operator-grid-tier-map';
+import { MAX_SHARE_LIMIT } from '@easy-track/constants';
 
 type TierInput = {
   nodeOperator: string;
@@ -148,7 +149,7 @@ export const formParts = createMotionFormPart({
           const groupShareLimit =
             groupData?.operator.toLowerCase() === DEFAULT_TIER_OPERATOR
               ? defaultTierMaxShareLimit
-              : groupData?.shareLimit;
+              : MAX_SHARE_LIMIT;
 
           return (
             <Fragment key={item.id}>
