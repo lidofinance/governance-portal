@@ -2,7 +2,6 @@ import { ProposalsListItem } from './proposals-list-item';
 import { InlineLoaderStyled, ProposalSearchItemWrapper } from './style';
 import { PROPOSALS_PATH } from 'constants/urls';
 import Link from 'next/link';
-import { Address } from 'viem';
 import { useDualGovernanceProposalsContext } from 'providers/dual-governance-proposals';
 
 export const ProposalSearchItem = ({ id }: { id: string }) => {
@@ -35,8 +34,6 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
         >
           <ProposalsListItem
             id={proposal.proposalId}
-            proposer={proposal.DGEvent?.args.proposerAccount as Address}
-            description={proposal.DGEvent?.args?.metadata || ''}
             calls={proposal.proposalDetails?.calls}
             proposalDetails={proposal.proposalDetails}
           />

@@ -13,7 +13,6 @@ import { useEffect, useState, useMemo } from 'react';
 import { FlexWrapper } from 'shared/styled-components';
 import Link from 'next/link';
 import { PROPOSALS_PATH, votePage } from 'constants/urls';
-import { Address } from 'viem';
 
 const INITIAL_DISPLAY_LIMIT = 4;
 
@@ -85,10 +84,8 @@ export const ProposalsList = () => {
         >
           <ProposalsListItem
             id={dataItem.proposalId}
-            description={dataItem.DGEvent?.args.metadata || ''}
             calls={dataItem.proposalDetails.calls}
             proposalDetails={dataItem.proposalDetails}
-            proposer={dataItem.DGEvent?.args.proposerAccount as Address}
           />
         </Link>
       );
