@@ -7,7 +7,11 @@ import { EventExecuteVote } from '../types';
 type Args = {
   address: Address;
   client: PublicClient;
-  votes: { id: string | number | bigint; snapshotBlock: bigint }[];
+  votes: {
+    id: string | number | bigint;
+    snapshotBlock: bigint;
+    toBlock: bigint;
+  }[];
 };
 
 export const getEventsExecuteVote = async ({
@@ -35,6 +39,7 @@ export const getEventsExecuteVote = async ({
           address,
           event: executeVoteEventAbi,
           fromBlock: vote.snapshotBlock,
+          toBlock: vote.toBlock,
           args: { voteId: BigInt(vote.id) },
         });
 

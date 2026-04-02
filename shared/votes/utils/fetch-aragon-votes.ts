@@ -24,6 +24,9 @@ type VoteResult = Vote & {
   executeEvent: EventExecuteVote | null;
 };
 
+const FALLBACK_BLOCK_TIME_SECS = 12;
+const EXECUTE_BUFFER_SECS = 604800; // 1 week in seconds
+
 const isVoteActive = (vote: Vote) => {
   if (
     vote.state.status === VoteStatus.ActiveObjection &&
@@ -45,8 +48,13 @@ export const fetchAragonVotes = async ({
   client,
   onlyActive = true,
 }: FetchArgs): Promise<VoteResult[]> => {
-  const votesLengthBn = await votingContract.readContract('votesLength');
+  const [votesLengthBn, voteTimeBn, latestBlock] = await Promise.all([
+    votingContract.readContract('votesLength'),
+    votingContract.readContract('voteTime'),
+    client.getBlock({ blockTag: 'latest' }),
+  ]);
   const votesLength = Number(votesLengthBn);
+  const voteTimeSecs = Number(voteTimeBn);
 
   if (votesLength === 0) {
     return [];
@@ -103,10 +111,20 @@ export const fetchAragonVotes = async ({
   }
 
   const voteArgs = {
-    votes: votesToProcess.map((v) => ({
-      id: v.id,
-      snapshotBlock: v.snapshotBlock,
-    })),
+    votes: votesToProcess.map((v) => {
+      const elapsedBlocks = Number(latestBlock.number - v.snapshotBlock);
+      const elapsedSecs = Number(latestBlock.timestamp - v.startDate);
+      const blockTimeSecs =
+        elapsedBlocks > 0 && elapsedSecs > 0
+          ? elapsedSecs / elapsedBlocks
+          : FALLBACK_BLOCK_TIME_SECS;
+      const rawToBlock =
+        v.snapshotBlock +
+        BigInt(Math.ceil((voteTimeSecs + EXECUTE_BUFFER_SECS) / blockTimeSecs));
+      const toBlock =
+        rawToBlock < latestBlock.number ? rawToBlock : latestBlock.number;
+      return { id: v.id, snapshotBlock: v.snapshotBlock, toBlock };
+    }),
     address: votingContract.address,
     client,
   };
