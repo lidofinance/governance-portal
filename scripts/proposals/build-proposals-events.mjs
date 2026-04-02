@@ -1,5 +1,5 @@
 import { createPublicClient, http } from 'viem';
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { HISTORICAL_ADDRESSES } from '../../constants/historical-addresses.mjs';
@@ -127,6 +127,19 @@ export const buildProposalsEvents = async () => {
   }
   console.debug(`Successfully created ${clientsCreated} clients.`);
 
+  const outputPath = join(__dirname, '../../public/proposals-events-data.json');
+
+  let existingData = {};
+  try {
+    existingData = JSON.parse(readFileSync(outputPath, 'utf8'));
+    console.debug('Loaded existing proposals-events-data.json for incremental update');
+  } catch {
+    console.debug('No existing proposals-events-data.json found, starting fresh');
+  }
+
+  // Proposal statuses that are terminal — events will never change after this
+  const TERMINAL_STATUSES = new Set([3 /* Executed */, 4 /* Cancelled */]);
+
   const eventsData = {};
 
   for (const chainIdStr of supportedChains) {
@@ -211,13 +224,23 @@ export const buildProposalsEvents = async () => {
       `Successfully fetched ${proposalsDetails.length} proposal details for chain ${chainId}`,
     );
 
+    const existingChainData = existingData[chainId]?.proposals ?? {};
+
     eventsData[chainId] = {
-      proposals: {},
+      proposals: { ...existingChainData },
     };
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const processProposal = async (proposal) => {
       if (!proposal) return null;
+
+      const cached = existingChainData[proposal.id];
+      if (cached && TERMINAL_STATUSES.has(proposal.status)) {
+        console.debug(
+          `Proposal ${proposal.id} is terminal and already cached, skipping`,
+        );
+        return null;
+      }
 
       console.debug(
         `Processing event fetches for proposal ${proposal.id} on chain ${chainId}...`,
@@ -292,7 +315,6 @@ export const buildProposalsEvents = async () => {
   console.debug('Proposals events build completed successfully');
   console.debug('Built data for chains:', Object.keys(eventsData));
 
-  const outputPath = join(__dirname, '../../public/proposals-events-data.json');
   writeFileSync(outputPath, JSON.stringify(eventsData, serializeBigInt, 2));
   console.debug(`eventsData written to ${outputPath}`);
 

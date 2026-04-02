@@ -82,10 +82,7 @@ export const useProposals = ({
 
         const proposals = await fetchProposals({
           proposalsCount,
-          publicClient: rpcProvider,
           EPTContract: emergencyProtectedTimelock,
-          governanceAddresses,
-          chainId,
         });
 
         return { proposalsCount, proposals };

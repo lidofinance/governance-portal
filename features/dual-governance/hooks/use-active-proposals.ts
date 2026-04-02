@@ -3,7 +3,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';
 import { ProposalStatus } from '../proposals/types';
-import { fetchCachedEventsData } from '../utils/fetch-cached-events-data';
+import { fetchCachedProposalEvents } from '../utils/fetch-cached-events-data';
 
 type Args = {
   proposalsCount?: bigint;
@@ -26,11 +26,13 @@ export const useActiveProposals = ({ proposalsCount }: Args) => {
         return [] as number[];
       }
 
-      const cachedProposals = await fetchCachedEventsData();
+      const allIds = Array.from(
+        { length: Number(proposalsCount) },
+        (_, i) => i + 1,
+      );
+      const cachedChainData = await fetchCachedProposalEvents(chainId, allIds);
 
       const activeProposalIds: number[] = [];
-      const chainIdStr = chainId.toString();
-      const cachedChainData = cachedProposals[chainIdStr]?.proposals || {};
 
       for (
         let proposalId = 1;

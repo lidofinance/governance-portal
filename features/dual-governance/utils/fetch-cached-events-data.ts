@@ -1,30 +1,34 @@
-import { CachedEventsData } from '../proposals/types';
+import { ProposalEventsSubset } from '../proposals/types';
 
-export const fetchCachedEventsData = async (): Promise<CachedEventsData> => {
-  try {
-    const response = await fetch('/proposals-events-data.json');
-    if (response.ok) {
-      try {
-        return await response.json();
-      } catch (err) {
-        console.warn(
-          'proposals-events-data.json is not valid JSON, falling back to on-demand fetch',
-          err,
-        );
-      }
-    } else if (response.status !== 404) {
-      console.warn(
-        'Failed to fetch proposals-events-data.json, status:',
-        response.status,
-        response.statusText,
-      );
-    }
-  } catch (err) {
-    console.warn(
-      'Network error while fetching proposals-events-data.json, falling back to on-demand fetch',
-      err,
-    );
+export const fetchCachedProposalEvents = async (
+  chainId: number,
+  proposalIds: (string | number)[],
+): Promise<ProposalEventsSubset> => {
+  if (proposalIds.length === 0) {
+    return {};
   }
 
-  return {};
+  const ids = proposalIds.map(String).join(',');
+
+  try {
+    const response = await fetch(
+      `/api/proposals/events?chainId=${chainId}&proposalIds=${encodeURIComponent(ids)}`,
+    );
+
+    if (!response.ok) {
+      if (response.status !== 404) {
+        console.warn(
+          'fetchCachedProposalEvents: unexpected status',
+          response.status,
+          response.statusText,
+        );
+      }
+      return {};
+    }
+
+    return (await response.json()) as ProposalEventsSubset;
+  } catch (err) {
+    console.warn('fetchCachedProposalEvents: network error', err);
+    return {};
+  }
 };

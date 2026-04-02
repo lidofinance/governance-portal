@@ -1,7 +1,6 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
-  CachedEventsData,
   EventsLogs,
   ProposalDetails,
   ProposalStatus,
@@ -11,7 +10,7 @@ import {
   fetchScheduledEvent,
   fetchSubmittedEvent,
 } from 'utils/proposals/fetch-proposal-events.mjs';
-import { fetchCachedEventsData } from '../utils/fetch-cached-events-data';
+import { fetchCachedProposalEvents } from '../utils/fetch-cached-events-data';
 
 type Args = {
   proposalDetails?: ProposalDetails;
@@ -54,11 +53,11 @@ export const useProposalEvents = ({ proposalDetails }: Args) => {
         };
       }
 
-      const eventsData: CachedEventsData = await fetchCachedEventsData();
-
       const proposalStatus = proposalDetails.status;
-      const chainData = eventsData[chainId.toString()];
-      const proposalData = chainData?.proposals[proposalDetails.id.toString()];
+      const cachedChainData = await fetchCachedProposalEvents(chainId, [
+        proposalDetails.id.toString(),
+      ]);
+      const proposalData = cachedChainData[proposalDetails.id.toString()];
 
       const events: EventsLogs = {
         proposalSubmittedEvent: proposalData?.proposalSubmittedEvent ?? null,

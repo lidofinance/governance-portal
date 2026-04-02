@@ -32,7 +32,7 @@ export type ProposalCombinedData = {
 
 export type ProposalSubmittedLog = Log & {
   args: {
-    proposerAccount: string;
+    proposerAccount: Address;
     proposalId: bigint;
     metadata: string;
   };
@@ -63,4 +63,9 @@ export type CachedEventsData = {
       [proposalId: string]: EventsLogs & { details?: ProposalDetails };
     };
   };
+};
+
+// Returned by GET /api/proposals/events — the proposals-keyed slice for one chain
+export type ProposalEventsSubset = {
+  [proposalId: string]: EventsLogs & { details?: ProposalDetails };
 };
