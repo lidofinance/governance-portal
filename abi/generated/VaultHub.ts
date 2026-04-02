@@ -6,6 +6,120 @@ export const vaultHubAbi = [
   {
     type: 'constructor',
     inputs: [
+      { name: 'implementation_', internalType: 'address', type: 'address' },
+      { name: 'admin_', internalType: 'address', type: 'address' },
+      { name: 'data_', internalType: 'bytes', type: 'bytes' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'error', inputs: [], name: 'NotAdmin' },
+  { type: 'error', inputs: [], name: 'ProxyIsOssified' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  { type: 'event', anonymous: false, inputs: [], name: 'ProxyOssified' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
+  },
+  { type: 'fallback', stateMutability: 'payable' },
+  {
+    type: 'function',
+    inputs: [{ name: 'newAdmin_', internalType: 'address', type: 'address' }],
+    name: 'proxy__changeAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getAdmin',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getImplementation',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getIsOssified',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__ossify',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation_', internalType: 'address', type: 'address' },
+    ],
+    name: 'proxy__upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation_', internalType: 'address', type: 'address' },
+      { name: 'setupCalldata_', internalType: 'bytes', type: 'bytes' },
+      { name: 'forceCall_', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'proxy__upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  { type: 'receive', stateMutability: 'payable' },
+  {
+    type: 'constructor',
+    inputs: [
       {
         name: '_locator',
         internalType: 'contract ILidoLocator',
@@ -1561,4 +1675,4 @@ export const vaultHubAbi = [
     stateMutability: 'view',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

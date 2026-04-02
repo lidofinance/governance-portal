@@ -618,3 +618,11 @@ export const DualGovernanceUpgradeStateVerifier: ChainAddressMap = {
 export const OracleReportSanityCheckerLegacy: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x6232397ebac4f5772e53285b26c47914e9461e75',
 };
+
+export const ZkSyncL1ERC20Bridge: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x41527b2d03844db6b0945f25702cb958b6d55989',
+};
+
+export const LazyOracle: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x5DB427080200c235F2Ae8Cd17A7be87921f7AD6c',
+};
