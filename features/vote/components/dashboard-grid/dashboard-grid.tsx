@@ -4,6 +4,7 @@ import { Container, Pagination } from '@lidofinance/lido-ui';
 import { VOTE_DASHBOARD_INDEX_PATH, voteDashboardPage } from 'constants/urls';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
 import {
   keepPreviousData,
@@ -11,6 +12,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
+import { getEventsExecuteVote } from 'shared/votes/utils/get-events-execute-vote';
+import { estimateExecuteVoteBlockRange } from 'shared/votes/utils/estimate-execute-vote-block-range';
 import { useWatchContractEvent } from 'wagmi';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { aragonVotingAbi } from 'abi/generated';
@@ -42,6 +45,7 @@ type Props = {
 export const DashboardGrid = ({ currentPage }: Props) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const votingContract = useReadContract(Voting);
+  const votingContractAddress = useContractAddress(Voting);
   const queryClient = useQueryClient();
 
   const votingInfo = useQuery({
@@ -76,8 +80,41 @@ export const DashboardGrid = ({ currentPage }: Props) => {
     staleTime: currentPage === 1 ? 600 * 1000 : Infinity, // 10 minutes for the first page
   });
 
+  const executeEvents = useQuery({
+    queryKey: ['execute-events', chainId, currentPage],
+    enabled: !!votes.data && !!votingInfo.data,
+    staleTime: currentPage === 1 ? 600 * 1000 : Infinity,
+    queryFn: async () => {
+      if (!votingInfo.data || !votes.data) {
+        return {};
+      }
+
+      const latestBlock = await rpcProvider.getBlock({ blockTag: 'latest' });
+      const voteTimeSecs = votingInfo.data.voteTime;
+
+      return getEventsExecuteVote({
+        address: votingContractAddress,
+        client: rpcProvider,
+        votes: votes.data
+          .filter((v) => v.executed)
+          .map((v) => {
+            const { fromBlock, toBlock } = estimateExecuteVoteBlockRange({
+              snapshotBlock: v.snapshotBlock,
+              startDate: v.startDate,
+              voteTimeSecs,
+              latestBlock,
+            });
+            return { id: v.id, fromBlock, toBlock };
+          }),
+      });
+    },
+  });
+
   const isLoading = votingInfo.isLoading || votes.isFetching;
-  const votesList = votes.data;
+  const mergedVotes = votes.data?.map((v) => ({
+    ...v,
+    executeEvent: executeEvents.data?.[v.id.toString()] ?? null,
+  }));
   const pagesCount = votingInfo.data?.votesLength
     ? Math.ceil(votingInfo.data.votesLength / PAGE_SIZE)
     : 1;
@@ -130,7 +167,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
       <GridWrap>
         {isLoading
           ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)
-          : votesList?.map((voteData) => (
+          : mergedVotes?.map((voteData) => (
               <DashboardVote
                 key={voteData.id}
                 vote={voteData}

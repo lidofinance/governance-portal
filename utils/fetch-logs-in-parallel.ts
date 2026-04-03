@@ -36,7 +36,6 @@ export const fetchLogsInParallelChunks = async <T>({
   if (!fromBlock && chainId) {
     const deploymentBlocks = CONTRACT_DEPLOYMENT_BLOCKS[chainId];
     fromBlock = deploymentBlocks?.dualGovernance || 0n;
-    console.debug(`Using deployment block ${fromBlock} for chain ${chainId}`);
   }
 
   fromBlock = fromBlock || 0n;
@@ -44,11 +43,7 @@ export const fetchLogsInParallelChunks = async <T>({
   const totalBlocks = toBlock - fromBlock + 1n;
 
   // If the range is small enough, just make a single request
-  if (totalBlocks <= 4999n) {
-    console.debug(
-      `Block range ${fromBlock}-${toBlock} is small enough for a single request`,
-    );
-
+  if (totalBlocks <= MAX_BLOCKS_PER_CHUNK) {
     try {
       const filter: any = {
         address,
@@ -75,7 +70,7 @@ export const fetchLogsInParallelChunks = async <T>({
   // Calculate initial chunk size based on total blocks and chunk count
   let blocksPerChunk = totalBlocks / BigInt(chunkCount);
 
-  // Ensure no chunk exceeds 4999 blocks (Ethereum RPC limit)
+  // Ensure no chunk exceeds MAX_BLOCKS_PER_CHUNK
   if (blocksPerChunk > MAX_BLOCKS_PER_CHUNK) {
     chunkCount = Number(
       (totalBlocks + MAX_BLOCKS_PER_CHUNK - 1n) / MAX_BLOCKS_PER_CHUNK,
@@ -114,9 +109,6 @@ export const fetchLogsInParallelChunks = async <T>({
 
         const logs = await client.getLogs(filter);
         if (logs.length > 0) {
-          console.debug(
-            `Found ${logs.length} matching logs in chunk ${chunk.fromBlock}-${chunk.toBlock}`,
-          );
           return logs as unknown as T[];
         }
       } catch (error) {
@@ -127,7 +119,6 @@ export const fetchLogsInParallelChunks = async <T>({
       }
     }
 
-    console.debug('No matching logs found in any chunk');
     return [] as unknown as T[];
   }
 

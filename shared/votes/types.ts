@@ -99,7 +99,7 @@ export type VoteEvent = VoteInfo & {
 
 export type EventExecuteVote = {
   event: Log;
-  executedAt: bigint | undefined;
+  executedAt: bigint;
 };
 
 export type DelegationInfo = {
