@@ -55,6 +55,8 @@ export const contentSecurityPolicy: ContentSecurityPolicyOption = {
       'https://*.walletconnect.org',
       'https://*.walletconnect.com',
     ],
+    objectSrc: ["'none'"],
+    formAction: ["'self'"],
     workerSrc: ["'none'"],
     'base-uri': config.ipfsMode ? undefined : ["'none'"],
   },
