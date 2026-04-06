@@ -88,13 +88,13 @@ export const EvmAddressesByChain: EvmAddresses = {
 
     // Lido Vaults
     [MotionType.RegisterGroupsInOperatorGrid]:
-      '0x17305dB55c908e84C58BbDCa57258A7D1f7eEa7c',
+      '0xE73842AEbEC99Dacf2aAEec61409fD01A033f478',
     [MotionType.RegisterTiersInOperatorGrid]:
-      '0x6b535F441F95046562406F4E2518D9AD7Db2dc0D',
+      '0x5292A1284e4695B95C0840CF8ea25A818751C17F',
     [MotionType.UpdateGroupsShareLimit]:
       '0xf23559De8ab37fF7a154384B0822dA867Cfa7Eac',
     [MotionType.AlterTiersInOperatorGrid]:
-      '0x37d9B09EDA477a84E3913fCB4d032EFb0BF9B62E',
+      '0x73f80240ad9363d5d3C5C3626953C351cA36Bfe9',
     [MotionType.SetJailStatusInOperatorGrid]:
       '0x6a4f33F05E7412A11100353724Bb6a152Cf0D305',
     [MotionType.UpdateVaultsFeesInOperatorGrid]:
@@ -105,9 +105,9 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xaf35A63a4114B7481589fDD9FDB3e35Fd65fAed7',
 
     [MotionType.CuratedExitRequestHashesSubmit]:
-      '0x4F716AD3Cc7A3A5cdA2359e5B2c84335c171dCde',
+      '0x8aa34dAaF0fC263203A15Bcfa0Ed926D466e59F3',
     [MotionType.SDVTExitRequestHashesSubmit]:
-      '0x58A59dDC6Aea9b1D5743D024E15DfA4badB56E37',
+      '0xB7668B5485d0f826B86a75b0115e088bB9ee03eE',
     [MotionType.CSMSetVettedGateTree]:
       '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
 
