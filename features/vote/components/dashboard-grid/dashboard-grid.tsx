@@ -4,7 +4,6 @@ import { Container, Pagination } from '@lidofinance/lido-ui';
 import { VOTE_DASHBOARD_INDEX_PATH, voteDashboardPage } from 'constants/urls';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Voting } from 'shared/blockchain/contracts';
 import {
   keepPreviousData,
@@ -45,7 +44,6 @@ type Props = {
 export const DashboardGrid = ({ currentPage }: Props) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const votingContract = useReadContract(Voting);
-  const votingContractAddress = useContractAddress(Voting);
   const queryClient = useQueryClient();
 
   const votingInfo = useQuery({
@@ -93,13 +91,13 @@ export const DashboardGrid = ({ currentPage }: Props) => {
       const voteTimeSecs = votingInfo.data.voteTime;
 
       return getEventsExecuteVote({
-        address: votingContractAddress,
+        address: votingContract.address,
         client: rpcProvider,
         votes: votes.data
           .filter((v) => v.executed)
           .map((v) => {
             const { fromBlock, toBlock } = estimateExecuteVoteBlockRange({
-              snapshotBlock: v.snapshotBlock,
+              snapshotBlockNumber: v.snapshotBlock,
               startDate: v.startDate,
               voteTimeSecs,
               latestBlock,

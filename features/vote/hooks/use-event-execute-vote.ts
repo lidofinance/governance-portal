@@ -24,7 +24,7 @@ export const useEventExecuteVote = (
 
       const latestBlock = await rpcProvider.getBlock({ blockTag: 'latest' });
       const { fromBlock, toBlock } = estimateExecuteVoteBlockRange({
-        snapshotBlock: vote.snapshotBlock,
+        snapshotBlockNumber: vote.snapshotBlock,
         startDate: vote.startDate,
         voteTimeSecs: voteTime,
         latestBlock,

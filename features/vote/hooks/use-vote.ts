@@ -14,15 +14,16 @@ export const useVote = (voteId: number) => {
     queryFn: async () => {
       const voteIdBigInt = BigInt(voteId);
 
-      const votesLengthBn = await votingContract.readContract('votesLength');
+      const voteRaw = await votingContract.readContract('getVote', [
+        voteIdBigInt,
+      ]);
 
-      if (voteId >= Number(votesLengthBn)) {
+      if (voteRaw === null) {
         return null;
       }
 
-      const [voteRaw, canExecute] = await Promise.all([
-        votingContract.readContract('getVote', [voteIdBigInt]),
-        votingContract.readContract('canExecute', [voteIdBigInt]),
+      const canExecute = await votingContract.readContract('canExecute', [
+        voteIdBigInt,
       ]);
 
       const vote = parseVote(voteIdBigInt, voteRaw, canExecute);
