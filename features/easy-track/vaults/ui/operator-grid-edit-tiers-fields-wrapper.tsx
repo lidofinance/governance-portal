@@ -3,8 +3,6 @@ import { useFieldArray, useWatch } from 'react-hook-form';
 import { TierParams } from '@easy-track/vaults/types';
 import { Tier } from '@easy-track/vaults/hooks/use-operator-grid-tier-map';
 import { EMPTY_TIER } from '@easy-track/vaults/constants';
-import { useMemo } from 'react';
-import { parseEther } from 'viem';
 import {
   Fieldset,
   FieldsHeader,
@@ -22,8 +20,8 @@ type TierInput = {
 
 type Props = {
   tierArrayFieldName: string;
-  maxShareLimit: bigint | string | undefined;
   currentTierIds: readonly bigint[];
+  maxShareLimit?: bigint | undefined;
   getOperatorGridTier: (tierId: string) => Promise<Tier | null>;
 };
 
@@ -57,20 +55,6 @@ export const OperatorGridEditTiersFieldsWrapper = ({
       return tierId === thisId || !selectedIds.includes(tierId);
     });
   };
-
-  const maxShareLimitBn = useMemo(() => {
-    if (!maxShareLimit) {
-      return 0n;
-    }
-    if (typeof maxShareLimit === 'string') {
-      try {
-        return parseEther(maxShareLimit);
-      } catch (error) {
-        return 0n;
-      }
-    }
-    return maxShareLimit;
-  }, [maxShareLimit]);
 
   return (
     <>
@@ -125,7 +109,7 @@ export const OperatorGridEditTiersFieldsWrapper = ({
           <OperatorGridTierFieldsets
             tierArrayFieldName={tierArrayFieldName}
             fieldIndex={tierIndex}
-            maxShareLimit={maxShareLimitBn}
+            maxShareLimit={maxShareLimit}
           />
         </FieldsWrapper>
       ))}
