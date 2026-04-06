@@ -204,6 +204,19 @@ export const allowedRecipientsRegistryAbi = [
     name: 'SpendableAmountChanged',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: '_newSpentAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'SpentAmountChanged',
+  },
+  {
     type: 'function',
     inputs: [],
     name: 'ADD_RECIPIENT_TO_ALLOWED_LIST_ROLE',
@@ -420,10 +433,19 @@ export const allowedRecipientsRegistryAbi = [
   {
     type: 'function',
     inputs: [
+      { name: '_newSpentAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'unsafeSetSpentAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
       { name: '_payoutAmount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'updateSpentAmount',
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

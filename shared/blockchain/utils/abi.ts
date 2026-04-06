@@ -22,7 +22,9 @@ type ContractMetadata = {
  */
 const getAbiKey = (contractName: string): string => {
   const parts =
-    contractName.match(/([A-Z][a-z0-9]+)|([A-Z]+(?=[A-Z][a-z0-9]|$))/g) || [];
+    contractName.match(
+      /([A-Z][a-z0-9]+)|([A-Z]+[0-9]+)|([A-Z]+(?=[A-Z][a-z0-9]|$))/g,
+    ) || [];
   if (parts.length === 0) {
     return `${contractName}Abi`;
   }
@@ -130,6 +132,12 @@ export const fetchContractMetadata = async (
   }
 
   if (!result) {
+    if (withLocalDecoder) {
+      console.warn(
+        `No local ABI found for address ${address} on chain ${chainId}`,
+      );
+    }
+
     // fallback - etherscan
     const abi = await fetchAbiFromEtherscan({
       address,

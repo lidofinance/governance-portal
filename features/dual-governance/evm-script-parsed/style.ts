@@ -77,7 +77,7 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
 
 export const CallWrapper = styled.div<{ $withDg?: boolean }>`
   word-break: break-all;
-  padding: 20px;
+  padding: 18px;
 
   ${({ $withDg }) =>
     $withDg &&
