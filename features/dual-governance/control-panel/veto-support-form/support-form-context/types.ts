@@ -1,4 +1,4 @@
-import { WithdrawalsMap } from 'features/dual-governance/types';
+import { WithdrawalsMap } from '@dg/types';
 import { Token } from 'shared/blockchain/types';
 import { Address } from 'viem';
 

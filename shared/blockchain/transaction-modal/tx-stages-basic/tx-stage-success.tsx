@@ -7,7 +7,7 @@ import { Text } from 'shared/components/text';
 import { Link } from '@lidofinance/lido-ui';
 import { Box } from 'shared/components/box';
 import { config } from 'config';
-import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
+import { useStETHConversion } from '@dg/hooks/use-steth-conversion';
 
 type TxStageSuccessProps = {
   txHash?: string | null;

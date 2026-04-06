@@ -6,12 +6,12 @@ import {
   NoTokensMessage,
   RevocableTokenItemStyled,
 } from './style';
-import { useEscrowBalances } from 'features/dual-governance/hooks/use-escrow-balances';
+import { useEscrowBalances } from '@dg/hooks/use-escrow-balances';
 import { Text } from 'shared/components/text';
 import { VetoSignallingTokens } from './veto-signalling-tokens';
 import { RageQuitTokens } from './rage-quit-tokens';
-import { useClaimCustomNftAction } from '../../write-actions/claim-custom-nft';
-import { useClaimCustomNftModal } from '../../modals/modal-manager';
+import { useClaimCustomNftAction } from '@dg/write-actions/claim-custom-nft';
+import { useClaimCustomNftModal } from '@dg/modals/modal-manager';
 import { Button } from 'shared/components/button';
 import { FlexWrapper } from 'shared/styled-components';
 import { Box } from 'shared/components/box';

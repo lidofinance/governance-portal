@@ -3,9 +3,9 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import {
   DelegationTabs,
   DelegationTabsLayoutProps,
-} from 'features/vote/components/delegation-tabs';
+} from '@vote/components/delegation-tabs';
 import { Layout } from 'shared/components';
-import { VoteMeta } from 'features/vote/meta';
+import { VoteMeta } from '@vote/meta';
 
 const DelegationPage: FC<DelegationTabsLayoutProps> = ({ mode }) => {
   return (

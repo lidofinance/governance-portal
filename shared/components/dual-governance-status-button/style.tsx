@@ -1,8 +1,8 @@
 import { Popover } from '@lidofinance/lido-ui';
 import { Button } from 'shared/components/button';
 import styled from 'styled-components';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
-import { getDualGovernanceBannerColor } from 'features/dual-governance/utils/get-banner-color';
+import { VisibleGovernanceState } from '@dg/types';
+import { getDualGovernanceBannerColor } from '@dg/utils/get-banner-color';
 
 export const DualGovernanceStatusButtonStyled = styled(Button).attrs({
   color: 'secondary',

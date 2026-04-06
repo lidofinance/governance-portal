@@ -12,7 +12,7 @@ import {
 } from './style';
 import { Button, Link } from '@lidofinance/lido-ui';
 import { VoteStatusChips } from '../vote-status-chips';
-import { getVoteDetailsFormatted } from '../../utils/get-vote-details-formatted';
+import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { formatEther } from 'viem';
 import { Text } from 'shared/components/text';
@@ -28,10 +28,10 @@ import { useConnect } from 'reef-knot/core-react';
 import { VoteInfo } from '../vote-info';
 import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
-import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteContext } from '@vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
-import { useEnactVoteAction } from 'features/vote/write-actions/enact-vote/action';
+import { useEnactVoteAction } from '@vote/write-actions/enact-vote/action';
 
 const localeDateOptions = {
   month: 'long',

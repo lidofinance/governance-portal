@@ -14,6 +14,8 @@ export const MOTION_ATTENTION_PERIOD = 1 / 24;
 export const MAX_RESERVE_RATIO_BP = 9999;
 // uint256 internal constant MAX_FEE_BP = type(uint16).max;
 export const MAX_FEE_BP = 65535;
+// 10_000_000 * 1e18, 10M
+export const MAX_SHARE_LIMIT = 10_000_000_000_000_000_000_000_000n;
 
 export const INCREASE_LIMIT_MOTION_MAP = {
   [MotionType.NodeOperatorIncreaseLimit]: {

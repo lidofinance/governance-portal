@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { VisibleGovernanceState } from 'features/dual-governance/types';
+import { VisibleGovernanceState } from '@dg/types';
 import { InlineLoader } from '@lidofinance/lido-ui';
 
 type IndicatorProps = {

@@ -1,10 +1,9 @@
 import { aragonVotingAbi } from 'abi/generated';
-import { EventExecuteVote, RawVote, Vote, VoteStatus } from '../types';
+import { RawVote, Vote, VoteStatus } from '../types';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { ContractFunctionParameters, PublicClient } from 'viem';
 import { parseVote } from './parse-vote';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { getEventsExecuteVote } from './get-events-execute-vote';
 import { getEventsStartVote } from './get-events-start-vote';
 
 type VotingContract = ReturnType<
@@ -21,7 +20,6 @@ type FetchArgs = {
 
 type VoteResult = Vote & {
   startEvent: EventStartVote | null;
-  executeEvent: EventExecuteVote | null;
 };
 
 const isVoteActive = (vote: Vote) => {
@@ -102,7 +100,7 @@ export const fetchAragonVotes = async ({
     return [];
   }
 
-  const voteArgs = {
+  const startVoteArgs = {
     votes: votesToProcess.map((v) => ({
       id: v.id,
       snapshotBlock: v.snapshotBlock,
@@ -111,18 +109,10 @@ export const fetchAragonVotes = async ({
     client,
   };
 
-  const [executeEvents, startEvents] = await Promise.all([
-    !onlyActive
-      ? getEventsExecuteVote(voteArgs)
-      : Promise.resolve({} as Record<string, EventExecuteVote | null>),
-    getEventsStartVote(voteArgs),
-  ]);
+  const startEvents = await getEventsStartVote(startVoteArgs);
 
-  return votesToProcess
-    .map((v) => ({
-      ...v,
-      executeEvent: executeEvents[v.id.toString()] || null,
-      startEvent: startEvents[v.id.toString()],
-    }))
-    .filter((vote): vote is VoteResult => !!vote);
+  return votesToProcess.map((v) => ({
+    ...v,
+    startEvent: startEvents[v.id.toString()] ?? null,
+  }));
 };

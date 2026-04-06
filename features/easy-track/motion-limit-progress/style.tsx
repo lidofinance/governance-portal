@@ -17,6 +17,8 @@ export const ProgressDesc = styled.span`
 
 export const LimitDesc = styled.div`
   font-size: 14px;
+  min-width: 0;
+  word-break: break-all;
 `;
 
 export const Limit = styled.span`

@@ -1,7 +1,6 @@
 import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
 import { useFieldArray } from 'react-hook-form';
 import { EMPTY_TIER } from '../constants';
-import { useMemo } from 'react';
 import { OperatorGridTierFieldsets } from './operator-grid-tier-fieldsets';
 import {
   Fieldset,
@@ -10,17 +9,14 @@ import {
   FieldsWrapper,
   RemoveItemButton,
 } from '../../start-motion/parts/style';
-import { parseEther } from 'viem';
 
 type Props = {
   tierArrayFieldName: string;
-  maxShareLimit: bigint | string | undefined;
   groupTiersCount: number | undefined;
 };
 
 export const OperatorGridAddTiersFieldsWrapper = ({
   tierArrayFieldName,
-  maxShareLimit,
   groupTiersCount,
 }: Props) => {
   const tiersFieldArray = useFieldArray({
@@ -28,20 +24,6 @@ export const OperatorGridAddTiersFieldsWrapper = ({
   });
 
   const handleAddTier = () => tiersFieldArray.append({ ...EMPTY_TIER });
-
-  const maxShareLimitBn = useMemo(() => {
-    if (!maxShareLimit) {
-      return 0n;
-    }
-    if (typeof maxShareLimit === 'string') {
-      try {
-        return parseEther(maxShareLimit);
-      } catch (error) {
-        return 0n;
-      }
-    }
-    return maxShareLimit;
-  }, [maxShareLimit]);
 
   return (
     <>
@@ -68,7 +50,6 @@ export const OperatorGridAddTiersFieldsWrapper = ({
           <OperatorGridTierFieldsets
             tierArrayFieldName={tierArrayFieldName}
             fieldIndex={tierIndex}
-            maxShareLimit={maxShareLimitBn}
           />
         </FieldsWrapper>
       ))}

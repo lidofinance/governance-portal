@@ -5,15 +5,9 @@ import {
   useContext,
   useMemo,
 } from 'react';
-import {
-  ProposalsQueryResult,
-  useProposals,
-} from 'features/dual-governance/hooks/use-proposals';
+import { ProposalsQueryResult, useProposals } from '@dg/hooks/use-proposals';
 import invariant from 'tiny-invariant';
-import {
-  ProposalCombinedData,
-  ProposalStatus,
-} from 'features/dual-governance/proposals/types';
+import { ProposalCombinedData, ProposalStatus } from '@dg/proposals/types';
 import { useActiveVotes } from 'shared/votes/hooks/use-active-votes';
 import { VoteData } from 'shared/votes/types';
 import {

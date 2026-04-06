@@ -4,7 +4,7 @@ import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
 import { useEnactVoteTxSender } from './tx-sender';
 import { useTxModalEnactVote } from './modal-stages';
-import { useVoteContext } from 'features/vote/providers/vote-context';
+import { useVoteContext } from '@vote/providers/vote-context';
 
 export const useEnactVoteAction = () => {
   const { data: isMultisig } = useIsContract();

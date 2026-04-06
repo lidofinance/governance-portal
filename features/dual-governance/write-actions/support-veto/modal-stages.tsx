@@ -1,4 +1,4 @@
-import { EscrowActionArgs } from 'features/dual-governance/types';
+import { EscrowActionArgs } from '@dg/types';
 import { getEscrowActionModalStages } from 'shared/blockchain/transaction-modal/hooks/get-escrow-action-modal-stages';
 import {
   TransactionModalTransitStage,

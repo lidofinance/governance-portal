@@ -1,4 +1,4 @@
-import { ProposalFullInfo } from 'features/dual-governance/proposals/proposal-full-info';
+import { ProposalFullInfo } from '@dg/proposals/proposal-full-info';
 import { VisibleGovernanceState } from '../types';
 import { BackgroundGradient } from 'shared/components';
 import { useDualGovernanceStateContext } from 'providers/dual-governance-state';

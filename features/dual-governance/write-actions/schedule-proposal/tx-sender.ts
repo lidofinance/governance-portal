@@ -4,7 +4,7 @@ import { Address } from 'viem';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { DualGovernance } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { useDynamicDualGovernance } from '../../hooks/use-dynamic-dual-governance';
+import { useDynamicDualGovernance } from '@dg/hooks/use-dynamic-dual-governance';
 
 export const useScheduleProposalTxSend = () => {
   const { chainId } = useLidoSDK();

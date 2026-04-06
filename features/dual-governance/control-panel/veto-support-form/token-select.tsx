@@ -5,7 +5,7 @@ import { Token } from 'shared/blockchain/types';
 import { useSupportFormDataContext } from './support-form-context';
 import { TokenBalance } from 'shared/components/token-balance';
 import { useFormContext } from 'react-hook-form';
-import { VetoSupportedTokens } from 'features/dual-governance/types';
+import { VetoSupportedTokens } from '@dg/types';
 import { useCallback } from 'react';
 import { useEscrowContext } from 'providers/escrow';
 import { getEtherscanAddressLink } from 'utils/etherscan';

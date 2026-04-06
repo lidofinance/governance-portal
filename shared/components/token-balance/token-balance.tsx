@@ -11,7 +11,7 @@ import { Box } from 'shared/components/box';
 import { Text } from '../text';
 import { isBigInt } from 'shared/blockchain/is-bigint';
 import { useEffect, useState } from 'react';
-import { useStETHConversion } from 'features/dual-governance/hooks/use-steth-conversion';
+import { useStETHConversion } from '@dg/hooks/use-steth-conversion';
 
 type Props = {
   token: Token | 'ETH' | 'unstETH';

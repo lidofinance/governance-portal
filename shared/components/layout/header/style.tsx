@@ -108,7 +108,7 @@ export const HeaderControlButton = styled(Link)`
   }
 
   svg {
-    margin-left: 4px;
+    margin-left: 2px;
     margin-top: 2px;
   }
 `;

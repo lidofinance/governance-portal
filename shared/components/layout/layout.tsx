@@ -5,6 +5,8 @@ import { ContainerProps } from '@lidofinance/lido-ui';
 
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
+import { TestModeBanner } from 'shared/components/test-mode-banner';
+import { NoSsrWrapper } from 'shared/components/no-ssr-wrapper';
 import {
   LayoutTitleStyle,
   LayoutSubTitleStyle,
@@ -50,6 +52,9 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
         <meta name="twitter:description" content={META_DESCRIPTION} />
       </Head>
       <Header />
+      <NoSsrWrapper>
+        <TestModeBanner />
+      </NoSsrWrapper>
       <ContainerStyled size={containerSize}>
         {title && <LayoutTitleStyle>{title}</LayoutTitleStyle>}
         {subtitle && <LayoutSubTitleStyle>{subtitle}</LayoutSubTitleStyle>}

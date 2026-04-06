@@ -11,7 +11,7 @@ import {
   DelegationFormInput,
   DelegationFormMode,
   DelegationFormValidationContext,
-} from 'features/vote/types';
+} from '@vote/types';
 import { Address, isAddress } from 'viem';
 
 const VALIDATION_CONTEXT_TIMEOUT = 10000;

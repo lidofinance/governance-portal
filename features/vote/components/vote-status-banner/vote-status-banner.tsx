@@ -11,7 +11,7 @@ import {
 import { VoteDetailsCountdown } from '../vote-details-countdown';
 import { convertStatusToStyledVariant, VoteStatusFontSize } from './types';
 // TODO: move to shared
-import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { ProposalStatus } from '@dg/proposals/types';
 import { VoteStatus } from 'shared/votes/types';
 
 import {

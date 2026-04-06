@@ -8,10 +8,10 @@ import {
   TxStageSign,
 } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 import { Hex } from 'viem';
-import { VoteSuccessModal } from '../../components/vote-actions/modals/vote-success-modal/vote-success-modal';
-import { VoteConfirmDelegatedModal } from '../../components/vote-actions/modals/vote-delegated-confirm-modal';
+import { VoteSuccessModal } from '@vote/components/vote-actions/modals/vote-success-modal/vote-success-modal';
+import { VoteConfirmDelegatedModal } from '@vote/components/vote-actions/modals/vote-delegated-confirm-modal';
 import { VoteTxArgs } from './types';
-import { VOTE_MODE_MAP } from 'features/vote/constants';
+import { VOTE_MODE_MAP } from '@vote/constants';
 import { ComponentProps } from 'react';
 
 const getInProgressText = ({ delegatedVoters, mode }: VoteTxArgs) => {

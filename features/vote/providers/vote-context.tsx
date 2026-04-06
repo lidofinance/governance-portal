@@ -11,12 +11,13 @@ import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoterState } from '../hooks/use-voter-state';
 import { useCastVoteEvents } from '../hooks/use-cast-vote-events';
 import { useVotingConfig } from '../hooks/use-voting-config';
+import { useEventExecuteVote } from '../hooks/use-event-execute-vote';
 import { InlineVoteCardLoader } from '../styles';
 import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { useVoteDelegators } from '../hooks/use-vote-delegators';
 import { EligibleDelegator, VoterInfo } from '../types';
-import { ProposalStatus } from 'features/dual-governance/proposals/types';
+import { ProposalStatus } from '@dg/proposals/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 
@@ -24,7 +25,7 @@ type Value = {
   vote: Vote;
   canExecute: boolean;
   eventStart: EventStartVote | undefined;
-  eventExecute: EventExecuteVote | null | undefined;
+  eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[];
   voterState: VoterState | undefined;
   voterDaoTokenBalance: bigint | undefined;
@@ -71,16 +72,18 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch: refetchVote,
-  } = useVote(voteId, votingConfig?.voteTime);
+  } = useVote(Number(voteId));
+
+  const { data: eventExecute } = useEventExecuteVote(
+    voteData?.vote,
+    votingConfig?.voteTime,
+  );
 
   const {
     data: voteEvents,
     isLoading: isCastVoteEventsDataLoading,
     refetch: refetchVoteEvents,
-  } = useCastVoteEvents(
-    voteData?.vote,
-    voteData?.eventExecute?.event.blockNumber,
-  );
+  } = useCastVoteEvents(voteData?.vote, votingConfig?.voteTime);
 
   const {
     data: voterState,
@@ -91,7 +94,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
   const { data: dgProposal, isLoading: isProposalDataLoading } =
     useVoteDualGovernanceStatus({
       voteId: voteData?.vote.id,
-      eventExecuteVote: voteData?.eventExecute,
+      eventExecuteVote: eventExecute,
     });
 
   const {
@@ -127,7 +130,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
       vote: voteData.vote,
       canExecute: voteData.canExecute,
       eventStart: voteData.eventStart,
-      eventExecute: voteData.eventExecute,
+      eventExecute: eventExecute ?? null,
       voterState: voterState?.voterState,
       voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
       voteEvents: voteEvents ?? [],
@@ -150,6 +153,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     delegatorsData?.eligibleDelegatedVotingPower,
     delegatorsData?.totalDelegatedVotingPower,
     dgProposal,
+    eventExecute,
     isLoading,
     refetchers,
     voteData,

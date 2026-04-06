@@ -2,7 +2,7 @@ import { Text } from '@lidofinance/lido-ui';
 import { useFormState } from 'react-hook-form';
 import { Balance, CustomizeButton, DelegationFormBalanceStyled } from './style';
 import { useAccount } from 'wagmi';
-import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { formatToken } from 'shared/blockchain/utils';
 import { KnownToken } from 'shared/blockchain/tokens';
 

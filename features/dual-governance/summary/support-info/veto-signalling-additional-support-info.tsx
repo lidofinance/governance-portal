@@ -4,11 +4,11 @@ import { useEscrowContext } from 'providers/escrow';
 import { useMemo } from 'react';
 import { Token } from 'shared/blockchain/types';
 import { Text } from 'shared/components/text';
-import { DGTooltip } from '../../tooltips';
+import { DGTooltip } from '@dg/tooltips';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
-import { useThresholdValue } from 'features/dual-governance/hooks';
-import { useDualGovernanceConfig } from '../../hooks/use-dual-governance-config';
-import { GovernanceState } from '../../types';
+import { useThresholdValue } from '@dg/hooks';
+import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
+import { GovernanceState } from '@dg/types';
 
 type Props = {
   amountTillRQPhaseWei: bigint;

@@ -12,8 +12,12 @@ import { AddressPop } from 'shared/components/address-pop/address-pop';
 import { parseEther } from 'viem';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { TurnArrow, UnionIcon } from 'shared/components/icons';
-import { getPublicDelegate } from '../../utils/get-public-delegate';
-import { formatVp } from 'features/vote/utils/format-vp';
+import { getPublicDelegate } from '@vote/utils/get-public-delegate';
+import { formatVp } from '@vote/utils/format-vp';
+
+const getShouldShowTooltip = (stake: bigint) => {
+  return stake > parseEther('1000') || stake < parseEther('0.1');
+};
 
 type Props = {
   voteEvent: VoteEvent;
@@ -91,7 +95,7 @@ export const VoterItem = ({
           {isDelegate && `(${delegatedVotesLength})`}
         </ListRowCell>
         <ListRowCell>
-          {Number(stake) > parseEther('1000') ? (
+          {getShouldShowTooltip(stake) ? (
             <Tooltip
               placement="top"
               title={formatVp({ stake, showFullValue: true })}

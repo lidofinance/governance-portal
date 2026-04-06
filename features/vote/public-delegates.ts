@@ -145,4 +145,11 @@ export const PUBLIC_DELEGATES: PublicDelegate[] = [
     lido: 'https://research.lido.fi/t/kuzmich-delegate-thread/10191',
     twitter: null,
   },
+  {
+    name: 'batuX',
+    avatar: `${basePath}/delegates/batux.jpg`,
+    address: '0x45bc852B0Ddb1FCc9d6C1daB4038F0b2dFDafD99',
+    lido: 'https://research.lido.fi/t/batux-delegate-thread/11201',
+    twitter: 'https://twitter.com/crypto_han',
+  },
 ];

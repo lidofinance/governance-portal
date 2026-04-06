@@ -4,10 +4,10 @@ import {
   RevokeDelegationButton,
   DelegationAddressBadgeStyled,
 } from './style';
-import { DelegationType, PublicDelegate } from 'features/vote/types';
-import { useDelegationFormData } from 'features/vote/providers/delegation-form-context';
+import { DelegationType, PublicDelegate } from '@vote/types';
+import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { AddressPop } from 'shared/components/address-pop';
-import { PublicDelegateAvatar } from '../../public-delegate-avatar';
+import { PublicDelegateAvatar } from '@vote/components/public-delegate-avatar';
 
 type Props = {
   address: string;

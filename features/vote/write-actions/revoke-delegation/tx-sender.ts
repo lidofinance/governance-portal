@@ -3,8 +3,8 @@ import invariant from 'tiny-invariant';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Snapshot, Voting } from 'shared/blockchain/contracts';
-import { SNAPSHOT_LIDO_SPACE_NAME } from 'features/vote/constants';
-import { DelegationType } from 'features/vote/types';
+import { SNAPSHOT_LIDO_SPACE_NAME } from '@vote/constants';
+import { DelegationType } from '@vote/types';
 
 export const useRevokeDelegationTxSender = () => {
   const writeVotingContract = useWriteContract(Voting.abi);
