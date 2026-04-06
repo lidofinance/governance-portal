@@ -116,7 +116,7 @@ export const decodeCalls = async (
             useBundledAbi,
             etherscanApiKey,
             client,
-            idCounter,
+            [1],
           );
         }
       }

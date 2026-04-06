@@ -11,6 +11,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
+import { getEventsExecuteVote } from 'shared/votes/utils/get-events-execute-vote';
+import { estimateExecuteVoteBlockRange } from 'shared/votes/utils/estimate-execute-vote-block-range';
 import { useWatchContractEvent } from 'wagmi';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { aragonVotingAbi } from 'abi/generated';
@@ -76,8 +78,41 @@ export const DashboardGrid = ({ currentPage }: Props) => {
     staleTime: currentPage === 1 ? 600 * 1000 : Infinity, // 10 minutes for the first page
   });
 
+  const executeEvents = useQuery({
+    queryKey: ['execute-events', chainId, currentPage],
+    enabled: !!votes.data && !!votingInfo.data,
+    staleTime: currentPage === 1 ? 600 * 1000 : Infinity,
+    queryFn: async () => {
+      if (!votingInfo.data || !votes.data) {
+        return {};
+      }
+
+      const latestBlock = await rpcProvider.getBlock({ blockTag: 'latest' });
+      const voteTimeSecs = votingInfo.data.voteTime;
+
+      return getEventsExecuteVote({
+        address: votingContract.address,
+        client: rpcProvider,
+        votes: votes.data
+          .filter((v) => v.executed)
+          .map((v) => {
+            const { fromBlock, toBlock } = estimateExecuteVoteBlockRange({
+              snapshotBlockNumber: v.snapshotBlock,
+              startDate: v.startDate,
+              voteTimeSecs,
+              latestBlock,
+            });
+            return { id: v.id, fromBlock, toBlock };
+          }),
+      });
+    },
+  });
+
   const isLoading = votingInfo.isLoading || votes.isFetching;
-  const votesList = votes.data;
+  const mergedVotes = votes.data?.map((v) => ({
+    ...v,
+    executeEvent: executeEvents.data?.[v.id.toString()] ?? null,
+  }));
   const pagesCount = votingInfo.data?.votesLength
     ? Math.ceil(votingInfo.data.votesLength / PAGE_SIZE)
     : 1;
@@ -130,7 +165,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
       <GridWrap>
         {isLoading
           ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)
-          : votesList?.map((voteData) => (
+          : mergedVotes?.map((voteData) => (
               <DashboardVote
                 key={voteData.id}
                 vote={voteData}
