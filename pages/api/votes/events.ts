@@ -16,7 +16,7 @@ import type { CachedVoteEventsData, VoteEventsSubset } from './types';
 
 const JSON_PATH = path.join(process.cwd(), 'public', 'votes-events-data.json');
 
-const MAX_VOTE_IDS = 500;
+const MAX_VOTE_IDS = 5;
 
 // Module-level cache: null = not loaded yet; populated lazily, no TTL (file
 // only changes on deploy via the build script).
@@ -33,7 +33,7 @@ const loadFileData = async (): Promise<CachedVoteEventsData> => {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { chainId, voteIds } = req.query;
+  const { chainId, votingAddress, voteIds } = req.query;
 
   const chainIdNum = parseInt(chainId as string, 10);
   if (
@@ -43,6 +43,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     !config.supportedChains.includes(chainIdNum)
   ) {
     return res.status(400).json({ message: 'Invalid chainId' });
+  }
+
+  if (!votingAddress || typeof votingAddress !== 'string') {
+    return res.status(400).json({ message: 'votingAddress is required' });
+  }
+
+  if (!/^0x[a-fA-F0-9]{40}$/.test(votingAddress)) {
+    return res.status(400).json({ message: 'Invalid votingAddress' });
   }
 
   if (!voteIds || typeof voteIds !== 'string') {
@@ -73,11 +81,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(503).json({ message: 'Votes events data unavailable' });
   }
 
-  const chainVotes = allData[chainIdNum.toString()]?.votes ?? {};
+  const chainData = allData[chainIdNum.toString()] ?? {};
+  const addressVotes = chainData[votingAddress]?.votes ?? {};
 
   const result: VoteEventsSubset = {};
   for (const id of ids) {
-    const entry = chainVotes[id];
+    const entry = addressVotes[id];
     if (entry !== undefined) {
       result[id] = entry;
     }
