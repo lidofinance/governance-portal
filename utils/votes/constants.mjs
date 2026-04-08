@@ -1,11 +1,15 @@
 export const CHUNK_SIZE = 4999n; // Max RPC getLogs window
 export const CONCURRENT_LIMIT = 3;
-export const GET_LOGS_BLOCK_RANGE = 2499n; // Half of CHUNK_SIZE
-
-// CHAINS values: Mainnet = 1, Hoodi = 560048
+// CHAINS values: Mainnet = 1, Holesky = 17000, Hoodi = 560048
+// Each chain maps to an array of voting contract addresses.
+// Multiple addresses per chain are needed when there are separate deployments
+// (e.g., Hoodi has "actual" and "test" Aragon Voting contracts).
 export const VOTING_ADDRESSES = {
-  1: '0x2e59A20f205bB85a89C53f1936454680651E618e',
-  560048: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
+  1: ['0x2e59A20f205bB85a89C53f1936454680651E618e'],
+  560048: [
+    '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
+    '0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636',
+  ],
 };
 
 export const startVoteEventAbi = {
