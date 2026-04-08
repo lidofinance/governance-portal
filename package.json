@@ -19,7 +19,9 @@
     "test:unit": "jest",
     "prepare": "husky",
     "build-events:local": "node --env-file=.env.local ./scripts/proposals/build-proposals-events.mjs",
-    "validate-events": "node --env-file=.env.local ./scripts/proposals/validate-proposals-events.mjs"
+    "validate-events": "node --env-file=.env.local ./scripts/proposals/validate-proposals-events.mjs",
+    "build-vote-events:local": "node --env-file=.env.local ./scripts/votes/build-votes-events.mjs",
+    "validate-vote-events": "node --env-file=.env.local ./scripts/votes/validate-votes-events.mjs"
   },
   "dependencies": {
     "@lidofinance/api-metrics": "^0.45.1",
