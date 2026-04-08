@@ -175,25 +175,30 @@ const validateVoteDetails = async (
 
 const validateEvents = async (eventsData, clients) => {
   for (const chainIdStr in eventsData) {
-    if (Object.prototype.hasOwnProperty.call(eventsData, chainIdStr)) {
-      const chainId = Number(chainIdStr);
-      const { votes } = eventsData[chainIdStr];
-      const client = clients[chainId];
+    if (!Object.prototype.hasOwnProperty.call(eventsData, chainIdStr)) {
+      continue;
+    }
 
-      console.log(`\n## Chain ID: ${chainId}`);
+    const chainId = Number(chainIdStr);
+    const chainData = eventsData[chainIdStr];
+    const client = clients[chainId];
 
-      if (!client) {
-        console.warn(
-          `Skipping validation: No RPC client available for chain ${chainId}.`,
-        );
-        continue;
-      }
+    console.log(`\n## Chain ID: ${chainId}`);
 
-      const address = VOTING_ADDRESSES[chainId];
-      if (!address) {
-        console.warn(
-          `Skipping validation: No voting address for chain ${chainId}.`,
-        );
+    if (!client) {
+      console.warn(
+        `Skipping validation: No RPC client available for chain ${chainId}.`,
+      );
+      continue;
+    }
+
+    for (const votingAddress of Object.keys(chainData)) {
+      const { votes } = chainData[votingAddress];
+
+      console.log(`\n### Voting contract: ${votingAddress}`);
+
+      if (!votes) {
+        console.log('No votes data found.');
         continue;
       }
 
@@ -202,7 +207,7 @@ const validateEvents = async (eventsData, clients) => {
         .sort((a, b) => a - b);
 
       if (voteIds.length === 0) {
-        console.log('No votes found on this chain.');
+        console.log('No votes found.');
         continue;
       }
 
@@ -212,7 +217,7 @@ const validateEvents = async (eventsData, clients) => {
 
         await sleep(1000);
 
-        await validateVoteDetails(voteId, vote, client, address);
+        await validateVoteDetails(voteId, vote, client, votingAddress);
 
         if (startVoteEvent && startVoteEvent.transactionHash) {
           const txHash = startVoteEvent.transactionHash;

@@ -1,7 +1,6 @@
 import {
   CHUNK_SIZE,
   CONCURRENT_LIMIT,
-  GET_LOGS_BLOCK_RANGE,
   startVoteEventAbi,
   executeVoteEventAbi,
   castVoteEventAbi,
@@ -41,95 +40,6 @@ const processChunksInBatches = async (
   return allResults;
 };
 
-const getBlockByTimestampBinarySearch = async (
-  targetTimestamp,
-  publicClient,
-  maxIterations = 50,
-) => {
-  const currentBlock = await publicClient.getBlockNumber();
-  let low = 0n;
-  let high = currentBlock;
-
-  for (let i = 0; i < maxIterations; i++) {
-    const mid = (low + high) / 2n;
-    const block = await publicClient.getBlock({ blockNumber: mid });
-    const blockTimestamp = Number(block.timestamp);
-
-    if (blockTimestamp === targetTimestamp) {
-      return mid;
-    }
-
-    if (blockTimestamp < targetTimestamp) {
-      low = mid + 1n;
-    } else {
-      high = mid - 1n;
-    }
-
-    if (high - low <= 1n) {
-      const [lowBlock, highBlock] = await Promise.all([
-        publicClient.getBlock({ blockNumber: low }),
-        publicClient.getBlock({ blockNumber: high }),
-      ]);
-
-      const lowDiff = Math.abs(Number(lowBlock.timestamp) - targetTimestamp);
-      const highDiff = Math.abs(Number(highBlock.timestamp) - targetTimestamp);
-
-      return lowDiff <= highDiff ? low : high;
-    }
-  }
-
-  return (low + high) / 2n;
-};
-
-const getBlockByTimestamp = async (
-  timestamp,
-  chainId,
-  publicClient,
-  isRuntime,
-) => {
-  try {
-    const url = isRuntime
-      ? `/api/etherscan/block-by-timestamp?chainId=${chainId}&timestamp=${timestamp}`
-      : `https://api.etherscan.io/v2/api?chainid=${chainId}&module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=${process.env.ETHERSCAN_API_KEY}`;
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data.status !== '1' || !data.result) {
-      throw new Error(`Etherscan API error: ${data.message || 'No result'}`);
-    }
-
-    const block = BigInt(data.result);
-    return {
-      fromBlock: block > GET_LOGS_BLOCK_RANGE ? block - GET_LOGS_BLOCK_RANGE : 0n,
-      toBlock: block + GET_LOGS_BLOCK_RANGE,
-    };
-  } catch (error) {
-    console.debug(
-      'Etherscan API failed, using block estimation:',
-      error.message,
-    );
-
-    const exactBlock = await getBlockByTimestampBinarySearch(
-      timestamp,
-      publicClient,
-    );
-
-    return {
-      fromBlock:
-        exactBlock > GET_LOGS_BLOCK_RANGE
-          ? exactBlock - GET_LOGS_BLOCK_RANGE
-          : 0n,
-      toBlock: exactBlock + GET_LOGS_BLOCK_RANGE,
-    };
-  }
-};
-
 /**
  * Fetch StartVote event for a given vote.
  * Uses snapshotBlock as anchor — the event is emitted in the same block.
@@ -158,7 +68,9 @@ export const fetchStartVoteEvent = async (
 
 /**
  * Fetch ExecuteVote event for an executed vote.
- * Scans from snapshotBlock to current block in chunks.
+ * First tries a single getLogs over the full range (voteId is indexed,
+ * so most RPC nodes handle it efficiently). Falls back to chunked
+ * scanning if the RPC rejects the range.
  */
 export const fetchExecuteVoteEvent = async (
   voteId,
@@ -166,21 +78,20 @@ export const fetchExecuteVoteEvent = async (
   votingAddress,
   publicClient,
 ) => {
+  const logArgs = {
+    address: votingAddress,
+    event: executeVoteEventAbi,
+    args: { voteId: BigInt(voteId) },
+  };
+
   try {
-    const toBlock = await publicClient.getBlockNumber();
-    const chunks = createChunks(snapshotBlock, toBlock);
+    // Try full-range query first — indexed topic makes this fast on most RPCs
+    const events = await publicClient.getLogs({
+      ...logArgs,
+      fromBlock: snapshotBlock,
+    });
 
-    const results = await processChunksInBatches(chunks, (chunk) =>
-      publicClient.getLogs({
-        address: votingAddress,
-        event: executeVoteEventAbi,
-        args: { voteId: BigInt(voteId) },
-        fromBlock: chunk.from,
-        toBlock: chunk.to,
-      }),
-    );
-
-    const executedLog = results[0] || null;
+    const executedLog = events[0] || null;
 
     if (executedLog && executedLog.blockNumber) {
       const block = await publicClient.getBlock({
@@ -190,18 +101,48 @@ export const fetchExecuteVoteEvent = async (
     }
 
     return executedLog;
-  } catch (error) {
-    console.warn(
-      `Failed to fetch ExecuteVote for vote ${voteId}:`,
-      error.message,
+  } catch {
+    // Full-range rejected — fall back to chunked scanning
+    console.debug(
+      `  Full-range getLogs failed for vote ${voteId}, falling back to chunked scan`,
     );
-    return null;
+
+    try {
+      const toBlock = await publicClient.getBlockNumber();
+      const chunks = createChunks(snapshotBlock, toBlock);
+
+      const results = await processChunksInBatches(chunks, (chunk) =>
+        publicClient.getLogs({
+          ...logArgs,
+          fromBlock: chunk.from,
+          toBlock: chunk.to,
+        }),
+      );
+
+      const executedLog = results[0] || null;
+
+      if (executedLog && executedLog.blockNumber) {
+        const block = await publicClient.getBlock({
+          blockNumber: executedLog.blockNumber,
+        });
+        return { ...executedLog, blockTimestamp: Number(block.timestamp) };
+      }
+
+      return executedLog;
+    } catch (error) {
+      console.warn(
+        `Failed to fetch ExecuteVote for vote ${voteId}:`,
+        error.message,
+      );
+      return null;
+    }
   }
 };
 
 /**
  * Fetch CastVote and AttemptCastVoteAsDelegate events for a vote.
- * Scans from snapshotBlock to toBlock (executeVote block or current block) in chunks.
+ * Tries a single getLogs call first (voteId is indexed), falls back to
+ * chunked scanning if the RPC rejects the range.
  */
 export const fetchCastVoteEvents = async (
   voteId,
@@ -210,6 +151,43 @@ export const fetchCastVoteEvents = async (
   votingAddress,
   publicClient,
 ) => {
+  const castVoteArgs = {
+    address: votingAddress,
+    event: castVoteEventAbi,
+    args: { voteId: BigInt(voteId) },
+    fromBlock: snapshotBlock,
+  };
+
+  const delegateArgs = {
+    address: votingAddress,
+    event: attemptCastVoteAsDelegateEventAbi,
+    args: { voteId: BigInt(voteId) },
+    fromBlock: snapshotBlock,
+  };
+
+  if (toBlock) {
+    castVoteArgs.toBlock = toBlock;
+    delegateArgs.toBlock = toBlock;
+  }
+
+  // Try single full-range query first
+  try {
+    const [castVoteResults, delegateResults] = await Promise.all([
+      publicClient.getLogs(castVoteArgs),
+      publicClient.getLogs(delegateArgs),
+    ]);
+
+    return {
+      castVoteEvents: castVoteResults,
+      attemptCastVoteAsDelegateEvents: delegateResults,
+    };
+  } catch {
+    // Full-range rejected — fall back to chunked scanning
+    console.debug(
+      `  Full-range CastVote getLogs failed for vote ${voteId}, falling back to chunked scan`,
+    );
+  }
+
   try {
     const endBlock = toBlock || (await publicClient.getBlockNumber());
 
@@ -218,9 +196,7 @@ export const fetchCastVoteEvents = async (
         createChunks(snapshotBlock, endBlock),
         (chunk) =>
           publicClient.getLogs({
-            address: votingAddress,
-            event: castVoteEventAbi,
-            args: { voteId: BigInt(voteId) },
+            ...castVoteArgs,
             fromBlock: chunk.from,
             toBlock: chunk.to,
           }),
@@ -229,9 +205,7 @@ export const fetchCastVoteEvents = async (
         createChunks(snapshotBlock, endBlock),
         (chunk) =>
           publicClient.getLogs({
-            address: votingAddress,
-            event: attemptCastVoteAsDelegateEventAbi,
-            args: { voteId: BigInt(voteId) },
+            ...delegateArgs,
             fromBlock: chunk.from,
             toBlock: chunk.to,
           }),

@@ -76,16 +76,6 @@ const fetchVoteData = async (publicClient, votingAddress, voteId) => {
   }
 };
 
-/**
- * A vote is terminal (events won't change) when:
- * - executed === true (enacted)
- * - open === false && phase === 2 (Closed — rejected/expired)
- */
-const isVoteTerminal = (voteData) => {
-  // phase 2 = Closed
-  return voteData.executed || (!voteData.open && voteData.phase === 2);
-};
-
 export const buildVotesEvents = async () => {
   console.debug('Starting votes events build...');
 
@@ -152,9 +142,7 @@ export const buildVotesEvents = async () => {
   let existingData = {};
   try {
     existingData = JSON.parse(readFileSync(outputPath, 'utf8'));
-    console.debug(
-      'Loaded existing votes-events-data.json for incremental update',
-    );
+    console.debug('Loaded existing votes-events-data.json');
   } catch {
     console.debug('No existing votes-events-data.json found, starting fresh');
   }
@@ -180,170 +168,190 @@ export const buildVotesEvents = async () => {
 
     console.debug(`Processing chain ${chainId}...`);
 
-    const votingAddress = chainVotingAddresses[chainId];
+    const addresses = chainVotingAddresses[chainId];
+    const existingChainData = existingData[chainId] ?? {};
+    eventsData[chainId] = {};
 
-    const votesLength = await fetchVotesLength(
-      clients[chainId],
-      votingAddress,
-    );
+    for (const votingAddress of addresses) {
+      console.debug(`  Processing voting contract ${votingAddress}...`);
 
-    if (votesLength === null || votesLength === undefined) {
-      console.warn(
-        `Could not obtain votes count for chain ${chainId}, skipping.`,
+      const votesLength = await fetchVotesLength(
+        clients[chainId],
+        votingAddress,
       );
-      eventsData[chainId] = { votes: {} };
-      continue;
-    }
 
-    const votesCount = Number(votesLength);
-    console.debug(`Found ${votesCount} votes on chain ${chainId}`);
-
-    if (votesCount === 0) {
-      eventsData[chainId] = { votes: {} };
-      continue;
-    }
-
-    // Vote IDs are 0-indexed
-    const voteIds = Array.from({ length: votesCount }, (_, i) => i);
-
-    console.debug(`Fetching vote data for chain ${chainId}...`);
-    const voteDataResults = await Promise.allSettled(
-      voteIds.map((id) =>
-        fetchVoteData(clients[chainId], votingAddress, id),
-      ),
-    );
-
-    const allVoteData = [];
-    voteDataResults.forEach((result, index) => {
-      if (result.status === 'fulfilled' && result.value) {
-        allVoteData.push(result.value);
-      } else if (result.status === 'rejected') {
+      if (votesLength === null || votesLength === undefined) {
         console.warn(
-          `Failed to fetch vote data for ID ${voteIds[index]} on chain ${chainId}:`,
-          result.reason.message,
+          `Could not obtain votes count for ${votingAddress} on chain ${chainId}, skipping.`,
         );
-      }
-    });
-
-    console.debug(
-      `Successfully fetched ${allVoteData.length} vote data entries for chain ${chainId}`,
-    );
-
-    const existingChainData = existingData[chainId]?.votes ?? {};
-    eventsData[chainId] = { votes: { ...existingChainData } };
-
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const processVote = async (voteData) => {
-      if (!voteData) {
-        return null;
+        if (!eventsData[chainId][votingAddress]) {
+          eventsData[chainId][votingAddress] = { votes: {} };
+        }
+        continue;
       }
 
-      const cached = existingChainData[voteData.id];
-      if (cached && isVoteTerminal(voteData)) {
-        console.debug(
-          `Vote ${voteData.id} is terminal and already cached, skipping`,
-        );
-        return null;
+      const votesCount = Number(votesLength);
+      console.debug(`  Found ${votesCount} votes at ${votingAddress}`);
+
+      if (votesCount === 0) {
+        if (!eventsData[chainId][votingAddress]) {
+          eventsData[chainId][votingAddress] = { votes: {} };
+        }
+        continue;
       }
+
+      // Vote IDs are 0-indexed
+      const voteIds = Array.from({ length: votesCount }, (_, i) => i);
+
+      console.debug(`  Fetching vote data for ${votingAddress}...`);
+      const voteDataResults = await Promise.allSettled(
+        voteIds.map((id) => fetchVoteData(clients[chainId], votingAddress, id)),
+      );
+
+      const allVoteData = [];
+      voteDataResults.forEach((result, index) => {
+        if (result.status === 'fulfilled' && result.value) {
+          allVoteData.push(result.value);
+        } else if (result.status === 'rejected') {
+          console.warn(
+            `Failed to fetch vote data for ID ${voteIds[index]} at ${votingAddress}:`,
+            result.reason.message,
+          );
+        }
+      });
 
       console.debug(
-        `Processing event fetches for vote ${voteData.id} on chain ${chainId}...`,
+        `  Successfully fetched ${allVoteData.length} vote data entries`,
       );
 
-      try {
-        const snapshotBlock = BigInt(voteData.snapshotBlock);
+      const existingAddressData =
+        existingChainData[votingAddress]?.votes ?? {};
+      eventsData[chainId][votingAddress] = {
+        votes: { ...existingAddressData },
+      };
 
-        const startVoteEvent = await fetchStartVoteEvent(
-          voteData.id,
-          snapshotBlock,
-          votingAddress,
-          clients[chainId],
-        );
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const processVote = async (voteData) => {
+        if (!voteData) {
+          return null;
+        }
 
-        let executeVoteEvent = null;
-        if (voteData.executed) {
-          executeVoteEvent = await fetchExecuteVoteEvent(
+        if (existingAddressData[voteData.id]) {
+          return null;
+        }
+
+        try {
+          const snapshotBlock = BigInt(voteData.snapshotBlock);
+
+          console.debug(
+            `    [vote ${voteData.id}] Fetching StartVote (snapshotBlock: ${snapshotBlock})...`,
+          );
+          const startVoteEvent = await fetchStartVoteEvent(
             voteData.id,
             snapshotBlock,
             votingAddress,
             clients[chainId],
           );
-        }
+          console.debug(
+            `    [vote ${voteData.id}] StartVote: ${startVoteEvent ? 'found' : 'not found'}`,
+          );
 
-        // Only fetch cast vote events for terminal votes (active votes change)
-        let castVoteData = null;
-        if (isVoteTerminal(voteData)) {
+          let executeVoteEvent = null;
+          if (voteData.executed) {
+            console.debug(`    [vote ${voteData.id}] Fetching ExecuteVote...`);
+            executeVoteEvent = await fetchExecuteVoteEvent(
+              voteData.id,
+              snapshotBlock,
+              votingAddress,
+              clients[chainId],
+            );
+            const execStatus = executeVoteEvent
+              ? 'found (block ' + executeVoteEvent.blockNumber + ')'
+              : 'not found';
+            console.debug(
+              `    [vote ${voteData.id}] ExecuteVote: ${execStatus}`,
+            );
+          }
+
           const executeBlock = executeVoteEvent?.blockNumber
             ? BigInt(executeVoteEvent.blockNumber)
             : null;
 
-          castVoteData = await fetchCastVoteEvents(
+          console.debug(
+            `    [vote ${voteData.id}] Fetching CastVote events...`,
+          );
+          const castVoteData = await fetchCastVoteEvents(
             voteData.id,
             snapshotBlock,
             executeBlock,
             votingAddress,
             clients[chainId],
           );
-        }
+          console.debug(
+            `    [vote ${voteData.id}] CastVote: ${castVoteData.castVoteEvents.length} votes, ${castVoteData.attemptCastVoteAsDelegateEvents.length} delegate events`,
+          );
 
-        return {
-          id: voteData.id,
-          data: {
-            startVoteEvent,
-            executeVoteEvent,
-            castVoteEvents: castVoteData?.castVoteEvents ?? null,
-            attemptCastVoteAsDelegateEvents:
-              castVoteData?.attemptCastVoteAsDelegateEvents ?? null,
-            voteDetails: {
-              id: voteData.id,
-              open: voteData.open,
-              executed: voteData.executed,
-              startDate: voteData.startDate,
-              snapshotBlock: voteData.snapshotBlock,
-              phase: voteData.phase,
+          return {
+            id: voteData.id,
+            data: {
+              startVoteEvent,
+              executeVoteEvent,
+              castVoteEvents: castVoteData.castVoteEvents,
+              attemptCastVoteAsDelegateEvents:
+                castVoteData.attemptCastVoteAsDelegateEvents,
+              voteDetails: {
+                id: voteData.id,
+                open: voteData.open,
+                executed: voteData.executed,
+                startDate: voteData.startDate,
+                snapshotBlock: voteData.snapshotBlock,
+                phase: voteData.phase,
+              },
             },
-          },
-        };
-      } catch (error) {
-        console.error(
-          `Error fetching events for vote ${voteData.id} on chain ${chainId}:`,
-          error.message,
-          error.stack,
-        );
-        return null;
-      }
-    };
-
-    console.debug(
-      `Processing ${allVoteData.length} votes sequentially for chain ${chainId}...`,
-    );
-
-    for (const [index, voteData] of allVoteData.entries()) {
-      console.debug(
-        `Processing vote ${index + 1}/${allVoteData.length} (ID: ${voteData.id}) on chain ${chainId}`,
-      );
-      try {
-        const result = await processVote(voteData);
-        if (result) {
-          const { id, data } = result;
-          eventsData[chainId].votes[id] = data;
+          };
+        } catch (error) {
+          console.error(
+            `Error fetching events for vote ${voteData.id} at ${votingAddress}:`,
+            error.message,
+            error.stack,
+          );
+          return null;
         }
-      } catch (error) {
-        console.error(
-          `A critical error occurred processing vote ${voteData.id} on chain ${chainId}:`,
-          error.message,
-          error.stack,
+      };
+
+      console.debug(
+        `  Processing ${allVoteData.length} votes sequentially for ${votingAddress}...`,
+      );
+
+      for (const [index, voteData] of allVoteData.entries()) {
+        console.debug(
+          `  Processing vote ${index + 1}/${allVoteData.length} (ID: ${voteData.id})`,
         );
+        try {
+          const result = await processVote(voteData);
+          if (result) {
+            const { id, data } = result;
+            eventsData[chainId][votingAddress].votes[id] = data;
+            writeFileSync(
+              outputPath,
+              JSON.stringify(eventsData, serializeBigInt, 2),
+            );
+          }
+        } catch (error) {
+          console.error(
+            `A critical error occurred processing vote ${voteData.id} at ${votingAddress}:`,
+            error.message,
+            error.stack,
+          );
+        }
       }
+      console.debug(`  All votes for ${votingAddress} processed.`);
     }
-    console.debug(`All votes for chain ${chainId} processed.`);
+    console.debug(`All voting contracts for chain ${chainId} processed.`);
   }
 
   console.debug('Votes events build completed successfully');
   console.debug('Built data for chains:', Object.keys(eventsData));
-
-  writeFileSync(outputPath, JSON.stringify(eventsData, serializeBigInt, 2));
-  console.debug(`eventsData written to ${outputPath}`);
 
   return eventsData;
 };
