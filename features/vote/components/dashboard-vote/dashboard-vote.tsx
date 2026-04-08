@@ -62,6 +62,7 @@ export const DashboardVote = ({
     useVoteDualGovernanceStatus({
       voteId: vote.id,
       eventExecuteVote: executeEvent,
+      isEventExecuteLoading: false,
     });
 
   const handlePass = useCallback(() => {

@@ -13,6 +13,7 @@ import { EventExecuteVote } from 'shared/votes/types';
 type Args = {
   voteId: number | string | undefined;
   eventExecuteVote: EventExecuteVote | null | undefined;
+  isEventExecuteLoading: boolean;
 };
 
 type DualGovernanceProposalSubmittedLog = Log & {
@@ -26,6 +27,7 @@ type DualGovernanceProposalSubmittedLog = Log & {
 export const useVoteDualGovernanceStatus = ({
   voteId,
   eventExecuteVote,
+  isEventExecuteLoading,
 }: Args) => {
   const client = usePublicClient();
   const { chainId } = useLidoSDK();
@@ -94,11 +96,10 @@ export const useVoteDualGovernanceStatus = ({
 
   return {
     ...query,
-    isLoading:
-      eventExecuteVote === undefined
-        ? true
-        : isEnabled
-          ? query.isLoading
-          : false,
+    isLoading: isEventExecuteLoading
+      ? true
+      : isEnabled
+        ? query.isLoading
+        : false,
   };
 };
