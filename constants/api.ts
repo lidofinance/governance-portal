@@ -8,4 +8,5 @@ export const enum API_ROUTES {
   ETHERSCAN_BLOCK_BY_TIMESTAMP = 'api/etherscan/block-by-timestamp',
   ETHERSCAN = 'api/etherscan',
   PROPOSALS_EVENTS = 'api/proposals/events',
+  VOTES_EVENTS = 'api/votes/events',
 }
