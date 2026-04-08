@@ -74,10 +74,8 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchVote,
   } = useVote(Number(voteId));
 
-  const { data: eventExecute } = useEventExecuteVote(
-    voteData?.vote,
-    votingConfig?.voteTime,
-  );
+  const { data: eventExecute, isLoading: isEventExecuteLoading } =
+    useEventExecuteVote(voteData?.vote, votingConfig?.voteTime);
 
   const {
     data: voteEvents,
@@ -95,6 +93,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     useVoteDualGovernanceStatus({
       voteId: voteData?.vote.id,
       eventExecuteVote: eventExecute,
+      isEventExecuteLoading,
     });
 
   const {
