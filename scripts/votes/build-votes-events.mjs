@@ -10,6 +10,7 @@ import {
   fetchExecuteVoteEvent,
   fetchCastVoteEvents,
 } from '../../utils/votes/fetch-vote-events.mjs';
+import { fetchIpfsDescription } from '../../utils/votes/fetch-ipfs-description.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -360,7 +361,27 @@ export const buildVotesEvents = async () => {
           return null;
         }
 
-        if (existingAddressData[voteData.id]) {
+        const cachedEntry = existingAddressData[voteData.id];
+
+        if (cachedEntry) {
+          // Back-fill: if the vote is cached but the description was never
+          // resolved (field missing or null), fetch only the description
+          // from IPFS and patch it in place. Avoids re-running the event
+          // scans on every rebuild.
+          if (cachedEntry.description == null) {
+            const description = await fetchIpfsDescription(
+              cachedEntry.startVoteEvent?.args?.metadata ?? '',
+            );
+            if (description != null) {
+              console.debug(
+                `    [vote ${voteData.id}] Back-filled description (${description.length} chars).`,
+              );
+              return {
+                id: voteData.id,
+                data: { ...cachedEntry, description },
+              };
+            }
+          }
           return null;
         }
 
@@ -419,6 +440,11 @@ export const buildVotesEvents = async () => {
             `    [vote ${voteData.id}] Processed: ${voteEvents.length} vote entries (from ${castVoteData.castVoteEvents.length} raw votes, ${castVoteData.attemptCastVoteAsDelegateEvents.length} delegate events)`,
           );
 
+          console.debug(`    [vote ${voteData.id}] Fetching IPFS description...`);
+          const description = await fetchIpfsDescription(
+            startVoteEvent?.args?.metadata ?? '',
+          );
+
           return {
             id: voteData.id,
             data: {
@@ -440,6 +466,7 @@ export const buildVotesEvents = async () => {
               startVoteEvent,
               executeVoteEvent,
               voteEvents,
+              description,
             },
           };
         } catch (error) {

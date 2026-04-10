@@ -15,6 +15,7 @@ export type ActiveVoteResult = Vote & {
   startEvent: EventStartVote | null;
   executeEvent: EventExecuteVote | null;
   voteEvents: VoteEvent[] | null;
+  description: string | null;
 };
 
 type Args = {
@@ -79,6 +80,7 @@ export const fetchActiveVotes = async ({
       startEvent: null,
       executeEvent: null,
       voteEvents: null,
+      description: null,
     }));
   }
 
@@ -98,5 +100,6 @@ export const fetchActiveVotes = async ({
     startEvent: startEvents[v.id.toString()] ?? null,
     executeEvent: executeEvents[v.id.toString()] ?? null,
     voteEvents: null,
+    description: null,
   }));
 };

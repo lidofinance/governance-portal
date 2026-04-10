@@ -15,6 +15,7 @@ export type ArchivedVoteResult = Vote & {
   startEvent: EventStartVote | null;
   executeEvent: EventExecuteVote | null;
   voteEvents: VoteEvent[];
+  description: string | null;
 };
 
 const BATCH_SIZE = 12;
@@ -94,6 +95,7 @@ const parseArchivedVote = (archived: ArchivedVote): ArchivedVoteResult => {
     startEvent: parseStartVoteEvent(archived.startVoteEvent),
     executeEvent: parseExecuteVoteEvent(archived.executeVoteEvent),
     voteEvents: archived.voteEvents.map(parseVoteEvent),
+    description: archived.description ?? null,
   };
 };
 

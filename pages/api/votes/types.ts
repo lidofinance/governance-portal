@@ -55,6 +55,15 @@ export type ArchivedVote = {
   startVoteEvent: ArchivedStartVoteEvent | null;
   executeVoteEvent: ArchivedExecuteVoteEvent | null;
   voteEvents: ArchivedVoteEvent[];
+  /**
+   * IPFS description text resolved at build time from
+   * `startVoteEvent.args.metadata`. `null` when the metadata has no CID or
+   * the gateway fetch failed — callers should fall back to the on-chain
+   * `metadata` string in that case. Stored separately so the two values can
+   * legitimately diverge (and so search-by-description has a plain-text
+   * corpus to scan).
+   */
+  description: string | null;
 };
 
 export type CachedVoteEventsData = {

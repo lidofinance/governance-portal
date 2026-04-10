@@ -24,6 +24,7 @@ type VoteResult = Vote & {
   startEvent: EventStartVote | null;
   executeEvent: EventExecuteVote | null;
   voteEvents: VoteEvent[] | null;
+  description: string | null;
 };
 
 const isVoteActive = (vote: Vote) => {
