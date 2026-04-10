@@ -26,6 +26,7 @@ type Value = {
   eventStart: EventStartVote | null;
   eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[];
+  description: string | null;
   voterState: VoterState | undefined;
   voterDaoTokenBalance: bigint | undefined;
   voteTime: number;
@@ -129,6 +130,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
       canExecute: voteData.canExecute,
       eventStart: voteData.eventStart,
       eventExecute: voteData.eventExecute,
+      description: voteData.description,
       voterState: voterState?.voterState,
       voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
       voteEvents: voteEvents ?? [],
