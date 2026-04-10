@@ -1,5 +1,5 @@
 import { getLogs } from 'viem/actions';
-import { Address, Log, PublicClient } from 'viem';
+import { Address, Hex, PublicClient } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
 import { aragonVotingAbi } from 'abi/generated';
 
@@ -16,8 +16,16 @@ export type StartVoteEventArgs = {
   metadata: string;
 };
 
+/**
+ * Narrow event shape — only the fields the UI actually reads.
+ * Both the RPC path (viem Log is structurally assignable) and the
+ * archived cache path produce this shape.
+ */
 export type EventStartVote = {
-  event: Log;
+  event: {
+    transactionHash: Hex | null;
+    blockNumber: bigint | null;
+  };
   args: StartVoteEventArgs;
 };
 

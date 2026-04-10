@@ -67,6 +67,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
     queryFn: () =>
       fetchAragonVotes({
         votingContract,
+        chainId,
         limit: PAGE_SIZE,
         offset: (currentPage - 1) * PAGE_SIZE,
         client: rpcProvider,
