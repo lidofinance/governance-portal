@@ -1,10 +1,11 @@
 import { aragonVotingAbi } from 'abi/generated';
-import { RawVote, Vote, VoteStatus } from '../types';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { ContractFunctionParameters, PublicClient } from 'viem';
-import { parseVote } from './parse-vote';
-import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { getEventsStartVote } from './get-events-start-vote';
+import type { PublicClient } from 'viem';
+import type { Vote, VoteEvent, EventExecuteVote } from '../types';
+import { VoteStatus } from '../types';
+import type { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import type { EventStartVote } from './get-event-start-vote';
+import { fetchArchivedVotes } from './fetch-archived-votes';
+import { fetchActiveVotes } from './fetch-active-votes';
 
 type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
@@ -12,6 +13,7 @@ type VotingContract = ReturnType<
 
 type FetchArgs = {
   votingContract: VotingContract;
+  chainId: number;
   limit: number;
   offset?: number;
   client: PublicClient;
@@ -20,6 +22,8 @@ type FetchArgs = {
 
 type VoteResult = Vote & {
   startEvent: EventStartVote | null;
+  executeEvent: EventExecuteVote | null;
+  voteEvents: VoteEvent[] | null;
 };
 
 const isVoteActive = (vote: Vote) => {
@@ -36,8 +40,13 @@ const isVoteActive = (vote: Vote) => {
   );
 };
 
+/**
+ * Thin orchestrator: splits a page of vote IDs into archived (from JSON)
+ * and active (from RPC), fetches both in parallel, merges by ID descending.
+ */
 export const fetchAragonVotes = async ({
   votingContract,
+  chainId,
   limit,
   offset = 0,
   client,
@@ -52,67 +61,37 @@ export const fetchAragonVotes = async ({
 
   const startId = votesLength - 1 - offset;
   const endId = Math.max(startId - limit + 1, 0);
-
   const voteIds = Array.from(
     { length: startId - endId + 1 },
     (_, i) => startId - i,
   );
 
-  const contractConfig = {
-    address: votingContract.address,
-    abi: aragonVotingAbi,
-  } as const;
+  const archived = await fetchArchivedVotes({
+    chainId,
+    votingAddress: votingContract.address,
+    voteIds,
+  });
 
-  const getVotesBatch = async (voteIds: number[]) => {
-    const voteCalls: ContractFunctionParameters[] = voteIds.map((id) => ({
-      ...contractConfig,
-      functionName: 'getVote',
-      args: [id],
-    }));
+  const missingIds = voteIds.filter((id) => !(id.toString() in archived));
 
-    const executeCalls: ContractFunctionParameters[] = voteIds.map((id) => ({
-      ...contractConfig,
-      functionName: 'canExecute',
-      args: [id],
-    }));
+  const active = await fetchActiveVotes({
+    votingContract,
+    client,
+    voteIds: missingIds,
+    withEvents: !onlyActive,
+  });
 
-    const results = await client.multicall({
-      contracts: [...voteCalls, ...executeCalls],
-    });
-
-    const voteResults = results.slice(0, voteIds.length);
-    const executeResults = results.slice(voteIds.length);
-
-    return voteIds.map((id, index) => {
-      return parseVote(
-        id,
-        voteResults[index].result as RawVote,
-        executeResults[index].result as boolean,
-      );
-    });
-  };
-
-  const allVotes = await getVotesBatch(voteIds);
-
-  const votesToProcess = onlyActive ? allVotes.filter(isVoteActive) : allVotes;
-
-  if (votesToProcess.length === 0) {
-    return [];
+  const voteMap = new Map<number, VoteResult>();
+  for (const [id, vote] of Object.entries(archived)) {
+    voteMap.set(Number(id), vote);
+  }
+  for (const vote of active) {
+    voteMap.set(vote.id, vote);
   }
 
-  const startVoteArgs = {
-    votes: votesToProcess.map((v) => ({
-      id: v.id,
-      snapshotBlock: v.snapshotBlock,
-    })),
-    address: votingContract.address,
-    client,
-  };
+  const merged = voteIds
+    .map((id) => voteMap.get(id))
+    .filter((v): v is VoteResult => v !== undefined);
 
-  const startEvents = await getEventsStartVote(startVoteArgs);
-
-  return votesToProcess.map((v) => ({
-    ...v,
-    startEvent: startEvents[v.id.toString()] ?? null,
-  }));
+  return onlyActive ? merged.filter(isVoteActive) : merged;
 };

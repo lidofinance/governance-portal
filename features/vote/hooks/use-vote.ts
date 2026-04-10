@@ -1,44 +1,76 @@
-import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
+import { useLidoSDK } from 'providers/lido-sdk';
 import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { parseVote } from 'shared/votes/utils/parse-vote';
-import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
+import { fetchArchivedVotes } from 'shared/votes/utils/fetch-archived-votes';
+import { fetchActiveVotes } from 'shared/votes/utils/fetch-active-votes';
+import type { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
+import type { EventExecuteVote, Vote, VoteEvent } from 'shared/votes/types';
 
-export const useVote = (voteId: number) => {
+export type VoteFull = {
+  vote: Vote;
+  canExecute: boolean;
+  eventStart: EventStartVote | null;
+  eventExecute: EventExecuteVote | null;
+  voteEvents: VoteEvent[] | null;
+};
+
+/**
+ * Thin orchestrator. Tries the archived (JSON) path first; falls back to
+ * the active (RPC) path if the vote is not in the cache. The two paths
+ * are pure functions — this hook is just the React Query wrapper.
+ */
+export const useVote = (voteId: number, voteTime: number | undefined) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const votingContract = useReadContract(Voting);
 
   return useQuery({
     queryKey: ['vote', voteId, chainId],
-    staleTime: 5 * 60_000, // 5 minutes
-    queryFn: async () => {
-      const voteIdBigInt = BigInt(voteId);
+    staleTime: 5 * 60_000,
+    enabled: !!voteTime,
+    queryFn: async (): Promise<VoteFull | null> => {
+      const archived = await fetchArchivedVotes({
+        chainId,
+        votingAddress: votingContract.address,
+        voteIds: [voteId],
+      });
 
-      const voteRaw = await votingContract.readContract('getVote', [
-        voteIdBigInt,
-      ]);
+      const archivedVote = archived[voteId.toString()];
+      if (archivedVote) {
+        return {
+          vote: archivedVote,
+          canExecute: archivedVote.canExecute,
+          eventStart: archivedVote.startEvent,
+          eventExecute: archivedVote.executeEvent,
+          voteEvents: archivedVote.voteEvents,
+        };
+      }
 
-      if (voteRaw === null) {
+      // Not in archive — fetch live state from chain.
+      const votesLength = Number(
+        await votingContract.readContract('votesLength'),
+      );
+      if (voteId >= votesLength) {
         return null;
       }
 
-      const canExecute = await votingContract.readContract('canExecute', [
-        voteIdBigInt,
-      ]);
-
-      const vote = parseVote(voteIdBigInt, voteRaw, canExecute);
-
-      const eventStart = await getEventStartVote({
-        address: votingContract.address,
+      const [active] = await fetchActiveVotes({
+        votingContract,
         client: rpcProvider,
-        voteId: voteIdBigInt,
-        fromBlock: vote.snapshotBlock,
+        voteIds: [voteId],
+        withEvents: true,
       });
 
+      if (!active) {
+        return null;
+      }
+
       return {
-        vote,
-        eventStart,
+        vote: active,
+        canExecute: active.canExecute,
+        eventStart: active.startEvent,
+        eventExecute: active.executeEvent,
+        voteEvents: null,
       };
     },
   });

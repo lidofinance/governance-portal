@@ -21,6 +21,129 @@ const serializeBigInt = (key, value) => {
   return value;
 };
 
+/**
+ * A vote is terminal (archived) once voting has closed (`open === false`).
+ * At that point cast votes, metadata and start/execute events are frozen.
+ * `executed` / `canExecute` may still flip if someone enacts a "Passed
+ * waiting for enact" vote, but that window is bounded by the cache
+ * rebuild cadence and worth the trade-off to keep the dashboard fully
+ * served from JSON.
+ */
+const isVoteTerminal = (voteData) => !voteData.open;
+
+const isCastVoteMoreRecent = (newVote, existing) => {
+  if (!existing) {
+    return true;
+  }
+  if (newVote.blockNumber > existing.blockNumber) {
+    return true;
+  }
+  if (newVote.blockNumber === existing.blockNumber) {
+    return newVote.transactionIndex > existing.transactionIndex;
+  }
+  return false;
+};
+
+/**
+ * Pre-process CastVote and AttemptCastVoteAsDelegate events into the
+ * UI VoteEvent[] shape. Mirrors the runtime logic in
+ * features/vote/utils/get-cast-vote-events.ts so the client doesn't
+ * have to redo this work.
+ */
+const processCastVoteEvents = (castVoteEvents, delegateEvents) => {
+  if (castVoteEvents.length === 0) {
+    return [];
+  }
+
+  const votesMap = {};
+
+  for (const event of castVoteEvents) {
+    const key = event.args.voter.toLowerCase();
+    if (isCastVoteMoreRecent(event, votesMap[key])) {
+      votesMap[key] = {
+        blockNumber: event.blockNumber,
+        transactionIndex: event.transactionIndex ?? 0,
+        voter: event.args.voter,
+        supports: event.args.supports,
+        stake: event.args.stake,
+      };
+    }
+  }
+
+  const delegatedVotesMap = {};
+
+  for (const delegateEvent of delegateEvents) {
+    const nestedVotes = [];
+
+    for (const voter of delegateEvent.args.voters) {
+      const key = voter.toLowerCase();
+      const voteEvent = votesMap[key];
+
+      if (!voteEvent) {
+        continue;
+      }
+
+      if (
+        voteEvent.blockNumber === delegateEvent.blockNumber &&
+        voteEvent.transactionIndex === (delegateEvent.transactionIndex ?? 0)
+      ) {
+        nestedVotes.push({
+          voter: voteEvent.voter,
+          supports: voteEvent.supports,
+          stake: voteEvent.stake,
+        });
+
+        delete votesMap[key];
+      }
+    }
+
+    if (nestedVotes.length === 0) {
+      continue;
+    }
+
+    const delegateSupports = nestedVotes[0].supports;
+    const delegateKey = `${delegateEvent.args.delegate.toLowerCase()}-${delegateSupports}`;
+    const existingDelegatedVote = delegatedVotesMap[delegateKey];
+
+    let delegatedVotes = nestedVotes;
+    if (existingDelegatedVote) {
+      const merged = new Map();
+      for (const v of [
+        ...(existingDelegatedVote.delegatedVotes ?? []),
+        ...nestedVotes,
+      ]) {
+        merged.set(v.voter.toLowerCase(), v);
+      }
+      delegatedVotes = [...merged.values()];
+    }
+
+    const delegatedStake = delegatedVotes.reduce(
+      (acc, v) => acc + v.stake,
+      0n,
+    );
+
+    const sortedVotes = delegatedVotes.sort((a, b) =>
+      a.stake > b.stake ? -1 : 1,
+    );
+
+    delegatedVotesMap[delegateKey] = {
+      voter: delegateEvent.args.delegate,
+      supports: delegateSupports,
+      stake: delegatedStake,
+      delegatedVotes: sortedVotes,
+    };
+  }
+
+  return [
+    ...Object.values(votesMap).map((v) => ({
+      voter: v.voter,
+      supports: v.supports,
+      stake: v.stake,
+    })),
+    ...Object.values(delegatedVotesMap),
+  ].sort((a, b) => (a.stake > b.stake ? -1 : 1));
+};
+
 const fetchVotesLength = async (publicClient, votingAddress) => {
   try {
     console.debug('Fetching votes count...');
@@ -67,6 +190,7 @@ const fetchVoteData = async (publicClient, votingAddress, voteId) => {
       yea: rawVote[6],
       nay: rawVote[7],
       votingPower: rawVote[8],
+      script: rawVote[9],
       phase: rawVote[10],
       canExecute,
     };
@@ -240,6 +364,13 @@ export const buildVotesEvents = async () => {
           return null;
         }
 
+        if (!isVoteTerminal(voteData)) {
+          console.debug(
+            `    [vote ${voteData.id}] Not terminal (open=${voteData.open}, executed=${voteData.executed}, canExecute=${voteData.canExecute}), skipping.`,
+          );
+          return null;
+        }
+
         try {
           const snapshotBlock = BigInt(voteData.snapshotBlock);
 
@@ -252,9 +383,6 @@ export const buildVotesEvents = async () => {
             votingAddress,
             clients[chainId],
           );
-          console.debug(
-            `    [vote ${voteData.id}] StartVote: ${startVoteEvent ? 'found' : 'not found'}`,
-          );
 
           let executeVoteEvent = null;
           if (voteData.executed) {
@@ -264,12 +392,6 @@ export const buildVotesEvents = async () => {
               snapshotBlock,
               votingAddress,
               clients[chainId],
-            );
-            const execStatus = executeVoteEvent
-              ? 'found (block ' + executeVoteEvent.blockNumber + ')'
-              : 'not found';
-            console.debug(
-              `    [vote ${voteData.id}] ExecuteVote: ${execStatus}`,
             );
           }
 
@@ -287,26 +409,37 @@ export const buildVotesEvents = async () => {
             votingAddress,
             clients[chainId],
           );
+
+          const voteEvents = processCastVoteEvents(
+            castVoteData.castVoteEvents,
+            castVoteData.attemptCastVoteAsDelegateEvents,
+          );
+
           console.debug(
-            `    [vote ${voteData.id}] CastVote: ${castVoteData.castVoteEvents.length} votes, ${castVoteData.attemptCastVoteAsDelegateEvents.length} delegate events`,
+            `    [vote ${voteData.id}] Processed: ${voteEvents.length} vote entries (from ${castVoteData.castVoteEvents.length} raw votes, ${castVoteData.attemptCastVoteAsDelegateEvents.length} delegate events)`,
           );
 
           return {
             id: voteData.id,
             data: {
-              startVoteEvent,
-              executeVoteEvent,
-              castVoteEvents: castVoteData.castVoteEvents,
-              attemptCastVoteAsDelegateEvents:
-                castVoteData.attemptCastVoteAsDelegateEvents,
               voteDetails: {
                 id: voteData.id,
                 open: voteData.open,
                 executed: voteData.executed,
                 startDate: voteData.startDate,
                 snapshotBlock: voteData.snapshotBlock,
+                supportRequired: voteData.supportRequired,
+                minAcceptQuorum: voteData.minAcceptQuorum,
+                yea: voteData.yea,
+                nay: voteData.nay,
+                votingPower: voteData.votingPower,
+                script: voteData.script,
                 phase: voteData.phase,
+                canExecute: voteData.canExecute,
               },
+              startVoteEvent,
+              executeVoteEvent,
+              voteEvents,
             },
           };
         } catch (error) {

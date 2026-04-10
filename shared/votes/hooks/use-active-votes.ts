@@ -19,6 +19,7 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
       try {
         const votes = await fetchAragonVotes({
           votingContract,
+          chainId,
           limit,
           client: rpcProvider,
           onlyActive: shouldGetActive,
