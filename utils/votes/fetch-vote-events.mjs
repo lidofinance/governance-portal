@@ -40,9 +40,25 @@ const processChunksInBatches = async (
   return allResults;
 };
 
+const shapeStartVoteEvent = (log) => {
+  if (!log) {
+    return null;
+  }
+  return {
+    transactionHash: log.transactionHash,
+    blockNumber: log.blockNumber,
+    args: {
+      voteId: log.args.voteId,
+      creator: log.args.creator,
+      metadata: log.args.metadata,
+    },
+  };
+};
+
 /**
  * Fetch StartVote event for a given vote.
  * Uses snapshotBlock as anchor — the event is emitted in the same block.
+ * Returns a UI-ready shape: { transactionHash, blockNumber, args }.
  */
 export const fetchStartVoteEvent = async (
   voteId,
@@ -59,11 +75,25 @@ export const fetchStartVoteEvent = async (
       toBlock: snapshotBlock + 1n,
     });
 
-    return events[0] || null;
+    return shapeStartVoteEvent(events[0]);
   } catch (error) {
     console.warn(`Failed to fetch StartVote for vote ${voteId}:`, error.message);
     return null;
   }
+};
+
+const shapeExecuteVoteEvent = async (log, publicClient) => {
+  if (!log || !log.blockNumber) {
+    return null;
+  }
+  const block = await publicClient.getBlock({
+    blockNumber: log.blockNumber,
+  });
+  return {
+    transactionHash: log.transactionHash,
+    blockNumber: log.blockNumber,
+    executedAt: Number(block.timestamp),
+  };
 };
 
 /**
@@ -71,6 +101,7 @@ export const fetchStartVoteEvent = async (
  * First tries a single getLogs over the full range (voteId is indexed,
  * so most RPC nodes handle it efficiently). Falls back to chunked
  * scanning if the RPC rejects the range.
+ * Returns a UI-ready shape: { transactionHash, blockNumber, executedAt }.
  */
 export const fetchExecuteVoteEvent = async (
   voteId,
@@ -85,24 +116,13 @@ export const fetchExecuteVoteEvent = async (
   };
 
   try {
-    // Try full-range query first — indexed topic makes this fast on most RPCs
     const events = await publicClient.getLogs({
       ...logArgs,
       fromBlock: snapshotBlock,
     });
 
-    const executedLog = events[0] || null;
-
-    if (executedLog && executedLog.blockNumber) {
-      const block = await publicClient.getBlock({
-        blockNumber: executedLog.blockNumber,
-      });
-      return { ...executedLog, blockTimestamp: Number(block.timestamp) };
-    }
-
-    return executedLog;
+    return await shapeExecuteVoteEvent(events[0], publicClient);
   } catch {
-    // Full-range rejected — fall back to chunked scanning
     console.debug(
       `  Full-range getLogs failed for vote ${voteId}, falling back to chunked scan`,
     );
@@ -119,16 +139,7 @@ export const fetchExecuteVoteEvent = async (
         }),
       );
 
-      const executedLog = results[0] || null;
-
-      if (executedLog && executedLog.blockNumber) {
-        const block = await publicClient.getBlock({
-          blockNumber: executedLog.blockNumber,
-        });
-        return { ...executedLog, blockTimestamp: Number(block.timestamp) };
-      }
-
-      return executedLog;
+      return await shapeExecuteVoteEvent(results[0], publicClient);
     } catch (error) {
       console.warn(
         `Failed to fetch ExecuteVote for vote ${voteId}:`,
@@ -139,10 +150,32 @@ export const fetchExecuteVoteEvent = async (
   }
 };
 
+const shapeCastVoteLog = (log) => ({
+  blockNumber: log.blockNumber,
+  transactionIndex: log.transactionIndex,
+  args: {
+    voteId: log.args.voteId,
+    voter: log.args.voter,
+    supports: log.args.supports,
+    stake: log.args.stake,
+  },
+});
+
+const shapeDelegateLog = (log) => ({
+  blockNumber: log.blockNumber,
+  transactionIndex: log.transactionIndex,
+  args: {
+    voteId: log.args.voteId,
+    delegate: log.args.delegate,
+    voters: log.args.voters,
+  },
+});
+
 /**
  * Fetch CastVote and AttemptCastVoteAsDelegate events for a vote.
  * Tries a single getLogs call first (voteId is indexed), falls back to
  * chunked scanning if the RPC rejects the range.
+ * Returns normalized events for processing by the build script.
  */
 export const fetchCastVoteEvents = async (
   voteId,
@@ -170,7 +203,6 @@ export const fetchCastVoteEvents = async (
     delegateArgs.toBlock = toBlock;
   }
 
-  // Try single full-range query first
   try {
     const [castVoteResults, delegateResults] = await Promise.all([
       publicClient.getLogs(castVoteArgs),
@@ -178,11 +210,10 @@ export const fetchCastVoteEvents = async (
     ]);
 
     return {
-      castVoteEvents: castVoteResults,
-      attemptCastVoteAsDelegateEvents: delegateResults,
+      castVoteEvents: castVoteResults.map(shapeCastVoteLog),
+      attemptCastVoteAsDelegateEvents: delegateResults.map(shapeDelegateLog),
     };
   } catch {
-    // Full-range rejected — fall back to chunked scanning
     console.debug(
       `  Full-range CastVote getLogs failed for vote ${voteId}, falling back to chunked scan`,
     );
@@ -213,8 +244,8 @@ export const fetchCastVoteEvents = async (
     ]);
 
     return {
-      castVoteEvents: castVoteResults,
-      attemptCastVoteAsDelegateEvents: delegateResults,
+      castVoteEvents: castVoteResults.map(shapeCastVoteLog),
+      attemptCastVoteAsDelegateEvents: delegateResults.map(shapeDelegateLog),
     };
   } catch (error) {
     console.warn(

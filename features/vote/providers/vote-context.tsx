@@ -23,8 +23,8 @@ import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 type Value = {
   vote: Vote;
   canExecute: boolean;
-  eventStart: EventStartVote | undefined;
-  eventExecute: EventExecuteVote | null | undefined;
+  eventStart: EventStartVote | null;
+  eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[];
   voterState: VoterState | undefined;
   voterDaoTokenBalance: bigint | undefined;
@@ -79,6 +79,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchVoteEvents,
   } = useCastVoteEvents(
     voteData?.vote,
+    voteData?.voteEvents,
     voteData?.eventExecute?.event.blockNumber,
   );
 

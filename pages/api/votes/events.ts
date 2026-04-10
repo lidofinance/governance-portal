@@ -16,7 +16,7 @@ import type { CachedVoteEventsData, VoteEventsSubset } from './types';
 
 const JSON_PATH = path.join(process.cwd(), 'public', 'votes-events-data.json');
 
-const MAX_VOTE_IDS = 5;
+const MAX_VOTE_IDS = 12;
 
 // Module-level cache: null = not loaded yet; populated lazily, no TTL (file
 // only changes on deploy via the build script).
