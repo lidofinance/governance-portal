@@ -11,21 +11,22 @@ import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoterState } from '../hooks/use-voter-state';
 import { useCastVoteEvents } from '../hooks/use-cast-vote-events';
 import { useVotingConfig } from '../hooks/use-voting-config';
-import { useEventExecuteVote } from '../hooks/use-event-execute-vote';
 import { InlineVoteCardLoader } from '../styles';
 import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { useVoteDelegators } from '../hooks/use-vote-delegators';
 import { EligibleDelegator, VoterInfo } from '../types';
-import { ProposalStatus } from 'shared/types';
+import { ProposalStatus } from '@dg/proposals/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 
 type Value = {
   vote: Vote;
+  canExecute: boolean;
   eventStart: EventStartVote | null;
   eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[];
+  description: string | null;
   voterState: VoterState | undefined;
   voterDaoTokenBalance: bigint | undefined;
   voteTime: number;
@@ -71,10 +72,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch: refetchVote,
-  } = useVote(Number(voteId));
-
-  const { data: eventExecute, isLoading: isEventExecuteLoading } =
-    useEventExecuteVote(voteData?.vote, votingConfig?.voteTime);
+  } = useVote(Number(voteId), votingConfig?.voteTime);
 
   const {
     data: voteEvents,
@@ -95,8 +93,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
   const { data: dgProposal, isLoading: isProposalDataLoading } =
     useVoteDualGovernanceStatus({
       voteId: voteData?.vote.id,
-      eventExecuteVote: eventExecute,
-      isEventExecuteLoading,
+      eventExecuteVote: voteData?.eventExecute,
     });
 
   const {
@@ -130,8 +127,10 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
 
     return {
       vote: voteData.vote,
+      canExecute: voteData.canExecute,
       eventStart: voteData.eventStart,
-      eventExecute: eventExecute ?? null,
+      eventExecute: voteData.eventExecute,
+      description: voteData.description,
       voterState: voterState?.voterState,
       voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
       voteEvents: voteEvents ?? [],
@@ -154,7 +153,6 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     delegatorsData?.eligibleDelegatedVotingPower,
     delegatorsData?.totalDelegatedVotingPower,
     dgProposal,
-    eventExecute,
     isLoading,
     refetchers,
     voteData,

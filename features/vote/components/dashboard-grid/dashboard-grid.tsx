@@ -172,6 +172,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
                 vote={voteData}
                 startEvent={voteData.startEvent}
                 executeEvent={voteData.executeEvent}
+                description={voteData.description}
                 voteTime={votingInfo.data.voteTime}
                 objectionPhaseTime={votingInfo.data.objectionPhaseTime}
                 onPass={votes.refetch}

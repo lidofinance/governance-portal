@@ -36,6 +36,7 @@ type Props = {
   objectionPhaseTime: number;
   onPass: () => void;
   executeEvent: EventExecuteVote | null;
+  description: string | null;
 };
 
 export const DashboardVote = ({
@@ -45,6 +46,7 @@ export const DashboardVote = ({
   objectionPhaseTime,
   onPass,
   executeEvent,
+  description,
 }: Props) => {
   const {
     nayPct,
@@ -125,7 +127,10 @@ export const DashboardVote = ({
         <VoteBody>
           <VoteTitle>Vote #{vote.id}</VoteTitle>
           <VoteDescriptionWrap data-testid="voteDescription">
-            <VoteDescription metadata={startEvent?.args.metadata} />
+            <VoteDescription
+              metadata={startEvent?.args.metadata}
+              description={description}
+            />
           </VoteDescriptionWrap>
         </VoteBody>
         <Footer>

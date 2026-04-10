@@ -13,6 +13,7 @@ export type VoteFull = {
   eventStart: EventStartVote | null;
   eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[] | null;
+  description: string | null;
 };
 
 /**
@@ -43,6 +44,7 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
           eventStart: archivedVote.startEvent,
           eventExecute: archivedVote.executeEvent,
           voteEvents: archivedVote.voteEvents,
+          description: archivedVote.description,
         };
       }
 
@@ -71,6 +73,7 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
         eventStart: active.startEvent,
         eventExecute: active.executeEvent,
         voteEvents: null,
+        description: null,
       };
     },
   });

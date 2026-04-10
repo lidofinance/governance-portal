@@ -11222,7 +11222,8 @@
               "supports": true,
               "stake": "1128792538595636100"
             }
-          ]
+          ],
+          "description": "\nThe proposal is to support **Jump Crypto voluntarily exits from the validator set** by setting `targetValidatorsCount` to 0.\nAlgorithm would prioritise exiting Jump Crypto validators in order to fulfil users' withdrawals requests.\nJump Crypto request on [forum](https://research.lido.fi/t/lido-dao-proposal-to-set-targetvalidatorscount-for-jump-crypto-operator-to-0-to-wind-down-the-jump-crypto-legacy-set/5259).\n"
         },
         "165": {
           "voteDetails": {
@@ -11505,7 +11506,8 @@
               "supports": true,
               "stake": "285000000000000000"
             }
-          ]
+          ],
+          "description": "\n### Omnibus on-chain vote contains 3 motions:\n1. **Onboard seven new Node Operators to the Lido on Ethereum Node Operator Set**. NOs addresses and verifications can be found on the [Research forum](https://research.lido.fi/t/announcement-onboarding-for-ethereum-wave-5/4809/17). The snapshot link is [here](https://snapshot.org/#/lido-snapshot.eth/proposal/0x780d8397c4325757f3506c35274da47c87727fb15dd592e8c4455de92bf2de27). Items 1-7.\n\n2. Support **Jump Crypto voluntarily exit from the Node Operator Set** by setting `targetValidatorsCount` to 0. The algorithm would prioritize exiting Jump Crypto validators to fulfil users' withdrawal requests. Jump Crypto request is [on the forum](https://research.lido.fi/t/lido-dao-proposal-to-set-targetvalidatorscount-for-jump-crypto-operator-to-0-to-wind-down-the-jump-crypto-legacy-set/5259). Items 8,9.\n\n3. **Anchor Sunset**.\n[Snapshot](https://snapshot.org/#/lido-snapshot.eth/proposal/0xe964fb2b0ad887673a0748b025c68a957a4b05b604d306bdc66125e7b758e524) to discontinue the stETH <> bETH Anchor integration passed on Jun 22, 2022. And tech details of the upgrade were provided on the [Research forum](https://research.lido.fi/t/anchor-vault-upgrade-on-chain-voting-announcement/5538) on Sep 23, 2023. The code was [reviewed by statemind.io](https://research.lido.fi/t/anchor-vault-upgrade-on-chain-voting-announcement/5538/2). Item 10.\n"
         },
         "166": {
           "voteDetails": {
@@ -11659,7 +11661,8 @@
               "supports": true,
               "stake": "40313594864670355951"
             }
-          ]
+          ],
+          "description": "\n### Omnibus on-chain vote contains:\n\n1. stETH transfer to the [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)), as previously [requested on the forum](https://research.lido.fi/t/lido-v2-may-1-2023-december-31-2023-lido-ongoing-grant-request/4476/11). Items 1-3.\n2. Changing the Node Operator's (#id - 27) name, as [requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/16). Item 4.\n"
         },
         "167": {
           "voteDetails": {
@@ -11842,7 +11845,8 @@
               "supports": true,
               "stake": "40313594864670355951"
             }
-          ]
+          ],
+          "description": "\n### Omnibus on-chain vote contains:\n\n1. stETH transfer to the [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)), as previously [requested on the forum](https://research.lido.fi/t/lido-v2-may-1-2023-december-31-2023-lido-ongoing-grant-request/4476/11). Items 1-3.\n2. Changing the Node Operator's (#id - 27) name, as [requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/16). Item 4.\n\nThat's a rerun of [vote #166](https://vote.lido.fi/vote/166).\n"
         },
         "168": {
           "voteDetails": {
@@ -11956,7 +11960,8 @@
               "supports": true,
               "stake": "40000000000000000000"
             }
-          ]
+          ],
+          "description": "\n1. **Replacement of Jump Crypto with ChainLayer in Lido on Ethereum Oracle set**. [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0x29a1106ab03bfc146f324cf194f13119ae172d92a031ceb35ea37bd928c10577). Items 1-6.\n\n2. **Deactivation of node operators** Jump Crypto (id 1) and Anyblock Analytics (id 12) in Curated Node Operators Registry. Proposed [on the forum](https://research.lido.fi/t/disable-inactive-node-operators-anyblock-analytics-jump-crypto-in-curated-node-operator-registry/6077). Items 7,8.\n\n3. **stETH transfer** to the [Lido Contributors Group](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) multisigs ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)), as [requested on the forum](https://research.lido.fi/t/lido-v2-may-1-2023-december-31-2023-lido-ongoing-grant-request/4476/16). Items 9-11.\n\n4. **Upgrading the Easy Track setups** to allow [Lido Contributors Group](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) multisigs funding not only in DAI, but also in USDT and USDC. Proposed [on the forum](https://research.lido.fi/t/updating-the-easy-track-setups-to-allow-dai-usdt-usdc-payments-for-lido-contributors-group/5738). The new version of contracts was [audited by Oxorio](https://github.com/lidofinance/audits/blob/main/Oxorio%20Lido%20Easy%20Track%20Smart%20Contracts%20Security%20Audit%20Report%2010-2023.pdf). This part consists of 2 motions:\n    - Add `EVMScripExecutor` the permissions to transfer USDT and USDC with single transfer limit of 2M in addition to current permissions. Items 12,13.\n    - Switch the DAI top-up setup to the DAI, USDT, and USDC top-up setup for all [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)). Items 14-19.\n"
         },
         "169": {
           "voteDetails": {
@@ -12060,7 +12065,8 @@
               "supports": true,
               "stake": "40000000000000000000"
             }
-          ]
+          ],
+          "description": "\n1. **Replacement of Jump Crypto with ChainLayer in Lido on Ethereum Oracle set**. [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0x29a1106ab03bfc146f324cf194f13119ae172d92a031ceb35ea37bd928c10577). Items 1-6.\n\n2. **Deactivation of node operators** Jump Crypto (id 1) and Anyblock Analytics (id 12) in Curated Node Operators Registry. Proposed [on the forum](https://research.lido.fi/t/disable-inactive-node-operators-anyblock-analytics-jump-crypto-in-curated-node-operator-registry/6077). Items 7,8.\n\n3. **stETH transfer** to the [Lido Contributors Group](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) multisigs ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)), as [requested on the forum](https://research.lido.fi/t/lido-v2-may-1-2023-december-31-2023-lido-ongoing-grant-request/4476/16). Items 9-11.\n\n4. **Upgrading the Easy Track setups** to allow [Lido Contributors Group](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) multisigs funding not only in DAI, but also in USDT and USDC. Proposed [on the forum](https://research.lido.fi/t/updating-the-easy-track-setups-to-allow-dai-usdt-usdc-payments-for-lido-contributors-group/5738). The new version of contracts was [audited by Oxorio](https://github.com/lidofinance/audits/blob/main/Oxorio%20Lido%20Easy%20Track%20Smart%20Contracts%20Security%20Audit%20Report%2010-2023.pdf). This part consists of 2 motions:\n    - Add `EVMScripExecutor` the permissions to transfer USDT and USDC with single transfer limit of 2M in addition to current permissions. Items 12,13.\n    - Switch the DAI top-up setup to the DAI, USDT, and USDC top-up setup for all [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)). Items 14-19.\n"
         },
         "170": {
           "voteDetails": {
@@ -12374,7 +12380,8 @@
               "supports": true,
               "stake": "2785707904952620329"
             }
-          ]
+          ],
+          "description": "\n1. **Replace Jump Crypto with ChainLayer in Lido on Ethereum Oracle set**. [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0x29a1106ab03bfc146f324cf194f13119ae172d92a031ceb35ea37bd928c10577). Items 1-6.\n\n2. **Deactivate node operators** Jump Crypto (id 1) and Anyblock Analytics (id 12) in Curated Node Operators Registry. Proposed [on the forum](https://research.lido.fi/t/disable-inactive-node-operators-anyblock-analytics-jump-crypto-in-curated-node-operator-registry/6077). Items 7,8.\n\n3. **Rename node operator** HashQuark (id 20) to HashKey Cloud. Requested [on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/20). Item 9.\n\n4. **Add the stETH factories** to enable [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)) funding in stETH via Easy Track as proposed [on the forum](https://research.lido.fi/t/egg-st2024-v1-lido-contributors-group-request-for-grant-funding-to-advance-goose-goals/6054/13). Items 10-12.\n\n5. **Upgrade the Easy Track setups to allow funding not only in DAI but also in USDT and USDC**. The new version of contracts was [audited by Oxorio](https://github.com/lidofinance/audits/blob/main/Oxorio%20Lido%20Easy%20Track%20Smart%20Contracts%20Security%20Audit%20Report%2010-2023.pdf)\nThe upgrade includes:\n    - Add `EVMScripExecutor` the permissions to transfer USDT and USDC with a single transfer limit of 2M in addition to current permissions. Items 13,14.\n    - Switch the DAI top-up setup to the DAI, USDT, and USDC top-up setup for all [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)). Proposed [on the forum](https://research.lido.fi/t/updating-the-easy-track-setups-to-allow-dai-usdt-usdc-payments-for-lido-contributors-group/5738). Items 15-20.\n    - Switch the DAI top-up setup to the DAI, USDT, and USDC top-up setup for [LEGO multisig](https://app.safe.global/settings/setup?safe=eth:0x12a43b049A7D330cB8aEAB5113032D18AE9a9030). Proposed [on the forum](https://research.lido.fi/t/updating-the-easy-track-setup-for-lego/6344). Items 21,22.\n\n6. **Decrease the Easy Track limit for** [TRP multisig](https://app.safe.global/settings/setup?safe=eth:0x834560F580764Bc2e0B16925F8bF229bb00cB759) as recommended by the TRP committee [here](https://research.lido.fi/t/request-to-authorise-a-22m-ldo-ceiling-for-a-four-year-contributor-token-reward-plan-trp/3833/23). Items 23,24.\n"
         },
         "171": {
           "voteDetails": {
@@ -12622,7 +12629,8 @@
               "supports": true,
               "stake": "40000000000000000000"
             }
-          ]
+          ],
+          "description": "\n1. **Replace Jump Crypto with ChainLayer in Lido on Ethereum Oracle set**. [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0x29a1106ab03bfc146f324cf194f13119ae172d92a031ceb35ea37bd928c10577). Items 1-6.\n\n2. **Deactivate node operators** Jump Crypto (id 1) and Anyblock Analytics (id 12) in Curated Node Operators Registry. Proposed [on the forum](https://research.lido.fi/t/disable-inactive-node-operators-anyblock-analytics-jump-crypto-in-curated-node-operator-registry/6077). Items 7,8.\n\n3. **Rename node operator** HashQuark (id 20) to HashKey Cloud. Requested [on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/20). Item 9.\n\n4. **Add the stETH factories** to enable [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)) funding in stETH via Easy Track as proposed [on the forum](https://research.lido.fi/t/egg-st2024-v1-lido-contributors-group-request-for-grant-funding-to-advance-goose-goals/6054/13). Items 10-12.\n\n5. **Upgrade the Easy Track setups to allow funding not only in DAI but also in USDT and USDC**. The new version of contracts was [audited by Oxorio](https://github.com/lidofinance/audits/blob/main/Oxorio%20Lido%20Easy%20Track%20Smart%20Contracts%20Security%20Audit%20Report%2010-2023.pdf)\nThe upgrade includes:\n    - Add `EVMScripExecutor` the permissions to transfer USDT and USDC with a single transfer limit of 2M in addition to current permissions. Items 13,14.\n    - Switch the DAI top-up setup to the DAI, USDT, and USDC top-up setup for all [Lido Contributors Group multisigs](https://research.lido.fi/t/ref-introducing-the-lido-contributors-group-including-pool-maintenance-labs-and-argo-technology-consulting/3069) ([RCC](https://app.safe.global/settings/setup?safe=eth:0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437), [PML](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), and [ATC](https://app.safe.global/settings/setup?safe=eth:0x9B1cebF7616f2BC73b47D226f90b01a7c9F86956)). Proposed [on the forum](https://research.lido.fi/t/updating-the-easy-track-setups-to-allow-dai-usdt-usdc-payments-for-lido-contributors-group/5738). Items 15-20.\n    - Switch the DAI top-up setup to the DAI, USDT, and USDC top-up setup for [LEGO multisig](https://app.safe.global/settings/setup?safe=eth:0x12a43b049A7D330cB8aEAB5113032D18AE9a9030). Proposed [on the forum](https://research.lido.fi/t/updating-the-easy-track-setup-for-lego/6344). Items 21,22.\n\n6. **Decrease the Easy Track limit for** [TRP multisig](https://app.safe.global/settings/setup?safe=eth:0x834560F580764Bc2e0B16925F8bF229bb00cB759) as recommended by the TRP committee [here](https://research.lido.fi/t/request-to-authorise-a-22m-ldo-ceiling-for-a-four-year-contributor-token-reward-plan-trp/3833/23). Items 23,24.\n"
         },
         "172": {
           "voteDetails": {
@@ -13030,7 +13038,8 @@
               "supports": true,
               "stake": "1000000000007022876"
             }
-          ]
+          ],
+          "description": "\nThis vote follows a [Lido DAO decision on Snapshot](https://snapshot.org/#/lido-snapshot.eth/proposal/0xf3ac657484444f0b54eba2c251135c47f875e3d1821496247d11bdd7fab0f291) and [proposes to release](https://research.lido.fi/t/simple-dvt-release/6613) the Simple DVT module on the mainnet, introducing new Easy Track factories for operational efficiency, and adjusting Oracle Report Sanity Checker parameters.\nAll audit reports can be found here: [Simple DVT app](https://github.com/lidofinance/audits/blob/main/Certora%20Lido%20V2%20Audit%20Report%2004-23.pdf) (same implementation as Node Operators Registry), [Easy Track factories](https://github.com/lidofinance/audits/blob/main/Statemind%20Lido%20Simple%20DVT%20Easy%20Track%20Factories%20Audit%20Report%2001-24.pdf), [SSV module](https://github.com/bloxapp/ssv-network/blob/v1.0.2/contracts/audits/2023-30-10_Quantstamp_v1.0.2.pdf), [Obol module](https://obol.tech/charon_quantstamp_audit.pdf).\n\nThe proposed actions include:\n\n1. Create new Aragon repo for Simple DVT app: Establish a dedicated repository with the implementation address 0x8538930c385C0438A357d2c25CB3eAD95Ab6D8ed. View the content at the URI: ipfs:[QmaSSujHCGcnFuetAPGwVW5BegaMBvn5SCsgi3LSfvraSo](https://ipfs.io/ipfs/QmaSSujHCGcnFuetAPGwVW5BegaMBvn5SCsgi3LSfvraSo/).  Item 1.\n2. Setup and Initialize Simple DVT as a new Aragon App: Model after the [NodeOperatorsRegistry's contract](https://etherscan.io/address/0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5) implementation for the Simple DVT app. Items 2, 3.\n3. Integrate Simple DVT Module with StakingRouter: Add the Simple DVT module to [the StakingRouter](https://etherscan.io/address/0xFdDf38947aFB03C621C71b06C9C70bce73f12999) capped at 0.5% of total Lido stake, with 10% fee split as 2% to DAO Treasury / 8% to the Simple DVT module. Items 4-6.\n4. Grant permissions to [EasyTrackEVMScriptExecutor](https://etherscan.io/address/0xFE5986E06210aC1eCC1aDCafc0cc7f8D63B3F977): Enabling operational adjustments within the Simple DVT module via Easy Track. Items 7-10.\n5. Attach new Easy Track EVM Script Factories for the Simple DVT Module to Easy Track registry: Equip the [Simple DVT Module Committee Multisig](https://app.safe.global/settings/setup?safe=eth:0x08637515E85A4633E23dfc7861e2A9f53af640f7) ([forum proposal](https://research.lido.fi/t/simple-dvt-module-committee-multisig/6520)) with the ability to manage Node Operators: adding, activating, deactivating, and adjusting validator limits and details. All factories addresses could be found on the [forum proposal](https://research.lido.fi/t/simple-dvt-release/6613). Items 11-18.\n6. Adjust Oracle Report Sanity Checker Parameters: Modify parameters to support several-module reporting, enhancing the system's reporting capabilities. Items 19-22.\n"
         },
         "173": {
           "voteDetails": {
@@ -13228,7 +13237,8 @@
               "supports": true,
               "stake": "1000000000000001152"
             }
-          ]
+          ],
+          "description": "\n**Proposed actions:**\nIncorporate Easy Track Factories to transfer tokens from Treasury for swaps, enhancing treasury management operations as proposed by the [Treasury Management Committee (TMC)](https://snapshot.org/#/lido-snapshot.eth/proposal/0xac31f800288c68e32d1eb3cea7a525022faae3eb3bf805d1b3d248cda5375a13) in [TMC-1](https://research.lido.fi/t/tmc-1-pipeline-to-sell-steth-at-regular-intervals-for-dai/5059):\n\n1. Add Factory for stETH  to stablecoins swaps. Item 1.\n2. Add Factory for stablecoins swaps (DAI / USDC / USDT). Item 2.\n\nThese factories are able to transfer  funds to [Stonks Contracts](https://docs.lido.fi/deployed-contracts/#lido-stonks-contracts) ([audited by Ackee](https://github.com/lidofinance/audits?tab=readme-ov-file#03-2024-ackee-blockchain-lido-stonks-audit)), with the `trustedcaller` role granted to the [TMC multisig](https://app.safe.global/home?safe=eth:0xa02FC823cCE0D016bD7e17ac684c9abAb2d6D647).\n\nThe [Stonks Contracts](https://docs.lido.fi/deployed-contracts/#lido-stonks-contracts) receive tokens and сonfigure the setup for initiating CoW swaps order. After this, CoW Order can be created via [Easy Track UI](https://easytrack.lido.fi), ensuring the Treasury's minimum expected return.\n\nFurther details can be found [on the research forum](https://research.lido.fi/t/lido-stonks-treasury-swaps-via-optimistic-governance/6860).\n"
         },
         "174": {
           "voteDetails": {
@@ -13476,7 +13486,8 @@
               "supports": true,
               "stake": "846054086924078"
             }
-          ]
+          ],
+          "description": "\nThe vote is intended to change the current **GateSeal for the WithdrawalQueue and ValidatorExitBusOracle** contracts, which expires on May 1, 2024, with a new one that will **expire on April 1, 2025**. The GateSeal enables a one-time, immediate emergency pause of these contracts for 6 days.\n\nThe new GateSeal contract was deployed using the GateSeal Factory from the GateSeal Blueprint. [statemind.io](https://statemind.io/) audited the initial Factory and Blueprint ([report](https://github.com/lidofinance/audits/?tab=readme-ov-file#04-2023-statemind-gateseals-audit)) and [verified](https://github.com/lidofinance/audits/blob/main/Statemind%20GateSeal%20Deployment%20Validation%2004-2024.pdf) that the new GateSeal is identical to the Blueprint and has the correct parameters.\n\nMore information on the [Research forum](https://research.lido.fi/t/renew-gateseal-for-the-withdrawal-queue-and-validator-exit-bus-oracle/7081)\n"
         },
         "175": {
           "voteDetails": {
@@ -13715,7 +13726,8 @@
               "supports": true,
               "stake": "1000000000000001152"
             }
-          ]
+          ],
+          "description": "\n1. **Expanding the Simple DVT Module:** Increase the Simple DVT module's staking share limit from 0.5% to 4%, as decided in the [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0xaca2da3c932542e030db8bf5b6e4420bf4aa98bd57bd62b9b8008a4b7398abb2).\n\n2. **Lido Contributors Group Funding:** Transfer 96,666.62 LDO within the [[EGG] st2024 v1 Grant Funding](https://snapshot.org/#/lido-snapshot.eth/proposal/0x41a47f0735b7aca8c1e7f93fae86a82f5c3fac8796657d2e95e63b1aa6d09c52) to the [PML multisig](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D), as requested [on the forum](https://research.lido.fi/t/egg-st2024-v1-lido-contributors-group-request-for-grant-funding-to-advance-goose-goals/6054/19).\n"
         },
         "176": {
           "voteDetails": {
@@ -14013,7 +14025,8 @@
               "supports": true,
               "stake": "1000000000000001152"
             }
-          ]
+          ],
+          "description": "\n1. **Expanding the Simple DVT Module:** Increase the Simple DVT module's staking share limit from 0.5% to 4%, as decided in the [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0xaca2da3c932542e030db8bf5b6e4420bf4aa98bd57bd62b9b8008a4b7398abb2).\n\n2. **Lido Contributors Group Funding:** Transfer 180,000 LDO within the [EGG st2024 v2 Grant Funding](https://snapshot.org/#/lido-snapshot.eth/proposal/0x2baf3275d15a8494ff94fef58d93bedd2fc28bfea8519f7e86474fc72dc25076) to the [PML multisig](https://app.safe.global/settings/setup?safe=eth:0x17F6b2C738a63a8D3A113a228cfd0b373244633D).\n"
         },
         "177": {
           "voteDetails": {
@@ -14367,7 +14380,8 @@
               "supports": true,
               "stake": "1000000000000001152"
             }
-          ]
+          ],
+          "description": "\n1. **Replace Rated Labs with MatrixedLink in Lido on Ethereum Oracle set**, following the [Snapshot decision](https://snapshot.org/#/lido-snapshot.eth/proposal/0x5667528b50af1668ea246bde5bbf136f202629dee50747bbcc0839f48bf396b1). (Items 1-4)\n\n2. **Rename Node Operator** with ID 23 from \"CryptoManufaktur\" to \"Galaxy\" **and update the reward address**, as [requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/26). (Items 5-7)\n\n3. **On-Chain Delegation** (Items 8-10). [Approved on Snapshot](https://snapshot.org/#/lido-snapshot.eth/proposal/0x8ad1089720d2fd68cc49b74e138915af7fec35a06b04c2af2fcf4828d5bbd220), this proposal enhances Lido DAO's governance by updating two contracts:\n    - [Aragon Voting:](https://etherscan.io/address/0xf165148978Fa3cE74d76043f833463c340CFB704) allows LDO holders to delegate voting power while retaining override rights and enabling delegates to participate in on-chain voting on behalf of their delegators. Includes a Lido Aragon Voting Repo upgrade. Audited by [Ackee](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Lido%20Simple%20Delegation%20audit%20report%2007-24.pdf) and [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Lido%20Simple%20Delegation%20audit%20report%2007-24.pdf).\n    - [TRP Voting Adapter:](https://etherscan.io/address/0x4b2AB543FA389Ca8528656282bF0011257071BED) allows [TRP participants](https://research.lido.fi/t/lidodao-token-rewards-plan-trp/3364) to delegate their voting power. [Checked by MixBytes](https://research.lido.fi/t/lip-21-simple-on-chain-delegation/6840/21).\n"
         },
         "178": {
           "voteDetails": {
@@ -14785,7 +14799,8 @@
               "supports": true,
               "stake": "1000000000000000000"
             }
-          ]
+          ],
+          "description": "\n1. **Replace Rated Labs with MatrixedLink in Lido on Ethereum Oracle set**, following the [Snapshot decision](https://snapshot.org/#/lido-snapshot.eth/proposal/0x5667528b50af1668ea246bde5bbf136f202629dee50747bbcc0839f48bf396b1) (items 1-4).\n\n2. **Rename Node Operators** with IDs 23 (CryptoManufaktur) and 36 (Numic) **and update the reward addresses** as requested on the forum: [CryptoManufaktur](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/26), [Numic](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/33) (items 5-10).\n\n3. **On-chain Delegation** (items 11-13). [Approved on Snapshot](https://snapshot.org/#/lido-snapshot.eth/proposal/0x8ad1089720d2fd68cc49b74e138915af7fec35a06b04c2af2fcf4828d5bbd220), this proposal enhances Lido DAO's governance by updating two contracts:\n    - [Aragon Voting:](https://etherscan.io/address/0xf165148978Fa3cE74d76043f833463c340CFB704) allows LDO holders to delegate voting power while retaining override rights and enabling delegates to participate in on-chain voting on behalf of their delegators. Includes Lido Aragon Voting Repo upgrade. Audited by [Ackee](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Lido%20Simple%20Delegation%20audit%20report%2007-24.pdf) and [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Lido%20Simple%20Delegation%20audit%20report%2007-24.pdf).\n    - [TRP Voting Adapter:](https://etherscan.io/address/0x4b2AB543FA389Ca8528656282bF0011257071BED) allows [TRP participants](https://research.lido.fi/t/lidodao-token-rewards-plan-trp/3364) to delegate their voting power. [Checked by MixBytes](https://research.lido.fi/t/lip-21-simple-on-chain-delegation/6840/21).\n"
         },
         "179": {
           "voteDetails": {
@@ -15486,7 +15501,8 @@
               "supports": true,
               "stake": "1000000000000000000"
             }
-          ]
+          ],
+          "description": "\n1. Upgrade **wstETH on Optimism bridge endpoints** to enable **rebasable stETH** on Optimism alongside wstETH. Following [Snapshot vote](https://snapshot.org/#/lido-snapshot.eth/proposal/0xb1a3c33a4911712770c351504bac0499611ceb0faff248eacb1e96354f8e21e8) and proposed [action plan](https://research.lido.fi/t/steth-on-optimism-upgrade-announcement-and-action-plan/8474).\nSolution audited by [MixBytes](https://github.com/lidofinance/audits/blob/main/L2/stETH-on-Optimism-2024-06-MixBytes-Audit-Report.pdf) and [Ackee Blockchain](https://github.com/lidofinance/audits/blob/main/L2/stETH-on-Optimism-2024-06-Ackee-Blockchain-Audit-report.pdf). Items 1-5.\n\n2. Add **Easy Track setup** for funding the [Lido Alliance Operational Multisig](https://app.safe.global/transactions/queue?safe=eth:0x606f77BF3dd6Ed9790D9771C7003f269a385D942) following the [Lido DAO Snapshot decision](https://snapshot.org/#/lido-snapshot.eth/proposal/0xa478fa5518769096eda2b7403a1d4104ca47de3102e8a9abab8640ef1b50650c). Item 6.\n"
         },
         "180": {
           "voteDetails": {
@@ -16325,7 +16341,8 @@
               "supports": true,
               "stake": "1000000000000000000"
             }
-          ]
+          ],
+          "description": "\nRelease the Community Staking Module (CSM) for permissionless staking and upgrade the Staking Router to ensure compatibility with CSM and future modules, improving system efficiency. A detailed action plan can be found [on the research forum](https://research.lido.fi/t/staking-router-community-staking-module-upgrade-announcement/8612/6).\n\n1. **Staking Router and related contracts upgrade** following the DAO-approved [LIP-25: Staking Router 2.0](https://snapshot.org/#/lido-snapshot.eth/proposal/0xffb4042d3bfceef33c66f78c092a76fa8e1db198559d93798cc9db3fb4d722e7) and [LIP-23: Negative rebase sanity check with a pluggable second opinion](https://snapshot.org/#/lido-snapshot.eth/proposal/0xa44f6a4dba07d7e24b0e4180025f7a9db6251046daa74d2a8fae84de0d9ce21e) designs. Items 1-19.\n2. **Add Community Staking Module** to the Staking Router. CSM follows the [approved LIP-26 design and Mainnet Release Setup](https://snapshot.org/#/lido-snapshot.eth/proposal/0xd0d7bfd68f2241524dbb14ae6fe0e8414b9fe3e0dcfc50641a8d28f0067d6693). Items 20-26.\n\n**Audits:** [Staking Router 2.0 upgrade](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Lido%20Staking%20Router%20v2%20Report%2010-24.pdf), [CSM](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Lido%20Community%20Staking%20Module%20Report%2010-24.pdf) both with deployment verification by Ackee Blockchain; [Staking Router 2.0 & CSM](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20CSM%20Security%20Audit%20Report%2010-24.pdf), [Lido Oracle](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20Oracle%20Security%20Audit%20Report%2010-24.pdf) (incl. CSM Oracle) by Mixbytes;\nThe AccountingOracle (negative rebase parameters, pluggable second opinion) was part of Staking Router 2.0 upgrade audits and also audited separately: [Mixbytes report](https://github.com/lidofinance/audits/blob/main/Lido%20Sanity%20Checker%20Security%20Audit%20Report.pdf) and [ChainSecurity report](https://github.com/lidofinance/audits/blob/main/ChainSecurity%20Code%20Assessment%20of%20LIP-23%20Negative%20Rebase%20Checks%20Smart%20Contracts%2006-24.pdf).\n\nAdditionally, separate from the Staking Router 2.0 and CSM Release:\n\n3. **Rotate the Instadapp Oracle address**, [as requested on the forum](https://research.lido.fi/t/expansion-of-lidos-ethereum-oracle-set/2836/71). Items 27-33.\n"
         },
         "181": {
           "voteDetails": {
@@ -16965,7 +16982,8 @@
               "supports": true,
               "stake": "1000000000000001152"
             }
-          ]
+          ],
+          "description": "\n1. **Change Easy Track limits for PML and ATC** following the [Snapshot decision](https://snapshot.org/#/lido-snapshot.eth/proposal/0x44bc7db53129ab4048c7f6f5cdc03407ec73444cbb5976c9579cb19bd3b57f7e) (items 1 & 2). **Reduce the PML limit** from **6M** to **4M**, and **increase the ATC limit** from **1.5M** to **7M** in USDC/USDT/DAI per quarter to reflect operational changes.\n\n2. **Increase the Lido Stonks stETH limit to 12,000 stETH and reset spent amount**, as per the [Treasury Management Committee's decision](https://research.lido.fi/t/tmc-4-increase-stonks-execution-limits/8616) to achieve [TMC-1](https://research.lido.fi/t/tmc-1-pipeline-to-sell-steth-at-regular-intervals-for-dai/5059) (items 3 & 4). Resetting spent amount will allow swapping up to 12,000 stETH in 2024, and the limit will be reset again on January 1, 2025, as originally scheduled.\n\n3. **Update the reward address** for Node Operator `ID 16` (Simply Staking), as [requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/36) (item 5).\n"
         },
         "182": {
           "voteDetails": {
@@ -17717,7 +17735,8 @@
               "supports": true,
               "stake": "1089598019019984475"
             }
-          ]
+          ],
+          "description": "\n1. **Change Easy Track limits for PML and ATC** following the [Snapshot decision](https://snapshot.org/#/lido-snapshot.eth/proposal/0x44bc7db53129ab4048c7f6f5cdc03407ec73444cbb5976c9579cb19bd3b57f7e) (items 1 & 2). **Reduce the PML limit** from **6M** to **4M**, and **increase the ATC limit** from **1.5M** to **7M** in USDC/USDT/DAI per quarter to reflect operational changes.\n\n2. **Increase the Lido Stonks stETH limit to 12,000 stETH and reset spent amount**, as per the [Treasury Management Committee's decision](https://research.lido.fi/t/tmc-4-increase-stonks-execution-limits/8616) to achieve [TMC-1](https://research.lido.fi/t/tmc-1-pipeline-to-sell-steth-at-regular-intervals-for-dai/5059) (items 3 & 4). Resetting spent amount will allow swapping up to 12,000 stETH in 2024, and the limit will be reset again on January 1, 2025, as originally scheduled.\n\n3. **Update the reward address** for Node Operator `ID 16` (Simply Staking), as [requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/36) (item 5).\n"
         },
         "183": {
           "voteDetails": {
@@ -18566,7 +18585,8 @@
               "supports": true,
               "stake": "200000000000000000"
             }
-          ]
+          ],
+          "description": "\n1. **Transition Community Staking Module to Permissionless Phase** by activating public release and **increasing the share limit** from 1% to 2%, as [approved on Snapshot](https://snapshot.org/#/s:lido-snapshot.eth/proposal/0x7cbd5e9cb95bda9581831daf8b0e72d1ad0b068d2cbd3bda2a2f6ae378464f26). Alongside the share limit, [it is proposed](https://research.lido.fi/t/community-staking-module/5917/86) to **raise the priority exit share threshold** from 1.25% to 2.5% to maintain parameter ratios. Items 1-4.\n\n2. **Rename Node Operator ID 17 from BridgeTower to Solstice** as [requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/41). Item 5.\n"
         },
         "184": {
           "voteDetails": {
@@ -20209,7 +20229,8 @@
               "supports": false,
               "stake": "349262049442263104"
             }
-          ]
+          ],
+          "description": "1. **Extend On-Chain Voting Duration** (Items 1-17)  \nAs approved on [Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xa58da73cc4257837ae981d8ad861252f4cbbda7a173a577702f8f93561f57825):\n- **Main phase**: 48h → 72h\n- **Objection phase**: 24h → 48h\n\nTo align with these changes, **GateSeal** (pausing the [WithdrawalQueue](https://etherscan.io/address/0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1) and [ValidatorExitBusOracle](https://etherscan.io/address/0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e)) and **CSM GateSeal** (pausing the [CSModule](https://etherscan.io/address/0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F), [CSAccounting](https://etherscan.io/address/0x4d72BFF1BeaC69925F8Bd12526a39BAAb069e5Da), and [CSFeeOracle](https://etherscan.io/address/0x4D4074628678Bd302921c20573EEa1ed38DdF7FB)) will be updated with the same configuration, except for extending the duration from 6 to 11 days. The new versions will expire on **March 1, 2026**.\n**Statemind.io** audited the [initial Factory and Blueprint](https://github.com/lidofinance/audits/?tab=readme-ov-file#04-2023-statemind-gateseals-audit) and [verified](https://github.com/lidofinance/audits/blob/main/Statemind%20GateSeal%20Deployment%20Validation%2003-2025.pdf) that the updated GateSeal contracts match the Blueprint and have the correct parameters.\n\n2. **Deploy Easy Track Factories for Lido Ecosystem & Lido Labs BORG Foundations to streamline operational funding** (Items 18, 19)\n\nSnapshot proposals & contract details:\n- [Lido Ecosystem Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x7f72f12d72643c20cd0455c603d344050248e75ed1074c8391fae4c30f09ca15) | [Configuration](https://research.lido.fi/t/establishment-of-lido-ecosystem-borg-foundation-as-a-lido-dao-adjacent-foundation/9345/15) | security limit $5M per quarter\n- [Lido Labs Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xdf648307e68415e7b5cf96c6afbabd696c1731839f4b4a7cf5cb7efbc44ee9d6) | [Configuration](https://research.lido.fi/t/establishment-of-lido-labs-borg-foundation-as-a-lido-dao-adjacent-foundation/9344/18) | security limit $18M per quarter"
         },
         "185": {
           "voteDetails": {
@@ -21222,7 +21243,8 @@
               "supports": true,
               "stake": "449600142298075520"
             }
-          ]
+          ],
+          "description": "\n**Ensure Compatibility with Ethereum's Pectra Fork**, as approved [on Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xb6559f0cdb1164ae5d63769827c4a275805bd944392a17b60cf51ddc54429dc6):\n\n1. **Update oracle consensus versions** to activate the new algorithm that ensures correct behavior before and after the hardfork. Items 1–9.\n\n    - [Accounting Oracle](https://etherscan.io/address/0x852deD011285fe67063a08005c71a85690503Cee): v2 → v3\n    - [Validator Exit Bus Oracle](https://etherscan.io/address/0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e): v2 → v3\n    - [CS Fee Oracle](https://etherscan.io/address/0x4D4074628678Bd302921c20573EEa1ed38DdF7FB): v1 → v2\n\n**Audits by:** [Composable Security](https://github.com/lidofinance/audits/blob/main/Composable%20Security%20Lido%20Oracle%20v5%2004-25.pdf), [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20Oracle%20v5%2004-25.pdf).\n\n2. **Update CS Verifier Contract** [on the Community Staking Module](https://etherscan.io/address/0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F) to remove the slashing report functionality and reflect the updated **`gIndexes`** structure. Items 10–11.\n\n**Audits by:** [Ackee Blockchain](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Lido%20Community%20Staking%20Module%20Report%2004-25.pdf), [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20CSM%20Security%20Audit%20Report%2004-25.pdf) with deployment verification by both teams.\n"
         },
         "186": {
           "voteDetails": {
@@ -22221,7 +22243,8 @@
               "supports": true,
               "stake": "1"
             }
-          ]
+          ],
+          "description": "\n**Emergency rotation of compromised Chorus One oracle.**\n\nRotate Chorus One's address in the Lido on Ethereum Oracle set. Full context on [Research forum](https://research.lido.fi/t/emergency-rotation-of-compromised-chorus-one-oracle/10037).\n"
         },
         "187": {
           "voteDetails": {
@@ -23190,7 +23213,8 @@
               "supports": false,
               "stake": "351608133369624512"
             }
-          ]
+          ],
+          "description": "Contains separate updates approved by Lido DAO via Snapshot voting:\n\n1. **Post-Pectra update:** adjust Oracle Report Sanity Checker parameters to align with reduced slashing penalty and updated validator churn limits. Items 1-9.\n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xb6559f0cdb1164ae5d63769827c4a275805bd944392a17b60cf51ddc54429dc6) | Audited by [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20Oracle%20v5%2004-25.pdf)\n2. **Add Easy Track Factories** for managing MEV-Boost Relay Allowed List. Items 10-13.\n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xf1074ec134595ba8ba6f802c5e505fda32e6ab93e9763d1e43001f439241b7c9) | Audit and deploy verification by [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20RMC%20EasyTrack%20Security%20Audit%20Report%2005-2025.pdf)\n3. **Reduce `keyRemovalCharge`** for the Community Staking Module. Items 14-16.\n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xcd1c1a051888efd495d97458ae9fa4fe5198616eb3d92a71d3352d9f25e79c4e)\n4. **Increase Easy Track security limit** for [Liquidity Observation Lab](https://docs.lido.fi/multisigs/committees/#281-liquidity-observation-lab-committee-ethereum) from 2,100&nbsp;stETH per&nbsp;3&nbsp;months to 6,000&nbsp;stETH per&nbsp;6&nbsp;months. Item 17.\n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x3ecd09e4c0f22d25c711ca5777c49c22d144385b85dd7f696ca6cc66cc0ca157)\n"
         },
         "188": {
           "voteDetails": {
@@ -24265,7 +24289,8 @@
               "supports": false,
               "stake": "351608133369624512"
             }
-          ]
+          ],
+          "description": "Contains separate updates approved by Lido DAO via Snapshot voting:\n\n1. **Post-Pectra update:** adjust Oracle Report Sanity Checker parameters to align with reduced slashing penalty and updated validator churn limits. Items 1-9.  \n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xb6559f0cdb1164ae5d63769827c4a275805bd944392a17b60cf51ddc54429dc6) | Audited by [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20Oracle%20v5%2004-25.pdf)\n2. **Add Easy Track Factories** for managing MEV-Boost Relay Allowed List. Items 10-13.  \n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xf1074ec134595ba8ba6f802c5e505fda32e6ab93e9763d1e43001f439241b7c9) | Audit and deploy verification by [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20RMC%20EasyTrack%20Security%20Audit%20Report%2005-2025.pdf) \n3. **Reduce `keyRemovalCharge`** for the Community Staking Module. Items 14-16.  \n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xcd1c1a051888efd495d97458ae9fa4fe5198616eb3d92a71d3352d9f25e79c4e)\n4. **Increase Easy Track security limit** for [Liquidity Observation Lab](https://docs.lido.fi/multisigs/committees/#281-liquidity-observation-lab-committee-ethereum) from 2,100 stETH per 3 months to 6,000 stETH per 6 months. Item 17.  \n[Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x3ecd09e4c0f22d25c711ca5777c49c22d144385b85dd7f696ca6cc66cc0ca157)\n"
         },
         "189": {
           "voteDetails": {
@@ -25415,7 +25440,8 @@
               "supports": true,
               "stake": "285000000000000000"
             }
-          ]
+          ],
+          "description": "\n**Activate Dual Governance on-chain** — a dynamic timelock that enables stETH holders to delay execution and exit safely in response to contentious proposals. \nThe Dual Governance design and parameters follow the DAO-approved [LIP-28 Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x26a66c9b91ff46aeac74b6f6714467993edc6840a8f292fb5c1366fc44dec2a6).\n\nDeployment verification: [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Dual%20Governance%20Deployment%20and%20Voting%20Script%20Review%20Report%2006-2025.pdf) | Formal verification: [Certora](https://github.com/lidofinance/audits/blob/main/Certora%20Dual%20Governance%20Audit%20Report%2002-2025.pdf), [Runtime Verification](https://github.com/lidofinance/audits/blob/main/Runtime%20Verification%20Dual%20Governance%20Formal%20Verification%20Report%2002-2025.pdf) | Audits: [OpenZeppelin](https://github.com/lidofinance/audits/blob/main/OpenZeppelin%20Dual%20Governance%20Re-Audit%20Report%2002-2025.pdf), [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Dual%20Governance%20Audit%20Report%2010-2024.pdf)\n\n- Reassign roles according to [the Dual Governance specification](https://github.com/lidofinance/dual-governance/blob/48b6c8cab4e6498b29e844ca21ae5f3238440771/docs/permissions-transition/permissions-transition-mainnet.md). Items 1–50.\n- Reset `RecoveryVaultAppId` in the [DAO Kernel contract](https://etherscan.io/address/0xb8FFC3Cd6e7Cf5a098A1c92F48009765B24088Dc). Items 51–53.\n- Validate on-chain roles setup. Item 54.\n- Submit a Dual Governance proposal to revoke [Aragon Agent](https://etherscan.io/address/0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c) roles from [Aragon Voting](https://etherscan.io/address/0x2e59A20f205bB85a89C53f1936454680651E618e). Item 55.\n- Validate Dual Governance activation state and enforce execution timeframe on-chain. Items 56–57.\n"
         },
         "190": {
           "voteDetails": {
@@ -26600,7 +26626,8 @@
               "supports": true,
               "stake": "37524964325620407"
             }
-          ]
+          ],
+          "description": "1. **Rotate Lido on Ethereum Oracle Set member Kyber Network for Caliber**, as per [Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xdc208507ca0f659c7f9e38056288aedb7610816ea4020ca751c3422434780de8). Items 1.1–1.6.\n2. **Increase CSM stake share limit from 2% to 3%**. [Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xcd1c1a051888efd495d97458ae9fa4fe5198616eb3d92a71d3352d9f25e79c4e). Item 1.7.\n3. **Enable a grace period for CSM Node Operators** by setting `keyRemovalCharge = 0`. [Proposed on the Forum](https://research.lido.fi/t/community-staking-module/5917/133). Items 1.8-1.10.\n4. **Introduce a simplified CSVerifier for CSM**. [Proposed on the forum](https://research.lido.fi/t/community-staking-module/5917/143). Items 1.11, 1.12. Audit & deployment verification by [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20CSM%20Security%20Audit%20Report%2007-2025.pdf).\n5. **Update the reward address and name for Node Operator ID 2 `P2P.ORG - P2P Validator`**. [Requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/44). Items 1.13, 1.14.\n6. **Switch off Easy Track environment for PML, ATC, RCC entities**, deprecated after Snapshot-approved transition to [Lido Labs](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xdf648307e68415e7b5cf96c6afbabd696c1731839f4b4a7cf5cb7efbc44ee9d6) and [Lido Ecosystem](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x7f72f12d72643c20cd0455c603d344050248e75ed1074c8391fae4c30f09ca15) BORG Foundations. Items 2–7."
         },
         "191": {
           "voteDetails": {
@@ -27700,7 +27727,8 @@
               "supports": true,
               "stake": "122465185302096896"
             }
-          ]
+          ],
+          "description": "\n**Fix for the Dual Governance RageQuit mechanism**. Full context [on the forum](https://research.lido.fi/t/dual-governance-security-upgrade-plan-ragequit-eth-withdrawal-delay-fix/10543). Audited by [Certora](https://github.com/lidofinance/audits/blob/main/Certora%20Dual%20Governance%20v1.0.1%20Hotfix%20Review%20Report%2008-2025.pdf) and [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Dual%20Governance%20Escrow%20Fix%20Review%20Report%2008-2025.pdf).\n\n1. Finalize the configuration of the new Dual Governance (items 1-7).\n2. Set the Governance address in the EmergencyProtectedTimelock to the new Dual Governance (item 8).\n3. Replace the config provider in the old Dual Governance with the new ImmutableDualGovernanceConfigProvider to prevent re-entering the vulnerable state and enable free withdrawals from the old Escrow (item 9).\n4. Verify the resulting state of the new Dual Governance on-chain (item 10).\n"
         },
         "192": {
           "voteDetails": {
@@ -28794,7 +28822,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "description": "\n1. **Upgrade to CSM v2 and increase CSM stake share limit from 3% to 5%**, as per [Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0xc3f92bcdf8926cfa7528ca6a979c0fdce1e4d0cfaaa72dd6410a76a2e1e55766). Items 1.34-1.59. Audit & deployment verification by: [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Triggerable%20Withdrawals%20and%20CSM%20v2%20Audit%20Report%2009-2025.pdf) | [Ackee](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Community%20Staking%20Module%20v2%20Audit%20Report%2009-2025.pdf).\n2. **Activate Triggerable Withdrawals**, as per [Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x7d7f0e1a6d181310f8752af37e20515a9be258f30b211872f9acca99bc478851). Items 1.1-1.33, 1.60-1.66, 2-4. Audit & deployment verification by [Statemind](https://github.com/lidofinance/audits/blob/main/Statemind%20Triggerable%20Withdrawals%20and%20CSM%20v2%20Audit%20Report%2009-2025.pdf) | Audit by [Ackee](https://github.com/lidofinance/audits/blob/main/Ackee%20Blockchain%20Lido%20Triggerable%20Withdrawals%20Audit%20Report%2009-25.pdf).\n3. **Update the reward address and name for Node Operator ID 25 `Nethermind`**, as per [Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x3f68e9bc69850da419211c3d9f0a76d006ed044abc0f8bc845bc1d1cf3db0a8d). Items 1.67, 1.68.\n4. **Rotate Deposit Security Committee address for `Kiln`**. [Requested on the forum](https://research.lido.fi/t/security-disclosure-kiln-precautionary-out-of-order-exits-in-response-security-incident/10654/3). Items 1.69, 1.70."
         },
         "193": {
           "voteDetails": {
@@ -32053,7 +32082,8 @@
               "supports": true,
               "stake": "30656021708209072"
             }
-          ]
+          ],
+          "description": "\n**Activate Lido V3: Phase 1 (Soft Launch)** — a major upgrade to the Lido protocol introduces non-custodial, over-collateralized staking vaults (“stVaults”) that enable stakers to opt into specific operators or strategies while still minting stETH.  The Lido V3 design and implementation follow the DAO-approved [Snapshot](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x01cd474645cc7c3ddf68314d475d421ef833499297f508fee5f7411fafff3954). Phase 1 is intentionally [proposed in a constrained soft launch](https://research.lido.fi/t/lido-v3-design-implementation-proposal/10665/8) mode to enable early adopters and partners while maintaining a conservative security posture.\n\nDeployment verification: [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20V3%20Security%20Audit%20Report%20-%2012-2025.pdf) | Formal verification: [Certora](https://github.com/lidofinance/audits/blob/main/Certora%20Lido%20V3%20Formal%20Verification%20Report%20-%2012-2025.pdf) | Audits: [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20V3%20Security%20Audit%20Report%20-%2012-2025.pdf), [Certora](https://github.com/lidofinance/audits/blob/main/Certora%20Lido%20V3%20Audit%20Report%20-%2012-2025.pdf), [Consensys Diligence](https://github.com/lidofinance/audits/blob/main/Consensys%20Diligence%20Lido%20V3%20Security%20Audit%20-%2011-2025.pdf) | Offchain audits: [Certora](https://github.com/lidofinance/audits/blob/main/Certora%20Lido%20V3%20Oracle%20V7%20Audit%20Report%20-%2012-2025.pdf), [Composable Security](https://github.com/lidofinance/audits/blob/main/Composable%20Security%20Lido%20V3%20Oracle%20V7%20Audit%20Report%20-%2012-2025.pdf)\n\n[Dual Governance Items](https://research.lido.fi/t/lido-v3-design-implementation-proposal/10665/5#p-23638-part-2-dual-governance-items-21-items-subject-to-dg-veto-period-27)\n- Ensure DG proposal execution occurs during the monitored time window and aligns with oracle reports. Item 1.1.\n- Lock upgrade window and validate network state. Item 1.2.\n- Upgrade proxy implementations, reassign roles and permissions, configure oracle slashing parameters. Items 1.3-1.17.\n- Disable Predeposit Guarantee guided deposit flows as a part of [Soft Launch](https://research.lido.fi/t/lido-v3-design-implementation-proposal/10665/9). Items 1.18-1.20.\n- Finalize upgrade and validate Lido V3 activation state. Item 1.21.\n\n[Voting Items](https://research.lido.fi/t/lido-v3-design-implementation-proposal/10665/5#p-23638-part-1-voting-items-8-items-execute-immediately-26)\n- Add Easy Track factories enabling [stVault Committee](https://docs.lido.fi/multisigs/committees#216-stvaults-committee) to configure VaultHub and OperatorGrid contracts. Items 2–9."
         },
         "195": {
           "voteDetails": {
@@ -35156,7 +35186,8 @@
               "supports": true,
               "stake": "30656021708209072"
             }
-          ]
+          ],
+          "description": "\n1. **Change Curated Staking Module fee to 3.5%**, as per [Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x3a5d10fcd3fad6d5ccf05f5bd49244046600ad9cbed9a5e07845200b3ae97e09). Item 1.1.\n2. **Raise SDVT Staking Module stake share limit to 4.3% and priority exit threshold to 4.78%**, as [proposed on the Forum](https://research.lido.fi/t/staking-router-module-proposal-simple-dvt/5625/127). Item 1.2.\n3. **Set A41 Node Operator soft target validators limit to 0**, as [requested on the Forum](https://research.lido.fi/t/a41-node-operator-intention-to-wind-down-operations-request-for-dao-vote/10954). Item 1.3.\n4. **Set Easy Track TRP limit to 15'000'000 LDO**, as per [Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x16ecb51631d67213d44629444fcc6275bc2abe4d7e955bebaf15c60a42cba471). Item 1.4.\n5. **Add sUSDS token to stablecoins Allowed Tokens Registry and sUSDS transfer permission to Easy Track EVM Script Executor in Aragon Finance**, as proposed in [TMC-6 on the Forum](https://research.lido.fi/t/tmc-6-convert-dao-treasury-stablecoins-into-susds-and-update-config-on-easy-track-and-aragon-finance-accordingly/10868). Items 2-6.\n6. **Transfer MATIC from Lido Treasury to Liquidity Observation Lab (LOL) Multisig**, as proposed in [TMC-5 on the Forum](https://research.lido.fi/t/tmc-5-convert-matic-to-usdc/10814). Item 7."
         },
         "196": {
           "voteDetails": {
@@ -35941,7 +35972,8 @@
               "supports": true,
               "stake": "1036655480617864146"
             }
-          ]
+          ],
+          "description": "Add a limited mechanism for applying vesting to the certain contributors’ LDO tokens."
         },
         "197": {
           "voteDetails": {
@@ -37293,7 +37325,8 @@
               "supports": false,
               "stake": "164358706910733842"
             }
-          ]
+          ],
+          "description": "Execute asset recovery proposal with a 1-year long cliff"
         },
         "198": {
           "voteDetails": {
@@ -38861,7 +38894,8 @@
               "supports": false,
               "stake": "108446844070113966"
             }
-          ]
+          ],
+          "description": "\n1. **Activate Lido V3: Phase 2 (Full Launch)**, as [proposed on the Forum](https://research.lido.fi/t/lido-v3-design-implementation-proposal/10665/15). Updated audits: [Consensys Diligence](https://github.com/lidofinance/audits/blob/main/Consensys%20Diligence%20Lido%20V3%20Security%20Audit%20-%2011-2025.pdf), [Certora](https://github.com/lidofinance/audits/blob/main/Certora%20Lido%20V3%20Audit%20Report%20-%2012-2025.pdf), [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20Lido%20V3%20Security%20Audit%20Report%20-%2012-2025.pdf). BLS Library audit: [Sigma Prime](https://github.com/lidofinance/audits/blob/main/Sigma%20Prime%20-%20Lido%20BLS%20Library%20Security%20Assessment%20Report%20v2.0%20-%2001-2026.pdf).\n    1. Revoke OperatorsGrid & VaultHub configuration roles from Lido V3 Phase 1 VaultsAdapter contract and grant them to Phase 2 VaultsAdapter contract. Items 1.1-1.6.\n    2. Enable Predeposit Guarantee guided deposit flows as a part of Full Launch. 1.7-1.10.\n    3. Raise the maximum allowed stETH external shares ratio to 30%. Items 1.11-1.13.\n    4. Remove Lido V3 Phase 1 Easy Track factories and add Phase 2 factories enabling [stVault Committee](https://docs.lido.fi/multisigs/committees/#216-stvaults-committee) to configure VaultHub and OperatorGrid contracts. Items 2-15.\n2. **Raise Community Staking Module stake share limit to 7.5% and priority exit threshold to 9%**, as [proposed on the Forum](https://research.lido.fi/t/community-staking-module/5917/182). Item 1.14.\n3. **Grant `MANAGE_FRAME_CONFIG_ROLE` on CS HashConsensus to [TwoPhaseFrameConfigUpdate contract](https://etherscan.io/address/0xb2b4db1491cbe949ae85eff01e0d3ee239f110c1)**, as [proposed on the Forum](https://research.lido.fi/t/offset-csm-performance-oracle-report-weekday/11077). Audit & deployment verification: [MixBytes](https://github.com/lidofinance/audits/blob/main/MixBytes%20CSM%20Performance%20Oracle%20Security%20Audit%20Report%2001-26.pdf). Item 1.15.\n"
         }
       }
     }

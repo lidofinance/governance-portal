@@ -58,6 +58,7 @@ export const VoteCard = () => {
     voteTime,
     objectionPhaseTime,
     dgProposal,
+    description,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -166,7 +167,11 @@ export const VoteCard = () => {
       <SectionHeading>Proposal</SectionHeading>
       {eventStart?.args.metadata && (
         <DescriptionWrap data-testid="voteDescription">
-          <VoteDescription metadata={eventStart.args.metadata} allowMD />
+          <VoteDescription
+            metadata={eventStart.args.metadata}
+            description={description}
+            allowMD
+          />
         </DescriptionWrap>
       )}
       <DetailsBoxWrap data-testid="voteScript">

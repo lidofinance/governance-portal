@@ -9,13 +9,23 @@ import { MarkdownWrapper } from '../markdown-wrapper';
 
 type Props = {
   metadata?: string | undefined;
+  /**
+   * Pre-resolved IPFS description from the archived-vote cache. When a
+   * non-empty string is passed, the component renders it directly and
+   * skips the runtime IPFS fetch. `null`/`undefined` means "not cached" —
+   * fall through to the metadata → IPFS path.
+   */
+  description?: string | null;
   allowMD?: boolean;
 };
 
 const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
 
-export const VoteDescription = ({ metadata, allowMD }: Props) => {
+export const VoteDescription = ({ metadata, description, allowMD }: Props) => {
   const cid = metadata?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
+
+  const cachedDescription = trimStart(description ?? '');
+  const hasCachedDescription = cachedDescription.length > 0;
 
   const {
     data = '',
@@ -24,7 +34,7 @@ export const VoteDescription = ({ metadata, allowMD }: Props) => {
   } = useQuery({
     queryKey: [cid],
     queryFn: async () => await fetcherIPFS(cid || ''),
-    enabled: !!cid,
+    enabled: !!cid && !hasCachedDescription,
   });
 
   if (metadata === '') {
@@ -35,6 +45,17 @@ export const VoteDescription = ({ metadata, allowMD }: Props) => {
     return (
       <DescriptionText>
         Failed to fetch vote description from RPC provider.
+      </DescriptionText>
+    );
+  }
+
+  if (hasCachedDescription) {
+    if (allowMD) {
+      return <MarkdownWrapper>{cachedDescription}</MarkdownWrapper>;
+    }
+    return (
+      <DescriptionText>
+        {replaceJsxElements(removeMD(cachedDescription))}
       </DescriptionText>
     );
   }
