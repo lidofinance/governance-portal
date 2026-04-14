@@ -116,6 +116,13 @@ export const MotionTypeDisplayNames: Record<
     'Force validator exits in Vault Hub (Phase I)',
   [MotionType.SocializeBadDebtInVaultHubPhaseOne]:
     'Socialize bad debt in Vault Hub (Phase I)',
+  // Vaults Old
+  [MotionType.RegisterGroupsInOperatorGridOld]:
+    'Register groups in Operator Grid (Old)',
+  [MotionType.RegisterTiersInOperatorGridOld]:
+    'Register tiers in Operator Grid (Old)',
+  [MotionType.AlterTiersInOperatorGridOld]:
+    'Alter tiers in Operator Grid (Old)',
 } as const;
 
 export const getMotionTypeDisplayName = (

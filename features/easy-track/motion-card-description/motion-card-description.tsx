@@ -410,6 +410,17 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.SocializeBadDebtInVaultHubPhaseOne]: (
     props: DescDispatchProps,
   ) => <VaultsSocializeBadDebtInVaultHub {...props} />,
+
+  // Vaults Old
+  [MotionType.RegisterGroupsInOperatorGridOld]: (props: DescDispatchProps) => (
+    <VaultsRegisterGroupsInOperatorGrid {...props} />
+  ),
+  [MotionType.AlterTiersInOperatorGridOld]: (props: DescDispatchProps) => (
+    <VaultsAlterTiersInOperatorGrid {...props} />
+  ),
+  [MotionType.RegisterTiersInOperatorGridOld]: (props: DescDispatchProps) => (
+    <VaultsRegisterTiersInOperatorGrid {...props} />
+  ),
 } as const;
 
 type Props = {

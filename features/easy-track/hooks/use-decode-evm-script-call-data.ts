@@ -104,6 +104,11 @@ export const MOTION_TYPE_ABI_MAP = {
     abi.evmForceValidatorExitsInVaultHubAbi,
   [MotionType.SocializeBadDebtInVaultHubPhaseOne]:
     abi.evmSocializeBadDebtInVaultHubAbi,
+  [MotionType.RegisterGroupsInOperatorGridOld]:
+    abi.evmRegisterGroupsInOperatorsGridAbi,
+  [MotionType.RegisterTiersInOperatorGridOld]:
+    abi.evmRegisterTiersInOperatorsGridAbi,
+  [MotionType.AlterTiersInOperatorGridOld]: abi.evmAlterTiersInOperatorGridAbi,
 } as const;
 
 /**
