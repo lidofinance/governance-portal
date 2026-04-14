@@ -165,6 +165,12 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x6C968cD89CA358fbAf57B18e77a8973Fa869a6aA',
     [MotionType.SocializeBadDebtInVaultHubPhaseOne]:
       '0x1dF50522A1D868C12bF71747Bb6F24A18Fe6d32C',
+    [MotionType.RegisterGroupsInOperatorGridOld]:
+      '0xE73842AEbEC99Dacf2aAEec61409fD01A033f478',
+    [MotionType.RegisterTiersInOperatorGridOld]:
+      '0x5292A1284e4695B95C0840CF8ea25A818751C17F',
+    [MotionType.AlterTiersInOperatorGridOld]:
+      '0x73f80240ad9363d5d3C5C3626953C351cA36Bfe9',
   },
 
   // Holesky
