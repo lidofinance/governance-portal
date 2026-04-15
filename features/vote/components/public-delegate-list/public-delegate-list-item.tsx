@@ -39,8 +39,8 @@ export const PublicDelegateListItem = ({
             <Text size="xxs" weight={700} title={delegate.name}>
               {delegate.name}
             </Text>
-            <AddressPop address={delegate.address}>
-              <Text size="xxs" color="secondary">
+            <AddressPop address={delegate.address} data-testid="addressPop">
+              <Text size="xxs" color="secondary" data-testid="delegateAddress">
                 {trimAddress(delegate.address, 4)}
               </Text>
             </AddressPop>
@@ -57,11 +57,11 @@ export const PublicDelegateListItem = ({
           </SocialButtons>
         </DelegateInfo>
         <DelegateNumbersMobile>
-          <HeaderTitleWithIcon>
+          <HeaderTitleWithIcon data-testid="AragonVP">
             VP <AragonSmallLogo />
             {delegate.delegatedVotingPowerFormatted}
           </HeaderTitleWithIcon>
-          <Text size="xxs" weight={700}>
+          <Text size="xxs" weight={700} data-testid="delegatorsCount">
             From {delegate.delegatorsCount.toString()}
           </Text>
         </DelegateNumbersMobile>
@@ -88,15 +88,19 @@ export const PublicDelegateListItem = ({
           <Text size="xxs" weight={700} title={delegate.name}>
             {delegate.name}
           </Text>
-          <AddressPop address={delegate.address}>
-            <Text size="xxs" color="secondary">
+          <AddressPop address={delegate.address} data-testid="addressPop">
+            <Text size="xxs" color="secondary" data-testid="delegateAddress">
               {trimAddress(delegate.address, 4)}
             </Text>
           </AddressPop>
         </DelegateNameAndAddress>
       </DelegateInfo>
-      <Text size="xxs">{delegate.delegatedVotingPowerFormatted}</Text>
-      <Text size="xxs">{delegate.delegatorsCount.toString()}</Text>
+      <Text size="xxs" data-testid="AragonVP">
+        {delegate.delegatedVotingPowerFormatted}
+      </Text>
+      <Text size="xxs" data-testid="delegatorsCount">
+        {delegate.delegatorsCount.toString()}
+      </Text>
       <SocialButtons>
         <ExternalLink href={delegate.lido}>
           <LidoSocialIcon />
