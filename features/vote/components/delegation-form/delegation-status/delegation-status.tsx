@@ -40,7 +40,7 @@ export const DelegationStatus = () => {
               type="Aragon"
             />
           ) : (
-            <StatusValue>
+            <StatusValue data-testid="delegationStatusAragon">
               {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
             </StatusValue>
           )}
@@ -57,7 +57,7 @@ export const DelegationStatus = () => {
               type="Snapshot"
             />
           ) : (
-            <StatusValue>
+            <StatusValue data-testid="delegationStatusSnapshot">
               {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
             </StatusValue>
           )}
@@ -81,7 +81,7 @@ export const DelegationStatus = () => {
           type={mode}
         />
       ) : (
-        <StatusValue>
+        <StatusValue data-testid="delegationStatus">
           {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
         </StatusValue>
       )}

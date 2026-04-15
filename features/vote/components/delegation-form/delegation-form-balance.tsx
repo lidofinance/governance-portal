@@ -23,7 +23,7 @@ export const DelegationFormBalance = ({ onCustomizeClick }: Props) => {
     <DelegationFormBalanceStyled $withError={!!errors['delegateAddress']}>
       <Balance>
         <Text>Your voting power</Text>
-        <Text weight={700}>
+        <Text weight={700} data-testid="currentVP">
           {typeof daoTokenBalance !== 'bigint'
             ? 'Loading...'
             : formatToken({
@@ -34,7 +34,12 @@ export const DelegationFormBalance = ({ onCustomizeClick }: Props) => {
         </Text>
       </Balance>
       {onCustomizeClick && (
-        <CustomizeButton onClick={onCustomizeClick}>Customize</CustomizeButton>
+        <CustomizeButton
+          onClick={onCustomizeClick}
+          data-testid="customizeButton"
+        >
+          Customize
+        </CustomizeButton>
       )}
     </DelegationFormBalanceStyled>
   );

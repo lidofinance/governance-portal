@@ -8,7 +8,10 @@ export const DelegationFormController: FC<PropsWithChildren> = ({
   const { mode } = useDelegationFormData();
 
   return (
-    <DelegationFormControllerStyled $customMode={mode !== 'simple'}>
+    <DelegationFormControllerStyled
+      $customMode={mode !== 'simple'}
+      data-testid="delegationForm"
+    >
       {children}
     </DelegationFormControllerStyled>
   );

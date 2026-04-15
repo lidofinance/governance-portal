@@ -32,7 +32,7 @@ export const PublicDelegateListItem = ({
 }: Props) => {
   if (isMobile) {
     return (
-      <ListItem>
+      <ListItem data-testid="delegateListItem">
         <DelegateInfo>
           <PublicDelegateAvatar avatarSrc={delegate.avatar} />
           <DelegateNameAndAddress>
@@ -71,6 +71,7 @@ export const PublicDelegateListItem = ({
             variant="outlined"
             disabled={!delegate.address}
             onClick={onSelect}
+            data-testid="delegateSelectButton"
           >
             Select
           </Button>
@@ -80,7 +81,7 @@ export const PublicDelegateListItem = ({
   }
 
   return (
-    <ListItem>
+    <ListItem data-testid="delegateListItem">
       <DelegateInfo>
         <PublicDelegateAvatar avatarSrc={delegate.avatar} />
         <DelegateNameAndAddress>
@@ -112,6 +113,7 @@ export const PublicDelegateListItem = ({
           variant="outlined"
           disabled={!delegate.address}
           onClick={onSelect}
+          data-testid="delegateSelectButton"
         >
           Select
         </Button>
