@@ -25,7 +25,7 @@ export const DelegationAddressBadge = ({
   return (
     <DelegationAddressBadgeStyled>
       <AddressPop address={address}>
-        <AddressBadgeWrap>
+        <AddressBadgeWrap data-testid="delegateBadge">
           {publicDelegate ? (
             <PublicDelegateAvatar avatarSrc={publicDelegate.avatar} size={20} />
           ) : (
@@ -35,12 +35,16 @@ export const DelegationAddressBadge = ({
             as="span"
             size="xxs"
             color={publicDelegate ? 'default' : 'secondary'}
+            data-testid="currentDelegate"
           >
             {publicDelegate?.name ?? trimAddress(address, 4)}
           </Text>
         </AddressBadgeWrap>
       </AddressPop>
-      <RevokeDelegationButton onClick={() => onRevoke(type)} />
+      <RevokeDelegationButton
+        onClick={() => onRevoke(type)}
+        data-testid="revokeButton"
+      />
     </DelegationAddressBadgeStyled>
   );
 };

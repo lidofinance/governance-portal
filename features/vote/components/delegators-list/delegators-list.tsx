@@ -62,9 +62,9 @@ export const DelegatorsList = () => {
 
   return (
     <Wrap>
-      <TitleWrap>
+      <TitleWrap data-testid="delegatorsTitle">
         <InfoLabel>Delegated</InfoLabel>
-        <CounterBadge>
+        <CounterBadge data-testid="delegatedVPTotal">
           {formatBalance(data.totalDelegatedVotingPower)}{' '}
           {KnownToken.LDO.symbol}
         </CounterBadge>
@@ -73,7 +73,7 @@ export const DelegatorsList = () => {
           {delegatedVotersCount > 1 ? 'es' : ''} on-chain
         </InfoLabel>
       </TitleWrap>
-      <DelegatorsListStyled>
+      <DelegatorsListStyled data-testid="delegatorsList">
         {delegatorsToShow.map((delegator) => (
           <DelegatorsListItem
             key={delegator.address}
