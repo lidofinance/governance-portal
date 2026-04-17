@@ -132,7 +132,11 @@ export const DelegationFormSubmitButton = ({ onCustomizeClick }: Props) => {
 
   if (!isWalletConnected) {
     return (
-      <DelegateButton onClick={connect} type="button">
+      <DelegateButton
+        onClick={connect}
+        type="button"
+        data-testid="connectWalletButton"
+      >
         Connect wallet
       </DelegateButton>
     );
@@ -144,6 +148,7 @@ export const DelegationFormSubmitButton = ({ onCustomizeClick }: Props) => {
         type="submit"
         disabled={!isSupportedChain}
         loading={isSubmitting}
+        data-testid="delegateButton"
       >
         {buttonText}
       </DelegateButton>
@@ -156,6 +161,7 @@ export const DelegationFormSubmitButton = ({ onCustomizeClick }: Props) => {
       loading={isSubmitting}
       disabled={!isSupportedChain}
       onClick={onSubmitDialog}
+      data-testid="redelegateButton"
     >
       {buttonText}
     </DelegateButton>

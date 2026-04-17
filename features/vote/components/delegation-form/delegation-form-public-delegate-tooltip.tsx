@@ -35,7 +35,8 @@ export const DelegationFormPublicDelegateTooltip = () => {
 
   return (
     <DelegationFormFootNoteStyled>
-      Public delegate: <b>{selectedPublicDelegate.name}</b>
+      Public delegate:{' '}
+      <b data-testid="selectedDelegate">{selectedPublicDelegate.name}</b>
     </DelegationFormFootNoteStyled>
   );
 };

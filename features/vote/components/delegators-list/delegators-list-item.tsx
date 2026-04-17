@@ -12,16 +12,16 @@ type Props = {
 
 export const DelegatorsListItem = ({ address, balance, ensName }: Props) => {
   return (
-    <DelegatorsListItemStyled key={address}>
+    <DelegatorsListItemStyled key={address} data-testid="delegatorsListItem">
       <AddressPop address={address}>
         <AddressBadgeWrap>
           <Identicon address={address} diameter={20} />
-          <Text as="span" size="xxs">
+          <Text as="span" size="xxs" data-testid="delegatorsAddress">
             {ensName ?? trimAddress(address, 4)}
           </Text>
         </AddressBadgeWrap>
       </AddressPop>
-      <Text size="xs">
+      <Text size="xs" data-testid="delegatorsVP">
         {formatBalance(balance)} {KnownToken.LDO.symbol}
       </Text>
     </DelegatorsListItemStyled>
