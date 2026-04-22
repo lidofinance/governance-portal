@@ -19,7 +19,8 @@
     "test:unit": "jest",
     "prepare": "husky",
     "build-events:local": "node --env-file=.env.local ./scripts/proposals/build-proposals-events.mjs",
-    "validate-events": "node --env-file=.env.local ./scripts/proposals/validate-proposals-events.mjs"
+    "validate-events": "node --env-file=.env.local ./scripts/proposals/validate-proposals-events.mjs",
+    "abi-coverage": "npx tsx scripts/check-abi-coverage.ts"
   },
   "dependencies": {
     "@lidofinance/api-metrics": "^0.45.1",

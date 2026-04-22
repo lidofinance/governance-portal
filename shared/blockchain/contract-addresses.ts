@@ -311,23 +311,17 @@ export const EmergencyProtectedTimelock: ChainAddressMap = {
   },
 };
 
-export const EmergencyExecutionCommitteeProposed: ChainAddressMap = {
+export const EmergencyExecutionCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xC7792b3F2B399bB0EdF53fECDceCeB97FBEB18AF',
   [CHAINS.Hoodi]: '0x8E1Ce8995E370222CbD825fFD7Dce2A5BfE1E631',
 };
 
-export const EmergencyActivationCommitteeProposed: ChainAddressMap = {
+export const EmergencyActivationCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x8B7854488Fde088d686Ea672B6ba1A5242515f45',
   [CHAINS.Hoodi]: '0xA678c29cbFde2C74aF15C7724EE4b1527A50D45B',
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
-  [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
-  [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
-};
-
-export const EmergencyGovernanceProposed: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
   [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
   [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
@@ -339,17 +333,20 @@ export const TiebreakerCoreCommittee: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
 };
 
-export const TieBreakerSubCommittee1: ChainAddressMap = {
+// DG Tiebreaker Sub Committee
+export const BuildersSubCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x3D3ba54D54bbFF40F2Dfa2A8e27bD4dE3dab2951',
   [CHAINS.Hoodi]: '0xEd27F0d08630685A0cEFb1040596Cb264cf79f14',
 };
 
-export const TieBreakerSubCommittee2: ChainAddressMap = {
+// DG Tiebreaker Sub Committee
+export const NodeOperatorsSubCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xDBfa0B8A15a503f25224fcA5F84a3853230A715C',
   [CHAINS.Hoodi]: '0xE3e3c67997A4Db7d47ac7fa8ef81B677daBe5794',
 };
 
-export const TieBreakerSubCommittee3: ChainAddressMap = {
+// DG Tiebreaker Sub Committee
+export const EthereumEcosystemSubCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xBF048f2111497B6Df5E062811f5fC422804D4baE',
   [CHAINS.Hoodi]: '0xF4F16CB3B9E7a076E55c508035f25E606913Cc9d',
 };
