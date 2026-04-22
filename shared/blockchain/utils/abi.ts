@@ -20,7 +20,7 @@ type ContractMetadata = {
  * e.g., AccountingOracle → accountingOracleAbi
  * e.g., AragonACL → aragonAclAbi
  */
-const getAbiKey = (contractName: string): string => {
+export const getAbiKey = (contractName: string): string => {
   const parts =
     contractName.match(
       /([A-Z][a-z0-9]+)|([A-Z]+[0-9]+)|([A-Z]+(?=[A-Z][a-z0-9]|$))/g,
@@ -113,17 +113,23 @@ export const getLocalContractAbi = (
   return getLocalAbi(contractName);
 };
 
+export type DecoderContext = {
+  chainId: CHAINS;
+  fetchPolicy: 'local-first' | 'local-only' | 'etherscan-only';
+  etherscanApiKey?: string;
+  client: PublicClient;
+};
+
 export const fetchContractMetadata = async (
   address: Address,
-  chainId: CHAINS,
-  withLocalDecoder: boolean,
-  etherscanApiKey: string | undefined,
-  client: PublicClient,
+  decoderContext: DecoderContext,
 ): Promise<ContractMetadata | null> => {
+  const { chainId, fetchPolicy, etherscanApiKey, client } = decoderContext;
   let result: ContractMetadata | null = null;
 
   const contractName = getContractName(chainId, address);
 
+  const withLocalDecoder = fetchPolicy !== 'etherscan-only';
   if (withLocalDecoder && contractName) {
     const abi = getLocalAbi(contractName);
     if (abi) {
@@ -138,16 +144,18 @@ export const fetchContractMetadata = async (
       );
     }
 
-    // fallback - etherscan
-    const abi = await fetchAbiFromEtherscan({
-      address,
-      chainId,
-      etherscanApiKey,
-      client,
-    });
+    if (fetchPolicy !== 'local-only') {
+      // fallback - etherscan
+      const abi = await fetchAbiFromEtherscan({
+        address,
+        chainId,
+        etherscanApiKey,
+        client,
+      });
 
-    if (abi) {
-      result = { abi, name: contractName };
+      if (abi) {
+        result = { abi, name: contractName };
+      }
     }
   }
 
