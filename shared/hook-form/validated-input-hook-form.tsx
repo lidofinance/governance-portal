@@ -29,6 +29,10 @@ export const ValidatedInputHookForm = ({
 
   const validate = useCallback(
     async (value: string) => {
+      // Bump the token on every call so any in-flight async work from a prior
+      // call is marked stale, even if this call exits early (empty/sync-fail).
+      const token = ++latestToken.current;
+
       // Empty is "valid" here; consumers wire `required` via `rules` if needed.
       if (!value) return true;
 
@@ -37,8 +41,6 @@ export const ValidatedInputHookForm = ({
       if (syncErr) return syncErr;
       if (!validateAsync) return true;
 
-      // Token guards against stale runs: only the latest call's result is kept.
-      const token = ++latestToken.current;
       await new Promise((resolve) => setTimeout(resolve, debounceTimeoutMs));
       if (token !== latestToken.current) return true;
 

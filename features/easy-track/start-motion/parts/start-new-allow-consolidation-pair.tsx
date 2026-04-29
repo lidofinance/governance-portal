@@ -275,11 +275,11 @@ export const formParts = createMotionFormPart({
     const validateTargetIdAsync = async (value: string) => {
       invariant(
         walletAddress,
-        'Wallet address is required for source ID validation',
+        'Wallet address is required for target ID validation',
       );
       invariant(
         factoryData,
-        'Factory data is required for source ID validation',
+        'Factory data is required for target ID validation',
       );
 
       const targetId = BigInt(value);
