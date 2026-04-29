@@ -23,7 +23,6 @@ import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 
 type Value = {
   vote: Vote;
-  canExecute: boolean;
   eventStart: EventStartVote | undefined;
   eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[];
@@ -127,7 +126,6 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
 
     return {
       vote: voteData.vote,
-      canExecute: voteData.canExecute,
       eventStart: voteData.eventStart,
       eventExecute: eventExecute ?? null,
       voterState: voterState?.voterState,

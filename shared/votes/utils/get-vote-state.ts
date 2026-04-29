@@ -5,8 +5,8 @@ type VoteWithoutState = Omit<Vote, 'state'>;
 
 const EMPTY_SCRIPT = '0x00000001';
 
-const isVoteEnactable = (vote: VoteWithoutState): boolean | string => {
-  return vote.script && vote.script !== EMPTY_SCRIPT;
+const isVoteEnactable = (vote: VoteWithoutState): boolean => {
+  return !!vote.script && vote.script !== EMPTY_SCRIPT;
 };
 
 export const isQuorumReached = (vote: VoteWithoutState): boolean => {
