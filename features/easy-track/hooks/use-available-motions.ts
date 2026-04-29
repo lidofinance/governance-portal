@@ -8,7 +8,7 @@ import {
   parseEvmSupportedChainId,
 } from 'features/easy-track/evm-addresses';
 import { getIsTrustedCaller } from 'shared/blockchain/utils/get-is-trusted-caller';
-import { Address, getAddress } from 'viem';
+import { Address, getAddress, isAddress } from 'viem';
 import { useNodeOperatorsList } from './use-node-operators-list';
 
 type NodeOperatorsList = ReturnType<typeof useNodeOperatorsList>['data'];
@@ -56,11 +56,16 @@ export const useAvailableMotions = () => {
         EvmAddressesByChain[parsedChainId][
           MotionTypeForms.CuratedExitRequestHashesSubmit
         ];
+      const allowConsolidationPairAddress =
+        EvmAddressesByChain[parsedChainId][
+          MotionTypeForms.AllowConsolidationPair
+        ];
 
       const excludedAddresses = [
         nodeOperatorIncreaseLimitAddress,
         sandboxNodeOperatorIncreaseLimitAddress,
         curatedSubmitRequestHashesAddress,
+        allowConsolidationPairAddress,
       ].filter(
         (address) => typeof address === 'string' && address.length > 0,
       ) as string[];
@@ -149,6 +154,18 @@ export const useAvailableMotions = () => {
       address: EvmAddressesByChain[parsedChainId][
         MotionTypeForms.SandboxNodeOperatorIncreaseLimit
       ] as Address,
+      isTrusted: true,
+    });
+  }
+
+  const allowConsolidationPairAddress =
+    EvmAddressesByChain[parsedChainId][
+      MotionTypeForms.AllowConsolidationPair
+    ] ?? '';
+  if (isAddress(allowConsolidationPairAddress)) {
+    allowedMotions.push({
+      motionType: MotionTypeForms.AllowConsolidationPair,
+      address: allowConsolidationPairAddress,
       isTrusted: true,
     });
   }

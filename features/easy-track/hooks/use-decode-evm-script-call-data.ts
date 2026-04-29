@@ -109,6 +109,7 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.RegisterTiersInOperatorGridOld]:
     abi.evmRegisterTiersInOperatorsGridAbi,
   [MotionType.AlterTiersInOperatorGridOld]: abi.evmAlterTiersInOperatorGridAbi,
+  [MotionType.AllowConsolidationPair]: abi.allowConsolidationPairAbi,
 } as const;
 
 /**

@@ -34,6 +34,8 @@ import * as StartNewSDVTNodeOperatorRewardAddressesSet from './start-new-sdvt-no
 import * as StartNewSDVTNodeOperatorNamesSet from './start-new-sdvt-node-operator-names-set';
 import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-operator-managers-change';
 
+import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation-pair';
+
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
     formAllowedRecipientTopUp.formParts({
@@ -165,6 +167,9 @@ export const formParts = {
     StartNewVaultsUpdateGroupsShareLimit.formParts,
   [MotionTypeForms.UpdateVaultsFeesInOperatorGrid]:
     StartNewVaultsUpdateVaultsFeesInOperatorGrid.formParts,
+
+  [MotionTypeForms.AllowConsolidationPair]:
+    StartNewAllowConsolidationPair.formParts,
 } as const;
 
 export type FormData = {

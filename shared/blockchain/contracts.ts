@@ -979,3 +979,31 @@ export const UpdateGroupsShareLimit: ContractObject<
   abi: abi.evmUpdateGroupsShareLimitAbi,
   chainAddressMap: EvmAddressesByType[MotionType.UpdateGroupsShareLimit],
 };
+
+export const StakingRouter: ContractObject<typeof abi.stakingRouterAbi> = {
+  name: 'StakingRouter',
+  abi: abi.stakingRouterAbi,
+  chainAddressMap: addr.StakingRouter,
+};
+
+export const AllowConsolidationPair: ContractObject<
+  typeof abi.allowConsolidationPairAbi
+> = {
+  name: 'AllowConsolidationPair',
+  abi: abi.allowConsolidationPairAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.AllowConsolidationPair],
+};
+
+export const ConsolidationMigrator: ContractObject<
+  typeof abi.consolidationMigratorAbi
+> = {
+  name: 'ConsolidationMigrator',
+  abi: abi.consolidationMigratorAbi,
+  chainAddressMap: addr.ConsolidationMigrator,
+};
+
+export const MetaRegistry: ContractObject<typeof abi.metaRegistryAbi> = {
+  name: 'MetaRegistry',
+  abi: abi.metaRegistryAbi,
+  chainAddressMap: addr.MetaRegistry,
+};
