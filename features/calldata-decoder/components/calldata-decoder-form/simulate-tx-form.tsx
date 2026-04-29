@@ -1,10 +1,11 @@
 import { Text } from '@lidofinance/lido-ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Address, getAddress, Hex } from 'viem';
+import { Address, createPublicClient, getAddress, Hex, http } from 'viem';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import { SubmitButtonHookForm } from 'shared/hook-form/submit-button-hook-form';
+import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { validateUintValue } from 'utils/validate-uint-value';
 import { BlockStyled } from './style';
@@ -22,7 +23,8 @@ type Props = {
 };
 
 export const SimulateTxForm = ({ calldata, defaultTo }: Props) => {
-  const { rpcProvider } = useLidoSDK();
+  const { chainId } = useLidoSDK();
+  const getRpcUrlByChainId = useGetRpcUrlByChainId();
 
   const [result, setResult] = useState<
     | { type: 'success'; data: Hex | undefined }
@@ -45,6 +47,14 @@ export const SimulateTxForm = ({ calldata, defaultTo }: Props) => {
     setResult(null);
   }, [defaultTo, formMethods]);
 
+  // Use a dedicated client to bypass the project-wide transport wrapper
+  // that swallows eth_call reverts (see utils/use-web3-transport.ts).
+  const rpcClient = useMemo(() => {
+    return createPublicClient({
+      transport: http(getRpcUrlByChainId(chainId)),
+    });
+  }, [chainId, getRpcUrlByChainId]);
+
   const onSubmit = async ({ to, from, value }: FormValues) => {
     setResult(null);
 
@@ -53,7 +63,7 @@ export const SimulateTxForm = ({ calldata, defaultTo }: Props) => {
     const trimmedValue = value?.trim();
 
     try {
-      const { data } = await rpcProvider.call({
+      const { data } = await rpcClient.call({
         to: getAddress(trimmedTo),
         account: trimmedFrom ? getAddress(trimmedFrom) : undefined,
         data: calldata,
