@@ -45,6 +45,8 @@ export const MotionTypeForms = {
 
   CSMSettleElStealingPenalty: 'CSMSettleElStealingPenalty',
   CSMSetVettedGateTree: 'CSMSetVettedGateTree',
+  CSMSetMerkleGateTree: 'CSMSetMerkleGateTree',
+  CuratedSetMerkleGateTree: 'CuratedSetMerkleGateTree',
 
   MEVBoostRelaysAdd: 'MEVBoostRelaysAdd',
   MEVBoostRelaysEdit: 'MEVBoostRelaysEdit',

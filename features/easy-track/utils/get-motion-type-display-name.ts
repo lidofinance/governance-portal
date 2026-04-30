@@ -36,6 +36,8 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.CSMSettleElStealingPenalty]:
     'Settle EL Rewards Stealing penalty for CSM operators',
   [MotionType.CSMSetVettedGateTree]: 'Set CSM vetted gate tree',
+  [MotionType.CSMSetMerkleGateTree]: '[CSM] Set merkle gate tree',
+  [MotionType.CuratedSetMerkleGateTree]: '[Curated] Set merkle gate tree',
   [MotionType.CuratedExitRequestHashesSubmit]:
     '[Curated] Submit Exit Request Hashes',
   [MotionType.SDVTExitRequestHashesSubmit]: '[SDVT] Submit Exit Request Hashes',

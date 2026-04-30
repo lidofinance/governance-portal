@@ -46,6 +46,7 @@ import { MevBoostRelaysAdd } from './motion-descriptions/mev-boost-relays-add';
 import { MevBoostRelaysEdit } from './motion-descriptions/mev-boost-relays-edit';
 import { MevBoostRelaysRemove } from './motion-descriptions/mev-boost-relays-remove';
 import { CsmSetVettedGateTree } from './motion-descriptions/csm-set-vetted-gate-tree';
+import { SetMerkleGateTree } from './motion-descriptions/set-merkle-gate-tree';
 import { CuratedExitRequestHashesSubmit } from './motion-descriptions/curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './motion-descriptions/sdvt-exit-request-hashes-submit';
 import { VaultsForceValidatorExitsInVaultHub } from './motion-descriptions/vaults-force-validator-exits-in-vault-hub';
@@ -353,6 +354,12 @@ const MOTION_DESCRIPTIONS = {
   ),
   [MotionType.CSMSetVettedGateTree]: (props: DescDispatchProps) => (
     <CsmSetVettedGateTree {...props} />
+  ),
+  [MotionType.CSMSetMerkleGateTree]: (props: DescDispatchProps) => (
+    <SetMerkleGateTree {...props} />
+  ),
+  [MotionType.CuratedSetMerkleGateTree]: (props: DescDispatchProps) => (
+    <SetMerkleGateTree {...props} />
   ),
   [MotionType.CuratedExitRequestHashesSubmit]: (props: DescDispatchProps) => (
     <CuratedExitRequestHashesSubmit {...props} />

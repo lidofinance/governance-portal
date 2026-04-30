@@ -33,6 +33,7 @@ import {
 import { MotionType } from '../../motion-types';
 import { validateUintValue } from '../../utils/validate-uint-value';
 import { encodeNORExtOperatorData } from '../../utils/nor-ext-operator-data';
+import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 
 const MAX_BP = 10000;
 const NO_GROUP_ID = '0';
@@ -148,6 +149,9 @@ export const formParts = createMotionFormPart({
       nodeOperatorsRegistryAbi,
     );
     const readMetaRegistry = useReadContractGetter(metaRegistryAbi);
+
+    const { isTrustedCallerConnected, isTrustedCallerLoading } =
+      useIsTrustedCaller(CreateOrUpdateOperatorGroupContract);
 
     const subFields = useFieldArray({ name: fieldNames.subNodeOperators });
     const extFields = useFieldArray({ name: fieldNames.externalOperators });
@@ -330,7 +334,7 @@ export const formParts = createMotionFormPart({
       return undefined;
     };
 
-    if (isFactoryDataLoading) {
+    if (isFactoryDataLoading || isTrustedCallerLoading) {
       return <PageLoader />;
     }
 
@@ -342,6 +346,10 @@ export const formParts = createMotionFormPart({
             : 'Failed to load CreateOrUpdateOperatorGroup factory data'}
         </ErrorBox>
       );
+    }
+
+    if (!isTrustedCallerConnected) {
+      return <MessageBox>You should be connected as trusted caller</MessageBox>;
     }
 
     const modeLabel = isCreateMode

@@ -78,6 +78,8 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.MEVBoostRelaysEdit]: abi.editMevBoostRelaysAbi,
   [MotionType.MEVBoostRelaysRemove]: abi.removeMevBoostRelaysAbi,
   [MotionType.CSMSetVettedGateTree]: abi.csmSetVettedGateTreeAbi,
+  [MotionType.CSMSetMerkleGateTree]: abi.setMerkleGateTreeAbi,
+  [MotionType.CuratedSetMerkleGateTree]: abi.setMerkleGateTreeAbi,
   [MotionType.CuratedExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
   [MotionType.SDVTExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
   [MotionType.RegisterGroupsInOperatorGrid]:

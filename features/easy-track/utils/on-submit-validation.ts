@@ -25,6 +25,8 @@ const EXTRA_VALIDATION_MAP: {
   [K in MotionTypeForms]?: ValidateFn<K>;
 } = {
   [MotionType.CSMSetVettedGateTree]: validateGateTreeIpfs,
+  [MotionType.CSMSetMerkleGateTree]: validateGateTreeIpfs,
+  [MotionType.CuratedSetMerkleGateTree]: validateGateTreeIpfs,
   [MotionType.ForceValidatorExitsInVaultHub]: validateForceExits,
   [MotionType.CreateOrUpdateOperatorGroup]: validateCreateOrUpdateOperatorGroup,
 };
