@@ -20,7 +20,12 @@ export const useDecodedCalls = <Call extends BaseCall>(
     staleTime: Infinity,
     enabled: calls.length > 0,
     queryFn: async () =>
-      decodeCalls(calls, chainId, useBundledAbi, etherscanApiKey, rpcProvider),
+      decodeCalls(calls, {
+        chainId,
+        fetchPolicy: useBundledAbi ? 'local-first' : 'etherscan-only',
+        etherscanApiKey,
+        client: rpcProvider,
+      }),
   });
 
   return data ?? [];

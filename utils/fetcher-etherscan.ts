@@ -48,9 +48,10 @@ export const fetcherEtherscan = async <T>({
 
   const urlBase = isProxy ? ETHERSCAN_API_URL : ETHERSCAN_REMOTE_API_URL;
   const url = `${urlBase}?${queryParams.join('&')}`;
+  const cacheKey = `${chainId}-${module}-${action}-${address}`;
 
   if (useCache) {
-    const cached = cache.get(url);
+    const cached = cache.get(cacheKey);
     if (cached) return cached as T;
   }
 
@@ -68,7 +69,7 @@ export const fetcherEtherscan = async <T>({
   }
 
   if (useCache) {
-    cache.put(url, result, ETHERSCAN_CACHE_TTL);
+    cache.put(cacheKey, result, ETHERSCAN_CACHE_TTL);
   }
 
   return result;

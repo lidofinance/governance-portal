@@ -311,23 +311,17 @@ export const EmergencyProtectedTimelock: ChainAddressMap = {
   },
 };
 
-export const EmergencyExecutionCommitteeProposed: ChainAddressMap = {
+export const EmergencyExecutionCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xC7792b3F2B399bB0EdF53fECDceCeB97FBEB18AF',
   [CHAINS.Hoodi]: '0x8E1Ce8995E370222CbD825fFD7Dce2A5BfE1E631',
 };
 
-export const EmergencyActivationCommitteeProposed: ChainAddressMap = {
+export const EmergencyActivationCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x8B7854488Fde088d686Ea672B6ba1A5242515f45',
   [CHAINS.Hoodi]: '0xA678c29cbFde2C74aF15C7724EE4b1527A50D45B',
 };
 
 export const EmergencyGovernance: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
-  [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
-  [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
-};
-
-export const EmergencyGovernanceProposed: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x553337946F2FAb8911774b20025fa776B76a7CcE',
   [CHAINS.Holesky]: '0x1e43c35B1087e7f767Dc36E1E6783A3132497A41',
   [CHAINS.Hoodi]: '0x69E8e916c4A19F42C13C802abDF2767E1fB4F059',
@@ -339,17 +333,20 @@ export const TiebreakerCoreCommittee: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
 };
 
-export const TieBreakerSubCommittee1: ChainAddressMap = {
+// DG Tiebreaker Sub Committee
+export const BuildersSubCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x3D3ba54D54bbFF40F2Dfa2A8e27bD4dE3dab2951',
   [CHAINS.Hoodi]: '0xEd27F0d08630685A0cEFb1040596Cb264cf79f14',
 };
 
-export const TieBreakerSubCommittee2: ChainAddressMap = {
+// DG Tiebreaker Sub Committee
+export const NodeOperatorsSubCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xDBfa0B8A15a503f25224fcA5F84a3853230A715C',
   [CHAINS.Hoodi]: '0xE3e3c67997A4Db7d47ac7fa8ef81B677daBe5794',
 };
 
-export const TieBreakerSubCommittee3: ChainAddressMap = {
+// DG Tiebreaker Sub Committee
+export const EthereumEcosystemSubCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xBF048f2111497B6Df5E062811f5fC422804D4baE',
   [CHAINS.Hoodi]: '0xF4F16CB3B9E7a076E55c508035f25E606913Cc9d',
 };
@@ -488,32 +485,6 @@ export const PmlStethAllowedRecipientsRegistry: ChainAddressMap = {
 export const AtcStethAllowedRecipientsRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xd3950eB3d7A9B0aBf8515922c0d35D13e85a2c91',
   [CHAINS.Holesky]: '0x955bA61676dAd6091Ff3F9BC498219D6DbD49107',
-};
-
-export const Stonks = {
-  [CHAINS.Mainnet]: [
-    '0x3e2D251275A92a8169A3B17A2C49016e2de492a7',
-    '0xf4F6A03E3dbf0aA22083be80fDD340943d275Ea5',
-    '0x7C2a1E25cA6D778eCaEBC8549371062487846aAF',
-    '0x79f5E20996abE9f6a48AF6f9b13f1E55AED6f06D',
-    '0x8Ba6D367D15Ebc52f3eBBdb4a8710948C0918d42',
-    '0x281e6BB6F26A94250aCEb24396a8E4190726C97e',
-    '0x64B6aF9A108dCdF470E48e4c0147127F26221A7C',
-    '0x278f7B6CBB3Cc37374e6a40bDFEBfff08f65A5C7',
-    '0x2B5a3944A654439379B206DE999639508bA2e850',
-  ],
-  [CHAINS.Holesky]: [
-    '0x7949418C1C8a45b453114568fD3a5526100Eb0D9',
-    '0x1939e7466c21703620F672D994ad1Df03d418B66',
-    '0x28b91E39A7E67C473d7886BD1284231e99bE7939',
-    '0x1305492Fd4677349Ca335EaD9127D2BDEAD7fd6f',
-    '0xeFd6014CbE75D782Cd672e8A1a7bA6FCAB0572EC',
-    '0x43E190221729c223B453d75ADC8548679EcC222a',
-    '0x8f86792A0C1F1AecF87C5e4E2f01fCAF3E9360a0',
-    '0xDCBC0AE0141aEdEec14e418a173A6b3fA3724AE4',
-    '0x507D0971ffd5de64Ba1fb30Ee6Bb93376035DD00',
-  ],
-  [CHAINS.Hoodi]: [],
 };
 
 export const StonksStethAllowedRecipientsRegistry: ChainAddressMap = {

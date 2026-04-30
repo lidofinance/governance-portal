@@ -1,5 +1,3 @@
-import { useGlobalMemo } from 'shared/hooks';
-
 import {
   ABIProvider,
   ABIElement as ABIElementImported,
@@ -10,34 +8,13 @@ import {
   abiProviders,
 } from '@lidofinance/evm-script-decoder';
 
-import * as abis from 'abi/generated';
-import * as ADDR from 'shared/blockchain/contract-addresses';
-import { ChainAddressMap } from 'shared/blockchain/types';
 import { useGetRpcUrlByChainId } from 'config/rpc';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { fetcherEtherscan } from 'utils/fetcher-etherscan';
 import { useConfig } from 'config';
 import { Address, createPublicClient, getContract, http } from 'viem';
-import { ABI_EXCEPTIONS } from 'constants/abi-exceptions';
-
-type ContractName = keyof typeof ADDR;
-
-// This is a little hack needed because some of the local ABIs
-// doesn't meet the ABIElement type requirements
-type ABIElement = Omit<ABIElementImported, 'name' | 'type'> & {
-  name?: string;
-  type?: string;
-};
-
-type ExceptionContractName = keyof typeof ABI_EXCEPTIONS;
-type GeneralContractName = Exclude<ContractName, ExceptionContractName>;
-
-const getAbiKey = (contractName: string): string => {
-  const camelCase =
-    contractName.charAt(0).toLowerCase() + contractName.slice(1);
-  return `${camelCase}Abi`;
-};
+import { useAbiMap } from './use-abi-map';
+import { useMemo } from 'react';
 
 /**
  The only reason we still keep EVMScriptDecoder is to check whether the ongoing Aragon vote item has Unknown contracts.
@@ -49,59 +26,10 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
   const { userConfig } = useConfig();
   const { etherscanApiKey, useBundledAbi } = userConfig.savedUserConfig;
   const getRpcUrlByChainId = useGetRpcUrlByChainId();
-  const rpcUrl = getRpcUrlByChainId(chainId as unknown as CHAINS);
+  const rpcUrl = getRpcUrlByChainId(chainId);
+  const abiMap = useAbiMap();
 
-  return useGlobalMemo(() => {
-    // Map of contract addresses to their ABIs on the current chain
-    // needed to initialize the localDecoder
-    const abiMap = Object.keys(ADDR).reduce(
-      (result, contractName: string) => {
-        const contractAddressMap = ADDR[
-          contractName as ContractName
-        ] as ChainAddressMap;
-        const addressConfig = contractAddressMap?.[chainId as CHAINS];
-        if (!addressConfig) {
-          return result;
-        }
-
-        let addresses: string[];
-        if (typeof addressConfig === 'object' && 'actual' in addressConfig) {
-          const useTestContracts = userConfig.savedUserConfig.useTestContracts;
-          if (useTestContracts) {
-            addresses = [addressConfig.test, addressConfig.actual];
-          } else {
-            addresses = [addressConfig.actual];
-          }
-        } else {
-          addresses = [addressConfig as string];
-        }
-
-        let abi: ABIElement[] | undefined;
-        if (contractName in ABI_EXCEPTIONS) {
-          abi = ABI_EXCEPTIONS[
-            contractName as ExceptionContractName
-          ] as unknown as ABIElement[];
-        } else {
-          try {
-            const abiKey = getAbiKey(
-              contractName as GeneralContractName,
-            ) as keyof typeof abis;
-            abi = abis[abiKey] as unknown as ABIElement[];
-          } catch (e) {
-            throw new Error(`contractName: ${contractName}, error: ${e}`);
-          }
-        }
-
-        if (abi) {
-          addresses.forEach((address) => {
-            result[address] = abi;
-          });
-        }
-        return result;
-      },
-      {} as Record<string, ABIElement[]>,
-    );
-
+  return useMemo(() => {
     const localDecoder = new abiProviders.Local(
       abiMap as Record<string, ABIElementImported[]>,
     );
@@ -152,5 +80,5 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
         Boolean,
       ) as ABIProvider[]),
     );
-  }, `evm-script-decoder-${chainId}-${rpcUrl}}`);
+  }, [abiMap, chainId, etherscanApiKey, rpcUrl, useBundledAbi]);
 };

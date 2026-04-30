@@ -27,6 +27,7 @@ import { useTestContractsInfo } from './use-test-contracts-info';
 import { Text } from 'shared/components/text';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { CALLDATA_DECODER_PATH } from 'constants/urls';
 
 const Actions = ({ children }: { children: React.ReactNode }) => (
   <StyledActions>{children}</StyledActions>
@@ -294,6 +295,16 @@ export const SettingsForm = () => {
           </Block>
         </>
       )}
+
+      <br />
+      <Block>
+        <DescriptionTitle>Tools</DescriptionTitle>
+        <Link href={CALLDATA_DECODER_PATH} target="_self">
+          <Button fullwidth variant="outlined">
+            Calldata decoder
+          </Button>
+        </Link>
+      </Block>
     </Container>
   );
 };

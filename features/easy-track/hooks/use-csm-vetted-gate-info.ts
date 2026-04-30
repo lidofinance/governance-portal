@@ -2,7 +2,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { CSMSetVettedGateTree } from 'shared/blockchain/contracts';
-import { csmVettedGateTreeAbi } from 'abi/generated/CSMVettedGateTree';
+import { csmVettedGateAbi } from 'abi/generated/CSMVettedGate';
 import { readContract } from 'viem/actions';
 
 export const useCSMVettedGateInfo = () => {
@@ -18,12 +18,12 @@ export const useCSMVettedGateInfo = () => {
       const [treeRoot, treeCid] = await Promise.all([
         readContract(rpcProvider, {
           address: vettedGateAddress,
-          abi: csmVettedGateTreeAbi,
+          abi: csmVettedGateAbi,
           functionName: 'treeRoot',
         }),
         readContract(rpcProvider, {
           address: vettedGateAddress,
-          abi: csmVettedGateTreeAbi,
+          abi: csmVettedGateAbi,
           functionName: 'treeCid',
         }),
       ]);

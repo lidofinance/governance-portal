@@ -1,13 +1,8 @@
+import { Address, decodeFunctionData, getAddress, Hex, isAddress } from 'viem';
 import {
-  Address,
-  decodeFunctionData,
-  getAddress,
-  Hex,
-  isAddress,
-  PublicClient,
-} from 'viem';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import { fetchContractMetadata } from 'shared/blockchain/utils/abi';
+  DecoderContext,
+  fetchContractMetadata,
+} from 'shared/blockchain/utils/abi';
 import { decodeEvmScript } from 'shared/blockchain/utils/decode-evm-script';
 import { AragonAgent } from 'shared/blockchain/contract-addresses';
 
@@ -33,15 +28,13 @@ export type DecodedCall = {
 
 export const decodeCalls = async (
   calls: BaseCall[],
-  chainId: CHAINS,
-  useBundledAbi: boolean,
-  etherscanApiKey: string | undefined,
-  client: PublicClient,
+  decoderContext: DecoderContext,
   // Mutable ref to share auto-incrementing ID across recursive calls
   counter?: number[],
 ): Promise<DecodedCall[]> => {
   const idCounter = counter ?? [1];
   const result: DecodedCall[] = [];
+  const aragonAgentAddress = AragonAgent[decoderContext.chainId];
 
   for (const call of calls) {
     const decodedCall: DecodedCall = {
@@ -59,13 +52,7 @@ export const decodeCalls = async (
     }
 
     // metadata is name + abi (abi is from local/etherscan)
-    const metadata = await fetchContractMetadata(
-      call.target,
-      chainId,
-      useBundledAbi,
-      etherscanApiKey,
-      client,
-    );
+    const metadata = await fetchContractMetadata(call.target, decoderContext);
 
     if (!metadata) {
       result.push(decodedCall);
@@ -94,28 +81,22 @@ export const decodeCalls = async (
           }));
           decodedCall.nestedCalls = await decodeCalls(
             parsedInnerCalls,
-            chainId,
-            useBundledAbi,
-            etherscanApiKey,
-            client,
+            decoderContext,
             [1],
           );
         }
       } else if (decoded.functionName === 'forward') {
         const evmScriptData = decoded.args?.[0] as Hex | undefined;
-        const aragonAgentAddress = AragonAgent[chainId] as string;
         if (
           typeof evmScriptData === 'string' &&
+          typeof aragonAgentAddress === 'string' &&
           decodedCall.contractAddress.toLowerCase() ===
             aragonAgentAddress.toLowerCase()
         ) {
           const evmScriptCalls = decodeEvmScript(evmScriptData);
           decodedCall.nestedCalls = await decodeCalls(
             evmScriptCalls,
-            chainId,
-            useBundledAbi,
-            etherscanApiKey,
-            client,
+            decoderContext,
             [1],
           );
         }
