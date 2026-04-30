@@ -121,3 +121,4 @@ export * from './ZkSyncL1ERC20Bridge';
 export * from './AllowConsolidationPair';
 export * from './ConsolidationMigrator';
 export * from './MetaRegistry';
+export * from './CreateOrUpdateOperatorGroup';

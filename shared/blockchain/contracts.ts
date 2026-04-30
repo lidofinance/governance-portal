@@ -1007,3 +1007,11 @@ export const MetaRegistry: ContractObject<typeof abi.metaRegistryAbi> = {
   abi: abi.metaRegistryAbi,
   chainAddressMap: addr.MetaRegistry,
 };
+
+export const CreateOrUpdateOperatorGroup: ContractObject<
+  typeof abi.createOrUpdateOperatorGroupAbi
+> = {
+  name: 'CreateOrUpdateOperatorGroup',
+  abi: abi.createOrUpdateOperatorGroupAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.CreateOrUpdateOperatorGroup],
+};

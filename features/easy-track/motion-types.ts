@@ -62,6 +62,7 @@ export const MotionTypeForms = {
   SetLiabilitySharesTargetInVaultHub: 'SetLiabilitySharesTargetInVaultHub',
 
   AllowConsolidationPair: 'AllowConsolidationPair',
+  CreateOrUpdateOperatorGroup: 'CreateOrUpdateOperatorGroup',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare

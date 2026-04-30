@@ -35,6 +35,7 @@ import * as StartNewSDVTNodeOperatorNamesSet from './start-new-sdvt-node-operato
 import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-operator-managers-change';
 
 import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation-pair';
+import * as StartNewCreateOrUpdateOperatorGroup from './start-new-create-or-update-operator-group';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -170,6 +171,8 @@ export const formParts = {
 
   [MotionTypeForms.AllowConsolidationPair]:
     StartNewAllowConsolidationPair.formParts,
+  [MotionTypeForms.CreateOrUpdateOperatorGroup]:
+    StartNewCreateOrUpdateOperatorGroup.formParts,
 } as const;
 
 export type FormData = {

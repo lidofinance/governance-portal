@@ -51,6 +51,8 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.AllianceOpsStablesTopUp]: 'Top up Alliance Ops stablecoins',
 
   [MotionType.AllowConsolidationPair]: 'Allow consolidation pair',
+  [MotionType.CreateOrUpdateOperatorGroup]:
+    'Create or update MetaRegistry operator group',
 
   [EvmUnrecognized]: 'Unrecognized evm factory',
 
