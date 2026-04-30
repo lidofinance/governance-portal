@@ -53,7 +53,6 @@ export const VoteCard = () => {
   const { chainId } = useLidoSDK();
   const {
     vote,
-    canExecute,
     eventExecute,
     eventStart,
     voteTime,
@@ -189,7 +188,9 @@ export const VoteCard = () => {
           {vote.phase !== VotePhase.Closed && <VotePowerInfo />}
           <VoteInfo walletAddress={walletAddress} />
           {vote.phase !== VotePhase.Closed && <VoteActions />}
-          {canExecute && (
+          {/* Do not render Enact button for votes with empty script
+          Pending is `canExecute && isVoteEnactable(vote)` */}
+          {vote.state.status === VoteStatus.Pending && (
             <EnactButtonWrap>
               <Button
                 fullwidth

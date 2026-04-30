@@ -4,6 +4,7 @@ import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { parseVote } from 'shared/votes/utils/parse-vote';
 import { getEventStartVote } from 'shared/votes/utils/get-event-start-vote';
+
 export const useVote = (voteId: number) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const votingContract = useReadContract(Voting);
@@ -37,7 +38,6 @@ export const useVote = (voteId: number) => {
 
       return {
         vote,
-        canExecute,
         eventStart,
       };
     },

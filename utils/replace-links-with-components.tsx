@@ -18,7 +18,7 @@ export const replaceJsxElements = (text: string) => {
     {
       regex: REGEX_ETH_ADDRESS,
       replace: (address) => (
-        <AddressPop address={address}>
+        <AddressPop address={address} isInline isPaddingless>
           <Box
             display="flex"
             alignItems="center"
