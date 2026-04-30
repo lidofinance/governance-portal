@@ -869,6 +869,22 @@ export const CSMSetVettedGateTree: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.CSMSetVettedGateTree],
 };
 
+export const CSMSetMerkleGateTree: ContractObject<
+  typeof abi.setMerkleGateTreeAbi
+> = {
+  name: 'CSMSetMerkleGateTree',
+  abi: abi.setMerkleGateTreeAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.CSMSetMerkleGateTree],
+};
+
+export const CuratedSetMerkleGateTree: ContractObject<
+  typeof abi.setMerkleGateTreeAbi
+> = {
+  name: 'CuratedSetMerkleGateTree',
+  abi: abi.setMerkleGateTreeAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.CuratedSetMerkleGateTree],
+};
+
 export const SDVTExitRequestHashesSubmit: ContractObject<
   typeof abi.submitExitRequestHashesAbi
 > = {
