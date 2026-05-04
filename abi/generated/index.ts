@@ -20,7 +20,7 @@ export * from './CSHashConsensus';
 export * from './CSMRegistry';
 export * from './CSMSetVettedGateTree';
 export * from './CSMSettleElStealingPenalty';
-export * from './CSMVettedGateTree';
+export * from './CSMVettedGate';
 export * from './CSVerifier';
 export * from './ChangeNodeOperatorManagers';
 export * from './CompositePostRebaseBeaconReceiver';

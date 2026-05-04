@@ -33,3 +33,5 @@ export const stonksOrderPage = (orderAddress: string) =>
   `${STONKS_PATH}/orders/${orderAddress}`;
 export const stonksInstancePage = (stonksAddress: string) =>
   `${STONKS_PATH}/${stonksAddress}`;
+
+export const CALLDATA_DECODER_PATH = '/calldata-decoder';
