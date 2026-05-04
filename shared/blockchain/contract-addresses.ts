@@ -629,7 +629,7 @@ export const LazyOracle: ChainAddressMap = {
 };
 
 export const MetaRegistry: ChainAddressMap = {
-  [CHAINS.Hoodi]: '0x87EB69Ae51317405FD285efD2326a4a11f6173b9',
+  [CHAINS.Hoodi]: '0x857289cCBFBc4C134Cc312022a104CD9b38d8AAE',
 };
 
 export const ConsolidationMigrator: ChainAddressMap = {
