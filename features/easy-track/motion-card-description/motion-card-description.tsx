@@ -57,6 +57,7 @@ import { VaultsSocializeBadDebtInVaultHub } from '@easy-track/motion-card-descri
 import { VaultsAlterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-alter-tiers-in-operator-grid';
 import { VaultsRegisterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-register-tiers-in-operator-grid';
 import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-liability-shares-target-in-vault-hub';
+import { AllowConsolidationPair } from './motion-descriptions/allow-consolidation-pair';
 
 type GenericDescProps = MotionDescriptionProps<Abi>;
 
@@ -420,6 +421,10 @@ const MOTION_DESCRIPTIONS = {
   ),
   [MotionType.RegisterTiersInOperatorGridOld]: (props: DescDispatchProps) => (
     <VaultsRegisterTiersInOperatorGrid {...props} />
+  ),
+
+  [MotionType.AllowConsolidationPair]: (props: DescDispatchProps) => (
+    <AllowConsolidationPair {...props} />
   ),
 } as const;
 

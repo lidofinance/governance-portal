@@ -1,4 +1,8 @@
-import { decodeFunctionResult } from 'viem';
+import {
+  decodeAbiParameters,
+  decodeFunctionResult,
+  parseAbiParameters,
+} from 'viem';
 import * as abi from 'abi/generated';
 import { MotionType } from '../motion-types';
 
@@ -109,7 +113,27 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.RegisterTiersInOperatorGridOld]:
     abi.evmRegisterTiersInOperatorsGridAbi,
   [MotionType.AlterTiersInOperatorGridOld]: abi.evmAlterTiersInOperatorGridAbi,
+  [MotionType.AllowConsolidationPair]: abi.allowConsolidationPairAbi,
 } as const;
+
+type DecodeOverride = (data: `0x${string}`) => unknown;
+
+// Override the generic `decodeFunctionResult` path for factories whose
+// `decodeEVMScriptCallData` ABI declares a single struct output but whose
+// input bytes are encoded as separate top-level args. Wire formats differ by
+// a leading offset, so the generic path throws PositionOutOfBoundsError.
+const MOTION_TYPE_DECODE_OVERRIDES: Partial<
+  Record<MotionType, DecodeOverride>
+> = {
+  [MotionType.AllowConsolidationPair]: (data) => {
+    const [submitter, sourceOperatorId, targetOperatorIds] =
+      decodeAbiParameters(
+        parseAbiParameters('address, uint256, uint256[]'),
+        data,
+      );
+    return { submitter, sourceOperatorId, targetOperatorIds };
+  },
+};
 
 /**
  * Decodes EVM script call data for a given motion type
@@ -120,6 +144,16 @@ export const decodeEvmScriptCallData = (
   callDataRaw: `0x${string}` | undefined,
 ) => {
   if (!callDataRaw) return null;
+
+  const override = MOTION_TYPE_DECODE_OVERRIDES[motionType];
+  if (override) {
+    try {
+      return override(callDataRaw);
+    } catch (error) {
+      console.error(`Failed to decode call data for ${motionType}:`, error);
+      return null;
+    }
+  }
 
   const factoryAbi = MOTION_TYPE_ABI_MAP[motionType];
   if (!factoryAbi) {

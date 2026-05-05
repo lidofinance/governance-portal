@@ -60,6 +60,8 @@ export const MotionTypeForms = {
   ForceValidatorExitsInVaultHub: 'ForceValidatorExitsInVaultHub',
   SocializeBadDebtInVaultHub: 'SocializeBadDebtInVaultHub',
   SetLiabilitySharesTargetInVaultHub: 'SetLiabilitySharesTargetInVaultHub',
+
+  AllowConsolidationPair: 'AllowConsolidationPair',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare

@@ -118,3 +118,6 @@ export * from './WithdrawalQueueERC721';
 export * from './WithdrawalVault';
 export * from './WstETH';
 export * from './ZkSyncL1ERC20Bridge';
+export * from './AllowConsolidationPair';
+export * from './ConsolidationMigrator';
+export * from './MetaRegistry';

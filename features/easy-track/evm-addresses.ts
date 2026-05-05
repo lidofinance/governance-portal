@@ -335,6 +335,9 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.SandboxStethTopUp]:
       '0xE5aE943A3AEFA44AD16438Bc3D2cA7654103F985',
 
+    [MotionType.AllowConsolidationPair]:
+      '0x22D36e7616F541A527989C5652fDA4d527bB461C',
+
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',
     [MotionType.AllianceOpsStablesTopUp]: '',

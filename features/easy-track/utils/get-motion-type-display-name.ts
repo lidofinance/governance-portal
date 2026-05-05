@@ -50,6 +50,8 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.StonksStethTopUp]: 'Top up stonks stETH',
   [MotionType.AllianceOpsStablesTopUp]: 'Top up Alliance Ops stablecoins',
 
+  [MotionType.AllowConsolidationPair]: 'Allow consolidation pair',
+
   [EvmUnrecognized]: 'Unrecognized evm factory',
 
   // next motion types are retired
