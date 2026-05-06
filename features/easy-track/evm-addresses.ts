@@ -275,10 +275,6 @@ export const EvmAddressesByChain: EvmAddresses = {
   [CHAINS.Hoodi]: {
     [MotionType.NodeOperatorIncreaseLimit]:
       '0x0f121e4069e17a2Dc5bAbF39d769313a1e20f323',
-    [MotionType.CSMSettleElStealingPenalty]:
-      '0x5c0af5b9f96921d3F61503e1006CF0ab9867279E',
-    [MotionType.CSMSetVettedGateTree]:
-      '0xa890fc73e1b771Ee6073e2402E631c312FF92Cd9',
     [MotionType.CuratedExitRequestHashesSubmit]:
       '0x397206ecdbdcb1A55A75e60Fc4D054feC72E5f63',
 
@@ -337,6 +333,8 @@ export const EvmAddressesByChain: EvmAddresses = {
 
     [MotionType.AllowConsolidationPair]:
       '0x22D36e7616F541A527989C5652fDA4d527bB461C',
+    [MotionType.CreateOrUpdateOperatorGroup]:
+      '0x44D9b39bBdc2182Aa1af6f16f8F55E0eA038294d',
 
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',
@@ -382,6 +380,11 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.SetLiabilitySharesTargetInVaultHub]:
       '0xaccaE3755d63EeaAF2e525E780aEeA8D58700Ab9',
 
+    [MotionType.CSMSetMerkleGateTree]:
+      '0xf71fcB20B9FB8468653Bcb24E31F39bc069D5995',
+    [MotionType.CuratedSetMerkleGateTree]:
+      '0x5194cC02B6F477B4a23DFA422fFC238c8B5b1736',
+
     // next motion factories are @deprecated
     // we are keeping them here to display history data
     [MotionType.LEGOTopUp]: '',
@@ -406,6 +409,10 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.RccStablesTopUp]: '',
     [MotionType.PmlStablesTopUp]: '',
     [MotionType.AtcStablesTopUp]: '',
+    [MotionType.CSMSettleElStealingPenalty]:
+      '0x5c0af5b9f96921d3F61503e1006CF0ab9867279E',
+    [MotionType.CSMSetVettedGateTree]:
+      '0xa890fc73e1b771Ee6073e2402E631c312FF92Cd9',
   },
 };
 

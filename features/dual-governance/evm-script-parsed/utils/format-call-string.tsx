@@ -33,6 +33,7 @@ const formatArg = (
   arg: unknown,
   chainId: CHAINS,
   parentId?: string | number,
+  isNestedCallsArg?: boolean,
 ): string => {
   if (typeof arg === 'string') {
     if (arg.startsWith('0x') && arg.length === 42) {
@@ -51,17 +52,24 @@ const formatArg = (
       return `See parsed evm script ${itemLocation}`;
     }
   }
+  if (typeof arg === 'bigint') {
+    return arg.toString();
+  }
   if (Array.isArray(arg)) {
-    // Check if it's an array of call objects (nested calls)
-    if (arg.length > 0 && typeof arg[0] === 'object' && arg[0] !== null) {
+    // Caller marks the arg whose bytes were recursively decoded into `nestedCalls`;
+    // point the user at the decoded list instead of dumping the raw tuple array.
+    if (isNestedCallsArg) {
       const firstIndex = `${parentId}.1`;
       const lastIndex = `${parentId}.${arg.length}`;
       return `See ${arg.length} parsed calls at ${firstIndex} — ${lastIndex}`;
     }
-    return `[${arg.join(', ')}]`;
+    return `[${arg.map((item) => formatArg(item, chainId, parentId)).join(', ')}]`;
   }
   if (typeof arg === 'object' && arg !== null) {
-    return '[object Object]';
+    const entries = Object.entries(arg).map(
+      ([k, v]) => `${k}: ${formatArg(v, chainId, parentId)}`,
+    );
+    return `{ ${entries.join(', ')} }`;
   }
   return String(arg);
 };
@@ -154,10 +162,16 @@ const FormatSingleCall: React.FC<{
     ? functionInputs.map((input: any) => `${input.type} ${input.name}`)
     : args?.map((_, i) => `arg${i}`);
 
+  const hasNestedCalls = !!nestedCalls?.length;
   const callData = args?.length ? (
     args
       .map((arg, i) => {
-        const formatted = formatArg(arg, chainId, id);
+        const formatted = formatArg(
+          arg,
+          chainId,
+          id,
+          hasNestedCalls && i === 0,
+        );
         return formatted ? (
           <CallDataItem key={`${id}-arg-${i}`}>
             [{i + 1}] {formatted}

@@ -869,6 +869,22 @@ export const CSMSetVettedGateTree: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.CSMSetVettedGateTree],
 };
 
+export const CSMSetMerkleGateTree: ContractObject<
+  typeof abi.setMerkleGateTreeAbi
+> = {
+  name: 'CSMSetMerkleGateTree',
+  abi: abi.setMerkleGateTreeAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.CSMSetMerkleGateTree],
+};
+
+export const CuratedSetMerkleGateTree: ContractObject<
+  typeof abi.setMerkleGateTreeAbi
+> = {
+  name: 'CuratedSetMerkleGateTree',
+  abi: abi.setMerkleGateTreeAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.CuratedSetMerkleGateTree],
+};
+
 export const SDVTExitRequestHashesSubmit: ContractObject<
   typeof abi.submitExitRequestHashesAbi
 > = {
@@ -1006,4 +1022,12 @@ export const MetaRegistry: ContractObject<typeof abi.metaRegistryAbi> = {
   name: 'MetaRegistry',
   abi: abi.metaRegistryAbi,
   chainAddressMap: addr.MetaRegistry,
+};
+
+export const CreateOrUpdateOperatorGroup: ContractObject<
+  typeof abi.createOrUpdateOperatorGroupAbi
+> = {
+  name: 'CreateOrUpdateOperatorGroup',
+  abi: abi.createOrUpdateOperatorGroupAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.CreateOrUpdateOperatorGroup],
 };

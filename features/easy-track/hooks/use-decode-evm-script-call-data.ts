@@ -78,6 +78,8 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.MEVBoostRelaysEdit]: abi.editMevBoostRelaysAbi,
   [MotionType.MEVBoostRelaysRemove]: abi.removeMevBoostRelaysAbi,
   [MotionType.CSMSetVettedGateTree]: abi.csmSetVettedGateTreeAbi,
+  [MotionType.CSMSetMerkleGateTree]: abi.setMerkleGateTreeAbi,
+  [MotionType.CuratedSetMerkleGateTree]: abi.setMerkleGateTreeAbi,
   [MotionType.CuratedExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
   [MotionType.SDVTExitRequestHashesSubmit]: abi.submitExitRequestHashesAbi,
   [MotionType.RegisterGroupsInOperatorGrid]:
@@ -114,6 +116,7 @@ export const MOTION_TYPE_ABI_MAP = {
     abi.evmRegisterTiersInOperatorsGridAbi,
   [MotionType.AlterTiersInOperatorGridOld]: abi.evmAlterTiersInOperatorGridAbi,
   [MotionType.AllowConsolidationPair]: abi.allowConsolidationPairAbi,
+  [MotionType.CreateOrUpdateOperatorGroup]: abi.createOrUpdateOperatorGroupAbi,
 } as const;
 
 type DecodeOverride = (data: `0x${string}`) => unknown;
