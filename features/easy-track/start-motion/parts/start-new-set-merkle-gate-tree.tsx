@@ -16,7 +16,6 @@ import {
   CSMSetMerkleGateTree,
   CuratedSetMerkleGateTree,
 } from 'shared/blockchain/contracts';
-import { ContractObject } from 'shared/blockchain/types';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { PageLoader } from 'shared/components/page-loader';
 import { Text } from 'shared/components/text';
@@ -49,10 +48,7 @@ const SET_MERKLE_GATE_TREE_MAP = {
     motionType: MotionType.CuratedSetMerkleGateTree,
     evmContract: CuratedSetMerkleGateTree,
   },
-} satisfies Record<
-  string,
-  { motionType: MotionType; evmContract: ContractObject }
->;
+};
 
 export const formParts = ({
   motionType,
