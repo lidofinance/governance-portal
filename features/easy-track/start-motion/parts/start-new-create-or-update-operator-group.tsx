@@ -301,9 +301,6 @@ export const formParts = createMotionFormPart({
       if (uintErr) return uintErr;
 
       const share = Number(value);
-      if (!Number.isFinite(share) || share <= 0) {
-        return 'Share must be greater than 0';
-      }
       if (share > MAX_BP) {
         return `Share must not exceed ${MAX_BP}`;
       }
@@ -411,7 +408,7 @@ export const formParts = createMotionFormPart({
                 <ValidatedInputHookForm
                   valueType="number"
                   fieldName={`${fieldNames.subNodeOperators}.${fieldIndex}.share`}
-                  label={`Share (BP, 1..${MAX_BP})`}
+                  label={`Share (BP, 0..${MAX_BP})`}
                   validateSync={validateShareSync}
                   rules={{ required: 'Field is required' }}
                 />
