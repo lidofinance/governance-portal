@@ -332,7 +332,7 @@ export const formParts = createMotionFormPart({
         <Fieldset>
           <InputHookForm
             fieldName={fieldNames.submitter}
-            label="Submitter address"
+            label="Consolidation manager address"
             rules={{
               required: 'Field is required',
               validate: (value) => validateAddress(value) ?? true,
@@ -356,7 +356,7 @@ export const formParts = createMotionFormPart({
             <FieldsWrapper>
               <FieldsHeader>
                 <FieldsHeaderDesc>
-                  Target operator #{fieldIndex + 1}
+                  Target sub-operator #{fieldIndex + 1}
                 </FieldsHeaderDesc>
                 {targetFields.fields.length > 1 && (
                   <RemoveItemButton
@@ -371,7 +371,7 @@ export const formParts = createMotionFormPart({
                 <ValidatedInputHookForm
                   valueType="number"
                   fieldName={`${fieldNames.targetOperatorIds}.${fieldIndex}.id`}
-                  label="Target node operator ID"
+                  label="Target sub-operator ID"
                   validateSync={validateTargetIdSync(fieldIndex)}
                   validateAsync={validateTargetIdAsync}
                   rules={{ required: 'Field is required' }}
@@ -390,7 +390,7 @@ export const formParts = createMotionFormPart({
             icon={<Plus />}
             color="secondary"
           >
-            One more target operator
+            One more target sub-operator
           </ButtonIcon>
         </Fieldset>
 

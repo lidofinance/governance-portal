@@ -65,7 +65,6 @@ export const Description = styled.div`
   font-weight: 500;
   margin-bottom: 64px;
   color: rgba(39, 56, 82, 0.6);
-  word-break: break-all;
 
   ul {
     padding-left: 20px;
