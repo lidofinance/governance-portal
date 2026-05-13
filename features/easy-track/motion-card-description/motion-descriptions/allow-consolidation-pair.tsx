@@ -62,8 +62,9 @@ export const AllowConsolidationPair = ({
           if (state?.isAllowed) {
             return (
               <li key={index}>
-                Update submitter for target node operator <b>#{targetId}</b>{' '}
-                from <AddressPopInline address={state.currentSubmitter} /> to{' '}
+                Update consolidation manager for target sub-operator{' '}
+                <b>#{targetId}</b> from{' '}
+                <AddressPopInline address={state.currentSubmitter} /> to{' '}
                 <AddressPopInline address={submitter} />
               </li>
             );
@@ -71,8 +72,8 @@ export const AllowConsolidationPair = ({
 
           return (
             <li key={index}>
-              Allow consolidation to target node operator <b>#{targetId}</b>{' '}
-              with submitter <AddressPopInline address={submitter} />
+              Allow consolidation to target sub-operator <b>#{targetId}</b> with
+              consolidation manager <AddressPopInline address={submitter} />
             </li>
           );
         })}
