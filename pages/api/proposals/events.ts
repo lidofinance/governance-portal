@@ -76,7 +76,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let allData: CachedEventsData;
   try {
     allData = await loadFileData();
-  } catch (err) {
+  } catch {
     return res
       .status(503)
       .json({ message: 'Proposals events data unavailable' });
