@@ -60,7 +60,7 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
         votingContract,
         client: rpcProvider,
         voteIds: [voteId],
-        withEvents: true,
+        withExecuteEvent: true,
       });
 
       if (!active) {

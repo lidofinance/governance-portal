@@ -79,7 +79,7 @@ export const fetchAragonVotes = async ({
     votingContract,
     client,
     voteIds: missingIds,
-    withEvents: !onlyActive,
+    withExecuteEvent: !onlyActive,
   });
 
   const voteMap = new Map<number, VoteResult>();

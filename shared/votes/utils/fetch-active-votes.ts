@@ -22,13 +22,14 @@ type Args = {
   votingContract: VotingContract;
   client: PublicClient;
   voteIds: number[];
-  withEvents: boolean;
+  withExecuteEvent: boolean;
 };
 
 /**
  * Pure RPC reader for live vote data. Multicall getVote + canExecute
- * for the requested IDs, optionally fetches StartVote/ExecuteVote
- * events in parallel.
+ * for the requested IDs, then always fetches the StartVote event
+ * (title/metadata) and — only when withExecuteEvent is set — the
+ * heavier ExecuteVote scan, in parallel.
  *
  * No cache, no fallback, no converters.
  */
@@ -36,7 +37,7 @@ export const fetchActiveVotes = async ({
   votingContract,
   client,
   voteIds,
-  withEvents,
+  withExecuteEvent,
 }: Args): Promise<ActiveVoteResult[]> => {
   if (voteIds.length === 0) {
     return [];
@@ -74,25 +75,20 @@ export const fetchActiveVotes = async ({
     ),
   );
 
-  if (!withEvents) {
-    return votes.map((v) => ({
-      ...v,
-      startEvent: null,
-      executeEvent: null,
-      voteEvents: null,
-      description: null,
-    }));
-  }
-
   const eventArgs = {
     votes: votes.map((v) => ({ id: v.id, snapshotBlock: v.snapshotBlock })),
     address: votingContract.address,
     client,
   };
 
+  // StartVote carries the title/metadata and is required for every
+  // returned vote (one indexed getLogs at snapshotBlock). Only the
+  // heavier ExecuteVote scan is optional — an active vote isn't executed.
   const [startEvents, executeEvents] = await Promise.all([
     getEventsStartVote(eventArgs),
-    getEventsExecuteVote(eventArgs),
+    withExecuteEvent
+      ? getEventsExecuteVote(eventArgs)
+      : Promise.resolve({} as Record<string, EventExecuteVote | null>),
   ]);
 
   return votes.map((v) => ({

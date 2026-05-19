@@ -8,10 +8,7 @@ import { VOTING_ADDRESSES } from '../../utils/votes/constants.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const INPUT_FILE_PATH = join(
-  __dirname,
-  '../../public/votes-events-data.json',
-);
+const INPUT_FILE_PATH = join(__dirname, '../../public/votes-events-data.json');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -56,28 +53,46 @@ const setupClients = () => {
   return clients;
 };
 
-const validateStartVoteEvent = (voteId, startVoteEventData, receipt) => {
-  const { address, topics } = startVoteEventData;
+const validateStartVoteEvent = (
+  voteId,
+  startVoteEventData,
+  receipt,
+  votingAddress,
+) => {
   let isValid = true;
 
-  const log = receipt.logs.find(
-    (l) =>
-      l.address.toLowerCase() === address.toLowerCase() &&
-      l.topics[0] === topics[0],
-  );
+  // The cached event only stores { transactionHash, blockNumber, args }.
+  // Re-derive the on-chain log by decoding the receipt's logs against the
+  // AragonVoting ABI and matching the StartVote event for this voteId.
+  let decodedLog = null;
+  for (const log of receipt.logs) {
+    if (log.address.toLowerCase() !== votingAddress.toLowerCase()) {
+      continue;
+    }
+    try {
+      const decoded = decodeEventLog({
+        abi: AragonVotingAbi,
+        data: log.data,
+        topics: log.topics,
+      });
+      if (
+        decoded.eventName === 'StartVote' &&
+        String(decoded.args.voteId) === String(voteId)
+      ) {
+        decodedLog = decoded;
+        break;
+      }
+    } catch {
+      // Log from another contract/event — not decodable here, skip.
+    }
+  }
 
-  if (!log) {
+  if (!decodedLog) {
     console.error(
-      `[${voteId}] Event Validation: Did not find expected 'StartVote' log in receipt at address: ${address}`,
+      `[${voteId}] Event Validation: No matching 'StartVote' log in receipt for ${votingAddress}`,
     );
     return false;
   }
-
-  const decodedLog = decodeEventLog({
-    abi: AragonVotingAbi,
-    data: log.data,
-    topics: log.topics,
-  });
 
   const onChainCreator = decodedLog.args.creator;
   const onChainMetadata = decodedLog.args.metadata;
@@ -107,12 +122,7 @@ const validateStartVoteEvent = (voteId, startVoteEventData, receipt) => {
   return isValid;
 };
 
-const validateVoteDetails = async (
-  voteId,
-  voteData,
-  client,
-  votingAddress,
-) => {
+const validateVoteDetails = async (voteId, voteData, client, votingAddress) => {
   let isValid = true;
   const jsonDetails = voteData.voteDetails;
 
@@ -228,7 +238,12 @@ const validateEvents = async (eventsData, clients) => {
             });
 
             if (receipt) {
-              validateStartVoteEvent(voteId, startVoteEvent, receipt);
+              validateStartVoteEvent(
+                voteId,
+                startVoteEvent,
+                receipt,
+                votingAddress,
+              );
             } else {
               console.warn(
                 `Could not retrieve receipt for Vote ${voteId} (TX: ${txHash}).`,
