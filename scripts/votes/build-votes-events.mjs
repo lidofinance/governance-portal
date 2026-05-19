@@ -32,6 +32,23 @@ const serializeBigInt = (key, value) => {
  */
 const isVoteTerminal = (voteData) => !voteData.open;
 
+// Skip a vote only when its CACHED entry is itself final and complete,
+// not just because an entry exists — otherwise a vote enacted after being
+// cached (open=false → executed) keeps stale data forever.
+const canSkip = (cached) => {
+  if (!cached?.voteDetails || !cached.startVoteEvent) {
+    return false;
+  }
+  // executed → needs the ExecuteVote event; else → closed & unexecutable
+  if (cached.voteDetails.executed) {
+    return Boolean(cached.executeVoteEvent);
+  }
+  return (
+    cached.voteDetails.open === false &&
+    cached.voteDetails.canExecute === false
+  );
+};
+
 const isCastVoteMoreRecent = (newVote, existing) => {
   if (!existing) {
     return true;
@@ -363,11 +380,9 @@ export const buildVotesEvents = async () => {
 
         const cachedEntry = existingAddressData[voteData.id];
 
-        if (cachedEntry) {
-          // Back-fill: if the vote is cached but the description was never
-          // resolved (field missing or null), fetch only the description
-          // from IPFS and patch it in place. Avoids re-running the event
-          // scans on every rebuild.
+        if (cachedEntry && canSkip(cachedEntry)) {
+          // Final + complete. Only the IPFS description may still be
+          // missing — back-fill it cheaply without re-scanning events.
           if (cachedEntry.description == null) {
             const description = await fetchIpfsDescription(
               cachedEntry.startVoteEvent?.args?.metadata ?? '',
@@ -382,7 +397,16 @@ export const buildVotesEvents = async () => {
               };
             }
           }
+          console.debug(
+            `    [vote ${voteData.id}] Cached + complete (executed=${cachedEntry.voteDetails.executed}), skipping.`,
+          );
           return null;
+        }
+
+        if (cachedEntry) {
+          console.debug(
+            `    [vote ${voteData.id}] Cached but incomplete (e.g. enacted after caching), re-fetching.`,
+          );
         }
 
         if (!isVoteTerminal(voteData)) {
