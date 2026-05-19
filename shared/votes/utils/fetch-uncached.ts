@@ -11,7 +11,7 @@ type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
 >;
 
-export type ActiveVoteResult = Vote & {
+export type UncachedVoteResult = Vote & {
   startEvent: EventStartVote | null;
   executeEvent: EventExecuteVote | null;
   voteEvents: VoteEvent[] | null;
@@ -26,19 +26,20 @@ type Args = {
 };
 
 /**
- * Pure RPC reader for live vote data. Multicall getVote + canExecute
- * for the requested IDs, then always fetches the StartVote event
- * (title/metadata) and — only when withExecuteEvent is set — the
- * heavier ExecuteVote scan, in parallel.
+ * Pure RPC reader for votes NOT in the JSON cache — the fallback path
+ * for fetchAragonVotes / useVote. Multicall getVote + canExecute, then
+ * always the StartVote event (title/metadata) and — only when
+ * withExecuteEvent is set — the heavier ExecuteVote scan, in parallel.
  *
- * No cache, no fallback, no converters.
+ * No cache, no converters. "Uncached" ≠ "active": it also covers
+ * terminal/executed votes the cache hasn't picked up yet.
  */
-export const fetchActiveVotes = async ({
+export const fetchUncached = async ({
   votingContract,
   client,
   voteIds,
   withExecuteEvent,
-}: Args): Promise<ActiveVoteResult[]> => {
+}: Args): Promise<UncachedVoteResult[]> => {
   if (voteIds.length === 0) {
     return [];
   }
@@ -82,8 +83,9 @@ export const fetchActiveVotes = async ({
   };
 
   // StartVote carries the title/metadata and is required for every
-  // returned vote (one indexed getLogs at snapshotBlock). Only the
-  // heavier ExecuteVote scan is optional — an active vote isn't executed.
+  // returned vote (one indexed getLogs at snapshotBlock). The heavier
+  // ExecuteVote scan runs only when the caller asks (withExecuteEvent)
+  // — skipped for active-only callers, whose votes aren't executed.
   const [startEvents, executeEvents] = await Promise.all([
     getEventsStartVote(eventArgs),
     withExecuteEvent

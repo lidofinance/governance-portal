@@ -5,7 +5,7 @@ import { VoteStatus } from '../types';
 import type { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import type { EventStartVote } from './get-event-start-vote';
 import { fetchArchivedVotes } from './fetch-archived-votes';
-import { fetchActiveVotes } from './fetch-active-votes';
+import { fetchUncached } from './fetch-uncached';
 
 type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
@@ -42,8 +42,10 @@ const isVoteActive = (vote: Vote) => {
 };
 
 /**
- * Thin orchestrator: splits a page of vote IDs into archived (from JSON)
- * and active (from RPC), fetches both in parallel, merges by ID descending.
+ * Thin orchestrator: reads a page of vote IDs from the archived JSON
+ * first, then fetches whatever is missing from RPC (the uncached path),
+ * and merges by ID descending. Sequential by necessity — the RPC set
+ * is exactly the IDs absent from the archive.
  */
 export const fetchAragonVotes = async ({
   votingContract,
@@ -75,7 +77,7 @@ export const fetchAragonVotes = async ({
 
   const missingIds = voteIds.filter((id) => !(id.toString() in archived));
 
-  const active = await fetchActiveVotes({
+  const uncached = await fetchUncached({
     votingContract,
     client,
     voteIds: missingIds,
@@ -86,7 +88,7 @@ export const fetchAragonVotes = async ({
   for (const [id, vote] of Object.entries(archived)) {
     voteMap.set(Number(id), vote);
   }
-  for (const vote of active) {
+  for (const vote of uncached) {
     voteMap.set(vote.id, vote);
   }
 

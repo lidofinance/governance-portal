@@ -3,7 +3,7 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { fetchArchivedVotes } from 'shared/votes/utils/fetch-archived-votes';
-import { fetchActiveVotes } from 'shared/votes/utils/fetch-active-votes';
+import { fetchUncached } from 'shared/votes/utils/fetch-uncached';
 import type { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import type { EventExecuteVote, Vote, VoteEvent } from 'shared/votes/types';
 
@@ -56,22 +56,22 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
         return null;
       }
 
-      const [active] = await fetchActiveVotes({
+      const [uncached] = await fetchUncached({
         votingContract,
         client: rpcProvider,
         voteIds: [voteId],
         withExecuteEvent: true,
       });
 
-      if (!active) {
+      if (!uncached) {
         return null;
       }
 
       return {
-        vote: active,
-        canExecute: active.canExecute,
-        eventStart: active.startEvent,
-        eventExecute: active.executeEvent,
+        vote: uncached,
+        canExecute: uncached.canExecute,
+        eventStart: uncached.startEvent,
+        eventExecute: uncached.executeEvent,
         voteEvents: null,
         description: null,
       };
