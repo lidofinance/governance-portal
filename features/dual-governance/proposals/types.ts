@@ -66,6 +66,4 @@ export type CachedEventsData = {
 };
 
 // Returned by GET /api/proposals/events — the proposals-keyed slice for one chain
-export type ProposalEventsSubset = {
-  [proposalId: string]: EventsLogs & { details?: ProposalDetails };
-};
+export type ProposalEventsSubset = CachedEventsData[string]['proposals'];
