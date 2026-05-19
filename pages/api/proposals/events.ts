@@ -10,7 +10,7 @@ import {
   responseTimeMetric,
 } from 'utils-api';
 import Metrics from 'utils-api/metrics';
-import { API_ROUTES } from 'constants/api';
+import { API_ROUTES, MAX_PROPOSAL_IDS } from 'constants/api';
 import { config } from 'config';
 import {
   CachedEventsData,
@@ -22,8 +22,6 @@ const JSON_PATH = path.join(
   'public',
   'proposals-events-data.json',
 );
-
-const MAX_PROPOSAL_IDS = 500;
 
 // Module-level cache: null = not loaded yet; populated lazily, no TTL (file
 // only changes on deploy via the build script).

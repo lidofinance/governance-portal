@@ -9,3 +9,8 @@ export const enum API_ROUTES {
   ETHERSCAN = 'api/etherscan',
   PROPOSALS_EVENTS = 'api/proposals/events',
 }
+
+// pages/api/proposals/events.ts rejects requests with more than this many
+// `proposalIds` with HTTP 400. Clients with a variable-length id list must
+// chunk to this size before calling the route — fetchCachedProposalEvents does.
+export const MAX_PROPOSAL_IDS = 500;
