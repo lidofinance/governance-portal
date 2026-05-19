@@ -4,7 +4,6 @@ import { dirname, join } from 'node:path';
 import { createPublicClient, http, decodeEventLog } from 'viem';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
 import AragonVotingAbi from '../../abi/AragonVoting.abi.json' assert { type: 'json' };
-import { VOTING_ADDRESSES } from '../../utils/votes/constants.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
