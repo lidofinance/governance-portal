@@ -248,13 +248,13 @@ export const fetchCastVoteEvents = async (
       attemptCastVoteAsDelegateEvents: delegateResults.map(shapeDelegateLog),
     };
   } catch (error) {
-    console.warn(
-      `Failed to fetch CastVote events for vote ${voteId}:`,
-      error.message,
+    // Distinguish a failed scan from a genuinely empty voter list: a
+    // legitimately zero-voter terminal vote returns [] via the normal
+    // path above. Throw here so the build's processVote catch skips
+    // persisting a partial entry (re-fetched next run) instead of
+    // freezing `voteEvents: []` forever — canSkip can't tell them apart.
+    throw new Error(
+      `Failed to fetch CastVote events for vote ${voteId}: ${error.message}`,
     );
-    return {
-      castVoteEvents: [],
-      attemptCastVoteAsDelegateEvents: [],
-    };
   }
 };
