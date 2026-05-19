@@ -132,13 +132,18 @@ export const buildProposalsEvents = async () => {
   let existingData = {};
   try {
     existingData = JSON.parse(readFileSync(outputPath, 'utf8'));
-    console.debug('Loaded existing proposals-events-data.json for incremental update');
+    console.debug(
+      'Loaded existing proposals-events-data.json for incremental update',
+    );
   } catch {
-    console.debug('No existing proposals-events-data.json found, starting fresh');
+    console.debug(
+      'No existing proposals-events-data.json found, starting fresh',
+    );
   }
 
   // Proposal statuses that are terminal — events will never change after this
   const TERMINAL_STATUSES = new Set([3 /* Executed */, 4 /* Cancelled */]);
+  const EXECUTED_STATUS = 3;
 
   const eventsData = {};
 
@@ -230,14 +235,31 @@ export const buildProposalsEvents = async () => {
       proposals: { ...existingChainData },
     };
 
+    // Skip a proposal only when its CACHED entry is itself final and complete,
+    // not just because the freshly-fetched status is terminal — otherwise a
+    // proposal that turned terminal after being cached keeps stale data forever.
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const canSkip = (cached, proposal) => {
+      const cachedStatus = cached?.details?.status;
+      return (
+        // cached entry is itself terminal and matches the current status
+        cachedStatus !== undefined &&
+        TERMINAL_STATUSES.has(cachedStatus) &&
+        cachedStatus === proposal.status &&
+        // and the events required for that status are present
+        !!cached.proposalSubmittedEvent &&
+        (proposal.status !== EXECUTED_STATUS || !!cached.proposalExecutedEvent)
+      );
+    };
+
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const processProposal = async (proposal) => {
       if (!proposal) return null;
 
       const cached = existingChainData[proposal.id];
-      if (cached && TERMINAL_STATUSES.has(proposal.status)) {
+      if (canSkip(cached, proposal)) {
         console.debug(
-          `Proposal ${proposal.id} is terminal and already cached, skipping`,
+          `Proposal ${proposal.id} is terminal and fully cached, skipping`,
         );
         return null;
       }
