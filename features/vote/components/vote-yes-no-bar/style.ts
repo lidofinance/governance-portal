@@ -50,7 +50,7 @@ export const VotesBarYea = styled(VotesBar)`
   background-color: var(--lido-color-success);
 `;
 
-export const VoteYaNayText = styled(Text).attrs({ as: 'span', size: 14 })<{
+export const VoteYeaNayText = styled(Text).attrs({ as: 'span', size: 14 })<{
   $variant: 'success' | 'error';
 }>`
   color: var(--lido-color-${({ $variant }) => $variant});
