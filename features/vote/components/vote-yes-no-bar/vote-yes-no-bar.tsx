@@ -1,14 +1,12 @@
 import { Text } from '@lidofinance/lido-ui';
+import { formatVoteAmount } from '@vote/utils/format-vote-amount';
 import {
   VotesBarNay,
   VotesBarWrap,
   VotesBarYea,
   VotesTitleWrap,
+  VoteYaNayText,
 } from './style';
-
-const vpFormatter = new Intl.NumberFormat('en', {
-  maximumFractionDigits: 0,
-});
 
 type Props = {
   yeaPct: number;
@@ -31,25 +29,40 @@ export const VoteYesNoBar = ({
   showOnForeground,
   showNumber,
 }: Props) => {
-  const nayInfo = showNumber
-    ? `"No" — ${vpFormatter.format(nayNum)} (${nayPctOfTotalSupply}%)`
-    : `"No" — ${nayPctOfTotalSupply}%`;
+  const yeaInfo = showNumber ? (
+    <span>
+      <VoteYaNayText $variant="success">Yes</VoteYaNayText>{' '}
+      {formatVoteAmount(yeaNum)} ({yeaPctOfTotalSupply}%)
+    </span>
+  ) : (
+    <span>
+      <VoteYaNayText $variant="success">Yes</VoteYaNayText>{' '}
+      {yeaPctOfTotalSupply}%
+    </span>
+  );
 
-  const yeaInfo = showNumber
-    ? `"Yes" — ${vpFormatter.format(yeaNum)} (${yeaPctOfTotalSupply}%)`
-    : `"Yes" — ${yeaPctOfTotalSupply}%`;
+  const nayInfo = showNumber ? (
+    <span>
+      {formatVoteAmount(nayNum)} ({nayPctOfTotalSupply}%){' '}
+      <VoteYaNayText $variant="error">No</VoteYaNayText>
+    </span>
+  ) : (
+    <span>
+      {nayPctOfTotalSupply}% <VoteYaNayText $variant="error">No</VoteYaNayText>
+    </span>
+  );
 
   return (
     <>
       <VotesTitleWrap>
         <Text size="xxs">
-          <Text data-testid="votesNo" as="span" size="xxs">
-            <span>{nayInfo}</span>
-          </Text>
-        </Text>
-        <Text size="xxs" style={{ textAlign: 'right' }}>
           <Text as="span" size="xxs" data-testid="votesYes">
             <span>{yeaInfo}</span>
+          </Text>
+        </Text>
+        <Text size="xxs">
+          <Text data-testid="votesNo" as="span" size="xxs">
+            <span>{nayInfo}</span>
           </Text>
         </Text>
       </VotesTitleWrap>
@@ -58,8 +71,8 @@ export const VoteYesNoBar = ({
         data-testid="votesYesNoBar"
         showOnForeground={showOnForeground}
       >
-        <VotesBarNay style={{ width: `${nayPct}%` }} />
         <VotesBarYea style={{ width: `${yeaPct}%` }} />
+        <VotesBarNay style={{ width: `${nayPct}%` }} />
       </VotesBarWrap>
     </>
   );
