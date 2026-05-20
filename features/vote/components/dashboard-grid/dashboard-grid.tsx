@@ -1,51 +1,23 @@
-import Router from 'next/router';
-import { useEffect } from 'react';
-import { Container, Pagination } from '@lidofinance/lido-ui';
-import { VOTE_DASHBOARD_INDEX_PATH, voteDashboardPage } from 'constants/urls';
-import { useConfig } from 'config';
+import { Container } from '@lidofinance/lido-ui';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
-import {
-  keepPreviousData,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
-import { getEventsExecuteVote } from 'shared/votes/utils/get-events-execute-vote';
-import { estimateExecuteVoteBlockRange } from 'shared/votes/utils/estimate-execute-vote-block-range';
 import { useWatchContractEvent } from 'wagmi';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { aragonVotingAbi } from 'abi/generated';
 import { AttentionBanner } from 'shared/components/attention-banner';
-import { GridWrap, PaginationWrap, DashboardGridHeading } from './style';
+import { GridWrap, DashboardGridHeading } from './style';
 import { Text } from 'shared/components/text';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 import { DashboardVote } from '../dashboard-vote';
 import { VoteSearch } from '../vote-search';
 
-const PAGE_SIZE = 12;
-
+const PAGE_SIZE = 5;
 const PAGE_RANGE = Array.from({ length: PAGE_SIZE }, (_, i) => i);
 
-const handleChangePage = (nextPage: number) => {
-  void Router.push(voteDashboardPage(nextPage));
-};
-
-const getPageKey = (chainId: CHAINS, page: number, useLocalCache: boolean) => [
-  'dashboard-votes',
-  chainId,
-  page,
-  useLocalCache,
-];
-
-type Props = {
-  currentPage: number;
-};
-
-export const DashboardGrid = ({ currentPage }: Props) => {
+export const DashboardGrid = () => {
   const { chainId, rpcProvider } = useLidoSDK();
-  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
@@ -68,68 +40,21 @@ export const DashboardGrid = ({ currentPage }: Props) => {
   });
 
   const votes = useQuery({
-    queryKey: getPageKey(chainId, currentPage, useLocalCache),
+    queryKey: ['dashboard-votes', chainId, votingContract.address],
     queryFn: () =>
       fetchAragonVotes({
         votingContract,
         chainId,
         limit: PAGE_SIZE,
-        offset: (currentPage - 1) * PAGE_SIZE,
+        offset: 0,
         client: rpcProvider,
         onlyActive: false,
-        useLocalCache,
       }),
-    placeholderData: keepPreviousData,
-    staleTime: currentPage === 1 ? 600 * 1000 : Infinity, // 10 minutes for the first page
+    staleTime: 10 * 60 * 1000,
   });
 
-  const executeEvents = useQuery({
-    queryKey: ['execute-events', chainId, currentPage],
-    enabled: !!votes.data && !!votingInfo.data,
-    staleTime: currentPage === 1 ? 600 * 1000 : Infinity,
-    queryFn: async () => {
-      if (!votingInfo.data || !votes.data) {
-        return {};
-      }
-
-      const latestBlock = await rpcProvider.getBlock({ blockTag: 'latest' });
-      const voteTimeSecs = votingInfo.data.voteTime;
-
-      return getEventsExecuteVote({
-        address: votingContract.address,
-        client: rpcProvider,
-        votes: votes.data
-          .filter((v) => v.executed)
-          .map((v) => {
-            const { fromBlock, toBlock } = estimateExecuteVoteBlockRange({
-              snapshotBlockNumber: v.snapshotBlock,
-              startDate: v.startDate,
-              voteTimeSecs,
-              latestBlock,
-            });
-            return { id: v.id, fromBlock, toBlock };
-          }),
-      });
-    },
-  });
-
-  const isLoading = votingInfo.isLoading || votes.isFetching;
-  const mergedVotes = votes.data?.map((v) => ({
-    ...v,
-    executeEvent: executeEvents.data?.[v.id.toString()] ?? null,
-  }));
-  const pagesCount = votingInfo.data?.votesLength
-    ? Math.ceil(votingInfo.data.votesLength / PAGE_SIZE)
-    : 1;
-
-  const isOutOfPageBounds =
-    (!votingInfo.isLoading && currentPage > pagesCount) || currentPage < 1;
-
-  useEffect(() => {
-    if (isOutOfPageBounds) {
-      void Router.replace(VOTE_DASHBOARD_INDEX_PATH);
-    }
-  }, [isOutOfPageBounds]);
+  const isLoading = votingInfo.isLoading || votes.isLoading;
+  const votesList = votes.data ?? [];
 
   useWatchContractEvent({
     address: votingContract.address,
@@ -137,14 +62,10 @@ export const DashboardGrid = ({ currentPage }: Props) => {
     eventName: 'StartVote',
     onLogs: () => {
       void queryClient.invalidateQueries({
-        queryKey: getPageKey(chainId, 1, useLocalCache),
+        queryKey: ['dashboard-votes', chainId, votingContract.address],
       });
     },
   });
-
-  if (isOutOfPageBounds) {
-    return null;
-  }
 
   if (votes.error || votingInfo.error) {
     console.error('Error fetching votes:', votes.error || votingInfo.error);
@@ -155,9 +76,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
     );
   }
 
-  if (!votingInfo.data) {
-    return null;
-  }
+  const info = votingInfo.data;
 
   return (
     <>
@@ -168,29 +87,21 @@ export const DashboardGrid = ({ currentPage }: Props) => {
         <VoteSearch />
       </DashboardGridHeading>
       <GridWrap>
-        {isLoading
+        {isLoading || !info
           ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)
-          : mergedVotes?.map((voteData) => (
+          : votesList.map((voteData) => (
               <DashboardVote
                 key={voteData.id}
                 vote={voteData}
                 startEvent={voteData.startEvent}
                 executeEvent={voteData.executeEvent}
                 description={voteData.description}
-                voteTime={votingInfo.data.voteTime}
-                objectionPhaseTime={votingInfo.data.objectionPhaseTime}
+                voteTime={info.voteTime}
+                objectionPhaseTime={info.objectionPhaseTime}
                 onPass={votes.refetch}
               />
             ))}
       </GridWrap>
-      <PaginationWrap>
-        <Pagination
-          pagesCount={pagesCount}
-          activePage={currentPage}
-          onItemClick={(idx: number) => handleChangePage(idx)}
-          siblingCount={1}
-        />
-      </PaginationWrap>
     </>
   );
 };
