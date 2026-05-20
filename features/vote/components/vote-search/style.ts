@@ -7,7 +7,7 @@ export const StyledInput = styled(InputNumber)`
   width: 300px;
   & > span {
     padding: 13px 15px 13px 10px;
-    background: #fff;
+    background: var(--lido-color-foreground);
   }
   & > span > span {
     padding-right: 8px;
