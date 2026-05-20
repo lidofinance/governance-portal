@@ -5,7 +5,7 @@ import {
   VotesBarWrap,
   VotesBarYea,
   VotesTitleWrap,
-  VoteYaNayText,
+  VoteYeaNayText,
 } from './style';
 
 type Props = {
@@ -31,12 +31,12 @@ export const VoteYesNoBar = ({
 }: Props) => {
   const yeaInfo = showNumber ? (
     <span>
-      <VoteYaNayText $variant="success">Yes</VoteYaNayText>{' '}
+      <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
       {formatVoteAmount(yeaNum)} ({yeaPctOfTotalSupply}%)
     </span>
   ) : (
     <span>
-      <VoteYaNayText $variant="success">Yes</VoteYaNayText>{' '}
+      <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
       {yeaPctOfTotalSupply}%
     </span>
   );
@@ -44,11 +44,12 @@ export const VoteYesNoBar = ({
   const nayInfo = showNumber ? (
     <span>
       {formatVoteAmount(nayNum)} ({nayPctOfTotalSupply}%){' '}
-      <VoteYaNayText $variant="error">No</VoteYaNayText>
+      <VoteYeaNayText $variant="error">No</VoteYeaNayText>
     </span>
   ) : (
     <span>
-      {nayPctOfTotalSupply}% <VoteYaNayText $variant="error">No</VoteYaNayText>
+      {nayPctOfTotalSupply}%{' '}
+      <VoteYeaNayText $variant="error">No</VoteYeaNayText>
     </span>
   );
 
