@@ -52,7 +52,7 @@ export const VoteSearch = () => {
     <StyledInput
       value={voteId}
       isInteger={true}
-      placeholder="DAO vote #"
+      placeholder="Search"
       onChange={handleVoteIdChange}
       onKeyDown={handleKeyDown}
       leftDecorator={<VoteSearchIcon />}

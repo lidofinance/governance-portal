@@ -5,12 +5,12 @@ import { devicesHeaderMedia } from 'styles/global';
 
 export const StyledInput = styled(InputNumber)`
   width: 300px;
-  span {
+  & > span {
     padding: 13px 15px 13px 10px;
-    background: transparent;
-    span {
-      padding-right: 8px;
-    }
+    background: #fff;
+  }
+  & > span > span {
+    padding-right: 8px;
   }
   input::placeholder {
     font-size: 14px;
@@ -19,5 +19,9 @@ export const StyledInput = styled(InputNumber)`
 
   @media ${devicesHeaderMedia.tablet} {
     width: 195px;
+  }
+
+  @media (max-width: 999px) {
+    width: 100%;
   }
 `;
