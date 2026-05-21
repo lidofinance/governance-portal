@@ -1,24 +1,21 @@
 import {
-  BlockWrap,
-  BoxVotes,
-  Card,
   DescriptionWrap,
   DetailsBoxWrap,
   EnactButtonWrap,
+  Layout,
+  MainCard,
+  MobileCTASlot,
+  MobileSidebarSlot,
   SectionHeading,
-  VoteHeader,
-  VoteTimestamp,
+  SideCard,
+  SidebarSection,
   VoteTitle,
 } from './style';
-import { Button, Link } from '@lidofinance/lido-ui';
-import { VoteStatusChips } from '../vote-status-chips';
-import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
-import { useLidoSDK } from 'providers/lido-sdk';
-import { formatEther } from 'viem';
-import { Text } from 'shared/components/text';
-import { getEtherscanTxLink } from 'utils/etherscan';
-import React, { useCallback, useMemo } from 'react';
-import { VoteYesNoBar } from '../vote-yes-no-bar';
+import { Button } from '@lidofinance/lido-ui';
+import { Button as DgButton } from 'shared/components/button';
+import { useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { splitVoteDescription } from '@vote/utils/split-vote-description';
 import { VoteDescription } from '../vote-description';
 import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
@@ -30,36 +27,24 @@ import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from '@vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
+import { VoteQuorumPanel } from '../vote-quorum-panel';
+import { VoteDetailsList } from '../vote-details-list';
+import { VoteMetaBar } from '../vote-meta-bar';
+import { VoteVetoSupport } from '../vote-veto-support';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useEnactVoteAction } from '@vote/write-actions/enact-vote/action';
-
-const localeDateOptions = {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-  hour: 'numeric',
-  minute: '2-digit',
-  hour12: false,
-  timeZoneName: 'short',
-};
-
-const formatDate = (date: number) =>
-  new Date(date * 1000).toLocaleDateString(
-    'en-US',
-    localeDateOptions as Intl.DateTimeFormatOptions,
-  );
+import { ProposalStatus } from '@dg/proposals/types';
+import { PROPOSALS_PATH } from 'constants/urls';
 
 export const VoteCard = () => {
-  const { chainId } = useLidoSDK();
   const {
     vote,
     canExecute,
-    eventExecute,
     eventStart,
     voteTime,
     objectionPhaseTime,
-    dgProposal,
     description,
+    dgProposal,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -68,6 +53,8 @@ export const VoteCard = () => {
     useAccount();
 
   const { connect } = useConnect();
+
+  const router = useRouter();
 
   const processEnact = useEnactVoteAction();
 
@@ -79,115 +66,65 @@ export const VoteCard = () => {
     vote.state.status === VoteStatus.Rejected ||
     vote.state.status === VoteStatus.Executed;
 
-  const formattedDate = useMemo(() => {
-    if (!eventExecute && !vote.startDate) {
-      return null;
-    }
+  const isDualGovernancePhase =
+    !!dgProposal &&
+    (dgProposal.proposalStatus === ProposalStatus.Submitted ||
+      dgProposal.proposalStatus === ProposalStatus.Scheduled);
 
-    if (!eventExecute) {
-      return `Started ${formatDate(Number(vote.startDate))}`;
-    }
+  const { title, body } = splitVoteDescription({
+    description,
+    metadata: eventStart?.args.metadata,
+    truncateTitle: false,
+  });
 
-    if (eventExecute.executedAt) {
-      return `Enacted ${formatDate(Number(eventExecute.executedAt))}`;
-    }
-  }, [eventExecute, vote.startDate]);
+  const hasBody = body !== null || !description?.trim();
 
-  const {
-    totalSupply,
-    nayNum,
-    yeaNum,
-    nayPct,
-    yeaPct,
-    nayPctOfTotalSupplyFormatted,
-    yeaPctOfTotalSupplyFormatted,
-  } = getVoteDetailsFormatted(vote);
-
-  return (
-    <Card key={vote.id} data-testid="voteCard">
-      <VoteHeader>
-        <VoteTitle data-testid="voteTitle">Vote #{vote.id}</VoteTitle>
-        <VoteStatusChips
-          totalSupply={totalSupply}
-          nayNum={nayNum}
-          yeaNum={yeaNum}
-          minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
-          status={vote.state.status}
-          executedTxHash={eventExecute?.event.transactionHash}
-          votePhase={vote.phase}
-          chainId={chainId}
-          proposalId={dgProposal?.proposalId}
-          proposalStatus={dgProposal?.proposalStatus}
-        />
-        <BlockWrap>
-          <Text as="span" color="secondary" size={12}>
-            {'Block '}
-          </Text>
-          <Text as="span" color="default" size={12} data-testid="blockNumber">
-            {eventStart?.event.transactionHash ? (
-              <Link
-                href={getEtherscanTxLink(
-                  chainId,
-                  eventStart?.event.transactionHash,
-                )}
-              >
-                #{vote.snapshotBlock.toString()}
-              </Link>
-            ) : (
-              `#${vote.snapshotBlock.toString()}`
-            )}
-          </Text>
-        </BlockWrap>
-      </VoteHeader>
-      <VoteTimestamp color="secondary" size={12} data-testid="voteDate">
-        {formattedDate}
-      </VoteTimestamp>
-      <BoxVotes data-testid="voteDetails">
-        <VoteYesNoBar
-          yeaPct={yeaPct}
-          nayPct={nayPct}
-          yeaNum={yeaNum}
-          nayNum={nayNum}
-          yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
-          nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
-          showOnForeground
-          showNumber
-        />
-      </BoxVotes>
-      {(vote.phase === VotePhase.Main ||
-        vote.phase === VotePhase.Objection) && (
-        <VoteProgressBar
-          startDate={Number(vote.startDate)}
-          voteTime={voteTime}
-          objectionPhaseTime={objectionPhaseTime}
-          isEnded={isEnded}
-          votePhase={vote.phase}
-        />
-      )}
-      <VotersList walletAddress={walletAddress} />
-      <SectionHeading>Proposal</SectionHeading>
-      {eventStart?.args.metadata && (
-        <DescriptionWrap data-testid="voteDescription">
-          <VoteDescription
-            metadata={eventStart.args.metadata}
-            description={description}
-            allowMD
+  const sidebarItems = (
+    <>
+      <SidebarSection>
+        <VoteQuorumPanel vote={vote} />
+      </SidebarSection>
+      {!isEnded && (
+        <SidebarSection>
+          <VoteProgressBar
+            startDate={Number(vote.startDate)}
+            voteTime={voteTime}
+            objectionPhaseTime={objectionPhaseTime}
+            isEnded={isEnded}
+            votePhase={vote.phase}
           />
-        </DescriptionWrap>
+        </SidebarSection>
       )}
-      <DetailsBoxWrap data-testid="voteScript">
-        <VoteScript
-          voteId={vote.id}
-          script={vote.script}
-          metadata={eventStart?.args.metadata || ''}
-        />
-      </DetailsBoxWrap>
+      <SidebarSection>
+        <VoteDetailsList />
+      </SidebarSection>
+      {isDualGovernancePhase && dgProposal && (
+        <>
+          <SidebarSection>
+            <VoteVetoSupport />
+          </SidebarSection>
+          <SidebarSection>
+            <DgButton
+              fullwidth
+              size="sm"
+              onClick={() =>
+                router.push(`${PROPOSALS_PATH}/${dgProposal.proposalId}`)
+              }
+            >
+              See on Dual Governance
+            </DgButton>
+          </SidebarSection>
+        </>
+      )}
+    </>
+  );
+
+  const ctaItems = isDualGovernancePhase ? null : (
+    <>
       {!isWalletConnected && vote.phase !== VotePhase.Closed && (
-        <DetailsBoxWrap>
-          <Button fullwidth onClick={openConnectWalletModal}>
-            Connect wallet
-          </Button>
-        </DetailsBoxWrap>
+        <Button fullwidth onClick={openConnectWalletModal}>
+          Connect wallet
+        </Button>
       )}
       {isWalletConnected && (
         <>
@@ -208,6 +145,49 @@ export const VoteCard = () => {
           )}
         </>
       )}
-    </Card>
+    </>
+  );
+
+  return (
+    <Layout key={vote.id} data-testid="voteCard">
+      <MainCard>
+        <VoteMetaBar
+          voteId={vote.id}
+          status={vote.state.status}
+          isQuorumReached={vote.state.isQuorumReached}
+          voteTime={voteTime}
+          objectionPhaseTime={objectionPhaseTime}
+          startDate={Number(vote.startDate)}
+          isEnded={isEnded}
+          dualGovernancePhase={isDualGovernancePhase}
+          withLabels
+        />
+        <MobileSidebarSlot>{sidebarItems}</MobileSidebarSlot>
+        <SectionHeading>Proposal description</SectionHeading>
+        {title && <VoteTitle data-testid="voteTitle">{title}</VoteTitle>}
+        {hasBody && (
+          <DescriptionWrap data-testid="voteDescription">
+            <VoteDescription
+              metadata={eventStart?.args.metadata}
+              description={body}
+              allowMD
+            />
+          </DescriptionWrap>
+        )}
+        <DetailsBoxWrap data-testid="voteScript">
+          <VoteScript
+            voteId={vote.id}
+            script={vote.script}
+            metadata={eventStart?.args.metadata || ''}
+          />
+        </DetailsBoxWrap>
+        {ctaItems && <MobileCTASlot>{ctaItems}</MobileCTASlot>}
+        <VotersList walletAddress={walletAddress} />
+      </MainCard>
+      <SideCard>
+        {sidebarItems}
+        {ctaItems && <SidebarSection>{ctaItems}</SidebarSection>}
+      </SideCard>
+    </Layout>
   );
 };

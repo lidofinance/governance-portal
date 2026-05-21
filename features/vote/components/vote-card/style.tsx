@@ -2,74 +2,89 @@ import styled from 'styled-components';
 import { Block } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
-type BoxProps = {
-  isCentered?: boolean;
-};
+export const Layout = styled.div`
+  max-width: 1024px;
+  margin: 0 auto 40px;
+  display: flex;
+  gap: ${({ theme }) => theme.spaceMap.xl}px;
+  align-items: flex-start;
 
-export const ContentHighlightBox = styled.div<BoxProps>`
-  margin-bottom: 10px;
-  padding: 10px;
-  color: var(--lido-color-text);
-  font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;
-  font-weight: 400;
-  border-radius: ${({ theme }) => theme.borderRadiusesMap.lg}px;
-  text-align: ${({ isCentered }) => (isCentered ? 'center' : 'left')};
-  background-color: var(--lido-color-backgroundSecondary);
+  @media (max-width: 999px) {
+    flex-direction: column;
+    max-width: 560px;
+  }
 `;
 
-export const Card = styled(Block).attrs({
+export const MainCard = styled(Block).attrs({
   paddingLess: true,
 })`
-  padding: 20px;
-  max-width: 560px;
-  margin: 0 auto 40px;
+  padding: 32px;
+  flex: 0 1 664px;
+  min-width: 0;
   box-shadow: ${({ theme }) => theme.boxShadows.xl}
     var(--lido-color-shadowLight);
+
+  @media (max-width: 999px) {
+    flex: 1 0 auto;
+    width: 100%;
+  }
 `;
 
-export const VoteHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
-`;
-
-export const VoteTitle = styled(Text).attrs({
-  size: 20,
-  weight: 700,
+export const SideCard = styled(Block).attrs({
+  paddingLess: true,
 })`
-  flex-shrink: 0;
+  padding: 32px;
+  flex: 0 1 336px;
+  box-shadow: ${({ theme }) => theme.boxShadows.xl}
+    var(--lido-color-shadowLight);
+
+  @media (max-width: 999px) {
+    display: none;
+  }
 `;
 
-export const BlockWrap = styled.div`
-  text-align: right;
-  margin-left: auto;
+export const SidebarSection = styled.div`
+  & + & {
+    margin-top: ${({ theme }) => theme.spaceMap.xl}px;
+  }
 `;
 
-export const VoteTimestamp = styled(Text).attrs({
-  size: 12,
-  color: 'secondary',
-})`
-  margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
+export const MobileSidebarSlot = styled.div`
+  display: none;
+
+  @media (max-width: 999px) {
+    display: block;
+    margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+  }
+`;
+
+export const MobileCTASlot = styled.div`
+  display: none;
+
+  @media (max-width: 999px) {
+    display: block;
+    margin-top: ${({ theme }) => theme.spaceMap.xxl}px;
+  }
 `;
 
 export const DetailsBoxWrap = styled.div`
   margin-top: ${({ theme }) => theme.spaceMap.xxl}px;
 `;
 
-export const BoxVotes = styled(ContentHighlightBox)`
-  padding: 0;
-  background: none;
-  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+export const SectionHeading = styled(Text).attrs({
+  size: 12,
+  color: 'secondary',
+})`
+  display: block;
+  margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
 `;
 
-export const SectionHeading = styled(Text).attrs({
-  size: 16,
+export const VoteTitle = styled(Text).attrs({
+  size: 20,
   weight: 700,
 })`
-  margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+  display: block;
+  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
 `;
 
 export const DescriptionWrap = styled.div`
