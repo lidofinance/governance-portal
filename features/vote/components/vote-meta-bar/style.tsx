@@ -16,10 +16,11 @@ export const BadgeGroup = styled.div`
   gap: 8px;
 `;
 
-export const TimeGroup = styled.div`
+export const TimeGroup = styled.div<{ $labeled?: boolean }>`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: ${({ $labeled }) => ($labeled ? '54px' : '8px')};
+  margin-left: auto;
 `;
 
 type StatusVariant = 'active' | 'success' | 'error' | 'warning';
@@ -147,6 +148,18 @@ export const PhaseNumber = styled.span`
   font-weight: 700;
   line-height: 1;
   flex-shrink: 0;
+`;
+
+export const MetaLabel = styled.span`
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--lido-color-textSecondary);
+`;
+
+export const MetaCell = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 `;
 
 export const VoteIdText = styled.span`
