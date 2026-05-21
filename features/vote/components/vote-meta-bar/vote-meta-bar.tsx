@@ -14,6 +14,8 @@ import {
   VoteIdText,
   CountdownText,
   EndedText,
+  MetaLabel,
+  MetaCell,
   TooltipText,
   TooltipIconWrap,
 } from './style';
@@ -27,6 +29,7 @@ type Props = {
   startDate: number;
   isEnded: boolean;
   dualGovernancePhase?: boolean;
+  withLabels?: boolean;
 };
 
 const PHASE_TOOLTIP_TEXT =
@@ -41,6 +44,7 @@ export const VoteMetaBar = ({
   startDate,
   isEnded,
   dualGovernancePhase,
+  withLabels = false,
 }: Props) => {
   const mainPhaseEnd = startDate + (voteTime - objectionPhaseTime);
   const objectionPhaseEnd = startDate + voteTime;
@@ -80,7 +84,12 @@ export const VoteMetaBar = ({
     phase = { text: 'Enactable', variant: 'enactable' };
   }
 
-  const timeNode = isActive ? (
+  const activePhaseLabel =
+    status === VoteStatus.ActiveMain
+      ? 'Main phase ends in'
+      : 'Objection phase ends in';
+
+  const timeValue = isActive ? (
     <CountdownText>
       <VoteDetailsCountdown
         voteTime={
@@ -89,6 +98,14 @@ export const VoteMetaBar = ({
         isEndedBeforeTime={isEnded}
       />
     </CountdownText>
+  ) : (
+    <CountdownText>
+      <FormattedDate date={endTimestamp} format="DD MMM YYYY" />
+    </CountdownText>
+  );
+
+  const timeNodeInline = isActive ? (
+    timeValue
   ) : (
     <EndedText>
       Ended on <FormattedDate date={endTimestamp} format="DD MMM YYYY" />
@@ -120,10 +137,25 @@ export const VoteMetaBar = ({
           </PhaseBadge>
         )}
       </BadgeGroup>
-      <TimeGroup>
-        <VoteIdText>Vote #{voteId}</VoteIdText>
-        <Separator />
-        {timeNode}
+      <TimeGroup $labeled={withLabels}>
+        {withLabels ? (
+          <>
+            <MetaCell>
+              <MetaLabel>Proposal ID</MetaLabel>
+              <VoteIdText>Vote #{voteId}</VoteIdText>
+            </MetaCell>
+            <MetaCell>
+              <MetaLabel>{isActive ? activePhaseLabel : 'Ended on'}</MetaLabel>
+              {timeValue}
+            </MetaCell>
+          </>
+        ) : (
+          <>
+            <VoteIdText>Vote #{voteId}</VoteIdText>
+            <Separator />
+            {timeNodeInline}
+          </>
+        )}
       </TimeGroup>
     </MetaWrap>
   );

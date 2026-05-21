@@ -1,35 +1,22 @@
 import { useCallback } from 'react';
 
 import Link from 'next/link';
-import { Text, Tooltip } from '@lidofinance/lido-ui';
-import { InfoIcon } from 'shared/components/icons';
 import {
   VoteDashboardCard,
   VoteTitle,
   VoteDescriptionWrap,
   VoteSummary,
   VoteQuorum,
-  QuorumRow,
-  QuorumLabel,
-  QuorumValue,
-  QuorumReached,
-  QuorumReachedWrap,
-  QuorumTooltipBody,
-  QuorumTooltipRow,
-  VoteTotalsRow,
 } from './style';
-import { formatVoteAmount } from '@vote/utils/format-vote-amount';
 import { splitVoteDescription } from '@vote/utils/split-vote-description';
 import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
 import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
-import { formatFloatPct } from '@vote/utils/format-float-pct';
 import { votePage } from 'constants/urls';
 import { VoteDescription } from '../vote-description';
-import { VoteYesNoBar } from '../vote-yes-no-bar';
-import { VoteMetaBar } from './vote-meta-bar';
+import { VoteQuorumPanel } from '../vote-quorum-panel';
+import { VoteMetaBar } from '../vote-meta-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { formatEther } from 'viem';
 import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
 import { ProposalStatus } from '@dg/proposals/types';
 
@@ -52,15 +39,7 @@ export const DashboardVote = ({
   executeEvent,
   description,
 }: Props) => {
-  const {
-    nayPct,
-    yeaPct,
-    yeaNum,
-    nayNum,
-    nayPctOfTotalSupplyFormatted,
-    yeaPctOfTotalSupplyFormatted,
-    startDate,
-  } = getVoteDetailsFormatted(vote);
+  const { startDate } = getVoteDetailsFormatted(vote);
 
   const { data: voteDualGovernanceStatus } = useVoteDualGovernanceStatus({
     voteId: vote.id,
@@ -94,19 +73,27 @@ export const DashboardVote = ({
     onPass: handlePass,
   });
 
-  const quorumPct = formatFloatPct(Number(formatEther(vote.minAcceptQuorum)));
-  const yeaNumFormatted = formatVoteAmount(yeaNum);
-  const nayNumFormatted = formatVoteAmount(nayNum);
-
-  const totalSupply = Number(formatEther(vote.votingPower));
-  const quorumAmount = totalSupply * Number(formatEther(vote.minAcceptQuorum));
-
-  const { title, body } = splitVoteDescription({
+  const { title: splitTitle, body: splitBody } = splitVoteDescription({
     description,
     metadata: startEvent?.args.metadata,
   });
 
-  const hasDescription = body !== null || !description?.trim();
+  const trimmedDescription = description?.trim() || null;
+  const hasCleanSplit = splitTitle !== null && splitBody !== null;
+
+  const title = trimmedDescription
+    ? hasCleanSplit
+      ? splitTitle
+      : 'Proposal'
+    : splitTitle;
+
+  const body = trimmedDescription
+    ? hasCleanSplit
+      ? splitBody
+      : trimmedDescription
+    : null;
+
+  const hasDescription = body !== null || !trimmedDescription;
 
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
@@ -137,51 +124,7 @@ export const DashboardVote = ({
           )}
         </VoteSummary>
         <VoteQuorum>
-          <QuorumRow>
-            <QuorumLabel>
-              Quorum: <QuorumValue>{quorumPct}%</QuorumValue>
-            </QuorumLabel>
-            {vote.state.isQuorumReached && (
-              <Tooltip
-                title={
-                  <QuorumTooltipBody>
-                    To reach quorum, more than {quorumPct}% of the total LDO
-                    supply must vote for one option.
-                    <QuorumTooltipRow>
-                      <span>Total Supply</span>
-                      <span>{formatVoteAmount(totalSupply)} LDO</span>
-                    </QuorumTooltipRow>
-                    <QuorumTooltipRow>
-                      <span>Quorum</span>
-                      <span>{formatVoteAmount(quorumAmount)} LDO</span>
-                    </QuorumTooltipRow>
-                  </QuorumTooltipBody>
-                }
-              >
-                <QuorumReachedWrap>
-                  <QuorumReached>Reached</QuorumReached>
-                  <InfoIcon />
-                </QuorumReachedWrap>
-              </Tooltip>
-            )}
-          </QuorumRow>
-          <VoteYesNoBar
-            yeaPct={yeaPct}
-            nayPct={nayPct}
-            yeaNum={yeaNum}
-            nayNum={nayNum}
-            yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
-            nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
-            showOnForeground
-          />
-          <VoteTotalsRow>
-            <Text size="xxs" color="secondary">
-              {yeaNumFormatted}
-            </Text>
-            <Text size="xxs" color="secondary">
-              {nayNumFormatted}
-            </Text>
-          </VoteTotalsRow>
+          <VoteQuorumPanel vote={vote} />
         </VoteQuorum>
       </VoteDashboardCard>
     </Link>

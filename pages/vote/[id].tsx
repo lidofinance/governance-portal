@@ -17,7 +17,7 @@ export default function VotePage() {
   return (
     <>
       <VoteMeta />
-      <Layout metaTitle={`Vote #${id}`}>
+      <Layout containerSize="full" metaTitle={`Vote #${id}`}>
         <BackButton label="votes" href={VOTE_DASHBOARD_INDEX_PATH} />
         <VoteProvider voteId={id}>
           <VoteCard />
