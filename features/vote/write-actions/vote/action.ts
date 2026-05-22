@@ -14,6 +14,8 @@ type VoteActionArgs = {
   requestDelegateSelection?: boolean;
 };
 
+export type ProcessVote = (args: VoteActionArgs) => Promise<boolean | void>;
+
 export const useVoteAction = () => {
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalVote();
