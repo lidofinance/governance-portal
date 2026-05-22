@@ -6,24 +6,29 @@ import {
   MainCard,
   MobileCTASlot,
   MobileSidebarSlot,
+  NoticeWrap,
+  PowerRow,
   SectionHeading,
   SideCard,
   SidebarSection,
+  VoteActionsWrap,
+  VotedPill,
   VoteTitle,
+  YourVoteHeading,
 } from './style';
 import { Button } from '@lidofinance/lido-ui';
 import { Button as DgButton } from 'shared/components/button';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { splitVoteDescription } from '@vote/utils/split-vote-description';
 import { VoteDescription } from '../vote-description';
+import { VoteNotice } from '../vote-notice';
 import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
 import { useConnect } from 'reef-knot/core-react';
 import { VoteInfo } from '../vote-info';
-import { VotePowerInfo } from '../vote-power-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from '@vote/providers/vote-context';
 import { VoteProgressBar } from '../vote-progress-bar';
@@ -33,8 +38,12 @@ import { VoteMetaBar } from '../vote-meta-bar';
 import { VoteVetoSupport } from '../vote-veto-support';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useEnactVoteAction } from '@vote/write-actions/enact-vote/action';
+import { useVoteAction } from '@vote/write-actions/vote/action';
 import { ProposalStatus } from '@dg/proposals/types';
 import { PROPOSALS_PATH } from 'constants/urls';
+import { formatBalance } from 'utils/format-balance';
+import { KnownToken } from 'shared/blockchain/tokens';
+import { SkeletonBar } from 'shared/components/skeleton-bar';
 
 export const VoteCard = () => {
   const {
@@ -45,6 +54,8 @@ export const VoteCard = () => {
     objectionPhaseTime,
     description,
     dgProposal,
+    voteEvents,
+    voterDaoTokenBalance,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -57,6 +68,31 @@ export const VoteCard = () => {
   const router = useRouter();
 
   const processEnact = useEnactVoteAction();
+  const processVote = useVoteAction();
+
+  const [isChangeMode, setIsChangeMode] = useState(false);
+
+  const userOwnVote = useMemo(() => {
+    if (!walletAddress || voteEvents.length === 0) {
+      return null;
+    }
+    const lower = walletAddress.toLowerCase();
+    return voteEvents.find((e) => e.voter.toLowerCase() === lower) ?? null;
+  }, [walletAddress, voteEvents]);
+
+  const hasDelegateVote = useMemo(() => {
+    if (!walletAddress || voteEvents.length === 0) {
+      return false;
+    }
+    const lower = walletAddress.toLowerCase();
+    return voteEvents.some((e) =>
+      e.delegatedVotes?.some((v) => v.voter.toLowerCase() === lower),
+    );
+  }, [walletAddress, voteEvents]);
+
+  useEffect(() => {
+    setIsChangeMode(false);
+  }, [userOwnVote?.supports]);
 
   const openConnectWalletModal = useCallback(async () => {
     await connect();
@@ -119,18 +155,68 @@ export const VoteCard = () => {
     </>
   );
 
+  const isClosed = vote.phase === VotePhase.Closed;
+  const hasOwnVote = !!userOwnVote;
+  const hasVotingPower =
+    voterDaoTokenBalance !== undefined && voterDaoTokenBalance > 0n;
+  const showYourVoteSection =
+    hasOwnVote || hasDelegateVote || (!isClosed && hasVotingPower);
+  const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
+
   const ctaItems = isDualGovernancePhase ? null : (
     <>
-      {!isWalletConnected && vote.phase !== VotePhase.Closed && (
+      {!isWalletConnected && !isClosed && (
         <Button fullwidth onClick={openConnectWalletModal}>
           Connect wallet
         </Button>
       )}
       {isWalletConnected && (
         <>
-          {vote.phase !== VotePhase.Closed && <VotePowerInfo />}
-          <VoteInfo walletAddress={walletAddress} />
-          {vote.phase !== VotePhase.Closed && <VoteActions />}
+          {showYourVoteSection && (
+            <>
+              <YourVoteHeading>
+                Your vote
+                {hasOwnVote && (
+                  <VotedPill $supports={userOwnVote.supports}>
+                    {userOwnVote.supports ? '“Yes”' : '“No”'}
+                  </VotedPill>
+                )}
+              </YourVoteHeading>
+              {!hasOwnVote && <VoteInfo walletAddress={walletAddress} />}
+              {!isClosed && (
+                <PowerRow>
+                  <span>My voting power</span>
+                  <span>
+                    {voterDaoTokenBalance === undefined ? (
+                      <SkeletonBar width={60} />
+                    ) : (
+                      `${formatBalance(voterDaoTokenBalance)} ${KnownToken.LDO.symbol}`
+                    )}
+                  </span>
+                </PowerRow>
+              )}
+              {showVoteButtons && (
+                <NoticeWrap>
+                  <VoteNotice />
+                </NoticeWrap>
+              )}
+            </>
+          )}
+          <VoteActionsWrap $hidden={!showVoteButtons}>
+            <VoteActions processVote={processVote} />
+          </VoteActionsWrap>
+          {hasOwnVote && !isChangeMode && !isClosed && (
+            <VoteActionsWrap>
+              <DgButton
+                fullwidth
+                size="sm"
+                variant="outlined"
+                onClick={() => setIsChangeMode(true)}
+              >
+                Change your vote
+              </DgButton>
+            </VoteActionsWrap>
+          )}
           {canExecute && (
             <EnactButtonWrap>
               <Button

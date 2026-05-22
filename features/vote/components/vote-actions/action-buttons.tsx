@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tooltip } from '@lidofinance/lido-ui';
-import { CheckIcon, CrossIcon } from 'shared/components/icons';
 import { VotePhase } from 'shared/votes/types';
 import { ActionButtonsStyled, VoteButton } from './style';
 import { VoteMode } from '@vote/types';
@@ -31,7 +30,7 @@ export const ActionButtons = ({
       ref={yayRef}
       loading={loading}
     >
-      <CheckIcon /> Yes
+      Yes
     </VoteButton>
   );
 
@@ -43,7 +42,7 @@ export const ActionButtons = ({
         ref={nayRef}
         loading={loading}
       >
-        <CrossIcon /> No
+        No
       </VoteButton>
 
       {isObjection ? (

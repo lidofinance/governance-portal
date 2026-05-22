@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const Tabs = styled.div`
   position: relative;
@@ -73,6 +74,56 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
       border-top-right-radius: 20px;
       color: white;
     `};
+`;
+
+export const VoteScriptBodyInner = styled.div<Pick<TabProps, '$variant'>>`
+  ${({ $variant }) =>
+    $variant === 'voting' &&
+    css`
+      max-height: 524px;
+      overflow-y: auto;
+
+      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+        max-height: none;
+      }
+    `};
+`;
+
+export const ScriptFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-color-fog);
+`;
+
+export const ScriptFooterButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--accent-color-ocean-light);
+
+  & > svg {
+    width: 14px;
+    height: 14px;
+    transform: translateY(1px);
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;
 
 export const CallWrapper = styled.div<{ $withDg?: boolean }>`
