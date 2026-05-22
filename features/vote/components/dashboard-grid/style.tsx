@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
+import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const GridWrap = styled.div`
   margin: 0 auto;
@@ -45,7 +46,7 @@ export const DashboardGridHeading = styled.section`
     }
   }
 
-  @media (max-width: 999px) {
+  @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;

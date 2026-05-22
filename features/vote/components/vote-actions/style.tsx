@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { Button } from '@lidofinance/lido-ui';
+import { Button } from 'shared/components/button';
 
 export const Actions = styled.div`
-  margin-top: ${({ theme }) => theme.spaceMap.sm}px;
   display: flex;
   gap: 10px;
 
@@ -21,21 +20,12 @@ export const Actions = styled.div`
 
 export const VoteButton = styled(Button).attrs({
   size: 'sm',
-  color: 'secondary',
   fullwidth: true,
 })`
   & > span {
     display: flex;
     align-items: center;
-    gap: 12px;
-  }
-
-  text-align: left;
-  svg {
-    display: block;
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
+    justify-content: center;
   }
 `;
 

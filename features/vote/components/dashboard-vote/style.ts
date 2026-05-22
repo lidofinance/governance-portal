@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { Text } from 'shared/components/text';
 import { DashboardCard } from 'shared/components/dashboard-card';
+import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const VoteDashboardCard = styled(DashboardCard)`
   flex-direction: row;
   justify-content: space-between;
 
-  @media (max-width: 999px) {
+  @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     flex-direction: column;
     height: auto;
   }
@@ -43,7 +44,7 @@ export const VoteDescriptionWrap = styled(Text).attrs({
 export const VoteSummary = styled.section`
   width: 70%;
 
-  @media (max-width: 999px) {
+  @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     width: 100%;
   }
 `;
@@ -52,7 +53,7 @@ export const VoteQuorum = styled.section`
   width: 274px;
   margin-left: auto;
 
-  @media (max-width: 999px) {
+  @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     width: 100%;
     margin-left: 0;
     margin-top: ${({ theme }) => theme.spaceMap.xl}px;
