@@ -65,5 +65,11 @@ export type CachedEventsData = {
   };
 };
 
-// Returned by GET /api/proposals/events — the proposals-keyed slice for one chain
 export type ProposalEventsSubset = CachedEventsData[string]['proposals'];
+
+export type ProposalEventsManifest = {
+  chunkSize: number;
+  firstId: number;
+  lastId: number;
+  chunks: { [chunkIndex: string]: string };
+};
