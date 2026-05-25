@@ -580,4 +580,4 @@ export const aragonFinanceAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

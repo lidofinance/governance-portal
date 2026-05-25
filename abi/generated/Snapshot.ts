@@ -70,4 +70,4 @@ export const snapshotAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

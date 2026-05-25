@@ -291,4 +291,4 @@ export const csVerifierProposedAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

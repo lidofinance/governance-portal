@@ -314,4 +314,4 @@ export const governanceTokenAbi = [
     ],
     name: 'Approval',
   },
-] as const
+] as const;

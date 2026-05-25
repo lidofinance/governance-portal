@@ -95,4 +95,4 @@ export const submitExitRequestHashesAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

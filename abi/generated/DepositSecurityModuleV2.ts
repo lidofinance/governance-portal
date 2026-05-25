@@ -428,4 +428,4 @@ export const depositSecurityModuleV2Abi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

@@ -233,4 +233,4 @@ export const allowedTokensRegistryAbi = [
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

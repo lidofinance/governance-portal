@@ -314,4 +314,4 @@ export const miniMeTokenAbi = [
     ],
     name: 'Approval',
   },
-] as const
+] as const;

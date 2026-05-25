@@ -418,4 +418,4 @@ export const tokenManagerAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

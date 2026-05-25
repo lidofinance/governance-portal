@@ -89,4 +89,4 @@ export const evmUpdateVaultsFeesInOperatorGridAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

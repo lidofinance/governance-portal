@@ -198,4 +198,4 @@ export const insuranceFundAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

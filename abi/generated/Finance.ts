@@ -24,4 +24,4 @@ export const financeAbi = [
     outputs: [{ name: '', type: 'bytes32' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

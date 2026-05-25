@@ -587,4 +587,4 @@ export const legacyOracleAbi = [
     inputs: [{ name: 'version', type: 'uint256', indexed: false }],
     name: 'ContractVersionSet',
   },
-] as const
+] as const;

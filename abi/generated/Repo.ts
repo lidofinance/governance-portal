@@ -240,4 +240,4 @@ export const repoAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

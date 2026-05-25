@@ -331,4 +331,4 @@ export const limitCheckerAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

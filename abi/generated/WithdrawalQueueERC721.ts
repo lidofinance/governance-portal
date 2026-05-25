@@ -1246,4 +1246,4 @@ export const withdrawalQueueErc721Abi = [
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

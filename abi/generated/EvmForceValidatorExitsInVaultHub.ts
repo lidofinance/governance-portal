@@ -56,4 +56,4 @@ export const evmForceValidatorExitsInVaultHubAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

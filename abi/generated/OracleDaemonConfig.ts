@@ -239,4 +239,4 @@ export const oracleDaemonConfigAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

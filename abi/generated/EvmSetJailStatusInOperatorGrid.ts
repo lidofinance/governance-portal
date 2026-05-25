@@ -49,4 +49,4 @@ export const evmSetJailStatusInOperatorGridAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

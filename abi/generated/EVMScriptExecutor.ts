@@ -117,4 +117,4 @@ export const evmScriptExecutorAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

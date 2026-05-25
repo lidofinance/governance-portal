@@ -180,4 +180,4 @@ export const trpVestingEscrowFactoryAbi = [
     outputs: [{ name: '', type: 'address' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

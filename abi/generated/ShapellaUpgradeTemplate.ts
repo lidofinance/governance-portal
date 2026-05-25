@@ -726,4 +726,4 @@ export const shapellaUpgradeTemplateAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;
