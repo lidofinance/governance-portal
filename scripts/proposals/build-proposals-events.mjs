@@ -86,11 +86,21 @@ const writeChainChunks = (chainId, proposalsMap) => {
   const dir = chainDir(chainId);
   mkdirSync(dir, { recursive: true });
 
-  const ids = Object.keys(proposalsMap)
-    .map(Number)
-    .filter(Number.isFinite);
-  const firstId = ids.length > 0 ? Math.min(...ids) : 0;
-  const lastId = ids.length > 0 ? Math.max(...ids) : 0;
+  let firstId = 0;
+  let lastId = 0;
+  let hasIds = false;
+  for (const key of Object.keys(proposalsMap)) {
+    const id = Number(key);
+    if (!Number.isFinite(id)) continue;
+    if (!hasIds) {
+      firstId = id;
+      lastId = id;
+      hasIds = true;
+    } else {
+      if (id < firstId) firstId = id;
+      if (id > lastId) lastId = id;
+    }
+  }
 
   const partitioned = partitionByChunk(proposalsMap, firstId);
   const newChunkFiles = new Map();
@@ -283,6 +293,7 @@ export const buildProposalsEvents = async () => {
 
     if (proposalsCount === 0n) {
       console.debug(`No proposals found on chain ${chainId}`);
+      writeChainChunks(chainId, {});
       continue;
     }
 
