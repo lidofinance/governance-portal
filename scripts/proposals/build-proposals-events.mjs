@@ -41,12 +41,12 @@ const hashChunk = (jsonString) =>
   createHash('sha256').update(jsonString).digest('hex').slice(0, 10);
 
 const readExistingChainData = (chainId) => {
-  const mPath = manifestPath(chainId);
-  if (!existsSync(mPath)) {
+  const manifestFile = manifestPath(chainId);
+  if (!existsSync(manifestFile)) {
     return {};
   }
   try {
-    const manifest = JSON.parse(readFileSync(mPath, 'utf8'));
+    const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
     const merged = {};
     for (const file of Object.values(manifest.chunks || {})) {
       const chunkPath = join(chainDir(chainId), file);
@@ -91,14 +91,20 @@ const writeChainChunks = (chainId, proposalsMap) => {
   let hasIds = false;
   for (const key of Object.keys(proposalsMap)) {
     const id = Number(key);
-    if (!Number.isFinite(id)) continue;
+    if (!Number.isFinite(id)) {
+      continue;
+    }
     if (!hasIds) {
       firstId = id;
       lastId = id;
       hasIds = true;
     } else {
-      if (id < firstId) firstId = id;
-      if (id > lastId) lastId = id;
+      if (id < firstId) {
+        firstId = id;
+      }
+      if (id > lastId) {
+        lastId = id;
+      }
     }
   }
 
@@ -124,7 +130,9 @@ const writeChainChunks = (chainId, proposalsMap) => {
     firstId,
     lastId,
     chunks: Object.fromEntries(
-      [...newChunkFiles].sort(([a], [b]) => a - b).map(([k, v]) => [k, v]),
+      [...newChunkFiles].sort(
+        ([indexA], [indexB]) => indexA - indexB,
+      ),
     ),
   };
   writeFileSync(manifestPath(chainId), JSON.stringify(manifest, null, 2));
@@ -293,6 +301,13 @@ export const buildProposalsEvents = async () => {
 
     if (proposalsCount === 0n) {
       console.debug(`No proposals found on chain ${chainId}`);
+      const existingChainData = readExistingChainData(chainId);
+      const existingCount = Object.keys(existingChainData).length;
+      if (existingCount > 0) {
+        console.warn(
+          `⚠️ Chain ${chainId}: contract reports 0 proposals but cache has ${existingCount} entries. Wiping — verify this is intentional (devnet reset?).`,
+        );
+      }
       writeChainChunks(chainId, {});
       continue;
     }
@@ -340,7 +355,7 @@ export const buildProposalsEvents = async () => {
     for (const [idStr, cached] of Object.entries(existingChainData)) {
       const freshStatus = freshStatusById.get(idStr);
       if (
-        freshStatus !== undefined &&
+        freshStatus === undefined ||
         cached?.details?.status === freshStatus
       ) {
         seed[idStr] = cached;
