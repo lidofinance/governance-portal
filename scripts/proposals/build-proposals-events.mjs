@@ -334,7 +334,7 @@ export const buildProposalsEvents = async () => {
     const existingChainData = readExistingChainData(chainId);
 
     const freshStatusById = new Map(
-      proposalsDetails.map((p) => [String(p.id), p.status]),
+      proposalsDetails.map((proposal) => [String(proposal.id), proposal.status]),
     );
     const seed = {};
     for (const [idStr, cached] of Object.entries(existingChainData)) {

@@ -15,14 +15,16 @@ const manifestPromises = new Map<
 const chunkPromises = new Map<string, Promise<ProposalEventsSubset>>();
 
 const isValidManifest = (raw: unknown): raw is ProposalEventsManifest => {
-  if (raw === null || typeof raw !== 'object') return false;
-  const m = raw as Partial<ProposalEventsManifest>;
+  if (raw === null || typeof raw !== 'object') {
+    return false;
+  }
+  const manifest = raw as Partial<ProposalEventsManifest>;
   return (
-    typeof m.chunkSize === 'number' &&
-    typeof m.firstId === 'number' &&
-    typeof m.lastId === 'number' &&
-    m.chunks !== null &&
-    typeof m.chunks === 'object'
+    typeof manifest.chunkSize === 'number' &&
+    typeof manifest.firstId === 'number' &&
+    typeof manifest.lastId === 'number' &&
+    manifest.chunks !== null &&
+    typeof manifest.chunks === 'object'
   );
 };
 
@@ -33,17 +35,17 @@ const fetchManifest = (
   if (cached) {
     return cached;
   }
-  const p = fetch(manifestUrl(chainId))
-    .then(async (r) => {
-      if (!r.ok) {
+  const promise = fetch(manifestUrl(chainId))
+    .then(async (response) => {
+      if (!response.ok) {
         return null;
       }
-      const raw = (await r.json()) as unknown;
+      const raw = (await response.json()) as unknown;
       return isValidManifest(raw) ? raw : null;
     })
     .catch(() => null);
-  manifestPromises.set(chainId, p);
-  return p;
+  manifestPromises.set(chainId, promise);
+  return promise;
 };
 
 const fetchChunk = (
@@ -55,16 +57,16 @@ const fetchChunk = (
   if (cached) {
     return cached;
   }
-  const p = fetch(chunkUrl(chainId, file))
-    .then(async (r) => {
-      if (!r.ok) {
+  const promise = fetch(chunkUrl(chainId, file))
+    .then(async (response) => {
+      if (!response.ok) {
         return {} as ProposalEventsSubset;
       }
-      return (await r.json()) as ProposalEventsSubset;
+      return (await response.json()) as ProposalEventsSubset;
     })
     .catch(() => ({}) as ProposalEventsSubset);
-  chunkPromises.set(key, p);
-  return p;
+  chunkPromises.set(key, promise);
+  return promise;
 };
 
 export const fetchCachedProposalEvents = async (
@@ -84,11 +86,15 @@ export const fetchCachedProposalEvents = async (
 
   const chunkIndices = new Set<number>();
   for (const id of proposalIds) {
-    const n = Number(id);
-    if (!Number.isFinite(n) || n < firstId || n > lastId) {
+    const numericId = Number(id);
+    if (
+      !Number.isFinite(numericId) ||
+      numericId < firstId ||
+      numericId > lastId
+    ) {
       continue;
     }
-    chunkIndices.add(Math.floor((n - firstId) / chunkSize));
+    chunkIndices.add(Math.floor((numericId - firstId) / chunkSize));
   }
 
   const chunkFiles: string[] = [];
