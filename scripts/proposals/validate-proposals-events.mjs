@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { createPublicClient, http, decodeEventLog } from 'viem';
@@ -9,10 +9,7 @@ import { HISTORICAL_ADDRESSES } from '../../constants/historical-addresses.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const INPUT_FILE_PATH = join(
-  __dirname,
-  '../../public/proposals-events-data.json',
-);
+const INPUT_ROOT = join(__dirname, '../../public/proposals-events');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -34,17 +31,46 @@ for (const chainIdStr of supportedChains) {
   }
 }
 
-const readEventsData = () => {
-  try {
-    const rawData = readFileSync(INPUT_FILE_PATH, 'utf8');
-    return JSON.parse(rawData);
-  } catch (error) {
-    console.error(
-      `Error reading or parsing file at ${INPUT_FILE_PATH}:`,
-      error.message,
-    );
-    throw new Error('Failed to load proposals data file.');
+const readChainData = (chainId) => {
+  const chainDir = join(INPUT_ROOT, String(chainId));
+  const manifestFile = join(chainDir, 'manifest.json');
+  if (!existsSync(manifestFile)) {
+    return null;
   }
+  const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+  const proposals = {};
+  const missingChunks = [];
+  for (const file of Object.values(manifest.chunks || {})) {
+    const chunkPath = join(chainDir, file);
+    if (!existsSync(chunkPath)) {
+      console.error(
+        `❌ Manifest references missing chunk ${file} for chain ${chainId}`,
+      );
+      missingChunks.push(file);
+      continue;
+    }
+    const chunkData = JSON.parse(readFileSync(chunkPath, 'utf8'));
+    Object.assign(proposals, chunkData);
+  }
+  return { proposals, missingChunks };
+};
+
+const readEventsData = () => {
+  if (!existsSync(INPUT_ROOT) || !statSync(INPUT_ROOT).isDirectory()) {
+    throw new Error(`Cache root not found at ${INPUT_ROOT}.`);
+  }
+  const eventsData = {};
+  for (const entry of readdirSync(INPUT_ROOT)) {
+    const chainId = Number(entry);
+    if (!Number.isFinite(chainId)) {
+      continue;
+    }
+    const chainData = readChainData(chainId);
+    if (chainData) {
+      eventsData[entry] = chainData;
+    }
+  }
+  return eventsData;
 };
 
 const setupClients = () => {
@@ -257,6 +283,16 @@ const main = async () => {
     const eventsData = readEventsData();
     const clients = setupClients();
     await validateEvents(eventsData, clients);
+
+    const hasMissingChunks = Object.values(eventsData).some(
+      (chain) => chain.missingChunks && chain.missingChunks.length > 0,
+    );
+    if (hasMissingChunks) {
+      console.error(
+        '❌ Validation failed: manifest references chunks that are missing on disk.',
+      );
+      process.exit(1);
+    }
 
     process.exit(0);
   } catch (error) {

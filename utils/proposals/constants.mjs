@@ -2,6 +2,8 @@ export const CHUNK_SIZE = 4999n; // Max DPRC getLogs window
 export const CONCURRENT_LIMIT = 3;
 export const GET_LOGS_BLOCK_RANGE = 2499n; // Half of CHUNK_SIZE
 
+export const PROPOSALS_PER_CHUNK = 10;
+
 export const proposalExecutedEventAbi = {
   anonymous: false,
   inputs: [
