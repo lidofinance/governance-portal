@@ -48,4 +48,4 @@ export const tokenRecovererForManagerContractsAbi = [
     outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

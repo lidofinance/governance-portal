@@ -442,4 +442,4 @@ export const tiebreakerSubCommitteeAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

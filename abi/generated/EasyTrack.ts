@@ -722,4 +722,4 @@ export const easyTrackAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

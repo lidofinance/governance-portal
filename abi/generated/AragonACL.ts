@@ -452,4 +452,4 @@ export const aragonAclAbi = [
     ],
     name: 'ScriptResult',
   },
-] as const
+] as const;

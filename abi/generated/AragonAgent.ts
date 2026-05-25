@@ -546,4 +546,4 @@ export const aragonAgentAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

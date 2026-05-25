@@ -283,4 +283,4 @@ export const dgConfigProviderAbi = [
     ],
     name: 'InvalidVetoSignallingDurationRange',
   },
-] as const
+] as const;

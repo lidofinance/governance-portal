@@ -476,4 +476,4 @@ export const tiebreakerCoreCommitteeAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

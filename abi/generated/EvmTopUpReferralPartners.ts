@@ -73,4 +73,4 @@ export const evmTopUpReferralPartnersAbi = [
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

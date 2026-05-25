@@ -68,4 +68,4 @@ export const votingAbi = [
     ],
     name: 'ProxyDeposit',
   },
-] as const
+] as const;

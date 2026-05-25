@@ -979,4 +979,4 @@ export const oracleReportSanityCheckerAbi = [
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

@@ -57,4 +57,4 @@ export const csmSetVettedGateTreeAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

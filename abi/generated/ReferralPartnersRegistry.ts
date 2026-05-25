@@ -91,4 +91,4 @@ export const referralPartnersRegistryAbi = [
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

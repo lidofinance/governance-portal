@@ -683,4 +683,4 @@ export const csHashConsensusAbi = [
     ],
     name: 'UnexpectedConsensusVersion',
   },
-] as const
+] as const;

@@ -382,4 +382,4 @@ export const lidoDaoAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

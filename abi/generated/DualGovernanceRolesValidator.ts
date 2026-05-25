@@ -315,4 +315,4 @@ export const dualGovernanceRolesValidatorAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

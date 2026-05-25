@@ -131,4 +131,4 @@ export const dualGovernanceTimeConstraintsAbi = [
     outputs: [{ name: '', internalType: 'Duration', type: 'uint32' }],
     stateMutability: 'view',
   },
-] as const
+] as const;
