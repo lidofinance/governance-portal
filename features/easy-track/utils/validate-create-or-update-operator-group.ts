@@ -2,17 +2,18 @@ const MAX_BP = 10000;
 
 type FormArgs = {
   groupId: string;
+  name: string;
   subNodeOperators: { nodeOperatorId: string; share: string }[];
   externalOperators: { nodeOperatorId: string }[];
 };
 
 export const validateCreateOrUpdateOperatorGroup = ({
   groupId,
+  name,
   subNodeOperators,
   externalOperators,
 }: FormArgs): string | null => {
   const isCreate = groupId === '0' || groupId === '';
-
   if (isCreate && subNodeOperators.length === 0) {
     return 'Creating a new group requires at least one sub-operator';
   }
@@ -23,6 +24,15 @@ export const validateCreateOrUpdateOperatorGroup = ({
     externalOperators.length > 0
   ) {
     return 'To clear an existing group, external operators must also be empty';
+  }
+
+  const isClear =
+    !isCreate &&
+    subNodeOperators.length === 0 &&
+    externalOperators.length === 0;
+
+  if (isClear && name.length > 0) {
+    return 'Name must be empty when clearing a group';
   }
 
   if (subNodeOperators.length > 0) {

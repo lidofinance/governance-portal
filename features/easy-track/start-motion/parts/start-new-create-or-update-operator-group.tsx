@@ -10,6 +10,7 @@ import {
   useReadContract,
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
+import { useDebounce } from 'shared/hooks/use-debounce';
 import { metaRegistryAbi, nodeOperatorsRegistryAbi } from 'abi/generated';
 import {
   CreateOrUpdateOperatorGroup as CreateOrUpdateOperatorGroupContract,
@@ -32,10 +33,14 @@ import {
 } from './create-motion-form-part';
 import { MotionType } from '../../motion-types';
 import { validateUintValue } from '../../utils/validate-uint-value';
-import { encodeNORExtOperatorData } from '../../utils/nor-ext-operator-data';
+import {
+  encodeNORExtOperatorData,
+  decodeNORExtOperatorData,
+} from '../../utils/nor-ext-operator-data';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 
 const MAX_BP = 10000;
+const MAX_NAME_LENGTH = 256;
 const NO_GROUP_ID = '0';
 
 type SubOperatorField = {
@@ -49,6 +54,7 @@ type ExternalOperatorField = {
 
 type FormData = {
   groupId: string;
+  name: string;
   subNodeOperators: SubOperatorField[];
   externalOperators: ExternalOperatorField[];
   // Resolved from `factory.allowedExternalModuleId()` at component mount and
@@ -96,6 +102,7 @@ export const formParts = createMotionFormPart({
         {
           type: 'tuple',
           components: [
+            { type: 'string' },
             {
               type: 'tuple[]',
               components: [{ type: 'uint64' }, { type: 'uint16' }],
@@ -110,6 +117,7 @@ export const formParts = createMotionFormPart({
       [
         BigInt(formData.groupId),
         [
+          formData.name,
           sortedSubs.map((s) => [s.nodeOperatorId, s.share] as const),
           sortedExts.map(
             (e) =>
@@ -132,6 +140,7 @@ export const formParts = createMotionFormPart({
   },
   getDefaultFormData: (): FormData => ({
     groupId: '',
+    name: '',
     subNodeOperators: [{ nodeOperatorId: '', share: '' }],
     externalOperators: [],
     allowedExternalModuleId: '',
@@ -240,6 +249,63 @@ export const formParts = createMotionFormPart({
       }
     }, [factoryData, setValue, fieldNames.allowedExternalModuleId]);
 
+    const debouncedGroupIdValue = useDebounce(groupIdValue, 500);
+    const { data: existingGroup } = useQuery({
+      queryKey: [
+        'meta-registry-operator-group',
+        chainId,
+        factoryData?.metaRegistryAddress,
+        debouncedGroupIdValue,
+      ],
+      enabled:
+        !!factoryData?.metaRegistryAddress &&
+        /^\d+$/.test(debouncedGroupIdValue) && // Check is valid digits value
+        debouncedGroupIdValue !== NO_GROUP_ID,
+      staleTime: Infinity,
+      queryFn: () => {
+        if (!factoryData) {
+          return null;
+        }
+
+        return readMetaRegistry(factoryData.metaRegistryAddress)(
+          'getOperatorGroup',
+          [BigInt(debouncedGroupIdValue)],
+        );
+      },
+    });
+
+    useEffect(() => {
+      if (existingGroup) {
+        setValue(fieldNames.name, existingGroup.name);
+        subFields.replace(
+          existingGroup.subNodeOperators.map((op) => ({
+            nodeOperatorId: op.nodeOperatorId.toString(),
+            share: op.share.toString(),
+          })),
+        );
+        extFields.replace(
+          existingGroup.externalOperators.map((op) => ({
+            nodeOperatorId: decodeNORExtOperatorData(
+              op.data,
+            ).nodeOperatorId.toString(),
+          })),
+        );
+        return;
+      }
+
+      // Clean sub fields if needed
+      if (
+        debouncedGroupIdValue === '' ||
+        debouncedGroupIdValue === NO_GROUP_ID
+      ) {
+        setValue(fieldNames.name, '');
+        subFields.replace([{ nodeOperatorId: '', share: '' }]);
+        extFields.replace([]);
+      }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [existingGroup, debouncedGroupIdValue, setValue, fieldNames.name]);
+
     const fetchOperatorGroupsCount = () => {
       if (!factoryData) {
         throw new Error('Factory data is required');
@@ -307,6 +373,25 @@ export const formParts = createMotionFormPart({
       return undefined;
     };
 
+    const validateNameSync = (value: string) => {
+      const trimmedValue = value?.trim() ?? '';
+      if (isClearMode) {
+        if (trimmedValue.length > 0) {
+          return 'Name must be empty when clearing a group';
+        }
+        return undefined;
+      }
+
+      if (trimmedValue.length === 0) {
+        return 'Name is required';
+      }
+
+      if (trimmedValue.length > MAX_NAME_LENGTH) {
+        return `Name must be at most ${MAX_NAME_LENGTH} characters (current: ${trimmedValue.length})`;
+      }
+      return undefined;
+    };
+
     const validateExternalNodeOperatorIdSync = (fieldIndex: number) => {
       return (value: string) => {
         const uintErr = validateUintValue(value);
@@ -370,10 +455,19 @@ export const formParts = createMotionFormPart({
           <ValidatedInputHookForm
             valueType="number"
             fieldName={fieldNames.groupId}
-            label="Group ID (0 to create)"
+            label="Group ID (0 to create new)"
             validateSync={validateUintValue}
             validateAsync={validateGroupIdAsync}
             rules={{ required: 'Field is required' }}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <ValidatedInputHookForm
+            fieldName={fieldNames.name}
+            label="Group name"
+            validateSync={validateNameSync}
+            rules={isClearMode ? undefined : { required: 'Field is required' }}
           />
         </Fieldset>
 

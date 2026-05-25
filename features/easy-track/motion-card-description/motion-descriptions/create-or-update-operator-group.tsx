@@ -12,7 +12,7 @@ export const CreateOrUpdateOperatorGroup = ({
   callData,
 }: MotionDescriptionProps<typeof createOrUpdateOperatorGroupAbi>) => {
   const [groupId, groupInfo] = callData;
-  const { subNodeOperators, externalOperators } = groupInfo;
+  const { name, subNodeOperators, externalOperators } = groupInfo;
 
   const isCreate = groupId === NO_GROUP_ID;
   const isClear =
@@ -31,14 +31,18 @@ export const CreateOrUpdateOperatorGroup = ({
   return (
     <>
       {isCreate ? (
-        <>Create new MetaRegistry operator group with </>
+        <>
+          Create new MetaRegistry operator group <b>{name}</b>
+        </>
       ) : (
         <>
-          Update MetaRegistry operator group <b>#{groupId.toString()}</b>{' '}
-          with{' '}
+          Update MetaRegistry operator group{' '}
+          <b>
+            {name} (#{groupId.toString()})
+          </b>
         </>
       )}
-      {pluralize(subNodeOperators.length, 'sub-operator')}
+      with {pluralize(subNodeOperators.length, 'sub-operator')}
       {externalOperators.length > 0 && (
         <> and {pluralize(externalOperators.length, 'external operator')}</>
       )}

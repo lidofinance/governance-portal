@@ -142,6 +142,7 @@ export const metaRegistryAbi = [
   { type: 'error', inputs: [], name: 'InvalidInitialization' },
   { type: 'error', inputs: [], name: 'InvalidOperatorGroup' },
   { type: 'error', inputs: [], name: 'InvalidOperatorGroupId' },
+  { type: 'error', inputs: [], name: 'InvalidOperatorGroupName' },
   { type: 'error', inputs: [], name: 'InvalidSubNodeOperatorShares' },
   { type: 'error', inputs: [], name: 'ModuleAddressNotCached' },
   {
@@ -245,6 +246,7 @@ export const metaRegistryAbi = [
         internalType: 'struct IMetaRegistry.OperatorGroup',
         type: 'tuple',
         components: [
+          { name: 'name', internalType: 'string', type: 'string' },
           {
             name: 'subNodeOperators',
             internalType: 'struct IMetaRegistry.SubNodeOperator[]',
@@ -287,6 +289,7 @@ export const metaRegistryAbi = [
         internalType: 'struct IMetaRegistry.OperatorGroup',
         type: 'tuple',
         components: [
+          { name: 'name', internalType: 'string', type: 'string' },
           {
             name: 'subNodeOperators',
             internalType: 'struct IMetaRegistry.SubNodeOperator[]',
@@ -469,6 +472,7 @@ export const metaRegistryAbi = [
         internalType: 'struct IMetaRegistry.OperatorGroup',
         type: 'tuple',
         components: [
+          { name: 'name', internalType: 'string', type: 'string' },
           {
             name: 'subNodeOperators',
             internalType: 'struct IMetaRegistry.SubNodeOperator[]',
@@ -522,6 +526,13 @@ export const metaRegistryAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'getInitializedVersion',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
     ],
@@ -558,6 +569,7 @@ export const metaRegistryAbi = [
         internalType: 'struct IMetaRegistry.OperatorGroup',
         type: 'tuple',
         components: [
+          { name: 'name', internalType: 'string', type: 'string' },
           {
             name: 'subNodeOperators',
             internalType: 'struct IMetaRegistry.SubNodeOperator[]',
