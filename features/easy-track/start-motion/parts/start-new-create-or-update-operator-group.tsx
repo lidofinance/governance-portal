@@ -374,7 +374,7 @@ export const formParts = createMotionFormPart({
     };
 
     const validateNameSync = (value: string) => {
-      const trimmedValue = value?.trim() ?? '';
+      const trimmedValue = value.trim();
       if (isClearMode) {
         if (trimmedValue.length > 0) {
           return 'Name must be empty when clearing a group';

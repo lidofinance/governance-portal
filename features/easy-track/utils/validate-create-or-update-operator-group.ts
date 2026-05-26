@@ -9,7 +9,6 @@ type FormArgs = {
 
 export const validateCreateOrUpdateOperatorGroup = ({
   groupId,
-  name,
   subNodeOperators,
   externalOperators,
 }: FormArgs): string | null => {
@@ -24,15 +23,6 @@ export const validateCreateOrUpdateOperatorGroup = ({
     externalOperators.length > 0
   ) {
     return 'To clear an existing group, external operators must also be empty';
-  }
-
-  const isClear =
-    !isCreate &&
-    subNodeOperators.length === 0 &&
-    externalOperators.length === 0;
-
-  if (isClear && name.length > 0) {
-    return 'Name must be empty when clearing a group';
   }
 
   if (subNodeOperators.length > 0) {
