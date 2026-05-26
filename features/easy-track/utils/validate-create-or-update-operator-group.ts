@@ -2,6 +2,7 @@ const MAX_BP = 10000;
 
 type FormArgs = {
   groupId: string;
+  name: string;
   subNodeOperators: { nodeOperatorId: string; share: string }[];
   externalOperators: { nodeOperatorId: string }[];
 };
@@ -12,7 +13,6 @@ export const validateCreateOrUpdateOperatorGroup = ({
   externalOperators,
 }: FormArgs): string | null => {
   const isCreate = groupId === '0' || groupId === '';
-
   if (isCreate && subNodeOperators.length === 0) {
     return 'Creating a new group requires at least one sub-operator';
   }

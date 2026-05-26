@@ -160,23 +160,16 @@
   },
   { "inputs": [], "name": "AlreadyUsedAsExternalOperator", "type": "error" },
   { "inputs": [], "name": "InvalidBondCurveWeight", "type": "error" },
-  {
-    "inputs": [],
-    "name": "InvalidExternalOperatorDataEntry",
-    "type": "error"
-  },
+  { "inputs": [], "name": "InvalidExternalOperatorDataEntry", "type": "error" },
   { "inputs": [], "name": "InvalidInitialization", "type": "error" },
   { "inputs": [], "name": "InvalidOperatorGroup", "type": "error" },
   { "inputs": [], "name": "InvalidOperatorGroupId", "type": "error" },
+  { "inputs": [], "name": "InvalidOperatorGroupName", "type": "error" },
   { "inputs": [], "name": "InvalidSubNodeOperatorShares", "type": "error" },
   { "inputs": [], "name": "ModuleAddressNotCached", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "nodeOperatorId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
     ],
     "name": "NodeOperatorAlreadyInGroup",
     "type": "error"
@@ -271,6 +264,7 @@
       },
       {
         "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
           {
             "components": [
               {
@@ -313,6 +307,7 @@
       },
       {
         "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
           {
             "components": [
               {
@@ -356,11 +351,7 @@
       {
         "components": [
           { "internalType": "string", "name": "name", "type": "string" },
-          {
-            "internalType": "string",
-            "name": "description",
-            "type": "string"
-          },
+          { "internalType": "string", "name": "description", "type": "string" },
           {
             "internalType": "bool",
             "name": "ownerEditsRestricted",
@@ -455,11 +446,7 @@
     "inputs": [],
     "name": "ACCOUNTING",
     "outputs": [
-      {
-        "internalType": "contract IAccounting",
-        "name": "",
-        "type": "address"
-      }
+      { "internalType": "contract IAccounting", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -530,6 +517,7 @@
       { "internalType": "uint256", "name": "groupId", "type": "uint256" },
       {
         "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
           {
             "components": [
               {
@@ -596,12 +584,15 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getInitializedVersion",
+    "outputs": [{ "internalType": "uint64", "name": "", "type": "uint64" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "nodeOperatorId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
     ],
     "name": "getNodeOperatorGroupId",
     "outputs": [
@@ -632,11 +623,7 @@
     "name": "getNodeOperatorWeightAndExternalStake",
     "outputs": [
       { "internalType": "uint256", "name": "weight", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "externalStake",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "externalStake", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -649,6 +636,7 @@
     "outputs": [
       {
         "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
           {
             "components": [
               {
@@ -690,22 +678,14 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "nodeOperatorId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
     ],
     "name": "getOperatorMetadata",
     "outputs": [
       {
         "components": [
           { "internalType": "string", "name": "name", "type": "string" },
-          {
-            "internalType": "string",
-            "name": "description",
-            "type": "string"
-          },
+          { "internalType": "string", "name": "description", "type": "string" },
           {
             "internalType": "bool",
             "name": "ownerEditsRestricted",
@@ -809,11 +789,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "nodeOperatorId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
     ],
     "name": "refreshOperatorWeight",
     "outputs": [],
@@ -864,11 +840,7 @@
       {
         "components": [
           { "internalType": "string", "name": "name", "type": "string" },
-          {
-            "internalType": "string",
-            "name": "description",
-            "type": "string"
-          },
+          { "internalType": "string", "name": "description", "type": "string" },
           {
             "internalType": "bool",
             "name": "ownerEditsRestricted",

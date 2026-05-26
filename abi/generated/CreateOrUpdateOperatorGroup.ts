@@ -43,6 +43,7 @@ export const createOrUpdateOperatorGroupAbi = [
         internalType: 'struct IMetaRegistry.OperatorGroup',
         type: 'tuple',
         components: [
+          { name: 'name', internalType: 'string', type: 'string' },
           {
             name: 'subNodeOperators',
             internalType: 'struct IMetaRegistry.SubNodeOperator[]',
