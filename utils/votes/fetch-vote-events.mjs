@@ -55,11 +55,6 @@ const shapeStartVoteEvent = (log) => {
   };
 };
 
-/**
- * Fetch StartVote event for a given vote.
- * Uses snapshotBlock as anchor — the event is emitted in the same block.
- * Returns a UI-ready shape: { transactionHash, blockNumber, args }.
- */
 export const fetchStartVoteEvent = async (
   voteId,
   snapshotBlock,
@@ -96,13 +91,6 @@ const shapeExecuteVoteEvent = async (log, publicClient) => {
   };
 };
 
-/**
- * Fetch ExecuteVote event for an executed vote.
- * First tries a single getLogs over the full range (voteId is indexed,
- * so most RPC nodes handle it efficiently). Falls back to chunked
- * scanning if the RPC rejects the range.
- * Returns a UI-ready shape: { transactionHash, blockNumber, executedAt }.
- */
 export const fetchExecuteVoteEvent = async (
   voteId,
   snapshotBlock,
@@ -116,37 +104,27 @@ export const fetchExecuteVoteEvent = async (
   };
 
   try {
-    const events = await publicClient.getLogs({
-      ...logArgs,
-      fromBlock: snapshotBlock,
-    });
+    const headBlock = await publicClient.getBlockNumber();
+    const chunks = createChunks(snapshotBlock, headBlock);
 
-    return await shapeExecuteVoteEvent(events[0], publicClient);
-  } catch {
-    console.debug(
-      `  Full-range getLogs failed for vote ${voteId}, falling back to chunked scan`,
-    );
-
-    try {
-      const toBlock = await publicClient.getBlockNumber();
-      const chunks = createChunks(snapshotBlock, toBlock);
-
-      const results = await processChunksInBatches(chunks, (chunk) =>
-        publicClient.getLogs({
-          ...logArgs,
-          fromBlock: chunk.from,
-          toBlock: chunk.to,
-        }),
-      );
-
-      return await shapeExecuteVoteEvent(results[0], publicClient);
-    } catch (error) {
-      console.warn(
-        `Failed to fetch ExecuteVote for vote ${voteId}:`,
-        error.message,
-      );
-      return null;
+    for (const chunk of chunks) {
+      const events = await publicClient.getLogs({
+        ...logArgs,
+        fromBlock: chunk.from,
+        toBlock: chunk.to,
+      });
+      if (events.length > 0) {
+        return await shapeExecuteVoteEvent(events[0], publicClient);
+      }
     }
+
+    return null;
+  } catch (error) {
+    console.warn(
+      `Failed to fetch ExecuteVote for vote ${voteId}:`,
+      error.message,
+    );
+    return null;
   }
 };
 

@@ -1,5 +1,9 @@
-export const CHUNK_SIZE = 4999n; // Max RPC getLogs window
+export const CHUNK_SIZE = 999n; // Max RPC getLogs window (drpc public mainnet caps at 1000)
 export const CONCURRENT_LIMIT = 3;
+export const BUILD_FETCH_CONCURRENCY = 10;
+export const VOTES_PER_CHUNK = 10;
+export const APPROX_BLOCK_TIME_SECONDS = 12n;
+export const VOTE_END_BLOCK_BUFFER = 100n;
 // CHAINS values: Mainnet = 1, Holesky = 17000, Hoodi = 560048
 // Each chain maps to an array of voting contract addresses.
 // Multiple addresses per chain are needed when there are separate deployments

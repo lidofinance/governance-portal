@@ -154,6 +154,33 @@ export default withBundleAnalyzer({
           },
         ],
       },
+      {
+        source: '/votes-events/:chainId/:votingAddress/manifest.json',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=60, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/votes-events/:chainId/:votingAddress/descriptions.json',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=60, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/votes-events/:chainId/:votingAddress/chunk-:rest*.json',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       ...CACHE_CONTROL_PAGES.map((page) => ({
         source: page,
         headers: [{ key: CACHE_CONTROL_HEADER, value: CACHE_CONTROL_VALUE }],

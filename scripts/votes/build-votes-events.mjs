@@ -1,45 +1,55 @@
 import { createPublicClient, http } from 'viem';
-import { writeFileSync, readFileSync } from 'fs';
+import {
+  writeFileSync,
+  readFileSync,
+  readdirSync,
+  existsSync,
+  mkdirSync,
+  unlinkSync,
+} from 'fs';
+import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
 import AragonVotingAbi from '../../abi/AragonVoting.abi.json' assert { type: 'json' };
-import { VOTING_ADDRESSES } from '../../utils/votes/constants.mjs';
+import {
+  VOTING_ADDRESSES,
+  VOTES_PER_CHUNK,
+  APPROX_BLOCK_TIME_SECONDS,
+  VOTE_END_BLOCK_BUFFER,
+  BUILD_FETCH_CONCURRENCY,
+} from '../../utils/votes/constants.mjs';
 import {
   fetchStartVoteEvent,
   fetchExecuteVoteEvent,
   fetchCastVoteEvents,
 } from '../../utils/votes/fetch-vote-events.mjs';
 import { fetchIpfsDescription } from '../../utils/votes/fetch-ipfs-description.mjs';
+import { canonicalStringify } from '../../utils/canonical-stringify.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const serializeBigInt = (key, value) => {
-  if (typeof value === 'bigint') {
-    return value.toString();
-  }
-  return value;
-};
+const OUTPUT_ROOT = join(__dirname, '../../public/votes-events');
 
-/**
- * A vote is terminal (archived) once voting has closed (`open === false`).
- * At that point cast votes, metadata and start/execute events are frozen.
- * `executed` / `canExecute` may still flip if someone enacts a "Passed
- * waiting for enact" vote, but that window is bounded by the cache
- * rebuild cadence and worth the trade-off to keep the dashboard fully
- * served from JSON.
- */
+const chainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
+const addressDir = (chainId, votingAddress) =>
+  join(chainDir(chainId), votingAddress);
+const manifestPath = (chainId, votingAddress) =>
+  join(addressDir(chainId, votingAddress), 'manifest.json');
+const descriptionsPath = (chainId, votingAddress) =>
+  join(addressDir(chainId, votingAddress), 'descriptions.json');
+const chunkFileName = (chunkIndex, hash) => `chunk-${chunkIndex}.${hash}.json`;
+
+const hashChunk = (jsonString) =>
+  createHash('sha256').update(jsonString).digest('hex').slice(0, 10);
+
 const isVoteTerminal = (voteData) => !voteData.open;
 
-// Skip a vote only when its CACHED entry is itself final and complete,
-// not just because an entry exists — otherwise a vote enacted after being
-// cached (open=false → executed) keeps stale data forever.
 const canSkip = (cached) => {
   if (!cached?.voteDetails || !cached.startVoteEvent) {
     return false;
   }
-  // executed → needs the ExecuteVote event; else → closed & unexecutable
   if (cached.voteDetails.executed) {
     return Boolean(cached.executeVoteEvent);
   }
@@ -62,12 +72,6 @@ const isCastVoteMoreRecent = (newVote, existing) => {
   return false;
 };
 
-/**
- * Pre-process CastVote and AttemptCastVoteAsDelegate events into the
- * UI VoteEvent[] shape. Mirrors the runtime logic in
- * features/vote/utils/get-cast-vote-events.ts so the client doesn't
- * have to redo this work.
- */
 const processCastVoteEvents = (castVoteEvents, delegateEvents) => {
   if (castVoteEvents.length === 0) {
     return [];
@@ -126,22 +130,22 @@ const processCastVoteEvents = (castVoteEvents, delegateEvents) => {
     let delegatedVotes = nestedVotes;
     if (existingDelegatedVote) {
       const merged = new Map();
-      for (const v of [
+      for (const delegatedVote of [
         ...(existingDelegatedVote.delegatedVotes ?? []),
         ...nestedVotes,
       ]) {
-        merged.set(v.voter.toLowerCase(), v);
+        merged.set(delegatedVote.voter.toLowerCase(), delegatedVote);
       }
       delegatedVotes = [...merged.values()];
     }
 
     const delegatedStake = delegatedVotes.reduce(
-      (acc, v) => acc + v.stake,
+      (acc, delegatedVote) => acc + delegatedVote.stake,
       0n,
     );
 
-    const sortedVotes = delegatedVotes.sort((a, b) =>
-      a.stake > b.stake ? -1 : 1,
+    const sortedVotes = delegatedVotes.sort((first, second) =>
+      first.stake > second.stake ? -1 : 1,
     );
 
     delegatedVotesMap[delegateKey] = {
@@ -153,13 +157,173 @@ const processCastVoteEvents = (castVoteEvents, delegateEvents) => {
   }
 
   return [
-    ...Object.values(votesMap).map((v) => ({
-      voter: v.voter,
-      supports: v.supports,
-      stake: v.stake,
+    ...Object.values(votesMap).map((voteEntry) => ({
+      voter: voteEntry.voter,
+      supports: voteEntry.supports,
+      stake: voteEntry.stake,
     })),
     ...Object.values(delegatedVotesMap),
-  ].sort((a, b) => (a.stake > b.stake ? -1 : 1));
+  ].sort((first, second) => (first.stake > second.stake ? -1 : 1));
+};
+
+const readExistingAddressData = (chainId, votingAddress) => {
+  const manifestFile = manifestPath(chainId, votingAddress);
+  if (!existsSync(manifestFile)) {
+    return {};
+  }
+  try {
+    const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+    const merged = {};
+    for (const file of Object.values(manifest.chunks || {})) {
+      const chunkPath = join(addressDir(chainId, votingAddress), file);
+      if (!existsSync(chunkPath)) {
+        continue;
+      }
+      const chunkData = JSON.parse(readFileSync(chunkPath, 'utf8'));
+      Object.assign(merged, chunkData);
+    }
+    return merged;
+  } catch (error) {
+    console.warn(
+      `Failed to read existing cache for ${chainId}/${votingAddress}:`,
+      error.message,
+    );
+    return {};
+  }
+};
+
+const partitionByChunk = (votesMap, firstId) => {
+  const chunks = new Map();
+  for (const [idStr, entry] of Object.entries(votesMap)) {
+    const id = Number(idStr);
+    if (!Number.isFinite(id)) {
+      continue;
+    }
+    const idx = Math.floor((id - firstId) / VOTES_PER_CHUNK);
+    if (!chunks.has(idx)) {
+      chunks.set(idx, {});
+    }
+    chunks.get(idx)[idStr] = entry;
+  }
+  return chunks;
+};
+
+const writeAddressChunks = (chainId, votingAddress, votesMap) => {
+  const dir = addressDir(chainId, votingAddress);
+  mkdirSync(dir, { recursive: true });
+
+  let firstId = 0;
+  let lastId = 0;
+  let hasIds = false;
+  for (const key of Object.keys(votesMap)) {
+    const id = Number(key);
+    if (!Number.isFinite(id)) {
+      continue;
+    }
+    if (!hasIds) {
+      firstId = id;
+      lastId = id;
+      hasIds = true;
+    } else {
+      if (id < firstId) {
+        firstId = id;
+      }
+      if (id > lastId) {
+        lastId = id;
+      }
+    }
+  }
+
+  const partitioned = partitionByChunk(votesMap, firstId);
+  const newChunkFiles = new Map();
+
+  for (const [idx, chunkData] of partitioned) {
+    const json = canonicalStringify(chunkData, 2);
+    const hash = hashChunk(json);
+    const filename = chunkFileName(idx, hash);
+    const filepath = join(dir, filename);
+    if (!existsSync(filepath)) {
+      writeFileSync(filepath, json);
+      console.debug(`    wrote ${filename}`);
+    } else {
+      console.debug(`    unchanged ${filename}`);
+    }
+    newChunkFiles.set(idx, filename);
+  }
+
+  const manifest = {
+    chunkSize: VOTES_PER_CHUNK,
+    firstId,
+    lastId,
+    chunks: Object.fromEntries(
+      [...newChunkFiles].sort(
+        ([indexA], [indexB]) => indexA - indexB,
+      ),
+    ),
+  };
+  writeFileSync(
+    manifestPath(chainId, votingAddress),
+    canonicalStringify(manifest, 2),
+  );
+  console.debug(`    wrote manifest.json`);
+
+  const keep = new Set(newChunkFiles.values());
+  keep.add('manifest.json');
+  keep.add('descriptions.json');
+  for (const file of readdirSync(dir)) {
+    if (!keep.has(file) && file.startsWith('chunk-') && file.endsWith('.json')) {
+      unlinkSync(join(dir, file));
+      console.debug(`    removed orphan ${file}`);
+    }
+  }
+};
+
+const writeAddressDescriptions = (chainId, votingAddress, votesMap) => {
+  const dir = addressDir(chainId, votingAddress);
+  mkdirSync(dir, { recursive: true });
+
+  const descriptions = {};
+  for (const [idStr, entry] of Object.entries(votesMap)) {
+    descriptions[idStr] = {
+      creator: entry?.startVoteEvent?.args?.creator ?? null,
+      metadata: entry?.startVoteEvent?.args?.metadata ?? null,
+      description: entry?.description ?? null,
+    };
+  }
+
+  writeFileSync(
+    descriptionsPath(chainId, votingAddress),
+    canonicalStringify(descriptions, 2),
+  );
+  console.debug(`    wrote descriptions.json (${Object.keys(descriptions).length} entries)`);
+};
+
+const fetchVotePhaseBlocks = async (publicClient, votingAddress) => {
+  try {
+    const [voteTime, objectionPhaseTime] = await Promise.all([
+      publicClient.readContract({
+        address: votingAddress,
+        abi: AragonVotingAbi,
+        functionName: 'voteTime',
+      }),
+      publicClient
+        .readContract({
+          address: votingAddress,
+          abi: AragonVotingAbi,
+          functionName: 'objectionPhaseTime',
+        })
+        .catch(() => 0n),
+    ]);
+    const totalSeconds = BigInt(voteTime) + BigInt(objectionPhaseTime);
+    return (
+      totalSeconds / APPROX_BLOCK_TIME_SECONDS + VOTE_END_BLOCK_BUFFER
+    );
+  } catch (error) {
+    console.warn(
+      `Failed to read voteTime/objectionPhaseTime at ${votingAddress}: ${error.message}. Falling back to 100000 block window.`,
+    );
+    return 100000n;
+  }
 };
 
 const fetchVotesLength = async (publicClient, votingAddress) => {
@@ -195,8 +359,6 @@ const fetchVoteData = async (publicClient, votingAddress, voteId) => {
       }),
     ]);
 
-    // rawVote tuple: [open, executed, startDate, snapshotBlock, supportRequired,
-    //   minAcceptQuorum, yea, nay, votingPower, script, phase]
     return {
       id: voteId,
       open: rawVote[0],
@@ -218,6 +380,134 @@ const fetchVoteData = async (publicClient, votingAddress, voteId) => {
   }
 };
 
+const processVote = async (
+  voteData,
+  existingAddressData,
+  votingAddress,
+  publicClient,
+  votePhaseBlocks,
+) => {
+  if (!voteData) {
+    return null;
+  }
+
+  const cachedEntry = existingAddressData[voteData.id];
+
+  if (cachedEntry && canSkip(cachedEntry)) {
+    if (cachedEntry.description == null) {
+      const description = await fetchIpfsDescription(
+        cachedEntry.startVoteEvent?.args?.metadata ?? '',
+      );
+      if (description != null) {
+        console.debug(
+          `    [vote ${voteData.id}] Back-filled description (${description.length} chars).`,
+        );
+        return { ...cachedEntry, description };
+      }
+    }
+    console.debug(
+      `    [vote ${voteData.id}] Cached + complete (executed=${cachedEntry.voteDetails.executed}), skipping.`,
+    );
+    return cachedEntry;
+  }
+
+  if (cachedEntry) {
+    console.debug(
+      `    [vote ${voteData.id}] Cached but incomplete (e.g. enacted after caching), re-fetching.`,
+    );
+  }
+
+  if (!isVoteTerminal(voteData)) {
+    console.debug(
+      `    [vote ${voteData.id}] Not terminal (open=${voteData.open}, executed=${voteData.executed}, canExecute=${voteData.canExecute}), skipping.`,
+    );
+    return null;
+  }
+
+  try {
+    const snapshotBlock = BigInt(voteData.snapshotBlock);
+
+    console.debug(
+      `    [vote ${voteData.id}] Fetching StartVote (snapshotBlock: ${snapshotBlock})...`,
+    );
+    const startVoteEvent = await fetchStartVoteEvent(
+      voteData.id,
+      snapshotBlock,
+      votingAddress,
+      publicClient,
+    );
+
+    let executeVoteEvent = null;
+    if (voteData.executed) {
+      console.debug(`    [vote ${voteData.id}] Fetching ExecuteVote...`);
+      executeVoteEvent = await fetchExecuteVoteEvent(
+        voteData.id,
+        snapshotBlock,
+        votingAddress,
+        publicClient,
+      );
+    }
+
+    // CastVote scan upper bound: voting closes at snapshotBlock + voteTime +
+    // objectionPhaseTime regardless of when (or if) it was executed, so this
+    // is always tighter than executeBlock and covers non-executed terminal
+    // votes too.
+    const voteEndBlock = snapshotBlock + votePhaseBlocks;
+
+    console.debug(`    [vote ${voteData.id}] Fetching CastVote events...`);
+    const castVoteData = await fetchCastVoteEvents(
+      voteData.id,
+      snapshotBlock,
+      voteEndBlock,
+      votingAddress,
+      publicClient,
+    );
+
+    const voteEvents = processCastVoteEvents(
+      castVoteData.castVoteEvents,
+      castVoteData.attemptCastVoteAsDelegateEvents,
+    );
+
+    console.debug(
+      `    [vote ${voteData.id}] Processed: ${voteEvents.length} vote entries.`,
+    );
+
+    console.debug(`    [vote ${voteData.id}] Fetching IPFS description...`);
+    const description = await fetchIpfsDescription(
+      startVoteEvent?.args?.metadata ?? '',
+    );
+
+    return {
+      voteDetails: {
+        id: voteData.id,
+        open: voteData.open,
+        executed: voteData.executed,
+        startDate: voteData.startDate,
+        snapshotBlock: voteData.snapshotBlock,
+        supportRequired: voteData.supportRequired,
+        minAcceptQuorum: voteData.minAcceptQuorum,
+        yea: voteData.yea,
+        nay: voteData.nay,
+        votingPower: voteData.votingPower,
+        script: voteData.script,
+        phase: voteData.phase,
+        canExecute: voteData.canExecute,
+      },
+      startVoteEvent,
+      executeVoteEvent,
+      voteEvents,
+      description,
+    };
+  } catch (error) {
+    console.error(
+      `Error fetching events for vote ${voteData.id} at ${votingAddress}:`,
+      error.message,
+      error.stack,
+    );
+    return null;
+  }
+};
+
 export const buildVotesEvents = async () => {
   console.debug('Starting votes events build...');
 
@@ -228,7 +518,7 @@ export const buildVotesEvents = async () => {
 
   if (supportedChains.length === 0) {
     console.warn('No SUPPORTED_CHAINS environment variable set. Aborting.');
-    return {};
+    return;
   }
 
   const chainVotingAddresses = {};
@@ -240,10 +530,6 @@ export const buildVotesEvents = async () => {
       console.warn(`No voting address found for chain ${chainId}.`);
     }
   }
-  console.debug(
-    'Loaded voting addresses for chains:',
-    Object.keys(chainVotingAddresses),
-  );
 
   const clients = {};
   for (const chainIdStr of supportedChains) {
@@ -251,7 +537,6 @@ export const buildVotesEvents = async () => {
     const rpcUrls = process.env[`EL_RPC_URLS_${chainId}`];
 
     if (rpcUrls) {
-      console.debug(`Creating client for chain ${chainId}...`);
       clients[chainId] = createPublicClient({
         transport: http(rpcUrls.split(',')[0], {
           retryCount: 3,
@@ -271,50 +556,21 @@ export const buildVotesEvents = async () => {
     console.error(
       'FATAL: No RPC clients were created for any supported chains.',
     );
-    console.error('This is likely due to missing environment variables');
-    console.error('(e.g., EL_RPC_URLS_1, EL_RPC_URLS_560048, etc.).');
-    console.error('Aborting build to prevent an empty data file.');
+    console.error('Aborting build to prevent empty data files.');
     console.error('----------------------------------------------------');
     throw new Error('No RPC clients configured.');
   }
-  console.debug(`Successfully created ${clientsCreated} clients.`);
-
-  const outputPath = join(__dirname, '../../public/votes-events-data.json');
-
-  let existingData = {};
-  try {
-    existingData = JSON.parse(readFileSync(outputPath, 'utf8'));
-    console.debug('Loaded existing votes-events-data.json');
-  } catch {
-    console.debug('No existing votes-events-data.json found, starting fresh');
-  }
-
-  const eventsData = {};
 
   for (const chainIdStr of supportedChains) {
     const chainId = Number(chainIdStr);
 
-    if (!clients[chainId]) {
-      console.debug(
-        `No RPC client available for chain ${chainId}, skipping...`,
-      );
-      continue;
-    }
-
-    if (!chainVotingAddresses[chainId]) {
-      console.debug(
-        `No voting address configured for chain ${chainId}, skipping...`,
-      );
+    if (!clients[chainId] || !chainVotingAddresses[chainId]) {
       continue;
     }
 
     console.debug(`Processing chain ${chainId}...`);
 
-    const addresses = chainVotingAddresses[chainId];
-    const existingChainData = existingData[chainId] ?? {};
-    eventsData[chainId] = {};
-
-    for (const votingAddress of addresses) {
+    for (const votingAddress of chainVotingAddresses[chainId]) {
       console.debug(`  Processing voting contract ${votingAddress}...`);
 
       const votesLength = await fetchVotesLength(
@@ -326,200 +582,93 @@ export const buildVotesEvents = async () => {
         console.warn(
           `Could not obtain votes count for ${votingAddress} on chain ${chainId}, skipping.`,
         );
-        if (!eventsData[chainId][votingAddress]) {
-          eventsData[chainId][votingAddress] = { votes: {} };
-        }
         continue;
       }
 
       const votesCount = Number(votesLength);
       console.debug(`  Found ${votesCount} votes at ${votingAddress}`);
 
+      const votePhaseBlocks = await fetchVotePhaseBlocks(
+        clients[chainId],
+        votingAddress,
+      );
+      console.debug(`  Vote phase length: ${votePhaseBlocks} blocks`);
+
+      const existingAddressData = readExistingAddressData(
+        chainId,
+        votingAddress,
+      );
+
       if (votesCount === 0) {
-        if (!eventsData[chainId][votingAddress]) {
-          eventsData[chainId][votingAddress] = { votes: {} };
+        const existingCount = Object.keys(existingAddressData).length;
+        if (existingCount > 0) {
+          console.warn(
+            `⚠️ ${chainId}/${votingAddress}: contract reports 0 votes but cache has ${existingCount} entries. Wiping — verify intentional (devnet reset?).`,
+          );
         }
+        writeAddressChunks(chainId, votingAddress, {});
+        writeAddressDescriptions(chainId, votingAddress, {});
         continue;
       }
 
-      // Vote IDs are 0-indexed
-      const voteIds = Array.from({ length: votesCount }, (_, i) => i);
+      const voteIds = Array.from({ length: votesCount }, (_, index) => index);
 
       console.debug(`  Fetching vote data for ${votingAddress}...`);
-      const voteDataResults = await Promise.allSettled(
-        voteIds.map((id) => fetchVoteData(clients[chainId], votingAddress, id)),
-      );
-
       const allVoteData = [];
-      voteDataResults.forEach((result, index) => {
-        if (result.status === 'fulfilled' && result.value) {
-          allVoteData.push(result.value);
-        } else if (result.status === 'rejected') {
-          console.warn(
-            `Failed to fetch vote data for ID ${voteIds[index]} at ${votingAddress}:`,
-            result.reason.message,
-          );
-        }
-      });
+      for (
+        let batchStart = 0;
+        batchStart < voteIds.length;
+        batchStart += BUILD_FETCH_CONCURRENCY
+      ) {
+        const batchIds = voteIds.slice(
+          batchStart,
+          batchStart + BUILD_FETCH_CONCURRENCY,
+        );
+        const batchResults = await Promise.allSettled(
+          batchIds.map((voteId) =>
+            fetchVoteData(clients[chainId], votingAddress, voteId),
+          ),
+        );
+        batchResults.forEach((result, batchIndex) => {
+          if (result.status === 'fulfilled' && result.value) {
+            allVoteData.push(result.value);
+          } else if (result.status === 'rejected') {
+            console.warn(
+              `Failed to fetch vote data for ID ${batchIds[batchIndex]} at ${votingAddress}:`,
+              result.reason.message,
+            );
+          }
+        });
+      }
 
       console.debug(
         `  Successfully fetched ${allVoteData.length} vote data entries`,
       );
 
-      const existingAddressData =
-        existingChainData[votingAddress]?.votes ?? {};
-      eventsData[chainId][votingAddress] = {
-        votes: { ...existingAddressData },
-      };
-
-      // eslint-disable-next-line unicorn/consistent-function-scoping
-      const processVote = async (voteData) => {
-        if (!voteData) {
-          return null;
-        }
-
-        const cachedEntry = existingAddressData[voteData.id];
-
-        if (cachedEntry && canSkip(cachedEntry)) {
-          // Final + complete. Only the IPFS description may still be
-          // missing — back-fill it cheaply without re-scanning events.
-          if (cachedEntry.description == null) {
-            const description = await fetchIpfsDescription(
-              cachedEntry.startVoteEvent?.args?.metadata ?? '',
-            );
-            if (description != null) {
-              console.debug(
-                `    [vote ${voteData.id}] Back-filled description (${description.length} chars).`,
-              );
-              return {
-                id: voteData.id,
-                data: { ...cachedEntry, description },
-              };
-            }
-          }
-          console.debug(
-            `    [vote ${voteData.id}] Cached + complete (executed=${cachedEntry.voteDetails.executed}), skipping.`,
-          );
-          return null;
-        }
-
-        if (cachedEntry) {
-          console.debug(
-            `    [vote ${voteData.id}] Cached but incomplete (e.g. enacted after caching), re-fetching.`,
-          );
-        }
-
-        if (!isVoteTerminal(voteData)) {
-          console.debug(
-            `    [vote ${voteData.id}] Not terminal (open=${voteData.open}, executed=${voteData.executed}, canExecute=${voteData.canExecute}), skipping.`,
-          );
-          return null;
-        }
-
-        try {
-          const snapshotBlock = BigInt(voteData.snapshotBlock);
-
-          console.debug(
-            `    [vote ${voteData.id}] Fetching StartVote (snapshotBlock: ${snapshotBlock})...`,
-          );
-          const startVoteEvent = await fetchStartVoteEvent(
-            voteData.id,
-            snapshotBlock,
-            votingAddress,
-            clients[chainId],
-          );
-
-          let executeVoteEvent = null;
-          if (voteData.executed) {
-            console.debug(`    [vote ${voteData.id}] Fetching ExecuteVote...`);
-            executeVoteEvent = await fetchExecuteVoteEvent(
-              voteData.id,
-              snapshotBlock,
-              votingAddress,
-              clients[chainId],
-            );
-          }
-
-          const executeBlock = executeVoteEvent?.blockNumber
-            ? BigInt(executeVoteEvent.blockNumber)
-            : null;
-
-          console.debug(
-            `    [vote ${voteData.id}] Fetching CastVote events...`,
-          );
-          const castVoteData = await fetchCastVoteEvents(
-            voteData.id,
-            snapshotBlock,
-            executeBlock,
-            votingAddress,
-            clients[chainId],
-          );
-
-          const voteEvents = processCastVoteEvents(
-            castVoteData.castVoteEvents,
-            castVoteData.attemptCastVoteAsDelegateEvents,
-          );
-
-          console.debug(
-            `    [vote ${voteData.id}] Processed: ${voteEvents.length} vote entries (from ${castVoteData.castVoteEvents.length} raw votes, ${castVoteData.attemptCastVoteAsDelegateEvents.length} delegate events)`,
-          );
-
-          console.debug(`    [vote ${voteData.id}] Fetching IPFS description...`);
-          const description = await fetchIpfsDescription(
-            startVoteEvent?.args?.metadata ?? '',
-          );
-
-          return {
-            id: voteData.id,
-            data: {
-              voteDetails: {
-                id: voteData.id,
-                open: voteData.open,
-                executed: voteData.executed,
-                startDate: voteData.startDate,
-                snapshotBlock: voteData.snapshotBlock,
-                supportRequired: voteData.supportRequired,
-                minAcceptQuorum: voteData.minAcceptQuorum,
-                yea: voteData.yea,
-                nay: voteData.nay,
-                votingPower: voteData.votingPower,
-                script: voteData.script,
-                phase: voteData.phase,
-                canExecute: voteData.canExecute,
-              },
-              startVoteEvent,
-              executeVoteEvent,
-              voteEvents,
-              description,
-            },
-          };
-        } catch (error) {
-          console.error(
-            `Error fetching events for vote ${voteData.id} at ${votingAddress}:`,
-            error.message,
-            error.stack,
-          );
-          return null;
-        }
-      };
-
-      console.debug(
-        `  Processing ${allVoteData.length} votes sequentially for ${votingAddress}...`,
+      const freshVoteIds = new Set(
+        allVoteData.map((voteData) => String(voteData.id)),
       );
+      const finalAddressData = {};
+      for (const [idStr, cached] of Object.entries(existingAddressData)) {
+        if (!freshVoteIds.has(idStr)) {
+          finalAddressData[idStr] = cached;
+        }
+      }
 
       for (const [index, voteData] of allVoteData.entries()) {
         console.debug(
           `  Processing vote ${index + 1}/${allVoteData.length} (ID: ${voteData.id})`,
         );
         try {
-          const result = await processVote(voteData);
-          if (result) {
-            const { id, data } = result;
-            eventsData[chainId][votingAddress].votes[id] = data;
-            writeFileSync(
-              outputPath,
-              JSON.stringify(eventsData, serializeBigInt, 2),
-            );
+          const entry = await processVote(
+            voteData,
+            existingAddressData,
+            votingAddress,
+            clients[chainId],
+            votePhaseBlocks,
+          );
+          if (entry) {
+            finalAddressData[voteData.id] = entry;
           }
         } catch (error) {
           console.error(
@@ -529,21 +678,20 @@ export const buildVotesEvents = async () => {
           );
         }
       }
-      console.debug(`  All votes for ${votingAddress} processed.`);
+
+      console.debug(`  Writing chunks for ${chainId}/${votingAddress}...`);
+      writeAddressChunks(chainId, votingAddress, finalAddressData);
+      writeAddressDescriptions(chainId, votingAddress, finalAddressData);
     }
-    console.debug(`All voting contracts for chain ${chainId} processed.`);
   }
 
   console.debug('Votes events build completed successfully');
-  console.debug('Built data for chains:', Object.keys(eventsData));
-
-  return eventsData;
 };
 
 void (async () => {
   try {
     await buildVotesEvents();
-    console.log('Script buildVotesEvents completed successfully.');
+    console.debug('Script buildVotesEvents completed successfully.');
     process.exit(0);
   } catch (error) {
     console.error('Script failed:', error.message, error.stack);

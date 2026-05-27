@@ -1,10 +1,4 @@
-import type { Address } from 'viem';
-
-/**
- * Types for the archived-vote cache. The build script produces this shape
- * from chain data, and the API serves slices of it by vote ID. BigInts are
- * serialized as strings (JSON limitation) and converted back on read.
- */
+import type { Address, Hex } from 'viem';
 
 export type ArchivedVoteDetails = {
   id: number;
@@ -17,13 +11,13 @@ export type ArchivedVoteDetails = {
   yea: string;
   nay: string;
   votingPower: string;
-  script: string;
+  script: Hex;
   phase: number;
   canExecute: boolean;
 };
 
 export type ArchivedStartVoteEvent = {
-  transactionHash: string;
+  transactionHash: Hex;
   blockNumber: string;
   args: {
     voteId: string;
@@ -33,12 +27,11 @@ export type ArchivedStartVoteEvent = {
 };
 
 export type ArchivedExecuteVoteEvent = {
-  transactionHash: string;
+  transactionHash: Hex;
   blockNumber: string;
   executedAt: number;
 };
 
-/** Matches the UI VoteEvent shape, with bigints serialized as strings. */
 export type ArchivedVoteEvent = {
   voter: Address;
   supports: boolean;
@@ -55,14 +48,6 @@ export type ArchivedVote = {
   startVoteEvent: ArchivedStartVoteEvent | null;
   executeVoteEvent: ArchivedExecuteVoteEvent | null;
   voteEvents: ArchivedVoteEvent[];
-  /**
-   * IPFS description text resolved at build time from
-   * `startVoteEvent.args.metadata`. `null` when the metadata has no CID or
-   * the gateway fetch failed — callers should fall back to the on-chain
-   * `metadata` string in that case. Stored separately so the two values can
-   * legitimately diverge (and so search-by-description has a plain-text
-   * corpus to scan).
-   */
   description: string | null;
 };
 
@@ -76,7 +61,13 @@ export type CachedVoteEventsData = {
   };
 };
 
-/** Returned by GET /api/votes/events — the votes-keyed slice for one chain + address. */
 export type VoteEventsSubset = {
   [voteId: string]: ArchivedVote;
+};
+
+export type VoteEventsManifest = {
+  chunkSize: number;
+  firstId: number;
+  lastId: number;
+  chunks: { [chunkIndex: string]: string };
 };
