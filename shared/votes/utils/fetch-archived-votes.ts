@@ -1,11 +1,11 @@
-import type { Address, Hex } from 'viem';
+import type { Address } from 'viem';
 import type {
   ArchivedStartVoteEvent,
   ArchivedExecuteVoteEvent,
   ArchivedVote,
   ArchivedVoteEvent,
-  VoteEventsSubset,
-} from 'pages/api/votes/types';
+} from 'shared/votes/cache/types';
+import { fetchCachedVoteEvents } from 'features/vote/utils/fetch-cached-vote-events';
 import type { EventStartVote } from './get-event-start-vote';
 import type { EventExecuteVote, Vote, VoteEvent } from '../types';
 import { VotePhase } from '../types';
@@ -18,8 +18,6 @@ export type ArchivedVoteResult = Vote & {
   description: string | null;
 };
 
-const BATCH_SIZE = 12;
-
 const PHASE_MAP: Record<number, VotePhase> = {
   0: VotePhase.Main,
   1: VotePhase.Objection,
@@ -27,71 +25,71 @@ const PHASE_MAP: Record<number, VotePhase> = {
 };
 
 const parseStartVoteEvent = (
-  e: ArchivedStartVoteEvent | null,
+  event: ArchivedStartVoteEvent | null,
 ): EventStartVote | null => {
-  if (!e) {
+  if (!event) {
     return null;
   }
   return {
     event: {
-      transactionHash: e.transactionHash as Hex,
-      blockNumber: BigInt(e.blockNumber),
+      transactionHash: event.transactionHash,
+      blockNumber: BigInt(event.blockNumber),
     },
     args: {
-      voteId: BigInt(e.args.voteId),
-      creator: e.args.creator,
-      metadata: e.args.metadata,
+      voteId: BigInt(event.args.voteId),
+      creator: event.args.creator,
+      metadata: event.args.metadata,
     },
   };
 };
 
 const parseExecuteVoteEvent = (
-  e: ArchivedExecuteVoteEvent | null,
+  event: ArchivedExecuteVoteEvent | null,
 ): EventExecuteVote | null => {
-  if (!e) {
+  if (!event) {
     return null;
   }
   return {
     event: {
-      transactionHash: e.transactionHash as Hex,
-      blockNumber: BigInt(e.blockNumber),
+      transactionHash: event.transactionHash,
+      blockNumber: BigInt(event.blockNumber),
     },
-    executedAt: BigInt(e.executedAt),
+    executedAt: BigInt(event.executedAt),
   };
 };
 
-const parseVoteEvent = (e: ArchivedVoteEvent): VoteEvent => ({
-  voter: e.voter,
-  supports: e.supports,
-  stake: BigInt(e.stake),
-  delegatedVotes: e.delegatedVotes?.map((d) => ({
-    voter: d.voter,
-    supports: d.supports,
-    stake: BigInt(d.stake),
+const parseVoteEvent = (event: ArchivedVoteEvent): VoteEvent => ({
+  voter: event.voter,
+  supports: event.supports,
+  stake: BigInt(event.stake),
+  delegatedVotes: event.delegatedVotes?.map((delegated) => ({
+    voter: delegated.voter,
+    supports: delegated.supports,
+    stake: BigInt(delegated.stake),
   })),
 });
 
 const parseArchivedVote = (archived: ArchivedVote): ArchivedVoteResult => {
-  const d = archived.voteDetails;
+  const details = archived.voteDetails;
   const voteObject = {
-    id: d.id,
-    open: d.open,
-    executed: d.executed,
-    startDate: BigInt(d.startDate),
-    snapshotBlock: BigInt(d.snapshotBlock),
-    supportRequired: BigInt(d.supportRequired),
-    minAcceptQuorum: BigInt(d.minAcceptQuorum),
-    yea: BigInt(d.yea),
-    nay: BigInt(d.nay),
-    votingPower: BigInt(d.votingPower),
-    script: d.script as Hex,
-    phase: PHASE_MAP[d.phase] ?? VotePhase.Closed,
-    canExecute: d.canExecute,
+    id: details.id,
+    open: details.open,
+    executed: details.executed,
+    startDate: BigInt(details.startDate),
+    snapshotBlock: BigInt(details.snapshotBlock),
+    supportRequired: BigInt(details.supportRequired),
+    minAcceptQuorum: BigInt(details.minAcceptQuorum),
+    yea: BigInt(details.yea),
+    nay: BigInt(details.nay),
+    votingPower: BigInt(details.votingPower),
+    script: details.script,
+    phase: PHASE_MAP[details.phase] ?? VotePhase.Closed,
+    canExecute: details.canExecute,
   };
 
   return {
     ...voteObject,
-    state: getVoteState(voteObject, d.canExecute),
+    state: getVoteState(voteObject, details.canExecute),
     startEvent: parseStartVoteEvent(archived.startVoteEvent),
     executeEvent: parseExecuteVoteEvent(archived.executeVoteEvent),
     voteEvents: archived.voteEvents.map(parseVoteEvent),
@@ -99,53 +97,6 @@ const parseArchivedVote = (archived: ArchivedVote): ArchivedVoteResult => {
   };
 };
 
-const fetchArchivedVoteEventsBatched = async (
-  chainId: number,
-  votingAddress: Address,
-  voteIds: (string | number)[],
-): Promise<VoteEventsSubset> => {
-  const batches: (string | number)[][] = [];
-  for (let i = 0; i < voteIds.length; i += BATCH_SIZE) {
-    batches.push(voteIds.slice(i, i + BATCH_SIZE));
-  }
-
-  const results = await Promise.all(
-    batches.map(async (batch) => {
-      const ids = batch.map(String).join(',');
-
-      try {
-        const response = await fetch(
-          `/api/votes/events?chainId=${chainId}&votingAddress=${votingAddress}&voteIds=${encodeURIComponent(ids)}`,
-        );
-
-        if (!response.ok) {
-          if (response.status !== 404) {
-            console.warn(
-              'fetchArchivedVotes: unexpected status',
-              response.status,
-            );
-          }
-          return {};
-        }
-
-        return (await response.json()) as VoteEventsSubset;
-      } catch (err) {
-        console.warn('fetchArchivedVotes: network error', err);
-        return {};
-      }
-    }),
-  );
-
-  return Object.assign({}, ...results) as VoteEventsSubset;
-};
-
-/**
- * Pure JSON reader for archived votes. Returns a map keyed by vote ID.
- * Votes not present in the archive are silently omitted — callers detect
- * cache misses by checking which IDs are missing from the result.
- *
- * No RPC, no fallback, no type converters interleaved with logic.
- */
 export const fetchArchivedVotes = async ({
   chainId,
   votingAddress,
@@ -159,11 +110,7 @@ export const fetchArchivedVotes = async ({
     return {};
   }
 
-  const subset = await fetchArchivedVoteEventsBatched(
-    chainId,
-    votingAddress,
-    voteIds,
-  );
+  const subset = await fetchCachedVoteEvents(chainId, votingAddress, voteIds);
 
   const result: Record<string, ArchivedVoteResult> = {};
   for (const [id, archived] of Object.entries(subset)) {

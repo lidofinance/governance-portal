@@ -5,5 +5,4 @@
 # diff" on GitHub; `git diff`/`git log -p` locally) so a targeted change is
 # still auditable — we intentionally do NOT set `-diff`. Integrity is enforced
 # by the deterministic build + `validate-events`; never hand-edit these files.
-public/proposals-events-data.json linguist-generated
-public/votes-events-data.json linguist-generated
+public/votes-events/** linguist-generated

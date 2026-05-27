@@ -7,5 +7,4 @@ export const enum API_ROUTES {
   COW_PLACE_ORDER = 'api/cow/place-order',
   ETHERSCAN_BLOCK_BY_TIMESTAMP = 'api/etherscan/block-by-timestamp',
   ETHERSCAN = 'api/etherscan',
-  VOTES_EVENTS = 'api/votes/events',
 }

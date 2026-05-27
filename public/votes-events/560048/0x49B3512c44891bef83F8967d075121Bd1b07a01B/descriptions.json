@@ -1,0 +1,357 @@
+{
+  "0": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Lido: Resume protocol\n2. Lido: Resume staking\n3. Lido: Set staking limit 3000.0 ETH per day\n4. WQ: Grant \"RESUME_ROLE\" role to 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n5. WQ: Resume contract\n6. VEBO: Grant \"RESUME_ROLE\" role to 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n7. VEBO: Resume contract\n8. VEBO consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n9. VEBO consensus: Add member 0xcA80ee7313A315879f326105134F938676Cfd7a9 and set quorum to 1\n10. VEBO consensus: Add member 0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459 and set quorum to 2\n11. VEBO: Update initial epoch to 32\n12. AO consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n13. AO consensus: Add member 0xcA80ee7313A315879f326105134F938676Cfd7a9 and set quorum to 1\n14. AO consensus: Add member 0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459 and set quorum to 2\n15. AO: Update initial epoch to 32\n16. DSM: Add guardian 0x4E93C8c7B06F1CEEb03A8e13B0371b35F93d3257 and set quorum to 1\n17. DSM: Add guardian 0x2aD1cBE1109376aD6f9D714c29c9A7FF452300FE and set quorum to 2\n18. SR: Grant \"STAKING_MODULE_MANAGE_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n19. NOR: Grant 'STAKING_ROUTER_ROLE' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n20. NOR: Grant 'MANAGE_SIGNING_KEYS' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n21. NOR: Grant 'SET_NODE_OPERATOR_LIMIT_ROLE' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n22. NOR: Grant 'MANAGE_NODE_OPERATOR_ROLE' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n23. AO consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n24. AO consensus: Grant \"MANAGE_FRAME_CONFIG_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n25. AO consensus: Grant \"MANAGE_FAST_LANE_CONFIG_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n26. VEBO consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n27. VEBO consensus: Grant \"MANAGE_FRAME_CONFIG_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n28. VEBO consensus: Grant \"MANAGE_FAST_LANE_CONFIG_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n29. Oracle daemon config: Grant \"CONFIG_MANAGER_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n30. Sanity checker: Grant \"ALL_LIMITS_MANAGER_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E"
+  },
+  "1": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "2": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Create a new repo with version 1.0.0 for sandbox\n2. Link 0x85d2fceef13a6c14c43527594f79fb91a8ef8f15024a43486efac8df2b11e632 with the implementation 0x749b29ed0A41A431A69C3E1b0432dc1df13408E7\n3. Initialize the new module\n4. Grant STAKING_ROUTER_ROLE permission to the new module\n5. Grant REQUEST_BURN_SHARES_ROLE role to the new module\n6. Grant STAKING_MODULE_MANAGE_ROLE role to the Agent\n7. Add the new module to the staking router"
+  },
+  "3": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Create a new repo with version 1.0.0 for sandbox\n2. Link 0x85d2fceef13a6c14c43527594f79fb91a8ef8f15024a43486efac8df2b11e632 with the implementation 0x749b29ed0A41A431A69C3E1b0432dc1df13408E7\n3. Initialize the new module\n4. Grant STAKING_ROUTER_ROLE permission to the new module\n5. Grant REQUEST_BURN_SHARES_ROLE role to the new module\n6. Grant STAKING_MODULE_MANAGE_ROLE role to the Agent\n7. Add the new module to the staking router"
+  },
+  "4": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Rename SimpleDVT module"
+  },
+  "5": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Grant staking module manage role to agent 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n2. Add staking module Community Staking with address 0x79CEf36D84743222f37765204Bec41E92a93E59d\n3. Grant request burn shares role to CSAccounting contract with address 0xA54b90BA34C5f326BC1485054080994e38FB4C60\n4. Grant resume role to agent 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n5. Grant csmModuleManager role to agent 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n6. Resume staking module\n7. Activate public release\n8. Revoke resume role from agent 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n9. Revoke csmModuleManager role from agent 0x0534aA41907c9631fae990960bCC72d75fA7cfeD\n10. Update initial epoch to 425"
+  },
+  "6": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Permissions for Sandbox module"
+  },
+  "7": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Module 1: Grant 'STAKING_ROUTER_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n2. Module 1: Grant 'MANAGE_SIGNING_KEYS' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n3. Module 1: Grant 'SET_NODE_OPERATOR_LIMIT_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n4. Module 1: Grant 'MANAGE_NODE_OPERATOR_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n5. Module 2: Grant 'STAKING_ROUTER_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n6. Module 2: Grant 'MANAGE_SIGNING_KEYS' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n7. Module 2: Grant 'SET_NODE_OPERATOR_LIMIT_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n8. Module 2: Grant 'MANAGE_NODE_OPERATOR_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n9. Module 3: Grant 'STAKING_ROUTER_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n10. Module 3: Grant 'MANAGE_SIGNING_KEYS' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n11. Module 3: Grant 'SET_NODE_OPERATOR_LIMIT_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275\n12. Module 3: Grant 'MANAGE_NODE_OPERATOR_ROLE' role to 0xF865A1d43D36c713B4DA085f32b7d1e9739B9275"
+  },
+  "8": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "9": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantPermission(0x79a20FD0FA36453B2F45eAbab19bfef43575Ba9E,0x5cDbE1590c083b5A2A64427fAA63A7cfDB91FbB5,0x07b39e0faf2521001ae4e58cb9ffd3840a63e205d288dc9c93c3774f0d794754) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62\n2) call grantRole(0xe85fdec10fe0f93d0792364051df7c3d73e37c17b3a954bffe593960e3cd3012,0x79a20FD0FA36453B2F45eAbab19bfef43575Ba9E) at 0x79CEf36D84743222f37765204Bec41E92a93E59d"
+  },
+  "10": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. AO consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n2. AO consensus: Grant \"MANAGE_FRAME_CONFIG_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n3. AO consensus: Grant \"MANAGE_FAST_LANE_CONFIG_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n4. VEBO consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n5. VEBO consensus: Grant \"MANAGE_FRAME_CONFIG_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n6. VEBO consensus: Grant \"MANAGE_FAST_LANE_CONFIG_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n7. CS consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n8. CS consensus: Grant \"MANAGE_FRAME_CONFIG_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b\n9. CS consensus: Grant \"MANAGE_FAST_LANE_CONFIG_ROLE\" role to 0x4022E0754d0cB6905B54306105D3346d1547988b"
+  },
+  "11": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. CS consensus: Grant \"MANAGE_MEMBERS_AND_QUORUM_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n2. CS consensus: Grant \"MANAGE_FRAME_CONFIG_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n3. CS consensus: Grant \"MANAGE_FAST_LANE_CONFIG_ROLE\" role to 0xE28f573b732632fdE03BD5507A7d475383e8512E"
+  },
+  "12": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Module 2: Grant 'STAKING_ROUTER_ROLE' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n2. Module 2: Grant 'MANAGE_SIGNING_KEYS' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n3. Module 2: Grant 'SET_NODE_OPERATOR_LIMIT_ROLE' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E\n4. Module 2: Grant 'MANAGE_NODE_OPERATOR_ROLE' role to 0xE28f573b732632fdE03BD5507A7d475383e8512E"
+  },
+  "13": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Grant MANAGE_CONSENSUS_VERSION_ROLE role on Accounting Oracle 0x852deD011285fe67063a08005c71a85690503Cee to Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c;\n 2. Update Accounting Oracle 0x852deD011285fe67063a08005c71a85690503Cee consensus version to 3;\n 3. Revoke MANAGE_CONSENSUS_VERSION_ROLE role on Accounting Oracle 0x852deD011285fe67063a08005c71a85690503Cee from Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c;\n 4. Grant MANAGE_CONSENSUS_VERSION_ROLE role on Validator Exit Bus Oracle 0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6 to Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c;\n 5. Update Validator Exit Bus Oracle 0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e consensus version to 3;\n 6. Revoke MANAGE_CONSENSUS_VERSION_ROLE role on Validator Exit Bus Oracle 0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e from Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c;\n 7. Grant MANAGE_CONSENSUS_VERSION_ROLE role on CSFeeOracle 0x4D4074628678Bd302921c20573EEa1ed38DdF7FB to Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c;\n 8. Update CSFeeOracle 0x4D4074628678Bd302921c20573EEa1ed38DdF7FB consensus version to 2;\n 9. Revoke MANAGE_CONSENSUS_VERSION_ROLE role on CSFeeOracle 0x4D4074628678Bd302921c20573EEa1ed38DdF7FB from Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c;\n 10. Revoke VERIFIER_ROLE role on CSM 0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F from old CS Verifier 0x3Dfc50f22aCA652a0a6F28a0F892ab62074b5583;\n 11. Grant VERIFIER_ROLE role on CSM 0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F to new CS Verifier <TODO: new verifier address>.\nlidovoteipfs://bafkreigvxrcapbitpvpxvozglbrajeasjqlcqes7f3fretfjbr2sefqsya"
+  },
+  "14": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "15": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "16": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "17": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "18": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "19": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "20": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1) Grant permission `MANAGE_NODE_OPERATOR_ROLE` on Simple DVT module for `EasyTrackEVMScriptExecutor`;\n 2) Grant permission `SET_NODE_OPERATOR_LIMIT_ROLE` on Simple DVT module for `EasyTrackEVMScriptExecutor`;\n 3) Transfer permission manager of `MANAGE_SIGNING_KEYS` on Simple DVT module for `EasyTrackEVMScriptExecutor`;\n 4) Grant `STAKING_ROUTER_ROLE` on Simple DVT module for `EasyTrackEVMScriptExecutor`;\n 5) Add `AddNodeOperators` EVM script factory with address 0x42f2532ab3d41dfD6030db1EC2fF3DBC8DCdf89a;\n 6) Add `ActivateNodeOperators` EVM script factory with address 0xfA3B3EE204E1f0f165379326768667300992530e;\n 7) Add `DeactivateNodeOperators` EVM script factory with address 0x3114bEbC222Faec27DF8AB7f9bD8dF2063d7fc77;\n 8) Add `SetVettedValidatorsLimits` EVM script factory with address 0x956c5dC6cfc8603b2293bF8399B718cbf61a9dda;\n 9) Add `UpdateTargetValidatorLimits` EVM script factory with address 0xc3975Bc4091B585c57357990155B071111d7f4f8;\n 10) Add `SetNodeOperatorNames` EVM script factory with address 0x2F98760650922cf65f1b596635bC5835b6E561d4;\n 11) Add `SetNodeOperatorRewardAddresses` EVM script factory with address 0x3d267e4f8d9dCcc83c2DE66729e6A5B2B0856e31;\n 12) Add `ChangeNodeOperatorManagers` EVM script factory with address 0x8a437cd5685e270cDDb347eeEfEbD22109Fa42a9.\nlidovoteipfs://bafkreieott4y2234xyej7pvjry2lonxczklwtw3achw6yjs3g3vxiogsri"
+  },
+  "21": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": ""
+  },
+  "22": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "\nVoting 01/05/2025. Hoodi network.\n\nI. Deploy sandbox EVM script factories for EasyTrack:\n\n1. Add `RemoveAllowedRecipients` EVM script factory \n2. Add `AddAllowedRecipient` EVM script factory\n3. Add `TopUpAllowedRecipient` EVM script factory\n4. Add `CREATE_PAYMENTS_ROLE` permission to EasyTrackEVMScriptExecutor\n",
+    "metadata": "Omnibus vote: 1) Add `RemoveAllowedRecipients` EVM script factory with address 0xc84251D2959E976AfE95201E1e2B88dB56Bc0a69;\n 2) Add `AddAllowedRecipient` EVM script factory with address 0x056561d0F1314CB3932180b3f0B3C03174F2642B;\n 3) Add `TopUpAllowedRecipient` EVM script factory with address 0x4A7B898981182c42ecC9444Cd40Cf42CEB6b71Ab;\n 4) Add CREATE_PAYMENTS_ROLE permission to EasyTrackEVMScriptExecutor.\nlidovoteipfs://bafkreib7txct53nntf4r2isgf3mb7l3jpayjudp6ksh7iacconquq2gdkm"
+  },
+  "23": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Dual Governance Launch on Hoodi testnet",
+    "metadata": "Omnibus vote: 1. Revoke STAKING_CONTROL_ROLE permission from Voting on Lido;\n 2. Set STAKING_CONTROL_ROLE manager to Agent on Lido;\n 3. Revoke RESUME_ROLE permission from Voting on Lido;\n 4. Set RESUME_ROLE manager to Agent on Lido;\n 5. Revoke PAUSE_ROLE permission from Voting on Lido;\n 6. Set PAUSE_ROLE manager to Agent on Lido;\n 7. Revoke UNSAFE_CHANGE_DEPOSITED_VALIDATORS_ROLE permission from Voting on Lido;\n 8. Set UNSAFE_CHANGE_DEPOSITED_VALIDATORS_ROLE manager to Agent on Lido;\n 9. Revoke STAKING_PAUSE_ROLE permission from Voting on Lido;\n 10. Set STAKING_PAUSE_ROLE manager to Agent on Lido;\n 11. Revoke APP_MANAGER_ROLE permission from Voting on DAOKernel;\n 12. Set APP_MANAGER_ROLE manager to Agent on DAOKernel;\n 13. Create UNSAFELY_MODIFY_VOTE_TIME_ROLE permission on Voting with manager Voting and grant it to Voting;\n 14. Create MINT_ROLE permission on TokenManager with manager Voting and grant it to Voting;\n 15. Create REVOKE_VESTINGS_ROLE permission on TokenManager with manager Voting and grant it to Voting;\n 16. Create BURN_ROLE permission on TokenManager with manager Voting and grant it to Voting;\n 17. Create ISSUE_ROLE permission on TokenManager with manager Voting and grant it to Voting;\n 18. Create CHANGE_PERIOD_ROLE permission on Finance with manager Voting and grant it to Voting;\n 19. Create CHANGE_BUDGETS_ROLE permission on Finance with manager Voting and grant it to Voting;\n 20. Revoke REGISTRY_MANAGER_ROLE permission from Voting on EVMScriptRegistry;\n 21. Set REGISTRY_MANAGER_ROLE manager to Agent on EVMScriptRegistry;\n 22. Revoke REGISTRY_ADD_EXECUTOR_ROLE permission from Voting on EVMScriptRegistry;\n 23. Set REGISTRY_ADD_EXECUTOR_ROLE manager to Agent on EVMScriptRegistry;\n 24. Set STAKING_ROUTER_ROLE manager to Agent on Curated Module;\n 25. Set MANAGE_NODE_OPERATOR_ROLE manager to Agent on Curated Module;\n 26. Revoke SET_NODE_OPERATOR_LIMIT_ROLE permission from Voting on Curated Module;\n 27. Set SET_NODE_OPERATOR_LIMIT_ROLE manager to Agent on Curated Module;\n 28. Revoke MANAGE_SIGNING_KEYS permission from Voting on Curated Module;\n 29. Set MANAGE_SIGNING_KEYS manager to Agent on Curated Module;\n 30. Revoke STAKING_ROUTER_ROLE permission from Voting on Simple DVT Module;\n 31. Set STAKING_ROUTER_ROLE manager to Agent on Simple DVT Module;\n 32. Revoke MANAGE_NODE_OPERATOR_ROLE permission from Voting on Simple DVT Module;\n 33. Set MANAGE_NODE_OPERATOR_ROLE manager to Agent on Simple DVT Module;\n 34. Revoke SET_NODE_OPERATOR_LIMIT_ROLE permission from Voting on Simple DVT Module;\n 35. Set SET_NODE_OPERATOR_LIMIT_ROLE manager to Agent on Simple DVT Module;\n 36. Grant CREATE_PERMISSIONS_ROLE permission to Agent on ACL;\n 37. Revoke CREATE_PERMISSIONS_ROLE permission from Voting on ACL;\n 38. Set CREATE_PERMISSIONS_ROLE manager to Agent on ACL;\n 39. Grant RUN_SCRIPT_ROLE permission to DualGovernance Executor on Agent;\n 40. Grant RUN_SCRIPT_ROLE permission to Agent Manager on Agent;\n 41. Set RUN_SCRIPT_ROLE manager to Agent on Agent;\n 42. Grant EXECUTE_ROLE to DualGovernance Executor on Agent;\n 43. Set EXECUTE_ROLE manager to Agent on Agent;\n 44. Grant PAUSE_ROLE to ResealManager on WithdrawalQueue;\n 45. Grant RESUME_ROLE to ResealManager on WithdrawalQueue;\n 46. Grant PAUSE_ROLE to ResealManager on ValidatorsExitBusOracle;\n 47. Grant RESUME_ROLE to ResealManager on ValidatorsExitBusOracle;\n 48. Grant DEFAULT_ADMIN_ROLE to Voting on AllowedTokensRegistry;\n 49. Revoke DEFAULT_ADMIN_ROLE from Agent on AllowedTokensRegistry;\n 50. Revoke ADD_TOKEN_TO_ALLOWED_LIST_ROLE from Agent on AllowedTokensRegistry;\n 51. Revoke REMOVE_TOKEN_FROM_ALLOWED_LIST_ROLE from Agent on AllowedTokensRegistry;\n 52. Set admin to Agent on WithdrawalVault;\n 53. Validate transferred roles;\n 54. Submit a proposal to the Dual Governance to revoke RUN_SCRIPT_ROLE and EXECUTE_ROLE from Aragon Voting;\n 55. Verify Dual Governance launch state;\n 56. Introduce an expiration deadline after which the omnibus can no longer be enacted.\nlidovoteipfs://bafkreidoujxu7oxcyzpegqtq32wjyxcksgtcrp3yg33z4ndhlrxxje7lf4"
+  },
+  "24": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "\nVoting may slot '25\n\nI. EasyTrack Factories for Managing MEV-Boost Relay Allowed List\n\n1. Add `AddMEVBoostRelay` EVM script factory with address `0xF02DbeaA1Bbc90226CaB995db4C190DbE25983af`\n2. Add `RemoveMEVBoostRelay` EVM script factory with address `0x7FCc2901C6C3D62784cB178B14d44445B038f736`\n3. Add `EditMEVBoostRelay` EVM script factory with address `0x27A99a7104190DdA297B222104A6C70A4Ca5A17e`\n4. Change manager role on MEV-Boost Relay Allowed List from `0xF865A1d43D36c713B4DA085f32b7d1e9739B9275` to `EasyTrackEVMScriptExecutor` `0x79a20FD0FA36453B2F45eAbab19bfef43575Ba9E`\n\nII. ...\n",
+    "metadata": "Omnibus vote: 1) Add `AddMEVBoostRelay` EVM script factory with address `0xF02DbeaA1Bbc90226CaB995db4C190DbE25983af`;\n 2) Add `RemoveMEVBoostRelay` EVM script factory with address `0x7FCc2901C6C3D62784cB178B14d44445B038f736`;\n 3) Add `EditMEVBoostRelay` EVM script factory with address `0x27A99a7104190DdA297B222104A6C70A4Ca5A17e`;\n 4) Change manager role on MEV-Boost Relay Allowed List from `0xF865A1d43D36c713B4DA085f32b7d1e9739B9275` to `EasyTrackEVMScriptExecutor` `0x79a20FD0FA36453B2F45eAbab19bfef43575Ba9E`.\nlidovoteipfs://bafkreicnjj3xpyxxdzkqzrxkgbejxhybcsz2drxvpxbzo6ixidpwkmrkmm"
+  },
+  "25": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call setObjectionsThreshold(50) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "26": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Set Withdrawal NFT URI to https://wq-api-hoodi.testnet.fi/v1/nft"
+  },
+  "27": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Triggerable withdrawals and CSM v2 upgrade voting (HOODI)",
+    "metadata": "Omnibus vote: 1. Update locator implementation\n2. Update VEBO implementation\n3. Call finalizeUpgrade_v2 on VEBO\n4. Grant VEBO role MANAGE_CONSENSUS_VERSION_ROLE to the AGENT\n5. Bump VEBO consensus version to `4`\n6. Revoke VEBO role MANAGE_CONSENSUS_VERSION_ROLE from the AGENT\n7. Grant SUBMIT_REPORT_HASH_ROLE on Validator Exit Bus Oracle to the EasyTrack EVM Script Executor\n8. Grant TWG role ADD_FULL_WITHDRAWAL_REQUEST_ROLE to the CS Ejector\n9. Grant TWG role ADD_FULL_WITHDRAWAL_REQUEST_ROLE to the VEB\n10. Connect TRIGGERABLE_WITHDRAWALS_GATEWAY to Dual Governance tiebreaker\n11. Update WithdrawalVault implementation\n12. Call finalizeUpgrade_v2 on WithdrawalVault\n13. Update Accounting Oracle implementation\n14. Grant AO MANAGE_CONSENSUS_VERSION_ROLE to the AGENT\n15. Bump AO consensus version to `4`\n16. Revoke AO MANAGE_CONSENSUS_VERSION_ROLE from the AGENT\n17. Call finalizeUpgrade_v3() on AO\n18. Update SR implementation\n19. Call finalizeUpgrade_v3() on SR\n20. Grant SR role REPORT_VALIDATOR_EXITING_STATUS_ROLE to ValidatorExitDelayVerifier\n21. Grant SR role REPORT_VALIDATOR_EXIT_TRIGGERED_ROLE to TWG\n22. Grant APP_MANAGER_ROLE role to the AGENT\n23. Update `NodeOperatorsRegistry` implementation\n24. Call finalizeUpgrade_v4 on Curated Staking Module\n25. Update `SDVT` implementation\n26. Call finalizeUpgrade_v4 on SDVT\n27. Revoke APP_MANAGER_ROLE role from the AGENT\n28. Grant CONFIG_MANAGER_ROLE role to the AGENT\n29. Remove NODE_OPERATOR_NETWORK_PENETRATION_THRESHOLD_BP variable from OracleDaemonConfig\n30. Remove VALIDATOR_DELAYED_TIMEOUT_IN_SLOTS variable from OracleDaemonConfig\n31. Remove VALIDATOR_DELINQUENT_TIMEOUT_IN_SLOTS variable from OracleDaemonConfig\n32. Add EXIT_EVENTS_LOOKBACK_WINDOW_IN_SLOTS variable to OracleDaemonConfig\n33. Revoke CONFIG_MANAGER_ROLE role from the AGENT\n34. Upgrade CSM implementation on proxy\n35. Call `finalizeUpgradeV2()` on CSM contract\n36. Upgrade CSAccounting implementation on proxy\n37. Call `finalizeUpgradeV2(bondCurves)` on CSAccounting contract\n38. Upgrade CSFeeOracle implementation on proxy\n39. Call `finalizeUpgradeV2(consensusVersion)` on CSFeeOracle contract\n40. Upgrade CSFeeDistributor implementation on proxy\n41. Call `finalizeUpgradeV2(admin)` on CSFeeDistributor contract\n42. Revoke CSAccounting role SET_BOND_CURVE_ROLE from the CSM contract\n43. Revoke CSAccounting role RESET_BOND_CURVE_ROLE from the CSM contract\n44. Revoke CSAccounting role RESET_BOND_CURVE_ROLE from the CSM committee\n45. Grant CSM role CREATE_NODE_OPERATOR_ROLE for the permissionless gate\n46. Grant CSM role CREATE_NODE_OPERATOR_ROLE for the vetted gate\n47. Grant CSAccounting role SET_BOND_CURVE_ROLE for the vetted gate\n48. Revoke role VERIFIER_ROLE from the previous instance of the Verifier contract\n49. Grant role VERIFIER_ROLE to the new instance of the Verifier contract\n50. Revoke CSM role PAUSE_ROLE from the previous GateSeal instance\n51. Revoke CSAccounting role PAUSE_ROLE from the previous GateSeal instance\n52. Revoke CSFeeOracle role PAUSE_ROLE from the previous GateSeal instance\n53. Grant CSM role PAUSE_ROLE for the new GateSeal instance\n54. Grant CSAccounting role PAUSE_ROLE for the new GateSeal instance\n55. Grant CSFeeOracle role PAUSE_ROLE for the new GateSeal instance\n56. Grant MANAGE_BOND_CURVES_ROLE to the AGENT\n57. Add Identified Community Stakers Gate Bond Curve\n58. Revoke MANAGE_BOND_CURVES_ROLE from the AGENT\n59. Increase CSM share in Staking Router from 15% to 16%\n60. Revoke PAUSE_ROLE on WithdrawalQueue from the old GateSeal\n61. Revoke PAUSE_ROLE on ValidatorsExitBusOracle from the old GateSeal\n62. Grant PAUSE_ROLE on WithdrawalQueue to the new WithdrawalQueue GateSeal\n63. Grant PAUSE_ROLE on ValidatorsExitBusOracle to the new Triggerable Withdrawals GateSeal\n64. Grant PAUSE_ROLE on TriggerableWithdrawalsGateway to the new Triggerable Withdrawals GateSeal\n65. Grant PAUSE_ROLE on TriggerableWithdrawalsGateway to ResealManager\n66. Grant RESUME_ROLE on TriggerableWithdrawalsGateway to ResealManager;\n 67. Add CSSetVettedGateTree factory to EasyTrack with permissions;\n 68. Add `SubmitValidatorsExitRequestHashes` (SDVT) EVM script factory to Easy Track;\n 69. Add `SubmitValidatorsExitRequestHashes` (Curated Module) EVM script factory to Easy Track.\nlidovoteipfs://bafkreigtb36xpss65ijygto4lmknmdkou6ql74zd5dllx3yimy25x6ptxq"
+  },
+  "28": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Update Sandbox Module Implementation (HOODI)",
+    "metadata": "Omnibus vote: 1. Grant APP_MANAGER_ROLE role to the AGENT\n2. Update `Sandbox Module` implementation\n3. Call finalizeUpgrade_v4 on `Sandbox Module`\n4. Revoke APP_MANAGER_ROLE role from the AGENT.\nlidovoteipfs://bafkreid7idhinlhvz6ekf76og2q6axf6owbh3ymjddwueuebw7ndlhharm"
+  },
+  "29": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Proposal to upgrade Dual Governance contract on Hoodi testnet (Immunefi reported vulnerability fix)",
+    "metadata": "Omnibus vote: 1. Submit Dual Governance proposal to upgrade Dual Governance contract on Hoodi testnet (Immunefi reported vulnerability fix).\nlidovoteipfs://bafkreicfgpgqnj2lwerhweihnlze734t4iguw7jnqg7ylsos6ixoepn5vu"
+  },
+  "30": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "TW Upgrade & Test for Validators Exiting via Voting (HOODI)",
+    "metadata": "Omnibus vote: TW Upgrade & Test for Validators Exiting via Voting (HOODI).\nlidovoteipfs://bafkreifkhmr6qcmhyhohqmcqebsmyacnshdlu2awkm32oja4idewbdmsmm"
+  },
+  "31": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Easy Track EVM script factories list update.",
+    "metadata": "Omnibus vote: 1. Remove the outdated factory 0x4A7B898981182c42ecC9444Cd40Cf42CEB6b71Ab from Easy Track 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a;\n 2. Remove the outdated factory 0x056561d0F1314CB3932180b3f0B3C03174F2642B from Easy Track 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a;\n 3. Remove the outdated factory 0xc84251D2959E976AfE95201E1e2B88dB56Bc0a69 from Easy Track 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a;\n 4. Add new factory 0xE5aE943A3AEFA44AD16438Bc3D2cA7654103F985 (Allowed Recipient Registry 0x7E33f2192c2cEC339493B9193110BC0510d6CBD2);\n 5. Add new factory 0x8f05Cc4cC42745E9723E105D38638683f162e1d9 (Allowed Recipient Registry 0x7E33f2192c2cEC339493B9193110BC0510d6CBD2);\n 6. Add new factory 0x86E10ffC7c67A92e0c5E58ae42945213da43D0c7 (Allowed Recipient Registry 0x7E33f2192c2cEC339493B9193110BC0510d6CBD2);\n 7. Add new factory 0x9D735eeDfa96F53BF9d31DbE81B51a5d333198dB (Allowed Recipient Registry 0xdf53b1cd4CFE43b6CdA3640Be0e4f1a45126ec61).\nlidovoteipfs://bafkreih3oarbjrt6qu6fqftclphldaufg6w62fpdpq77hm64anoxteyxbe"
+  },
+  "32": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Test for Validators Exiting via Voting (HOODI)",
+    "metadata": "Omnibus vote: Test for Validators Exiting via Voting (HOODI).\nlidovoteipfs://bafkreibvsjitaei6pcsjl3dzokowj67lzbvsqdzfsy6pfnz34uakkj677i"
+  },
+  "33": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "TW Upgrade Validator Exit Verifier (HOODI)",
+    "metadata": "Omnibus vote: 1. Upgrade Lido Locator implementation\n2. Grant REPORT_VALIDATOR_EXITING_STATUS_ROLE to new validator exit verifier\n3. Revoke REPORT_VALIDATOR_EXITING_STATUS_ROLE from old validator exit verifier.\nlidovoteipfs://bafkreicoya72k47pp4oibsb6gfdc6gxs3nnh36srcp3gdiujwuctvd5xke"
+  },
+  "34": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Upgrade CSMv2 cotnracts to the latest versions"
+  },
+  "35": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Lido V3 Hoodi Testnet upgrade"
+  },
+  "36": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Lido V3 Hoodi Testnet upgrade"
+  },
+  "37": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9\n2) call set(SLASHING_RESERVE_WE_RIGHT_SHIFT,0x2000) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9\n3) call set(SLASHING_RESERVE_WE_LEFT_SHIFT,0x2000) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9\n4) call revokeRole(0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9"
+  },
+  "38": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9"
+  },
+  "39": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9\n2) call set(SLASHING_RESERVE_WE_RIGHT_SHIFT,0x2000) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9\n3) call set(SLASHING_RESERVE_WE_LEFT_SHIFT,0x2000) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9\n4) call revokeRole(0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x2a833402e3F46fFC1ecAb3598c599147a78731a9"
+  },
+  "40": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call addEVMScriptFactory(0xa11906bBBBaC5207b8FDA4F7F294d7EcB8dcc758,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac96c4d514) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0xc5dCd2A9642ceA9B71A632BF5b8ff52424Ea1B40,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac9c157e03) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n3) call addEVMScriptFactory(0x83DfE5Fe8ac8b7DB38c020F4F54BF09b65D92c63,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac33eb1f1a) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n4) call addEVMScriptFactory(0x351426775c75aB5127de860Cdcaf1953F1D622a2,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Aced7139a7) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n5) call addEVMScriptFactory(0xc3FA83D65a900303e1d99cDBBF762c6630562c04,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac285f591c) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n6) call addEVMScriptFactory(0xE0b822c1126E22D5E248c52F0DF3362DF4D85eAc,0x501e678182bB5dF3f733281521D3f3D1aDe6991754544bcb) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n7) call addEVMScriptFactory(0xf8F8902c333666c175ccAcC738c3c3D80a78ACfb,0x501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n8) call addEVMScriptFactory(0x56Ff87F41a8CF795764E15E496124240Ac17695b,0x501e678182bB5dF3f733281521D3f3D1aDe69917e52b6085) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n9) call addEVMScriptFactory(0x4D80CBe1a4AcAA53870074Ea3e25BFE7B04e1282,0x501e678182bB5dF3f733281521D3f3D1aDe69917e37a7c0b501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "41": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantPermission(0x0534aA41907c9631fae990960bCC72d75fA7cfeD,0x3508A952176b3c15387C97BE809eaffB1982176a,0xa42eee1333c0758ba72be38e728b6dadb32ea767de5b4ddbaea1dae85b1b051f) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62\n2) call setMaxExternalRatioBP(3000) at 0x3508A952176b3c15387C97BE809eaffB1982176a\n3) call revokePermission(0x0534aA41907c9631fae990960bCC72d75fA7cfeD,0x3508A952176b3c15387C97BE809eaffB1982176a,0xa42eee1333c0758ba72be38e728b6dadb32ea767de5b4ddbaea1dae85b1b051f) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62"
+  },
+  "42": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call upgradeTo(0xE96BE4FB723e68e7b96244b7399C64a58bcD0062) at 0xb3e6a8B6A752d3bb905A1B3Ef12bbdeE77E8160e\n2) call proxy__upgradeTo(0x100200eE0067B4Aa95c7Ae0433d8467F5Ca74E78) at 0xf41491C79C30e8f4862d3F4A5b790171adB8e04A\n3) call proxy__upgradeTo(0xab35DA5722B188E3b67896873F88e2dFA905c944) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n4) call proxy__upgradeTo(0x36CdDa6Ff2cb8a83a0F328aA2Bf1B5200377FAf9) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n5) call proxy__upgradeTo(0x6D2c164Be7cc36b03aBd0e2e133bE03A30ad3358) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n6) call proxy__upgradeTo(0x8717971067D6FeeB631d750B09Ba66a6B4E01BA3) at 0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
+  },
+  "43": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeEVMScriptFactory(0xE0b822c1126E22D5E248c52F0DF3362DF4D85eAc) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0xA76bD0a2ca6E1Be2F7Cf62fa63BddaCb6d6d1287,0x501e678182bB5dF3f733281521D3f3D1aDe6991754544bcb) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n3) call removeEVMScriptFactory(0xf8F8902c333666c175ccAcC738c3c3D80a78ACfb) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n4) call addEVMScriptFactory(0x6d91c6751DfB46E7E22eC78f5e6FbcEb1BBe6614,0x501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n5) call removeEVMScriptFactory(0x4D80CBe1a4AcAA53870074Ea3e25BFE7B04e1282) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n6) call addEVMScriptFactory(0xF5ce5E9348EB58AfA29aD933ae3A0DCb74b68d1b,0x501e678182bB5dF3f733281521D3f3D1aDe69917e37a7c0b501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "44": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call proxy__upgradeTo(0x60beda728821B47446fDBcD14111b447BF8663e0) at 0xf41491C79C30e8f4862d3F4A5b790171adB8e04A\n2) call proxy__upgradeTo(0x81a8e96bf75eb02CE082FaFF5701B181E491dc1c) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n3) call proxy__upgradeTo(0x25414E6CEB90F5ffa42cb11CeE95Adb4EC9a1dB8) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n4) call proxy__upgradeTo(0x778Dc3a94B24D0Cd66E36d3ED8d47cAa622688F6) at 0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8\n5) call grantPermission(0x0534aA41907c9631fae990960bCC72d75fA7cfeD,0xA48DF029Fd2e5FCECB3886c5c2F60e3625A1E87d,0xb6d92708f3d4817afc106147d969e229ced5c46e65e0a5002a0d391287762bd0) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62\n6) call setApp(0xf1f3eb40f5bc1ad1344716ced8b8a0431d840b5783aea1fd01786bc26f35ac0f,0x3ca7c3e38968823ccb4c78ea688df41356f182ae1d159e4ee608d30d68cef320,0x892D3fF28Dc9360cAA47576070B1892244e68a1f) at 0xA48DF029Fd2e5FCECB3886c5c2F60e3625A1E87d\n7) call revokePermission(0x0534aA41907c9631fae990960bCC72d75fA7cfeD,0xA48DF029Fd2e5FCECB3886c5c2F60e3625A1E87d,0xb6d92708f3d4817afc106147d969e229ced5c46e65e0a5002a0d391287762bd0) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62"
+  },
+  "45": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "sUSDS swaps (HOODI)",
+    "metadata": "Omnibus vote: 1. Termporarily grant ADD_TOKEN_TO_ALLOWED_LIST_ROLE to Aragon Voting;\n 2. Add sUSDS to the Sandbox stablecoins Allowed Tokens Registry;\n 3. Revoke ADD_TOKEN_TO_ALLOWED_LIST_ROLE from Aragon Voting;\n 4. Remove CREATE_PAYMENTS_ROLE from EVMScriptExecutor on Aragon Finance;\n 5. Grant CREATE_PAYMENTS_ROLE to EVMScriptExecutor on Aragon Finance with amount limits.\nlidovoteipfs://bafkreiewx36sw74mspun3gwp4czkhw4gxgt75dosp6ukxo5tlmz7lgdzwy"
+  },
+  "46": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call proxy__upgradeTo(0x41f0765b56d4f6b6AF231c217886ea7A8D1e7640) at 0x9b5b78D1C9A3238bF24662067e34c57c83E8c354\n2) call grantPermission(0x0534aA41907c9631fae990960bCC72d75fA7cfeD,0xA48DF029Fd2e5FCECB3886c5c2F60e3625A1E87d,0xb6d92708f3d4817afc106147d969e229ced5c46e65e0a5002a0d391287762bd0) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62\n3) call setApp(0xf1f3eb40f5bc1ad1344716ced8b8a0431d840b5783aea1fd01786bc26f35ac0f,0x3ca7c3e38968823ccb4c78ea688df41356f182ae1d159e4ee608d30d68cef320,0x4f9143Dba1f1BbFa535528254592f3396E229e53) at 0xA48DF029Fd2e5FCECB3886c5c2F60e3625A1E87d\n4) call revokePermission(0x0534aA41907c9631fae990960bCC72d75fA7cfeD,0xA48DF029Fd2e5FCECB3886c5c2F60e3625A1E87d,0xb6d92708f3d4817afc106147d969e229ced5c46e65e0a5002a0d391287762bd0) at 0x78780e70Eae33e2935814a327f7dB6c01136cc62\n5) call proxy__upgradeTo(0x4e3b9fd9F713e5dbA86255febD4c402794135095) at 0xf41491C79C30e8f4862d3F4A5b790171adB8e04A\n6) call proxy__upgradeTo(0x0f7b5BFA0FC13F2b8218a1624a5aF4055500cAe0) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n7) call proxy__upgradeTo(0x932d97b59B8846796469C129AB1b83c2a855a3F7) at 0x4C9fFC325392090F789255b9948Ab1659b797964"
+  },
+  "47": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeEVMScriptFactory(0xA76bD0a2ca6E1Be2F7Cf62fa63BddaCb6d6d1287) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0xF21f98cac0Ba38f02b4d5be1667cc345929E8877,0x501e678182bB5dF3f733281521D3f3D1aDe6991754544bcb) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n3) call removeEVMScriptFactory(0x6d91c6751DfB46E7E22eC78f5e6FbcEb1BBe6614) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n4) call addEVMScriptFactory(0x4DF806111AC58e93d90E6D2fBE8522a76be6F499,0x501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n5) call removeEVMScriptFactory(0xF5ce5E9348EB58AfA29aD933ae3A0DCb74b68d1b) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n6) call addEVMScriptFactory(0xfEF8B796Fea42b3C68E342364Adcf88F1d6145a6,0x501e678182bB5dF3f733281521D3f3D1aDe69917e37a7c0b501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "48": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeEVMScriptFactory(0xc3FA83D65a900303e1d99cDBBF762c6630562c04) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0x4e5b0187479854e88A5b18c49047636707a26f0d,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac285f591c) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n3) call removeEVMScriptFactory(0x351426775c75aB5127de860Cdcaf1953F1D622a2) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n4) call addEVMScriptFactory(0x615D3f028D1CA549d350403Cd6043Cb515BE08BF,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Aced7139a7) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "49": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call proxy__upgradeTo(0x4c29A1D1e14BaD29650c8B91Ad91c5AEdF5fd811) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n2) call proxy__upgradeTo(0xd7eb46d18a07F78ed07201E1C7F7A4933967da6D) at 0x9b5b78D1C9A3238bF24662067e34c57c83E8c354\n3) call proxy__upgradeTo(0x751A4AA1A29Bc0C0E587aa04c3EABF0797F9B1A4) at 0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
+  },
+  "50": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0x8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a78,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n2) call pauseFor(0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n3) call revokeRole(0x8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a78,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d"
+  },
+  "51": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0xa79a6aede309e0d48bf2ef0f71355c06ad317956d4c0da2deb0dc47cc34f826c,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n2) call resume() at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n3) call revokeRole(0xa79a6aede309e0d48bf2ef0f71355c06ad317956d4c0da2deb0dc47cc34f826c,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d"
+  },
+  "52": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call revokeRole(0xa495a3428837724c7f7648cda02eb83c9c4c778c8688d6f254c7f3f80c154d55,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n2) call grantRole(0x8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a78,0x05172CbCDb7307228F781436b327679e4DAE166B) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n3) call grantRole(0xa79a6aede309e0d48bf2ef0f71355c06ad317956d4c0da2deb0dc47cc34f826c,0x05172CbCDb7307228F781436b327679e4DAE166B) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n4) call revokeRole(0x479bc4a51d27fbdc8e51b5b1ebd3dcd58bd229090980bff226f8930587e69ce3,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n5) call revokeRole(0x44f007e8cc2a08047a03d8d9c295057454942eb49ee3ced9c87e9b9406f21174,0x0534aA41907c9631fae990960bCC72d75fA7cfeD) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n6) call revokeRole(0x44f007e8cc2a08047a03d8d9c295057454942eb49ee3ced9c87e9b9406f21174,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n7) call grantRole(0x8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a78,0x05172CbCDb7307228F781436b327679e4DAE166B) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n8) call grantRole(0xa79a6aede309e0d48bf2ef0f71355c06ad317956d4c0da2deb0dc47cc34f826c,0x05172CbCDb7307228F781436b327679e4DAE166B) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d"
+  },
+  "53": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeMember(0x44e3996629a9026BF95C4Be3c1a38242D1E64a01,7) at 0x32EC59a78abaca3f91527aeB2008925D5AaC1eFC\n2) call removeMember(0x0f30c4ceBE7F3057e81949B0Ab1591FC256226b5,6) at 0x32EC59a78abaca3f91527aeB2008925D5AaC1eFC\n3) call removeMember(0xcA80ee7313A315879f326105134F938676Cfd7a9,5) at 0x32EC59a78abaca3f91527aeB2008925D5AaC1eFC"
+  },
+  "54": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeEVMScriptFactory(0xF21f98cac0Ba38f02b4d5be1667cc345929E8877) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0x1e71B8E60e0491A212999f3104A06913b77f438e,0x501e678182bB5dF3f733281521D3f3D1aDe6991754544bcb) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n3) call removeEVMScriptFactory(0xfEF8B796Fea42b3C68E342364Adcf88F1d6145a6) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n4) call addEVMScriptFactory(0x6e8D6e23A46AD61967CDD5C220B67645F46A2D7c,0x501e678182bb5df3f733281521d3f3d1ade69917e37a7c0b501e678182bb5df3f733281521d3f3d1ade69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n5) call removeEVMScriptFactory(0x56Ff87F41a8CF795764E15E496124240Ac17695b) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n6) call addEVMScriptFactory(0x99a645A4137ea171Ce4D43c22d30A71251D6Ed7d,0x501e678182bb5df3f733281521d3f3d1ade69917e52b6085) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n7) call removeEVMScriptFactory(0x4e5b0187479854e88A5b18c49047636707a26f0d) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n8) call addEVMScriptFactory(0x395E6AF61B6Ba3EC0E72E168A2Ec8204589F357c,0x854cf0d7446faa7addfe557cc8aa9fa9b7017910285f591c) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n9) call removeEVMScriptFactory(0xa11906bBBBaC5207b8FDA4F7F294d7EcB8dcc758) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n10) call addEVMScriptFactory(0x01C9dB53D7a87c3e47D537c925921fB735bEe6c9,0x854cf0d7446faa7addfe557cc8aa9fa9b701791096c4d514) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n11) call removeEVMScriptFactory(0x83DfE5Fe8ac8b7DB38c020F4F54BF09b65D92c63) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n12) call addEVMScriptFactory(0x820e9924C2059d37871acd6eccB578e4a3B15c30,0x854cf0d7446faa7addfe557cc8aa9fa9b701791033eb1f1a) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n13) call removeEVMScriptFactory(0x615D3f028D1CA549d350403Cd6043Cb515BE08BF) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n14) call addEVMScriptFactory(0x2D5b8B082d618A8d5DeFE3f4c2b2869e3f1C1a3D,0x854cf0d7446faa7addfe557cc8aa9fa9b7017910ed7139a7) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "55": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call revokeRole(0xa495a3428837724c7f7648cda02eb83c9c4c778c8688d6f254c7f3f80c154d55,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n2) call grantRole(0xa495a3428837724c7f7648cda02eb83c9c4c778c8688d6f254c7f3f80c154d55,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910) at 0x501e678182bB5dF3f733281521D3f3D1aDe69917\n3) call revokeRole(0x2159c5943234d9f3a7225b9a743ea06e4a0d0ba5ed82889e867759a8a9eb7883,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n4) call grantRole(0x2159c5943234d9f3a7225b9a743ea06e4a0d0ba5ed82889e867759a8a9eb7883,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n5) call revokeRole(0xa85bab4b576ca359fa6ae02ab8744b5c85c7e7ed4d7e0bca7b5b64580ac5d17d,0xBC2bb8310730F3D2b514Cb26f7e0A8776De879Ac) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n6) call grantRole(0xa85bab4b576ca359fa6ae02ab8744b5c85c7e7ed4d7e0bca7b5b64580ac5d17d,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910) at 0x4C9fFC325392090F789255b9948Ab1659b797964\n7) call proxy__upgradeTo(0xd1245b75d243A7e0b655479043f9C30b3e8717F5) at 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d"
+  },
+  "56": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "Grant MANAGE_SIGNING_KEYS role for operator ID = 1 to 0xc8195bb2851d7129D9100af9d65Bd448A6dE11eF on Hoodi",
+    "metadata": "Omnibus vote: 1. Grant MANAGE_SIGNING_KEYS role for operator ID = 1 to 0xc8195bb2851d7129D9100af9d65Bd448A6dE11eF on Hoodi.\nlidovoteipfs://bafkreibcmwxupju2hx54awwjh7fpbybkmcxban5v36go4nsnrem2fwipgq"
+  },
+  "57": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeEVMScriptFactory(0xc5dCd2A9642ceA9B71A632BF5b8ff52424Ea1B40) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0xaccaE3755d63EeaAF2e525E780aEeA8D58700Ab9,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b70179109c157e03) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "58": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0x44f007e8cc2a08047a03d8d9c295057454942eb49ee3ced9c87e9b9406f21174,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910) at 0x4C9fFC325392090F789255b9948Ab1659b797964"
+  },
+  "59": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0x44f007e8cc2a08047a03d8d9c295057454942eb49ee3ced9c87e9b9406f21174,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910) at 0x4C9fFC325392090F789255b9948Ab1659b797964"
+  },
+  "60": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0x44f007e8cc2a08047a03d8d9c295057454942eb49ee3ced9c87e9b9406f21174,0x854CF0D7446Faa7AdDFE557cc8aa9FA9b7017910) at 0x4C9fFC325392090F789255b9948Ab1659b797964"
+  },
+  "61": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call removeEVMScriptFactory(0x1e71B8E60e0491A212999f3104A06913b77f438e) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n2) call addEVMScriptFactory(0x9A3Fe18BcD5e7657f6a78Ab895aF125Cacae2c36,0x501e678182bB5dF3f733281521D3f3D1aDe6991754544bcb) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n3) call removeEVMScriptFactory(0x4DF806111AC58e93d90E6D2fBE8522a76be6F499) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n4) call addEVMScriptFactory(0x8182E168f858514328C06b5C21eec975E105D494,0x501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n5) call removeEVMScriptFactory(0x6e8D6e23A46AD61967CDD5C220B67645F46A2D7c) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a\n6) call addEVMScriptFactory(0x50ffc44FF526405dBA3e5a4833B003D93301dDDd,0x501e678182bB5dF3f733281521D3f3D1aDe69917e37a7c0b501e678182bB5dF3f733281521D3f3D1aDe69917552b91da) at 0x284D91a7D47850d21A6DEaaC6E538AC7E5E6fc2a"
+  },
+  "62": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call proxy__upgradeTo(0xC372aBC601C4eE5aA82CA2bcb54Da5a1Ef492E82) at 0xf41491C79C30e8f4862d3F4A5b790171adB8e04A\n2) call proxy__upgradeTo(0x4300a0FA4BAD3243b5952db16dB93Db8E3752E23) at 0x4C9fFC325392090F789255b9948Ab1659b797964"
+  },
+  "63": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call proxy__upgradeTo(0xAd2C869FE66Ff4c0E347A0824Af92D2B7C91288A) at 0x4C9fFC325392090F789255b9948Ab1659b797964"
+  },
+  "64": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Revoke PAUSE_ROLE from GateSeal 0x73d76Bd3D589B2b2185c402da82cdAfbc18b958D on 0xfe56573178f1bcdf53F01A6E9977670dcBBD9186\n2. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xfe56573178f1bcdf53F01A6E9977670dcBBD9186\n3. Register 0xfe56573178f1bcdf53F01A6E9977670dcBBD9186 with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n4. Revoke PAUSE_ROLE from GateSeal 0x368f2fcb593170823cc844F1B29e75E3d26879A1 on 0x6679090D92b08a2a686eF8614feECD8cDFE209db\n5. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x6679090D92b08a2a686eF8614feECD8cDFE209db\n6. Register 0x6679090D92b08a2a686eF8614feECD8cDFE209db with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n7. Revoke PAUSE_ROLE from GateSeal 0x368f2fcb593170823cc844F1B29e75E3d26879A1 on 0x8664d394C2B3278F26A1B44B967aEf99707eeAB2\n8. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x8664d394C2B3278F26A1B44B967aEf99707eeAB2\n9. Register 0x8664d394C2B3278F26A1B44B967aEf99707eeAB2 with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n10. Revoke PAUSE_ROLE from GateSeal 0x2291496c76CC2e9368DbE9d4977ED2623cbDfb32 on 0x4C9fFC325392090F789255b9948Ab1659b797964\n11. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x4C9fFC325392090F789255b9948Ab1659b797964\n12. Register 0x4C9fFC325392090F789255b9948Ab1659b797964 with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n13. Revoke PAUSE_ROLE from GateSeal 0x2291496c76CC2e9368DbE9d4977ED2623cbDfb32 on 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n14. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n15. Register 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n16. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x79CEf36D84743222f37765204Bec41E92a93E59d\n17. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x79CEf36D84743222f37765204Bec41E92a93E59d\n18. Register 0x79CEf36D84743222f37765204Bec41E92a93E59d with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n19. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0xA54b90BA34C5f326BC1485054080994e38FB4C60\n20. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xA54b90BA34C5f326BC1485054080994e38FB4C60\n21. Register 0xA54b90BA34C5f326BC1485054080994e38FB4C60 with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n22. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0xe7314f561B2e72f9543F1004e741bab6Fc51028B\n23. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xe7314f561B2e72f9543F1004e741bab6Fc51028B\n24. Register 0xe7314f561B2e72f9543F1004e741bab6Fc51028B with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n25. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x1773b2Ff99A030F6000554Cb8A5Ec93145650cbA\n26. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x1773b2Ff99A030F6000554Cb8A5Ec93145650cbA\n27. Register 0x1773b2Ff99A030F6000554Cb8A5Ec93145650cbA with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n28. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x10a254E724fe2b7f305F76f3F116a3969c53845f\n29. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x10a254E724fe2b7f305F76f3F116a3969c53845f\n30. Register 0x10a254E724fe2b7f305F76f3F116a3969c53845f with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n31. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x777bd76326E4aDcD353b03AD45b33BAF41048476\n32. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x777bd76326E4aDcD353b03AD45b33BAF41048476\n33. Register 0x777bd76326E4aDcD353b03AD45b33BAF41048476 with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53"
+  },
+  "65": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "1. Revoke PAUSE_ROLE from GateSeal 0x73d76Bd3D589B2b2185c402da82cdAfbc18b958D on 0xfe56573178f1bcdf53F01A6E9977670dcBBD9186\n2. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xfe56573178f1bcdf53F01A6E9977670dcBBD9186\n3. Register 0xfe56573178f1bcdf53F01A6E9977670dcBBD9186 with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n4. Revoke PAUSE_ROLE from GateSeal 0x368f2fcb593170823cc844F1B29e75E3d26879A1 on 0x6679090D92b08a2a686eF8614feECD8cDFE209db\n5. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x6679090D92b08a2a686eF8614feECD8cDFE209db\n6. Register 0x6679090D92b08a2a686eF8614feECD8cDFE209db with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n7. Revoke PAUSE_ROLE from GateSeal 0x368f2fcb593170823cc844F1B29e75E3d26879A1 on 0x8664d394C2B3278F26A1B44B967aEf99707eeAB2\n8. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x8664d394C2B3278F26A1B44B967aEf99707eeAB2\n9. Register 0x8664d394C2B3278F26A1B44B967aEf99707eeAB2 with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n10. Revoke PAUSE_ROLE from GateSeal 0x2291496c76CC2e9368DbE9d4977ED2623cbDfb32 on 0x4C9fFC325392090F789255b9948Ab1659b797964\n11. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x4C9fFC325392090F789255b9948Ab1659b797964\n12. Register 0x4C9fFC325392090F789255b9948Ab1659b797964 with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n13. Revoke PAUSE_ROLE from GateSeal 0x2291496c76CC2e9368DbE9d4977ED2623cbDfb32 on 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n14. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d\n15. Register 0xa5F55f3402beA2B14AE15Dae1b6811457D43581d with CircuitBreaker, pauser: 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102\n16. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x79CEf36D84743222f37765204Bec41E92a93E59d\n17. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x79CEf36D84743222f37765204Bec41E92a93E59d\n18. Register 0x79CEf36D84743222f37765204Bec41E92a93E59d with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n19. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0xA54b90BA34C5f326BC1485054080994e38FB4C60\n20. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xA54b90BA34C5f326BC1485054080994e38FB4C60\n21. Register 0xA54b90BA34C5f326BC1485054080994e38FB4C60 with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n22. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0xe7314f561B2e72f9543F1004e741bab6Fc51028B\n23. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0xe7314f561B2e72f9543F1004e741bab6Fc51028B\n24. Register 0xe7314f561B2e72f9543F1004e741bab6Fc51028B with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n25. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x1773b2Ff99A030F6000554Cb8A5Ec93145650cbA\n26. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x1773b2Ff99A030F6000554Cb8A5Ec93145650cbA\n27. Register 0x1773b2Ff99A030F6000554Cb8A5Ec93145650cbA with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n28. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x10a254E724fe2b7f305F76f3F116a3969c53845f\n29. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x10a254E724fe2b7f305F76f3F116a3969c53845f\n30. Register 0x10a254E724fe2b7f305F76f3F116a3969c53845f with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53\n31. Revoke PAUSE_ROLE from GateSeal 0x725166f143DdcD9EC1b96dfb70f16E3f44968A65 on 0x777bd76326E4aDcD353b03AD45b33BAF41048476\n32. Grant PAUSE_ROLE to CircuitBreaker 0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555 on 0x777bd76326E4aDcD353b03AD45b33BAF41048476\n33. Register 0x777bd76326E4aDcD353b03AD45b33BAF41048476 with CircuitBreaker, pauser: 0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53"
+  },
+  "66": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Register pauser 0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102 for TriggerableWithdrawalGateway on CircuitBreaker"
+  },
+  "67": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit DG proposal: upgrade CSM impl, cleanStuckKeys, revert CSM impl, grant MANAGE_FRAME_CONFIG_ROLE on CS Oracle HashConsensus to CSM committee multisig.\nlidovoteipfs://bafkreiduucnkjbvzdd4pkuesvql62zve4fpko5gjqv47wskef5cgbe64vu"
+  },
+  "68": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": "\n1. **Activate Staking Router v3**, including protocol contract upgrades and Dual Governance execution setup. Items 1.1-1.18.\n2. **Upgrade Community Staking Module to v3**, including CSM contract upgrades, role updates and identified DVT cluster setup. Items 1.19-1.52.\n3. **Add and configure Curated Module v2**. Items 1.53-1.64.\n4. **Finalize the protocol upgrade**. Item 1.65.\n5. **Update Easy Track factories for CSM v3 and Curated Module v2 operations**. Items 2-12.\n",
+    "metadata": "Omnibus vote: 1. Submit a Dual Governance proposal to activate Staking Router v3 + Curated Module v2 + Community Staking Module v3;\n 2. Remove CSMSettleElStealingPenalty ET factory;\n 3. Remove CSMSetVettedGateTree ET factory;\n 4. Add UpdateStakingModuleShareLimits ET factory;\n 5. Add AllowConsolidationPair ET factory;\n 6. Add SetMerkleGateTree CSM ET factory;\n 7. Add ReportWithdrawalsForSlashedValidators CSM ET factory;\n 8. Add SettleGeneralDelayedPenalty CSM ET factory;\n 9. Add SetMerkleGateTree CM ET factory;\n 10. Add ReportWithdrawalsForSlashedValidators CM ET factory;\n 11. Add SettleGeneralDelayedPenalty CM ET factory;\n 12. Add CreateOrUpdateOperatorGroup CM ET factory.\nlidovoteipfs://bafkreihs2k2zamnathydbfoedk2rr23rllg52vec4lh5m2ng6avenpau5q"
+  },
+  "69": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Upgrade Withdrawal Vault to 0x6724DaD16f7b05157dF72783F99cA6B813742330"
+  },
+  "70": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit DG proposal: named Gates and MetaRegistry migration;\n 2. Remove the OLD CreateOrUpdateOperatorGroup Easy Track factory;\n 3. Add the NEW CreateOrUpdateOperatorGroup Easy Track factory;\n 4. Remove the OLD ReportWithdrawalsForSlashedValidators (CSM) Easy Track factory;\n 5. Add the NEW ReportWithdrawalsForSlashedValidators (CSM) Easy Track factory;\n 6. Remove the OLD ReportWithdrawalsForSlashedValidators (CM) Easy Track factory;\n 7. Add the NEW ReportWithdrawalsForSlashedValidators (CM) Easy Track factory.\nlidovoteipfs://bafkreiacki2iikm7kmznbqq556eidejnkeaj4qaoil7hxlyufuc2s3yh64"
+  }
+}
