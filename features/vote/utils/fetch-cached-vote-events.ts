@@ -1,6 +1,6 @@
 import type { Address } from 'viem';
 import type {
-  ArchivedVote,
+  CachedVote,
   VoteEventsManifest,
   VoteEventsSubset,
 } from 'shared/votes/cache/types';
@@ -30,11 +30,11 @@ const isValidManifest = (raw: unknown): raw is VoteEventsManifest => {
 const isValidChunk = (raw: unknown): raw is Record<string, unknown> =>
   raw !== null && typeof raw === 'object' && !Array.isArray(raw);
 
-const isValidArchivedVote = (raw: unknown): raw is ArchivedVote => {
+const isValidCachedVote = (raw: unknown): raw is CachedVote => {
   if (raw === null || typeof raw !== 'object') {
     return false;
   }
-  const entry = raw as Partial<ArchivedVote>;
+  const entry = raw as Partial<CachedVote>;
   return (
     entry.voteDetails !== null &&
     typeof entry.voteDetails === 'object' &&
@@ -85,7 +85,7 @@ const fetchChunk = (
       }
       const filtered: VoteEventsSubset = {};
       for (const [voteId, entry] of Object.entries(raw)) {
-        if (isValidArchivedVote(entry)) {
+        if (isValidCachedVote(entry)) {
           filtered[voteId] = entry;
         }
       }

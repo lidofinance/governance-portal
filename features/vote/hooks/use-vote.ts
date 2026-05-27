@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { fetchArchivedVotes } from 'shared/votes/utils/fetch-archived-votes';
-import { fetchUncached } from 'shared/votes/utils/fetch-uncached';
+import { fetchCachedVotes } from 'shared/votes/utils/fetch-cached-votes';
+import { fetchUncachedVotes } from 'shared/votes/utils/fetch-uncached-votes';
 import type { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import type { EventExecuteVote, Vote, VoteEvent } from 'shared/votes/types';
 
@@ -27,28 +27,28 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
 
   return useQuery({
     queryKey: ['vote', voteId, chainId],
-    staleTime: 5 * 60_000,
+    staleTime: 5 * 60_000, // 5 minutes
     enabled: !!voteTime,
     queryFn: async (): Promise<VoteFull | null> => {
-      const archived = await fetchArchivedVotes({
+      const cachedVotesMap = await fetchCachedVotes({
         chainId,
         votingAddress: votingContract.address,
         voteIds: [voteId],
       });
 
-      const archivedVote = archived[voteId.toString()];
-      if (archivedVote) {
+      const cachedVote = cachedVotesMap[voteId.toString()];
+      if (cachedVote) {
         return {
-          vote: archivedVote,
-          canExecute: archivedVote.canExecute,
-          eventStart: archivedVote.startEvent,
-          eventExecute: archivedVote.executeEvent,
-          voteEvents: archivedVote.voteEvents,
-          description: archivedVote.description,
+          vote: cachedVote,
+          canExecute: cachedVote.canExecute,
+          eventStart: cachedVote.startEvent,
+          eventExecute: cachedVote.executeEvent,
+          voteEvents: cachedVote.voteEvents,
+          description: cachedVote.description,
         };
       }
 
-      // Not in archive — fetch live state from chain.
+      // Not in cache — fetch live state from chain.
       const votesLength = Number(
         await votingContract.readContract('votesLength'),
       );
@@ -56,22 +56,22 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
         return null;
       }
 
-      const [uncached] = await fetchUncached({
+      const [uncachedVote] = await fetchUncachedVotes({
         votingContract,
         client: rpcProvider,
         voteIds: [voteId],
         withExecuteEvent: true,
       });
 
-      if (!uncached) {
+      if (!uncachedVote) {
         return null;
       }
 
       return {
-        vote: uncached,
-        canExecute: uncached.canExecute,
-        eventStart: uncached.startEvent,
-        eventExecute: uncached.executeEvent,
+        vote: uncachedVote,
+        canExecute: uncachedVote.canExecute,
+        eventStart: uncachedVote.startEvent,
+        eventExecute: uncachedVote.executeEvent,
         voteEvents: null,
         description: null,
       };

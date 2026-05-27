@@ -72,7 +72,10 @@ export const fetchStartVoteEvent = async (
 
     return shapeStartVoteEvent(events[0]);
   } catch (error) {
-    console.warn(`Failed to fetch StartVote for vote ${voteId}:`, error.message);
+    console.warn(
+      `Failed to fetch StartVote for vote ${voteId}:`,
+      error.message,
+    );
     return null;
   }
 };
@@ -191,9 +194,9 @@ export const fetchCastVoteEvents = async (
       castVoteEvents: castVoteResults.map(shapeCastVoteLog),
       attemptCastVoteAsDelegateEvents: delegateResults.map(shapeDelegateLog),
     };
-  } catch {
+  } catch (error) {
     console.debug(
-      `  Full-range CastVote getLogs failed for vote ${voteId}, falling back to chunked scan`,
+      `  Full-range CastVote getLogs failed for vote ${voteId} (${error.message}), falling back to chunked scan`,
     );
   }
 
@@ -201,23 +204,19 @@ export const fetchCastVoteEvents = async (
     const endBlock = toBlock || (await publicClient.getBlockNumber());
 
     const [castVoteResults, delegateResults] = await Promise.all([
-      processChunksInBatches(
-        createChunks(snapshotBlock, endBlock),
-        (chunk) =>
-          publicClient.getLogs({
-            ...castVoteArgs,
-            fromBlock: chunk.from,
-            toBlock: chunk.to,
-          }),
+      processChunksInBatches(createChunks(snapshotBlock, endBlock), (chunk) =>
+        publicClient.getLogs({
+          ...castVoteArgs,
+          fromBlock: chunk.from,
+          toBlock: chunk.to,
+        }),
       ),
-      processChunksInBatches(
-        createChunks(snapshotBlock, endBlock),
-        (chunk) =>
-          publicClient.getLogs({
-            ...delegateArgs,
-            fromBlock: chunk.from,
-            toBlock: chunk.to,
-          }),
+      processChunksInBatches(createChunks(snapshotBlock, endBlock), (chunk) =>
+        publicClient.getLogs({
+          ...delegateArgs,
+          fromBlock: chunk.from,
+          toBlock: chunk.to,
+        }),
       ),
     ]);
 
@@ -226,11 +225,6 @@ export const fetchCastVoteEvents = async (
       attemptCastVoteAsDelegateEvents: delegateResults.map(shapeDelegateLog),
     };
   } catch (error) {
-    // Distinguish a failed scan from a genuinely empty voter list: a
-    // legitimately zero-voter terminal vote returns [] via the normal
-    // path above. Throw here so the build's processVote catch skips
-    // persisting a partial entry (re-fetched next run) instead of
-    // freezing `voteEvents: []` forever — canSkip can't tell them apart.
     throw new Error(
       `Failed to fetch CastVote events for vote ${voteId}: ${error.message}`,
     );

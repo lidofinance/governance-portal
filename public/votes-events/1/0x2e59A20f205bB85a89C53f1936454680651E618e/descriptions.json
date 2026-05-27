@@ -821,7 +821,7 @@
   },
   "164": {
     "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
-    "description": "\nThe proposal is to support **Jump Crypto voluntarily exits from the validator set** by setting `targetValidatorsCount` to 0.\nAlgorithm would prioritise exiting Jump Crypto validators in order to fulfil users' withdrawals requests.\nJump Crypto request on [forum](https://research.lido.fi/t/lido-dao-proposal-to-set-targetvalidatorscount-for-jump-crypto-operator-to-0-to-wind-down-the-jump-crypto-legacy-set/5259).\n",
+    "description": null,
     "metadata": "Omnibus vote: 1) Grant STAKING_MODULE_MANAGE_ROLE to Lido Agent;\n 2) Set Jump Crypto targetValidatorsLimits to 0.\nlidovoteipfs://bafkreiapvuobyrudww3oqhfopbs2fdmtebi6jnvpeb3plxkajnhafw25im"
   },
   "165": {

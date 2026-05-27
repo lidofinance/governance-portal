@@ -1,6 +1,6 @@
 import type { Address, Hex } from 'viem';
 
-export type ArchivedVoteDetails = {
+export type CachedVoteDetails = {
   id: number;
   open: boolean;
   executed: boolean;
@@ -16,7 +16,7 @@ export type ArchivedVoteDetails = {
   canExecute: boolean;
 };
 
-export type ArchivedStartVoteEvent = {
+export type CachedStartVoteEvent = {
   transactionHash: Hex;
   blockNumber: string;
   args: {
@@ -26,13 +26,13 @@ export type ArchivedStartVoteEvent = {
   };
 };
 
-export type ArchivedExecuteVoteEvent = {
+export type CachedExecuteVoteEvent = {
   transactionHash: Hex;
   blockNumber: string;
   executedAt: number;
 };
 
-export type ArchivedVoteEvent = {
+export type CachedVoteEvent = {
   voter: Address;
   supports: boolean;
   stake: string;
@@ -43,11 +43,11 @@ export type ArchivedVoteEvent = {
   }>;
 };
 
-export type ArchivedVote = {
-  voteDetails: ArchivedVoteDetails;
-  startVoteEvent: ArchivedStartVoteEvent | null;
-  executeVoteEvent: ArchivedExecuteVoteEvent | null;
-  voteEvents: ArchivedVoteEvent[];
+export type CachedVote = {
+  voteDetails: CachedVoteDetails;
+  startVoteEvent: CachedStartVoteEvent | null;
+  executeVoteEvent: CachedExecuteVoteEvent | null;
+  voteEvents: CachedVoteEvent[];
   description: string | null;
 };
 
@@ -55,14 +55,14 @@ export type CachedVoteEventsData = {
   [chainId: string]: {
     [votingAddress: string]: {
       votes: {
-        [voteId: string]: ArchivedVote;
+        [voteId: string]: CachedVote;
       };
     };
   };
 };
 
 export type VoteEventsSubset = {
-  [voteId: string]: ArchivedVote;
+  [voteId: string]: CachedVote;
 };
 
 export type VoteEventsManifest = {

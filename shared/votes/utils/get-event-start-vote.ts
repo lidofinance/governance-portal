@@ -16,11 +16,6 @@ export type StartVoteEventArgs = {
   metadata: string;
 };
 
-/**
- * Narrow event shape — only the fields the UI actually reads.
- * Both the RPC path (viem Log is structurally assignable) and the
- * archived cache path produce this shape.
- */
 export type EventStartVote = {
   event: {
     transactionHash: Hex | null;
