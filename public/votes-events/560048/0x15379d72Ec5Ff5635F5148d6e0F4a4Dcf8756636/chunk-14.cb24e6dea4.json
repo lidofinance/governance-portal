@@ -1,0 +1,501 @@
+{
+  "140": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "140"
+      },
+      "blockNumber": "1230818",
+      "transactionHash": "0xb92d81cddc0ed7f86f81d2e36e5997868c6b310931d51dbd1e293ad3b45298e2"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 140,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1230817",
+      "startDate": "1758105840",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "76048834325396825394"
+    },
+    "voteEvents": [
+      {
+        "stake": "76048834325396825394",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
+  },
+  "141": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "141"
+      },
+      "blockNumber": "1230886",
+      "transactionHash": "0x78d624c7ba62283405165f22595221b03af407c259644dac756fe34b89786ab1"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 141,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1230885",
+      "startDate": "1758106704",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "60080147179232804232802"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "60000000000000000000000",
+            "supports": true,
+            "voter": "0x3052Bc916De361395d7D67c3Cf710D0AcA154670"
+          },
+          {
+            "stake": "1100000000000000000",
+            "supports": true,
+            "voter": "0x1ec45D0c9B18D0a4fcef1B245ef9689C37312823"
+          },
+          {
+            "stake": "1000983796296296296",
+            "supports": true,
+            "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+          },
+          {
+            "stake": "999016203703703704",
+            "supports": true,
+            "voter": "0x5a01f64e6427cC8ffA1d1745Ab137b3BAC9D4210"
+          },
+          {
+            "stake": "998344907407407408",
+            "supports": true,
+            "voter": "0xe4e0b020D960b7EB5C2a21B8212c693a4fC73269"
+          }
+        ],
+        "stake": "60004098344907407407408",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "stake": "76048834325396825394",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
+  },
+  "142": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "142"
+      },
+      "blockNumber": "1231210",
+      "transactionHash": "0x1bd7793169a44bc8836540224835c3096b73eaa9e27c699374c459a52276ffa9"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 142,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "60080147179232804232802",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1231209",
+      "startDate": "1758110796",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "0"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "60000000000000000000000",
+            "supports": false,
+            "voter": "0x3052Bc916De361395d7D67c3Cf710D0AcA154670"
+          },
+          {
+            "stake": "1100000000000000000",
+            "supports": false,
+            "voter": "0x1ec45D0c9B18D0a4fcef1B245ef9689C37312823"
+          },
+          {
+            "stake": "1000983796296296296",
+            "supports": false,
+            "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+          },
+          {
+            "stake": "999016203703703704",
+            "supports": false,
+            "voter": "0x5a01f64e6427cC8ffA1d1745Ab137b3BAC9D4210"
+          },
+          {
+            "stake": "998344907407407408",
+            "supports": false,
+            "voter": "0xe4e0b020D960b7EB5C2a21B8212c693a4fC73269"
+          }
+        ],
+        "stake": "60004098344907407407408",
+        "supports": false,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "stake": "76048834325396825394",
+        "supports": false,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
+  },
+  "143": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "143"
+      },
+      "blockNumber": "1231413",
+      "transactionHash": "0xf6741adc182babace41768b0fdc08e3d592057c3e0c960034a73804e867692e6"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 143,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1231412",
+      "startDate": "1758113292",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "0"
+    },
+    "voteEvents": []
+  },
+  "144": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "144"
+      },
+      "blockNumber": "1231413",
+      "transactionHash": "0x1c4f11c9c9a5c8bf26d4280e0db2820d2355ca3ddc9677cdad19addf9582800e"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 144,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1231412",
+      "startDate": "1758113292",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "0"
+    },
+    "voteEvents": []
+  },
+  "145": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "145"
+      },
+      "blockNumber": "1231526",
+      "transactionHash": "0xc80178b31a5bc166c34c30fb95da8291c6e5da65160005db06c3883ae092ee5d"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 145,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1231525",
+      "startDate": "1758114720",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "60080147179232804232802"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "60000000000000000000000",
+            "supports": true,
+            "voter": "0x3052Bc916De361395d7D67c3Cf710D0AcA154670"
+          },
+          {
+            "stake": "1100000000000000000",
+            "supports": true,
+            "voter": "0x1ec45D0c9B18D0a4fcef1B245ef9689C37312823"
+          },
+          {
+            "stake": "1000983796296296296",
+            "supports": true,
+            "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+          },
+          {
+            "stake": "999016203703703704",
+            "supports": true,
+            "voter": "0x5a01f64e6427cC8ffA1d1745Ab137b3BAC9D4210"
+          },
+          {
+            "stake": "998344907407407408",
+            "supports": true,
+            "voter": "0xe4e0b020D960b7EB5C2a21B8212c693a4fC73269"
+          }
+        ],
+        "stake": "60004098344907407407408",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "stake": "76048834325396825394",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
+  },
+  "146": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "146"
+      },
+      "blockNumber": "1231526",
+      "transactionHash": "0x4e7ac07560ec1ffbce26f154d5c85cb5d88c187c39feee1b569a61c82cf15e71"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 146,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "76048834325396825394",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1231525",
+      "startDate": "1758114720",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "60004098344907407407408"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "60000000000000000000000",
+            "supports": true,
+            "voter": "0x3052Bc916De361395d7D67c3Cf710D0AcA154670"
+          },
+          {
+            "stake": "1100000000000000000",
+            "supports": true,
+            "voter": "0x1ec45D0c9B18D0a4fcef1B245ef9689C37312823"
+          },
+          {
+            "stake": "1000983796296296296",
+            "supports": true,
+            "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+          },
+          {
+            "stake": "999016203703703704",
+            "supports": true,
+            "voter": "0x5a01f64e6427cC8ffA1d1745Ab137b3BAC9D4210"
+          },
+          {
+            "stake": "998344907407407408",
+            "supports": true,
+            "voter": "0xe4e0b020D960b7EB5C2a21B8212c693a4fC73269"
+          }
+        ],
+        "stake": "60004098344907407407408",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "stake": "76048834325396825394",
+        "supports": false,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
+  },
+  "147": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "147"
+      },
+      "blockNumber": "1231699",
+      "transactionHash": "0xcd8d80399a41cb19b04dc7ef0c76cf4f145d610dd90d182d7fce5ec9ac708244"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 147,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1231698",
+      "startDate": "1758116916",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "2000983796296296296"
+    },
+    "voteEvents": [
+      {
+        "stake": "2000983796296296296",
+        "supports": true,
+        "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+      }
+    ]
+  },
+  "148": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "148"
+      },
+      "blockNumber": "1232004",
+      "transactionHash": "0x7617a88a2037bee650f43d12c021a1aabddb6388cf3e94d4359c8a01960a7b9a"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 148,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "60075048834325396825394",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1232003",
+      "startDate": "1758120744",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "5098344907407407408"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "60000000000000000000000",
+            "supports": false,
+            "voter": "0x3052Bc916De361395d7D67c3Cf710D0AcA154670"
+          }
+        ],
+        "stake": "60000000000000000000000",
+        "supports": false,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "stake": "75048834325396825394",
+        "supports": false,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2000983796296296296",
+            "supports": true,
+            "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+          },
+          {
+            "stake": "1100000000000000000",
+            "supports": true,
+            "voter": "0x1ec45D0c9B18D0a4fcef1B245ef9689C37312823"
+          },
+          {
+            "stake": "999016203703703704",
+            "supports": true,
+            "voter": "0x5a01f64e6427cC8ffA1d1745Ab137b3BAC9D4210"
+          },
+          {
+            "stake": "998344907407407408",
+            "supports": true,
+            "voter": "0xe4e0b020D960b7EB5C2a21B8212c693a4fC73269"
+          }
+        ],
+        "stake": "5098344907407407408",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
+  },
+  "149": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "Test vote",
+        "voteId": "149"
+      },
+      "blockNumber": "1232178",
+      "transactionHash": "0x8e4f5d40986da37aa8f901c6f49c30c44c60b32c9f3a2e3914d9cd91a5230228"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 149,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "1232177",
+      "startDate": "1758122964",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "0"
+    },
+    "voteEvents": []
+  }
+}

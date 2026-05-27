@@ -1,0 +1,672 @@
+{
+  "70": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Set staking limit for operators: \nid 3 set limit to 4000\nid 4 set limit to 3000\nid 5 set limit to 2200\nid 8 set limit to 620",
+        "voteId": "70"
+      },
+      "blockNumber": "12546464",
+      "transactionHash": "0x43ee05f071018407cd61ea59cec1fae6f8f1f8fa6e109e622fc287e114fdd5ad"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 70,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x0000000155032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000fa055032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000bb855032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf0000000000000000000000000000000000000000000000000000000000000005000000000000000000000000000000000000000000000000000000000000089855032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf0000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000026c",
+      "snapshotBlock": "12546463",
+      "startDate": "1622521823",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "43377723101644558935251381"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "231481481481482000000000",
+        "supports": true,
+        "voter": "0xa083Afa219BB7d21c5a72CaCAaDB99Cc1dA6dd98"
+      },
+      {
+        "stake": "231481481481482000000000",
+        "supports": true,
+        "voter": "0x096CA3674329bB66dD7CC14D1511dfB7728b9193"
+      },
+      {
+        "stake": "115740740740741000000000",
+        "supports": true,
+        "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+      },
+      {
+        "stake": "46296296296296300000000",
+        "supports": true,
+        "voter": "0x8d07D225a769b7Af3A923481E1FdF49180e6A265"
+      },
+      {
+        "stake": "34722222222222200000000",
+        "supports": true,
+        "voter": "0x9074485A2B1D4060B2cA3D808FD82e4629202Ee3"
+      },
+      {
+        "stake": "879422335435251381",
+        "supports": true,
+        "voter": "0xFf9F720CEEA8986aD8f187A7Fb265B57072CD944"
+      }
+    ]
+  },
+  "71": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Set staking limit for operators: \nid 3 set limit to 4000\nid 4 set limit to 3000\nid 5 set limit to 3000\nid 8 set limit to 620",
+        "voteId": "71"
+      },
+      "blockNumber": "12557044",
+      "transactionHash": "0xc8174656d923cbc13fde22645ecfe81b72f8ad7c3955204395a43e7ddb101d13"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 71,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x0000000155032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000fa055032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000bb855032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000bb855032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf0000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000026c",
+      "snapshotBlock": "12557043",
+      "startDate": "1622662839",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "50054509398581822181777680"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x61C808D82A3Ac53231750daDc13c777b59310bD9"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "10248301064657260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "2041912037628265473922255",
+        "supports": true,
+        "voter": "0x11099aC9Cc097d0C9759635b8e16c6a91ECC43dA"
+      },
+      {
+        "stake": "46296296296296300000000",
+        "supports": true,
+        "voter": "0x8d07D225a769b7Af3A923481E1FdF49180e6A265"
+      }
+    ]
+  },
+  "72": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "",
+        "voteId": "72"
+      },
+      "blockNumber": "12601093",
+      "transactionHash": "0xdbba66483d0fc578a4329626c13f3e4becb967be8d8e023a4b864088e959b9c3"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 72,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001b9e5cbb9ca5b0d659238807e84d0176930753d86000000e4f63648460000000000000000000000005a98fcbea516cf06857215779fd812ca3bef1b32000000000000000000000000753d5167c31fbeb5b49624314d74a957eb271709000000000000000000000000000000000000000000031a17e847807b1bc0000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000022496e63656e746976657320666f722073744554482f455448204375727665204c5073000000000000000000000000000000000000000000000000000000000000",
+      "snapshotBlock": "12601092",
+      "startDate": "1623252262",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "58368653420112883966467548"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "15000000000000000000000000",
+        "supports": true,
+        "voter": "0x8b1674a617F103897Fb82eC6b8EB749BA0b9765B"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "500190457149920766467548",
+        "supports": true,
+        "voter": "0x32254b28F793CC18B3575C86c61fE3D7421cbbef"
+      },
+      {
+        "stake": "115740740740741000000000",
+        "supports": true,
+        "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+      },
+      {
+        "stake": "34722222222222200000000",
+        "supports": true,
+        "voter": "0x9074485A2B1D4060B2cA3D808FD82e4629202Ee3"
+      }
+    ]
+  },
+  "73": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) revoke ASSIGN_ROLE from ldo-purchase-executor contract, 2) increase staking limits for node node operators #5,7,8",
+        "voteId": "73"
+      },
+      "blockNumber": "12652185",
+      "transactionHash": "0x2eb0bb9a02f49277cdd78dac84e2dc545eafe66e8325624e4db4b2b3baab7c38"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 73,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000019895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb000000000000000000000000489f04eeff0ba8441d42736549a1f1d6cca74775000000000000000000000000f73a1260d222f447210581ddf212d915c09a3249f5a08927c847d7a29dc35e105208dbde5ce951392105d712761cc5d17440e2ff55032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000fa055032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf000000000000000000000000000000000000000000000000000000000000000700000000000000000000000000000000000000000000000000000000000003e855032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000005dc",
+      "snapshotBlock": "12652184",
+      "startDate": "1623935967",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "53082384520360879869128193"
+    },
+    "voteEvents": [
+      {
+        "stake": "17777777780000000000000000",
+        "supports": true,
+        "voter": "0xC24da173A250e9Ca5c54870639EbE5f88be5102d"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "10248301064657260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "2222222220000000000000000",
+        "supports": true,
+        "voter": "0x6ae83EAB68b7112BaD5AfD72d6B24546AbFF137D"
+      },
+      {
+        "stake": "115740740740741000000000",
+        "supports": true,
+        "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+      },
+      {
+        "stake": "310516143224484002715",
+        "supports": true,
+        "voter": "0x5F74a2db08D717c94457c550af54548C4241Ace9"
+      },
+      {
+        "stake": "32198819653977270053",
+        "supports": true,
+        "voter": "0x6389CBcF38172a1e8eCF1C34c00cd7f603AfB80C"
+      }
+    ]
+  },
+  "74": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Set staking limit for operators: \nid 6 set limit to 1000",
+        "voteId": "74"
+      },
+      "blockNumber": "12742383",
+      "transactionHash": "0x9df4396191365600027962a3df4dc845d00130d65ebde93b9a70fb6b92f8005b"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 74,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x0000000155032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000003e8",
+      "snapshotBlock": "12742382",
+      "startDate": "1625150440",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "42157652778369006473922255"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "2041912037628265473922255",
+        "supports": true,
+        "voter": "0x11099aC9Cc097d0C9759635b8e16c6a91ECC43dA"
+      },
+      {
+        "stake": "115740740740741000000000",
+        "supports": true,
+        "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+      }
+    ]
+  },
+  "75": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "",
+        "voteId": "75"
+      },
+      "blockNumber": "12742584",
+      "transactionHash": "0xad44f5e01a9e6ee486c30eaaf41e8da03d4450a73c55090f2b7011be6c9e31ea"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 75,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x0000000155032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000001194",
+      "snapshotBlock": "12742583",
+      "startDate": "1625153246",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "59875652778369006473922255"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "2041912037628265473922255",
+        "supports": true,
+        "voter": "0x11099aC9Cc097d0C9759635b8e16c6a91ECC43dA"
+      },
+      {
+        "stake": "115740740740741000000000",
+        "supports": true,
+        "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+      }
+    ]
+  },
+  "76": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "",
+        "voteId": "76"
+      },
+      "blockNumber": "12793206",
+      "transactionHash": "0x224dea824ba5baa1ce7ebc598231df35677031db87f7a7faa89cebfc05e927a6"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 76,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001b9e5cbb9ca5b0d659238807e84d0176930753d86000000e4f63648460000000000000000000000005a98fcbea516cf06857215779fd812ca3bef1b32000000000000000000000000753d5167c31fbeb5b49624314d74a957eb271709000000000000000000000000000000000000000000031a17e847807b1bc0000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000022496e63656e746976657320666f722073744554482f455448204375727665204c5073000000000000000000000000000000000000000000000000000000000000",
+      "snapshotBlock": "12793205",
+      "startDate": "1625834443",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "31134493265065200510825310"
+    },
+    "voteEvents": [
+      {
+        "stake": "10248301064657260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "5000005172675232789918723",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0xFe45baf0F18c207152A807c1b05926583CFE2e4b"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0x083fc10cE7e97CaFBaE0fE332a9c4384c5f54E45"
+      },
+      {
+        "stake": "500013013625561732937195",
+        "supports": true,
+        "voter": "0x32254b28F793CC18B3575C86c61fE3D7421cbbef"
+      },
+      {
+        "stake": "317399231027618155993666",
+        "supports": true,
+        "voter": "0xE2e4F2A725E42D0F0EF6291F46c430F963482001"
+      },
+      {
+        "stake": "55524454819125217370027",
+        "supports": true,
+        "voter": "0x698048A913c9Bf5Df4DE96542c3cDA6BB8D60Cf6"
+      },
+      {
+        "stake": "8147644407967827502732",
+        "supports": true,
+        "voter": "0xf3B98123df006B6bD886fDb6C7cbf0583914E0A5"
+      },
+      {
+        "stake": "3655388408185434575831",
+        "supports": true,
+        "voter": "0x54E5e90a6679314E8339BB1ED74BeAb5cA19324A"
+      },
+      {
+        "stake": "920174840248043033247",
+        "supports": true,
+        "voter": "0x17cCdDa3914aB73f480FEEa2eCA6381C2cE6D4b9"
+      },
+      {
+        "stake": "500000000000000000000",
+        "supports": true,
+        "voter": "0x6Eb2C2eB6aB1225Fb605Ec660A8974c1CcA82a4F"
+      },
+      {
+        "stake": "27120604000901638464",
+        "supports": true,
+        "voter": "0x8149DC18D39FDBa137E43C871e7801E7CF566D41"
+      }
+    ]
+  },
+  "77": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "",
+        "voteId": "77"
+      },
+      "blockNumber": "12811446",
+      "transactionHash": "0x0b5064c11202a0f730f63a29a5f1e1f757804a88ebf7cc2c017cd31c81216134"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 77,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001b9e5cbb9ca5b0d659238807e84d0176930753d86000000e4f63648460000000000000000000000005a98fcbea516cf06857215779fd812ca3bef1b32000000000000000000000000753d5167c31fbeb5b49624314d74a957eb271709000000000000000000000000000000000000000000031a17e847807b1bc0000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000022496e63656e746976657320666f722073744554482f455448204375727665204c5073000000000000000000000000000000000000000000000000000000000000",
+      "snapshotBlock": "12811445",
+      "startDate": "1626079215",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "65809610438125738624859972"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "10248301064657260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "5000005172675232789918723",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0xFe45baf0F18c207152A807c1b05926583CFE2e4b"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "2041912037628265473922255",
+        "supports": true,
+        "voter": "0x11099aC9Cc097d0C9759635b8e16c6a91ECC43dA"
+      },
+      {
+        "stake": "500077452841611286568423",
+        "supports": true,
+        "voter": "0x32254b28F793CC18B3575C86c61fE3D7421cbbef"
+      },
+      {
+        "stake": "300084381173869232138874",
+        "supports": true,
+        "voter": "0x6094E1Dd925caCe56Fa501dAEc02b01a49E55770"
+      },
+      {
+        "stake": "996665345911283608934",
+        "supports": true,
+        "voter": "0xF53707cEA9EDAFCc5eB7693c44eF3D577B916AC0"
+      },
+      {
+        "stake": "233663803588150847338",
+        "supports": true,
+        "voter": "0xA9D89A5CAf6480496ACC8F4096fE254F24329ef0"
+      }
+    ]
+  },
+  "78": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "1) set withdrawal_credentials to 0x010000000000000000000000b9d7934878b5fb9610b3fe8a5e441e8fad7e293f, 2) reduce staking limits for node operators whose has approved keys but not used yet",
+        "voteId": "78"
+      },
+      "blockNumber": "12823794",
+      "transactionHash": "0xb4ec342326a9fcec8222b12ed26cd553723ef48c24ca290045f88e799b24a97b"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 78,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001ae7ab96520de3a18e5e111b5eaab095312d7fe8400000024e97ee8cc010000000000000000000000b9d7934878b5fb9610b3fe8a5e441e8fad7e293f55032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000d3a55032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000c0155032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000c01",
+      "snapshotBlock": "12823793",
+      "startDate": "1626247593",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "72966621754505307880013759"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x61C808D82A3Ac53231750daDc13c777b59310bD9"
+      },
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "10248301064657260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "5000005172675232789918723",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "310516143224484002715",
+        "supports": true,
+        "voter": "0x5F74a2db08D717c94457c550af54548C4241Ace9"
+      },
+      {
+        "stake": "5001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      }
+    ]
+  },
+  "79": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) increase staking limits for Node Operators, 2) refund gas spendings after withdrawal credentials change",
+        "voteId": "79"
+      },
+      "blockNumber": "12832399",
+      "transactionHash": "0x75812d8c42bcd887ab035d7ccbbb97e244647361d6bcc1805c08ab3179c10c2e"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 79,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x0000000155032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000fa055032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000119455032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000fa055032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000001f455032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf000000000000000000000000000000000000000000000000000000000000000700000000000000000000000000000000000000000000000000000000000006a455032650b14df07b85bf18a3a3ec8e0af2e028d500000044ae962acf00000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000604b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f636484600000000000000000000000000000000000000000000000000000000000000000000000000000000000000009a66fd7948a6834176fbb1c4127c61cb6d34956100000000000000000000000000000000000000000000000020eab3c12b4528000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000a47617320726566756e6400000000000000000000000000000000000000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f636484600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ac7e9af32422ac5968622585822e4d89ef51343000000000000000000000000000000000000000000000000470aa18177a4388a0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000a47617320726566756e6400000000000000000000000000000000000000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f636484600000000000000000000000000000000000000000000000000000000000000000000000000000000000000005f74a2db08d717c94457c550af54548c4241ace900000000000000000000000000000000000000000000000010e0983e5ca8e2000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000a47617320726566756e6400000000000000000000000000000000000000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f63648460000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0b581e041c17716ea1fcede4ec40e2e27a48aba00000000000000000000000000000000000000000000000022e947a4c0eb7e000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000a47617320726566756e6400000000000000000000000000000000000000000000",
+      "snapshotBlock": "12832398",
+      "startDate": "1626364095",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "58180962962962964000000000"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "231481481481482000000000",
+        "supports": true,
+        "voter": "0x096CA3674329bB66dD7CC14D1511dfB7728b9193"
+      },
+      {
+        "stake": "231481481481482000000000",
+        "supports": true,
+        "voter": "0xa083Afa219BB7d21c5a72CaCAaDB99Cc1dA6dd98"
+      }
+    ]
+  }
+}
