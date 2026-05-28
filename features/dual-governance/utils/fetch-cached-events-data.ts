@@ -3,9 +3,9 @@ import {
   ProposalEventsSubset,
 } from '../proposals/types';
 
-const manifestUrl = (chainId: number) =>
+const getManifestUrl = (chainId: number) =>
   `/proposals-events/${chainId}/manifest.json`;
-const chunkUrl = (chainId: number, file: string) =>
+const getChunkUrl = (chainId: number, file: string) =>
   `/proposals-events/${chainId}/${file}`;
 
 const manifestPromises = new Map<
@@ -35,7 +35,7 @@ const fetchManifest = (
   if (cached) {
     return cached;
   }
-  const promise = fetch(manifestUrl(chainId))
+  const promise = fetch(getManifestUrl(chainId))
     .then(async (response) => {
       if (!response.ok) {
         return null;
@@ -57,7 +57,7 @@ const fetchChunk = (
   if (cached) {
     return cached;
   }
-  const promise = fetch(chunkUrl(chainId, file))
+  const promise = fetch(getChunkUrl(chainId, file))
     .then(async (response) => {
       if (!response.ok) {
         return {} as ProposalEventsSubset;

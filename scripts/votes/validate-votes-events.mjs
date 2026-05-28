@@ -191,7 +191,7 @@ const validateVoteDetails = async (voteId, voteData, client, votingAddress) => {
   }
 };
 
-const validateAddress = async (chainId, votingAddress, votes, client) => {
+const validateAddress = async (votingAddress, votes, client) => {
   console.log(`\n### Voting contract: ${votingAddress}`);
 
   const voteIds = Object.keys(votes)
@@ -269,7 +269,7 @@ const main = async () => {
           console.log(`No manifest for ${votingAddress}`);
           continue;
         }
-        await validateAddress(chainId, votingAddress, votes, client);
+        await validateAddress(votingAddress, votes, client);
       }
     }
 
