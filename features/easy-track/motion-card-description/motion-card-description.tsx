@@ -42,6 +42,7 @@ import { SdvtNodeOperatorsAdd } from './motion-descriptions/sdvt-node-operators-
 import { SdvtNodeOperatorManagersChange } from './motion-descriptions/sdvt-node-operator-managers-change';
 import { DescNodeOperatorIncreaseLimit } from './motion-descriptions/node-operator-limit-increase';
 import { CsmSettleElStealingPenalty } from './motion-descriptions/csm-settle-el-stealing-penalty';
+import { SettleGeneralDelayedPenalty } from './motion-descriptions/settle-general-delayed-penalty';
 import { MevBoostRelaysAdd } from './motion-descriptions/mev-boost-relays-add';
 import { MevBoostRelaysEdit } from './motion-descriptions/mev-boost-relays-edit';
 import { MevBoostRelaysRemove } from './motion-descriptions/mev-boost-relays-remove';
@@ -316,6 +317,12 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.CSMSettleElStealingPenalty]: (props: DescDispatchProps) => (
     <CsmSettleElStealingPenalty {...props} />
   ),
+  [MotionType.CSMSettleGeneralDelayedPenalty]: (props: DescDispatchProps) => (
+    <SettleGeneralDelayedPenalty {...props} />
+  ),
+  [MotionType.CuratedSettleGeneralDelayedPenalty]: (
+    props: DescDispatchProps,
+  ) => <SettleGeneralDelayedPenalty {...props} />,
   [MotionType.AllianceOpsStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}

@@ -727,12 +727,22 @@ export const StonksStablesTopUp: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.StonksStablesTopUp],
 };
 
-export const CSMSettleElStealingPenalty: ContractObject<
-  typeof abi.csmSettleElStealingPenaltyAbi
+export const CSMSettleGeneralDelayedPenalty: ContractObject<
+  typeof abi.settleGeneralDelayedPenaltyAbi
 > = {
-  name: 'CSMSettleElStealingPenalty',
-  abi: abi.csmSettleElStealingPenaltyAbi,
-  chainAddressMap: EvmAddressesByType[MotionType.CSMSettleElStealingPenalty],
+  name: 'CSMSettleGeneralDelayedPenalty',
+  abi: abi.settleGeneralDelayedPenaltyAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSMSettleGeneralDelayedPenalty],
+};
+
+export const CuratedSettleGeneralDelayedPenalty: ContractObject<
+  typeof abi.settleGeneralDelayedPenaltyAbi
+> = {
+  name: 'CuratedSettleGeneralDelayedPenalty',
+  abi: abi.settleGeneralDelayedPenaltyAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CuratedSettleGeneralDelayedPenalty],
 };
 
 export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {

@@ -1,4 +1,5 @@
 // Auto-generated exports for all ABIs
+export * from './Accounting';
 export * from './AccountingOracle';
 export * from './ActivateNodeOperators';
 export * from './AddAllowedRecipient';
@@ -97,8 +98,10 @@ export * from './SetMerkleGateTree';
 export * from './SetNodeOperatorNames';
 export * from './SetNodeOperatorRewardAddresses';
 export * from './SetVettedValidatorsLimits';
+export * from './SettleGeneralDelayedPenalty';
 export * from './ShapellaUpgradeTemplate';
 export * from './Snapshot';
+export * from './StakingModule';
 export * from './StakingRouter';
 export * from './StakingVault';
 export * from './Steth';

@@ -13,7 +13,7 @@ import * as StartNewMEVBoostRelaysEdit from './start-new-mev-boost-relays-edit';
 import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remove';
 import * as StartNewSetMerkleGateTree from './start-new-set-merkle-gate-tree';
 import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
-import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-stealing-penalty';
+import * as StartNewSettleGeneralDelayedPenalty from './start-new-settle-general-delayed-penalty';
 
 import * as StartNewVaultForceValidatorExitsInVaultHub from './vaults/start-new-vault-force-validator-exits-in-vault-hub';
 import * as StartNewVaultsAlterTiersInOperatorGrid from './vaults/start-new-vaults-alter-tiers-in-operator-grid';
@@ -150,8 +150,14 @@ export const formParts = {
     }),
   [MotionTypeForms.CSMSetVettedGateTree]:
     StartNewCSMSetVettedGateTree.formParts,
-  [MotionTypeForms.CSMSettleElStealingPenalty]:
-    StartNewCSMSettleElStealingPenalty.formParts,
+  [MotionTypeForms.CSMSettleGeneralDelayedPenalty]:
+    StartNewSettleGeneralDelayedPenalty.formParts({
+      motionType: MotionTypeForms.CSMSettleGeneralDelayedPenalty,
+    }),
+  [MotionTypeForms.CuratedSettleGeneralDelayedPenalty]:
+    StartNewSettleGeneralDelayedPenalty.formParts({
+      motionType: MotionTypeForms.CuratedSettleGeneralDelayedPenalty,
+    }),
   [MotionTypeForms.CuratedExitRequestHashesSubmit]:
     StartNewExitRequestHashesSubmit.formParts('curated'),
   [MotionTypeForms.SDVTExitRequestHashesSubmit]:

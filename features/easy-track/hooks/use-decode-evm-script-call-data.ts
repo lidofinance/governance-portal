@@ -69,6 +69,10 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.RewardsShareProgramRemove]: abi.removeAllowedRecipientAbi,
   [MotionType.RewardsShareProgramTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.CSMSettleElStealingPenalty]: abi.csmSettleElStealingPenaltyAbi,
+  [MotionType.CSMSettleGeneralDelayedPenalty]:
+    abi.settleGeneralDelayedPenaltyAbi,
+  [MotionType.CuratedSettleGeneralDelayedPenalty]:
+    abi.settleGeneralDelayedPenaltyAbi,
   [MotionType.AllianceOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.EcosystemOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.LabsOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,

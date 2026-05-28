@@ -385,6 +385,11 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.CuratedSetMerkleGateTree]:
       '0x5194cC02B6F477B4a23DFA422fFC238c8B5b1736',
 
+    [MotionType.CSMSettleGeneralDelayedPenalty]:
+      '0xd0c38B2F0C1F760976dA010C1c35D828331Ff9E2',
+    [MotionType.CuratedSettleGeneralDelayedPenalty]:
+      '0x3486B872768D361309e405A046C4BF995c21CC6c',
+
     // next motion factories are @deprecated
     // we are keeping them here to display history data
     [MotionType.LEGOTopUp]: '',

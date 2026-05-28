@@ -33,8 +33,10 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.SandboxNodeOperatorIncreaseLimit]:
     '[NOR SandBox] Increase node operator staking limit',
   [MotionType.LegoStablesTopUp]: 'Top up LEGO stablecoins',
-  [MotionType.CSMSettleElStealingPenalty]:
-    'Settle EL Rewards Stealing penalty for CSM operators',
+  [MotionType.CSMSettleGeneralDelayedPenalty]:
+    '[CSM] Settle General Delayed Penalty',
+  [MotionType.CuratedSettleGeneralDelayedPenalty]:
+    '[Curated] Settle General Delayed Penalty',
   [MotionType.CSMSetVettedGateTree]: 'Set CSM vetted gate tree',
   [MotionType.CSMSetMerkleGateTree]: '[CSM] Set merkle gate tree',
   [MotionType.CuratedSetMerkleGateTree]: '[Curated] Set merkle gate tree',
@@ -92,6 +94,8 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.RccStethTopUp]: 'Top up RCC stETH',
   [MotionType.PmlStethTopUp]: 'Top up PML stETH',
   [MotionType.AtcStethTopUp]: 'Top up ATC stETH',
+  [MotionType.CSMSettleElStealingPenalty]:
+    'Settle EL Rewards Stealing penalty for CSM operators',
 
   // Vaults
   [MotionType.RegisterGroupsInOperatorGrid]: 'Register groups in Operator Grid',
