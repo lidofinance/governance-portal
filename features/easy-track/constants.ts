@@ -67,3 +67,5 @@ export const MOTION_STATUS_COLOR_MAP: Record<MotionDisplayStatus, string> = {
   [MotionDisplayStatus.ENACTED]: 'var(--accent-color-leaf)',
   [MotionDisplayStatus.DEFAULT]: 'var(--primary-color-black-50)',
 };
+
+export const MAX_BP = 10000;

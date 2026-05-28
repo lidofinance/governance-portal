@@ -335,6 +335,8 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x22D36e7616F541A527989C5652fDA4d527bB461C',
     [MotionType.CreateOrUpdateOperatorGroup]:
       '0xD3De4d7dCc0E81131032Fb4C32243f4b2B90e8b7',
+    [MotionType.UpdateStakingModuleShareLimits]:
+      '0xD63cf25df1bA6144db27A81A98120Dfc53dE4540',
 
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',

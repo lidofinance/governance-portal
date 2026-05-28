@@ -1041,3 +1041,12 @@ export const CreateOrUpdateOperatorGroup: ContractObject<
   abi: abi.createOrUpdateOperatorGroupAbi,
   chainAddressMap: EvmAddressesByType[MotionType.CreateOrUpdateOperatorGroup],
 };
+
+export const UpdateStakingModuleShareLimits: ContractObject<
+  typeof abi.evmUpdateStakingModuleShareLimitsAbi
+> = {
+  name: 'UpdateStakingModuleShareLimits',
+  abi: abi.evmUpdateStakingModuleShareLimitsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.UpdateStakingModuleShareLimits],
+};

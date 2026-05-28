@@ -57,6 +57,8 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.AllowConsolidationPair]: 'Allow consolidation pair',
   [MotionType.CreateOrUpdateOperatorGroup]:
     'Create or update MetaRegistry operator group',
+  [MotionType.UpdateStakingModuleShareLimits]:
+    'Update staking module share limits',
 
   [EvmUnrecognized]: 'Unrecognized evm factory',
 

@@ -61,6 +61,7 @@ export * from './EvmTopUpLegoProgram';
 export * from './EvmTopUpReferralPartners';
 export * from './EvmTopUpRewardPrograms';
 export * from './EvmUpdateGroupsShareLimit';
+export * from './EvmUpdateStakingModuleShareLimits';
 export * from './EvmUpdateVaultsFeesInOperatorGrid';
 export * from './ExecutionLayerRewardsVault';
 export * from './Finance';

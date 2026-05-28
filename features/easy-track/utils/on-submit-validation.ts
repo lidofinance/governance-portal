@@ -4,6 +4,7 @@ import { MotionType, MotionTypeForms } from '@easy-track/motion-types';
 import { validateGateTreeIpfs } from '@easy-track/utils/validate-gate-tree-ipfs';
 import { validateForceExits } from '@easy-track/utils/validate-force-exits';
 import { validateCreateOrUpdateOperatorGroup } from '@easy-track/utils/validate-create-or-update-operator-group';
+import { validateUpdateStakingModuleShareLimits } from '@easy-track/utils/validate-update-staking-module-share-limits';
 import { PublicClient } from 'viem';
 
 type FormPartsData = ReturnType<typeof getDefaultFormPartsData>;
@@ -29,6 +30,8 @@ const EXTRA_VALIDATION_MAP: {
   [MotionType.CuratedSetMerkleGateTree]: validateGateTreeIpfs,
   [MotionType.ForceValidatorExitsInVaultHub]: validateForceExits,
   [MotionType.CreateOrUpdateOperatorGroup]: validateCreateOrUpdateOperatorGroup,
+  [MotionType.UpdateStakingModuleShareLimits]:
+    validateUpdateStakingModuleShareLimits,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

@@ -121,6 +121,8 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.AlterTiersInOperatorGridOld]: abi.evmAlterTiersInOperatorGridAbi,
   [MotionType.AllowConsolidationPair]: abi.allowConsolidationPairAbi,
   [MotionType.CreateOrUpdateOperatorGroup]: abi.createOrUpdateOperatorGroupAbi,
+  [MotionType.UpdateStakingModuleShareLimits]:
+    abi.evmUpdateStakingModuleShareLimitsAbi,
 } as const;
 
 type DecodeOverride = (data: `0x${string}`) => unknown;

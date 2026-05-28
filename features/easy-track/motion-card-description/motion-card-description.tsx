@@ -61,6 +61,7 @@ import { VaultsRegisterTiersInOperatorGrid } from '@easy-track/motion-card-descr
 import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-liability-shares-target-in-vault-hub';
 import { AllowConsolidationPair } from './motion-descriptions/allow-consolidation-pair';
 import { CreateOrUpdateOperatorGroup } from './motion-descriptions/create-or-update-operator-group';
+import { UpdateStakingModuleShareLimits } from './motion-descriptions/update-staking-module-share-limits';
 
 type GenericDescProps = MotionDescriptionProps<Abi>;
 
@@ -443,6 +444,9 @@ const MOTION_DESCRIPTIONS = {
   ),
   [MotionType.CreateOrUpdateOperatorGroup]: (props: DescDispatchProps) => (
     <CreateOrUpdateOperatorGroup {...props} />
+  ),
+  [MotionType.UpdateStakingModuleShareLimits]: (props: DescDispatchProps) => (
+    <UpdateStakingModuleShareLimits {...props} />
   ),
 } as const;
 

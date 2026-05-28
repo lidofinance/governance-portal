@@ -37,6 +37,7 @@ import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-o
 
 import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation-pair';
 import * as StartNewCreateOrUpdateOperatorGroup from './start-new-create-or-update-operator-group';
+import * as StartNewUpdateStakingModuleShareLimits from './start-new-update-staking-module-share-limits';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -187,6 +188,8 @@ export const formParts = {
     StartNewAllowConsolidationPair.formParts,
   [MotionTypeForms.CreateOrUpdateOperatorGroup]:
     StartNewCreateOrUpdateOperatorGroup.formParts,
+  [MotionTypeForms.UpdateStakingModuleShareLimits]:
+    StartNewUpdateStakingModuleShareLimits.formParts,
 } as const;
 
 export type FormData = {

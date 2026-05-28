@@ -1,4 +1,4 @@
-const MAX_BP = 10000;
+import { MAX_BP } from '@easy-track/constants';
 
 type FormArgs = {
   groupId: string;

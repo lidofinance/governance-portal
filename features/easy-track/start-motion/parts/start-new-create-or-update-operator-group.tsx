@@ -38,8 +38,8 @@ import {
   decodeNORExtOperatorData,
 } from '../../utils/nor-ext-operator-data';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
+import { MAX_BP } from '@easy-track/constants';
 
-const MAX_BP = 10000;
 const MAX_NAME_LENGTH = 256;
 const NO_GROUP_ID = '0';
 

@@ -66,6 +66,7 @@ export const MotionTypeForms = {
 
   AllowConsolidationPair: 'AllowConsolidationPair',
   CreateOrUpdateOperatorGroup: 'CreateOrUpdateOperatorGroup',
+  UpdateStakingModuleShareLimits: 'UpdateStakingModuleShareLimits',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare
