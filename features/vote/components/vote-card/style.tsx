@@ -1,10 +1,14 @@
 import styled, { css } from 'styled-components';
 import { Block } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
-import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
+import {
+  VOTE_CARD_MAX_WIDTH,
+  VOTE_CARD_MOBILE_MAX_WIDTH,
+  VOTE_MOBILE_MAX_WIDTH,
+} from 'styles/constants';
 
 export const Layout = styled.div`
-  max-width: 1024px;
+  max-width: ${VOTE_CARD_MAX_WIDTH}px;
   margin: 0 auto 40px;
   display: flex;
   gap: ${({ theme }) => theme.spaceMap.xl}px;
@@ -12,7 +16,7 @@ export const Layout = styled.div`
 
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     flex-direction: column;
-    max-width: 560px;
+    max-width: ${VOTE_CARD_MOBILE_MAX_WIDTH}px;
   }
 `;
 
