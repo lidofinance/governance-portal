@@ -10,7 +10,7 @@ import {
   ScriptFooterButton,
 } from '@dg/evm-script-parsed/style';
 import { ScriptBody } from '@dg/evm-script-parsed/script-body';
-import { SimulateIcon, CopyIcon } from 'shared/components/icons';
+import { CopyIcon } from 'shared/components/icons';
 import { DecodedCall } from 'utils/decode-evm-script-calls';
 import { Hex } from 'viem';
 
@@ -135,10 +135,6 @@ export const Script = ({
         </VoteScriptBodyInner>
         {tabVariant === 'voting' && (
           <ScriptFooter>
-            <ScriptFooterButton type="button">
-              <SimulateIcon />
-              Simulate
-            </ScriptFooterButton>
             <ScriptFooterButton type="button" onClick={handleCopy}>
               <CopyIcon />
               Copy

@@ -11,7 +11,7 @@ import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoterState } from '../hooks/use-voter-state';
 import { useCastVoteEvents } from '../hooks/use-cast-vote-events';
 import { useVotingConfig } from '../hooks/use-voting-config';
-import { InlineVoteCardLoader } from '../styles';
+import { VoteCardSkeleton } from '../components/vote-card-skeleton';
 import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { useVoteDelegators } from '../hooks/use-vote-delegators';
@@ -183,7 +183,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
   });
 
   if (isVotingConfigLoading || isVoteDataLoading) {
-    return <InlineVoteCardLoader />;
+    return <VoteCardSkeleton />;
   }
 
   if (!value) {

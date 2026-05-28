@@ -116,6 +116,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
     --accent-color-leaf: #29C38C;
     --accent-color-leaf-light: #29C38C33;
     --accent-color-orange: #FF633C;
+    --vote-visited-link: #0068A3;
 
     // ----- Borders: For strokes
 

@@ -32,18 +32,27 @@ export const replaceAddressAndCIDInMD: CodeType = ({
 };
 type LinkType = Components['a'];
 
-export const replaceLinksInMD: LinkType = ({ children, href }) => {
-  if (href?.match(REGEX_URL_ONLY)) {
-    return <ExternalLink href={href}>{children}</ExternalLink>;
-  }
-  // not supporting internal links
-  return (
-    <span>
-      {children}
-      {href ? ` (${href})` : ''}
-    </span>
-  );
-};
+const createLinkRenderer =
+  (asLink: boolean): LinkType =>
+  ({ children, href }) => {
+    if (href?.match(REGEX_URL_ONLY)) {
+      return (
+        <ExternalLink href={href} asLink={asLink}>
+          {children}
+        </ExternalLink>
+      );
+    }
+    // not supporting internal links
+    return (
+      <span>
+        {children}
+        {href ? ` (${href})` : ''}
+      </span>
+    );
+  };
+
+export const replaceLinksInMD = createLinkRenderer(false);
+export const replaceLinksInMDAsAnchor = createLinkRenderer(true);
 
 type ImgType = Components['img'];
 
