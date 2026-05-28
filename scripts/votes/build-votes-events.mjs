@@ -32,21 +32,22 @@ const __dirname = dirname(__filename);
 
 const OUTPUT_ROOT = join(__dirname, '../../public/votes-events');
 
-const chainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
-const addressDir = (chainId, votingAddress) =>
-  join(chainDir(chainId), votingAddress);
-const manifestPath = (chainId, votingAddress) =>
-  join(addressDir(chainId, votingAddress), 'manifest.json');
-const descriptionsPath = (chainId, votingAddress) =>
-  join(addressDir(chainId, votingAddress), 'descriptions.json');
-const chunkFileName = (chunkIndex, hash) => `chunk-${chunkIndex}.${hash}.json`;
+const getChainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
+const getAddressDir = (chainId, votingAddress) =>
+  join(getChainDir(chainId), votingAddress);
+const getManifestPath = (chainId, votingAddress) =>
+  join(getAddressDir(chainId, votingAddress), 'manifest.json');
+const getDescriptionsPath = (chainId, votingAddress) =>
+  join(getAddressDir(chainId, votingAddress), 'descriptions.json');
+const getChunkFileName = (chunkIndex, hash) =>
+  `chunk-${chunkIndex}.${hash}.json`;
 
 const hashChunk = (jsonString) =>
   createHash('sha256').update(jsonString).digest('hex').slice(0, 10);
 
-const isVoteTerminal = (voteData) => !voteData.open;
+const isVoteClosed = (voteData) => !voteData.open;
 
-const canSkip = (cached) => {
+const isCachedVoteComplete = (cached) => {
   if (!cached?.voteDetails || !cached.startVoteEvent) {
     return false;
   }
@@ -167,7 +168,7 @@ const processCastVoteEvents = (castVoteEvents, delegateEvents) => {
 };
 
 const readExistingAddressData = (chainId, votingAddress) => {
-  const manifestFile = manifestPath(chainId, votingAddress);
+  const manifestFile = getManifestPath(chainId, votingAddress);
   if (!existsSync(manifestFile)) {
     return {};
   }
@@ -175,7 +176,7 @@ const readExistingAddressData = (chainId, votingAddress) => {
     const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
     const merged = {};
     for (const file of Object.values(manifest.chunks || {})) {
-      const chunkPath = join(addressDir(chainId, votingAddress), file);
+      const chunkPath = join(getAddressDir(chainId, votingAddress), file);
       if (!existsSync(chunkPath)) {
         continue;
       }
@@ -209,7 +210,7 @@ const partitionByChunk = (votesMap, firstId) => {
 };
 
 const writeAddressChunks = (chainId, votingAddress, votesMap) => {
-  const dir = addressDir(chainId, votingAddress);
+  const dir = getAddressDir(chainId, votingAddress);
   mkdirSync(dir, { recursive: true });
 
   let firstId = 0;
@@ -240,7 +241,7 @@ const writeAddressChunks = (chainId, votingAddress, votesMap) => {
   for (const [idx, chunkData] of partitioned) {
     const json = canonicalStringify(chunkData, 2);
     const hash = hashChunk(json);
-    const filename = chunkFileName(idx, hash);
+    const filename = getChunkFileName(idx, hash);
     const filepath = join(dir, filename);
     if (!existsSync(filepath)) {
       writeFileSync(filepath, json);
@@ -262,7 +263,7 @@ const writeAddressChunks = (chainId, votingAddress, votesMap) => {
     ),
   };
   writeFileSync(
-    manifestPath(chainId, votingAddress),
+    getManifestPath(chainId, votingAddress),
     canonicalStringify(manifest, 2),
   );
   console.debug(`    wrote manifest.json`);
@@ -279,7 +280,7 @@ const writeAddressChunks = (chainId, votingAddress, votesMap) => {
 };
 
 const writeAddressDescriptions = (chainId, votingAddress, votesMap) => {
-  const dir = addressDir(chainId, votingAddress);
+  const dir = getAddressDir(chainId, votingAddress);
   mkdirSync(dir, { recursive: true });
 
   const descriptions = {};
@@ -292,7 +293,7 @@ const writeAddressDescriptions = (chainId, votingAddress, votesMap) => {
   }
 
   writeFileSync(
-    descriptionsPath(chainId, votingAddress),
+    getDescriptionsPath(chainId, votingAddress),
     canonicalStringify(descriptions, 2),
   );
   console.debug(`    wrote descriptions.json (${Object.keys(descriptions).length} entries)`);
@@ -393,7 +394,7 @@ const processVote = async (
 
   const cachedEntry = existingAddressData[voteData.id];
 
-  if (cachedEntry && canSkip(cachedEntry)) {
+  if (cachedEntry && isCachedVoteComplete(cachedEntry)) {
     if (cachedEntry.description == null) {
       const description = await fetchIpfsDescription(
         cachedEntry.startVoteEvent?.args?.metadata ?? '',
@@ -417,9 +418,9 @@ const processVote = async (
     );
   }
 
-  if (!isVoteTerminal(voteData)) {
+  if (!isVoteClosed(voteData)) {
     console.debug(
-      `    [vote ${voteData.id}] Not terminal (open=${voteData.open}, executed=${voteData.executed}, canExecute=${voteData.canExecute}), skipping.`,
+      `    [vote ${voteData.id}] Still open (open=${voteData.open}, executed=${voteData.executed}, canExecute=${voteData.canExecute}), skipping.`,
     );
     return null;
   }
@@ -450,7 +451,7 @@ const processVote = async (
 
     // CastVote scan upper bound: voting closes at snapshotBlock + voteTime +
     // objectionPhaseTime regardless of when (or if) it was executed, so this
-    // is always tighter than executeBlock and covers non-executed terminal
+    // is always tighter than executeBlock and covers non-executed closed
     // votes too.
     const voteEndBlock = snapshotBlock + votePhaseBlocks;
 

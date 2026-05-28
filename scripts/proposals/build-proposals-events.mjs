@@ -32,16 +32,16 @@ const serializeBigInt = (key, value) => {
   return value;
 };
 
-const chainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
-const manifestPath = (chainId) => join(chainDir(chainId), 'manifest.json');
-const chunkFileName = (chunkIndex, hash) =>
+const getChainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
+const getManifestPath = (chainId) => join(getChainDir(chainId), 'manifest.json');
+const getChunkFileName = (chunkIndex, hash) =>
   `chunk-${chunkIndex}.${hash}.json`;
 
 const hashChunk = (jsonString) =>
   createHash('sha256').update(jsonString).digest('hex').slice(0, 10);
 
 const readExistingChainData = (chainId) => {
-  const manifestFile = manifestPath(chainId);
+  const manifestFile = getManifestPath(chainId);
   if (!existsSync(manifestFile)) {
     return {};
   }
@@ -49,7 +49,7 @@ const readExistingChainData = (chainId) => {
     const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
     const merged = {};
     for (const file of Object.values(manifest.chunks || {})) {
-      const chunkPath = join(chainDir(chainId), file);
+      const chunkPath = join(getChainDir(chainId), file);
       if (!existsSync(chunkPath)) {
         continue;
       }
@@ -83,7 +83,7 @@ const partitionByChunk = (proposalsMap, firstId) => {
 };
 
 const writeChainChunks = (chainId, proposalsMap) => {
-  const dir = chainDir(chainId);
+  const dir = getChainDir(chainId);
   mkdirSync(dir, { recursive: true });
 
   let firstId = 0;
@@ -114,7 +114,7 @@ const writeChainChunks = (chainId, proposalsMap) => {
   for (const [idx, chunkData] of partitioned) {
     const json = JSON.stringify(chunkData, serializeBigInt, 2);
     const hash = hashChunk(json);
-    const filename = chunkFileName(idx, hash);
+    const filename = getChunkFileName(idx, hash);
     const filepath = join(dir, filename);
     if (!existsSync(filepath)) {
       writeFileSync(filepath, json);
@@ -135,7 +135,7 @@ const writeChainChunks = (chainId, proposalsMap) => {
       ),
     ),
   };
-  writeFileSync(manifestPath(chainId), JSON.stringify(manifest, null, 2));
+  writeFileSync(getManifestPath(chainId), JSON.stringify(manifest, null, 2));
   console.debug(`  wrote manifest.json`);
 
   const keep = new Set(newChunkFiles.values());
@@ -367,7 +367,7 @@ export const buildProposalsEvents = async () => {
     };
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
-    const canSkip = (cached, proposal) => {
+    const isCachedProposalComplete = (cached, proposal) => {
       const cachedStatus = cached?.details?.status;
       return (
         cachedStatus !== undefined &&
@@ -383,7 +383,7 @@ export const buildProposalsEvents = async () => {
       if (!proposal) return null;
 
       const cached = existingChainData[proposal.id];
-      if (canSkip(cached, proposal)) {
+      if (isCachedProposalComplete(cached, proposal)) {
         console.debug(
           `Proposal ${proposal.id} is terminal and fully cached, skipping`,
         );
