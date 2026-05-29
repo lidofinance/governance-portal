@@ -23,7 +23,10 @@
     "build-vote-events": "node --env-file=.env.local ./scripts/votes/build-votes-events.mjs",
     "validate-vote-events": "node --env-file=.env.local ./scripts/votes/validate-votes-events.mjs",
     "build-all-events": "yarn build-dg-events && yarn build-vote-events",
-    "validate-all-events": "yarn validate-dg-events && yarn validate-vote-events"
+    "validate-all-events": "yarn validate-dg-events && yarn validate-vote-events",
+    "check-dg-cache": "node ./scripts/proposals/check-proposals-cache.mjs",
+    "check-vote-cache": "node ./scripts/votes/check-votes-cache.mjs",
+    "check-all-cache": "yarn check-dg-cache && yarn check-vote-cache"
   },
   "dependencies": {
     "@lidofinance/api-metrics": "^0.45.1",

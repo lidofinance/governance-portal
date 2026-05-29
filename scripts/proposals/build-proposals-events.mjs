@@ -18,6 +18,7 @@ import {
   fetchExecutedEvent,
 } from '../../utils/proposals/fetch-proposal-events.mjs';
 import { PROPOSALS_PER_CHUNK } from '../../utils/proposals/constants.mjs';
+import { isCachedProposalComplete } from '../../utils/cache/status.mjs';
 import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' assert { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
@@ -117,7 +118,7 @@ const writeChainChunks = (chainId, proposalsMap) => {
     const filename = getChunkFileName(idx, hash);
     const filepath = join(dir, filename);
     if (!existsSync(filepath)) {
-      writeFileSync(filepath, json);
+      writeFileSync(filepath, `${json}\n`);
       console.debug(`  wrote ${filename}`);
     } else {
       console.debug(`  unchanged ${filename}`);
@@ -135,7 +136,10 @@ const writeChainChunks = (chainId, proposalsMap) => {
       ),
     ),
   };
-  writeFileSync(getManifestPath(chainId), JSON.stringify(manifest, null, 2));
+  writeFileSync(
+    getManifestPath(chainId),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+  );
   console.debug(`  wrote manifest.json`);
 
   const keep = new Set(newChunkFiles.values());
@@ -254,9 +258,6 @@ export const buildProposalsEvents = async () => {
   }
   console.debug(`Successfully created ${clientsCreated} clients.`);
 
-  const TERMINAL_STATUSES = new Set([3 /* Executed */, 4 /* Cancelled */]);
-  const EXECUTED_STATUS = 3;
-
   const eventsData = {};
 
   for (const chainIdStr of supportedChains) {
@@ -367,25 +368,13 @@ export const buildProposalsEvents = async () => {
     };
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
-    const isCachedProposalComplete = (cached, proposal) => {
-      const cachedStatus = cached?.details?.status;
-      return (
-        cachedStatus !== undefined &&
-        TERMINAL_STATUSES.has(cachedStatus) &&
-        cachedStatus === proposal.status &&
-        !!cached.proposalSubmittedEvent &&
-        (proposal.status !== EXECUTED_STATUS || !!cached.proposalExecutedEvent)
-      );
-    };
-
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     const processProposal = async (proposal) => {
       if (!proposal) return null;
 
       const cached = existingChainData[proposal.id];
       if (isCachedProposalComplete(cached, proposal)) {
         console.debug(
-          `Proposal ${proposal.id} is terminal and fully cached, skipping`,
+          `Proposal ${proposal.id} is final and fully cached, skipping`,
         );
         return null;
       }
