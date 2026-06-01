@@ -1,11 +1,53 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
-import { createPublicClient, http, decodeEventLog } from 'viem';
+import { createPublicClient, http, decodeEventLog, isAddress } from 'viem';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
 import DualGovernanceAbi from '../../abi/DualGovernance.abi.json' assert { type: 'json' };
 import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' assert { type: 'json' };
 import { HISTORICAL_ADDRESSES } from '../../constants/historical-addresses.mjs';
+import { diffEntry } from '../cache-entry-diff.mjs';
+
+const eventSpecs = {
+  proposalSubmittedEvent: {
+    abi: DualGovernanceAbi,
+    eventName: 'ProposalSubmitted',
+    idArg: 'proposalId',
+    valueArgs: ['proposerAccount', 'metadata'],
+  },
+  proposalScheduledEvent: {
+    abi: EmergencyProtectedTimelockAbi,
+    eventName: 'ProposalScheduled',
+    idArg: 'id',
+    valueArgs: [],
+  },
+  proposalExecutedEvent: {
+    abi: EmergencyProtectedTimelockAbi,
+    eventName: 'ProposalExecuted',
+    idArg: 'id',
+    valueArgs: [],
+    checkTimestamp: true,
+  },
+};
+
+const PROPOSAL_STATUS_LABEL = {
+  0: 'NotExist',
+  1: 'Submitted',
+  2: 'Scheduled',
+  3: 'Executed',
+  4: 'Cancelled',
+};
+
+const requiredEventsByStatus = {
+  1: ['proposalSubmittedEvent'],
+  2: ['proposalSubmittedEvent', 'proposalScheduledEvent'],
+  3: [
+    'proposalSubmittedEvent',
+    'proposalScheduledEvent',
+    'proposalExecutedEvent',
+  ],
+  4: ['proposalSubmittedEvent'],
+};
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,7 +73,7 @@ for (const chainIdStr of supportedChains) {
   }
 }
 
-const readChainData = (chainId) => {
+const readCachedChainData = (chainId) => {
   const chainDir = join(INPUT_ROOT, String(chainId));
   const manifestFile = join(chainDir, 'manifest.json');
   if (!existsSync(manifestFile)) {
@@ -65,7 +107,7 @@ const readEventsData = () => {
     if (!Number.isFinite(chainId)) {
       continue;
     }
-    const chainData = readChainData(chainId);
+    const chainData = readCachedChainData(chainId);
     if (chainData) {
       eventsData[entry] = chainData;
     }
@@ -73,7 +115,7 @@ const readEventsData = () => {
   return eventsData;
 };
 
-const setupClients = () => {
+const getClients = () => {
   const clients = {};
 
   for (const chainIdStr of supportedChains) {
@@ -81,9 +123,9 @@ const setupClients = () => {
     const rpcUrl = process.env[`EL_RPC_URLS_${chainId}`];
 
     if (rpcUrl) {
-      console.log(`Setting up RPC client for chain ${chainId}...`);
+      console.info(`Setting up RPC client for chain ${chainId}...`);
       clients[chainId] = createPublicClient({
-        transport: http(rpcUrl, {
+        transport: http(rpcUrl.split(',')[0], {
           retryCount: 3,
           timeout: RPC_TIMEOUT_MS,
         }),
@@ -97,192 +139,205 @@ const setupClients = () => {
   return clients;
 };
 
-const validateSubmissionEvent = (proposalId, submittedEventData, receipt) => {
-  const { address, topics } = submittedEventData;
-  let isValid = true;
-
-  const log = receipt.logs.find(
-    (l) =>
-      l.address.toLowerCase() === address.toLowerCase() &&
-      l.topics[0] === topics[0],
-  );
-
-  if (!log) {
-    console.error(
-      `[${proposalId}] ❌ Event Validation: Did not find expected 'ProposalSubmitted' log in receipt at address: ${address}`,
-    );
-    return false;
-  }
-
-  const decodedLog = decodeEventLog({
-    abi: DualGovernanceAbi,
-    data: log.data,
-    topics: log.topics,
-  });
-
-  const onChainProposer = decodedLog.args.proposerAccount;
-  const onChainMetadata = decodedLog.args.metadata;
-  const jsonProposer = submittedEventData.args.proposerAccount;
-  const jsonMetadata = submittedEventData.args.metadata;
-
-  if (onChainProposer.toLowerCase() !== jsonProposer.toLowerCase()) {
-    console.error(
-      `[${proposalId}] ❌ Event Validation: Proposer mismatch! JSON: ${jsonProposer}, RPC: ${onChainProposer}`,
-    );
-    isValid = false;
-  }
-
-  if (onChainMetadata.trim() !== jsonMetadata.trim()) {
-    console.error(
-      `[${proposalId}] ❌ Event Validation: Metadata mismatch! JSON: "${jsonMetadata}", RPC: "${onChainMetadata}"`,
-    );
-    isValid = false;
-  }
-
-  if (isValid) {
-    console.log(
-      `[${proposalId}] ✅ Event Validation: Proposer & Metadata matched via transaction receipt`,
-    );
-  }
-
-  return isValid;
-};
-
-const validateProposalDetails = async (
+const collectDetailsDiffs = async (
   proposalId,
   proposalData,
   client,
-  contractAddress,
+  eptAddress,
 ) => {
-  let isValid = true;
-  const jsonDetails = proposalData.details;
-
   try {
     const onChainDetails = await client.readContract({
-      address: contractAddress,
+      address: eptAddress,
       abi: EmergencyProtectedTimelockAbi,
       functionName: 'getProposalDetails',
       args: [BigInt(proposalId)],
     });
-
-    const { executor, submittedAt, scheduledAt, status } = onChainDetails;
-
-    if (executor.toLowerCase() !== jsonDetails.executor.toLowerCase()) {
-      console.error(
-        `[${proposalId}] ❌ Details Validation: Executor mismatch! JSON: ${jsonDetails.executor}, RPC: ${executor}`,
-      );
-      isValid = false;
-    }
-
-    if (submittedAt !== jsonDetails.submittedAt) {
-      console.error(
-        `[${proposalId}] ❌ Details Validation: SubmittedAt mismatch! JSON: ${jsonDetails.submittedAt}, RPC: ${submittedAt}`,
-      );
-      isValid = false;
-    }
-
-    if (scheduledAt !== jsonDetails.scheduledAt) {
-      console.error(
-        `[${proposalId}] ❌ Details Validation: ScheduledAt mismatch! JSON: ${jsonDetails.scheduledAt}, RPC: ${scheduledAt}`,
-      );
-      isValid = false;
-    }
-
-    if (status !== jsonDetails.status) {
-      console.error(
-        `[${proposalId}] ❌ Details Validation: Status mismatch! JSON: ${jsonDetails.status}, RPC: ${status}`,
-      );
-      isValid = false;
-    }
-
-    if (isValid) {
-      console.log(
-        `[${proposalId}] ✅ Details Validation: Core contract storage matched`,
-      );
-    }
-
-    return isValid;
-  } catch (error) {
-    console.error(
-      `[${proposalId}] ❌ Details Validation: Failed to read proposal details from contract: ${error.message}`,
+    const diffs = diffEntry(onChainDetails, proposalData.details).map(
+      (message) => `details.${message}`,
     );
-    return false;
+    return { diffs, status: Number(onChainDetails.status) };
+  } catch (error) {
+    return { diffs: [`details: read failed: ${error.message}`], status: null };
   }
 };
 
+const collectEventDiffs = async (proposalId, key, cachedEvent, client) => {
+  const spec = eventSpecs[key];
+  const diffs = [];
+
+  if (!cachedEvent.transactionHash) {
+    return [`${key}: missing transactionHash`];
+  }
+
+  let receipt;
+  try {
+    receipt = await client.getTransactionReceipt({
+      hash: cachedEvent.transactionHash,
+    });
+  } catch (error) {
+    return [`${key}: receipt fetch failed: ${error.message}`];
+  }
+
+  const log = receipt.logs.find(
+    (entry) =>
+      entry.address.toLowerCase() === cachedEvent.address.toLowerCase() &&
+      entry.topics[0] === cachedEvent.topics[0],
+  );
+  if (!log) {
+    return [
+      `${key}: event not found in receipt ${cachedEvent.transactionHash}`,
+    ];
+  }
+
+  if (BigInt(receipt.blockNumber) !== BigInt(cachedEvent.blockNumber)) {
+    diffs.push(
+      `${key}.blockNumber: ${cachedEvent.blockNumber} !== ${receipt.blockNumber}`,
+    );
+  }
+
+  let decoded;
+  try {
+    decoded = decodeEventLog({
+      abi: spec.abi,
+      data: log.data,
+      topics: log.topics,
+    });
+  } catch (error) {
+    return [...diffs, `${key}: decode failed: ${error.message}`];
+  }
+
+  if (decoded.eventName !== spec.eventName) {
+    diffs.push(`${key}.eventName: ${spec.eventName} !== ${decoded.eventName}`);
+  }
+
+  if (String(decoded.args[spec.idArg]) !== String(proposalId)) {
+    diffs.push(
+      `${key}.${spec.idArg}: ${proposalId} !== ${decoded.args[spec.idArg]}`,
+    );
+  }
+
+  for (const arg of spec.valueArgs) {
+    const onChainValue = decoded.args[arg];
+    const cachedValue = cachedEvent.args[arg];
+    const equal = isAddress(onChainValue)
+      ? onChainValue.toLowerCase() === String(cachedValue).toLowerCase()
+      : String(onChainValue).trim() === String(cachedValue).trim();
+    if (!equal) {
+      diffs.push(
+        `${key}.args.${arg}: ${JSON.stringify(cachedValue)} !== ${JSON.stringify(onChainValue)}`,
+      );
+    }
+  }
+
+  if (spec.checkTimestamp && cachedEvent.blockTimestamp != null) {
+    try {
+      const block = await client.getBlock({
+        blockNumber: BigInt(cachedEvent.blockNumber),
+      });
+      if (Number(block.timestamp) !== Number(cachedEvent.blockTimestamp)) {
+        diffs.push(
+          `${key}.blockTimestamp: ${cachedEvent.blockTimestamp} !== ${block.timestamp}`,
+        );
+      }
+    } catch (error) {
+      diffs.push(`${key}.blockTimestamp: block fetch failed: ${error.message}`);
+    }
+  }
+
+  return diffs;
+};
+
+const collectProposalDiffs = async (
+  proposalId,
+  proposal,
+  client,
+  eptAddress,
+) => {
+  const { diffs, status } = await collectDetailsDiffs(
+    proposalId,
+    proposal,
+    client,
+    eptAddress,
+  );
+
+  const requiredKeys = requiredEventsByStatus[status] ?? [];
+  for (const key of requiredKeys) {
+    if (!proposal[key]) {
+      diffs.push(
+        `${key}: required by status ${PROPOSAL_STATUS_LABEL[status] ?? status} but missing in cache`,
+      );
+    }
+  }
+
+  for (const key of Object.keys(eventSpecs)) {
+    const cachedEvent = proposal[key];
+    if (!cachedEvent) {
+      continue;
+    }
+    diffs.push(
+      ...(await collectEventDiffs(proposalId, key, cachedEvent, client)),
+    );
+  }
+
+  return diffs;
+};
+
 const validateEvents = async (eventsData, clients) => {
-  for (const chainIdStr in eventsData) {
-    if (Object.prototype.hasOwnProperty.call(eventsData, chainIdStr)) {
-      const chainId = Number(chainIdStr);
-      const { proposals } = eventsData[chainIdStr];
-      const client = clients[chainId];
+  let hasFailures = false;
 
-      console.log(`\n## Chain ID: ${chainId}`);
+  for (const chainIdStr of Object.keys(eventsData)) {
+    const chainId = Number(chainIdStr);
+    const { proposals } = eventsData[chainIdStr];
+    const client = clients[chainId];
 
-      if (!client) {
-        console.warn(
-          `⚠️ Skipping validation: No RPC client available for chain ${chainId}.`,
-        );
-        continue;
-      }
+    console.info(`\n## Chain ID: ${chainId}`);
 
-      const proposalIds = Object.keys(proposals)
-        .map(Number)
-        .sort((a, b) => a - b);
+    if (!client) {
+      console.warn(
+        `⚠️ Skipping validation: No RPC client available for chain ${chainId}.`,
+      );
+      continue;
+    }
 
-      if (proposalIds.length === 0) {
-        console.log('No proposals found on this chain.');
-        continue;
-      }
+    const proposalIds = Object.keys(proposals)
+      .map(Number)
+      .sort((first, second) => first - second);
 
-      for (const proposalId of proposalIds) {
-        const proposal = proposals[proposalId];
-        const submittedEvent = proposal.proposalSubmittedEvent;
+    if (proposalIds.length === 0) {
+      console.info('No proposals found on this chain.');
+      continue;
+    }
 
-        await sleep(1000);
+    for (const proposalId of proposalIds) {
+      await sleep(1000);
 
-        await validateProposalDetails(
-          proposalId,
-          proposal,
-          client,
-          contractAddresses[chainId].emergencyProtectedTimelock,
-        );
+      const diffs = await collectProposalDiffs(
+        proposalId,
+        proposals[proposalId],
+        client,
+        contractAddresses[chainId].emergencyProtectedTimelock,
+      );
 
-        if (submittedEvent && submittedEvent.transactionHash) {
-          const txHash = submittedEvent.transactionHash;
-
-          try {
-            const receipt = await client.getTransactionReceipt({
-              hash: txHash,
-            });
-
-            if (receipt) {
-              validateSubmissionEvent(proposalId, submittedEvent, receipt);
-            } else {
-              console.warn(
-                `⚠️ Could not retrieve receipt for Proposal ${proposalId} (TX: ${txHash}).`,
-              );
-            }
-          } catch (error) {
-            console.error(
-              `❌ Failed to fetch receipt for Proposal ${proposalId} (TX: ${txHash}): ${error.message}`,
-            );
-          }
-        } else {
-          console.warn(
-            `⚠️ Proposal ${proposalId}: Missing submission event or transaction hash. Skipping receipt fetch.`,
-          );
+      if (diffs.length === 0) {
+        console.info(`[${proposalId}] ✅ Full entry matched on-chain`);
+      } else {
+        hasFailures = true;
+        console.error(`[${proposalId}] ❌ ${diffs.length} mismatch(es):`);
+        for (const message of diffs) {
+          console.error(`    - ${message}`);
         }
       }
     }
   }
+
+  return hasFailures;
 };
 
 const main = async () => {
   try {
     const eventsData = readEventsData();
-    const clients = setupClients();
-    await validateEvents(eventsData, clients);
+    const clients = getClients();
+    const hasFailures = await validateEvents(eventsData, clients);
 
     const hasMissingChunks = Object.values(eventsData).some(
       (chain) => chain.missingChunks && chain.missingChunks.length > 0,
@@ -290,6 +345,13 @@ const main = async () => {
     if (hasMissingChunks) {
       console.error(
         '❌ Validation failed: manifest references chunks that are missing on disk.',
+      );
+      process.exit(1);
+    }
+
+    if (hasFailures) {
+      console.error(
+        '❌ Validation failed: cached entries diverge from on-chain.',
       );
       process.exit(1);
     }
