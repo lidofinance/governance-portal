@@ -21,7 +21,7 @@ export const validateUpdateStakingModuleShareLimits = ({
   }
 
   if (newShare > newThreshold) {
-    return 'Stake share limit must be less or equal than priority exit share threshold';
+    return 'Stake share limit must be less than or equal to priority exit share threshold';
   }
 
   return null;
