@@ -30,11 +30,11 @@ export const Header = styled.div`
 `;
 
 export const MotionNumber = styled(Text).attrs({
-  size: 14,
-  weight: 800,
+  size: 16,
+  weight: 700,
+  color: 'textv1-secondary',
 })`
   margin-bottom: 3px;
-  color: rgba(39, 56, 82, 0.6);
 `;
 
 export const HeaderAside = styled.div`
@@ -45,14 +45,14 @@ export const HeaderAside = styled.div`
 export const StatusLabel = styled(Text).attrs({
   size: 12,
   weight: 500,
+  color: 'textv1-secondary',
 })`
   margin-bottom: 3px;
-  opacity: 0.4;
 `;
 
 export const StatusValue = styled(Text).attrs({
-  size: 14,
-  weight: 800,
+  size: 16,
+  weight: 700,
 })<{ $displayStatus: MotionDisplayStatus }>`
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -61,20 +61,26 @@ export const StatusValue = styled(Text).attrs({
 `;
 
 export const Description = styled.div`
-  font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 64px;
-  color: rgba(39, 56, 82, 0.6);
 
   ul {
     padding-left: 20px;
+    line-height: 1.8;
+  }
+
+  code {
+    word-break: break-all;
   }
 `;
 
-export const DescriptionMeta = styled.div`
+export const DescriptionMeta = styled(Text).attrs({
+  size: 12,
+  color: 'textv1-secondary',
+})`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   margin-top: 32px;
   margin-bottom: 16px;
 `;
@@ -107,9 +113,8 @@ export const StartDateCell = styled.div`
 
 export const InfoLabel = styled(Text).attrs({
   size: 12,
-  weight: 500,
+  color: 'textv1-secondary',
 })`
-  opacity: 0.4;
   margin-bottom: 4px;
 `;
 

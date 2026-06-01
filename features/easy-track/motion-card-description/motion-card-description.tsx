@@ -198,10 +198,9 @@ const MOTION_DESCRIPTIONS: Record<
 
 type Props = {
   motion: Motion;
-  textSize?: 'default' | 'small';
 };
 
-export const MotionDescription = ({ motion, textSize }: Props) => {
+export const MotionDescription = ({ motion }: Props) => {
   const { chainId } = useLidoSDK();
   const motionType = getMotionTypeByScriptFactory(
     chainId,
@@ -222,7 +221,7 @@ export const MotionDescription = ({ motion, textSize }: Props) => {
 
   if (motionType === EvmUnrecognized) {
     return (
-      <Text size={12} color="warning">
+      <Text size={14} color="warning">
         Unrecognized motion type
       </Text>
     );
@@ -235,12 +234,7 @@ export const MotionDescription = ({ motion, textSize }: Props) => {
   const Desc = MOTION_DESCRIPTIONS[motionType];
 
   return (
-    <Text
-      size={textSize === 'small' ? 12 : 14}
-      weight={400}
-      color="secondary"
-      as="div"
-    >
+    <Text size={14} color="textv1">
       <ErrorBoundary fallback={<>Failed to render motion description</>}>
         <Desc
           callData={callData}

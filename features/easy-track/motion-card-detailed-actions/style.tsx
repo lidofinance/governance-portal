@@ -13,7 +13,8 @@ export const Actions = styled.div`
 
 export const Hint = styled(Text).attrs({
   size: 12,
-  weight: 500,
+  weight: 400,
+  color: 'textv1',
 })`
   margin-bottom: 10px;
   opacity: 0.8;
