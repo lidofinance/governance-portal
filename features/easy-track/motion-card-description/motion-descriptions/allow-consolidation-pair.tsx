@@ -1,79 +1,124 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address, zeroAddress } from 'viem';
 import { allowConsolidationPairAbi } from 'abi/generated';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import {
   AllowConsolidationPair as AllowConsolidationPairContract,
-  ConsolidationMigrator,
+  StakingRouter,
 } from 'shared/blockchain/contracts';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { MotionDescriptionProps } from '../types';
-
-type PairState = {
-  isAllowed: boolean;
-  currentSubmitter: Address;
-};
+import { useNodeOperatorNames } from '@easy-track/hooks/use-node-operator-names';
 
 export const AllowConsolidationPair = ({
   callData,
-  isOnChain,
 }: MotionDescriptionProps<typeof allowConsolidationPairAbi>) => {
   const { submitter, sourceOperatorId, targetOperatorIds } = callData;
-  const sourceId = Number(sourceOperatorId);
 
   const { chainId } = useLidoSDK();
   const factoryContract = useReadContract(AllowConsolidationPairContract);
-  const consolidationMigrator = useReadContract(ConsolidationMigrator);
+  const stakingRouter = useReadContract(StakingRouter);
 
-  const { data: pairStates } = useQuery<PairState[]>({
+  const { data: modulesData, isLoading: isModulesDataLoading } = useQuery({
     queryKey: [
-      'allow-consolidation-pair-states',
+      'allow-consolidation-pair-modules',
       chainId,
-      sourceOperatorId.toString(),
-      targetOperatorIds.map((id) => id.toString()).join(','),
+      factoryContract.address,
     ],
-    enabled: !!isOnChain && !!factoryContract.address,
+    enabled: !!factoryContract.address,
+    staleTime: Infinity,
     queryFn: async () => {
-      const submitters = await Promise.all(
-        targetOperatorIds.map((targetId) =>
-          consolidationMigrator.readContract('getSubmitter', [
-            sourceOperatorId,
-            targetId,
-          ]),
-        ),
-      );
+      const [targetModuleId, sourceModuleId] = await Promise.all([
+        factoryContract.readContract('targetModuleId'),
+        factoryContract.readContract('sourceModuleId'),
+      ]);
 
-      return submitters.map((currentSubmitter) => ({
-        isAllowed: !!currentSubmitter && currentSubmitter !== zeroAddress,
-        currentSubmitter: currentSubmitter ?? zeroAddress,
-      }));
+      const [targetModule, sourceModule] = await Promise.all([
+        stakingRouter.readContract('getStakingModule', [targetModuleId]),
+        stakingRouter.readContract('getStakingModule', [sourceModuleId]),
+      ]);
+
+      return {
+        targetModuleAddress: targetModule.stakingModuleAddress,
+        targetModuleName: targetModule.name,
+        targetModuleId: targetModuleId.toString(),
+        sourceModuleAddress: sourceModule.stakingModuleAddress,
+        sourceModuleName: sourceModule.name,
+        sourceModuleId: sourceModuleId.toString(),
+      };
     },
   });
 
+  const {
+    data: sourceModuleOperatorsNames,
+    isLoading: isSourceNamesDataLoading,
+  } = useNodeOperatorNames(modulesData?.sourceModuleAddress, [
+    sourceOperatorId,
+  ]);
+
+  const {
+    data: targetModuleOperatorsNames,
+    isLoading: isTargetNamesDataLoadin,
+  } = useNodeOperatorNames(modulesData?.targetModuleAddress, targetOperatorIds);
+
+  const sourceOperatorName = sourceModuleOperatorsNames?.[0];
+  const sourceIdStr = sourceOperatorId.toString();
+
+  const sourceModuleNameEl = modulesData?.sourceModuleName ? (
+    <>
+      from <b>{modulesData.sourceModuleName}</b> (id:{' '}
+      {modulesData.sourceModuleId}) module
+    </>
+  ) : (
+    ''
+  );
+
+  const targetModuleNameEl = modulesData?.targetModuleName ? (
+    <>
+      from module <b>{modulesData.targetModuleName}</b> (id:{' '}
+      {modulesData.targetModuleId})
+    </>
+  ) : (
+    ''
+  );
+
+  if (
+    isModulesDataLoading ||
+    isSourceNamesDataLoading ||
+    isTargetNamesDataLoadin
+  ) {
+    return <>Loading...</>;
+  }
+
   return (
     <>
-      For source node operator <b>#{sourceId}</b>:
+      Node operator{' '}
+      {sourceOperatorName ? (
+        <>
+          <b>{sourceOperatorName}</b> (id: {sourceIdStr})
+        </>
+      ) : (
+        <b>#{sourceIdStr}</b>
+      )}{' '}
+      {sourceModuleNameEl} and:
       <ul>
-        {targetOperatorIds.map((id, index) => {
-          const targetId = Number(id);
-          const state = pairStates?.[index];
+        {targetOperatorIds.map((targetId, index) => {
+          const idStr = targetId.toString();
+          const name = targetModuleOperatorsNames?.[index];
 
-          if (state?.isAllowed) {
-            return (
-              <li key={index}>
-                Update consolidation manager for target sub-operator{' '}
-                <b>#{targetId}</b> from{' '}
-                <AddressPopInline address={state.currentSubmitter} /> to{' '}
-                <AddressPopInline address={submitter} />
-              </li>
-            );
-          }
+          const nameEl = name ? (
+            <>
+              <b>{name}</b> (id: {idStr})
+            </>
+          ) : (
+            <b>#{idStr}</b>
+          );
 
           return (
             <li key={index}>
-              Allow consolidation to target sub-operator <b>#{targetId}</b> with
-              consolidation manager <AddressPopInline address={submitter} />
+              sub-operator {nameEl} {targetModuleNameEl} with consolidation
+              manager
+              <AddressPopInline address={submitter} />;
             </li>
           );
         })}

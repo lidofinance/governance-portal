@@ -17,38 +17,32 @@ export const SetMerkleGateTree = ({
   const currentCid = liveGateInfo?.treeCid ?? encodedCurrentCid;
 
   return (
-    <div>
-      <strong>Set Merkle Gate Tree:</strong>
-      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-        <li>
-          <strong>Gate:</strong>
-          <div style={{ marginLeft: '1rem' }}>
-            <AddressPopInline address={gate} />
-          </div>
-        </li>
-        <li style={{ marginTop: '1rem' }}>
-          <strong>Tree Root:</strong>
-          <div style={{ marginLeft: '1rem' }}>
-            <div>
-              <span>Current:</span> <code>{currentRoot}</code>
-            </div>
-            <div>
-              <span>New:</span> <code>{newRoot}</code>
-            </div>
-          </div>
-        </li>
-        <li style={{ marginTop: '1rem' }}>
-          <strong>Tree CID:</strong>
-          <div style={{ marginLeft: '1rem' }}>
-            <div>
-              <span>Current:</span> <code>{currentCid}</code>
-            </div>
-            <div>
-              <span>New:</span> <code>{newCid}</code>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
+    <ul>
+      <li>
+        Gate: <AddressPopInline address={gate} />
+      </li>
+      <li>
+        Tree Root:
+        <ul>
+          <li>
+            Current: <code>{currentRoot}</code>
+          </li>
+          <li>
+            New: <code>{newRoot}</code>
+          </li>
+        </ul>
+      </li>
+      <li>
+        Tree CID:
+        <ul>
+          <li>
+            Current: <code>{currentCid}</code>
+          </li>
+          <li>
+            New: <code>{newCid}</code>
+          </li>
+        </ul>
+      </li>
+    </ul>
   );
 };

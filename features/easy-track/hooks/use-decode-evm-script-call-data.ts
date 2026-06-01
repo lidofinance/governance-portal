@@ -1,5 +1,4 @@
 import {
-  Abi,
   decodeAbiParameters,
   decodeFunctionResult,
   parseAbiParameters,
@@ -128,7 +127,7 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.CreateOrUpdateOperatorGroup]: abi.createOrUpdateOperatorGroupAbi,
   [MotionType.UpdateStakingModuleShareLimits]:
     abi.evmUpdateStakingModuleShareLimitsAbi,
-} as const satisfies Record<MotionType, Abi>;
+} as const;
 
 type DecodeOverride = (data: `0x${string}`) => unknown;
 
