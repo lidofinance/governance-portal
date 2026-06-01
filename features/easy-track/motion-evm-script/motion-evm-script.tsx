@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Motion, RawMotionSubgraph } from '../types';
 import { decodeEvmScript } from 'shared/blockchain/utils/decode-evm-script';
-import { Script } from '../../dual-governance/evm-script-parsed';
+import { Script } from 'shared/components/evm-script-parsed';
 import { useDecodedCalls } from 'shared/hooks';
 
 type Props = {

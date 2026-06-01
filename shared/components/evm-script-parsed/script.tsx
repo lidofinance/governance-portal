@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Tabs, Tab, VoteScriptBodyWrap } from '@dg/evm-script-parsed/style';
-import { ScriptBody } from '@dg/evm-script-parsed/script-body';
+import { Tabs, Tab, VoteScriptBodyWrap } from './style';
+import { ScriptBody } from './script-body';
 import { DecodedCall } from 'utils/decode-evm-script-calls';
 import { Hex } from 'viem';
 
