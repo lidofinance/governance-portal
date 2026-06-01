@@ -142,7 +142,7 @@ export const PUBLIC_DELEGATES: PublicDelegate[] = [
     name: 'PRO Delegators',
     avatar: `${basePath}/delegates/pro.jpeg`,
     address: '0x22062B3F26dc2CfeF4Ebb10D5bBA8DCd7DE064FB',
-    lido: 'https://research.lido.fi/t/batux-delegate-thread/11201',
-    twitter: 'https://twitter.com/crypto_han',
+    lido: 'https://research.lido.fi/t/pro-delegators-delegate-thread/11461',
+    twitter: null,
   },
 ];
