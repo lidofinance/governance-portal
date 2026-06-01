@@ -26,6 +26,10 @@ import {
 } from '../../utils/votes/fetch-vote-events.mjs';
 import { fetchIpfsDescription } from '../../utils/votes/fetch-ipfs-description.mjs';
 import { canonicalStringify } from '../../utils/canonical-stringify.mjs';
+import {
+  isVoteClosed,
+  isCachedVoteComplete,
+} from '../../utils/cache/status.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -44,21 +48,6 @@ const getChunkFileName = (chunkIndex, hash) =>
 
 const hashChunk = (jsonString) =>
   createHash('sha256').update(jsonString).digest('hex').slice(0, 10);
-
-const isVoteClosed = (voteData) => !voteData.open;
-
-const isCachedVoteComplete = (cached) => {
-  if (!cached?.voteDetails || !cached.startVoteEvent) {
-    return false;
-  }
-  if (cached.voteDetails.executed) {
-    return Boolean(cached.executeVoteEvent);
-  }
-  return (
-    cached.voteDetails.open === false &&
-    cached.voteDetails.canExecute === false
-  );
-};
 
 const isCastVoteMoreRecent = (newVote, existing) => {
   if (!existing) {
@@ -174,16 +163,16 @@ const readExistingAddressData = (chainId, votingAddress) => {
   }
   try {
     const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
-    const merged = {};
+    const votesById = {};
     for (const file of Object.values(manifest.chunks || {})) {
       const chunkPath = join(getAddressDir(chainId, votingAddress), file);
       if (!existsSync(chunkPath)) {
         continue;
       }
       const chunkData = JSON.parse(readFileSync(chunkPath, 'utf8'));
-      Object.assign(merged, chunkData);
+      Object.assign(votesById, chunkData);
     }
-    return merged;
+    return votesById;
   } catch (error) {
     console.warn(
       `Failed to read existing cache for ${chainId}/${votingAddress}:`,
@@ -244,7 +233,7 @@ const writeAddressChunks = (chainId, votingAddress, votesMap) => {
     const filename = getChunkFileName(idx, hash);
     const filepath = join(dir, filename);
     if (!existsSync(filepath)) {
-      writeFileSync(filepath, json);
+      writeFileSync(filepath, `${json}\n`);
       console.debug(`    wrote ${filename}`);
     } else {
       console.debug(`    unchanged ${filename}`);
@@ -264,7 +253,7 @@ const writeAddressChunks = (chainId, votingAddress, votesMap) => {
   };
   writeFileSync(
     getManifestPath(chainId, votingAddress),
-    canonicalStringify(manifest, 2),
+    `${canonicalStringify(manifest, 2)}\n`,
   );
   console.debug(`    wrote manifest.json`);
 
@@ -294,7 +283,7 @@ const writeAddressDescriptions = (chainId, votingAddress, votesMap) => {
 
   writeFileSync(
     getDescriptionsPath(chainId, votingAddress),
-    canonicalStringify(descriptions, 2),
+    `${canonicalStringify(descriptions, 2)}\n`,
   );
   console.debug(`    wrote descriptions.json (${Object.keys(descriptions).length} entries)`);
 };

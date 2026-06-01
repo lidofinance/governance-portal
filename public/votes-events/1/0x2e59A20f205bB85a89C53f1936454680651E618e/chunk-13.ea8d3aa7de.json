@@ -1,0 +1,930 @@
+{
+  "130": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "14897729",
+      "executedAt": 1654268035,
+      "transactionHash": "0x3f126198f641194e96cf6be0db03efc6ae92a4e1586b5062aaf373f171f0c5d2"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "('Omnibus vote: 1) Create role RESUME_ROLE and grant to Voting; ', '2) Create role STAKING_PAUSE_ROLE and grant to Voting; ', '3) Create role SET_EL_REWARDS_WITHDRAWAL_LIMIT_ROLE and grant to Voting; ', '4) Set Execution Layer rewards withdrawal limit to 2BP; ', '5) Wrap stETH burner into the composite receiver; ', '6) Attach composite receiver to lido oracle as beacon report callback; ', '7) Revoke BURN_ROLE permissions from Voting; ', '8) Grant BURN_ROLE constrained permissions to stETH burner; ', '9) Create role MANAGE_PROTOCOL_CONTRACTS_ROLE and grant to Voting; ', '10) Revoke SET_TREASURY from Voting; ', '11) Revoke SET_INSURANCE_FUND from Voting; ', '12) Revoke SET_ORACLE from Voting.')",
+        "voteId": "130"
+      },
+      "blockNumber": "14879134",
+      "transactionHash": "0x7c42a8522e2fcf80c36f73660b9e98f71c1b364e72b1ea06e9ff5b79453e33dd"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 130,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000019895f0f17cc1d1891b6f18ee0b483b6f221b37bb00000084be0384780000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe842fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c70000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e9895f0f17cc1d1891b6f18ee0b483b6f221b37bb00000084be0384780000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe8484ea57490227bc2be925c684e2a367071d69890b629590198f4125a018eb1de80000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e9895f0f17cc1d1891b6f18ee0b483b6f221b37bb00000084be0384780000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe84ca7d176c2da2028ed06be7e3b9457e6419ae0744dc311989e9b29f6a1ceb10030000000000000000000000002e59a20f205bb85a89c53f1936454680651e618eae7ab96520de3a18e5e111b5eaab095312d7fe840000002463c2eb53000000000000000000000000000000000000000000000000000000000000000255a7e1cbd678d9ebd50c7d69dc75203b0dbdd4310000002433657836000000000000000000000000b280e33812c0b09353180e92e27b8ad399b07f26442af784a788a5bd6f42a01ebe9f287a871243fb000000249a3cb2ca00000000000000000000000055a7e1cbd678d9ebd50c7d69dc75203b0dbdd4319895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe84e97b137254058bd94f28d2f3eb79e2d34074ffb488d042e3bc958e0a57d2fa229895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000c46815c992000000000000000000000000b280e33812c0b09353180e92e27b8ad399b07f26000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe84e97b137254058bd94f28d2f3eb79e2d34074ffb488d042e3bc958e0a57d2fa2200000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000001000100000000000000000000b280e33812c0b09353180e92e27b8ad399b07f269895f0f17cc1d1891b6f18ee0b483b6f221b37bb00000084be0384780000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe84eb7bfce47948ec1179e2358171d5ee7c821994c911519349b95313b6851090310000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e9895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe849f6f8058e4bcbf364e89c9e8da7eb7cada9d21b7aea6e2fd355b4669842c57959895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe84d6c7fda17708c7d91354c17ac044fde6f58fb548a5ded80960beba862b1f1d7d9895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe8411eba3f259e2be865238d718fd308257e3874ad4b3a642ea3af386a4eea190bd",
+      "snapshotBlock": "14879133",
+      "startDate": "1654006412",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "79096437309849638299830616"
+    },
+    "voteEvents": [
+      {
+        "stake": "20000000000000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "17563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "14000000000000000000000000",
+        "supports": true,
+        "voter": "0x8b1674a617F103897Fb82eC6b8EB749BA0b9765B"
+      },
+      {
+        "stake": "7933462950057260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "1881618110000000000000000",
+        "supports": true,
+        "voter": "0x44A67D41FF717887802789F06882a98291828E48"
+      },
+      {
+        "stake": "13866717704657291567",
+        "supports": true,
+        "voter": "0xbED050C15224a53a12815Fa79F2B1EF431887Eb2"
+      },
+      {
+        "stake": "10383074673234683624",
+        "supports": true,
+        "voter": "0x06F398ce76aCc1fCE97B7Cab0eb2a96BA9230c9b"
+      }
+    ]
+  },
+  "131": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "14980329",
+      "executedAt": 1655485920,
+      "transactionHash": "0x105d90f342b8cc57cdfe4d1515fdc7e534bdcf814108bb2ef7efe74894866c37"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) Revoke DEPOSIT_ROLE from the old DepositSecurityModule; 2) Grant DEPOSIT_ROLE to the new DepositSecurityModule; 3) Set lastDepositBlock of DepositSecurityModule to 14985614.",
+        "voteId": "131"
+      },
+      "blockNumber": "14962720",
+      "transactionHash": "0xabe5da8a8ad2555905d16b3b28d85ad7adc61cad1ab20ebf3c9fe95e60d4eee5"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 131,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000019895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb000000000000000000000000db149235b6f40dc08810aa69869783be101790e7000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe842561bf26f818282a3be40719542054d2173eb0d38539e8a8d3cff22f29fd23849895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000640a8ed3db000000000000000000000000710b3303fb508a84f10793c1106e32be873c24cd000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe842561bf26f818282a3be40719542054d2173eb0d38539e8a8d3cff22f29fd23843e40d73eb977dc6a537af587d48316fee66e9c8c00000084d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000001710b3303fb508a84f10793c1106e32be873c24cd0000002460c8a5470000000000000000000000000000000000000000000000000000000000e4a98e",
+      "snapshotBlock": "14962719",
+      "startDate": "1655224827",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "65283178027423407047017808"
+    },
+    "voteEvents": [
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "12000000000000000000000000",
+        "supports": true,
+        "voter": "0x61C808D82A3Ac53231750daDc13c777b59310bD9"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0xFe45baf0F18c207152A807c1b05926583CFE2e4b"
+      },
+      {
+        "stake": "4750000010000000000000000",
+        "supports": true,
+        "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+      },
+      {
+        "stake": "4750000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "3000005172675232790157548",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "1500000000000000000000000",
+        "supports": true,
+        "voter": "0xfB03B1939D58BDDb723785034D8E3Fcc2e2CfF95"
+      },
+      {
+        "stake": "1000001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      },
+      {
+        "stake": "509270659860000000000",
+        "supports": true,
+        "voter": "0x2809c14c910f112A1288050aFD45DBEaf96a89f6"
+      },
+      {
+        "stake": "310516143224484002715",
+        "supports": true,
+        "voter": "0x5F74a2db08D717c94457c550af54548C4241Ace9"
+      },
+      {
+        "stake": "13866717704657291567",
+        "supports": true,
+        "voter": "0xbED050C15224a53a12815Fa79F2B1EF431887Eb2"
+      },
+      {
+        "stake": "7190197794917329082",
+        "supports": true,
+        "voter": "0x13dDA63C28bB95FE9822FEA43ad5fEaA966636a9"
+      }
+    ]
+  },
+  "132": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "15018777",
+      "executedAt": 1656081495,
+      "transactionHash": "0xd08aa7c37faf58cea71921c1935c4092cfc750a29d222a86149bf8c0a62cf851"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) Add RockLogic GmbH node operator;\n 2) Add CryptoManufaktur node operator;\n 3) Add Kukis Global node operator;\n 4) Add Nethermind node operator;\n 5) Add ChainSafe node operator;\n 6) Add Prysmatic Labs node operator;\n 7) Add Sigma Prime node operator.",
+        "voteId": "132"
+      },
+      "blockNumber": "15002562",
+      "transactionHash": "0x73ad7bd5f40655725783f77d885df869038530d37f9bdb21fa4cdcd28f49d2bf"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 132,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x0000000155032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d7000000000000000000000000000000000000000000000000000000000000004000000000000000000000000049df3cca2670eb0d591146b16359fe336e476f29000000000000000000000000000000000000000000000000000000000000000e526f636b4c6f67696320476d624800000000000000000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d7000000000000000000000000000000000000000000000000000000000000004000000000000000000000000059ecf48345a221e0731e785ed79ed40d0a94e2a5000000000000000000000000000000000000000000000000000000000000001043727970746f4d616e7566616b7475720000000000000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d700000000000000000000000000000000000000000000000000000000000000400000000000000000000000008845d7f2bbfe82249c3b95e378a6ed039dd953f5000000000000000000000000000000000000000000000000000000000000000c4b756b697320476c6f62616c000000000000000000000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d70000000000000000000000000000000000000000000000000000000000000040000000000000000000000000237dee529a47750becdfa8a59a1d766e3e7b5f91000000000000000000000000000000000000000000000000000000000000000a4e65746865726d696e640000000000000000000000000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d70000000000000000000000000000000000000000000000000000000000000040000000000000000000000000f82b1fdcd493b2defab52c740399ff150baa7a2a0000000000000000000000000000000000000000000000000000000000000009436861696e53616665000000000000000000000000000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d700000000000000000000000000000000000000000000000000000000000000400000000000000000000000003bf3a9260fe18a1239767ac6f0f0bc7c1e5d1cbc000000000000000000000000000000000000000000000000000000000000000e507279736d61746963204c61627300000000000000000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d50000008485fa63d7000000000000000000000000000000000000000000000000000000000000004000000000000000000000000007fe5f404778c27f4d3a0ab56dc59f8efdd32d96000000000000000000000000000000000000000000000000000000000000000b5369676d61205072696d65000000000000000000000000000000000000000000",
+      "snapshotBlock": "15002561",
+      "startDate": "1655818886",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "50866163662251994131429275"
+    },
+    "voteEvents": [
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "7933462950057260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "4750000010000000000000000",
+        "supports": true,
+        "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+      },
+      {
+        "stake": "3000005172675232790157548",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "900000000000000000000000",
+        "supports": true,
+        "voter": "0x537dfB5f599A3d15C50E2d9270e46b808A52559D"
+      },
+      {
+        "stake": "1000001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      },
+      {
+        "stake": "310516143224484002715",
+        "supports": true,
+        "voter": "0x5F74a2db08D717c94457c550af54548C4241Ace9"
+      },
+      {
+        "stake": "53012346686251176691",
+        "supports": true,
+        "voter": "0x26D86aD23eD37e5886354771204a12B928CfA177"
+      }
+    ]
+  },
+  "133": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "15018878",
+      "executedAt": 1656083008,
+      "transactionHash": "0x3ad273c242d0958a83163043aa4400d5e0bef5064570b4dc0434cd27ae8c8b36"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) Push new Voting app version to Voting Repo;\n 2) Upgrade the DAO Voting contract implementation;\n 3) Push new Lido app version to Lido Repo;\n 4) Grant `UNSAFELY_MODIFY_VOTE_TIME_ROLE` to DAO Voting;\n 5) Update Voting objection phase duration to 24 hours;\n 6) Revoke `UNSAFELY_MODIFY_VOTE_TIME_ROLE` from DAO Voting.",
+        "voteId": "133"
+      },
+      "blockNumber": "15002863",
+      "transactionHash": "0xa5ef3332b58effbb6fecbfd50e379aa5b44773ad4c5be1dcb7c1c6496e9b00b0"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 133,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000014ee3118e3858e8d7164a634825bfe0f73d99c792000001047305341000000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000072fb5253ad16307b9e773d2a78cac58e309d5ba400000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000033697066733a516d506f7478377a484743674265394445684d6f4238336572564a75764d74335971436e6454657a57565270644100000000000000000000000000b8ffc3cd6e7cf5a098a1c92f48009765b24088dc00000064ae5b2540f1f3eb40f5bc1ad1344716ced8b8a0431d840b5783aea1fd01786bc26f35ac0f0abcd104777321a82b010357f20887d61247493d89d2e987ff57bcecbde00e1e00000000000000000000000072fb5253ad16307b9e773d2a78cac58e309d5ba4f5dc67e54fc96f993cd06073f71ca732c1e654b1000001047305341000000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000047ebab13b806773ec2a2d16873e2df770d130b5000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000033697066733a516d536359787a6d6d724156316344426a4c3369376a7a615a75694a373655716461465a694d6773786f46477a43000000000000000000000000009895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000640a8ed3db0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e068ca51c9d69625c7add396c98ca4f3b27d894c3b973051ad3ee53017d7094ea2e59a20f205bb85a89c53f1936454680651e618e000000241351c2f500000000000000000000000000000000000000000000000000000000000151809895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000649d0effdb0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e068ca51c9d69625c7add396c98ca4f3b27d894c3b973051ad3ee53017d7094ea",
+      "snapshotBlock": "15002862",
+      "startDate": "1655823777",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "50864800132732493198012973"
+    },
+    "voteEvents": [
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "7933462950057260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "4750000010000000000000000",
+        "supports": true,
+        "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+      },
+      {
+        "stake": "3000005172675232790157548",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "900000000000000000000000",
+        "supports": true,
+        "voter": "0x537dfB5f599A3d15C50E2d9270e46b808A52559D"
+      }
+    ]
+  },
+  "134": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "15147684",
+      "executedAt": 1657893741,
+      "transactionHash": "0xe61167aa87b2a7aa9bd68834bf703877d22315d6d765345ebf0135eb8c33c406"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) Redirect DAO Insurance Fund fees to DAO Treasury.",
+        "voteId": "134"
+      },
+      "blockNumber": "15128210",
+      "transactionHash": "0x38a19b41f2ee4dcd044a86a1ca3d761a9ce2f99308774857b36af4b47805c80d"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 134,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001ae7ab96520de3a18e5e111b5eaab095312d7fe84000000648cef3612000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001388",
+      "snapshotBlock": "15128209",
+      "startDate": "1657634379",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "74440326345015203280921580"
+    },
+    "voteEvents": [
+      {
+        "stake": "20078665120000000000000000",
+        "supports": true,
+        "voter": "0x9Bb75183646e2A0DC855498bacD72b769AE6ceD3"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "9000000000000000000000000",
+        "supports": true,
+        "voter": "0x61C808D82A3Ac53231750daDc13c777b59310bD9"
+      },
+      {
+        "stake": "7990994000000000000000000",
+        "supports": true,
+        "voter": "0x008756e24b06267B9D2488E5bf50091fC26C8e8d"
+      },
+      {
+        "stake": "7933462950057260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "5000000000000000000000000",
+        "supports": true,
+        "voter": "0xFe45baf0F18c207152A807c1b05926583CFE2e4b"
+      },
+      {
+        "stake": "4750000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "3000005172675232790157548",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "82799770122725609862091",
+        "supports": true,
+        "voter": "0xe9472FdFFaa6792df8Ff5FAaB5866C90DC7F6f22"
+      },
+      {
+        "stake": "40042091810000000000000",
+        "supports": true,
+        "voter": "0x8845D7F2Bbfe82249c3B95e378A6eD039Dd953F5"
+      },
+      {
+        "stake": "1000001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      },
+      {
+        "stake": "2154484356029539549",
+        "supports": true,
+        "voter": "0xbC2Ff35020ffF6Df7AE8a0b154938cE5C5e459C9"
+      },
+      {
+        "stake": "2154356117260169838",
+        "supports": true,
+        "voter": "0x3d5E234B544c57e79B7f624e544B90AA974b79c9"
+      },
+      {
+        "stake": "2154227889945694063",
+        "supports": true,
+        "voter": "0x60f1e68a7ffe5E5c33a3844838112575F00929ad"
+      },
+      {
+        "stake": "2151988951556316820",
+        "supports": true,
+        "voter": "0xFCE7FB5D5548b821b02ad99E398bb38b27FD626C"
+      },
+      {
+        "stake": "1966295959075813125",
+        "supports": true,
+        "voter": "0x2c6141c6c7aaf27dD1BE50bfdF5409F0Ca986eE2"
+      },
+      {
+        "stake": "1855962345138781919",
+        "supports": true,
+        "voter": "0x2835600819dc2633611d600C488a52C6AF4908f2"
+      },
+      {
+        "stake": "1851245926949870530",
+        "supports": true,
+        "voter": "0x8E6583b679c10e648D415BA48D57Cf3C2dC00F7F"
+      },
+      {
+        "stake": "1846906885262720934",
+        "supports": true,
+        "voter": "0x301b3410F3C3FeDf8f90ad465964a45861B1773e"
+      },
+      {
+        "stake": "1843061832322699701",
+        "supports": true,
+        "voter": "0x8Dd0F1C1BDEf8e2C180df44d348db44494C54Ea7"
+      },
+      {
+        "stake": "1841288797583475525",
+        "supports": true,
+        "voter": "0xeC0b276dfe3D75237F356b4092402a3d0e7b724b"
+      },
+      {
+        "stake": "1829516383437396322",
+        "supports": true,
+        "voter": "0x5B060d8C21B60d6904052BE0Dc6C2Eb1888De74C"
+      },
+      {
+        "stake": "1816781146690709958",
+        "supports": true,
+        "voter": "0x08fECB006F7edCE664eDF7B21F61f5EfC4D7aCF9"
+      },
+      {
+        "stake": "1773203803021621336",
+        "supports": true,
+        "voter": "0x2908790CeC0Da7786c8e954162d753a07a98b344"
+      }
+    ]
+  },
+  "135": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) Wrap $1,117,380.00 +5% ETH to WETH;\n 2) Send $1,117,380.00 +5% in WETH to the RCC multisig 0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437;\n 3) Send 67,017.32 LDO to the RCC multisig 0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437.",
+        "voteId": "135"
+      },
+      "blockNumber": "15308802",
+      "transactionHash": "0xfde0488236ddd72090447321ff0b3e629dd125940dc2d13d6daa5ebad1c43e4f"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 135,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000013e40d73eb977dc6a537af587d48316fee66e9c8c000000a4b61d27f6000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000000000000000000000000025f273933db570000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000004d0e30db000000000000000000000000000000000000000000000000000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f6364846000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000de06d17db9295fa8c4082d4f73ff81592a3ac437000000000000000000000000000000000000000000000025f273933db57000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001b524343204d756c7469736967204a756c2d536570205061796f75740000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f63648460000000000000000000000005a98fcbea516cf06857215779fd812ca3bef1b32000000000000000000000000de06d17db9295fa8c4082d4f73ff81592a3ac437000000000000000000000000000000000000000000000e3104257b055a3c96800000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001b524343204d756c7469736967204a756c2d536570205061796f75740000000000",
+      "snapshotBlock": "15308801",
+      "startDate": "1660058952",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "39035385004074683362221248"
+    },
+    "voteEvents": [
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "4750000000000000000000000",
+        "supports": true,
+        "voter": "0x96481CB0fCd7673254eBccC42DcE9B92da10ea04"
+      },
+      {
+        "stake": "4042091810000000000000",
+        "supports": true,
+        "voter": "0x8845D7F2Bbfe82249c3B95e378A6eD039Dd953F5"
+      },
+      {
+        "stake": "4958634113379170685",
+        "supports": true,
+        "voter": "0xec6003A6e7ff35D0D6977e9Dd22D75d4B2365c2D"
+      },
+      {
+        "stake": "4953630569983050563",
+        "supports": true,
+        "voter": "0x60dd456273Cbb018C2222621d4c2Dc5016E870d3"
+      },
+      {
+        "stake": "1000000000000000000",
+        "supports": true,
+        "voter": "0x8C7e6eC8811026d35Cb46db298902eEE40077329"
+      }
+    ]
+  },
+  "136": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "15371896",
+      "executedAt": 1660920503,
+      "transactionHash": "0x7af91e3834d7e8797387a2aa4cbb0ba4e04261295de56d5e86247744ad5bf8b9"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1) Wrap $1,117,380.00 +5% ETH to WETH;\n 2) Send $1,117,380.00 +5% in WETH to the RCC multisig 0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437;\n 3) Send 67,017.32 LDO to the RCC multisig 0xDE06d17Db9295Fa8c4082D4f73Ff81592A3aC437.",
+        "voteId": "136"
+      },
+      "blockNumber": "15352864",
+      "transactionHash": "0xf1068fbd685dbda49f9c117ea8dec3d469aa357611b5c3c76748d7c180f85284"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 136,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000013e40d73eb977dc6a537af587d48316fee66e9c8c000000a4b61d27f6000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000000000000000000000000021e19e0c9bab24000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000004d0e30db000000000000000000000000000000000000000000000000000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f6364846000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000de06d17db9295fa8c4082d4f73ff81592a3ac437000000000000000000000000000000000000000000000021e19e0c9bab2400000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001b524343204d756c7469736967204a756c2d536570205061796f75740000000000b9e5cbb9ca5b0d659238807e84d0176930753d86000000c4f63648460000000000000000000000005a98fcbea516cf06857215779fd812ca3bef1b32000000000000000000000000de06d17db9295fa8c4082d4f73ff81592a3ac437000000000000000000000000000000000000000000000e3104257b055a3c96800000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001b524343204d756c7469736967204a756c2d536570205061796f75740000000000",
+      "snapshotBlock": "15352863",
+      "startDate": "1660659857",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "64133196355291918115585565"
+    },
+    "voteEvents": [
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "13600000000000000000000000",
+        "supports": true,
+        "voter": "0x8b1674a617F103897Fb82eC6b8EB749BA0b9765B"
+      },
+      {
+        "stake": "7100128950057260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "4750000010000000000000000",
+        "supports": true,
+        "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+      },
+      {
+        "stake": "2323333340000000000000000",
+        "supports": true,
+        "voter": "0x4a7C6899cdcB379e284fBFD045462e751DA4C7cE"
+      },
+      {
+        "stake": "2073333340000000000000000",
+        "supports": true,
+        "voter": "0xC006544B93e86E8999623C1D12d2E352c61C8123"
+      },
+      {
+        "stake": "4042091810000000000000",
+        "supports": true,
+        "voter": "0x8845D7F2Bbfe82249c3B95e378A6eD039Dd953F5"
+      },
+      {
+        "stake": "1000001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      },
+      {
+        "stake": "2154484356029539549",
+        "supports": true,
+        "voter": "0xbC2Ff35020ffF6Df7AE8a0b154938cE5C5e459C9"
+      },
+      {
+        "stake": "2154356117260169838",
+        "supports": true,
+        "voter": "0x3d5E234B544c57e79B7f624e544B90AA974b79c9"
+      },
+      {
+        "stake": "2154227889945694063",
+        "supports": true,
+        "voter": "0x60f1e68a7ffe5E5c33a3844838112575F00929ad"
+      },
+      {
+        "stake": "2151988951556316820",
+        "supports": true,
+        "voter": "0xFCE7FB5D5548b821b02ad99E398bb38b27FD626C"
+      },
+      {
+        "stake": "1966295959075813125",
+        "supports": true,
+        "voter": "0x2c6141c6c7aaf27dD1BE50bfdF5409F0Ca986eE2"
+      },
+      {
+        "stake": "1855962345138781919",
+        "supports": true,
+        "voter": "0x2835600819dc2633611d600C488a52C6AF4908f2"
+      },
+      {
+        "stake": "1851245926949870530",
+        "supports": true,
+        "voter": "0x8E6583b679c10e648D415BA48D57Cf3C2dC00F7F"
+      },
+      {
+        "stake": "1846906885262720934",
+        "supports": true,
+        "voter": "0x301b3410F3C3FeDf8f90ad465964a45861B1773e"
+      },
+      {
+        "stake": "1843061832322699701",
+        "supports": true,
+        "voter": "0x8Dd0F1C1BDEf8e2C180df44d348db44494C54Ea7"
+      },
+      {
+        "stake": "1841288797583475525",
+        "supports": true,
+        "voter": "0xeC0b276dfe3D75237F356b4092402a3d0e7b724b"
+      },
+      {
+        "stake": "1829516383437396322",
+        "supports": true,
+        "voter": "0x5B060d8C21B60d6904052BE0Dc6C2Eb1888De74C"
+      },
+      {
+        "stake": "1816781146690709958",
+        "supports": true,
+        "voter": "0x08fECB006F7edCE664eDF7B21F61f5EfC4D7aCF9"
+      },
+      {
+        "stake": "1773203803021621336",
+        "supports": true,
+        "voter": "0x2908790CeC0Da7786c8e954162d753a07a98b344"
+      },
+      {
+        "stake": "1383074673234683624",
+        "supports": true,
+        "voter": "0x06F398ce76aCc1fCE97B7Cab0eb2a96BA9230c9b"
+      }
+    ]
+  },
+  "137": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "15371926",
+      "executedAt": 1660920853,
+      "transactionHash": "0xc8014cfe68b57f70409f8086023039c1ff78cc183353e4e65b5a42ffdb8f8096"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Make 0xA9b2F5ce3aAE7374a62313473a74C98baa7fa70E a vesting manager for total 10000000000000000000000000 LDO",
+        "voteId": "137"
+      },
+      "blockNumber": "15352945",
+      "transactionHash": "0x6315a72214883c966fad1c8cd604f69eec90e496598bbe201db799efab363d1a"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 137,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001b9e5cbb9ca5b0d659238807e84d0176930753d86000000e4f63648460000000000000000000000005a98fcbea516cf06857215779fd812ca3bef1b32000000000000000000000000a9b2f5ce3aae7374a62313473a74c98baa7fa70e000000000000000000000000000000000000000000084595161401484a000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000265472616e73666572204c444f20746f6b656e7320746f20626520736f6c6420666f722044414900000000000000000000000000000000000000000000000000009895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000640a8ed3db000000000000000000000000a9b2f5ce3aae7374a62313473a74c98baa7fa70e000000000000000000000000f73a1260d222f447210581ddf212d915c09a3249f5a08927c847d7a29dc35e105208dbde5ce951392105d712761cc5d17440e2ffa9b2f5ce3aae7374a62313473a74c98baa7fa70e00000004be9a6555",
+      "snapshotBlock": "15352944",
+      "startDate": "1660661044",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "67488726517206672792123899"
+    },
+    "voteEvents": [
+      {
+        "stake": "17718000000000000000000000",
+        "supports": true,
+        "voter": "0xb842aFD82d940fF5D8F6EF3399572592EBF182B0"
+      },
+      {
+        "stake": "16563332000000000000000000",
+        "supports": true,
+        "voter": "0x1f3813fE7ace2a33585F1438215C7F42832FB7B3"
+      },
+      {
+        "stake": "13600000000000000000000000",
+        "supports": true,
+        "voter": "0x8b1674a617F103897Fb82eC6b8EB749BA0b9765B"
+      },
+      {
+        "stake": "7100128950057260407855425",
+        "supports": true,
+        "voter": "0x7eE09c11D6Dc9684D6D5a4C6d333e5b9e336bb6C"
+      },
+      {
+        "stake": "4750000010000000000000000",
+        "supports": true,
+        "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+      },
+      {
+        "stake": "3000005172675232790157548",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "2323333340000000000000000",
+        "supports": true,
+        "voter": "0x4a7C6899cdcB379e284fBFD045462e751DA4C7cE"
+      },
+      {
+        "stake": "2073333340000000000000000",
+        "supports": true,
+        "voter": "0xC006544B93e86E8999623C1D12d2E352c61C8123"
+      },
+      {
+        "stake": "351948868980000000000000",
+        "supports": true,
+        "voter": "0xf1F3e3A0ce3Ea43300a1B97695d702738b70cf57"
+      },
+      {
+        "stake": "4042091810000000000000",
+        "supports": true,
+        "voter": "0x8845D7F2Bbfe82249c3B95e378A6eD039Dd953F5"
+      },
+      {
+        "stake": "3449926643476226578038",
+        "supports": true,
+        "voter": "0x3f6364f662B0127a3430bb9a9Fc16B602Da9a188"
+      },
+      {
+        "stake": "1000001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      },
+      {
+        "stake": "126193616045659802748",
+        "supports": true,
+        "voter": "0x5CAc404D11250cD241B719487f47e3D720873CFD"
+      },
+      {
+        "stake": "2154484356029539549",
+        "supports": true,
+        "voter": "0xbC2Ff35020ffF6Df7AE8a0b154938cE5C5e459C9"
+      },
+      {
+        "stake": "2154356117260169838",
+        "supports": true,
+        "voter": "0x3d5E234B544c57e79B7f624e544B90AA974b79c9"
+      },
+      {
+        "stake": "2154227889945694063",
+        "supports": true,
+        "voter": "0x60f1e68a7ffe5E5c33a3844838112575F00929ad"
+      },
+      {
+        "stake": "2151988951556316820",
+        "supports": true,
+        "voter": "0xFCE7FB5D5548b821b02ad99E398bb38b27FD626C"
+      },
+      {
+        "stake": "1966295959075813125",
+        "supports": true,
+        "voter": "0x2c6141c6c7aaf27dD1BE50bfdF5409F0Ca986eE2"
+      },
+      {
+        "stake": "1855962345138781919",
+        "supports": true,
+        "voter": "0x2835600819dc2633611d600C488a52C6AF4908f2"
+      },
+      {
+        "stake": "1851245926949870530",
+        "supports": true,
+        "voter": "0x8E6583b679c10e648D415BA48D57Cf3C2dC00F7F"
+      },
+      {
+        "stake": "1846906885262720934",
+        "supports": true,
+        "voter": "0x301b3410F3C3FeDf8f90ad465964a45861B1773e"
+      },
+      {
+        "stake": "1843061832322699701",
+        "supports": true,
+        "voter": "0x8Dd0F1C1BDEf8e2C180df44d348db44494C54Ea7"
+      },
+      {
+        "stake": "1841288797583475525",
+        "supports": true,
+        "voter": "0xeC0b276dfe3D75237F356b4092402a3d0e7b724b"
+      },
+      {
+        "stake": "1829516383437396322",
+        "supports": true,
+        "voter": "0x5B060d8C21B60d6904052BE0Dc6C2Eb1888De74C"
+      },
+      {
+        "stake": "1816781146690709958",
+        "supports": true,
+        "voter": "0x08fECB006F7edCE664eDF7B21F61f5EfC4D7aCF9"
+      },
+      {
+        "stake": "1773203803021621336",
+        "supports": true,
+        "voter": "0x2908790CeC0Da7786c8e954162d753a07a98b344"
+      },
+      {
+        "stake": "1383074673234683624",
+        "supports": true,
+        "voter": "0x06F398ce76aCc1fCE97B7Cab0eb2a96BA9230c9b"
+      }
+    ]
+  },
+  "138": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "1",
+        "voteId": "138"
+      },
+      "blockNumber": "15457852",
+      "transactionHash": "0x4988ccb5f9619d52661f5604bf8c4646ca49940b7f7b1b5c310b64b8b93def56"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 138,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001",
+      "snapshotBlock": "15457851",
+      "startDate": "1662103668",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "52644418780839035857"
+    },
+    "voteEvents": [
+      {
+        "stake": "48644418780839035857",
+        "supports": true,
+        "voter": "0x59F1202c2999e24a8bb25E25aDF25866047a3bC1"
+      },
+      {
+        "stake": "4000000000000000000",
+        "supports": true,
+        "voter": "0x24749AedF18208aB74A8110E07E820286Bb5acf8"
+      }
+    ]
+  },
+  "139": {
+    "description": null,
+    "executeVoteEvent": null,
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "",
+        "voteId": "139"
+      },
+      "blockNumber": "15482255",
+      "transactionHash": "0x8e55533bb328d101110ac0750a3043c3bd7a6fd5c86f22d0817328d751e16c8f"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": false,
+      "id": 139,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001442af784a788a5bd6f42a01ebe9f287a871243fb000000240719d5310000000000000000000000000000000000000000000000000000000000000064",
+      "snapshotBlock": "15482254",
+      "startDate": "1662442586",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "48644418780839035857"
+    },
+    "voteEvents": [
+      {
+        "stake": "48644418780839035857",
+        "supports": true,
+        "voter": "0x59F1202c2999e24a8bb25E25aDF25866047a3bC1"
+      }
+    ]
+  }
+}

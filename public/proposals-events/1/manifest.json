@@ -1,0 +1,8 @@
+{
+  "chunkSize": 10,
+  "firstId": 1,
+  "lastId": 10,
+  "chunks": {
+    "0": "chunk-0.78d78082c7.json"
+  }
+}

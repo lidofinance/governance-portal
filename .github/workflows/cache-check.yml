@@ -1,0 +1,23 @@
+name: Cache Check
+
+on: push
+
+permissions:
+  contents: read
+
+jobs:
+  check-cache:
+    runs-on: ubuntu-latest
+    name: Check events cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Check events cache
+        run: yarn check-all-cache
