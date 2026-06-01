@@ -42,7 +42,7 @@ export const checkManifestStructure = ({
   }
 
   const referencedFiles = new Set(Object.values(chunks));
-  const merged = {};
+  const entriesById = {};
 
   for (const [chunkIndex, fileName] of Object.entries(chunks)) {
     const chunkPath = join(dir, fileName);
@@ -80,7 +80,7 @@ export const checkManifestStructure = ({
         );
       }
       checkEntryShape(scope, idStr, entry);
-      merged[idStr] = entry;
+      entriesById[idStr] = entry;
     }
   }
 
@@ -94,7 +94,7 @@ export const checkManifestStructure = ({
     }
   }
 
-  return merged;
+  return entriesById;
 };
 
 export const processInBatches = async (ids, batchSize, handler) => {

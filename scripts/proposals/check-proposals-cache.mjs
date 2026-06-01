@@ -72,7 +72,7 @@ const fetchProposalStatus = async (client, address, proposalId) => {
   return details.status;
 };
 
-const checkChainCompleteness = async (chainId, merged) => {
+const checkChainCompleteness = async (chainId, proposalsById) => {
   const scope = `chain ${chainId}`;
   const client = getPublicClient(chainId);
   if (!client) {
@@ -98,7 +98,7 @@ const checkChainCompleteness = async (chainId, merged) => {
 
   const idsToCheck = [];
   for (let proposalId = 1; proposalId <= count; proposalId++) {
-    if (isCachedProposalFinal(merged[proposalId])) {
+    if (isCachedProposalFinal(proposalsById[proposalId])) {
       continue;
     }
     idsToCheck.push(proposalId);
@@ -115,7 +115,7 @@ const checkChainCompleteness = async (chainId, merged) => {
     if (!FINAL_STATUSES.has(status)) {
       return;
     }
-    if (!isCachedProposalComplete(merged[proposalId], { status })) {
+    if (!isCachedProposalComplete(proposalsById[proposalId], { status })) {
       fail(
         scope,
         `proposal ${proposalId} is final (status ${status}) on-chain but missing/incomplete in cache — rebuild with "yarn build-dg-events"`,
@@ -129,10 +129,10 @@ const main = async () => {
 
   for (const chainId of chainIds) {
     const chainDir = join(INPUT_ROOT, String(chainId));
-    let merged = {};
+    let proposalsById = {};
     if (existsSync(join(chainDir, 'manifest.json'))) {
       console.info(`chain ${chainId}: checking...`);
-      merged =
+      proposalsById =
         checkManifestStructure({
           dir: chainDir,
           scope: `chain ${chainId}`,
@@ -146,7 +146,7 @@ const main = async () => {
         `⚠️ chain ${chainId}: no cache directory — verifying completeness against chain`,
       );
     }
-    await checkChainCompleteness(chainId, merged);
+    await checkChainCompleteness(chainId, proposalsById);
   }
 
   reportAndExit('Proposals cache check', failures);

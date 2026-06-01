@@ -163,16 +163,16 @@ const readExistingAddressData = (chainId, votingAddress) => {
   }
   try {
     const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
-    const merged = {};
+    const votesById = {};
     for (const file of Object.values(manifest.chunks || {})) {
       const chunkPath = join(getAddressDir(chainId, votingAddress), file);
       if (!existsSync(chunkPath)) {
         continue;
       }
       const chunkData = JSON.parse(readFileSync(chunkPath, 'utf8'));
-      Object.assign(merged, chunkData);
+      Object.assign(votesById, chunkData);
     }
-    return merged;
+    return votesById;
   } catch (error) {
     console.warn(
       `Failed to read existing cache for ${chainId}/${votingAddress}:`,
