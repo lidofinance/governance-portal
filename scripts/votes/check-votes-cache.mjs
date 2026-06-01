@@ -70,7 +70,7 @@ const hasCachedVoteEvents = (cached, onChainExecuted) => {
   return onChainExecuted ? Boolean(cached.executeVoteEvent) : true;
 };
 
-const checkAddressCompleteness = async (chainId, votingAddress, merged) => {
+const checkAddressCompleteness = async (chainId, votingAddress, votesById) => {
   const scope = `${chainId}/${votingAddress}`;
   const client = getPublicClient(chainId);
   if (!client) {
@@ -90,7 +90,7 @@ const checkAddressCompleteness = async (chainId, votingAddress, merged) => {
 
   const idsToCheck = [];
   for (let voteId = 0; voteId < count; voteId++) {
-    const cached = merged[voteId];
+    const cached = votesById[voteId];
     if (cached?.voteDetails?.executed === true && cached.executeVoteEvent) {
       continue;
     }
@@ -108,7 +108,7 @@ const checkAddressCompleteness = async (chainId, votingAddress, merged) => {
     if (state.open) {
       return;
     }
-    if (!hasCachedVoteEvents(merged[voteId], state.executed)) {
+    if (!hasCachedVoteEvents(votesById[voteId], state.executed)) {
       fail(
         scope,
         `vote ${voteId} is closed on-chain (executed=${state.executed}) but missing/incomplete in cache — rebuild with "yarn build-vote-events"`,
@@ -124,10 +124,10 @@ const main = async () => {
     const chainId = Number(chainIdStr);
     for (const votingAddress of votingAddresses) {
       const addressDir = join(INPUT_ROOT, String(chainId), votingAddress);
-      let merged = {};
+      let votesById = {};
       if (existsSync(join(addressDir, 'manifest.json'))) {
         console.info(`${chainId}/${votingAddress}: checking...`);
-        merged =
+        votesById =
           checkManifestStructure({
             dir: addressDir,
             scope: `${chainId}/${votingAddress}`,
@@ -141,7 +141,7 @@ const main = async () => {
           `⚠️ ${chainId}/${votingAddress}: no cache directory — verifying completeness against chain`,
         );
       }
-      await checkAddressCompleteness(chainId, votingAddress, merged);
+      await checkAddressCompleteness(chainId, votingAddress, votesById);
     }
   }
 

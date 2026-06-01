@@ -22,15 +22,15 @@ const readAddressVotes = (chainId, votingAddress) => {
     return null;
   }
   const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
-  const merged = {};
+  const votesById = {};
   for (const file of Object.values(manifest.chunks || {})) {
     const chunkPath = join(dir, file);
     if (!existsSync(chunkPath)) {
       continue;
     }
-    Object.assign(merged, JSON.parse(readFileSync(chunkPath, 'utf8')));
+    Object.assign(votesById, JSON.parse(readFileSync(chunkPath, 'utf8')));
   }
-  return merged;
+  return votesById;
 };
 
 const listAddressDirs = (chainId) => {
