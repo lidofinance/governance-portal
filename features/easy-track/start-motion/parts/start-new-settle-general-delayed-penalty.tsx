@@ -273,6 +273,7 @@ export const formParts = ({
 
                   <Fieldset>
                     <ValidatedInputHookForm
+                      valueType="number"
                       fieldName={maxAmountFieldName}
                       label={
                         lockedBond != null

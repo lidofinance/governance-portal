@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { PageLoader } from 'shared/components/page-loader';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
+import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import {
   CSMReportWithdrawalsForSlashedValidators,
   CuratedReportWithdrawalsForSlashedValidators,
@@ -229,7 +230,7 @@ export const formParts = ({
                 </Fieldset>
 
                 <Fieldset>
-                  <InputHookForm
+                  <InputNumberHookForm
                     fieldName={`${fieldNames.reports}.${fieldIndex}.exitBalance`}
                     label="Exit balance (ETH)"
                     rules={{
@@ -251,7 +252,7 @@ export const formParts = ({
                 </Fieldset>
 
                 <Fieldset>
-                  <InputHookForm
+                  <InputNumberHookForm
                     fieldName={`${fieldNames.reports}.${fieldIndex}.slashingPenalty`}
                     label="Slashing penalty (ETH)"
                     rules={{
