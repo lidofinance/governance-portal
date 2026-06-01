@@ -54,6 +54,7 @@ export * from './EvmRegisterGroupsInOperatorsGrid';
 export * from './EvmRegisterTiersInOperatorsGrid';
 export * from './EvmRemoveReferralPartner';
 export * from './EvmRemoveRewardProgram';
+export * from './EvmReportWithdrawalsForSlashedValidators';
 export * from './EvmSetJailStatusInOperatorGrid';
 export * from './EvmSetLiabilitySharesTargetInVaultHub';
 export * from './EvmSocializeBadDebtInVaultHub';

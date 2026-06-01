@@ -73,6 +73,10 @@ export const MOTION_TYPE_ABI_MAP = {
     abi.settleGeneralDelayedPenaltyAbi,
   [MotionType.CuratedSettleGeneralDelayedPenalty]:
     abi.settleGeneralDelayedPenaltyAbi,
+  [MotionType.CSMReportWithdrawalsForSlashedValidators]:
+    abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
+    abi.evmReportWithdrawalsForSlashedValidatorsAbi,
   [MotionType.AllianceOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.EcosystemOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.LabsOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,

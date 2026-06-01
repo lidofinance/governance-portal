@@ -392,6 +392,11 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.CuratedSettleGeneralDelayedPenalty]:
       '0x3486B872768D361309e405A046C4BF995c21CC6c',
 
+    [MotionType.CSMReportWithdrawalsForSlashedValidators]:
+      '0x4EaB04775837A6F0218750A10454119f349258FE',
+    [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
+      '0x6E40FED7c28bAA93a798cA10f8A93965a19eC52e',
+
     // next motion factories are @deprecated
     // we are keeping them here to display history data
     [MotionType.LEGOTopUp]: '',

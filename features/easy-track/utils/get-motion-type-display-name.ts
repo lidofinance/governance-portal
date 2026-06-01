@@ -37,6 +37,10 @@ export const MotionTypeDisplayNames: Record<
     '[CSM] Settle General Delayed Penalty',
   [MotionType.CuratedSettleGeneralDelayedPenalty]:
     '[Curated] Settle General Delayed Penalty',
+  [MotionType.CSMReportWithdrawalsForSlashedValidators]:
+    '[CSM] Report withdrawals for slashed validators',
+  [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
+    '[Curated] Report withdrawals for slashed validators',
   [MotionType.CSMSetVettedGateTree]: 'Set CSM vetted gate tree',
   [MotionType.CSMSetMerkleGateTree]: '[CSM] Set merkle gate tree',
   [MotionType.CuratedSetMerkleGateTree]: '[Curated] Set merkle gate tree',

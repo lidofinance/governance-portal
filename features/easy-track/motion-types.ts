@@ -45,6 +45,10 @@ export const MotionTypeForms = {
 
   CSMSettleGeneralDelayedPenalty: 'CSMSettleGeneralDelayedPenalty',
   CuratedSettleGeneralDelayedPenalty: 'CuratedSettleGeneralDelayedPenalty',
+  CSMReportWithdrawalsForSlashedValidators:
+    'CSMReportWithdrawalsForSlashedValidators',
+  CuratedReportWithdrawalsForSlashedValidators:
+    'CuratedReportWithdrawalsForSlashedValidators',
   CSMSetVettedGateTree: 'CSMSetVettedGateTree',
   CSMSetMerkleGateTree: 'CSMSetMerkleGateTree',
   CuratedSetMerkleGateTree: 'CuratedSetMerkleGateTree',

@@ -745,6 +745,24 @@ export const CuratedSettleGeneralDelayedPenalty: ContractObject<
     EvmAddressesByType[MotionType.CuratedSettleGeneralDelayedPenalty],
 };
 
+export const CSMReportWithdrawalsForSlashedValidators: ContractObject<
+  typeof abi.evmReportWithdrawalsForSlashedValidatorsAbi
+> = {
+  name: 'CSMReportWithdrawalsForSlashedValidators',
+  abi: abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSMReportWithdrawalsForSlashedValidators],
+};
+
+export const CuratedReportWithdrawalsForSlashedValidators: ContractObject<
+  typeof abi.evmReportWithdrawalsForSlashedValidatorsAbi
+> = {
+  name: 'CuratedReportWithdrawalsForSlashedValidators',
+  abi: abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CuratedReportWithdrawalsForSlashedValidators],
+};
+
 export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {
   name: 'CSMRegistry',
   abi: abi.csmRegistryAbi,

@@ -14,6 +14,7 @@ import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remo
 import * as StartNewSetMerkleGateTree from './start-new-set-merkle-gate-tree';
 import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
 import * as StartNewSettleGeneralDelayedPenalty from './start-new-settle-general-delayed-penalty';
+import * as StartNewReportWithdrawalsForSlashedValidators from './start-new-report-withdrawals-for-slashed-validators';
 
 import * as StartNewVaultForceValidatorExitsInVaultHub from './vaults/start-new-vault-force-validator-exits-in-vault-hub';
 import * as StartNewVaultsAlterTiersInOperatorGrid from './vaults/start-new-vaults-alter-tiers-in-operator-grid';
@@ -158,6 +159,14 @@ export const formParts = {
   [MotionTypeForms.CuratedSettleGeneralDelayedPenalty]:
     StartNewSettleGeneralDelayedPenalty.formParts({
       motionType: MotionTypeForms.CuratedSettleGeneralDelayedPenalty,
+    }),
+  [MotionTypeForms.CSMReportWithdrawalsForSlashedValidators]:
+    StartNewReportWithdrawalsForSlashedValidators.formParts({
+      motionType: MotionTypeForms.CSMReportWithdrawalsForSlashedValidators,
+    }),
+  [MotionTypeForms.CuratedReportWithdrawalsForSlashedValidators]:
+    StartNewReportWithdrawalsForSlashedValidators.formParts({
+      motionType: MotionTypeForms.CuratedReportWithdrawalsForSlashedValidators,
     }),
   [MotionTypeForms.CuratedExitRequestHashesSubmit]:
     StartNewExitRequestHashesSubmit.formParts('curated'),
