@@ -101,12 +101,14 @@ export const fetchCachedVotes = async ({
   chainId,
   votingAddress,
   voteIds,
+  useLocalCache,
 }: {
   chainId: number;
   votingAddress: Address;
   voteIds: (string | number)[];
+  useLocalCache: boolean;
 }): Promise<Record<string, CachedVoteResult>> => {
-  if (voteIds.length === 0) {
+  if (!useLocalCache || voteIds.length === 0) {
     return {};
   }
 

@@ -72,8 +72,9 @@ const fetchChunk = (
 export const fetchCachedProposalEvents = async (
   chainId: number,
   proposalIds: (string | number)[],
+  useLocalCache: boolean,
 ): Promise<ProposalEventsSubset> => {
-  if (proposalIds.length === 0) {
+  if (!useLocalCache || proposalIds.length === 0) {
     return {};
   }
 
