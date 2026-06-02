@@ -220,4 +220,4 @@ export const evmScriptRegistryAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

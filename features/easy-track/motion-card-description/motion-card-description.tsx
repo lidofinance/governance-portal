@@ -46,6 +46,7 @@ import { MevBoostRelaysAdd } from './motion-descriptions/mev-boost-relays-add';
 import { MevBoostRelaysEdit } from './motion-descriptions/mev-boost-relays-edit';
 import { MevBoostRelaysRemove } from './motion-descriptions/mev-boost-relays-remove';
 import { CsmSetVettedGateTree } from './motion-descriptions/csm-set-vetted-gate-tree';
+import { SetMerkleGateTree } from './motion-descriptions/set-merkle-gate-tree';
 import { CuratedExitRequestHashesSubmit } from './motion-descriptions/curated-exit-request-hashes-submit';
 import { SdvtExitRequestHashesSubmit } from './motion-descriptions/sdvt-exit-request-hashes-submit';
 import { VaultsForceValidatorExitsInVaultHub } from './motion-descriptions/vaults-force-validator-exits-in-vault-hub';
@@ -57,6 +58,8 @@ import { VaultsSocializeBadDebtInVaultHub } from '@easy-track/motion-card-descri
 import { VaultsAlterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-alter-tiers-in-operator-grid';
 import { VaultsRegisterTiersInOperatorGrid } from '@easy-track/motion-card-description/motion-descriptions/vaults-register-tiers-in-operator-grid';
 import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-liability-shares-target-in-vault-hub';
+import { AllowConsolidationPair } from './motion-descriptions/allow-consolidation-pair';
+import { CreateOrUpdateOperatorGroup } from './motion-descriptions/create-or-update-operator-group';
 
 type GenericDescProps = MotionDescriptionProps<Abi>;
 
@@ -352,6 +355,12 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.CSMSetVettedGateTree]: (props: DescDispatchProps) => (
     <CsmSetVettedGateTree {...props} />
   ),
+  [MotionType.CSMSetMerkleGateTree]: (props: DescDispatchProps) => (
+    <SetMerkleGateTree {...props} />
+  ),
+  [MotionType.CuratedSetMerkleGateTree]: (props: DescDispatchProps) => (
+    <SetMerkleGateTree {...props} />
+  ),
   [MotionType.CuratedExitRequestHashesSubmit]: (props: DescDispatchProps) => (
     <CuratedExitRequestHashesSubmit {...props} />
   ),
@@ -420,6 +429,13 @@ const MOTION_DESCRIPTIONS = {
   ),
   [MotionType.RegisterTiersInOperatorGridOld]: (props: DescDispatchProps) => (
     <VaultsRegisterTiersInOperatorGrid {...props} />
+  ),
+
+  [MotionType.AllowConsolidationPair]: (props: DescDispatchProps) => (
+    <AllowConsolidationPair {...props} />
+  ),
+  [MotionType.CreateOrUpdateOperatorGroup]: (props: DescDispatchProps) => (
+    <CreateOrUpdateOperatorGroup {...props} />
   ),
 } as const;
 

@@ -180,4 +180,4 @@ export const mevBoostRelayAllowedListAbi = [
     stateMutability: 'nonpayable',
   },
   { type: 'fallback', stateMutability: 'nonpayable' },
-] as const
+] as const;

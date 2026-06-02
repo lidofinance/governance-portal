@@ -109,4 +109,4 @@ export const emergencyGovernanceAbi = [
     outputs: [{ name: 'proposalId', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

@@ -132,4 +132,4 @@ export const dualGovernanceLaunchVerifierAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

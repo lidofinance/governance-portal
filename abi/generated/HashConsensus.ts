@@ -637,4 +637,4 @@ export const hashConsensusAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

@@ -67,4 +67,4 @@ export const gateSealAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

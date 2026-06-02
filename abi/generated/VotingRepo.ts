@@ -287,4 +287,4 @@ export const votingRepoAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

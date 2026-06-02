@@ -11,6 +11,7 @@ import * as StartNewExitRequestHashesSubmit from './start-new-exit-request-hashe
 import * as StartNewMEVBoostRelaysAdd from './start-new-mev-boost-relays-add';
 import * as StartNewMEVBoostRelaysEdit from './start-new-mev-boost-relays-edit';
 import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remove';
+import * as StartNewSetMerkleGateTree from './start-new-set-merkle-gate-tree';
 import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
 import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-stealing-penalty';
 
@@ -33,6 +34,9 @@ import * as StartNewSDVTTargetValidatorLimitsUpdateV2 from './start-new-sdvt-tar
 import * as StartNewSDVTNodeOperatorRewardAddressesSet from './start-new-sdvt-node-operator-reward-addresses-set';
 import * as StartNewSDVTNodeOperatorNamesSet from './start-new-sdvt-node-operator-names-set';
 import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-operator-managers-change';
+
+import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation-pair';
+import * as StartNewCreateOrUpdateOperatorGroup from './start-new-create-or-update-operator-group';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -137,6 +141,13 @@ export const formParts = {
   [MotionTypeForms.MEVBoostRelaysEdit]: StartNewMEVBoostRelaysEdit.formParts,
   [MotionTypeForms.MEVBoostRelaysRemove]:
     StartNewMEVBoostRelaysRemove.formParts,
+  [MotionTypeForms.CSMSetMerkleGateTree]: StartNewSetMerkleGateTree.formParts({
+    motionType: MotionTypeForms.CSMSetMerkleGateTree,
+  }),
+  [MotionTypeForms.CuratedSetMerkleGateTree]:
+    StartNewSetMerkleGateTree.formParts({
+      motionType: MotionTypeForms.CuratedSetMerkleGateTree,
+    }),
   [MotionTypeForms.CSMSetVettedGateTree]:
     StartNewCSMSetVettedGateTree.formParts,
   [MotionTypeForms.CSMSettleElStealingPenalty]:
@@ -165,6 +176,11 @@ export const formParts = {
     StartNewVaultsUpdateGroupsShareLimit.formParts,
   [MotionTypeForms.UpdateVaultsFeesInOperatorGrid]:
     StartNewVaultsUpdateVaultsFeesInOperatorGrid.formParts,
+
+  [MotionTypeForms.AllowConsolidationPair]:
+    StartNewAllowConsolidationPair.formParts,
+  [MotionTypeForms.CreateOrUpdateOperatorGroup]:
+    StartNewCreateOrUpdateOperatorGroup.formParts,
 } as const;
 
 export type FormData = {

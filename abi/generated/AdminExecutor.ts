@@ -126,4 +126,4 @@ export const adminExecutorAbi = [
     stateMutability: 'nonpayable',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

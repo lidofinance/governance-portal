@@ -3,6 +3,7 @@ import { getDefaultFormPartsData } from '@easy-track/start-motion/parts';
 import { MotionType, MotionTypeForms } from '@easy-track/motion-types';
 import { validateGateTreeIpfs } from '@easy-track/utils/validate-gate-tree-ipfs';
 import { validateForceExits } from '@easy-track/utils/validate-force-exits';
+import { validateCreateOrUpdateOperatorGroup } from '@easy-track/utils/validate-create-or-update-operator-group';
 import { PublicClient } from 'viem';
 
 type FormPartsData = ReturnType<typeof getDefaultFormPartsData>;
@@ -24,7 +25,10 @@ const EXTRA_VALIDATION_MAP: {
   [K in MotionTypeForms]?: ValidateFn<K>;
 } = {
   [MotionType.CSMSetVettedGateTree]: validateGateTreeIpfs,
+  [MotionType.CSMSetMerkleGateTree]: validateGateTreeIpfs,
+  [MotionType.CuratedSetMerkleGateTree]: validateGateTreeIpfs,
   [MotionType.ForceValidatorExitsInVaultHub]: validateForceExits,
+  [MotionType.CreateOrUpdateOperatorGroup]: validateCreateOrUpdateOperatorGroup,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

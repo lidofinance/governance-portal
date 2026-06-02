@@ -433,4 +433,4 @@ export const burnerAbi = [
     stateMutability: 'view',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

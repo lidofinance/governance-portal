@@ -49,4 +49,4 @@ export const evmIncreaseNodeOperatorStakingLimitAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

@@ -1,0 +1,26 @@
+[
+  {
+    "inputs": [],
+    "name": "treeRoot",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "treeCid",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_treeRoot", "type": "bytes32" },
+      { "internalType": "string", "name": "_treeCid", "type": "string" }
+    ],
+    "name": "setTreeParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

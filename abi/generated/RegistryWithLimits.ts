@@ -448,4 +448,4 @@ export const registryWithLimitsAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;

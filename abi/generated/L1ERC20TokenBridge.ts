@@ -667,4 +667,4 @@ export const l1Erc20TokenBridgeAbi = [
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

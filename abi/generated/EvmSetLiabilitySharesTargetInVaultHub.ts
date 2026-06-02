@@ -49,4 +49,4 @@ export const evmSetLiabilitySharesTargetInVaultHubAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

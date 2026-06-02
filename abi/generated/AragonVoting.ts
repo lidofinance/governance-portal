@@ -615,4 +615,4 @@ export const aragonVotingAbi = [
     ],
     name: 'RecoverToVault',
   },
-] as const
+] as const;

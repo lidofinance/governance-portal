@@ -258,4 +258,4 @@ export const vaultsAdapterAbi = [
     stateMutability: 'nonpayable',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

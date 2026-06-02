@@ -598,3 +598,11 @@ export const LazyOracle: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x5DB427080200c235F2Ae8Cd17A7be87921f7AD6c',
   [CHAINS.Hoodi]: '0xf41491c79c30e8f4862d3f4a5b790171adb8e04a',
 };
+
+export const MetaRegistry: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x857289cCBFBc4C134Cc312022a104CD9b38d8AAE',
+};
+
+export const ConsolidationMigrator: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x747d357F5b6410B80Eb63406FaC5E2A91131B4f8',
+};

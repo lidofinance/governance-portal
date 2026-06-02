@@ -293,4 +293,4 @@ export const optimismL1CrossDomainMessengerProxyAbi = [
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

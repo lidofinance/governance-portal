@@ -872,4 +872,4 @@ export const operatorGridAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;

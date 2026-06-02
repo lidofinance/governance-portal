@@ -45,6 +45,8 @@ export const MotionTypeForms = {
 
   CSMSettleElStealingPenalty: 'CSMSettleElStealingPenalty',
   CSMSetVettedGateTree: 'CSMSetVettedGateTree',
+  CSMSetMerkleGateTree: 'CSMSetMerkleGateTree',
+  CuratedSetMerkleGateTree: 'CuratedSetMerkleGateTree',
 
   MEVBoostRelaysAdd: 'MEVBoostRelaysAdd',
   MEVBoostRelaysEdit: 'MEVBoostRelaysEdit',
@@ -60,6 +62,9 @@ export const MotionTypeForms = {
   ForceValidatorExitsInVaultHub: 'ForceValidatorExitsInVaultHub',
   SocializeBadDebtInVaultHub: 'SocializeBadDebtInVaultHub',
   SetLiabilitySharesTargetInVaultHub: 'SetLiabilitySharesTargetInVaultHub',
+
+  AllowConsolidationPair: 'AllowConsolidationPair',
+  CreateOrUpdateOperatorGroup: 'CreateOrUpdateOperatorGroup',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare

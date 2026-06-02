@@ -74,4 +74,4 @@ export const addNodeOperatorsAbi = [
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
-] as const
+] as const;

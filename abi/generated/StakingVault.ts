@@ -603,4 +603,4 @@ export const stakingVaultAbi = [
     stateMutability: 'view',
   },
   { type: 'receive', stateMutability: 'payable' },
-] as const
+] as const;

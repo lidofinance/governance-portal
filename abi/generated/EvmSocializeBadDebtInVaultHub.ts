@@ -50,4 +50,4 @@ export const evmSocializeBadDebtInVaultHubAbi = [
     ],
     stateMutability: 'view',
   },
-] as const
+] as const;
