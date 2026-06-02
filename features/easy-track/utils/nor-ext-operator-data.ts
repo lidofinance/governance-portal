@@ -5,7 +5,6 @@ import { encodePacked, hexToBigInt, hexToNumber, slice, type Hex } from 'viem';
 const NOR_EXT_OPERATOR_TYPE = 0;
 
 export type ExternalOperatorData = {
-  operatorType: number;
   moduleId: number;
   nodeOperatorId: bigint;
 };
@@ -22,7 +21,6 @@ export const encodeExternalOperatorData = (
 export const decodeExternalOperatorData = (
   data: Hex,
 ): ExternalOperatorData => ({
-  operatorType: hexToNumber(slice(data, 0, 1)),
   moduleId: hexToNumber(slice(data, 1, 2)),
   nodeOperatorId: hexToBigInt(slice(data, 2, 10)),
 });

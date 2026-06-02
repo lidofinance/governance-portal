@@ -234,7 +234,7 @@ export const MotionDescription = ({ motion }: Props) => {
   const Desc = MOTION_DESCRIPTIONS[motionType];
 
   return (
-    <Text size={14} color="textv1">
+    <Text size={14} color="textv1" as="div">
       <ErrorBoundary fallback={<>Failed to render motion description</>}>
         <Desc
           callData={callData}

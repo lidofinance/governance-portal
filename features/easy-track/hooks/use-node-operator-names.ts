@@ -6,7 +6,7 @@ import {
 } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { Address } from 'viem';
+import { Address, zeroAddress } from 'viem';
 
 export const useNodeOperatorNames = (
   stakingModuleAddress: Address | undefined,
@@ -37,7 +37,7 @@ export const useNodeOperatorNames = (
 
       const metaRegistryAddress = await readStakingModule('META_REGISTRY');
 
-      if (metaRegistryAddress !== null) {
+      if (metaRegistryAddress !== null || metaRegistryAddress !== zeroAddress) {
         const readMetaRegistry = getMetaRegistryReader(metaRegistryAddress);
 
         return Promise.all(
@@ -46,7 +46,9 @@ export const useNodeOperatorNames = (
               nodeOperatorId,
             ]);
 
-            return nodeOperator.name;
+            return typeof nodeOperator?.name === 'string'
+              ? nodeOperator.name
+              : '';
           }),
         );
       }

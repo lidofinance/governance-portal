@@ -117,8 +117,7 @@ export const AllowConsolidationPair = ({
           return (
             <li key={index}>
               sub-operator {nameEl} {targetModuleNameEl} with consolidation
-              manager
-              <AddressPopInline address={submitter} />;
+              manager <AddressPopInline address={submitter} />;
             </li>
           );
         })}

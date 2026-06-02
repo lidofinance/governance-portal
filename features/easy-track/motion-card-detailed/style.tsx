@@ -75,6 +75,7 @@ export const Description = styled.div`
 `;
 
 export const DescriptionMeta = styled(Text).attrs({
+  as: 'div',
   size: 12,
   color: 'textv1-secondary',
 })`

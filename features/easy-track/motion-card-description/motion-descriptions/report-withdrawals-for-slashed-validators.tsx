@@ -23,7 +23,11 @@ export const ReportWithdrawalsForSlashedValidators = ({
     motionType === MotionType.CSMReportWithdrawalsForSlashedValidators;
 
   const { data: stakingModuleAddress } = useQuery({
-    queryKey: [`report-withdrawals-for-slashed-validators-module`, chainId],
+    queryKey: [
+      `report-withdrawals-for-slashed-validators-module`,
+      motionType,
+      chainId,
+    ],
     enabled: !isCSM,
     queryFn: async () => {
       // CSM operators don't have names, so no need to fetch the module address to get them

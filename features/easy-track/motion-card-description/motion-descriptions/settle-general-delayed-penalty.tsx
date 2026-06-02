@@ -21,7 +21,7 @@ export const SettleGeneralDelayedPenalty = ({
   const isCSM = motionType === MotionType.CSMSettleGeneralDelayedPenalty;
 
   const { data: stakingModuleAddress } = useQuery({
-    queryKey: [`settle-general-delayed-penalty-module`, chainId],
+    queryKey: [`settle-general-delayed-penalty-module`, motionType, chainId],
     enabled: !isCSM,
     queryFn: async () => {
       // CSM operators don't have names, so no need to fetch the module address to get them
