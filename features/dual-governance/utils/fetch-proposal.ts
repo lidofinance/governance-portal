@@ -23,6 +23,7 @@ type Props = {
   governanceAddresses: Address[];
   chainId: CHAINS;
   isInTestMode?: boolean;
+  useLocalCache: boolean;
 };
 
 type ProposalDataResult = [ProposalDetails, SubmitProposalCall[]];
@@ -34,6 +35,7 @@ export const fetchProposal = async ({
   governanceAddresses,
   chainId,
   isInTestMode,
+  useLocalCache,
 }: Props) => {
   const proposalId = BigInt(id);
 
@@ -51,7 +53,11 @@ export const fetchProposal = async ({
     };
 
     // Try cache first
-    const cachedChainData = await fetchCachedProposalEvents(chainId, [id]);
+    const cachedChainData = await fetchCachedProposalEvents(
+      chainId,
+      [id],
+      useLocalCache,
+    );
     const cached = cachedChainData[id.toString()];
     const submittedEvent: ProposalSubmittedLog | null =
       cached?.proposalSubmittedEvent ?? null;

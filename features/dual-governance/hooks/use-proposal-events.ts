@@ -1,4 +1,5 @@
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useConfig } from 'config';
 import { useQuery } from '@tanstack/react-query';
 import {
   EventsLogs,
@@ -35,6 +36,7 @@ const isEventMissing = (
 
 export const useProposalEvents = ({ proposalDetails }: Args) => {
   const { chainId } = useLidoSDK();
+  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const publicClient = usePublicClient();
 
   return useQuery({
@@ -43,6 +45,7 @@ export const useProposalEvents = ({ proposalDetails }: Args) => {
       chainId,
       proposalDetails?.id.toString(),
       proposalDetails?.status,
+      useLocalCache,
     ],
     queryFn: async () => {
       if (!proposalDetails || !publicClient) {
@@ -54,9 +57,11 @@ export const useProposalEvents = ({ proposalDetails }: Args) => {
       }
 
       const proposalStatus = proposalDetails.status;
-      const cachedChainData = await fetchCachedProposalEvents(chainId, [
-        proposalDetails.id.toString(),
-      ]);
+      const cachedChainData = await fetchCachedProposalEvents(
+        chainId,
+        [proposalDetails.id.toString()],
+        useLocalCache,
+      );
       const proposalData = cachedChainData[proposalDetails.id.toString()];
 
       const events: EventsLogs = {

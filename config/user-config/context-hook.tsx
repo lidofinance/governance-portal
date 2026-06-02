@@ -14,6 +14,7 @@ type SavedUserConfig = {
   etherscanApiKey: string;
   useBundledAbi: boolean;
   useTestContracts: boolean;
+  useLocalCache: boolean;
 };
 
 export type UserConfigContextType = UserConfigDefaultType & {
@@ -28,6 +29,7 @@ const DEFAULT_STATE: SavedUserConfig = {
   etherscanApiKey: '',
   useBundledAbi: true,
   useTestContracts: false,
+  useLocalCache: true,
 };
 
 export const useUserConfigContext = () => {
@@ -39,8 +41,10 @@ export const useUserConfigContext = () => {
   const [isWalletConnectionAllowed, setIsWalletConnectionAllowed] =
     useState(true);
 
-  const [savedUserConfig, setSavedUserConfig] =
-    useState<SavedUserConfig>(restoredSettings);
+  const [savedUserConfig, setSavedUserConfig] = useState<SavedUserConfig>({
+    ...DEFAULT_STATE,
+    ...restoredSettings,
+  });
 
   const setSavedConfigAndRemember = useCallback(
     (config: SavedUserConfig) => {
