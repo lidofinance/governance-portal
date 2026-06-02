@@ -4,6 +4,12 @@ import { dirname, join } from 'node:path';
 import { createPublicClient, http, decodeEventLog } from 'viem';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
 import AragonVotingAbi from '../../abi/AragonVoting.abi.json' assert { type: 'json' };
+import { fetchCastVoteEvents } from '../../utils/votes/fetch-vote-events.mjs';
+import {
+  APPROX_BLOCK_TIME_SECONDS,
+  VOTE_END_BLOCK_BUFFER,
+} from '../../utils/votes/constants.mjs';
+import { diffEntry } from '../cache-entry-diff.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,7 +55,7 @@ const setupClients = () => {
     const chainId = Number(chainIdStr);
     const rpcUrls = process.env[`EL_RPC_URLS_${chainId}`];
     if (rpcUrls) {
-      console.log(`Setting up RPC client for chain ${chainId}...`);
+      console.info(`Setting up RPC client for chain ${chainId}...`);
       clients[chainId] = createPublicClient({
         transport: http(rpcUrls.split(',')[0], {
           retryCount: 3,
@@ -65,15 +71,76 @@ const setupClients = () => {
   return clients;
 };
 
-const validateStartVoteEvent = (
-  voteId,
-  startVoteEventData,
-  receipt,
-  votingAddress,
-) => {
-  let isValid = true;
+const fetchVotePhaseBlocks = async (client, votingAddress) => {
+  try {
+    const [voteTime, objectionPhaseTime] = await Promise.all([
+      client.readContract({
+        address: votingAddress,
+        abi: AragonVotingAbi,
+        functionName: 'voteTime',
+      }),
+      client
+        .readContract({
+          address: votingAddress,
+          abi: AragonVotingAbi,
+          functionName: 'objectionPhaseTime',
+        })
+        .catch(() => 0n),
+    ]);
+    const totalSeconds = BigInt(voteTime) + BigInt(objectionPhaseTime);
+    return totalSeconds / APPROX_BLOCK_TIME_SECONDS + VOTE_END_BLOCK_BUFFER;
+  } catch (error) {
+    console.warn(
+      `Failed to read voteTime/objectionPhaseTime at ${votingAddress}: ${error.message}. Falling back to 100000 block window.`,
+    );
+    return 100000n;
+  }
+};
 
-  let decodedLog = null;
+const collectDetailsDiffs = async (voteId, voteData, client, votingAddress) => {
+  try {
+    const [rawVote, canExecute] = await Promise.all([
+      client.readContract({
+        address: votingAddress,
+        abi: AragonVotingAbi,
+        functionName: 'getVote',
+        args: [BigInt(voteId)],
+      }),
+      client.readContract({
+        address: votingAddress,
+        abi: AragonVotingAbi,
+        functionName: 'canExecute',
+        args: [BigInt(voteId)],
+      }),
+    ]);
+
+    const chainVoteDetails = {
+      id: voteId,
+      open: rawVote[0],
+      executed: rawVote[1],
+      startDate: rawVote[2],
+      snapshotBlock: rawVote[3],
+      supportRequired: rawVote[4],
+      minAcceptQuorum: rawVote[5],
+      yea: rawVote[6],
+      nay: rawVote[7],
+      votingPower: rawVote[8],
+      script: rawVote[9],
+      phase: rawVote[10],
+      canExecute,
+    };
+
+    const diffs = diffEntry(chainVoteDetails, voteData.voteDetails, {
+      ignorePaths: ['canExecute'],
+    }).map((message) => `voteDetails.${message}`);
+
+    return { diffs, chainVoteDetails };
+  } catch (error) {
+    return { diffs: [`voteDetails: read failed: ${error.message}`], chainVoteDetails: null };
+  }
+};
+
+const findVotingLog = (receipt, votingAddress, eventName, voteId) => {
   for (const log of receipt.logs) {
     if (log.address.toLowerCase() !== votingAddress.toLowerCase()) {
       continue;
@@ -85,170 +152,333 @@ const validateStartVoteEvent = (
         topics: log.topics,
       });
       if (
-        decoded.eventName === 'StartVote' &&
+        decoded.eventName === eventName &&
         String(decoded.args.voteId) === String(voteId)
       ) {
-        decodedLog = decoded;
-        break;
+        return decoded;
       }
     } catch {
-      // Log from another contract/event — skip.
+      // log from another contract/event — skip
     }
   }
-
-  if (!decodedLog) {
-    console.error(
-      `[${voteId}] Event Validation: No matching 'StartVote' log in receipt for ${votingAddress}`,
-    );
-    return false;
-  }
-
-  const onChainCreator = decodedLog.args.creator;
-  const onChainMetadata = decodedLog.args.metadata;
-  const jsonCreator = startVoteEventData.args.creator;
-  const jsonMetadata = startVoteEventData.args.metadata;
-
-  if (onChainCreator.toLowerCase() !== jsonCreator.toLowerCase()) {
-    console.error(
-      `[${voteId}] Event Validation: Creator mismatch! JSON: ${jsonCreator}, RPC: ${onChainCreator}`,
-    );
-    isValid = false;
-  }
-
-  if (onChainMetadata.trim() !== jsonMetadata.trim()) {
-    console.error(
-      `[${voteId}] Event Validation: Metadata mismatch! JSON: "${jsonMetadata}", RPC: "${onChainMetadata}"`,
-    );
-    isValid = false;
-  }
-
-  if (isValid) {
-    console.log(
-      `[${voteId}] Event Validation: Creator & Metadata matched via transaction receipt`,
-    );
-  }
-
-  return isValid;
+  return null;
 };
 
-const validateVoteDetails = async (voteId, voteData, client, votingAddress) => {
-  let isValid = true;
-  const jsonDetails = voteData.voteDetails;
-
-  try {
-    const rawVote = await client.readContract({
-      address: votingAddress,
-      abi: AragonVotingAbi,
-      functionName: 'getVote',
-      args: [BigInt(voteId)],
-    });
-
-    const onChainOpen = rawVote[0];
-    const onChainExecuted = rawVote[1];
-    const onChainStartDate = rawVote[2].toString();
-    const onChainSnapshotBlock = rawVote[3].toString();
-
-    if (onChainOpen !== jsonDetails.open) {
-      console.error(
-        `[${voteId}] Details Validation: open mismatch! JSON: ${jsonDetails.open}, RPC: ${onChainOpen}`,
-      );
-      isValid = false;
-    }
-
-    if (onChainExecuted !== jsonDetails.executed) {
-      console.error(
-        `[${voteId}] Details Validation: executed mismatch! JSON: ${jsonDetails.executed}, RPC: ${onChainExecuted}`,
-      );
-      isValid = false;
-    }
-
-    if (onChainStartDate !== jsonDetails.startDate.toString()) {
-      console.error(
-        `[${voteId}] Details Validation: startDate mismatch! JSON: ${jsonDetails.startDate}, RPC: ${onChainStartDate}`,
-      );
-      isValid = false;
-    }
-
-    if (onChainSnapshotBlock !== jsonDetails.snapshotBlock.toString()) {
-      console.error(
-        `[${voteId}] Details Validation: snapshotBlock mismatch! JSON: ${jsonDetails.snapshotBlock}, RPC: ${onChainSnapshotBlock}`,
-      );
-      isValid = false;
-    }
-
-    if (isValid) {
-      console.log(
-        `[${voteId}] Details Validation: Core contract storage matched`,
-      );
-    }
-
-    return isValid;
-  } catch (error) {
-    console.error(
-      `[${voteId}] Details Validation: Failed to read vote details from contract: ${error.message}`,
-    );
-    return false;
+const collectStartVoteDiffs = async (voteId, cachedEvent, client, votingAddress) => {
+  if (!cachedEvent.transactionHash) {
+    return [`startVoteEvent: missing transactionHash`];
   }
+
+  let receipt;
+  try {
+    receipt = await client.getTransactionReceipt({
+      hash: cachedEvent.transactionHash,
+    });
+  } catch (error) {
+    return [`startVoteEvent: receipt fetch failed: ${error.message}`];
+  }
+
+  const decoded = findVotingLog(receipt, votingAddress, 'StartVote', voteId);
+  if (!decoded) {
+    return [
+      `startVoteEvent: no matching StartVote in receipt ${cachedEvent.transactionHash}`,
+    ];
+  }
+
+  const diffs = [];
+
+  if (BigInt(receipt.blockNumber) !== BigInt(cachedEvent.blockNumber)) {
+    diffs.push(
+      `startVoteEvent.blockNumber: ${cachedEvent.blockNumber} !== ${receipt.blockNumber}`,
+    );
+  }
+
+  if (
+    decoded.args.creator.toLowerCase() !==
+    String(cachedEvent.args.creator).toLowerCase()
+  ) {
+    diffs.push(
+      `startVoteEvent.args.creator: ${cachedEvent.args.creator} !== ${decoded.args.creator}`,
+    );
+  }
+
+  if (String(decoded.args.metadata).trim() !== String(cachedEvent.args.metadata).trim()) {
+    diffs.push(
+      `startVoteEvent.args.metadata: ${JSON.stringify(cachedEvent.args.metadata)} !== ${JSON.stringify(decoded.args.metadata)}`,
+    );
+  }
+
+  return diffs;
+};
+
+const collectExecuteVoteDiffs = async (voteId, cachedEvent, client, votingAddress) => {
+  if (!cachedEvent.transactionHash) {
+    return [`executeVoteEvent: missing transactionHash`];
+  }
+
+  let receipt;
+  try {
+    receipt = await client.getTransactionReceipt({
+      hash: cachedEvent.transactionHash,
+    });
+  } catch (error) {
+    return [`executeVoteEvent: receipt fetch failed: ${error.message}`];
+  }
+
+  const decoded = findVotingLog(receipt, votingAddress, 'ExecuteVote', voteId);
+  if (!decoded) {
+    return [
+      `executeVoteEvent: no matching ExecuteVote in receipt ${cachedEvent.transactionHash}`,
+    ];
+  }
+
+  const diffs = [];
+
+  if (BigInt(receipt.blockNumber) !== BigInt(cachedEvent.blockNumber)) {
+    diffs.push(
+      `executeVoteEvent.blockNumber: ${cachedEvent.blockNumber} !== ${receipt.blockNumber}`,
+    );
+  }
+
+  if (cachedEvent.executedAt != null) {
+    try {
+      const block = await client.getBlock({
+        blockNumber: BigInt(cachedEvent.blockNumber),
+      });
+      if (Number(block.timestamp) !== Number(cachedEvent.executedAt)) {
+        diffs.push(
+          `executeVoteEvent.executedAt: ${cachedEvent.executedAt} !== ${block.timestamp}`,
+        );
+      }
+    } catch (error) {
+      diffs.push(`executeVoteEvent.executedAt: block fetch failed: ${error.message}`);
+    }
+  }
+
+  return diffs;
+};
+
+const flattenIndividualVotes = (voteEvents) => {
+  const individualVotes = [];
+  for (const event of voteEvents || []) {
+    if (Array.isArray(event.delegatedVotes)) {
+      for (const nested of event.delegatedVotes) {
+        individualVotes.push({
+          voter: nested.voter,
+          supports: nested.supports,
+          stake: nested.stake,
+        });
+      }
+    } else {
+      individualVotes.push({
+        voter: event.voter,
+        supports: event.supports,
+        stake: event.stake,
+      });
+    }
+  }
+  return individualVotes;
+};
+
+const isCastVoteMoreRecent = (candidate, existing) => {
+  if (candidate.blockNumber > existing.blockNumber) {
+    return true;
+  }
+  if (candidate.blockNumber === existing.blockNumber) {
+    return (candidate.transactionIndex ?? 0) > (existing.transactionIndex ?? 0);
+  }
+  return false;
+};
+
+const collectVoteEventsDiffs = async (
+  voteId,
+  voteData,
+  chainVoteDetails,
+  client,
+  votingAddress,
+  votePhaseBlocks,
+) => {
+  const diffs = [];
+  const individualVotes = flattenIndividualVotes(voteData.voteEvents);
+
+  let yeaSum = 0n;
+  let naySum = 0n;
+  const cacheByVoter = new Map();
+  for (const individualVote of individualVotes) {
+    const key = individualVote.voter.toLowerCase();
+    if (cacheByVoter.has(key)) {
+      diffs.push(`voteEvents: duplicate voter ${individualVote.voter} in cache`);
+    }
+    cacheByVoter.set(key, individualVote);
+    const stake = BigInt(individualVote.stake);
+    if (individualVote.supports) {
+      yeaSum += stake;
+    } else {
+      naySum += stake;
+    }
+  }
+
+  if (chainVoteDetails) {
+    if (yeaSum !== BigInt(chainVoteDetails.yea)) {
+      diffs.push(
+        `voteEvents: yea sum ${yeaSum} !== getVote.yea ${chainVoteDetails.yea}`,
+      );
+    }
+    if (naySum !== BigInt(chainVoteDetails.nay)) {
+      diffs.push(
+        `voteEvents: nay sum ${naySum} !== getVote.nay ${chainVoteDetails.nay}`,
+      );
+    }
+  }
+
+  let castVoteData;
+  try {
+    const snapshotBlock = BigInt(voteData.voteDetails.snapshotBlock);
+    castVoteData = await fetchCastVoteEvents(
+      voteId,
+      snapshotBlock,
+      snapshotBlock + votePhaseBlocks,
+      votingAddress,
+      client,
+    );
+  } catch (error) {
+    diffs.push(`voteEvents: CastVote fetch failed: ${error.message}`);
+    return diffs;
+  }
+
+  const latestByVoter = new Map();
+
+  for (const event of castVoteData.castVoteEvents) {
+    const key = event.args.voter.toLowerCase();
+    const existing = latestByVoter.get(key);
+    if (!existing || isCastVoteMoreRecent(event, existing)) {
+      latestByVoter.set(key, event);
+    }
+  }
+
+  for (const [voter, raw] of latestByVoter) {
+    const individualVote = cacheByVoter.get(voter);
+    if (!individualVote) {
+      diffs.push(`voteEvents: voter ${raw.args.voter} on-chain but missing from cache`);
+      continue;
+    }
+    if (Boolean(individualVote.supports) !== Boolean(raw.args.supports)) {
+      diffs.push(
+        `voteEvents[${raw.args.voter}].supports: ${individualVote.supports} !== ${raw.args.supports}`,
+      );
+    }
+    if (String(individualVote.stake) !== raw.args.stake.toString()) {
+      diffs.push(
+        `voteEvents[${raw.args.voter}].stake: ${individualVote.stake} !== ${raw.args.stake}`,
+      );
+    }
+  }
+
+  for (const [voter, individualVote] of cacheByVoter) {
+    if (!latestByVoter.has(voter)) {
+      diffs.push(`voteEvents: voter ${individualVote.voter} in cache but not in chain logs`);
+    }
+  }
+
+  return diffs;
 };
 
 const validateAddress = async (votingAddress, votes, client) => {
-  console.log(`\n### Voting contract: ${votingAddress}`);
+  console.info(`\n### Voting contract: ${votingAddress}`);
 
   const voteIds = Object.keys(votes)
     .map(Number)
     .sort((first, second) => first - second);
 
   if (voteIds.length === 0) {
-    console.log('No votes found.');
-    return;
+    console.info('No votes found.');
+    return false;
   }
+
+  const votePhaseBlocks = await fetchVotePhaseBlocks(client, votingAddress);
+
+  let hasFailures = false;
 
   for (const voteId of voteIds) {
-    const vote = votes[voteId];
-    const startVoteEvent = vote.startVoteEvent;
-
     await sleep(1000);
 
-    await validateVoteDetails(voteId, vote, client, votingAddress);
+    const vote = votes[voteId];
+    const { diffs: detailsDiffs, chainVoteDetails } = await collectDetailsDiffs(
+      voteId,
+      vote,
+      client,
+      votingAddress,
+    );
 
-    if (startVoteEvent && startVoteEvent.transactionHash) {
-      const txHash = startVoteEvent.transactionHash;
-      try {
-        const receipt = await client.getTransactionReceipt({ hash: txHash });
-        if (receipt) {
-          validateStartVoteEvent(
-            voteId,
-            startVoteEvent,
-            receipt,
-            votingAddress,
-          );
-        } else {
-          console.warn(
-            `Could not retrieve receipt for Vote ${voteId} (TX: ${txHash}).`,
-          );
-        }
-      } catch (error) {
-        console.error(
-          `Failed to fetch receipt for Vote ${voteId} (TX: ${txHash}): ${error.message}`,
-        );
-      }
+    const diffs = [...detailsDiffs];
+
+    if (chainVoteDetails?.open) {
+      diffs.push('vote is open on-chain but present in cache (should be closed)');
+    }
+
+    if (vote.startVoteEvent) {
+      diffs.push(
+        ...(await collectStartVoteDiffs(
+          voteId,
+          vote.startVoteEvent,
+          client,
+          votingAddress,
+        )),
+      );
     } else {
-      console.warn(
-        `Vote ${voteId}: Missing start vote event or transaction hash. Skipping receipt fetch.`,
+      diffs.push('startVoteEvent: required but missing in cache');
+    }
+
+    if (chainVoteDetails?.executed && !vote.executeVoteEvent) {
+      diffs.push('executeVoteEvent: required (vote executed) but missing in cache');
+    }
+
+    if (vote.executeVoteEvent) {
+      diffs.push(
+        ...(await collectExecuteVoteDiffs(
+          voteId,
+          vote.executeVoteEvent,
+          client,
+          votingAddress,
+        )),
       );
     }
+
+    diffs.push(
+      ...(await collectVoteEventsDiffs(
+        voteId,
+        vote,
+        chainVoteDetails,
+        client,
+        votingAddress,
+        votePhaseBlocks,
+      )),
+    );
+
+    if (diffs.length === 0) {
+      console.info(`[${voteId}] ✅ Full entry matched on-chain`);
+    } else {
+      hasFailures = true;
+      console.error(`[${voteId}] ❌ ${diffs.length} mismatch(es):`);
+      for (const message of diffs) {
+        console.error(`    - ${message}`);
+      }
+    }
   }
+
+  return hasFailures;
 };
 
 const main = async () => {
   try {
     const clients = setupClients();
+    let hasFailures = false;
 
     for (const chainIdStr of supportedChains) {
       const chainId = Number(chainIdStr);
       const client = clients[chainId];
 
-      console.log(`\n## Chain ID: ${chainId}`);
+      console.info(`\n## Chain ID: ${chainId}`);
 
       if (!client) {
         console.warn(
@@ -259,18 +489,25 @@ const main = async () => {
 
       const addresses = listAddressDirs(chainId);
       if (addresses.length === 0) {
-        console.log('No address directories found.');
+        console.info('No address directories found.');
         continue;
       }
 
       for (const votingAddress of addresses) {
         const votes = readAddressVotes(chainId, votingAddress);
         if (!votes) {
-          console.log(`No manifest for ${votingAddress}`);
+          console.info(`No manifest for ${votingAddress}`);
           continue;
         }
-        await validateAddress(votingAddress, votes, client);
+        if (await validateAddress(votingAddress, votes, client)) {
+          hasFailures = true;
+        }
       }
+    }
+
+    if (hasFailures) {
+      console.error('❌ Validation failed: cached entries diverge from on-chain.');
+      process.exit(1);
     }
 
     process.exit(0);
