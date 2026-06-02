@@ -208,7 +208,7 @@ export const SettingsForm = () => {
                     data instead
                   </Text>
                 }
-              ></TooltipStyled>
+              />
             </CheckboxWrapper>
 
             {isTestnet && (
