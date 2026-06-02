@@ -1,4 +1,8 @@
-import { Abi, ContractFunctionName, ContractFunctionReturnType } from 'viem';
+import type {
+  Abi,
+  ContractFunctionName,
+  ContractFunctionReturnType,
+} from 'viem';
 
 export type ContractReadFunctionReturnType<
   abi extends Abi | readonly unknown[],
