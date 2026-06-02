@@ -727,12 +727,40 @@ export const StonksStablesTopUp: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.StonksStablesTopUp],
 };
 
-export const CSMSettleElStealingPenalty: ContractObject<
-  typeof abi.csmSettleElStealingPenaltyAbi
+export const CSMSettleGeneralDelayedPenalty: ContractObject<
+  typeof abi.settleGeneralDelayedPenaltyAbi
 > = {
-  name: 'CSMSettleElStealingPenalty',
-  abi: abi.csmSettleElStealingPenaltyAbi,
-  chainAddressMap: EvmAddressesByType[MotionType.CSMSettleElStealingPenalty],
+  name: 'CSMSettleGeneralDelayedPenalty',
+  abi: abi.settleGeneralDelayedPenaltyAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSMSettleGeneralDelayedPenalty],
+};
+
+export const CuratedSettleGeneralDelayedPenalty: ContractObject<
+  typeof abi.settleGeneralDelayedPenaltyAbi
+> = {
+  name: 'CuratedSettleGeneralDelayedPenalty',
+  abi: abi.settleGeneralDelayedPenaltyAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CuratedSettleGeneralDelayedPenalty],
+};
+
+export const CSMReportWithdrawalsForSlashedValidators: ContractObject<
+  typeof abi.evmReportWithdrawalsForSlashedValidatorsAbi
+> = {
+  name: 'CSMReportWithdrawalsForSlashedValidators',
+  abi: abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSMReportWithdrawalsForSlashedValidators],
+};
+
+export const CuratedReportWithdrawalsForSlashedValidators: ContractObject<
+  typeof abi.evmReportWithdrawalsForSlashedValidatorsAbi
+> = {
+  name: 'CuratedReportWithdrawalsForSlashedValidators',
+  abi: abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CuratedReportWithdrawalsForSlashedValidators],
 };
 
 export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {
@@ -1030,4 +1058,13 @@ export const CreateOrUpdateOperatorGroup: ContractObject<
   name: 'CreateOrUpdateOperatorGroup',
   abi: abi.createOrUpdateOperatorGroupAbi,
   chainAddressMap: EvmAddressesByType[MotionType.CreateOrUpdateOperatorGroup],
+};
+
+export const UpdateStakingModuleShareLimits: ContractObject<
+  typeof abi.evmUpdateStakingModuleShareLimitsAbi
+> = {
+  name: 'UpdateStakingModuleShareLimits',
+  abi: abi.evmUpdateStakingModuleShareLimitsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.UpdateStakingModuleShareLimits],
 };

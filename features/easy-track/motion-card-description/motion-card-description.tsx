@@ -42,6 +42,8 @@ import { SdvtNodeOperatorsAdd } from './motion-descriptions/sdvt-node-operators-
 import { SdvtNodeOperatorManagersChange } from './motion-descriptions/sdvt-node-operator-managers-change';
 import { DescNodeOperatorIncreaseLimit } from './motion-descriptions/node-operator-limit-increase';
 import { CsmSettleElStealingPenalty } from './motion-descriptions/csm-settle-el-stealing-penalty';
+import { SettleGeneralDelayedPenalty } from './motion-descriptions/settle-general-delayed-penalty';
+import { ReportWithdrawalsForSlashedValidators } from './motion-descriptions/report-withdrawals-for-slashed-validators';
 import { MevBoostRelaysAdd } from './motion-descriptions/mev-boost-relays-add';
 import { MevBoostRelaysEdit } from './motion-descriptions/mev-boost-relays-edit';
 import { MevBoostRelaysRemove } from './motion-descriptions/mev-boost-relays-remove';
@@ -60,6 +62,7 @@ import { VaultsRegisterTiersInOperatorGrid } from '@easy-track/motion-card-descr
 import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-card-description/motion-descriptions/vaults-set-liability-shares-target-in-vault-hub';
 import { AllowConsolidationPair } from './motion-descriptions/allow-consolidation-pair';
 import { CreateOrUpdateOperatorGroup } from './motion-descriptions/create-or-update-operator-group';
+import { UpdateStakingModuleShareLimits } from './motion-descriptions/update-staking-module-share-limits';
 
 type GenericDescProps = MotionDescriptionProps<Abi>;
 
@@ -316,6 +319,18 @@ const MOTION_DESCRIPTIONS = {
   [MotionType.CSMSettleElStealingPenalty]: (props: DescDispatchProps) => (
     <CsmSettleElStealingPenalty {...props} />
   ),
+  [MotionType.CSMSettleGeneralDelayedPenalty]: (props: DescDispatchProps) => (
+    <SettleGeneralDelayedPenalty {...props} />
+  ),
+  [MotionType.CuratedSettleGeneralDelayedPenalty]: (
+    props: DescDispatchProps,
+  ) => <SettleGeneralDelayedPenalty {...props} />,
+  [MotionType.CSMReportWithdrawalsForSlashedValidators]: (
+    props: DescDispatchProps,
+  ) => <ReportWithdrawalsForSlashedValidators {...props} />,
+  [MotionType.CuratedReportWithdrawalsForSlashedValidators]: (
+    props: DescDispatchProps,
+  ) => <ReportWithdrawalsForSlashedValidators {...props} />,
   [MotionType.AllianceOpsStablesTopUp]: (props: DescDispatchProps) => (
     <TopUpWithLimitsAndCustomToken
       {...props}
@@ -436,6 +451,9 @@ const MOTION_DESCRIPTIONS = {
   ),
   [MotionType.CreateOrUpdateOperatorGroup]: (props: DescDispatchProps) => (
     <CreateOrUpdateOperatorGroup {...props} />
+  ),
+  [MotionType.UpdateStakingModuleShareLimits]: (props: DescDispatchProps) => (
+    <UpdateStakingModuleShareLimits {...props} />
   ),
 } as const;
 

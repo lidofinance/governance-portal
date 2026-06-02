@@ -69,6 +69,14 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.RewardsShareProgramRemove]: abi.removeAllowedRecipientAbi,
   [MotionType.RewardsShareProgramTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.CSMSettleElStealingPenalty]: abi.csmSettleElStealingPenaltyAbi,
+  [MotionType.CSMSettleGeneralDelayedPenalty]:
+    abi.settleGeneralDelayedPenaltyAbi,
+  [MotionType.CuratedSettleGeneralDelayedPenalty]:
+    abi.settleGeneralDelayedPenaltyAbi,
+  [MotionType.CSMReportWithdrawalsForSlashedValidators]:
+    abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
+    abi.evmReportWithdrawalsForSlashedValidatorsAbi,
   [MotionType.AllianceOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.EcosystemOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.LabsOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
@@ -117,6 +125,8 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.AlterTiersInOperatorGridOld]: abi.evmAlterTiersInOperatorGridAbi,
   [MotionType.AllowConsolidationPair]: abi.allowConsolidationPairAbi,
   [MotionType.CreateOrUpdateOperatorGroup]: abi.createOrUpdateOperatorGroupAbi,
+  [MotionType.UpdateStakingModuleShareLimits]:
+    abi.evmUpdateStakingModuleShareLimitsAbi,
 } as const;
 
 type DecodeOverride = (data: `0x${string}`) => unknown;

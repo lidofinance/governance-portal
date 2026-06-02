@@ -335,6 +335,8 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x22D36e7616F541A527989C5652fDA4d527bB461C',
     [MotionType.CreateOrUpdateOperatorGroup]:
       '0xD3De4d7dCc0E81131032Fb4C32243f4b2B90e8b7',
+    [MotionType.UpdateStakingModuleShareLimits]:
+      '0xD63cf25df1bA6144db27A81A98120Dfc53dE4540',
 
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',
@@ -384,6 +386,16 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xf71fcB20B9FB8468653Bcb24E31F39bc069D5995',
     [MotionType.CuratedSetMerkleGateTree]:
       '0x5194cC02B6F477B4a23DFA422fFC238c8B5b1736',
+
+    [MotionType.CSMSettleGeneralDelayedPenalty]:
+      '0xd0c38B2F0C1F760976dA010C1c35D828331Ff9E2',
+    [MotionType.CuratedSettleGeneralDelayedPenalty]:
+      '0x3486B872768D361309e405A046C4BF995c21CC6c',
+
+    [MotionType.CSMReportWithdrawalsForSlashedValidators]:
+      '0x4EaB04775837A6F0218750A10454119f349258FE',
+    [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
+      '0x6E40FED7c28bAA93a798cA10f8A93965a19eC52e',
 
     // next motion factories are @deprecated
     // we are keeping them here to display history data
