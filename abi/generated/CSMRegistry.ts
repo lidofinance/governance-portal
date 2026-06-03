@@ -128,7 +128,7 @@ export const csmRegistryAbi = [
       { name: 'moduleType', internalType: 'bytes32', type: 'bytes32' },
       { name: 'lidoLocator', internalType: 'address', type: 'address' },
       { name: 'parametersRegistry', internalType: 'address', type: 'address' },
-      { name: '_accounting', internalType: 'address', type: 'address' },
+      { name: 'accounting', internalType: 'address', type: 'address' },
       { name: 'exitPenalties', internalType: 'address', type: 'address' },
     ],
     stateMutability: 'nonpayable',
@@ -144,17 +144,23 @@ export const csmRegistryAbi = [
   },
   { type: 'error', inputs: [], name: 'AlreadyProposed' },
   { type: 'error', inputs: [], name: 'CannotAddKeys' },
-  { type: 'error', inputs: [], name: 'EmptyKey' },
-  { type: 'error', inputs: [], name: 'ExitedKeysDecrease' },
-  { type: 'error', inputs: [], name: 'ExitedKeysHigherThanTotalDeposited' },
+  { type: 'error', inputs: [], name: 'DepositInfoIsNotUpToDate' },
+  { type: 'error', inputs: [], name: 'DepositQueueIsEmpty' },
+  {
+    type: 'error',
+    inputs: [],
+    name: 'DepositableKeysWithUnsupportedWithdrawalCredentials',
+  },
   { type: 'error', inputs: [], name: 'FailedToSendEther' },
   { type: 'error', inputs: [], name: 'InvalidAmount' },
   { type: 'error', inputs: [], name: 'InvalidInitialization' },
   { type: 'error', inputs: [], name: 'InvalidInput' },
-  { type: 'error', inputs: [], name: 'InvalidKeysCount' },
-  { type: 'error', inputs: [], name: 'InvalidLength' },
-  { type: 'error', inputs: [], name: 'InvalidReportData' },
+  { type: 'error', inputs: [], name: 'InvalidManagerAddress' },
+  { type: 'error', inputs: [], name: 'InvalidRewardAddress' },
+  { type: 'error', inputs: [], name: 'InvalidSigningKey' },
+  { type: 'error', inputs: [], name: 'InvalidTopUpOrder' },
   { type: 'error', inputs: [], name: 'InvalidVetKeysPointer' },
+  { type: 'error', inputs: [], name: 'InvalidWithdrawnValidatorInfo' },
   { type: 'error', inputs: [], name: 'KeysLimitExceeded' },
   { type: 'error', inputs: [], name: 'MethodCallIsNotAllowed' },
   { type: 'error', inputs: [], name: 'NoQueuedKeysToMigrate' },
@@ -167,23 +173,45 @@ export const csmRegistryAbi = [
   { type: 'error', inputs: [], name: 'PausedExpected' },
   { type: 'error', inputs: [], name: 'PriorityQueueAlreadyUsed' },
   { type: 'error', inputs: [], name: 'PriorityQueueMaxDepositsUsed' },
-  { type: 'error', inputs: [], name: 'QueueIsEmpty' },
-  { type: 'error', inputs: [], name: 'QueueLookupNoLimit' },
+  { type: 'error', inputs: [], name: 'PubkeyMismatch' },
   { type: 'error', inputs: [], name: 'ResumedExpected' },
+  { type: 'error', inputs: [], name: 'RewindForward' },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'bits', internalType: 'uint8', type: 'uint8' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'SafeCastOverflowedUintDowncast',
+  },
   { type: 'error', inputs: [], name: 'SameAddress' },
+  { type: 'error', inputs: [], name: 'SameTopUpQueueLimit' },
   { type: 'error', inputs: [], name: 'SenderIsNotEligible' },
   { type: 'error', inputs: [], name: 'SenderIsNotManagerAddress' },
   { type: 'error', inputs: [], name: 'SenderIsNotProposedAddress' },
   { type: 'error', inputs: [], name: 'SenderIsNotRewardAddress' },
   { type: 'error', inputs: [], name: 'SigningKeysInvalidOffset' },
+  { type: 'error', inputs: [], name: 'SlashingPenaltyIsNotApplicable' },
+  { type: 'error', inputs: [], name: 'TopUpQueueDisabled' },
+  { type: 'error', inputs: [], name: 'TopUpQueueIsEmpty' },
+  { type: 'error', inputs: [], name: 'TopUpQueueIsFull' },
+  { type: 'error', inputs: [], name: 'UnexpectedExtraKey' },
+  { type: 'error', inputs: [], name: 'UnreportableBalance' },
+  { type: 'error', inputs: [], name: 'UpgradeIsNotFinalized' },
+  { type: 'error', inputs: [], name: 'ValidatorSlashingAlreadyReported' },
   { type: 'error', inputs: [], name: 'ZeroAccountingAddress' },
   { type: 'error', inputs: [], name: 'ZeroAdminAddress' },
+  { type: 'error', inputs: [], name: 'ZeroExitBalance' },
   { type: 'error', inputs: [], name: 'ZeroExitPenaltiesAddress' },
   { type: 'error', inputs: [], name: 'ZeroLocatorAddress' },
+  { type: 'error', inputs: [], name: 'ZeroManagerAddress' },
+  { type: 'error', inputs: [], name: 'ZeroModuleType' },
   { type: 'error', inputs: [], name: 'ZeroParametersRegistryAddress' },
   { type: 'error', inputs: [], name: 'ZeroPauseDuration' },
+  { type: 'error', inputs: [], name: 'ZeroPenaltyType' },
   { type: 'error', inputs: [], name: 'ZeroRewardAddress' },
   { type: 'error', inputs: [], name: 'ZeroSenderAddress' },
+  { type: 'error', inputs: [], name: 'ZeroTopUpQueueLimit' },
   {
     type: 'event',
     anonymous: false,
@@ -246,82 +274,6 @@ export const csmRegistryAbi = [
       },
     ],
     name: 'DepositedSigningKeysCountChanged',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'nodeOperatorId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ELRewardsStealingPenaltyCancelled',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'nodeOperatorId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ELRewardsStealingPenaltyCompensated',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'nodeOperatorId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'proposedBlockHash',
-        internalType: 'bytes32',
-        type: 'bytes32',
-        indexed: false,
-      },
-      {
-        name: 'stolenAmount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'ELRewardsStealingPenaltyReported',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'nodeOperatorId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'ELRewardsStealingPenaltySettled',
   },
   {
     type: 'event',
@@ -445,6 +397,106 @@ export const csmRegistryAbi = [
   {
     type: 'event',
     anonymous: false,
+    inputs: [],
+    name: 'FullDepositInfoUpdateRequested',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'GeneralDelayedPenaltyCancelled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'GeneralDelayedPenaltyCompensated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'penaltyType',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'additionalFine',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'details',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+    ],
+    name: 'GeneralDelayedPenaltyReported',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'GeneralDelayedPenaltySettled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
     inputs: [
       {
         name: 'version',
@@ -454,6 +506,56 @@ export const csmRegistryAbi = [
       },
     ],
     name: 'Initialized',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'keyIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'newTotal',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'KeyAllocatedBalanceChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'keyIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'newBalance',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'KeyConfirmedBalanceChanged',
   },
   {
     type: 'event',
@@ -498,6 +600,31 @@ export const csmRegistryAbi = [
       },
     ],
     name: 'NodeOperatorAdded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'operatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'balanceWei',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'NodeOperatorBalanceUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [],
+    name: 'NodeOperatorDepositInfoFullyUpdated',
   },
   {
     type: 'event',
@@ -788,6 +915,46 @@ export const csmRegistryAbi = [
         indexed: true,
       },
       {
+        name: 'keyIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'TopUpQueueItemProcessed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'limit',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'TopUpQueueLimitSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'to', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TopUpQueueRewound',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
         name: 'totalKeysCount',
         internalType: 'uint256',
         type: 'uint256',
@@ -795,6 +962,71 @@ export const csmRegistryAbi = [
       },
     ],
     name: 'TotalSigningKeysCountChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'totalWithdrawnValidators',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'TotalWithdrawnValidatorsRebuilt',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'keyIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      { name: 'pubkey', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'ValidatorSlashingReported',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'keyIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'exitBalance',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'slashingPenalty',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      { name: 'pubkey', internalType: 'bytes', type: 'bytes', indexed: false },
+    ],
+    name: 'ValidatorWithdrawn',
   },
   {
     type: 'event',
@@ -829,37 +1061,11 @@ export const csmRegistryAbi = [
     name: 'VettedSigningKeysCountDecreased',
   },
   {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'nodeOperatorId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'keyIndex',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-      { name: 'pubkey', internalType: 'bytes', type: 'bytes', indexed: false },
-    ],
-    name: 'WithdrawalSubmitted',
-  },
-  {
     type: 'function',
     inputs: [],
     name: 'ACCOUNTING',
     outputs: [
-      { name: '', internalType: 'contract ICSAccounting', type: 'address' },
+      { name: '', internalType: 'contract IAccounting', type: 'address' },
     ],
     stateMutability: 'view',
   },
@@ -880,16 +1086,9 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'DEPOSIT_SIZE',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
     name: 'EXIT_PENALTIES',
     outputs: [
-      { name: '', internalType: 'contract ICSExitPenalties', type: 'address' },
+      { name: '', internalType: 'contract IExitPenalties', type: 'address' },
     ],
     stateMutability: 'view',
   },
@@ -912,11 +1111,18 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'MANAGE_TOP_UP_QUEUE_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'PARAMETERS_REGISTRY',
     outputs: [
       {
         name: '',
-        internalType: 'contract ICSParametersRegistry',
+        internalType: 'contract IParametersRegistry',
         type: 'address',
       },
     ],
@@ -939,20 +1145,6 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'QUEUE_LEGACY_PRIORITY',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'QUEUE_LOWEST_PRIORITY',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
     name: 'RECOVERER_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
@@ -960,7 +1152,21 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'REPORT_EL_REWARDS_STEALING_PENALTY_ROLE',
+    name: 'REPORT_GENERAL_DELAYED_PENALTY_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'REPORT_REGULAR_WITHDRAWN_VALIDATORS_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'REPORT_SLASHED_WITHDRAWN_VALIDATORS_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
   },
@@ -974,7 +1180,14 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'SETTLE_EL_REWARDS_STEALING_PENALTY_ROLE',
+    name: 'REWIND_TOP_UP_QUEUE_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'SETTLE_GENERAL_DELAYED_PENALTY_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
   },
@@ -1001,15 +1214,6 @@ export const csmRegistryAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'accounting',
-    outputs: [
-      { name: '', internalType: 'contract ICSAccounting', type: 'address' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
@@ -1031,7 +1235,7 @@ export const csmRegistryAbi = [
       { name: 'signatures', internalType: 'bytes', type: 'bytes' },
       {
         name: 'permit',
-        internalType: 'struct ICSAccounting.PermitInput',
+        internalType: 'struct IAccounting.PermitInput',
         type: 'tuple',
         components: [
           { name: 'value', internalType: 'uint256', type: 'uint256' },
@@ -1056,7 +1260,7 @@ export const csmRegistryAbi = [
       { name: 'signatures', internalType: 'bytes', type: 'bytes' },
       {
         name: 'permit',
-        internalType: 'struct ICSAccounting.PermitInput',
+        internalType: 'struct IAccounting.PermitInput',
         type: 'tuple',
         components: [
           { name: 'value', internalType: 'uint256', type: 'uint256' },
@@ -1074,10 +1278,34 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [
+      { name: 'maxDepositAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'pubkeys', internalType: 'bytes[]', type: 'bytes[]' },
+      { name: 'keyIndices', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'operatorIds', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'topUpLimits', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'allocateDeposits',
+    outputs: [
+      { name: 'allocations', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'maxCount', internalType: 'uint256', type: 'uint256' }],
+    name: 'batchDepositInfoUpdate',
+    outputs: [
+      { name: 'operatorsLeft', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
       { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'cancelELRewardsStealingPenalty',
+    name: 'cancelGeneralDelayedPenalty',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1106,9 +1334,9 @@ export const csmRegistryAbi = [
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'compensateELRewardsStealingPenalty',
+    name: 'compensateGeneralDelayedPenalty',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -1198,7 +1426,7 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'finalizeUpgradeV2',
+    name: 'finalizeUpgradeV3',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1214,6 +1442,39 @@ export const csmRegistryAbi = [
     inputs: [],
     name: 'getInitializedVersion',
     outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: 'startIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'keysCount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getKeyAllocatedBalances',
+    outputs: [
+      { name: 'balances', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: 'startIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'keysCount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getKeyConfirmedBalances',
+    outputs: [
+      { name: 'balances', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'maxKeyCount', internalType: 'uint256', type: 'uint256' }],
+    name: 'getKeysForTopUp',
+    outputs: [{ name: 'pubkeys', internalType: 'bytes[]', type: 'bytes[]' }],
     stateMutability: 'view',
   },
   {
@@ -1275,6 +1536,22 @@ export const csmRegistryAbi = [
         ],
       },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getNodeOperatorBalance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getNodeOperatorDepositInfoToUpdateCount',
+    outputs: [{ name: 'count', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -1388,17 +1665,6 @@ export const csmRegistryAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'getNodeOperatorTotalDepositedKeys',
-    outputs: [
-      { name: 'totalDepositedKeys', internalType: 'uint256', type: 'uint256' },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     inputs: [],
     name: 'getNodeOperatorsCount',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -1444,13 +1710,20 @@ export const csmRegistryAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'getRoleMembers',
+    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
       { name: 'startIndex', internalType: 'uint256', type: 'uint256' },
       { name: 'keysCount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'getSigningKeys',
-    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    outputs: [{ name: 'keys', internalType: 'bytes', type: 'bytes' }],
     stateMutability: 'view',
   },
   {
@@ -1493,6 +1766,35 @@ export const csmRegistryAbi = [
   {
     type: 'function',
     inputs: [],
+    name: 'getTopUpQueue',
+    outputs: [
+      { name: 'enabled', internalType: 'bool', type: 'bool' },
+      { name: 'limit', internalType: 'uint256', type: 'uint256' },
+      { name: 'length', internalType: 'uint256', type: 'uint256' },
+      { name: 'head', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'index', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTopUpQueueItem',
+    outputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getTotalModuleStake',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'getType',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
@@ -1519,7 +1821,10 @@ export const csmRegistryAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'admin', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: 'admin', internalType: 'address', type: 'address' },
+      { name: 'topUpQueueLimit', internalType: 'uint8', type: 'uint8' },
+    ],
     name: 'initialize',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -1549,7 +1854,7 @@ export const csmRegistryAbi = [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
       { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'isValidatorWithdrawn',
+    name: 'isValidatorSlashed',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
@@ -1557,10 +1862,11 @@ export const csmRegistryAbi = [
     type: 'function',
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'migrateToPriorityQueue',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'isValidatorWithdrawn',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -1580,7 +1886,7 @@ export const csmRegistryAbi = [
     inputs: [],
     name: 'onExitedAndStuckValidatorsCountsUpdated',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -1595,7 +1901,7 @@ export const csmRegistryAbi = [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
       { name: 'publicKey', internalType: 'bytes', type: 'bytes' },
       {
-        name: 'withdrawalRequestPaidFee',
+        name: 'elWithdrawalRequestFeePaid',
         internalType: 'uint256',
         type: 'uint256',
       },
@@ -1610,7 +1916,7 @@ export const csmRegistryAbi = [
     inputs: [],
     name: 'onWithdrawalCredentialsChanged',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -1636,6 +1942,13 @@ export const csmRegistryAbi = [
       { name: 'proposedAddress', internalType: 'address', type: 'address' },
     ],
     name: 'proposeNodeOperatorRewardAddressChange',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'rebuildTotalWithdrawnValidators',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1701,10 +2014,62 @@ export const csmRegistryAbi = [
     type: 'function',
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
-      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'penaltyType', internalType: 'bytes32', type: 'bytes32' },
       { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'details', internalType: 'string', type: 'string' },
     ],
-    name: 'reportELRewardsStealingPenalty',
+    name: 'reportGeneralDelayedPenalty',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'validatorInfos',
+        internalType: 'struct WithdrawnValidatorInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+          { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
+          { name: 'exitBalance', internalType: 'uint256', type: 'uint256' },
+          { name: 'slashingPenalty', internalType: 'uint256', type: 'uint256' },
+          { name: 'isSlashed', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    name: 'reportRegularWithdrawnValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'validatorInfos',
+        internalType: 'struct WithdrawnValidatorInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+          { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
+          { name: 'exitBalance', internalType: 'uint256', type: 'uint256' },
+          { name: 'slashingPenalty', internalType: 'uint256', type: 'uint256' },
+          { name: 'isSlashed', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    name: 'reportSlashedWithdrawnValidators',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'currentBalanceWei', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'reportValidatorBalance',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1717,6 +2082,23 @@ export const csmRegistryAbi = [
       { name: 'eligibleToExitInSec', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'reportValidatorExitDelay',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+      { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'reportValidatorSlashing',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'requestFullDepositInfoUpdate',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1748,28 +2130,25 @@ export const csmRegistryAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      { name: 'nodeOperatorIds', internalType: 'uint256[]', type: 'uint256[]' },
-    ],
-    name: 'settleELRewardsStealingPenalty',
+    inputs: [{ name: 'to', internalType: 'uint256', type: 'uint256' }],
+    name: 'rewindTopUpQueue',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'limit', internalType: 'uint256', type: 'uint256' }],
+    name: 'setTopUpQueueLimit',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
     inputs: [
-      {
-        name: 'withdrawalsInfo',
-        internalType: 'struct ValidatorWithdrawalInfo[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
-          { name: 'keyIndex', internalType: 'uint256', type: 'uint256' },
-          { name: 'amount', internalType: 'uint256', type: 'uint256' },
-        ],
-      },
+      { name: 'nodeOperatorIds', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'maxAmounts', internalType: 'uint256[]', type: 'uint256[]' },
     ],
-    name: 'submitWithdrawals',
+    name: 'settleGeneralDelayedPenalty',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1785,12 +2164,21 @@ export const csmRegistryAbi = [
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
       {
-        name: 'exitedValidatorsKeysCount',
+        name: 'exitedValidatorsCount',
         internalType: 'uint256',
         type: 'uint256',
       },
     ],
     name: 'unsafeUpdateValidatorsCount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateDepositInfo',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -1821,13 +2209,6 @@ export const csmRegistryAbi = [
       { name: 'targetLimit', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'updateTargetValidatorsLimits',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
-    name: 'setKeyRemovalCharge',
     outputs: [],
     stateMutability: 'nonpayable',
   },

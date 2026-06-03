@@ -61,7 +61,7 @@ export const MotionCard = ({ motion }: Props) => {
           )}
         </CardTitle>
         <DescWrapper>
-          <MotionDescription motion={motion} textSize="small" />
+          <MotionDescription motion={motion} />
         </DescWrapper>
         <CardStatusWrapper $displayStatus={displayStatus}>
           <Text size={12} weight={800}>

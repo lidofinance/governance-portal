@@ -34,8 +34,8 @@ import {
 import { MotionType } from '../../motion-types';
 import { validateUintValue } from '../../utils/validate-uint-value';
 import {
-  encodeNORExtOperatorData,
-  decodeNORExtOperatorData,
+  encodeExternalOperatorData,
+  decodeExternalOperatorData,
 } from '../../utils/nor-ext-operator-data';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { MAX_BP } from '@easy-track/constants';
@@ -122,7 +122,7 @@ export const formParts = createMotionFormPart({
           sortedExts.map(
             (e) =>
               [
-                encodeNORExtOperatorData(
+                encodeExternalOperatorData(
                   allowedExternalModuleId,
                   e.nodeOperatorId,
                 ),
@@ -285,7 +285,7 @@ export const formParts = createMotionFormPart({
         );
         extFields.replace(
           existingGroup.externalOperators.map((op) => ({
-            nodeOperatorId: decodeNORExtOperatorData(
+            nodeOperatorId: decodeExternalOperatorData(
               op.data,
             ).nodeOperatorId.toString(),
           })),

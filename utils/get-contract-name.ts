@@ -1,3 +1,5 @@
+import { EvmUnrecognized } from '@easy-track/evm-addresses';
+import { getMotionTypeByScriptFactory } from '@easy-track/utils/get-motion-type';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import * as addressMaps from 'shared/blockchain/contract-addresses';
 
@@ -26,7 +28,13 @@ export const getContractName = (chainId: CHAINS, address: string) => {
   );
 
   if (!name) {
-    return null;
+    // Try to look for EasyTrack EVM script factory addresses
+    const factoryName = getMotionTypeByScriptFactory(chainId, address);
+    if (factoryName === EvmUnrecognized) {
+      return null;
+    }
+
+    return factoryName;
   }
 
   return name;

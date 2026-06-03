@@ -59,11 +59,11 @@ export const UpdateStakingModuleShareLimits = ({
 
   return (
     <>
-      For staking module{' '}
+      For{' '}
       <b>
-        {moduleInfo.name} (ID #{moduleInfo.stakingModuleId})
-      </b>
-      <br />
+        {moduleInfo.name} (id: {moduleInfo.stakingModuleId})
+      </b>{' '}
+      module:
       <ul>
         {currentStakeShareLimit !== newStakeShareLimit && (
           <li>
