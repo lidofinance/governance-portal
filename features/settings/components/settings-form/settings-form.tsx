@@ -22,6 +22,7 @@ import {
   DescriptionText,
   DescriptionTitle,
   StyledActions,
+  TooltipStyled,
 } from './style';
 import { useTestContractsInfo } from './use-test-contracts-info';
 import { Text } from 'shared/components/text';
@@ -45,6 +46,7 @@ export const SettingsForm = () => {
       etherscanApiKey: userConfig.savedUserConfig.etherscanApiKey,
       useBundledAbi: userConfig.savedUserConfig.useBundledAbi,
       useTestContracts: userConfig.savedUserConfig.useTestContracts,
+      useLocalCache: userConfig.savedUserConfig.useLocalCache,
     },
   });
 
@@ -142,6 +144,7 @@ export const SettingsForm = () => {
         etherscanApiKey: formValues.etherscanApiKey,
         useBundledAbi: formValues.useBundledAbi,
         useTestContracts: formValues.useTestContracts,
+        useLocalCache: formValues.useLocalCache,
       });
     },
     [chainId, userConfig],
@@ -159,6 +162,7 @@ export const SettingsForm = () => {
     setValue('rpcUrl', '');
     setValue('etherscanApiKey', '');
     setValue('useBundledAbi', true);
+    setValue('useLocalCache', true);
     saveSettings(getValues());
     ToastSuccess('Settings have been reset');
   }, [setValue, saveSettings, getValues]);
@@ -188,6 +192,22 @@ export const SettingsForm = () => {
               <CheckboxHookForm
                 fieldName="useBundledAbi"
                 label="Use built-in ABIs"
+              />
+            </CheckboxWrapper>
+
+            <CheckboxWrapper>
+              <CheckboxHookForm
+                fieldName="useLocalCache"
+                label="Use local cache for historical data"
+              />
+              <TooltipStyled
+                title={
+                  <Text size={12}>
+                    This app uses locally stored cache for historical data (e.g.
+                    ended onchain votes). Disable this param to use realtime RPC
+                    data instead
+                  </Text>
+                }
               />
             </CheckboxWrapper>
 
@@ -260,6 +280,14 @@ export const SettingsForm = () => {
             This website includes pre-loaded ABIs for script parsing. If you are
             having trouble viewing the action items, uncheck this box to load
             ABIs from Etherscan.
+          </p>
+          <DescriptionTitle>
+            What does &ldquo;Use local cache for historical data&rdquo;
+            parameter?
+          </DescriptionTitle>
+          <p>
+            This app uses locally stored cache for historical data (e.g. ended
+            onchain votes). Disable this param to use realtime RPC data instead.
           </p>
           {isTestnet && (
             <>

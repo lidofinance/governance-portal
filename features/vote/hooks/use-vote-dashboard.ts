@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { useWatchContractEvent } from 'wagmi';
 import { aragonVotingAbi } from 'abi/generated';
+import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
@@ -21,6 +22,7 @@ export const VOTE_DASHBOARD_PAGE_SIZE = PAGE_SIZE;
 
 export const useVoteDashboard = () => {
   const { chainId, rpcProvider } = useLidoSDK();
+  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
@@ -94,6 +96,7 @@ export const useVoteDashboard = () => {
       chainId,
       votingContract.address,
       isFiltering ? debouncedQuery : 'all',
+      useLocalCache,
     ],
     initialPageParam: 0,
     queryFn: ({ pageParam }) => {
@@ -108,6 +111,7 @@ export const useVoteDashboard = () => {
           client: rpcProvider,
           onlyActive: false,
           voteIds: pageVoteIds,
+          useLocalCache,
         });
       }
       return fetchAragonVotes({
@@ -117,6 +121,7 @@ export const useVoteDashboard = () => {
         offset: pageParam * PAGE_SIZE,
         client: rpcProvider,
         onlyActive: false,
+        useLocalCache,
       });
     },
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {

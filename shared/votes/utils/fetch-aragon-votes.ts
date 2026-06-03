@@ -19,6 +19,7 @@ type FetchArgs = {
   client: PublicClient;
   onlyActive?: boolean;
   voteIds?: number[];
+  useLocalCache: boolean;
 };
 
 type VoteResult = Vote & {
@@ -50,6 +51,7 @@ export const fetchAragonVotes = async ({
   client,
   onlyActive = true,
   voteIds: requestedVoteIds,
+  useLocalCache,
 }: FetchArgs): Promise<VoteResult[]> => {
   let voteIds = requestedVoteIds;
 
@@ -79,6 +81,7 @@ export const fetchAragonVotes = async ({
     chainId,
     votingAddress: votingContract.address,
     voteIds,
+    useLocalCache,
   });
 
   const missingIds = voteIds.filter((id) => !(id.toString() in cachedVotesMap));
