@@ -76,9 +76,10 @@ export const VoteCard = () => {
     if (!walletAddress || voteEvents.length === 0) {
       return null;
     }
-    const lower = walletAddress.toLowerCase();
     return (
-      voteEvents.find((event) => event.voter.toLowerCase() === lower) ?? null
+      voteEvents.find(
+        (event) => event.voter.toLowerCase() === walletAddress.toLowerCase(),
+      ) ?? null
     );
   }, [walletAddress, voteEvents]);
 
@@ -86,10 +87,10 @@ export const VoteCard = () => {
     if (!walletAddress || voteEvents.length === 0) {
       return false;
     }
-    const lower = walletAddress.toLowerCase();
     return voteEvents.some((event) =>
       event.delegatedVotes?.some(
-        (delegatedVote) => delegatedVote.voter.toLowerCase() === lower,
+        (delegatedVote) =>
+          delegatedVote.voter.toLowerCase() === walletAddress.toLowerCase(),
       ),
     );
   }, [walletAddress, voteEvents]);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { DashboardGrid } from '@vote/components/dashboard-grid';
 import { Layout } from 'shared/components';
 import { VoteMeta } from '@vote/meta';

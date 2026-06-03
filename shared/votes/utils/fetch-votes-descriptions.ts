@@ -7,8 +7,6 @@ import type {
 const descriptionsUrl = (chainId: number, votingAddress: Address) =>
   `/votes-events/${chainId}/${votingAddress}/descriptions.json`;
 
-const descriptionsPromises = new Map<string, Promise<VoteDescriptionsMap>>();
-
 const isValidEntry = (raw: unknown): raw is VoteDescriptionEntry => {
   if (raw === null || typeof raw !== 'object') {
     return false;
@@ -17,33 +15,23 @@ const isValidEntry = (raw: unknown): raw is VoteDescriptionEntry => {
   return typeof entry.metadata === 'string';
 };
 
-export const fetchVotesDescriptions = (
+export const fetchVotesDescriptions = async (
   chainId: number,
   votingAddress: Address,
 ): Promise<VoteDescriptionsMap> => {
-  const key = `${chainId}:${votingAddress}`;
-  const cached = descriptionsPromises.get(key);
-  if (cached) {
-    return cached;
+  const response = await fetch(descriptionsUrl(chainId, votingAddress));
+  if (!response.ok) {
+    return {};
   }
-  const promise = fetch(descriptionsUrl(chainId, votingAddress))
-    .then(async (response) => {
-      if (!response.ok) {
-        return {} as VoteDescriptionsMap;
-      }
-      const raw = (await response.json()) as unknown;
-      if (raw === null || typeof raw !== 'object') {
-        return {} as VoteDescriptionsMap;
-      }
-      const result: VoteDescriptionsMap = {};
-      for (const [voteId, entry] of Object.entries(raw)) {
-        if (isValidEntry(entry)) {
-          result[voteId] = entry;
-        }
-      }
-      return result;
-    })
-    .catch(() => ({}) as VoteDescriptionsMap);
-  descriptionsPromises.set(key, promise);
-  return promise;
+  const raw = (await response.json()) as unknown;
+  if (raw === null || typeof raw !== 'object') {
+    return {};
+  }
+  const descriptionsById: VoteDescriptionsMap = {};
+  for (const [voteId, entry] of Object.entries(raw)) {
+    if (isValidEntry(entry)) {
+      descriptionsById[voteId] = entry;
+    }
+  }
+  return descriptionsById;
 };

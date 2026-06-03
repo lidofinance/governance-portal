@@ -57,31 +57,43 @@ export const VoteMetaBar = ({
     text: string;
     variant: 'active' | 'success' | 'error' | 'warning';
   };
-  if (isActive) {
-    statusLabel = { text: 'Active', variant: 'active' };
-  } else if (status === VoteStatus.Rejected) {
-    statusLabel = isQuorumReached
-      ? { text: 'Rejected', variant: 'error' }
-      : { text: 'No quorum', variant: 'warning' };
-  } else {
-    statusLabel = { text: 'Passed', variant: 'success' };
+  switch (status) {
+    case VoteStatus.ActiveMain:
+    case VoteStatus.ActiveObjection:
+      statusLabel = { text: 'Active', variant: 'active' };
+      break;
+    case VoteStatus.Rejected:
+      statusLabel = isQuorumReached
+        ? { text: 'Rejected', variant: 'error' }
+        : { text: 'No quorum', variant: 'warning' };
+      break;
+    default:
+      statusLabel = { text: 'Passed', variant: 'success' };
   }
 
   let phase: {
     text: string;
     variant: 'default' | 'enacted' | 'enactable' | 'phase';
     iconNumber?: number;
-  } | null = null;
-  if (status === VoteStatus.ActiveMain) {
-    phase = { text: 'Main phase', variant: 'phase', iconNumber: 1 };
-  } else if (status === VoteStatus.ActiveObjection) {
-    phase = { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
-  } else if (dualGovernancePhase && status === VoteStatus.Executed) {
-    phase = { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 };
-  } else if (status === VoteStatus.Executed) {
-    phase = { text: 'Enacted', variant: 'enacted' };
-  } else if (status === VoteStatus.Passed || status === VoteStatus.Pending) {
-    phase = { text: 'Enactable', variant: 'enactable' };
+  } | null;
+  switch (status) {
+    case VoteStatus.ActiveMain:
+      phase = { text: 'Main phase', variant: 'phase', iconNumber: 1 };
+      break;
+    case VoteStatus.ActiveObjection:
+      phase = { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
+      break;
+    case VoteStatus.Executed:
+      phase = dualGovernancePhase
+        ? { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 }
+        : { text: 'Enacted', variant: 'enacted' };
+      break;
+    case VoteStatus.Passed:
+    case VoteStatus.Pending:
+      phase = { text: 'Enactable', variant: 'enactable' };
+      break;
+    default:
+      phase = null;
   }
 
   const activePhaseLabel =
