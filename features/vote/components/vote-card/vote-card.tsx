@@ -77,7 +77,9 @@ export const VoteCard = () => {
       return null;
     }
     const lower = walletAddress.toLowerCase();
-    return voteEvents.find((e) => e.voter.toLowerCase() === lower) ?? null;
+    return (
+      voteEvents.find((event) => event.voter.toLowerCase() === lower) ?? null
+    );
   }, [walletAddress, voteEvents]);
 
   const hasDelegateVote = useMemo(() => {
@@ -85,8 +87,10 @@ export const VoteCard = () => {
       return false;
     }
     const lower = walletAddress.toLowerCase();
-    return voteEvents.some((e) =>
-      e.delegatedVotes?.some((v) => v.voter.toLowerCase() === lower),
+    return voteEvents.some((event) =>
+      event.delegatedVotes?.some(
+        (delegatedVote) => delegatedVote.voter.toLowerCase() === lower,
+      ),
     );
   }, [walletAddress, voteEvents]);
 

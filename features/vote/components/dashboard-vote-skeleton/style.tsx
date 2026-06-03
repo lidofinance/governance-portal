@@ -5,5 +5,5 @@ export const SkeletonCard = styled(Bar)`
   height: 280px;
   width: 100%;
   border-radius: 20px;
-  background-color: #e6e9ed;
+  background-color: var(--lido-color-backgroundSecondary);
 `;

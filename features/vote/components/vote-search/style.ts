@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-import { InputNumber } from 'shared/components/input-number/input-number';
+import { Input } from '@lidofinance/lido-ui';
 import { devicesHeaderMedia } from 'styles/global';
 import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
-export const StyledInput = styled(InputNumber)`
+export const StyledInput = styled(Input)`
   width: 300px;
   & > span {
     padding: 13px 15px 13px 10px;

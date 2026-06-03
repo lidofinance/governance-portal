@@ -1,91 +1,42 @@
 import { Container } from '@lidofinance/lido-ui';
-import { useLidoSDK } from 'providers/lido-sdk';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { Voting } from 'shared/blockchain/contracts';
-import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
-import { useWatchContractEvent } from 'wagmi';
-import { aragonVotingAbi } from 'abi/generated';
 import { AttentionBanner } from 'shared/components/attention-banner';
-import { GridWrap, DashboardGridHeading, LoadMoreCard } from './style';
 import { Text } from 'shared/components/text';
+import {
+  useVoteDashboard,
+  VOTE_DASHBOARD_PAGE_SIZE,
+} from 'features/vote/hooks/use-vote-dashboard';
+import { GridWrap, DashboardGridHeading, LoadMoreCard } from './style';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 import { DashboardVote } from '../dashboard-vote';
 import { VoteSearch } from '../vote-search';
+import { VoteSearchSummary } from '../vote-search-summary';
 
-const PAGE_SIZE = 5;
-const PAGE_RANGE = Array.from({ length: PAGE_SIZE }, (_, i) => i);
+const PAGE_RANGE = Array.from(
+  { length: VOTE_DASHBOARD_PAGE_SIZE },
+  (_, index) => index,
+);
 
 export const DashboardGrid = () => {
-  const { chainId, rpcProvider } = useLidoSDK();
-  const votingContract = useReadContract(Voting);
-  const queryClient = useQueryClient();
+  const {
+    searchQuery,
+    setSearchQuery,
+    clearFilter,
+    debouncedQuery,
+    isFiltering,
+    isSettling,
+    filteredCount,
+    info,
+    votesList,
+    showSkeletons,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+    error,
+  } = useVoteDashboard();
 
-  const votingInfo = useQuery({
-    queryKey: ['vote-dashboard-general-info', chainId, votingContract.address],
-    queryFn: async () => {
-      const [votesLength, voteTime, objectionPhaseTime] = await Promise.all([
-        votingContract.readContract('votesLength'),
-        votingContract.readContract('voteTime'),
-        votingContract.readContract('objectionPhaseTime'),
-      ]);
-
-      return {
-        voteTime: Number(voteTime),
-        objectionPhaseTime: Number(objectionPhaseTime),
-        votesLength: Number(votesLength),
-      };
-    },
-    staleTime: Infinity,
-  });
-
-  const totalVotes = votingInfo.data?.votesLength ?? 0;
-
-  const votes = useInfiniteQuery({
-    queryKey: ['dashboard-votes', chainId, votingContract.address],
-    initialPageParam: 0,
-    queryFn: ({ pageParam }) =>
-      fetchAragonVotes({
-        votingContract,
-        chainId,
-        limit: PAGE_SIZE,
-        offset: pageParam,
-        client: rpcProvider,
-        onlyActive: false,
-      }),
-    getNextPageParam: (_lastPage, _allPages, lastPageParam) => {
-      const loaded = lastPageParam + PAGE_SIZE;
-      return totalVotes > 0 && loaded < totalVotes ? loaded : undefined;
-    },
-    staleTime: 10 * 60 * 1000,
-  });
-
-  const votesList = votes.data?.pages.flat() ?? [];
-
-  useWatchContractEvent({
-    address: votingContract.address,
-    abi: aragonVotingAbi,
-    eventName: 'StartVote',
-    onLogs: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ['dashboard-votes', chainId, votingContract.address],
-      });
-      void queryClient.invalidateQueries({
-        queryKey: [
-          'vote-dashboard-general-info',
-          chainId,
-          votingContract.address,
-        ],
-      });
-    },
-  });
-
-  if (votes.error || votingInfo.error) {
-    console.error('Error fetching votes:', votes.error || votingInfo.error);
+  if (error) {
+    console.error('Error fetching votes:', error);
     return (
       <Container as="main" size="tight">
         <AttentionBanner>Error fetching voting data</AttentionBanner>
@@ -93,20 +44,24 @@ export const DashboardGrid = () => {
     );
   }
 
-  const info = votingInfo.data;
-  const isInitialLoading = votes.isLoading || !info;
-
   return (
     <>
       <DashboardGridHeading>
         <Text size={26} weight={700}>
           All votes
         </Text>
-        <VoteSearch />
+        <VoteSearch value={searchQuery} onChange={setSearchQuery} />
       </DashboardGridHeading>
+      {isFiltering && !isSettling && (
+        <VoteSearchSummary
+          count={filteredCount}
+          query={debouncedQuery}
+          onClear={clearFilter}
+        />
+      )}
       <GridWrap>
-        {isInitialLoading
-          ? PAGE_RANGE.map((i) => <DashboardVoteSkeleton key={i} />)
+        {showSkeletons || !info
+          ? PAGE_RANGE.map((index) => <DashboardVoteSkeleton key={index} />)
           : votesList.map((voteData) => (
               <DashboardVote
                 key={voteData.id}
@@ -116,15 +71,15 @@ export const DashboardGrid = () => {
                 description={voteData.description}
                 voteTime={info.voteTime}
                 objectionPhaseTime={info.objectionPhaseTime}
-                onPass={votes.refetch}
+                onPass={refetch}
               />
             ))}
-        {!isInitialLoading && votes.hasNextPage && (
+        {!showSkeletons && hasNextPage && (
           <LoadMoreCard
-            onClick={() => votes.fetchNextPage()}
-            disabled={votes.isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
           >
-            {votes.isFetchingNextPage ? 'Loading…' : 'Load More'}
+            {isFetchingNextPage ? 'Loading…' : 'Load More'}
           </LoadMoreCard>
         )}
       </GridWrap>
