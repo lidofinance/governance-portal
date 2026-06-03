@@ -71,3 +71,13 @@ export type VoteEventsManifest = {
   lastId: number;
   chunks: { [chunkIndex: string]: string };
 };
+
+export type VoteDescriptionEntry = {
+  creator: Address | null;
+  description: string | null;
+  metadata: string;
+};
+
+export type VoteDescriptionsMap = {
+  [voteId: string]: VoteDescriptionEntry;
+};

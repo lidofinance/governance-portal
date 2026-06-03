@@ -14,10 +14,11 @@ type VotingContract = ReturnType<
 type FetchArgs = {
   votingContract: VotingContract;
   chainId: number;
-  limit: number;
+  limit?: number;
   offset?: number;
   client: PublicClient;
   onlyActive?: boolean;
+  voteIds?: number[];
 };
 
 type VoteResult = Vote & {
@@ -48,20 +49,31 @@ export const fetchAragonVotes = async ({
   offset = 0,
   client,
   onlyActive = true,
+  voteIds: requestedVoteIds,
 }: FetchArgs): Promise<VoteResult[]> => {
-  const votesLengthBn = await votingContract.readContract('votesLength');
-  const votesLength = Number(votesLengthBn);
+  let voteIds = requestedVoteIds;
 
-  if (votesLength === 0) {
-    return [];
+  if (!voteIds) {
+    if (limit === undefined) {
+      throw new Error('fetchAragonVotes requires either voteIds or limit');
+    }
+    const votesLength = Number(
+      await votingContract.readContract('votesLength'),
+    );
+    const startId = votesLength - 1 - offset;
+    const endId = Math.max(startId - limit + 1, 0);
+    voteIds =
+      votesLength === 0
+        ? []
+        : Array.from(
+            { length: startId - endId + 1 },
+            (_, index) => startId - index,
+          );
   }
 
-  const startId = votesLength - 1 - offset;
-  const endId = Math.max(startId - limit + 1, 0);
-  const voteIds = Array.from(
-    { length: startId - endId + 1 },
-    (_, i) => startId - i,
-  );
+  if (voteIds.length === 0) {
+    return [];
+  }
 
   const cachedVotesMap = await fetchCachedVotes({
     chainId,
@@ -86,9 +98,9 @@ export const fetchAragonVotes = async ({
     voteMap.set(vote.id, vote);
   }
 
-  const merged = voteIds
+  const orderedVotes = voteIds
     .map((id) => voteMap.get(id))
-    .filter((v): v is VoteResult => v !== undefined);
+    .filter((vote): vote is VoteResult => vote !== undefined);
 
-  return onlyActive ? merged.filter(isVoteActive) : merged;
+  return onlyActive ? orderedVotes.filter(isVoteActive) : orderedVotes;
 };

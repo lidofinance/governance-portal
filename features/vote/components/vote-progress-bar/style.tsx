@@ -10,7 +10,6 @@ const stripeMove = keyframes`
 `;
 
 const STRIPE_COLOR = '#ffffff26';
-const INACTIVE_FILL = '#7A8AA0';
 
 export const Wrap = styled.div`
   display: flex;
@@ -75,7 +74,7 @@ export const BarSlot = styled.div<{
         `
       : css`
           & ${ProgressBarOutline} ${ProgressBarFiller} {
-            background-color: ${INACTIVE_FILL};
+            background-color: var(--lido-color-textSecondary);
           }
         `}
 `;
