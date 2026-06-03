@@ -60,20 +60,32 @@ export const useVoteDashboard = () => {
       return [];
     }
     const needle = debouncedQuery.trim().toLowerCase();
-    const matchedIds = new Set<number>();
+
+    let exactId: number | null = null;
     if (/^\d+$/.test(needle)) {
       const numericId = Number(needle);
       if (numericId < totalVotes) {
-        matchedIds.add(numericId);
+        exactId = numericId;
       }
     }
+
+    const textMatchedIds = new Set<number>();
     for (const [voteId, entry] of Object.entries(descriptions)) {
+      const numericVoteId = Number(voteId);
+      if (numericVoteId === exactId) {
+        continue;
+      }
       const text = entry.description || entry.metadata || '';
       if (text.toLowerCase().includes(needle)) {
-        matchedIds.add(Number(voteId));
+        textMatchedIds.add(numericVoteId);
       }
     }
-    return Array.from(matchedIds).sort((first, second) => second - first);
+
+    const textMatches = Array.from(textMatchedIds).sort(
+      (first, second) => second - first,
+    );
+
+    return exactId !== null ? [exactId, ...textMatches] : textMatches;
   }, [isFiltering, descriptions, debouncedQuery, totalVotes]);
 
   const votes = useInfiniteQuery({
