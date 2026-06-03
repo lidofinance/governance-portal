@@ -1,8 +1,12 @@
 import styled from 'styled-components';
+import { InfoTooltip } from 'shared/components/info-tooltip';
 import { devicesHeaderMedia } from 'styles/global';
 
 export const CheckboxWrapper = styled.div`
   margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spaceMap.xs}px;
   p {
     color: var(--lido-color-textSecondary);
   }
@@ -42,5 +46,11 @@ export const StyledActions = styled.div`
 
   @media ${devicesHeaderMedia.mobile} {
     flex-direction: column;
+  }
+`;
+
+export const TooltipStyled = styled(InfoTooltip)`
+  p {
+    color: white;
   }
 `;

@@ -2,6 +2,7 @@ import Router from 'next/router';
 import { useEffect } from 'react';
 import { Container, Pagination } from '@lidofinance/lido-ui';
 import { VOTE_DASHBOARD_INDEX_PATH, voteDashboardPage } from 'constants/urls';
+import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
@@ -29,10 +30,11 @@ const handleChangePage = (nextPage: number) => {
   void Router.push(voteDashboardPage(nextPage));
 };
 
-const getPageKey = (chainId: CHAINS, page: number) => [
+const getPageKey = (chainId: CHAINS, page: number, useLocalCache: boolean) => [
   'dashboard-votes',
   chainId,
   page,
+  useLocalCache,
 ];
 
 type Props = {
@@ -41,6 +43,7 @@ type Props = {
 
 export const DashboardGrid = ({ currentPage }: Props) => {
   const { chainId, rpcProvider } = useLidoSDK();
+  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
@@ -63,7 +66,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
   });
 
   const votes = useQuery({
-    queryKey: getPageKey(chainId, currentPage),
+    queryKey: getPageKey(chainId, currentPage, useLocalCache),
     queryFn: () =>
       fetchAragonVotes({
         votingContract,
@@ -72,6 +75,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
         offset: (currentPage - 1) * PAGE_SIZE,
         client: rpcProvider,
         onlyActive: false,
+        useLocalCache,
       }),
     placeholderData: keepPreviousData,
     staleTime: currentPage === 1 ? 600 * 1000 : Infinity, // 10 minutes for the first page
@@ -98,7 +102,7 @@ export const DashboardGrid = ({ currentPage }: Props) => {
     eventName: 'StartVote',
     onLogs: () => {
       void queryClient.invalidateQueries({
-        queryKey: getPageKey(chainId, 1),
+        queryKey: getPageKey(chainId, 1, useLocalCache),
       });
     },
   });

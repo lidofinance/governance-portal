@@ -3,6 +3,7 @@ export type SettingsFormData = {
   etherscanApiKey: string;
   useBundledAbi: boolean;
   useTestContracts: boolean;
+  useLocalCache: boolean;
 };
 
 export type SettingsFormValues = {
@@ -10,4 +11,5 @@ export type SettingsFormValues = {
   etherscanApiKey: string;
   useBundledAbi: boolean;
   useTestContracts: boolean;
+  useLocalCache: boolean;
 };

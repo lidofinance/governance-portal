@@ -31,6 +31,7 @@ export const useProposals = ({
   const { userConfig } = useConfig();
   const isInTestMode =
     userConfig.savedUserConfig.useTestContracts && getIsTestnet(chainId);
+  const { useLocalCache } = userConfig.savedUserConfig;
   const emergencyProtectedTimelock = useReadContract(
     EmergencyProtectedTimelock,
   );
@@ -53,7 +54,13 @@ export const useProposals = ({
   });
 
   return useQuery({
-    queryKey: ['get-proposals', chainId, Number(proposalsCount), isInTestMode],
+    queryKey: [
+      'get-proposals',
+      chainId,
+      Number(proposalsCount),
+      isInTestMode,
+      useLocalCache,
+    ],
     staleTime: 30000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -73,6 +80,7 @@ export const useProposals = ({
             chainId,
             governanceAddresses,
             isInTestMode,
+            useLocalCache,
           });
         }
 
