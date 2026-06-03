@@ -58,7 +58,7 @@ export const AllowConsolidationPair = ({
 
   const {
     data: targetModuleOperatorsNames,
-    isLoading: isTargetNamesDataLoadin,
+    isLoading: isTargetNamesDataLoading,
   } = useNodeOperatorNames(modulesData?.targetModuleAddress, targetOperatorIds);
 
   const sourceOperatorName = sourceModuleOperatorsNames?.[0];
@@ -85,7 +85,7 @@ export const AllowConsolidationPair = ({
   if (
     isModulesDataLoading ||
     isSourceNamesDataLoading ||
-    isTargetNamesDataLoadin
+    isTargetNamesDataLoading
   ) {
     return <>Loading...</>;
   }

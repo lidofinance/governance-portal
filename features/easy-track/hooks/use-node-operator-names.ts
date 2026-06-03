@@ -37,7 +37,7 @@ export const useNodeOperatorNames = (
 
       const metaRegistryAddress = await readStakingModule('META_REGISTRY');
 
-      if (metaRegistryAddress !== null || metaRegistryAddress !== zeroAddress) {
+      if (metaRegistryAddress !== null && metaRegistryAddress !== zeroAddress) {
         const readMetaRegistry = getMetaRegistryReader(metaRegistryAddress);
 
         return Promise.all(
