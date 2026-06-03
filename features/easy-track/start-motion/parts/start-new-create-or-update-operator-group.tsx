@@ -332,8 +332,8 @@ export const formParts = createMotionFormPart({
       if (count === null) {
         return 'Failed to read operator groups count';
       }
-      if (groupId >= count) {
-        return `Group ID must be less than ${count.toString()} (use 0 to create a new group)`;
+      if (groupId > count) {
+        return `Group ID must be less than or equal to ${count.toString()}`;
       }
       return undefined;
     };
