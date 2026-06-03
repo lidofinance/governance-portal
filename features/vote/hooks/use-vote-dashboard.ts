@@ -49,7 +49,7 @@ export const useVoteDashboard = () => {
 
   const totalVotes = votingInfo.data?.votesLength ?? 0;
 
-  const { data: descriptions } = useQuery({
+  const { data: descriptions, isLoading: isDescriptionsLoading } = useQuery({
     queryKey: ['votes-descriptions', chainId, votingContract.address],
     queryFn: () => fetchVotesDescriptions(chainId, votingContract.address),
     staleTime: 60 * 1000,
@@ -145,9 +145,14 @@ export const useVoteDashboard = () => {
   });
 
   const info = votingInfo.data;
+  const loadedVotes = votes.data?.pages.flat() ?? [];
   const searchIntent = searchQuery.trim() !== '';
-  const isSearchLoading =
-    searchIntent && (isSettling || (filteredIds.length > 0 && votes.isLoading));
+  const isResolvingSearch =
+    isSettling || (searchIntent && isDescriptionsLoading);
+  const showSkeletons =
+    !info ||
+    isResolvingSearch ||
+    (loadedVotes.length === 0 && (votes.isFetching || votes.isLoading));
 
   return {
     searchQuery,
@@ -158,8 +163,8 @@ export const useVoteDashboard = () => {
     isSettling,
     filteredCount: filteredIds.length,
     info,
-    votesList: votes.data?.pages.flat() ?? [],
-    showSkeletons: votes.isLoading || !info || isSearchLoading,
+    votesList: loadedVotes,
+    showSkeletons,
     hasNextPage: votes.hasNextPage,
     isFetchingNextPage: votes.isFetchingNextPage,
     fetchNextPage: votes.fetchNextPage,
