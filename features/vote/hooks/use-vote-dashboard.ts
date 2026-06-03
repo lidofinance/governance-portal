@@ -52,7 +52,7 @@ export const useVoteDashboard = () => {
   const { data: descriptions } = useQuery({
     queryKey: ['votes-descriptions', chainId, votingContract.address],
     queryFn: () => fetchVotesDescriptions(chainId, votingContract.address),
-    staleTime: Infinity,
+    staleTime: 60 * 1000,
   });
 
   const filteredIds = useMemo(() => {

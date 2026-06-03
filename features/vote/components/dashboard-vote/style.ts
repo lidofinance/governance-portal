@@ -35,7 +35,7 @@ export const VoteDescriptionWrap = styled(Text).attrs({
     white-space: normal;
   }
 
-  div {
+  button > div {
     display: inline-flex;
     vertical-align: middle;
   }
