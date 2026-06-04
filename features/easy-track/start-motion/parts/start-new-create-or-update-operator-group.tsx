@@ -181,11 +181,7 @@ export const formParts = createMotionFormPart({
   }),
   Component: ({ fieldNames, submitAction }) => {
     const { chainId } = useLidoSDK();
-    const {
-      watch,
-      setValue,
-      formState: { touchedFields },
-    } = useFormContext();
+    const { watch, setValue } = useFormContext();
 
     const factoryContract = useReadContract(
       CreateOrUpdateOperatorGroupContract,
@@ -216,25 +212,6 @@ export const formParts = createMotionFormPart({
       return Number.isFinite(parsed) ? acc + parsed : acc;
     }, 0);
     const isSharesSumInvalid = sharesSum !== 0 && sharesSum !== MAX_BP;
-
-    const validateGroupIdSync = (value: string) => {
-      invariant(factoryData, 'Factory data must be loaded for validation');
-
-      const uintErr = validateUintValue(value);
-      if (uintErr) {
-        return uintErr;
-      }
-
-      if (value === ZERO_GROUP_ID && selectedAction !== 'create') {
-        return 'Value must be more than 0';
-      }
-
-      if (BigInt(value) > factoryData.groupsCount) {
-        return `Value must be less than or equal to ${factoryData.groupsCount.toString()}`;
-      }
-
-      return undefined;
-    };
 
     const {
       data: factoryData,
@@ -280,7 +257,7 @@ export const formParts = createMotionFormPart({
           : `#${allowedExternalModuleId}`;
 
         return {
-          groupsCount,
+          groupsCount: groupsCount ?? 0n,
           curatedModuleAddress,
           allowedExternalModuleId,
           curatedNodeOperatorsCount: Number(curatedNodeOperatorsCount),
@@ -291,18 +268,37 @@ export const formParts = createMotionFormPart({
     });
 
     // Mirror the factory-derived module id into form state so populateTx can
-    // read it from `formData` at submit time (it has no React context).
+    // read it from `formData` at submit time.
     useEffect(() => {
-      if (factoryData && !touchedFields[fieldNames.allowedExternalModuleId]) {
+      if (factoryData) {
         setValue(
           fieldNames.allowedExternalModuleId,
           factoryData.allowedExternalModuleId.toString(),
-          { shouldDirty: false, shouldTouch: true },
+          { shouldDirty: false },
         );
       }
-      // Trigger only when factoryData is loaded or changes
+      // Mirror once factoryData resolves; it never changes
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [factoryData]);
+
+    const validateGroupIdSync = (value: string) => {
+      invariant(factoryData, 'Factory data must be loaded for validation');
+
+      const uintErr = validateUintValue(value);
+      if (uintErr) {
+        return uintErr;
+      }
+
+      if (value === ZERO_GROUP_ID && selectedAction !== 'create') {
+        return 'Value must be more than 0';
+      }
+
+      if (BigInt(value) > factoryData.groupsCount) {
+        return `Value must be less than or equal to ${factoryData.groupsCount.toString()}`;
+      }
+
+      return undefined;
+    };
 
     const debouncedGroupIdValue = useDebounce(groupIdValue, 500);
     const { data: existingGroup } = useQuery({
@@ -370,7 +366,9 @@ export const formParts = createMotionFormPart({
 
     // Hydrate the form once group data arrives for the selected update/clear action.
     useEffect(() => {
-      if (selectedAction === 'create' || !existingGroup) return;
+      if (selectedAction === 'create' || !existingGroup) {
+        return;
+      }
       applyGroupDataToFields(selectedAction, existingGroup);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [existingGroup]);
@@ -438,6 +436,10 @@ export const formParts = createMotionFormPart({
       return <PageLoader />;
     }
 
+    if (!isTrustedCallerConnected) {
+      return <MessageBox>You should be connected as trusted caller</MessageBox>;
+    }
+
     if (factoryDataError || !factoryData) {
       return (
         <ErrorBox>
@@ -448,14 +450,18 @@ export const formParts = createMotionFormPart({
       );
     }
 
-    if (!isTrustedCallerConnected) {
-      return <MessageBox>You should be connected as trusted caller</MessageBox>;
-    }
-
     const isClearAction = selectedAction === 'clear';
+    const isRegistryEmpty = factoryData.groupsCount === 0n;
 
     return (
       <>
+        {isRegistryEmpty && (
+          <MotionInfoBox>
+            Note: group count is 0, so only <b>Create new group</b> action is
+            available.
+          </MotionInfoBox>
+        )}
+
         <Fieldset>
           <SelectHookForm
             label="Action"
@@ -463,11 +469,18 @@ export const formParts = createMotionFormPart({
             onChange={(value) => handleActionChange(value as Action)}
             rules={{ required: 'Field is required' }}
           >
-            {FORM_ACTIONS.map(({ value, label }) => (
-              <Option key={value} value={value}>
-                {label}
-              </Option>
-            ))}
+            {FORM_ACTIONS.map(({ value, label }) => {
+              // Limit to create only when groupCount is 0
+              if (isRegistryEmpty && value !== 'create') {
+                return null;
+              }
+
+              return (
+                <Option key={value} value={value}>
+                  {label}
+                </Option>
+              );
+            })}
           </SelectHookForm>
         </Fieldset>
 
@@ -483,19 +496,30 @@ export const formParts = createMotionFormPart({
           </Fieldset>
         )}
 
-        <Fieldset>
-          <ValidatedInputHookForm
-            fieldName={fieldNames.name}
-            label="Group name"
-            validateSync={isClearAction ? undefined : validateNameSync}
-            disabled={isClearAction}
-            rules={
-              isClearAction ? undefined : { required: 'Field is required' }
-            }
-          />
-        </Fieldset>
+        {!isClearAction && (
+          <Fieldset>
+            <ValidatedInputHookForm
+              fieldName={fieldNames.name}
+              label="Group name"
+              validateSync={validateNameSync}
+              rules={{ required: 'Field is required' }}
+            />
+          </Fieldset>
+        )}
 
-        {selectedAction !== 'clear' && (
+        {isClearAction && existingGroup && (
+          <MotionInfoBox>
+            Clearing group{' '}
+            <b>
+              {existingGroup.name
+                ? `${existingGroup.name} (ID: #${debouncedGroupIdValue})`
+                : `#${debouncedGroupIdValue}`}
+            </b>
+            . Its name and all operators will be removed.
+          </MotionInfoBox>
+        )}
+
+        {!isClearAction && (
           <>
             {subFields.fields.map((item, fieldIndex) => (
               <Fragment key={item.id}>
