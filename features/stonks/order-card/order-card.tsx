@@ -15,8 +15,7 @@ import {
 import { CowOrder, OrderData, OrderStatus } from '@stonks/types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getCowOrderUrl } from '@stonks/utils/get-cow-order-url';
-// TODO: move to shared components
-import { FormattedDate } from '@vote/components/formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 import { getEtherscanLink } from 'utils/etherscan';
 import { formatToken } from 'shared/blockchain/utils';
 import { Text } from 'shared/components/text';

@@ -28,7 +28,7 @@ import { useAccount } from 'wagmi';
 import { MotionCardDetailedCancelButton } from '../motion-card-detailed-cancel-button';
 import { MotionDescription } from '../motion-card-description';
 import { MotionEvmScript } from '../motion-evm-script';
-import { FormattedDate } from '../../vote/components/formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 import { MotionDetailedTime } from '../motion-card-detailed-time';
 import { getMotionDisplayStatus } from '../utils/get-motion-status';
 import { useMotionTimeCountdown } from '../hooks/use-motion-time-countdown';

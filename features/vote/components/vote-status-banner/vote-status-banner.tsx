@@ -10,8 +10,7 @@ import {
 } from './style';
 import { VoteDetailsCountdown } from '../vote-details-countdown';
 import { convertStatusToStyledVariant, VoteStatusFontSize } from './types';
-// TODO: move to shared
-import { ProposalStatus } from '@dg/proposals/types';
+import { ProposalStatus } from 'shared/types';
 import { VoteStatus } from 'shared/votes/types';
 
 import {
@@ -19,7 +18,7 @@ import {
   VoteDoneIcon,
   VoteFailIcon,
 } from 'shared/components/icons';
-import { FormattedDate } from '../formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 
 type Props = {
   executedAt: bigint | undefined;

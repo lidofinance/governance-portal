@@ -11,8 +11,7 @@ import {
   trimAddress,
 } from '@lidofinance/lido-ui';
 import { BlockStyled, CalldataDecoderResultStyled } from './style';
-import { ScriptBody } from '@dg/evm-script-parsed/script-body';
-import { Script } from '@dg/evm-script-parsed';
+import { Script, ScriptBody } from 'shared/components/evm-script-parsed';
 import { DecoderContext } from 'shared/blockchain/utils/abi';
 import { Hex } from 'viem';
 

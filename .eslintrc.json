@@ -42,6 +42,48 @@
       {
         "checksVoidReturn": false
       }
+    ],
+    "import/no-restricted-paths": [
+      "error",
+      {
+        "zones": [
+          {
+            "target": "./features/calldata-decoder",
+            "from": "./features",
+            "except": ["./calldata-decoder"]
+          },
+          {
+            "target": "./features/committee",
+            "from": "./features",
+            "except": ["./committee"]
+          },
+          {
+            "target": "./features/dual-governance",
+            "from": "./features",
+            "except": ["./dual-governance"]
+          },
+          {
+            "target": "./features/easy-track",
+            "from": "./features",
+            "except": ["./easy-track"]
+          },
+          {
+            "target": "./features/settings",
+            "from": "./features",
+            "except": ["./settings"]
+          },
+          {
+            "target": "./features/stonks",
+            "from": "./features",
+            "except": ["./stonks"]
+          },
+          {
+            "target": "./features/vote",
+            "from": "./features",
+            "except": ["./vote"]
+          }
+        ]
+      }
     ]
   },
   "settings": {

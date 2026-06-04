@@ -9,7 +9,7 @@ import {
   ProgressPeriodWrapper,
 } from './style';
 
-import { FormattedDate } from '../../vote/components/formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 
 type MotionLimitProgressProps = {
   spentAmount: string;

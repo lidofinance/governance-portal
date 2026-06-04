@@ -1,7 +1,7 @@
 import { Wrap, Title, Value, Subvalue } from './style';
 import { MotionDisplayStatus, MotionStatus, RawMotionSubgraph } from '../types';
 import { MotionTimeData } from '../hooks/use-motion-time-countdown';
-import { FormattedDate } from '../../vote/components/formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 
 type Props = {
   motion: RawMotionSubgraph;
