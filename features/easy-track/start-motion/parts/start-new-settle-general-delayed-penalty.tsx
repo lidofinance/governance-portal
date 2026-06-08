@@ -277,7 +277,7 @@ export const formParts = ({
                       fieldName={maxAmountFieldName}
                       label={
                         lockedBond != null
-                          ? `Max amount to settle (current bond: ${formatEth(lockedBond)})`
+                          ? `Max amount to settle (current locked bond: ${formatEth(lockedBond)})`
                           : 'Max amount to settle'
                       }
                       validateSync={(value) => {
