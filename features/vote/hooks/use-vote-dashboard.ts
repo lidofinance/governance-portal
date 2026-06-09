@@ -100,28 +100,21 @@ export const useVoteDashboard = () => {
     ],
     initialPageParam: 0,
     queryFn: ({ pageParam }) => {
-      if (isFiltering) {
-        const pageVoteIds = filteredIds.slice(
-          pageParam * PAGE_SIZE,
-          (pageParam + 1) * PAGE_SIZE,
-        );
-        return fetchAragonVotes({
-          votingContract,
-          chainId,
-          client: rpcProvider,
-          onlyActive: false,
-          voteIds: pageVoteIds,
-          useLocalCache,
-        });
-      }
+      const pageParams = isFiltering
+        ? {
+            voteIds: filteredIds.slice(
+              pageParam * PAGE_SIZE,
+              (pageParam + 1) * PAGE_SIZE,
+            ),
+          }
+        : { limit: PAGE_SIZE, offset: pageParam * PAGE_SIZE };
       return fetchAragonVotes({
         votingContract,
         chainId,
-        limit: PAGE_SIZE,
-        offset: pageParam * PAGE_SIZE,
         client: rpcProvider,
         onlyActive: false,
         useLocalCache,
+        ...pageParams,
       });
     },
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {

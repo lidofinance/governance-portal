@@ -1,3 +1,4 @@
+import { pluralize } from 'utils/pluralize';
 import { SearchSummary, SearchSummaryQuery, ClearFilterButton } from './style';
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 export const VoteSearchSummary = ({ count, query, onClear }: Props) => (
   <SearchSummary>
     <span>
-      {count} {count === 1 ? 'result' : 'results'} found for{' '}
+      {pluralize(count, 'result')} found for{' '}
       <SearchSummaryQuery>“{query}”</SearchSummaryQuery>
     </span>
     <ClearFilterButton onClick={onClear}>Clear filter</ClearFilterButton>
