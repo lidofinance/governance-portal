@@ -33,23 +33,21 @@ export const useVoteDashboard = () => {
   const debouncedQuery = useDebounce(searchQuery, 400);
 
   useEffect(() => {
-    if (!router.isReady || syncedFromUrl) {
+    if (!router.isReady) {
       return;
     }
     const urlQuery = typeof router.query.q === 'string' ? router.query.q : '';
-    if (urlQuery) {
-      setSearchQuery(urlQuery);
-    }
+    setSearchQuery(urlQuery);
     setSyncedFromUrl(true);
-  }, [router.isReady, router.query.q, syncedFromUrl]);
+  }, [router.isReady, router.query.q]);
 
   useEffect(() => {
-    if (!syncedFromUrl) {
+    if (!router.isReady || !syncedFromUrl || searchQuery !== debouncedQuery) {
       return;
     }
     const currentParam =
       typeof router.query.q === 'string' ? router.query.q : '';
-    const nextParam = searchQuery.trim();
+    const nextParam = debouncedQuery.trim();
     if (currentParam === nextParam) {
       return;
     }
@@ -60,7 +58,7 @@ export const useVoteDashboard = () => {
       delete nextQuery.q;
     }
     void router.replace({ query: nextQuery }, undefined, { shallow: true });
-  }, [searchQuery, router, syncedFromUrl]);
+  }, [searchQuery, debouncedQuery, router, syncedFromUrl]);
 
   const isFiltering = debouncedQuery.trim() !== '';
   const isSettling = searchQuery !== debouncedQuery;
