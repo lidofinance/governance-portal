@@ -28,6 +28,7 @@ type Props = {
   onPass: () => void;
   executeEvent: EventExecuteVote | null;
   description: string | null;
+  returnQuery: string;
 };
 
 export const DashboardVote = ({
@@ -38,6 +39,7 @@ export const DashboardVote = ({
   onPass,
   executeEvent,
   description,
+  returnQuery,
 }: Props) => {
   const { startDate } = getVoteDetailsFormatted(vote);
 
@@ -100,7 +102,13 @@ export const DashboardVote = ({
     vote.state.status === VoteStatus.Executed;
 
   return (
-    <Link passHref href={votePage(vote.id)}>
+    <Link
+      passHref
+      href={{
+        pathname: votePage(vote.id),
+        query: returnQuery.trim() ? { q: returnQuery.trim() } : undefined,
+      }}
+    >
       <VoteDashboardCard data-testid={`voteCardPreview-${vote.id}`}>
         <VoteSummary>
           <VoteMetaBar

@@ -15,12 +15,17 @@ export default function VotePage() {
     return null;
   }
 
+  const returnQuery = typeof query.q === 'string' ? query.q : '';
+  const backHref = returnQuery
+    ? `${VOTE_DASHBOARD_INDEX_PATH}?q=${encodeURIComponent(returnQuery)}`
+    : VOTE_DASHBOARD_INDEX_PATH;
+
   return (
     <>
       <VoteMeta />
       <Layout containerSize="full" metaTitle={`Vote #${id}`}>
         <VotePageWrap>
-          <BackButton label="votes" href={VOTE_DASHBOARD_INDEX_PATH} />
+          <BackButton label="votes" href={backHref} />
         </VotePageWrap>
         <VoteProvider voteId={id}>
           <VoteCard />

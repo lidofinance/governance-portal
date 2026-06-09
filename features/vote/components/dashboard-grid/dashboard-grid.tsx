@@ -72,6 +72,7 @@ export const DashboardGrid = () => {
                 voteTime={info.voteTime}
                 objectionPhaseTime={info.objectionPhaseTime}
                 onPass={refetch}
+                returnQuery={searchQuery}
               />
             ))}
         {!showSkeletons && hasNextPage && (
