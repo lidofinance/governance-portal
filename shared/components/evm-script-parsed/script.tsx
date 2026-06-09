@@ -90,14 +90,19 @@ export const Script = ({
   const handleCopy = useCallback(() => {
     const tab = tabs[activeTab];
     let text = '';
-    if (tab === 'JSON') {
-      text = JSON.stringify(sanitizedCalls, null, 2);
-    } else if (tab === 'Raw') {
-      text = rawScript ?? '';
-    } else if (tab === 'Items') {
-      text = metadata ?? '';
-    } else if (tab === 'Parsed') {
-      text = bodyRef.current?.innerText ?? '';
+    switch (tab) {
+      case 'JSON':
+        text = JSON.stringify(sanitizedCalls, null, 2);
+        break;
+      case 'Raw':
+        text = rawScript ?? '';
+        break;
+      case 'Items':
+        text = metadata ?? '';
+        break;
+      case 'Parsed':
+        text = bodyRef.current?.innerText ?? '';
+        break;
     }
     if (!text) {
       return;

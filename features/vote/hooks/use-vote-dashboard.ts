@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { useWatchContractEvent } from 'wagmi';
 import { aragonVotingAbi } from 'abi/generated';
+import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
@@ -21,6 +22,7 @@ export const VOTE_DASHBOARD_PAGE_SIZE = PAGE_SIZE;
 
 export const useVoteDashboard = () => {
   const { chainId, rpcProvider } = useLidoSDK();
+  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
@@ -94,29 +96,25 @@ export const useVoteDashboard = () => {
       chainId,
       votingContract.address,
       isFiltering ? debouncedQuery : 'all',
+      useLocalCache,
     ],
     initialPageParam: 0,
     queryFn: ({ pageParam }) => {
-      if (isFiltering) {
-        const pageVoteIds = filteredIds.slice(
-          pageParam * PAGE_SIZE,
-          (pageParam + 1) * PAGE_SIZE,
-        );
-        return fetchAragonVotes({
-          votingContract,
-          chainId,
-          client: rpcProvider,
-          onlyActive: false,
-          voteIds: pageVoteIds,
-        });
-      }
+      const pageParams = isFiltering
+        ? {
+            voteIds: filteredIds.slice(
+              pageParam * PAGE_SIZE,
+              (pageParam + 1) * PAGE_SIZE,
+            ),
+          }
+        : { limit: PAGE_SIZE, offset: pageParam * PAGE_SIZE };
       return fetchAragonVotes({
         votingContract,
         chainId,
-        limit: PAGE_SIZE,
-        offset: pageParam * PAGE_SIZE,
         client: rpcProvider,
         onlyActive: false,
+        useLocalCache,
+        ...pageParams,
       });
     },
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
