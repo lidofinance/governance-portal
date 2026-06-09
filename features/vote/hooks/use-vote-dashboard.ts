@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   useInfiniteQuery,
   useQuery,
@@ -26,8 +27,41 @@ export const useVoteDashboard = () => {
   const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [syncedFromUrl, setSyncedFromUrl] = useState(false);
   const debouncedQuery = useDebounce(searchQuery, 400);
+
+  useEffect(() => {
+    if (!router.isReady || syncedFromUrl) {
+      return;
+    }
+    const urlQuery = typeof router.query.q === 'string' ? router.query.q : '';
+    if (urlQuery) {
+      setSearchQuery(urlQuery);
+    }
+    setSyncedFromUrl(true);
+  }, [router.isReady, router.query.q, syncedFromUrl]);
+
+  useEffect(() => {
+    if (!syncedFromUrl) {
+      return;
+    }
+    const currentParam =
+      typeof router.query.q === 'string' ? router.query.q : '';
+    const nextParam = searchQuery.trim();
+    if (currentParam === nextParam) {
+      return;
+    }
+    const nextQuery = { ...router.query };
+    if (nextParam) {
+      nextQuery.q = nextParam;
+    } else {
+      delete nextQuery.q;
+    }
+    void router.replace({ query: nextQuery }, undefined, { shallow: true });
+  }, [searchQuery, router, syncedFromUrl]);
+
   const isFiltering = debouncedQuery.trim() !== '';
   const isSettling = searchQuery !== debouncedQuery;
 
