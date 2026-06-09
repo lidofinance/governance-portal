@@ -11,7 +11,6 @@ export const VoteDetailsList = () => {
 
   const creator = eventStart?.args.creator;
   const startTxHash = eventStart?.event.transactionHash;
-  const executeBlock = eventExecute?.event.blockNumber;
   const executeTxHash = eventExecute?.event.transactionHash;
 
   return (
@@ -37,24 +36,22 @@ export const VoteDetailsList = () => {
           <FormattedDate date={Number(vote.startDate)} format="MMM D, HH:mm" />
         </Value>
       </Row>
-      <Row>
-        <Label>Snapshot block</Label>
-        <Value>
-          {startTxHash ? (
-            <Link href={getEtherscanTxLink(chainId, startTxHash)}>
-              #{vote.snapshotBlock.toString()}
-            </Link>
-          ) : (
-            `#${vote.snapshotBlock.toString()}`
-          )}
-        </Value>
-      </Row>
-      {executeBlock != null && executeTxHash && (
+      {startTxHash && (
         <Row>
-          <Label>Enacted on block</Label>
+          <Label>Start TX</Label>
+          <Value>
+            <Link href={getEtherscanTxLink(chainId, startTxHash)}>
+              {trimAddress(startTxHash, 4)}
+            </Link>
+          </Value>
+        </Row>
+      )}
+      {executeTxHash && (
+        <Row>
+          <Label>Enact TX</Label>
           <Value>
             <Link href={getEtherscanTxLink(chainId, executeTxHash)}>
-              #{executeBlock.toString()}
+              {trimAddress(executeTxHash, 4)}
             </Link>
           </Value>
         </Row>
