@@ -30,6 +30,16 @@ type Args = {
   truncateTitle?: boolean;
 };
 
+const HEADING_LINE = /^#{1,6}[ \t]+(.+?)[ \t]*(?:\r?\n|$)/;
+
+const formatTitle = (raw: string, truncateTitle: boolean): string | null => {
+  const cleanedTitle = removeMD(raw).trim();
+  if (!cleanedTitle) {
+    return null;
+  }
+  return truncateTitle ? truncate(cleanedTitle) : cleanedTitle;
+};
+
 export const splitVoteDescription = ({
   description,
   metadata,
@@ -37,6 +47,14 @@ export const splitVoteDescription = ({
 }: Args): Split => {
   const cached = description ? trimStart(description) : '';
   if (cached.length > 0) {
+    const heading = cached.match(HEADING_LINE);
+    if (heading) {
+      const body = cached.slice(heading[0].length).trimStart();
+      return {
+        title: formatTitle(heading[1], truncateTitle),
+        body: body.length > 0 ? body : null,
+      };
+    }
     if (/^1\.\s/.test(cached)) {
       return { title: null, body: cached };
     }
@@ -63,17 +81,9 @@ const splitText = (text: string, truncateTitle: boolean): Split => {
     lineEnd !== -1 ? lineEnd : Infinity,
   );
 
-  const formatTitle = (raw: string): string | null => {
-    const cleaned = removeMD(raw).trim();
-    if (!cleaned) {
-      return null;
-    }
-    return truncateTitle ? truncate(cleaned) : cleaned;
-  };
-
   if (cutIndex === Infinity) {
     if (truncateTitle) {
-      return { title: formatTitle(text), body: null };
+      return { title: formatTitle(text, truncateTitle), body: null };
     }
     return { title: null, body: text };
   }
@@ -82,7 +92,7 @@ const splitText = (text: string, truncateTitle: boolean): Split => {
   const bodyRaw = text.slice(cutIndex).trim();
 
   return {
-    title: formatTitle(titleRaw),
+    title: formatTitle(titleRaw, truncateTitle),
     body: bodyRaw.length > 0 ? bodyRaw : null,
   };
 };
