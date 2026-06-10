@@ -4,7 +4,7 @@ import type {
   VoteDescriptionsMap,
 } from 'shared/votes/cache/types';
 
-const descriptionsUrl = (chainId: number, votingAddress: Address) =>
+const getDescriptionsUrl = (chainId: number, votingAddress: Address) =>
   `/votes-events/${chainId}/${votingAddress}/descriptions.json`;
 
 const isValidEntry = (raw: unknown): raw is VoteDescriptionEntry => {
@@ -19,7 +19,7 @@ export const fetchVotesDescriptions = async (
   chainId: number,
   votingAddress: Address,
 ): Promise<VoteDescriptionsMap> => {
-  const response = await fetch(descriptionsUrl(chainId, votingAddress));
+  const response = await fetch(getDescriptionsUrl(chainId, votingAddress));
   if (!response.ok) {
     return {};
   }

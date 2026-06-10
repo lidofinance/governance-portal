@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   useInfiniteQuery,
   useQuery,
@@ -26,8 +27,39 @@ export const useVoteDashboard = () => {
   const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [syncedFromUrl, setSyncedFromUrl] = useState(false);
   const debouncedQuery = useDebounce(searchQuery, 400);
+
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+    const urlQuery = typeof router.query.q === 'string' ? router.query.q : '';
+    setSearchQuery(urlQuery);
+    setSyncedFromUrl(true);
+  }, [router.isReady, router.query.q]);
+
+  useEffect(() => {
+    if (!router.isReady || !syncedFromUrl || searchQuery !== debouncedQuery) {
+      return;
+    }
+    const currentParam =
+      typeof router.query.q === 'string' ? router.query.q : '';
+    const nextParam = debouncedQuery.trim();
+    if (currentParam === nextParam) {
+      return;
+    }
+    const nextQuery = { ...router.query };
+    if (nextParam) {
+      nextQuery.q = nextParam;
+    } else {
+      delete nextQuery.q;
+    }
+    void router.replace({ query: nextQuery }, undefined, { shallow: true });
+  }, [searchQuery, debouncedQuery, router, syncedFromUrl]);
+
   const isFiltering = debouncedQuery.trim() !== '';
   const isSettling = searchQuery !== debouncedQuery;
 
@@ -100,28 +132,21 @@ export const useVoteDashboard = () => {
     ],
     initialPageParam: 0,
     queryFn: ({ pageParam }) => {
-      if (isFiltering) {
-        const pageVoteIds = filteredIds.slice(
-          pageParam * PAGE_SIZE,
-          (pageParam + 1) * PAGE_SIZE,
-        );
-        return fetchAragonVotes({
-          votingContract,
-          chainId,
-          client: rpcProvider,
-          onlyActive: false,
-          voteIds: pageVoteIds,
-          useLocalCache,
-        });
-      }
+      const pageParams = isFiltering
+        ? {
+            voteIds: filteredIds.slice(
+              pageParam * PAGE_SIZE,
+              (pageParam + 1) * PAGE_SIZE,
+            ),
+          }
+        : { limit: PAGE_SIZE, offset: pageParam * PAGE_SIZE };
       return fetchAragonVotes({
         votingContract,
         chainId,
-        limit: PAGE_SIZE,
-        offset: pageParam * PAGE_SIZE,
         client: rpcProvider,
         onlyActive: false,
         useLocalCache,
+        ...pageParams,
       });
     },
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {

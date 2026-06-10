@@ -50,7 +50,11 @@ export const DashboardGrid = () => {
         <Text size={26} weight={700}>
           All votes
         </Text>
-        <VoteSearch value={searchQuery} onChange={setSearchQuery} />
+        <VoteSearch
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onClear={clearFilter}
+        />
       </DashboardGridHeading>
       {isFiltering && !isSettling && (
         <VoteSearchSummary
@@ -72,6 +76,7 @@ export const DashboardGrid = () => {
                 voteTime={info.voteTime}
                 objectionPhaseTime={info.objectionPhaseTime}
                 onPass={refetch}
+                returnQuery={searchQuery}
               />
             ))}
         {!showSkeletons && hasNextPage && (

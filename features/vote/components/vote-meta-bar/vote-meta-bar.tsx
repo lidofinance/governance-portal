@@ -35,6 +35,55 @@ type Props = {
 const PHASE_TOOLTIP_TEXT =
   'All proposals go through three stages before implementation: Main phase → Objection phase → Dual Governance phase.';
 
+type StatusLabel = {
+  text: string;
+  variant: 'active' | 'success' | 'error' | 'warning';
+};
+
+type PhaseLabel = {
+  text: string;
+  variant: 'default' | 'enacted' | 'enactable' | 'phase';
+  iconNumber?: number;
+} | null;
+
+const getStatusLabel = (
+  status: VoteStatus,
+  isQuorumReached: boolean,
+): StatusLabel => {
+  switch (status) {
+    case VoteStatus.ActiveMain:
+    case VoteStatus.ActiveObjection:
+      return { text: 'Active', variant: 'active' };
+    case VoteStatus.Rejected:
+      return isQuorumReached
+        ? { text: 'Rejected', variant: 'error' }
+        : { text: 'No quorum', variant: 'warning' };
+    default:
+      return { text: 'Passed', variant: 'success' };
+  }
+};
+
+const getPhaseLabel = (
+  status: VoteStatus,
+  dualGovernancePhase?: boolean,
+): PhaseLabel => {
+  switch (status) {
+    case VoteStatus.ActiveMain:
+      return { text: 'Main phase', variant: 'phase', iconNumber: 1 };
+    case VoteStatus.ActiveObjection:
+      return { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
+    case VoteStatus.Executed:
+      return dualGovernancePhase
+        ? { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 }
+        : { text: 'Enacted', variant: 'enacted' };
+    case VoteStatus.Passed:
+    case VoteStatus.Pending:
+      return { text: 'Enactable', variant: 'enactable' };
+    default:
+      return null;
+  }
+};
+
 export const VoteMetaBar = ({
   voteId,
   status,
@@ -53,48 +102,8 @@ export const VoteMetaBar = ({
   const isActive =
     status === VoteStatus.ActiveMain || status === VoteStatus.ActiveObjection;
 
-  let statusLabel: {
-    text: string;
-    variant: 'active' | 'success' | 'error' | 'warning';
-  };
-  switch (status) {
-    case VoteStatus.ActiveMain:
-    case VoteStatus.ActiveObjection:
-      statusLabel = { text: 'Active', variant: 'active' };
-      break;
-    case VoteStatus.Rejected:
-      statusLabel = isQuorumReached
-        ? { text: 'Rejected', variant: 'error' }
-        : { text: 'No quorum', variant: 'warning' };
-      break;
-    default:
-      statusLabel = { text: 'Passed', variant: 'success' };
-  }
-
-  let phase: {
-    text: string;
-    variant: 'default' | 'enacted' | 'enactable' | 'phase';
-    iconNumber?: number;
-  } | null;
-  switch (status) {
-    case VoteStatus.ActiveMain:
-      phase = { text: 'Main phase', variant: 'phase', iconNumber: 1 };
-      break;
-    case VoteStatus.ActiveObjection:
-      phase = { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
-      break;
-    case VoteStatus.Executed:
-      phase = dualGovernancePhase
-        ? { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 }
-        : { text: 'Enacted', variant: 'enacted' };
-      break;
-    case VoteStatus.Passed:
-    case VoteStatus.Pending:
-      phase = { text: 'Enactable', variant: 'enactable' };
-      break;
-    default:
-      phase = null;
-  }
+  const statusLabel = getStatusLabel(status, isQuorumReached);
+  const phase = getPhaseLabel(status, dualGovernancePhase);
 
   const activePhaseLabel =
     status === VoteStatus.ActiveMain
