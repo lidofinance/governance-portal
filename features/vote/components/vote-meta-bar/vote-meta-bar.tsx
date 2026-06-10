@@ -2,7 +2,6 @@ import { Tooltip } from '@lidofinance/lido-ui';
 import { VoteStatus } from 'shared/votes/types';
 import { VoteDoneIcon, VoteFailIcon, InfoIcon } from 'shared/components/icons';
 import { VoteDetailsCountdown } from '@vote/components/vote-details-countdown';
-import { FormattedDate } from '@vote/components/formatted-date';
 import {
   MetaWrap,
   BadgeGroup,
@@ -19,6 +18,7 @@ import {
   TooltipText,
   TooltipIconWrap,
 } from './style';
+import { FormattedDate } from 'shared/components/formatted-date';
 
 type Props = {
   voteId: number;

@@ -15,6 +15,7 @@ import { CommitteeProposalSignersInfo } from '../signers-info/committee-proposal
 import { TiebreakerQuorum } from '../tiebreaker-quorum';
 import { BaseCall } from 'utils/decode-evm-script-calls';
 import { useDecodedCalls } from 'shared/hooks';
+// eslint-disable-next-line import/no-restricted-paths
 import { useProposalEvents } from '@dg/hooks/use-proposal-events';
 
 type Props = {

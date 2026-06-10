@@ -128,10 +128,15 @@ export const useVoteDashboard = () => {
       chainId,
       votingContract.address,
       isFiltering ? debouncedQuery : 'all',
+      votingInfo.data?.voteTime,
       useLocalCache,
     ],
     initialPageParam: 0,
     queryFn: ({ pageParam }) => {
+      const voteTime = votingInfo.data?.voteTime;
+      if (voteTime === undefined) {
+        return [];
+      }
       const pageParams = isFiltering
         ? {
             voteIds: filteredIds.slice(
@@ -145,6 +150,7 @@ export const useVoteDashboard = () => {
         chainId,
         client: rpcProvider,
         onlyActive: false,
+        voteTime,
         useLocalCache,
         ...pageParams,
       });
@@ -156,7 +162,9 @@ export const useVoteDashboard = () => {
       }
       return lastPage.length === PAGE_SIZE ? lastPageParam + 1 : undefined;
     },
-    enabled: !isFiltering || filteredIds.length > 0,
+    enabled:
+      (!isFiltering || filteredIds.length > 0) &&
+      votingInfo.data?.voteTime !== undefined,
     staleTime: 10 * 60 * 1000,
   });
 

@@ -39,7 +39,7 @@ import { VoteVetoSupport } from '../vote-veto-support';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { useEnactVoteAction } from '@vote/write-actions/enact-vote/action';
 import { useVoteAction } from '@vote/write-actions/vote/action';
-import { ProposalStatus } from '@dg/proposals/types';
+import { ProposalStatus } from 'shared/types';
 import { PROPOSALS_PATH } from 'constants/urls';
 import { formatBalance } from 'utils/format-balance';
 import { KnownToken } from 'shared/blockchain/tokens';
@@ -48,7 +48,6 @@ import { SkeletonBar } from 'shared/components/skeleton-bar';
 export const VoteCard = () => {
   const {
     vote,
-    canExecute,
     eventStart,
     voteTime,
     objectionPhaseTime,
@@ -222,7 +221,7 @@ export const VoteCard = () => {
               </DgButton>
             </VoteActionsWrap>
           )}
-          {canExecute && (
+          {vote.state.status === VoteStatus.Pending && (
             <EnactButtonWrap>
               <Button
                 fullwidth

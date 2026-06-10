@@ -19,23 +19,24 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
     queryKey: ['active-votes', limit, chainId, useLocalCache],
     queryFn: async () => {
       try {
+        const [voteTime, objectionPhaseTime] = await Promise.all([
+          votingContract.readContract('voteTime'),
+          votingContract.readContract('objectionPhaseTime'),
+        ]);
+
         const votes = await fetchAragonVotes({
           votingContract,
           chainId,
           limit,
           client: rpcProvider,
           onlyActive: shouldGetActive,
+          voteTime: Number(voteTime),
           useLocalCache,
         });
 
         if (votes.length === 0) {
           return { votes: [] };
         }
-
-        const [voteTime, objectionPhaseTime] = await Promise.all([
-          votingContract.readContract('voteTime'),
-          votingContract.readContract('objectionPhaseTime'),
-        ]);
 
         const parsedVotes = votes.map((vote) => {
           return {

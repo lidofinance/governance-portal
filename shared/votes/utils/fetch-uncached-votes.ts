@@ -6,6 +6,7 @@ import { parseVote } from './parse-vote';
 import { EventStartVote } from './get-event-start-vote';
 import { getEventsStartVote } from './get-events-start-vote';
 import { getEventsExecuteVote } from './get-events-execute-vote';
+import { estimateExecuteVoteBlockRange } from './estimate-execute-vote-block-range';
 
 type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
@@ -22,6 +23,7 @@ type Args = {
   votingContract: VotingContract;
   client: PublicClient;
   voteIds: number[];
+  voteTime: number;
   withExecuteEvent: boolean;
 };
 
@@ -35,6 +37,7 @@ export const fetchUncachedVotes = async ({
   votingContract,
   client,
   voteIds,
+  voteTime,
   withExecuteEvent,
 }: Args): Promise<UncachedVoteResult[]> => {
   if (voteIds.length === 0) {
@@ -73,27 +76,43 @@ export const fetchUncachedVotes = async ({
     ),
   );
 
-  const eventArgs = {
-    votes: votes.map((v) => ({ id: v.id, snapshotBlock: v.snapshotBlock })),
-    address: votingContract.address,
-    client,
+  const fetchExecuteEvents = async (): Promise<
+    Record<string, EventExecuteVote | null>
+  > => {
+    const latestBlock = await client.getBlock();
+    return getEventsExecuteVote({
+      votes: votes.map((vote) => {
+        const { fromBlock, toBlock } = estimateExecuteVoteBlockRange({
+          snapshotBlockNumber: vote.snapshotBlock,
+          startDate: vote.startDate,
+          voteTimeSecs: voteTime,
+          latestBlock,
+        });
+        return { id: vote.id, fromBlock, toBlock };
+      }),
+      address: votingContract.address,
+      client,
+    });
   };
 
-  // StartVote carries the title/metadata and is required for every
-  // returned vote (one indexed getLogs at snapshotBlock). The heavier
-  // ExecuteVote scan runs only when the caller asks (withExecuteEvent)
-  // — skipped for active-only callers, whose votes aren't executed.
   const [startEvents, executeEvents] = await Promise.all([
-    getEventsStartVote(eventArgs),
+    getEventsStartVote({
+      votes: votes.map((vote) => ({
+        id: vote.id,
+        snapshotBlock: vote.snapshotBlock,
+      })),
+      address: votingContract.address,
+      client,
+    }),
     withExecuteEvent
-      ? getEventsExecuteVote(eventArgs)
+      ? fetchExecuteEvents()
       : Promise.resolve({} as Record<string, EventExecuteVote | null>),
   ]);
 
-  return votes.map((v) => ({
-    ...v,
-    startEvent: startEvents[v.id.toString()] ?? null,
-    executeEvent: executeEvents[v.id.toString()] ?? null,
+  return votes.map((vote) => ({
+    ...vote,
+    startEvent: startEvents[vote.id.toString()] ?? null,
+    executeEvent: executeEvents[vote.id.toString()] ?? null,
     voteEvents: null,
     description: null,
   }));

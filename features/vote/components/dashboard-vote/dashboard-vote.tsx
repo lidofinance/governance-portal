@@ -18,7 +18,7 @@ import { VoteQuorumPanel } from '../vote-quorum-panel';
 import { VoteMetaBar } from '../vote-meta-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
-import { ProposalStatus } from '@dg/proposals/types';
+import { ProposalStatus } from 'shared/types';
 
 type Props = {
   vote: Vote;
@@ -46,8 +46,8 @@ export const DashboardVote = ({
   const { data: voteDualGovernanceStatus } = useVoteDualGovernanceStatus({
     voteId: vote.id,
     eventExecuteVote: executeEvent,
-  isEventExecuteLoading: false,
-    });
+    isEventExecuteLoading: false,
+  });
 
   const isDualGovernancePhase =
     !!voteDualGovernanceStatus &&

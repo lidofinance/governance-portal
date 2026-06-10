@@ -4,8 +4,9 @@ import { ProgressBar } from 'shared/components/progress-bar';
 import { SkeletonBar } from 'shared/components/skeleton-bar';
 import { InfoIcon } from 'shared/components/icons';
 import { useEscrowContext } from 'providers/escrow';
+// eslint-disable-next-line import/no-restricted-paths
 import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
-import { calculateCurrentThresholdProgress } from '@dg/utils/calculate-current-threshold-progress';
+import { calculateCurrentThresholdProgress } from 'shared/utils/calculate-current-threshold-progress';
 import { parsePercent16 } from 'shared/blockchain/utils';
 import { formatBalance } from 'utils/format-balance';
 import {

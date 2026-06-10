@@ -3,8 +3,8 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useVoteContext } from '@vote/providers/vote-context';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import { AddressPop } from 'shared/components/address-pop/address-pop';
-import { FormattedDate } from '../formatted-date';
 import { List, Row, Label, Value, ProposerWrap } from './style';
+import { FormattedDate } from 'shared/components/formatted-date';
 
 export const VoteDetailsList = () => {
   const { chainId } = useLidoSDK();

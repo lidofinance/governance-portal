@@ -10,7 +10,7 @@ import { useEscrowContext } from 'providers/escrow';
 import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 import { FlexWrapper } from 'shared/styled-components';
 import { getNextGovernanceState } from '@dg/utils/get-next-dg-state';
-import { calculateCurrentThresholdProgress } from '@dg/utils/calculate-current-threshold-progress';
+import { calculateCurrentThresholdProgress } from 'shared/utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
 import { Link } from '@lidofinance/lido-ui';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';

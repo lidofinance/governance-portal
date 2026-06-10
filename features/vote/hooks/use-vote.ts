@@ -32,6 +32,10 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
     staleTime: 5 * 60_000, // 5 minutes
     enabled: !!voteTime,
     queryFn: async (): Promise<VoteFull | null> => {
+      if (voteTime === undefined) {
+        return null;
+      }
+
       const cachedVotesMap = await fetchCachedVotes({
         chainId,
         votingAddress: votingContract.address,
@@ -63,6 +67,7 @@ export const useVote = (voteId: number, voteTime: number | undefined) => {
         votingContract,
         client: rpcProvider,
         voteIds: [voteId],
+        voteTime,
         withExecuteEvent: true,
       });
 
