@@ -1,7 +1,8 @@
 import { Identicon, Link, trimAddress } from '@lidofinance/lido-ui';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useVoteContext } from '@vote/providers/vote-context';
-import { getEtherscanAddressLink, getEtherscanTxLink } from 'utils/etherscan';
+import { getEtherscanTxLink } from 'utils/etherscan';
+import { AddressPop } from 'shared/components/address-pop/address-pop';
 import { FormattedDate } from '../formatted-date';
 import { List, Row, Label, Value, ProposerWrap } from './style';
 
@@ -19,12 +20,12 @@ export const VoteDetailsList = () => {
         <Label>Proposer</Label>
         <Value>
           {creator ? (
-            <ProposerWrap>
-              <Identicon address={creator} diameter={16} />
-              <Link href={getEtherscanAddressLink(chainId, creator)}>
+            <AddressPop address={creator} isPaddingless isInline>
+              <ProposerWrap>
+                <Identicon address={creator} diameter={20} />
                 {trimAddress(creator, 4)}
-              </Link>
-            </ProposerWrap>
+              </ProposerWrap>
+            </AddressPop>
           ) : (
             '—'
           )}
