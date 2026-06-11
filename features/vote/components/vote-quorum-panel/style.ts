@@ -5,6 +5,7 @@ export const QuorumRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  line-height: 26px;
   margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
 `;
 

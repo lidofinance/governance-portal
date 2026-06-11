@@ -4,7 +4,14 @@ import { Text } from 'shared/components/text';
 export const VotesTitleWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
+  margin-bottom: 12px;
+`;
+
+export const SupplyText = styled(Text).attrs({
+  as: 'span',
+  size: 14,
+})`
+  margin: 0 4px;
 `;
 
 type VotesBarWrapProps = { showOnForeground?: boolean };
@@ -55,5 +62,5 @@ export const VoteYeaNayText = styled(Text).attrs({ as: 'span', size: 14 })<{
 }>`
   color: var(--lido-color-${({ $variant }) => $variant});
   font-weight: 700;
-  margin: 0 2px;
+  font-size: 14px;
 `;

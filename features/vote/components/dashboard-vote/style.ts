@@ -6,7 +6,7 @@ import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 export const VoteDashboardCard = styled(DashboardCard)`
   flex-direction: row;
   gap: 64px;
-
+  padding: ${({ theme }) => theme.spaceMap.xxl}px;
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     flex-direction: column;
     height: auto;
@@ -59,4 +59,10 @@ export const VoteQuorum = styled.section`
     flex: 0 0 auto;
     width: 100%;
   }
+`;
+
+export const VetoSupportWrap = styled.div`
+  margin-top: ${({ theme }) => theme.spaceMap.lg}px;
+  padding-top: ${({ theme }) => theme.spaceMap.lg}px;
+  border-top: 1px solid #e5e5e5;
 `;

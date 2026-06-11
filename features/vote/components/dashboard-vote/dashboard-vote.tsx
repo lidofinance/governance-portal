@@ -7,6 +7,7 @@ import {
   VoteDescriptionWrap,
   VoteSummary,
   VoteQuorum,
+  VetoSupportWrap,
 } from './style';
 import { splitVoteDescription } from '@vote/utils/split-vote-description';
 import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
@@ -15,6 +16,7 @@ import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
 import { votePage } from 'constants/urls';
 import { VoteDescription } from '../vote-description';
 import { VoteQuorumPanel } from '../vote-quorum-panel';
+import { VoteVetoSupport } from '../vote-veto-support';
 import { VoteMetaBar } from '../vote-meta-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
@@ -133,6 +135,11 @@ export const DashboardVote = ({
         </VoteSummary>
         <VoteQuorum>
           <VoteQuorumPanel vote={vote} />
+          {isDualGovernancePhase && (
+            <VetoSupportWrap>
+              <VoteVetoSupport />
+            </VetoSupportWrap>
+          )}
         </VoteQuorum>
       </VoteDashboardCard>
     </Link>

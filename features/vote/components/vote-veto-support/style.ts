@@ -12,6 +12,7 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 4px;
 `;
 
 export const Title = styled(Text).attrs({

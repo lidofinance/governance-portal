@@ -1,6 +1,7 @@
-import { Text } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
 import { formatVoteAmount } from '@vote/utils/format-vote-amount';
 import {
+  SupplyText,
   VotesBarNay,
   VotesBarWrap,
   VotesBarYea,
@@ -32,23 +33,24 @@ export const VoteYesNoBar = ({
   const yeaInfo = showNumber ? (
     <span>
       <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
-      {formatVoteAmount(yeaNum)} ({yeaPctOfTotalSupply}%)
+      {formatVoteAmount(yeaNum)} (<SupplyText>{yeaPctOfTotalSupply}</SupplyText>
+      %)
     </span>
   ) : (
     <span>
       <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
-      {yeaPctOfTotalSupply}%
+      <SupplyText>{yeaPctOfTotalSupply}</SupplyText>%
     </span>
   );
 
   const nayInfo = showNumber ? (
     <span>
-      {formatVoteAmount(nayNum)} ({nayPctOfTotalSupply}%){' '}
-      <VoteYeaNayText $variant="error">No</VoteYeaNayText>
+      {formatVoteAmount(nayNum)} (<SupplyText>{nayPctOfTotalSupply}</SupplyText>
+      %) <VoteYeaNayText $variant="error">No</VoteYeaNayText>
     </span>
   ) : (
     <span>
-      {nayPctOfTotalSupply}%{' '}
+      <SupplyText>{nayPctOfTotalSupply}% </SupplyText>
       <VoteYeaNayText $variant="error">No</VoteYeaNayText>
     </span>
   );
@@ -56,13 +58,13 @@ export const VoteYesNoBar = ({
   return (
     <>
       <VotesTitleWrap>
-        <Text size="xxs">
-          <Text as="span" size="xxs" data-testid="votesYes">
+        <Text size={14}>
+          <Text as="span" size={14} data-testid="votesYes">
             <span>{yeaInfo}</span>
           </Text>
         </Text>
-        <Text size="xxs">
-          <Text data-testid="votesNo" as="span" size="xxs">
+        <Text size={14}>
+          <Text data-testid="votesNo" as="span" size={14}>
             <span>{nayInfo}</span>
           </Text>
         </Text>
