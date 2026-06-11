@@ -606,3 +606,12 @@ export const MetaRegistry: ChainAddressMap = {
 export const ConsolidationMigrator: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x747d357F5b6410B80Eb63406FaC5E2A91131B4f8',
 };
+
+export const CSEjector: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xc72b58aa02E0e98cF8A4a0E9Dce75e763800802C',
+};
+
+export const CircuitBreaker: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555',
+  [CHAINS.Mainnet]: '0x6019CB557978296BA3C08a7B73225C0975DFB2F7',
+};
