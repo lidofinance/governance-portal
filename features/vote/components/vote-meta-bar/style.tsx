@@ -20,7 +20,11 @@ export const TimeGroup = styled.div<{ $labeled?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${({ $labeled }) => ($labeled ? '54px' : '8px')};
-  margin-left: auto;
+  ${({ $labeled }) =>
+    $labeled &&
+    css`
+      margin-left: auto;
+    `}
 `;
 
 type StatusVariant = 'active' | 'success' | 'error' | 'warning';

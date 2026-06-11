@@ -5,11 +5,12 @@ import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const VoteDashboardCard = styled(DashboardCard)`
   flex-direction: row;
-  justify-content: space-between;
+  gap: 64px;
 
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     flex-direction: column;
     height: auto;
+    gap: ${({ theme }) => theme.spaceMap.xl}px;
   }
 `;
 
@@ -42,20 +43,20 @@ export const VoteDescriptionWrap = styled(Text).attrs({
 `;
 
 export const VoteSummary = styled.section`
-  width: 70%;
+  flex: 1 1 auto;
+  min-width: 0;
 
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+    flex: 0 0 auto;
     width: 100%;
   }
 `;
 
 export const VoteQuorum = styled.section`
-  width: 274px;
-  margin-left: auto;
+  flex: 0 0 274px;
 
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+    flex: 0 0 auto;
     width: 100%;
-    margin-left: 0;
-    margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   }
 `;

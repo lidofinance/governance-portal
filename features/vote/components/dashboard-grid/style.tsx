@@ -2,8 +2,12 @@ import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
-export const GridWrap = styled.div`
+export const DashboardWrap = styled.div`
+  max-width: 1024px;
   margin: 0 auto;
+`;
+
+export const GridWrap = styled.div`
   display: grid;
   grid-gap: 20px;
   grid-template-columns: 1fr;
