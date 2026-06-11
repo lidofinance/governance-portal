@@ -353,5 +353,15 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "Omnibus vote: 1. Submit DG proposal: named Gates and MetaRegistry migration;\n 2. Remove the OLD CreateOrUpdateOperatorGroup Easy Track factory;\n 3. Add the NEW CreateOrUpdateOperatorGroup Easy Track factory;\n 4. Remove the OLD ReportWithdrawalsForSlashedValidators (CSM) Easy Track factory;\n 5. Add the NEW ReportWithdrawalsForSlashedValidators (CSM) Easy Track factory;\n 6. Remove the OLD ReportWithdrawalsForSlashedValidators (CM) Easy Track factory;\n 7. Add the NEW ReportWithdrawalsForSlashedValidators (CM) Easy Track factory.\nlidovoteipfs://bafkreiacki2iikm7kmznbqq556eidejnkeaj4qaoil7hxlyufuc2s3yh64"
+  },
+  "71": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit DG proposal: update CSM and Curated module implementations.\nlidovoteipfs://bafkreidkzpy5bkhiitn3shvvd7qthd52yammnv4sj5yjzsuqwbk26skzma"
+  },
+  "72": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit DG proposal: update CSM and Curated module implementations.\nlidovoteipfs://bafkreidkzpy5bkhiitn3shvvd7qthd52yammnv4sj5yjzsuqwbk26skzma"
   }
 }

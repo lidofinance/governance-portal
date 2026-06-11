@@ -312,7 +312,11 @@
   },
   "376": {
     "description": null,
-    "executeVoteEvent": null,
+    "executeVoteEvent": {
+      "blockNumber": "2957144",
+      "executedAt": 1780664160,
+      "transactionHash": "0x1a6fb056096852eec6d262b5b80bb0d2e99b74ffb45efd545b3d2bddb9d81d46"
+    },
     "startVoteEvent": {
       "args": {
         "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
@@ -323,8 +327,8 @@
       "transactionHash": "0x516c8127e95743429fd9e2b6333b752f2d6191d8212345892a806fcfc7d3f776"
     },
     "voteDetails": {
-      "canExecute": true,
-      "executed": false,
+      "canExecute": false,
+      "executed": true,
       "id": 376,
       "minAcceptQuorum": "50000000000000000",
       "nay": "0",
@@ -455,7 +459,11 @@
   },
   "379": {
     "description": null,
-    "executeVoteEvent": null,
+    "executeVoteEvent": {
+      "blockNumber": "2958052",
+      "executedAt": 1780676280,
+      "transactionHash": "0x61cb8c031d9563b17ea1b957a7cfa32ea7e28a327c47d8e3327e007cbe630711"
+    },
     "startVoteEvent": {
       "args": {
         "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
@@ -466,8 +474,8 @@
       "transactionHash": "0x05a68693c107faf005c45652a290c726df8fae8a1d65e9c998446b859065b833"
     },
     "voteDetails": {
-      "canExecute": true,
-      "executed": false,
+      "canExecute": false,
+      "executed": true,
       "id": 379,
       "minAcceptQuorum": "50000000000000000",
       "nay": "0",
