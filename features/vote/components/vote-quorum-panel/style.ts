@@ -24,18 +24,26 @@ export const QuorumValue = styled(Text).attrs({
   font-weight: 400;
 `;
 
-export const QuorumReachedWrap = styled.span`
+export const QuorumStatusWrap = styled.span<{ $reached: boolean }>`
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: var(--lido-color-textSecondary);
+  color: ${({ $reached }) =>
+    $reached ? 'var(--lido-color-textSecondary)' : 'var(--lido-color-warning)'};
   cursor: pointer;
+
+  ${({ $reached }) =>
+    !$reached &&
+    `svg path {
+      fill-opacity: 1;
+    }`}
 `;
 
-export const QuorumReached = styled.span`
+export const QuorumStatus = styled.span<{ $reached: boolean }>`
   font-size: 12px;
   font-weight: 400;
-  color: var(--lido-color-textSecondary);
+  color: ${({ $reached }) =>
+    $reached ? 'var(--lido-color-textSecondary)' : 'var(--lido-color-warning)'};
 `;
 
 export const QuorumTooltipBody = styled.span`
