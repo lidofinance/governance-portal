@@ -6,6 +6,7 @@ import type {
   CachedVoteEvent,
 } from 'shared/votes/cache/types';
 import { fetchCachedVoteEvents } from 'features/vote/utils/fetch-cached-vote-events';
+import { isCachedVoteComplete } from 'utils/cache/status.mjs';
 import type { EventStartVote } from './get-event-start-vote';
 import type { EventExecuteVote, Vote, VoteEvent } from '../types';
 import { VotePhase } from '../types';
@@ -116,6 +117,12 @@ export const fetchCachedVotes = async ({
 
   const result: Record<string, CachedVoteResult> = {};
   for (const [id, cached] of Object.entries(subset)) {
+    // Serve from cache only terminal votes; a closed-but-enactable vote stays
+    // mutable (can still be executed) and must be read live so the UI reflects
+    // a fresh enact instead of the pre-execution cached snapshot.
+    if (!isCachedVoteComplete(cached)) {
+      continue;
+    }
     result[id] = parseCachedVote(cached);
   }
   return result;
