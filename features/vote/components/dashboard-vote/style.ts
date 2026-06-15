@@ -17,7 +17,12 @@ export const VoteDashboardCard = styled(DashboardCard)`
 export const VoteTitle = styled(Text).attrs({
   size: 20,
   weight: 700,
-})``;
+})`
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
 
 export const VoteDescriptionWrap = styled(Text).attrs({
   size: 14,
@@ -25,11 +30,10 @@ export const VoteDescriptionWrap = styled(Text).attrs({
 })`
   margin-top: ${({ theme }) => theme.spaceMap.sm}px;
   line-height: 20px;
-  max-height: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 
   span {
