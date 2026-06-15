@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import {
   useRecipientMapAll,
-  REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
   useTokenByTopUpType,
 } from '../../hooks/use-registry-with-limits';
 
@@ -12,12 +11,12 @@ import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const TopUpWithLimits = ({
   callData,
-  registryType,
-}: MotionDescriptionProps<typeof topUpWithLimitsAbi> & {
-  registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
-}) => {
-  const { data: allowedRecipientMap } = useRecipientMapAll({ registryType });
-  const token = useTokenByTopUpType({ registryType });
+  motionType,
+}: MotionDescriptionProps<typeof topUpWithLimitsAbi>) => {
+  const { data: allowedRecipientMap } = useRecipientMapAll({
+    registryType: motionType,
+  });
+  const token = useTokenByTopUpType({ registryType: motionType });
 
   const recipients = useMemo(() => {
     if (!allowedRecipientMap) return null;

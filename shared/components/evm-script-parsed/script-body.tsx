@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { CallWrapper, ScriptBox } from '@dg/evm-script-parsed/style';
-import { useFormatDecodedCallString } from '@dg/evm-script-parsed/utils';
+import { CallWrapper, ScriptBox } from './style';
+import { useFormatDecodedCallString } from './utils';
 import { DecodedCall } from 'utils/decode-evm-script-calls';
 
 type Props = {

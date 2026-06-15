@@ -37,6 +37,7 @@ export const NavMobileWrapper = styled.div`
 export const NavItem = styled.div<{ $isActive?: boolean }>`
   font-size: 16px;
   cursor: pointer;
+  border-bottom: 2px solid transparent;
   a {
     display: block;
     padding: 33px 16px;
@@ -46,7 +47,7 @@ export const NavItem = styled.div<{ $isActive?: boolean }>`
   ${({ $isActive }) =>
     $isActive &&
     css`
-      border-bottom: 2px solid var(--accent-color-ocean-light);
+      border-bottom-color: var(--accent-color-ocean-light);
       a {
         color: var(--accent-color-ocean-light);
         font-weight: 600;

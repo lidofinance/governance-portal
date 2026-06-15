@@ -9,11 +9,7 @@ import {
 
 import { formatEther } from 'viem';
 
-import {
-  MotionDescriptionWithRegistryProps,
-  DecodeCallData,
-  RegistryType,
-} from '../types';
+import { MotionDescriptionProps } from '../types';
 import { MotionTypeDisplayNames } from '../../utils/get-motion-type-display-name';
 import { addAllowedRecipientAbi } from 'abi/generated/AddAllowedRecipient';
 import { topUpAllowedRecipientsAbi } from 'abi/generated/TopUpAllowedRecipients';
@@ -22,9 +18,9 @@ import { AddressPopInline } from 'shared/components/address-pop-inline';
 
 export const AllowedRecipientAdd = ({
   callData,
-  registryType,
-}: MotionDescriptionWithRegistryProps<typeof addAllowedRecipientAbi>) => {
-  const name = MotionTypeDisplayNames[registryType];
+  motionType,
+}: MotionDescriptionProps<typeof addAllowedRecipientAbi>) => {
+  const name = MotionTypeDisplayNames[motionType];
 
   return (
     <div>
@@ -36,11 +32,11 @@ export const AllowedRecipientAdd = ({
 
 export const AllowedRecipientTopUp = ({
   callData,
-  registryType,
-}: MotionDescriptionWithRegistryProps<typeof topUpAllowedRecipientsAbi>) => {
-  const token = useTokenByTopUpType({ registryType });
+  motionType,
+}: MotionDescriptionProps<typeof topUpAllowedRecipientsAbi>) => {
+  const token = useTokenByTopUpType({ registryType: motionType });
   const { data: allowedRecipientMap } = useRecipientMapAll({
-    registryType,
+    registryType: motionType,
   });
 
   const recipients = useMemo(() => {
@@ -48,7 +44,7 @@ export const AllowedRecipientTopUp = ({
     return callData[0].map((address) => allowedRecipientMap[address]);
   }, [callData, allowedRecipientMap]);
 
-  const name = MotionTypeDisplayNames[registryType];
+  const name = MotionTypeDisplayNames[motionType];
 
   return (
     <div>
@@ -66,13 +62,10 @@ export const AllowedRecipientTopUp = ({
 
 export const AllowedRecipientRemove = ({
   callData,
-  registryType,
-}: {
-  callData: DecodeCallData<typeof removeAllowedRecipientAbi>;
-  registryType: RegistryType;
-}) => {
+  motionType,
+}: MotionDescriptionProps<typeof removeAllowedRecipientAbi>) => {
   const { data: allowedRecipients } = useAllowedRecipients({
-    registryType,
+    registryType: motionType,
   });
 
   const program = useMemo(() => {
@@ -82,7 +75,7 @@ export const AllowedRecipientRemove = ({
     );
   }, [callData, allowedRecipients]);
 
-  const name = MotionTypeDisplayNames[registryType];
+  const name = MotionTypeDisplayNames[motionType];
 
   return (
     <div>

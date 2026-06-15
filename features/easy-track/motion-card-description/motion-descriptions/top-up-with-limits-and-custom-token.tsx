@@ -1,7 +1,4 @@
-import {
-  useRecipientMapAll,
-  REGISTRY_WITH_LIMITS_BY_MOTION_TYPE,
-} from '../../hooks/use-registry-with-limits';
+import { useRecipientMapAll } from '../../hooks/use-registry-with-limits';
 
 import { formatUnits, isAddress } from 'viem';
 import { topUpWithLimitsStablesAbi } from 'abi/generated/TopUpWithLimitsStables';
@@ -10,18 +7,14 @@ import { useMotionTokenData } from '../../hooks/use-motion-token-data';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
-type Props = MotionDescriptionProps<typeof topUpWithLimitsStablesAbi> & {
-  registryType: keyof typeof REGISTRY_WITH_LIMITS_BY_MOTION_TYPE;
-};
-
 export const TopUpWithLimitsAndCustomToken = ({
   callData,
-  registryType,
-}: Props) => {
+  motionType,
+}: MotionDescriptionProps<typeof topUpWithLimitsStablesAbi>) => {
   const [token, recipients, amounts] = callData;
 
   const { data: allowedRecipientMap, isPending: isRecipientDataLoading } =
-    useRecipientMapAll({ registryType });
+    useRecipientMapAll({ registryType: motionType });
 
   const { data: tokenData, isLoading: isTokenDataLoading } =
     useMotionTokenData(token);

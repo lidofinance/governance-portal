@@ -28,7 +28,7 @@ import { useAccount } from 'wagmi';
 import { MotionCardDetailedCancelButton } from '../motion-card-detailed-cancel-button';
 import { MotionDescription } from '../motion-card-description';
 import { MotionEvmScript } from '../motion-evm-script';
-import { FormattedDate } from '../../vote/components/formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 import { MotionDetailedTime } from '../motion-card-detailed-time';
 import { getMotionDisplayStatus } from '../utils/get-motion-status';
 import { useMotionTimeCountdown } from '../hooks/use-motion-time-countdown';
@@ -74,7 +74,7 @@ const MotionCardDetailedInner = () => {
       <Header>
         <div>
           <MotionNumber>Motion #{Number(motion.id)}</MotionNumber>
-          <Text size={14} weight={800}>
+          <Text size={20} weight={700} color="textv1">
             {getMotionTypeDisplayName(motionType)}
             {motionType === 'EvmUnrecognized' && (
               <>
@@ -94,9 +94,11 @@ const MotionCardDetailedInner = () => {
             </StatusValue>
           </div>
 
-          {isAuthorConnected && motion.status !== MotionStatus.CANCELED && (
-            <MotionCardDetailedCancelButton />
-          )}
+          {isAuthorConnected &&
+            motion.status !== MotionStatus.CANCELED &&
+            motion.status !== MotionStatus.ENACTED && (
+              <MotionCardDetailedCancelButton />
+            )}
         </HeaderAside>
       </Header>
       <Description>
@@ -137,11 +139,9 @@ const MotionCardDetailedInner = () => {
           <InfoCell>
             <MotionDetailedObjections motion={motion} />
           </InfoCell>
-          <AddressPop address={motion.creator}>
-            <Text size={14} color="secondary" as="span">
-              <InfoLabel>Author Address:</InfoLabel>
-              <IdenticonBadge address={motion.creator} />
-            </Text>
+          <AddressPop address={motion.creator} isPaddingless>
+            <InfoLabel>Author Address:</InfoLabel>
+            <IdenticonBadge address={motion.creator} />
           </AddressPop>
         </InfoCol>
       </InfoRow>

@@ -10,7 +10,7 @@ export const formatPercentBp = (value: number) => {
   return `${formatter.format(value * 0.01)}%`;
 };
 
-const formatBp = (value: bigint | number) => {
+export const formatBp = (value: bigint | number) => {
   const valueNum = typeof value === 'number' ? value : Number(value);
   return `${formatter.format(valueNum)} BP (${formatPercentBp(valueNum)})`;
 };

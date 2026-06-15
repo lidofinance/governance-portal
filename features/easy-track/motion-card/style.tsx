@@ -4,10 +4,10 @@ import { MotionDisplayStatus } from '../types';
 import { MOTION_STATUS_COLOR_MAP } from '@easy-track/constants';
 
 export const CardTitle = styled(Text).attrs({
-  size: 14,
+  size: 16,
   weight: 700,
 })`
-  color: rgb(39, 56, 82);
+  color: var(--lido-color-text);
   margin-bottom: ${({ theme }) => theme.spaceMap.sm}px;
   word-break: break-word;
 `;
@@ -17,10 +17,16 @@ export const DescWrapper = styled.div`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  color: var(--lido-color-text);
 
   ul,
   li {
     list-style-position: inside;
+  }
+
+  &,
+  * {
+    font-weight: 400;
   }
 `;
 

@@ -13,7 +13,8 @@ import * as StartNewMEVBoostRelaysEdit from './start-new-mev-boost-relays-edit';
 import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remove';
 import * as StartNewSetMerkleGateTree from './start-new-set-merkle-gate-tree';
 import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
-import * as StartNewCSMSettleElStealingPenalty from './start-new-csm-settle-el-stealing-penalty';
+import * as StartNewSettleGeneralDelayedPenalty from './start-new-settle-general-delayed-penalty';
+import * as StartNewReportWithdrawalsForSlashedValidators from './start-new-report-withdrawals-for-slashed-validators';
 
 import * as StartNewVaultForceValidatorExitsInVaultHub from './vaults/start-new-vault-force-validator-exits-in-vault-hub';
 import * as StartNewVaultsAlterTiersInOperatorGrid from './vaults/start-new-vaults-alter-tiers-in-operator-grid';
@@ -37,6 +38,7 @@ import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-o
 
 import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation-pair';
 import * as StartNewCreateOrUpdateOperatorGroup from './start-new-create-or-update-operator-group';
+import * as StartNewUpdateStakingModuleShareLimits from './start-new-update-staking-module-share-limits';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -150,8 +152,22 @@ export const formParts = {
     }),
   [MotionTypeForms.CSMSetVettedGateTree]:
     StartNewCSMSetVettedGateTree.formParts,
-  [MotionTypeForms.CSMSettleElStealingPenalty]:
-    StartNewCSMSettleElStealingPenalty.formParts,
+  [MotionTypeForms.CSMSettleGeneralDelayedPenalty]:
+    StartNewSettleGeneralDelayedPenalty.formParts({
+      motionType: MotionTypeForms.CSMSettleGeneralDelayedPenalty,
+    }),
+  [MotionTypeForms.CuratedSettleGeneralDelayedPenalty]:
+    StartNewSettleGeneralDelayedPenalty.formParts({
+      motionType: MotionTypeForms.CuratedSettleGeneralDelayedPenalty,
+    }),
+  [MotionTypeForms.CSMReportWithdrawalsForSlashedValidators]:
+    StartNewReportWithdrawalsForSlashedValidators.formParts({
+      motionType: MotionTypeForms.CSMReportWithdrawalsForSlashedValidators,
+    }),
+  [MotionTypeForms.CuratedReportWithdrawalsForSlashedValidators]:
+    StartNewReportWithdrawalsForSlashedValidators.formParts({
+      motionType: MotionTypeForms.CuratedReportWithdrawalsForSlashedValidators,
+    }),
   [MotionTypeForms.CuratedExitRequestHashesSubmit]:
     StartNewExitRequestHashesSubmit.formParts('curated'),
   [MotionTypeForms.SDVTExitRequestHashesSubmit]:
@@ -181,6 +197,8 @@ export const formParts = {
     StartNewAllowConsolidationPair.formParts,
   [MotionTypeForms.CreateOrUpdateOperatorGroup]:
     StartNewCreateOrUpdateOperatorGroup.formParts,
+  [MotionTypeForms.UpdateStakingModuleShareLimits]:
+    StartNewUpdateStakingModuleShareLimits.formParts,
 } as const;
 
 export type FormData = {

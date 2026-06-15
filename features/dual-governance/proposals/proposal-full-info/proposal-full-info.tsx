@@ -16,7 +16,7 @@ import {
 import { Text } from 'shared/components/text';
 import { ProposalCombinedData } from '@dg/proposals/types';
 
-import { Script } from '@dg/evm-script-parsed';
+import { Script } from 'shared/components/evm-script-parsed';
 import { getDateFromTimestamp } from 'utils/get-date-from-timestamp';
 import { Button } from 'shared/components/button';
 import { EmergencyProtectedTimelock } from 'shared/blockchain/contracts';

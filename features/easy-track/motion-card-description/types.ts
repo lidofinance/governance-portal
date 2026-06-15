@@ -9,6 +9,7 @@ import {
   SandboxNodeOperatorsRegistry,
   SDVTRegistry,
 } from 'shared/blockchain/contracts';
+import { MOTION_TYPE_ABI_MAP } from '@easy-track/hooks/use-decode-evm-script-call-data';
 
 export type NestProps<T> =
   T extends Promise<infer U>
@@ -44,8 +45,13 @@ export type DecodeCallData<T extends Abi> = DecodeFunctionResultReturnType<
  * const MyComponent = ({ callData }: MotionDescriptionProps<typeof myAbi>) => {...}
  */
 export type MotionDescriptionProps<T extends Abi> = {
+  motionType: {
+    [K in keyof typeof MOTION_TYPE_ABI_MAP]: (typeof MOTION_TYPE_ABI_MAP)[K] extends T
+      ? K
+      : never;
+  }[keyof typeof MOTION_TYPE_ABI_MAP];
   callData: DecodeCallData<T>;
-  isOnChain?: boolean;
+  isOnChain: boolean | undefined;
 };
 
 /**

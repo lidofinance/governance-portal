@@ -14,37 +14,35 @@ export const CsmSetVettedGateTree = ({
 
   return (
     <>
-      <div>
-        <strong>Set CSM Vetted Gate Tree:</strong>
-        <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-          <li>
-            <strong>Tree Root:</strong>
-            <div style={{ marginLeft: '1rem' }}>
-              {showCurrentGateInfo && (
-                <div>
-                  <span>Current:</span> <code>{vettedGateInfo.treeRoot}</code>
-                </div>
-              )}
+      <strong>Set CSM Vetted Gate Tree:</strong>
+      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+        <li>
+          <strong>Tree Root:</strong>
+          <div style={{ marginLeft: '1rem' }}>
+            {showCurrentGateInfo && (
               <div>
-                <span>New:</span> <code>{newRoot}</code>
+                <span>Current:</span> <code>{vettedGateInfo.treeRoot}</code>
               </div>
+            )}
+            <div>
+              <span>New:</span> <code>{newRoot}</code>
             </div>
-          </li>
-          <li style={{ marginTop: '1rem' }}>
-            <strong>Tree CID:</strong>
-            <div style={{ marginLeft: '1rem' }}>
-              {showCurrentGateInfo && (
-                <div>
-                  <span>Current:</span> <code>{vettedGateInfo.treeCid}</code>
-                </div>
-              )}
+          </div>
+        </li>
+        <li style={{ marginTop: '1rem' }}>
+          <strong>Tree CID:</strong>
+          <div style={{ marginLeft: '1rem' }}>
+            {showCurrentGateInfo && (
               <div>
-                <span>New:</span> <code>{newCid}</code>
+                <span>Current:</span> <code>{vettedGateInfo.treeCid}</code>
               </div>
+            )}
+            <div>
+              <span>New:</span> <code>{newCid}</code>
             </div>
-          </li>
-        </ul>
-      </div>
+          </div>
+        </li>
+      </ul>
     </>
   );
 };

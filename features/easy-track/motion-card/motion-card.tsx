@@ -14,7 +14,7 @@ import {
   getMotionStatus,
 } from '../utils/get-motion-status';
 import { Text } from 'shared/components/text';
-import { FormattedDate } from '../../vote/components/formatted-date';
+import { FormattedDate } from 'shared/components/formatted-date';
 import { useMotionTimeCountdown } from '../hooks/use-motion-time-countdown';
 import { useMotionProgress } from '../hooks/use-motion-progress';
 import { MOTION_ATTENTION_PERIOD } from '../constants';
@@ -61,7 +61,7 @@ export const MotionCard = ({ motion }: Props) => {
           )}
         </CardTitle>
         <DescWrapper>
-          <MotionDescription motion={motion} textSize="small" />
+          <MotionDescription motion={motion} />
         </DescWrapper>
         <CardStatusWrapper $displayStatus={displayStatus}>
           <Text size={12} weight={800}>

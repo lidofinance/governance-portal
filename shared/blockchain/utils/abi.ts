@@ -9,6 +9,8 @@ import * as abis from 'abi/generated';
 import { getContractName } from 'utils/get-contract-name';
 import { fetcherEtherscan } from 'utils/fetcher-etherscan';
 import { getProxyImplementationAddress } from './get-proxy-implementation-address';
+import { MotionType } from '@easy-track/motion-types';
+import { MOTION_TYPE_ABI_MAP } from '@easy-track/hooks/use-decode-evm-script-call-data';
 
 type ContractMetadata = {
   name: string | null;
@@ -134,6 +136,12 @@ export const fetchContractMetadata = async (
     const abi = getLocalAbi(contractName);
     if (abi) {
       result = { abi, name: contractName };
+    } else if (contractName in MotionType) {
+      // Try to load factory ABI
+      const factoryAbi = MOTION_TYPE_ABI_MAP[contractName as MotionType];
+      if (factoryAbi) {
+        result = { abi: factoryAbi, name: contractName };
+      }
     }
   }
 

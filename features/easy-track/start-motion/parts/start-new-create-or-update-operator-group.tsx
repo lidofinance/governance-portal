@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Plus, ButtonIcon, Option } from '@lidofinance/lido-ui';
+import { useQuery } from '@tanstack/react-query';
 import { encodeAbiParameters } from 'viem';
 import { PageLoader } from 'shared/components/page-loader';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -11,9 +11,10 @@ import {
   useReadContractGetter,
 } from 'shared/blockchain/hooks/use-read-contract';
 import { useDebounce } from 'shared/hooks/use-debounce';
-import { metaRegistryAbi, nodeOperatorsRegistryAbi } from 'abi/generated';
+import { nodeOperatorsRegistryAbi } from 'abi/generated';
 import {
   CreateOrUpdateOperatorGroup as CreateOrUpdateOperatorGroupContract,
+  MetaRegistry,
   StakingRouter,
 } from 'shared/blockchain/contracts';
 
@@ -34,14 +35,41 @@ import {
 import { MotionType } from '../../motion-types';
 import { validateUintValue } from '../../utils/validate-uint-value';
 import {
-  encodeNORExtOperatorData,
-  decodeNORExtOperatorData,
+  encodeExternalOperatorData,
+  decodeExternalOperatorData,
 } from '../../utils/nor-ext-operator-data';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
+import { MAX_BP } from '@easy-track/constants';
+import { SelectHookForm } from 'shared/hook-form/select-hook-form';
+import invariant from 'tiny-invariant';
 
-const MAX_BP = 10000;
 const MAX_NAME_LENGTH = 256;
-const NO_GROUP_ID = '0';
+const ZERO_GROUP_ID = '0';
+const FORM_ACTIONS = [
+  { value: 'create', label: 'Create new group' },
+  { value: 'update', label: 'Update existing group' },
+  { value: 'clear', label: 'Clear existing group' },
+] as const;
+
+const ABI_PARAMS = [
+  { type: 'uint256' },
+  {
+    type: 'tuple',
+    components: [
+      { type: 'string' },
+      {
+        type: 'tuple[]',
+        components: [{ type: 'uint64' }, { type: 'uint16' }],
+      },
+      {
+        type: 'tuple[]',
+        components: [{ type: 'bytes' }],
+      },
+    ],
+  },
+] as const;
+
+type Action = (typeof FORM_ACTIONS)[number]['value'];
 
 type SubOperatorField = {
   nodeOperatorId: string;
@@ -61,6 +89,7 @@ type FormData = {
   // mirrored into form state so populateTx (module scope) can read it without
   // its own contract round-trip.
   allowedExternalModuleId: string;
+  action: Action;
 };
 
 const sortByNodeOperatorId = <T extends { nodeOperatorId: bigint }>(
@@ -74,6 +103,20 @@ const sortByNodeOperatorId = <T extends { nodeOperatorId: bigint }>(
         : 0,
   );
 
+const validateNameSync = (value: string) => {
+  const trimmedValue = value.trim();
+
+  if (trimmedValue.length === 0) {
+    return 'Name is required';
+  }
+
+  if (trimmedValue.length > MAX_NAME_LENGTH) {
+    return `Name must be at most ${MAX_NAME_LENGTH} characters (current: ${trimmedValue.length})`;
+  }
+
+  return undefined;
+};
+
 export const formParts = createMotionFormPart({
   motionType: MotionType.CreateOrUpdateOperatorGroup,
   populateTx: async ({
@@ -83,54 +126,44 @@ export const formParts = createMotionFormPart({
   }: PopulateTxArgs<FormData>) => {
     const allowedExternalModuleId = Number(formData.allowedExternalModuleId);
 
-    const sortedSubs = sortByNodeOperatorId(
-      formData.subNodeOperators.map(({ nodeOperatorId, share }) => ({
-        nodeOperatorId: BigInt(nodeOperatorId),
-        share: Number(share),
-      })),
-    );
+    const isClear = formData.action === 'clear';
+    const groupId =
+      formData.action === 'create' ? ZERO_GROUP_ID : formData.groupId;
+    const groupName = isClear ? '' : formData.name.trim();
 
-    const sortedExts = sortByNodeOperatorId(
-      formData.externalOperators.map(({ nodeOperatorId }) => ({
-        nodeOperatorId: BigInt(nodeOperatorId),
-      })),
-    );
+    const sortedSubs = isClear
+      ? []
+      : sortByNodeOperatorId(
+          formData.subNodeOperators.map(({ nodeOperatorId, share }) => ({
+            nodeOperatorId: BigInt(nodeOperatorId),
+            share: Number(share),
+          })),
+        );
 
-    const encodedCallData = encodeAbiParameters(
+    const sortedExts = isClear
+      ? []
+      : sortByNodeOperatorId(
+          formData.externalOperators.map(({ nodeOperatorId }) => ({
+            nodeOperatorId: BigInt(nodeOperatorId),
+          })),
+        );
+
+    const encodedCallData = encodeAbiParameters(ABI_PARAMS, [
+      BigInt(groupId),
       [
-        { type: 'uint256' },
-        {
-          type: 'tuple',
-          components: [
-            { type: 'string' },
-            {
-              type: 'tuple[]',
-              components: [{ type: 'uint64' }, { type: 'uint16' }],
-            },
-            {
-              type: 'tuple[]',
-              components: [{ type: 'bytes' }],
-            },
-          ],
-        },
-      ] as const,
-      [
-        BigInt(formData.groupId),
-        [
-          formData.name,
-          sortedSubs.map((s) => [s.nodeOperatorId, s.share] as const),
-          sortedExts.map(
-            (e) =>
-              [
-                encodeNORExtOperatorData(
-                  allowedExternalModuleId,
-                  e.nodeOperatorId,
-                ),
-              ] as const,
-          ),
-        ],
+        groupName,
+        sortedSubs.map((s) => [s.nodeOperatorId, s.share] as const),
+        sortedExts.map(
+          (e) =>
+            [
+              encodeExternalOperatorData(
+                allowedExternalModuleId,
+                e.nodeOperatorId,
+              ),
+            ] as const,
+        ),
       ],
-    );
+    ]);
 
     return await contract.write({
       address: contract.address,
@@ -144,20 +177,21 @@ export const formParts = createMotionFormPart({
     subNodeOperators: [{ nodeOperatorId: '', share: '' }],
     externalOperators: [],
     allowedExternalModuleId: '',
+    action: 'create',
   }),
   Component: ({ fieldNames, submitAction }) => {
     const { chainId } = useLidoSDK();
     const { watch, setValue } = useFormContext();
-    const queryClient = useQueryClient();
 
     const factoryContract = useReadContract(
       CreateOrUpdateOperatorGroupContract,
     );
     const stakingRouter = useReadContract(StakingRouter);
+    const metaRegistry = useReadContract(MetaRegistry);
+
     const readNodeOperatorsRegistry = useReadContractGetter(
       nodeOperatorsRegistryAbi,
     );
-    const readMetaRegistry = useReadContractGetter(metaRegistryAbi);
 
     const { isTrustedCallerConnected, isTrustedCallerLoading } =
       useIsTrustedCaller(CreateOrUpdateOperatorGroupContract);
@@ -165,21 +199,19 @@ export const formParts = createMotionFormPart({
     const subFields = useFieldArray({ name: fieldNames.subNodeOperators });
     const extFields = useFieldArray({ name: fieldNames.externalOperators });
 
+    const selectedAction: Action = watch(fieldNames.action);
     const groupIdValue: string = watch(fieldNames.groupId);
     const subOpsValue: SubOperatorField[] = watch(fieldNames.subNodeOperators);
     const extOpsValue: ExternalOperatorField[] = watch(
       fieldNames.externalOperators,
     );
 
-    const isCreateMode = groupIdValue === NO_GROUP_ID || groupIdValue === '';
-    const isClearMode =
-      !isCreateMode && subOpsValue.length === 0 && extOpsValue.length === 0;
-
     const sharesSum = subOpsValue.reduce((acc, { share }) => {
       if (!share) return acc;
       const parsed = Number(share);
       return Number.isFinite(parsed) ? acc + parsed : acc;
     }, 0);
+    const isSharesSumInvalid = sharesSum !== 0 && sharesSum !== MAX_BP;
 
     const {
       data: factoryData,
@@ -190,24 +222,18 @@ export const formParts = createMotionFormPart({
       enabled: !!factoryContract.address,
       staleTime: Infinity,
       queryFn: async () => {
-        const [
-          factoryName,
-          metaRegistryAddress,
-          curatedModuleAddress,
-          allowedExtModuleIdRaw,
-        ] = await Promise.all([
-          factoryContract.readContract('name'),
-          factoryContract.readContract('metaRegistry'),
-          factoryContract.readContract('module'),
-          factoryContract.readContract('allowedExternalModuleId'),
-        ]);
-
-        const allowedExternalModuleId = Number(allowedExtModuleIdRaw);
+        const [curatedModuleAddress, allowedExternalModuleId, groupsCount] =
+          await Promise.all([
+            factoryContract.readContract('module'),
+            factoryContract.readContract('allowedExternalModuleId'),
+            metaRegistry.readContract('getOperatorGroupsCount'),
+          ]);
 
         const externalStakingModule = await stakingRouter.readContract(
           'getStakingModule',
-          [BigInt(allowedExternalModuleId)],
+          [allowedExternalModuleId],
         );
+
         if (externalStakingModule === null) {
           throw new Error('External staking module not found');
         }
@@ -226,66 +252,96 @@ export const formParts = createMotionFormPart({
           throw new Error('Failed to read curated node operators count');
         }
 
+        const externalModuleName = externalStakingModule.name
+          ? `${externalStakingModule.name} (ID: ${allowedExternalModuleId})`
+          : `#${allowedExternalModuleId}`;
+
         return {
-          factoryName,
-          metaRegistryAddress,
+          groupsCount: groupsCount ?? 0n,
           curatedModuleAddress,
           allowedExternalModuleId,
-          externalModuleAddress: externalStakingModule.stakingModuleAddress,
           curatedNodeOperatorsCount: Number(curatedNodeOperatorsCount),
           externalNodeOperatorsCount: Number(externalNodeOperatorsCount ?? 0n),
+          externalModuleName,
         };
       },
     });
 
     // Mirror the factory-derived module id into form state so populateTx can
-    // read it from `formData` at submit time (it has no React context).
+    // read it from `formData` at submit time.
     useEffect(() => {
       if (factoryData) {
         setValue(
           fieldNames.allowedExternalModuleId,
-          String(factoryData.allowedExternalModuleId),
+          factoryData.allowedExternalModuleId.toString(),
+          { shouldDirty: false },
         );
       }
-    }, [factoryData, setValue, fieldNames.allowedExternalModuleId]);
+      // Mirror once factoryData resolves; it never changes
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [factoryData]);
+
+    const validateGroupIdSync = (value: string) => {
+      invariant(factoryData, 'Factory data must be loaded for validation');
+
+      const uintErr = validateUintValue(value);
+      if (uintErr) {
+        return uintErr;
+      }
+
+      if (value === ZERO_GROUP_ID && selectedAction !== 'create') {
+        return 'Value must be more than 0';
+      }
+
+      if (BigInt(value) > factoryData.groupsCount) {
+        return `Value must be less than or equal to ${factoryData.groupsCount.toString()}`;
+      }
+
+      return undefined;
+    };
 
     const debouncedGroupIdValue = useDebounce(groupIdValue, 500);
     const { data: existingGroup } = useQuery({
       queryKey: [
         'meta-registry-operator-group',
         chainId,
-        factoryData?.metaRegistryAddress,
         debouncedGroupIdValue,
       ],
       enabled:
-        !!factoryData?.metaRegistryAddress &&
+        !!factoryData &&
         /^\d+$/.test(debouncedGroupIdValue) && // Check is valid digits value
-        debouncedGroupIdValue !== NO_GROUP_ID,
+        debouncedGroupIdValue !== ZERO_GROUP_ID,
       staleTime: Infinity,
       queryFn: () => {
-        if (!factoryData) {
+        const syncErr = validateGroupIdSync(debouncedGroupIdValue);
+        if (syncErr) {
           return null;
         }
 
-        return readMetaRegistry(factoryData.metaRegistryAddress)(
-          'getOperatorGroup',
-          [BigInt(debouncedGroupIdValue)],
-        );
+        return metaRegistry.readContract('getOperatorGroup', [
+          BigInt(debouncedGroupIdValue),
+        ]);
       },
     });
 
-    useEffect(() => {
-      if (existingGroup) {
-        setValue(fieldNames.name, existingGroup.name);
+    // Apply a group to the definition fields for update/clear
+    // Update fills the operators from the group, clear empties them
+    const applyGroupDataToFields = (
+      action: Exclude<Action, 'create'>,
+      group: typeof existingGroup,
+    ) => {
+      setValue(fieldNames.name, group?.name ?? '');
+
+      if (action === 'update' && group) {
         subFields.replace(
-          existingGroup.subNodeOperators.map((op) => ({
+          group.subNodeOperators.map((op) => ({
             nodeOperatorId: op.nodeOperatorId.toString(),
             share: op.share.toString(),
           })),
         );
         extFields.replace(
-          existingGroup.externalOperators.map((op) => ({
-            nodeOperatorId: decodeNORExtOperatorData(
+          group.externalOperators.map((op) => ({
+            nodeOperatorId: decodeExternalOperatorData(
               op.data,
             ).nodeOperatorId.toString(),
           })),
@@ -293,73 +349,51 @@ export const formParts = createMotionFormPart({
         return;
       }
 
-      // Clean sub fields if needed
-      if (
-        debouncedGroupIdValue === '' ||
-        debouncedGroupIdValue === NO_GROUP_ID
-      ) {
+      subFields.replace([]);
+      extFields.replace([]);
+    };
+
+    const handleActionChange = (action: Action) => {
+      if (action === 'create') {
+        setValue(fieldNames.groupId, '');
         setValue(fieldNames.name, '');
         subFields.replace([{ nodeOperatorId: '', share: '' }]);
         extFields.replace([]);
+      } else {
+        applyGroupDataToFields(action, existingGroup);
       }
+    };
 
+    // Hydrate the form once group data arrives for the selected update/clear action.
+    useEffect(() => {
+      if (selectedAction === 'create' || !existingGroup) {
+        return;
+      }
+      applyGroupDataToFields(selectedAction, existingGroup);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [existingGroup, debouncedGroupIdValue, setValue, fieldNames.name]);
-
-    const fetchOperatorGroupsCount = () => {
-      if (!factoryData) {
-        throw new Error('Factory data is required');
-      }
-      return queryClient.fetchQuery({
-        queryKey: [
-          'meta-registry-operator-groups-count',
-          chainId,
-          factoryData.metaRegistryAddress,
-        ],
-        // Mutable on-chain state — re-read on each validation pass.
-        queryFn: () =>
-          readMetaRegistry(factoryData.metaRegistryAddress)(
-            'getOperatorGroupsCount',
-          ),
-      });
-    };
-
-    const validateGroupIdAsync = async (value: string) => {
-      if (!factoryData) return undefined;
-      const groupId = BigInt(value);
-
-      const count = await fetchOperatorGroupsCount();
-      if (count === null) {
-        return 'Failed to read operator groups count';
-      }
-      if (groupId >= count) {
-        return `Group ID must be less than ${count.toString()} (use 0 to create a new group)`;
-      }
-      return undefined;
-    };
+    }, [existingGroup]);
 
     const validateSubNodeOperatorIdSync = (fieldIndex: number) => {
       return (value: string) => {
+        invariant(factoryData, 'Factory data must be loaded for validation');
         const uintErr = validateUintValue(value);
-        if (uintErr) return uintErr;
+        if (uintErr) {
+          return uintErr;
+        }
 
         const dupIndex = subOpsValue.findIndex(
           (op, idx) => op.nodeOperatorId === value && idx !== fieldIndex,
         );
         if (dupIndex !== -1) {
-          return 'Node operator ID is already used in another sub-operator';
+          return 'Value is already used in another sub-operator';
         }
+
+        if (Number(value) >= factoryData.curatedNodeOperatorsCount) {
+          return `Value must be less than ${factoryData.curatedNodeOperatorsCount}`;
+        }
+
         return undefined;
       };
-    };
-
-    const validateSubNodeOperatorIdAsync = async (value: string) => {
-      if (!factoryData) return undefined;
-      const id = BigInt(value);
-      if (id >= BigInt(factoryData.curatedNodeOperatorsCount)) {
-        return `ID must be less than ${factoryData.curatedNodeOperatorsCount}`;
-      }
-      return undefined;
     };
 
     const validateShareSync = (value: string) => {
@@ -373,51 +407,37 @@ export const formParts = createMotionFormPart({
       return undefined;
     };
 
-    const validateNameSync = (value: string) => {
-      const trimmedValue = value.trim();
-      if (isClearMode) {
-        if (trimmedValue.length > 0) {
-          return 'Name must be empty when clearing a group';
-        }
-        return undefined;
-      }
-
-      if (trimmedValue.length === 0) {
-        return 'Name is required';
-      }
-
-      if (trimmedValue.length > MAX_NAME_LENGTH) {
-        return `Name must be at most ${MAX_NAME_LENGTH} characters (current: ${trimmedValue.length})`;
-      }
-      return undefined;
-    };
-
     const validateExternalNodeOperatorIdSync = (fieldIndex: number) => {
       return (value: string) => {
+        invariant(factoryData, 'Factory data must be loaded for validation');
+
         const uintErr = validateUintValue(value);
-        if (uintErr) return uintErr;
+        if (uintErr) {
+          return uintErr;
+        }
 
         const dupIndex = extOpsValue.findIndex(
           (op, idx) => op.nodeOperatorId === value && idx !== fieldIndex,
         );
+
         if (dupIndex !== -1) {
           return 'Node operator ID is already used in another external operator';
         }
+
+        if (Number(value) >= factoryData.externalNodeOperatorsCount) {
+          return `Value must be less than ${factoryData.externalNodeOperatorsCount}`;
+        }
+
         return undefined;
       };
     };
 
-    const validateExternalNodeOperatorIdAsync = async (value: string) => {
-      if (!factoryData) return undefined;
-      const id = BigInt(value);
-      if (id >= BigInt(factoryData.externalNodeOperatorsCount)) {
-        return `ID must be less than ${factoryData.externalNodeOperatorsCount}`;
-      }
-      return undefined;
-    };
-
     if (isFactoryDataLoading || isTrustedCallerLoading) {
       return <PageLoader />;
+    }
+
+    if (!isTrustedCallerConnected) {
+      return <MessageBox>You should be connected as trusted caller</MessageBox>;
     }
 
     if (factoryDataError || !factoryData) {
@@ -430,104 +450,185 @@ export const formParts = createMotionFormPart({
       );
     }
 
-    if (!isTrustedCallerConnected) {
-      return <MessageBox>You should be connected as trusted caller</MessageBox>;
-    }
-
-    const modeLabel = isCreateMode
-      ? 'Create new group'
-      : isClearMode
-        ? 'Clear existing group'
-        : `Update group #${groupIdValue}`;
+    const isClearAction = selectedAction === 'clear';
+    const isRegistryEmpty = factoryData.groupsCount === 0n;
 
     return (
       <>
-        <MessageBox>
-          Factory: <b>{factoryData.factoryName}</b>. Use group ID <b>0</b> to
-          create a new group, an existing ID to update or clear one. For create
-          and update, sub-operator shares must sum to {MAX_BP}. To clear a
-          group, set its ID and remove all sub- and external operators.
-          <br />
-          Mode: <b>{modeLabel}</b>
-        </MessageBox>
+        {isRegistryEmpty && (
+          <MotionInfoBox>
+            Note: group count is 0, so only <b>Create new group</b> action is
+            available.
+          </MotionInfoBox>
+        )}
 
         <Fieldset>
-          <ValidatedInputHookForm
-            valueType="number"
-            fieldName={fieldNames.groupId}
-            label="Group ID (0 to create new)"
-            validateSync={validateUintValue}
-            validateAsync={validateGroupIdAsync}
+          <SelectHookForm
+            label="Action"
+            fieldName={fieldNames.action}
+            onChange={(value) => handleActionChange(value as Action)}
             rules={{ required: 'Field is required' }}
-          />
-        </Fieldset>
-
-        <Fieldset>
-          <ValidatedInputHookForm
-            fieldName={fieldNames.name}
-            label="Group name"
-            validateSync={validateNameSync}
-            rules={isClearMode ? undefined : { required: 'Field is required' }}
-          />
-        </Fieldset>
-
-        {subFields.fields.map((item, fieldIndex) => (
-          <Fragment key={item.id}>
-            <FieldsWrapper>
-              <FieldsHeader>
-                <FieldsHeaderDesc>
-                  Sub-operator #{fieldIndex + 1}
-                </FieldsHeaderDesc>
-                {(subFields.fields.length > 1 || !isCreateMode) && (
-                  <RemoveItemButton
-                    onClick={() => subFields.remove(fieldIndex)}
-                  >
-                    Remove sub-operator {fieldIndex + 1}
-                  </RemoveItemButton>
-                )}
-              </FieldsHeader>
-
-              <Fieldset>
-                <ValidatedInputHookForm
-                  valueType="number"
-                  fieldName={`${fieldNames.subNodeOperators}.${fieldIndex}.nodeOperatorId`}
-                  label="Node operator ID"
-                  validateSync={validateSubNodeOperatorIdSync(fieldIndex)}
-                  validateAsync={validateSubNodeOperatorIdAsync}
-                  rules={{ required: 'Field is required' }}
-                />
-              </Fieldset>
-
-              <Fieldset>
-                <ValidatedInputHookForm
-                  valueType="number"
-                  fieldName={`${fieldNames.subNodeOperators}.${fieldIndex}.share`}
-                  label={`Share (BP, 0..${MAX_BP})`}
-                  validateSync={validateShareSync}
-                  rules={{ required: 'Field is required' }}
-                />
-              </Fieldset>
-            </FieldsWrapper>
-          </Fragment>
-        ))}
-
-        <Fieldset>
-          <ButtonIcon
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => subFields.append({ nodeOperatorId: '', share: '' })}
-            icon={<Plus />}
-            color="secondary"
           >
-            One more sub-operator
-          </ButtonIcon>
+            {FORM_ACTIONS.map(({ value, label }) => {
+              // Limit to create only when groupCount is 0
+              if (isRegistryEmpty && value !== 'create') {
+                return null;
+              }
+
+              return (
+                <Option key={value} value={value}>
+                  {label}
+                </Option>
+              );
+            })}
+          </SelectHookForm>
         </Fieldset>
 
-        {subOpsValue.length > 0 && (
-          <MotionInfoBox $variant={sharesSum === MAX_BP ? undefined : 'error'}>
+        {selectedAction !== 'create' && (
+          <Fieldset>
+            <ValidatedInputHookForm
+              valueType="number"
+              fieldName={fieldNames.groupId}
+              label={`Group ID (1..${factoryData.groupsCount})`}
+              validateSync={validateGroupIdSync}
+              rules={{ required: 'Field is required' }}
+            />
+          </Fieldset>
+        )}
+
+        {!isClearAction && (
+          <Fieldset>
+            <ValidatedInputHookForm
+              fieldName={fieldNames.name}
+              label="Group name"
+              validateSync={validateNameSync}
+              rules={{ required: 'Field is required' }}
+            />
+          </Fieldset>
+        )}
+
+        {isClearAction && existingGroup && (
+          <MotionInfoBox>
+            Clearing group{' '}
+            <b>
+              {existingGroup.name
+                ? `${existingGroup.name} (ID: #${debouncedGroupIdValue})`
+                : `#${debouncedGroupIdValue}`}
+            </b>
+            . Its name and all operators will be removed.
+          </MotionInfoBox>
+        )}
+
+        {!isClearAction && (
+          <>
+            {subFields.fields.map((item, fieldIndex) => (
+              <Fragment key={item.id}>
+                <FieldsWrapper>
+                  <FieldsHeader>
+                    <FieldsHeaderDesc>
+                      Sub-operator #{fieldIndex + 1}
+                    </FieldsHeaderDesc>
+                    {subFields.fields.length > 1 && (
+                      <RemoveItemButton
+                        onClick={() => subFields.remove(fieldIndex)}
+                      >
+                        Remove sub-operator {fieldIndex + 1}
+                      </RemoveItemButton>
+                    )}
+                  </FieldsHeader>
+
+                  <Fieldset>
+                    <ValidatedInputHookForm
+                      valueType="number"
+                      fieldName={`${fieldNames.subNodeOperators}.${fieldIndex}.nodeOperatorId`}
+                      label={`ID (0..${factoryData.curatedNodeOperatorsCount - 1})`}
+                      validateSync={validateSubNodeOperatorIdSync(fieldIndex)}
+                      rules={{ required: 'Field is required' }}
+                    />
+                  </Fieldset>
+
+                  <Fieldset>
+                    <ValidatedInputHookForm
+                      valueType="number"
+                      fieldName={`${fieldNames.subNodeOperators}.${fieldIndex}.share`}
+                      label={`Share (BP, 0..${MAX_BP})`}
+                      validateSync={validateShareSync}
+                      rules={{ required: 'Field is required' }}
+                    />
+                  </Fieldset>
+                </FieldsWrapper>
+              </Fragment>
+            ))}
+
+            <Fieldset>
+              <ButtonIcon
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  subFields.append({ nodeOperatorId: '', share: '' })
+                }
+                icon={<Plus />}
+                color="secondary"
+              >
+                One more sub-operator
+              </ButtonIcon>
+            </Fieldset>
+
+            {extFields.fields.length > 0 && (
+              <MotionInfoBox>
+                External module: <b>{factoryData.externalModuleName}</b>
+              </MotionInfoBox>
+            )}
+
+            {extFields.fields.map((item, fieldIndex) => (
+              <Fragment key={item.id}>
+                <FieldsWrapper>
+                  <FieldsHeader>
+                    <FieldsHeaderDesc>
+                      External operator #{fieldIndex + 1}
+                    </FieldsHeaderDesc>
+                    <RemoveItemButton
+                      onClick={() => extFields.remove(fieldIndex)}
+                    >
+                      Remove operator {fieldIndex + 1}
+                    </RemoveItemButton>
+                  </FieldsHeader>
+
+                  <Fieldset>
+                    <ValidatedInputHookForm
+                      valueType="number"
+                      fieldName={`${fieldNames.externalOperators}.${fieldIndex}.nodeOperatorId`}
+                      label={`ID (0..${factoryData.externalNodeOperatorsCount - 1})`}
+                      validateSync={validateExternalNodeOperatorIdSync(
+                        fieldIndex,
+                      )}
+                      rules={{ required: 'Field is required' }}
+                    />
+                  </Fieldset>
+                </FieldsWrapper>
+              </Fragment>
+            ))}
+
+            <Fieldset>
+              <ButtonIcon
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => extFields.append({ nodeOperatorId: '' })}
+                icon={<Plus />}
+                color="secondary"
+              >
+                Add external operator
+              </ButtonIcon>
+            </Fieldset>
+          </>
+        )}
+
+        {selectedAction !== 'clear' && (
+          <MotionInfoBox $variant={isSharesSumInvalid ? 'error' : undefined}>
             Sub-operator shares sum: <b>{sharesSum}</b> / {MAX_BP}
-            {sharesSum !== MAX_BP && (
+            {isSharesSumInvalid && (
               <>
                 <br />
                 Sum must equal {MAX_BP} before submission.
@@ -535,46 +636,6 @@ export const formParts = createMotionFormPart({
             )}
           </MotionInfoBox>
         )}
-
-        {extFields.fields.map((item, fieldIndex) => (
-          <Fragment key={item.id}>
-            <FieldsWrapper>
-              <FieldsHeader>
-                <FieldsHeaderDesc>
-                  External operator #{fieldIndex + 1} (NOR module{' '}
-                  {factoryData.allowedExternalModuleId})
-                </FieldsHeaderDesc>
-                <RemoveItemButton onClick={() => extFields.remove(fieldIndex)}>
-                  Remove external operator {fieldIndex + 1}
-                </RemoveItemButton>
-              </FieldsHeader>
-
-              <Fieldset>
-                <ValidatedInputHookForm
-                  valueType="number"
-                  fieldName={`${fieldNames.externalOperators}.${fieldIndex}.nodeOperatorId`}
-                  label="External node operator ID"
-                  validateSync={validateExternalNodeOperatorIdSync(fieldIndex)}
-                  validateAsync={validateExternalNodeOperatorIdAsync}
-                  rules={{ required: 'Field is required' }}
-                />
-              </Fieldset>
-            </FieldsWrapper>
-          </Fragment>
-        ))}
-
-        <Fieldset>
-          <ButtonIcon
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => extFields.append({ nodeOperatorId: '' })}
-            icon={<Plus />}
-            color="secondary"
-          >
-            Add external operator
-          </ButtonIcon>
-        </Fieldset>
 
         {submitAction}
       </>
