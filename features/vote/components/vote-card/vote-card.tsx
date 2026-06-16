@@ -106,6 +106,7 @@ export const VoteCard = () => {
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
     vote.state.status === VoteStatus.Executed;
+  const isClosed = vote.phase === VotePhase.Closed;
 
   const isDualGovernancePhase =
     !!dgProposal &&
@@ -125,7 +126,7 @@ export const VoteCard = () => {
       <SidebarSection>
         <VoteQuorumPanel vote={vote} />
       </SidebarSection>
-      {!isEnded && (
+      {!isClosed && (
         <SidebarSection>
           <VoteProgressBar
             startDate={Number(vote.startDate)}
@@ -160,7 +161,6 @@ export const VoteCard = () => {
     </>
   );
 
-  const isClosed = vote.phase === VotePhase.Closed;
   const hasOwnVote = !!userOwnVote;
   const hasVotingPower =
     voterDaoTokenBalance !== undefined && voterDaoTokenBalance > 0n;
@@ -170,10 +170,11 @@ export const VoteCard = () => {
     hasDelegateVote ||
     (!isClosed && (hasVotingPower || hasDelegatedPower));
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
+  const isPending = vote.state.status === VoteStatus.Pending;
 
   const ctaItems = isDualGovernancePhase ? null : (
     <>
-      {!isWalletConnected && !isClosed && (
+      {!isWalletConnected && (!isClosed || isPending) && (
         <Button fullwidth onClick={openConnectWalletModal}>
           Connect wallet
         </Button>
@@ -233,7 +234,7 @@ export const VoteCard = () => {
               </DgButton>
             </VoteActionsWrap>
           )}
-          {vote.state.status === VoteStatus.Pending && (
+          {isPending && (
             <EnactButtonWrap>
               <Button
                 fullwidth
