@@ -55,6 +55,7 @@ export const VoteCard = () => {
     dgProposal,
     voteEvents,
     voterDaoTokenBalance,
+    totalDelegatedVotingPower,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -163,8 +164,11 @@ export const VoteCard = () => {
   const hasOwnVote = !!userOwnVote;
   const hasVotingPower =
     voterDaoTokenBalance !== undefined && voterDaoTokenBalance > 0n;
+  const hasDelegatedPower = totalDelegatedVotingPower > 0n;
   const showYourVoteSection =
-    hasOwnVote || hasDelegateVote || (!isClosed && hasVotingPower);
+    hasOwnVote ||
+    hasDelegateVote ||
+    (!isClosed && (hasVotingPower || hasDelegatedPower));
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
 
   const ctaItems = isDualGovernancePhase ? null : (
@@ -196,6 +200,14 @@ export const VoteCard = () => {
                     ) : (
                       `${formatBalance(voterDaoTokenBalance)} ${KnownToken.LDO.symbol}`
                     )}
+                  </span>
+                </PowerRow>
+              )}
+              {!isClosed && hasDelegatedPower && (
+                <PowerRow>
+                  <span>Total delegated voting power</span>
+                  <span>
+                    {`${formatBalance(totalDelegatedVotingPower)} ${KnownToken.LDO.symbol}`}
                   </span>
                 </PowerRow>
               )}
