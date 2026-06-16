@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const Tabs = styled.div`
   position: relative;
@@ -87,10 +86,6 @@ export const VoteScriptBodyInner = styled.div<Pick<TabProps, '$variant'>>`
     css`
       max-height: 524px;
       overflow-y: auto;
-
-      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
-        max-height: none;
-      }
     `};
 `;
 

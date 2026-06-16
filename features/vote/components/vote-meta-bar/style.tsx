@@ -1,12 +1,25 @@
 import styled, { css } from 'styled-components';
+import {
+  VOTE_CARD_MAX_WIDTH,
+  VOTE_CARD_MOBILE_MAX_WIDTH,
+} from 'styles/constants';
 
-export const MetaWrap = styled.div`
+export const MetaWrap = styled.div<{ $labeled?: boolean }>`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;
   margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
   font-size: 14px;
+
+  ${({ $labeled }) =>
+    !$labeled &&
+    css`
+      @media (max-width: ${VOTE_CARD_MOBILE_MAX_WIDTH}px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    `}
 `;
 
 export const BadgeGroup = styled.div`
@@ -24,6 +37,10 @@ export const TimeGroup = styled.div<{ $labeled?: boolean }>`
     $labeled &&
     css`
       margin-left: auto;
+
+      @media (max-width: ${VOTE_CARD_MAX_WIDTH - 1}px) {
+        margin-left: 0;
+      }
     `}
 `;
 

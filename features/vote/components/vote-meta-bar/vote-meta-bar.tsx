@@ -134,7 +134,7 @@ export const VoteMetaBar = ({
   );
 
   return (
-    <MetaWrap>
+    <MetaWrap $labeled={withLabels}>
       <BadgeGroup>
         <StatusBadge $variant={statusLabel.variant}>
           {statusLabel.variant === 'success' && <VoteDoneIcon />}

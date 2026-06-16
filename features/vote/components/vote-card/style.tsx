@@ -60,6 +60,14 @@ export const MobileSidebarSlot = styled.div`
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     display: block;
     margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+    padding: ${({ theme }) => theme.spaceMap.xl}px 0;
+    border-top: 1px solid var(--lido-color-border);
+    border-bottom: 1px solid var(--lido-color-border);
+
+    ${SidebarSection} + ${SidebarSection} {
+      padding-top: ${({ theme }) => theme.spaceMap.xl}px;
+      border-top: 1px solid var(--lido-color-border);
+    }
   }
 `;
 
