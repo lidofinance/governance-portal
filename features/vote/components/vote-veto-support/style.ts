@@ -45,6 +45,10 @@ export const InfoIconWrap = styled.span`
   color: var(--lido-color-textSecondary);
 `;
 
+export const TooltipText = styled.span`
+  font-size: 12px;
+`;
+
 export const ProgressWrap = styled.div`
   width: 100%;
 

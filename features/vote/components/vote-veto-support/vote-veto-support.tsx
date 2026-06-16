@@ -17,6 +17,7 @@ import {
   FooterRow,
   InfoIconWrap,
   ProgressWrap,
+  TooltipText,
 } from './style';
 
 export const VoteVetoSupport = () => {
@@ -49,7 +50,15 @@ export const VoteVetoSupport = () => {
       <Header>
         <Title>
           Veto support
-          <Tooltip title="Total stETH locked in the veto signalling escrow as a share of the VetoSignalling threshold. If support reaches 100%, Dual Governance enters VetoSignalling and blocks the proposal.">
+          <Tooltip
+            title={
+              <TooltipText>
+                Total stETH locked in the veto signalling escrow as a share of
+                the VetoSignalling threshold. If support reaches 100%, Dual
+                Governance enters VetoSignalling and blocks the proposal.
+              </TooltipText>
+            }
+          >
             <InfoIconWrap>
               <InfoIcon />
             </InfoIconWrap>
