@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Tooltip } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 
 export const QuorumRow = styled.div`
@@ -46,6 +47,12 @@ export const QuorumStatus = styled.span<{ $reached: boolean }>`
     $reached ? 'var(--lido-color-textSecondary)' : 'var(--lido-color-warning)'};
 `;
 
+export const QuorumTooltip = styled(Tooltip)`
+  && {
+    max-width: 320px;
+  }
+`;
+
 export const QuorumTooltipBody = styled.span`
   display: block;
   font-size: 12px;
@@ -54,7 +61,12 @@ export const QuorumTooltipBody = styled.span`
 export const QuorumTooltipRow = styled.span`
   display: flex;
   justify-content: space-between;
+  gap: ${({ theme }) => theme.spaceMap.lg}px;
   margin-top: ${({ theme }) => theme.spaceMap.xs}px;
+
+  span:last-child {
+    white-space: nowrap;
+  }
 `;
 
 export const VoteTotalsRow = styled.div`

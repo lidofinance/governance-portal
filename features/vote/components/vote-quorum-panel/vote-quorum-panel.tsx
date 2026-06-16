@@ -1,4 +1,4 @@
-import { Text, Tooltip } from '@lidofinance/lido-ui';
+import { Text } from '@lidofinance/lido-ui';
 import { formatEther } from 'viem';
 import { Vote } from 'shared/votes/types';
 import { InfoIcon } from 'shared/components/icons';
@@ -12,6 +12,7 @@ import {
   QuorumValue,
   QuorumStatusWrap,
   QuorumStatus,
+  QuorumTooltip,
   QuorumTooltipBody,
   QuorumTooltipRow,
   VoteTotalsRow,
@@ -46,7 +47,8 @@ export const VoteQuorumPanel = ({ vote }: Props) => {
         <QuorumLabel>
           Quorum: <QuorumValue>{quorumPct}%</QuorumValue>
         </QuorumLabel>
-        <Tooltip
+        <QuorumTooltip
+          placement="bottomRight"
           title={
             <QuorumTooltipBody>
               To reach quorum, more than {quorumPct}% of the total LDO supply
@@ -68,7 +70,7 @@ export const VoteQuorumPanel = ({ vote }: Props) => {
             </QuorumStatus>
             <InfoIcon />
           </QuorumStatusWrap>
-        </Tooltip>
+        </QuorumTooltip>
       </QuorumRow>
       <VoteYesNoBar
         yeaPct={yeaPct}
