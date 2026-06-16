@@ -13,7 +13,8 @@ interface Props {
 }
 
 export const VoteInfo = ({ walletAddress }: Props) => {
-  const { voteEvents, vote, voterDaoTokenBalance } = useVoteContext();
+  const { voteEvents, vote, voterDaoTokenBalance, hasDelegated } =
+    useVoteContext();
   const voteInfo = useMemo(() => {
     if (!walletAddress || !voteEvents) {
       return undefined;
@@ -52,6 +53,18 @@ export const VoteInfo = ({ walletAddress }: Props) => {
   }
 
   if (voteInfo === null) {
+    if (hasDelegated) {
+      return (
+        <InfoWrap>
+          <Text size={12} color="secondary">
+            {vote.phase === VotePhase.Closed
+              ? 'Delegate did not vote'
+              : 'Delegate not voted yet'}
+          </Text>
+        </InfoWrap>
+      );
+    }
+
     // If no balance at snapshot block, show nothing
     if (!voterDaoTokenBalance) {
       return null;

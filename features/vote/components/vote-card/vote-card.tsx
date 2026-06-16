@@ -56,6 +56,7 @@ export const VoteCard = () => {
     voteEvents,
     voterDaoTokenBalance,
     totalDelegatedVotingPower,
+    hasDelegated,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -168,6 +169,7 @@ export const VoteCard = () => {
   const showYourVoteSection =
     hasOwnVote ||
     hasDelegateVote ||
+    hasDelegated ||
     (!isClosed && (hasVotingPower || hasDelegatedPower));
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
   const isPending = vote.state.status === VoteStatus.Pending;

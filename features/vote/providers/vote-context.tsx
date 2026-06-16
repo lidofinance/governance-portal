@@ -19,6 +19,7 @@ import { EligibleDelegator, VoterInfo } from '../types';
 import { ProposalStatus } from 'shared/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
+import { useDelegationInfo } from '../hooks/use-delegation-info';
 
 type Value = {
   vote: Vote;
@@ -35,6 +36,7 @@ type Value = {
   eligibleDelegatedVotingPower: bigint;
   totalDelegatedVotingPower: bigint;
   delegatorsVotedThemselves: VoterInfo[];
+  hasDelegated: boolean;
   dgProposal:
     | {
         proposalId: number;
@@ -103,6 +105,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchDelegatorsData,
   } = useVoteDelegators(voteData?.vote.id);
 
+  const { data: delegationInfo } = useDelegationInfo();
+  const hasDelegated = !!delegationInfo?.aragonDelegateAddress;
+
   const refetchers = useMemo(
     () => ({
       refetchVote,
@@ -144,6 +149,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
         delegatorsData?.totalDelegatedVotingPower ?? 0n,
       delegatorsVotedThemselves:
         delegatorsData?.delegatedVotersVotedThemselves ?? [],
+      hasDelegated,
       dgProposal,
       isLoading,
       refetchers,
@@ -153,6 +159,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     delegatorsData?.eligibleDelegatedVoters,
     delegatorsData?.eligibleDelegatedVotingPower,
     delegatorsData?.totalDelegatedVotingPower,
+    hasDelegated,
     dgProposal,
     isLoading,
     refetchers,
