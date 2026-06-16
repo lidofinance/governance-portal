@@ -166,10 +166,12 @@ export const VoteCard = () => {
   const hasVotingPower =
     voterDaoTokenBalance !== undefined && voterDaoTokenBalance > 0n;
   const hasDelegatedPower = totalDelegatedVotingPower > 0n;
+  const hasNoVotingPower = voterDaoTokenBalance === 0n;
   const showYourVoteSection =
     hasOwnVote ||
     hasDelegateVote ||
     hasDelegated ||
+    hasNoVotingPower ||
     (!isClosed && (hasVotingPower || hasDelegatedPower));
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
   const isPending = vote.state.status === VoteStatus.Pending;

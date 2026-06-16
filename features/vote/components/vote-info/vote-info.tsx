@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { getPublicDelegate } from '@vote/utils/get-public-delegate';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { useVoteContext } from '@vote/providers/vote-context';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 interface Props {
   walletAddress: string | null | undefined;
@@ -65,9 +66,18 @@ export const VoteInfo = ({ walletAddress }: Props) => {
       );
     }
 
-    // If no balance at snapshot block, show nothing
-    if (!voterDaoTokenBalance) {
+    if (voterDaoTokenBalance === undefined) {
       return null;
+    }
+
+    if (voterDaoTokenBalance === 0n) {
+      return (
+        <InfoWrap>
+          <Text size={12} color="secondary">
+            You didn&#39;t have {KnownToken.LDO.symbol} when the vote started
+          </Text>
+        </InfoWrap>
+      );
     }
 
     return (
