@@ -1,8 +1,6 @@
 import { themeLight } from '@lidofinance/lido-ui';
 
-// Light-only replacement for LidoUIHead's theme CSS: no dark blocks and no
-// theme-detection script, so a dark cookie / dark OS theme can't flash the UI
-// before hydration. Mirrors lido-ui's generate-css-color-variables output.
+// Light-only replacement for LidoUIHead's theme CSS
 const toRgbChannels = (color: string): number[] | null => {
   if (/^#[\da-fA-F]{3}$/.test(color)) {
     return [color[1] + color[1], color[2] + color[2], color[3] + color[3]].map(

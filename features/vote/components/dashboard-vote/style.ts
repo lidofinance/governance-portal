@@ -68,5 +68,5 @@ export const VoteQuorum = styled.section`
 export const VetoSupportWrap = styled.div`
   margin-top: ${({ theme }) => theme.spaceMap.lg}px;
   padding-top: ${({ theme }) => theme.spaceMap.lg}px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--lido-color-border);
 `;

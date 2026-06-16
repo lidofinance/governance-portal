@@ -60,7 +60,7 @@ export const VoteInfo = ({ walletAddress }: Props) => {
           <Text size={12} color="secondary">
             {vote.phase === VotePhase.Closed
               ? 'Delegate did not vote'
-              : 'Delegate not voted yet'}
+              : 'Delegate has not voted yet'}
           </Text>
         </InfoWrap>
       );
