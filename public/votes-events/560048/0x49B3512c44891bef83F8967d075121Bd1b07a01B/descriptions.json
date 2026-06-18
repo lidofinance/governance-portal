@@ -363,5 +363,15 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "Omnibus vote: 1. Submit DG proposal: update CSM and Curated module implementations.\nlidovoteipfs://bafkreidkzpy5bkhiitn3shvvd7qthd52yammnv4sj5yjzsuqwbk26skzma"
+  },
+  "73": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "SRv3/CMv2 hoodi interim update"
+  },
+  "74": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Set StakingRouter module #1 shares to 0/0"
   }
 }

@@ -172,7 +172,11 @@
   },
   "353": {
     "description": null,
-    "executeVoteEvent": null,
+    "executeVoteEvent": {
+      "blockNumber": "3022428",
+      "executedAt": 1781541096,
+      "transactionHash": "0x2d60128ab0f5d7d07b52934a4aeba94d282dd5c9fb16f03c87e8c54ef15b96a0"
+    },
     "startVoteEvent": {
       "args": {
         "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
@@ -183,8 +187,8 @@
       "transactionHash": "0xfceb70c9f7bae9c8e4f74d8b86e9487e8ba387ffb970acf6393bd1f3cbd60f58"
     },
     "voteDetails": {
-      "canExecute": true,
-      "executed": false,
+      "canExecute": false,
+      "executed": true,
       "id": 353,
       "minAcceptQuorum": "50000000000000000",
       "nay": "0",
