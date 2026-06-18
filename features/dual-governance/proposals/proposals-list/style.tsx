@@ -91,6 +91,30 @@ export const MarkdownWrap = styled.div`
   & p {
     white-space: pre-wrap;
   }
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    margin: 0 0 8px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  & h1 {
+    font-size: 18px;
+  }
+  & h2 {
+    font-size: 16px;
+  }
+  & h3 {
+    font-size: 15px;
+  }
+  & h4,
+  & h5,
+  & h6 {
+    font-size: 13px;
+  }
   & > ol > li {
     line-height: 1.5;
   }
