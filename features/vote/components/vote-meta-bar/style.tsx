@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { Tooltip } from '@lidofinance/lido-ui';
 import {
   VOTE_CARD_MAX_WIDTH,
   VOTE_CARD_MOBILE_MAX_WIDTH,
@@ -207,6 +208,18 @@ export const EndedText = styled.span`
   font-size: 16px;
   font-weight: 700;
   color: var(--lido-color-textSecondary);
+`;
+
+export const PhaseTooltip = styled(Tooltip)`
+  && {
+    max-width: 320px;
+
+    @media (max-width: ${VOTE_CARD_MOBILE_MAX_WIDTH}px) {
+      left: 16px !important;
+      right: 16px;
+      max-width: unset;
+    }
+  }
 `;
 
 export const TooltipText = styled.span`

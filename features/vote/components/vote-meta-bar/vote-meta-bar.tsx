@@ -1,4 +1,3 @@
-import { Tooltip } from '@lidofinance/lido-ui';
 import { VoteStatus } from 'shared/votes/types';
 import { VoteDoneIcon, VoteFailIcon, InfoIcon } from 'shared/components/icons';
 import { VoteDetailsCountdown } from '@vote/components/vote-details-countdown';
@@ -15,6 +14,7 @@ import {
   EndedText,
   MetaLabel,
   MetaCell,
+  PhaseTooltip,
   TooltipText,
   TooltipIconWrap,
 } from './style';
@@ -149,11 +149,14 @@ export const VoteMetaBar = ({
             )}
             {phase.text}
             {phase.variant === 'phase' && (
-              <Tooltip title={<TooltipText>{PHASE_TOOLTIP_TEXT}</TooltipText>}>
+              <PhaseTooltip
+                placement="bottomRight"
+                title={<TooltipText>{PHASE_TOOLTIP_TEXT}</TooltipText>}
+              >
                 <TooltipIconWrap>
                   <InfoIcon />
                 </TooltipIconWrap>
-              </Tooltip>
+              </PhaseTooltip>
             )}
           </PhaseBadge>
         )}
