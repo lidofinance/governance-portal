@@ -20,7 +20,7 @@ import { Button } from '@lidofinance/lido-ui';
 import { Button as DgButton } from 'shared/components/button';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { splitVoteDescription } from '@vote/utils/split-vote-description';
+import { useVoteTitle } from '@vote/hooks/use-vote-title';
 import { VoteDescription } from '../vote-description';
 import { VoteNotice } from '../vote-notice';
 import { VotersList } from '../voters-list';
@@ -114,7 +114,7 @@ export const VoteCard = () => {
     (dgProposal.proposalStatus === ProposalStatus.Submitted ||
       dgProposal.proposalStatus === ProposalStatus.Scheduled);
 
-  const { title, body } = splitVoteDescription({
+  const { title, body } = useVoteTitle({
     description,
     metadata: eventStart?.args.metadata,
     truncateTitle: false,
@@ -276,8 +276,9 @@ export const VoteCard = () => {
           <DescriptionWrap data-testid="voteDescription">
             <VoteDescription
               metadata={eventStart?.args.metadata}
-              description={body}
+              description={description}
               allowMD
+              hideLeadingHeading
             />
           </DescriptionWrap>
         )}

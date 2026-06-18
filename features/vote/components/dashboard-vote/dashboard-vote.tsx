@@ -9,7 +9,7 @@ import {
   VoteQuorum,
   VetoSupportWrap,
 } from './style';
-import { splitVoteDescription } from '@vote/utils/split-vote-description';
+import { useVoteTitle } from '@vote/hooks/use-vote-title';
 import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
 import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
@@ -77,27 +77,12 @@ export const DashboardVote = ({
     onPass: handlePass,
   });
 
-  const { title: splitTitle, body: splitBody } = splitVoteDescription({
+  const { title, body } = useVoteTitle({
     description,
     metadata: startEvent?.args.metadata,
   });
 
-  const trimmedDescription = description?.trim() || null;
-  const hasCleanSplit = splitTitle !== null && splitBody !== null;
-
-  const title = trimmedDescription
-    ? hasCleanSplit
-      ? splitTitle
-      : 'Proposal'
-    : splitTitle;
-
-  const body = trimmedDescription
-    ? hasCleanSplit
-      ? splitBody
-      : trimmedDescription
-    : null;
-
-  const hasDescription = body !== null || !trimmedDescription;
+  const hasDescription = body !== null || !description?.trim();
 
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
@@ -128,7 +113,8 @@ export const DashboardVote = ({
             <VoteDescriptionWrap data-testid="voteDescription">
               <VoteDescription
                 metadata={startEvent?.args.metadata}
-                description={body}
+                description={description}
+                hideLeadingHeading
               />
             </VoteDescriptionWrap>
           )}

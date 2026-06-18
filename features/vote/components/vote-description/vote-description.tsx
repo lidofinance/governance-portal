@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetcherIPFS } from 'utils/fetcher-ipfs';
 import { DescriptionText } from './style';
 import { replaceJsxElements } from 'utils/replace-links-with-components';
+import { splitLeadingHeading } from '@vote/utils/parse-vote-title';
 import { MarkdownWrapper } from '../markdown-wrapper';
 
 type Props = {
@@ -17,12 +18,22 @@ type Props = {
    */
   description?: string | null;
   allowMD?: boolean;
+  /** Drop the leading `# heading` line, which is rendered as the vote title. */
+  hideLeadingHeading?: boolean;
 };
 
 const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
 
-export const VoteDescription = ({ metadata, description, allowMD }: Props) => {
+export const VoteDescription = ({
+  metadata,
+  description,
+  allowMD,
+  hideLeadingHeading,
+}: Props) => {
   const cid = metadata?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
+
+  const stripHeading = (text: string) =>
+    hideLeadingHeading ? (splitLeadingHeading(text).body ?? '') : text;
 
   const cachedDescription = trimStart(description ?? '');
   const hasCachedDescription = cachedDescription.length > 0;
@@ -50,13 +61,15 @@ export const VoteDescription = ({ metadata, description, allowMD }: Props) => {
   }
 
   if (hasCachedDescription) {
+    const text = stripHeading(cachedDescription);
+    if (!text) {
+      return <DescriptionText>No description.</DescriptionText>;
+    }
     if (allowMD) {
-      return <MarkdownWrapper>{cachedDescription}</MarkdownWrapper>;
+      return <MarkdownWrapper>{text}</MarkdownWrapper>;
     }
     return (
-      <DescriptionText>
-        {replaceJsxElements(removeMD(cachedDescription))}
-      </DescriptionText>
+      <DescriptionText>{replaceJsxElements(removeMD(text))}</DescriptionText>
     );
   }
 
@@ -83,13 +96,16 @@ export const VoteDescription = ({ metadata, description, allowMD }: Props) => {
     );
   }
 
-  if (trimmedData && allowMD) {
-    return <MarkdownWrapper>{trimmedData}</MarkdownWrapper>;
+  const text = stripHeading(trimmedData);
+  if (!text) {
+    return <DescriptionText>No description.</DescriptionText>;
+  }
+
+  if (allowMD) {
+    return <MarkdownWrapper>{text}</MarkdownWrapper>;
   }
 
   return (
-    <DescriptionText>
-      {replaceJsxElements(removeMD(trimmedData))}
-    </DescriptionText>
+    <DescriptionText>{replaceJsxElements(removeMD(text))}</DescriptionText>
   );
 };
