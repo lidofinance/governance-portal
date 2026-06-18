@@ -18,7 +18,7 @@ import {
 } from './style';
 import { Button } from '@lidofinance/lido-ui';
 import { Button as DgButton } from 'shared/components/button';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useVoteTitle } from '@vote/hooks/use-vote-title';
 import { VoteDescription } from '../vote-description';
@@ -27,7 +27,7 @@ import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { useConnect } from 'reef-knot/core-react';
+import { ConnectWalletButton } from 'shared/wallet';
 import { VoteInfo } from '../vote-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from '@vote/providers/vote-context';
@@ -64,8 +64,6 @@ export const VoteCard = () => {
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
 
-  const { connect } = useConnect();
-
   const router = useRouter();
 
   const processEnact = useEnactVoteAction();
@@ -99,10 +97,6 @@ export const VoteCard = () => {
   useEffect(() => {
     setIsChangeMode(false);
   }, [userOwnVote?.supports]);
-
-  const openConnectWalletModal = useCallback(async () => {
-    await connect();
-  }, [connect]);
 
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
@@ -179,9 +173,7 @@ export const VoteCard = () => {
   const ctaItems = isDualGovernancePhase ? null : (
     <>
       {!isWalletConnected && (!isClosed || isPending) && (
-        <Button fullwidth onClick={openConnectWalletModal}>
-          Connect wallet
-        </Button>
+        <ConnectWalletButton fullwidth>Connect wallet</ConnectWalletButton>
       )}
       {isWalletConnected && (
         <>

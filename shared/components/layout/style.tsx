@@ -1,5 +1,5 @@
 import { ContainerProps, H1 } from '@lidofinance/lido-ui';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
 export const LayoutTitleStyle = styled((props) => <H1 {...props} />)`
@@ -64,5 +64,14 @@ export const ContainerStyled = styled.main<{
     padding-left: ${({ $paddingX, theme }) => $paddingX ?? theme.spaceMap.lg}px;
     padding-right: ${({ $paddingX, theme }) =>
       $paddingX ?? theme.spaceMap.lg}px;
+  }
+
+  @media (max-width: 600px) {
+    ${({ $paddingX }) =>
+      $paddingX !== undefined &&
+      css`
+        padding-left: 20px;
+        padding-right: 20px;
+      `}
   }
 `;
