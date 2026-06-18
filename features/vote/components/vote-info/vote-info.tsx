@@ -70,7 +70,7 @@ export const VoteInfo = ({ walletAddress }: Props) => {
       return null;
     }
 
-    if (voterDaoTokenBalance === 0n) {
+    if (voterDaoTokenBalance === 0n && vote.phase !== VotePhase.Closed) {
       return (
         <InfoWrap>
           <Text size={12} color="secondary">
