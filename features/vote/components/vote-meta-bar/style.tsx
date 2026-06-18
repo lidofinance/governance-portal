@@ -222,8 +222,18 @@ export const PhaseTooltip = styled(Tooltip)`
   }
 `;
 
-export const TooltipText = styled.span`
+export const TooltipText = styled.div`
   font-size: 12px;
+`;
+
+export const TooltipList = styled.ul`
+  margin: 4px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+
+  li:not(:first-child) {
+    margin-top: 4px;
+  }
 `;
 
 export const TooltipIconWrap = styled.span`

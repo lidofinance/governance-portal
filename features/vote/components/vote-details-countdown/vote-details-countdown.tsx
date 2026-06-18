@@ -11,7 +11,22 @@ const format = (ms: number): string => {
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+  const units = [
+    { value: days, suffix: 'd' },
+    { value: hours, suffix: 'h' },
+    { value: minutes, suffix: 'm' },
+    { value: seconds, suffix: 's' },
+  ];
+
+  const firstSignificant = units.findIndex((unit) => unit.value > 0);
+  const startIndex =
+    firstSignificant === -1 ? units.length - 1 : firstSignificant;
+
+  return units
+    .slice(startIndex)
+    .map((unit) => `${unit.value}${unit.suffix}`)
+    .join(' ');
 };
 
 export const VoteDetailsCountdown = ({

@@ -34,7 +34,11 @@ export const VoteDetailsList = () => {
       <Row>
         <Label>Started at</Label>
         <Value>
-          <FormattedDate date={Number(vote.startDate)} format="MMM D, HH:mm" />
+          <FormattedDate
+            date={Number(vote.startDate)}
+            format="MMM D, HH:mm"
+            withTimezone
+          />
         </Value>
       </Row>
       {startTxHash && (

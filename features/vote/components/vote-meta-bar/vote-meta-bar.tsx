@@ -16,6 +16,7 @@ import {
   MetaCell,
   PhaseTooltip,
   TooltipText,
+  TooltipList,
   TooltipIconWrap,
 } from './style';
 import { FormattedDate } from 'shared/components/formatted-date';
@@ -32,8 +33,22 @@ type Props = {
   withLabels?: boolean;
 };
 
-const PHASE_TOOLTIP_TEXT =
-  'All proposals go through three stages before implementation: Main phase → Objection phase → Dual Governance phase.';
+const GOVERNANCE_STAGES = [
+  'Main phase — 72h to vote Yes or No.',
+  'Objection phase — 48h to vote No or switch Yes to No.',
+  'Dual Governance — dynamic timelock that lets stETH holders extend execution delay based on the level of opposition.',
+];
+
+const PHASE_TOOLTIP_TITLE = (
+  <TooltipText>
+    Governance stages:
+    <TooltipList>
+      {GOVERNANCE_STAGES.map((stage) => (
+        <li key={stage}>{stage}</li>
+      ))}
+    </TooltipList>
+  </TooltipText>
+);
 
 type StatusLabel = {
   text: string;
@@ -105,11 +120,6 @@ export const VoteMetaBar = ({
   const statusLabel = getStatusLabel(status, isQuorumReached);
   const phase = getPhaseLabel(status, dualGovernancePhase);
 
-  const activePhaseLabel =
-    status === VoteStatus.ActiveMain
-      ? 'Main phase ends in'
-      : 'Objection phase ends in';
-
   const timeValue = isActive ? (
     <CountdownText>
       <VoteDetailsCountdown
@@ -149,10 +159,7 @@ export const VoteMetaBar = ({
             )}
             {phase.text}
             {phase.variant === 'phase' && (
-              <PhaseTooltip
-                placement="bottomRight"
-                title={<TooltipText>{PHASE_TOOLTIP_TEXT}</TooltipText>}
-              >
+              <PhaseTooltip placement="bottomRight" title={PHASE_TOOLTIP_TITLE}>
                 <TooltipIconWrap>
                   <InfoIcon />
                 </TooltipIconWrap>
@@ -168,10 +175,12 @@ export const VoteMetaBar = ({
               <MetaLabel>Proposal ID</MetaLabel>
               <VoteIdText>Vote #{voteId}</VoteIdText>
             </MetaCell>
-            <MetaCell>
-              <MetaLabel>{isActive ? activePhaseLabel : 'Ended on'}</MetaLabel>
-              {timeValue}
-            </MetaCell>
+            {!isActive && (
+              <MetaCell>
+                <MetaLabel>Ended on</MetaLabel>
+                {timeValue}
+              </MetaCell>
+            )}
           </>
         ) : (
           <>
