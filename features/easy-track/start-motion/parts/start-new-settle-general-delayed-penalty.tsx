@@ -1,12 +1,11 @@
 import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
-import { encodeAbiParameters, parseAbiParameters, parseEther } from 'viem';
-import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+import { encodeAbiParameters } from 'viem';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
 
 import { PageLoader } from 'shared/components/page-loader';
-import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { ValidatedInputHookForm } from 'shared/hook-form/validated-input-hook-form';
 import {
   CuratedSettleGeneralDelayedPenalty,
@@ -21,8 +20,6 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { MotionType } from '../../motion-types';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { validateUintValue } from '../../utils/validate-uint-value';
-import { validateEtherValue } from 'utils/validate-ether-value';
-import { formatEth } from 'shared/blockchain/utils';
 import {
   createMotionFormPart,
   PopulateTxArgs,
@@ -39,7 +36,8 @@ import { stakingModuleAbi, accountingAbi } from 'abi/generated';
 
 type Settle = {
   id: string;
-  maxAmount: string;
+  // Auto-resolved from `Accounting.getBondLockNonce(id)`
+  nonce: string;
 };
 
 type FormData = {
@@ -73,14 +71,18 @@ export const formParts = ({
         (a, b) => Number(a.id) - Number(b.id),
       );
 
-      const nodeOperatorIds = sortedSettles.map(({ id }) => BigInt(id));
-      const maxAmounts = sortedSettles.map(({ maxAmount }) =>
-        parseEther(maxAmount),
+      const lockInfoList = sortedSettles.map(
+        ({ id, nonce }) => [BigInt(id), BigInt(nonce)] as const,
       );
 
       const encodedCallData = encodeAbiParameters(
-        parseAbiParameters('uint256[], uint256[]'),
-        [nodeOperatorIds, maxAmounts],
+        [
+          {
+            type: 'tuple[]',
+            components: [{ type: 'uint256' }, { type: 'uint256' }],
+          },
+        ],
+        [lockInfoList],
       );
 
       return await contract.write({
@@ -90,7 +92,7 @@ export const formParts = ({
       });
     },
     getDefaultFormData: (): FormData => ({
-      settles: [{ id: '', maxAmount: '' }],
+      settles: [{ id: '', nonce: '' }],
     }),
     Component: ({ fieldNames, submitAction }) => {
       const { chainId } = useLidoSDK();
@@ -126,14 +128,14 @@ export const formParts = ({
         useIsTrustedCaller(factory);
 
       const fieldsArr = useFieldArray({ name: fieldNames.settles });
-      const { watch, trigger, getValues } = useFormContext();
+      const { watch, setValue } = useFormContext();
       const selectedSettles: Settle[] = watch(fieldNames.settles);
 
-      const handleAddSettle = () => fieldsArr.append({ id: '', maxAmount: '' });
+      const handleAddSettle = () => fieldsArr.append({ id: '', nonce: '' });
 
-      const buildLockedBondQuery = (nodeOperatorId: string) => ({
+      const buildLockInfoQuery = (nodeOperatorId: string) => ({
         queryKey: [
-          'locked-bond',
+          'settle-lock-info',
           chainId,
           factoryData?.accountingAddress,
           nodeOperatorId,
@@ -141,62 +143,68 @@ export const formParts = ({
         queryFn: async () => {
           invariant(
             factoryData?.accountingAddress,
-            'accounting address is required to fetch locked bond',
+            'accounting address is required to fetch lock info',
           );
 
-          return await readAccountingContract(factoryData.accountingAddress)(
-            'getLockedBond',
-            [BigInt(nodeOperatorId)],
-          );
+          const read = readAccountingContract(factoryData.accountingAddress);
+          const [locked, nonce] = await Promise.all([
+            read('getLockedBond', [BigInt(nodeOperatorId)]),
+            read('getBondLockNonce', [BigInt(nodeOperatorId)]),
+          ]);
+
+          return { locked, nonce };
         },
       });
 
-      const isIdReadyForLockedBond = (id: string) =>
-        Boolean(id) &&
-        !validateUintValue(id) &&
-        factoryData?.nodeOperatorsCount !== undefined &&
-        Number(id) < factoryData.nodeOperatorsCount;
-
-      const lockedBondQueries = useQueries({
-        queries: selectedSettles.map(({ id }) => ({
-          ...buildLockedBondQuery(id),
-          enabled: isIdReadyForLockedBond(id),
-        })),
-      });
-
-      const fetchLockedBond = (nodeOperatorId: string) => {
-        invariant(factoryData, 'factory data is required to fetch locked bond');
-        return queryClient.fetchQuery(buildLockedBondQuery(nodeOperatorId));
+      const fetchLockInfo = (nodeOperatorId: string) => {
+        invariant(factoryData, 'factory data is required to fetch lock info');
+        return queryClient.fetchQuery(buildLockInfoQuery(nodeOperatorId));
       };
 
-      const validateMaxAmountAsync =
-        (fieldIndex: number) => async (value: string) => {
-          const idValue: string = getValues(
-            `${fieldNames.settles}.${fieldIndex}.id`,
-          );
+      const validateIdSync = (fieldIndex: number) => (value: string) => {
+        const uintError = validateUintValue(value);
+        if (uintError) {
+          return uintError;
+        }
 
-          // Defer to id field's own validators until it has a usable value
-          if (!idValue || validateUintValue(idValue)) {
-            return undefined;
-          }
+        if (
+          factoryData?.nodeOperatorsCount === undefined ||
+          Number(value) >= factoryData.nodeOperatorsCount
+        ) {
+          return 'Invalid node operator ID';
+        }
 
-          // Validate node operator ID
-          if (
-            factoryData?.nodeOperatorsCount === undefined ||
-            Number(idValue) >= factoryData.nodeOperatorsCount
-          ) {
-            return undefined;
-          }
+        const isAlreadyInInput = selectedSettles.some(
+          ({ id }, index) => id === value && index !== fieldIndex,
+        );
+        if (isAlreadyInInput) {
+          return 'ID is already in use by another settle';
+        }
 
-          const locked = await fetchLockedBond(idValue);
-          if (locked === null) {
-            return 'Cannot validate value; failed to fetch locked bond';
-          }
+        return undefined;
+      };
 
-          if (parseEther(value) < locked) {
-            return 'Value must be greater than or equal to currently locked bond for this node operator';
-          }
-        };
+      // Validates the lock and mirrors the bond-lock nonce into form state.
+      // Runs on submit, so the nonce is guaranteed present before populateTx encodes it.
+      // The factory requires it to match the current onchain nonce.
+      const validateIdAsync = (fieldIndex: number) => async (value: string) => {
+        const info = await fetchLockInfo(value);
+        if (info?.locked == null || info?.nonce == null) {
+          return 'Cannot validate value; failed to fetch bond lock info';
+        }
+
+        setValue(
+          `${fieldNames.settles}.${fieldIndex}.nonce`,
+          info.nonce.toString(),
+          { shouldDirty: false },
+        );
+
+        if (info.locked === 0n) {
+          return 'No delayed penalty to settle for this node operator';
+        }
+
+        return undefined;
+      };
 
       if (isTrustedCallerLoading || isFactoryDataLoading) {
         return <PageLoader />;
@@ -215,8 +223,6 @@ export const formParts = ({
       return (
         <>
           {fieldsArr.fields.map((item, fieldIndex) => {
-            const maxAmountFieldName = `${fieldNames.settles}.${fieldIndex}.maxAmount`;
-            const lockedBond = lockedBondQueries[fieldIndex]?.data;
             return (
               <Fragment key={item.id}>
                 <FieldsWrapper>
@@ -236,63 +242,11 @@ export const formParts = ({
                   </FieldsHeader>
 
                   <Fieldset>
-                    <InputHookForm
+                    <ValidatedInputHookForm
                       fieldName={`${fieldNames.settles}.${fieldIndex}.id`}
                       label="Node operator ID"
-                      rules={{
-                        required: 'Field is required',
-                        validate: (value) => {
-                          const uintError = validateUintValue(value);
-                          if (uintError) {
-                            return uintError;
-                          }
-                          const valueNum = Number(value);
-
-                          if (valueNum >= factoryData.nodeOperatorsCount) {
-                            return 'Invalid node operator ID';
-                          }
-
-                          const isAlreadyInInput = selectedSettles.some(
-                            ({ id }, index) =>
-                              id === value && index !== fieldIndex,
-                          );
-
-                          if (isAlreadyInInput) {
-                            return 'ID is already in use by another update';
-                          }
-
-                          // Locked bond is keyed on the id; rerun the
-                          // dependent maxAmount validator.
-                          void trigger(maxAmountFieldName);
-
-                          return true;
-                        },
-                      }}
-                    />
-                  </Fieldset>
-
-                  <Fieldset>
-                    <ValidatedInputHookForm
-                      valueType="number"
-                      fieldName={maxAmountFieldName}
-                      label={
-                        lockedBond != null
-                          ? `Max amount to settle (current locked bond: ${formatEth(lockedBond)})`
-                          : 'Max amount to settle'
-                      }
-                      validateSync={(value) => {
-                        const amountError = validateEtherValue(value);
-                        if (amountError) {
-                          return amountError;
-                        }
-
-                        if (parseEther(value) === 0n) {
-                          return 'Max amount must be greater than zero';
-                        }
-
-                        return undefined;
-                      }}
-                      validateAsync={validateMaxAmountAsync(fieldIndex)}
+                      validateSync={validateIdSync(fieldIndex)}
+                      validateAsync={validateIdAsync(fieldIndex)}
                       rules={{ required: 'Field is required' }}
                     />
                   </Fieldset>

@@ -334,9 +334,9 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.AllowConsolidationPair]:
       '0x22D36e7616F541A527989C5652fDA4d527bB461C',
     [MotionType.CreateOrUpdateOperatorGroup]:
-      '0xD3De4d7dCc0E81131032Fb4C32243f4b2B90e8b7',
+      '0xF5Dd3789AC14fd4be9C0D24f4d2218B4024047DD',
     [MotionType.UpdateStakingModuleShareLimits]:
-      '0xD63cf25df1bA6144db27A81A98120Dfc53dE4540',
+      '0xEE8E0d3087f09f56E3fdb80dd1DB3Fb37de0bfFF',
 
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',
@@ -383,19 +383,19 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xaccaE3755d63EeaAF2e525E780aEeA8D58700Ab9',
 
     [MotionType.CSMSetMerkleGateTree]:
-      '0xf71fcB20B9FB8468653Bcb24E31F39bc069D5995',
+      '0x9F4BB90d6D0bB3B18a7156F3648c1e5256BAD1a7',
     [MotionType.CuratedSetMerkleGateTree]:
       '0x5194cC02B6F477B4a23DFA422fFC238c8B5b1736',
 
     [MotionType.CSMSettleGeneralDelayedPenalty]:
-      '0xd0c38B2F0C1F760976dA010C1c35D828331Ff9E2',
+      '0x029239CDF35d5669d81D32A83EbF783b87aD1AEE',
     [MotionType.CuratedSettleGeneralDelayedPenalty]:
-      '0x3486B872768D361309e405A046C4BF995c21CC6c',
+      '0x6B5b2147E2B7Ae08E4486D41741D805A869d2338',
 
     [MotionType.CSMReportWithdrawalsForSlashedValidators]:
-      '0x4EaB04775837A6F0218750A10454119f349258FE',
+      '0x5732943077210FD18d9d5d2A9d4D8847A5069713',
     [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
-      '0x6E40FED7c28bAA93a798cA10f8A93965a19eC52e',
+      '0xE1EDc1857B47a3188d9cA16E3e6A2DF2Af494FDD',
 
     // next motion factories are @deprecated
     // we are keeping them here to display history data

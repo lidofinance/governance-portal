@@ -1,6 +1,6 @@
 import { settleGeneralDelayedPenaltyAbi } from 'abi/generated/SettleGeneralDelayedPenalty';
+import { pluralize } from 'utils/pluralize';
 import { MotionDescriptionProps } from '../types';
-import { formatEth } from 'shared/blockchain/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
@@ -12,7 +12,6 @@ export const SettleGeneralDelayedPenalty = ({
   callData,
   motionType,
 }: MotionDescriptionProps<typeof settleGeneralDelayedPenaltyAbi>) => {
-  const [nodeOperatorIds, maxAmounts] = callData;
   const { chainId } = useLidoSDK();
   const getFactoryContractReader = useReadContractGetter(
     settleGeneralDelayedPenaltyAbi,
@@ -41,31 +40,31 @@ export const SettleGeneralDelayedPenalty = ({
 
   const { data: nodeOperatorNames } = useNodeOperatorNames(
     stakingModuleAddress,
-    nodeOperatorIds,
+    callData.map(({ nodeOperatorId }) => nodeOperatorId),
   );
 
   return (
-    <ul>
-      {nodeOperatorIds.map((id, index) => {
-        const idStr = id.toString();
-        const maxAmount = maxAmounts[index];
-        const name = nodeOperatorNames?.[index];
+    <>
+      Settle delayed penalty for{' '}
+      {pluralize(callData.length, isCSM ? 'CSM operator' : 'node operator')}:
+      <ul>
+        {callData.map(({ nodeOperatorId }, index) => {
+          const idStr = nodeOperatorId.toString();
+          const name = nodeOperatorNames?.[index];
 
-        const nameEl = name ? (
-          <>
-            <b>{name}</b> (id: {idStr})
-          </>
-        ) : (
-          <b>#{idStr}</b>
-        );
-
-        return (
-          <li key={index}>
-            {isCSM ? 'CSM' : 'Node'} operator {nameEl}: max amount{' '}
-            <b>{formatEth(maxAmount)} stETH</b>;
-          </li>
-        );
-      })}
-    </ul>
+          return (
+            <li key={index}>
+              {name ? (
+                <>
+                  <b>{name}</b> (id: {idStr})
+                </>
+              ) : (
+                <b>#{idStr}</b>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };

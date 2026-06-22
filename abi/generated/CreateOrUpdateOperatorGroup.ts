@@ -39,6 +39,35 @@ export const createOrUpdateOperatorGroupAbi = [
     outputs: [
       { name: 'groupId', internalType: 'uint256', type: 'uint256' },
       {
+        name: 'currentGroupInfo',
+        internalType: 'struct IMetaRegistry.OperatorGroup',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          {
+            name: 'subNodeOperators',
+            internalType: 'struct IMetaRegistry.SubNodeOperator[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'nodeOperatorId',
+                internalType: 'uint64',
+                type: 'uint64',
+              },
+              { name: 'share', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+          {
+            name: 'externalOperators',
+            internalType: 'struct IMetaRegistry.ExternalOperator[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'data', internalType: 'bytes', type: 'bytes' },
+            ],
+          },
+        ],
+      },
+      {
         name: 'groupInfo',
         internalType: 'struct IMetaRegistry.OperatorGroup',
         type: 'tuple',
@@ -131,6 +160,73 @@ export const createOrUpdateOperatorGroupAbi = [
     inputs: [],
     name: 'trustedCaller',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'groupId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'currentGroupInfo',
+        internalType: 'struct IMetaRegistry.OperatorGroup',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          {
+            name: 'subNodeOperators',
+            internalType: 'struct IMetaRegistry.SubNodeOperator[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'nodeOperatorId',
+                internalType: 'uint64',
+                type: 'uint64',
+              },
+              { name: 'share', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+          {
+            name: 'externalOperators',
+            internalType: 'struct IMetaRegistry.ExternalOperator[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'data', internalType: 'bytes', type: 'bytes' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'newGroupInfo',
+        internalType: 'struct IMetaRegistry.OperatorGroup',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          {
+            name: 'subNodeOperators',
+            internalType: 'struct IMetaRegistry.SubNodeOperator[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'nodeOperatorId',
+                internalType: 'uint64',
+                type: 'uint64',
+              },
+              { name: 'share', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+          {
+            name: 'externalOperators',
+            internalType: 'struct IMetaRegistry.ExternalOperator[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'data', internalType: 'bytes', type: 'bytes' },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'validateInputData',
+    outputs: [],
     stateMutability: 'view',
   },
 ] as const;
