@@ -103,7 +103,7 @@ export const ProposalsListItem = ({
         </TimelockWrapper>
       </SummarySection>
       <ProposalDescription>
-        {descriptionLines.splice(0, 10).map((line, index) => (
+        {descriptionLines.slice(0, 10).map((line, index) => (
           <DescriptionText key={index}>{line}</DescriptionText>
         ))}
         {isUnknownContractCalled && (
