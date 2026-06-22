@@ -124,7 +124,7 @@ export const VoteItem = ({
         )}
         {descriptionLines.length > 0 && !trimmedData && !isIPFSLoading && (
           <DescriptionContent>
-            {descriptionLines.map((line, index) => (
+            {descriptionLines.slice(0, 10).map((line, index) => (
               <DescriptionText key={index}>{line}</DescriptionText>
             ))}
             {isUnknownContractCalled && (
