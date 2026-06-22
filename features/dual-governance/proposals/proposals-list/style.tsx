@@ -75,6 +75,7 @@ export const DescriptionText = styled(Text)`
   color: var(--primary-color-black-72);
   margin-bottom: 12px;
   font-size: 15px;
+  flex-shrink: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -85,6 +86,7 @@ export const DescriptionText = styled(Text)`
 export const DescriptionContent = styled.div`
   width: 100%;
   min-width: 0;
+  flex-shrink: 0;
   overflow: hidden;
   word-wrap: break-word;
   overflow-wrap: anywhere;
@@ -95,6 +97,7 @@ export const MarkdownWrap = styled.div`
   overflow-wrap: anywhere;
   word-break: break-word;
   font-size: 15px;
+  flex-shrink: 0;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 8;
