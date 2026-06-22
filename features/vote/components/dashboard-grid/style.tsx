@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
-import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
+import { VOTE_CARD_MAX_WIDTH, VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const DashboardWrap = styled.div`
-  max-width: 1024px;
+  max-width: ${VOTE_CARD_MAX_WIDTH}px;
   margin: 0 auto;
 `;
 

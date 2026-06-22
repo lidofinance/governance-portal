@@ -105,7 +105,8 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchDelegatorsData,
   } = useVoteDelegators(voteData?.vote.id);
 
-  const { data: delegationInfo } = useDelegationInfo();
+  const { data: delegationInfo, isLoading: isDelegationInfoLoading } =
+    useDelegationInfo();
   const hasDelegated = !!delegationInfo?.aragonDelegateAddress;
 
   const refetchers = useMemo(
@@ -124,7 +125,8 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isCastVoteEventsDataLoading ||
     isVoterStateLoading ||
     isDelegatorsDataLoading ||
-    isProposalDataLoading;
+    isProposalDataLoading ||
+    isDelegationInfoLoading;
 
   const value = useMemo(() => {
     if (!voteData?.vote) {

@@ -4,7 +4,7 @@ import { UnsupportedChainBannerStyled } from './style';
 
 export const UnsupportedChainBanner = () => {
   const { defaultChain } = useUserConfig();
-  const defaultChainName = CHAINS[defaultChain] ?? 'Ethereum mainnet';
+  const defaultChainName = CHAINS[defaultChain] ?? 'Mainnet';
 
   return (
     <UnsupportedChainBannerStyled>
