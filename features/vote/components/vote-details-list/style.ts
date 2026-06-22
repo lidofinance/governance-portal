@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const List = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spaceMap.md}px;
+  gap: ${({ theme }) => theme.spaceMap.sm}px;
 `;
 
 export const Row = styled.div`
@@ -11,7 +11,7 @@ export const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: ${({ theme }) => theme.spaceMap.md}px;
-  font-size: 14px;
+  font-size: 12px;
 `;
 
 export const Label = styled.span`

@@ -60,6 +60,8 @@ export const SideCard = styled(Block).attrs({
 export const SidebarSection = styled.div`
   & + & {
     margin-top: ${({ theme }) => theme.spaceMap.xl}px;
+    padding-top: ${({ theme }) => theme.spaceMap.xl}px;
+    border-top: 1px solid var(--lido-color-border);
   }
 `;
 
@@ -72,11 +74,6 @@ export const MobileSidebarSlot = styled.div`
     padding: ${({ theme }) => theme.spaceMap.xl}px 0;
     border-top: 1px solid var(--lido-color-border);
     border-bottom: 1px solid var(--lido-color-border);
-
-    ${SidebarSection} + ${SidebarSection} {
-      padding-top: ${({ theme }) => theme.spaceMap.xl}px;
-      border-top: 1px solid var(--lido-color-border);
-    }
   }
 `;
 
@@ -124,7 +121,7 @@ export const YourVoteHeading = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--lido-color-text);
 `;
@@ -154,6 +151,7 @@ export const PowerRow = styled.div`
 
   & > span:first-child {
     color: var(--lido-color-textSecondary);
+    font-size: 12px;
   }
 
   & > span:last-child {

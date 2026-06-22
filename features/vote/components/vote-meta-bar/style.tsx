@@ -3,6 +3,7 @@ import { Tooltip } from '@lidofinance/lido-ui';
 import {
   VOTE_CARD_MAX_WIDTH,
   VOTE_CARD_MOBILE_MAX_WIDTH,
+  VOTE_MOBILE_MAX_WIDTH,
 } from 'styles/constants';
 
 export const MetaWrap = styled.div<{ $labeled?: boolean }>`
@@ -14,8 +15,40 @@ export const MetaWrap = styled.div<{ $labeled?: boolean }>`
   font-size: 14px;
 
   ${({ $labeled }) =>
+    $labeled &&
+    css`
+      ${StatusBadge},
+      ${PhaseBadge} {
+        font-size: 12px;
+      }
+
+      ${MetaLabel} {
+        font-size: 12px;
+      }
+
+      ${VoteIdText},
+      ${CountdownText},
+      ${EndedText} {
+        font-size: 14px;
+      }
+    `}
+
+  ${({ $labeled }) =>
     !$labeled &&
     css`
+      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+        ${VoteIdText},
+        ${CountdownText},
+        ${EndedText} {
+          font-size: 14px;
+        }
+
+        ${StatusBadge},
+        ${PhaseBadge} {
+          font-size: 12px;
+        }
+      }
+
       @media (max-width: ${VOTE_CARD_MOBILE_MAX_WIDTH}px) {
         flex-direction: column;
         align-items: flex-start;
@@ -214,7 +247,7 @@ export const PhaseTooltip = styled(Tooltip)`
   && {
     max-width: 320px;
 
-    @media (max-width: ${VOTE_CARD_MOBILE_MAX_WIDTH}px) {
+    @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
       left: 16px !important;
       right: 16px;
       max-width: unset;

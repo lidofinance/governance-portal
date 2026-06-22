@@ -22,6 +22,12 @@ export const VoteTitle = styled(Text).attrs({
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+
+  @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+    && {
+      font-size: 16px;
+    }
+  }
 `;
 
 export const VoteDescriptionWrap = styled(Text).attrs({
