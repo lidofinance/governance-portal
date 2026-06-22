@@ -26,10 +26,12 @@ export const MetaWrap = styled.div<{ $labeled?: boolean }>`
         font-size: 12px;
       }
 
-      ${VoteIdText},
-      ${CountdownText},
-      ${EndedText} {
-        font-size: 14px;
+      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+        ${VoteIdText},
+        ${CountdownText},
+        ${EndedText} {
+          font-size: 14px;
+        }
       }
     `}
 
