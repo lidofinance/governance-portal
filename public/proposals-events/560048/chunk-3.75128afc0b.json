@@ -343,5 +343,74 @@
       "scheduledAt": 1781705520,
       "status": 3
     }
+  },
+  "36": {
+    "proposalSubmittedEvent": {
+      "eventName": "ProposalSubmitted",
+      "args": {
+        "proposerAccount": "0x49B3512c44891bef83F8967d075121Bd1b07a01B",
+        "proposalId": "36",
+        "metadata": "Hoodi: upgrade CSM and Curated Module v2 Accounting implementations"
+      },
+      "address": "0x9caaccc62c66d817cc59c44780d1b722359795bf",
+      "topics": [
+        "0x232ce03ddb9384ef5aeb6333cad16b1c7e68e1977e0e6e5a3666e934569a15fc",
+        "0x00000000000000000000000049b3512c44891bef83f8967d075121bd1b07a01b",
+        "0x0000000000000000000000000000000000000000000000000000000000000024"
+      ],
+      "data": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000043486f6f64693a20757067726164652043534d20616e642043757261746564204d6f64756c65207632204163636f756e74696e6720696d706c656d656e746174696f6e730000000000000000000000000000000000000000000000000000000000",
+      "blockHash": "0xd1a0195a08ec153da6d4566d02a7f94938c17343c66bc42a64b93a56325b01b7",
+      "blockNumber": "3047125",
+      "blockTimestamp": "0x6a3525b0",
+      "transactionHash": "0xb028bd8e172d79b9ecfb1e8d675f8f49365b3713d8576fb0782a393158ec73da",
+      "transactionIndex": 3,
+      "logIndex": 3,
+      "removed": false
+    },
+    "proposalScheduledEvent": {
+      "eventName": "ProposalScheduled",
+      "args": {
+        "id": "36"
+      },
+      "address": "0x0a5e22782c0bd4addf10d771f0bf0406b038282d",
+      "topics": [
+        "0x8b9c2cfee0d20895490bae51f33d88197032bb221b15e360155508136257569a",
+        "0x0000000000000000000000000000000000000000000000000000000000000024"
+      ],
+      "data": "0x",
+      "blockNumber": "3047185",
+      "transactionHash": "0x040ca7705784097430e24524a2f22cae410c955cc83544f9ffd712d8071bc54a",
+      "transactionIndex": 20,
+      "blockHash": "0x9e946e901147e1cf7eb9d8a1a1d46d527dd3a75c8eae3b1cc9971675f2bb88f3",
+      "blockTimestamp": "0x6a3528b0",
+      "logIndex": 2,
+      "removed": false
+    },
+    "proposalExecutedEvent": {
+      "eventName": "ProposalExecuted",
+      "args": {
+        "id": "36"
+      },
+      "address": "0x0a5e22782c0bd4addf10d771f0bf0406b038282d",
+      "topics": [
+        "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f",
+        "0x0000000000000000000000000000000000000000000000000000000000000024"
+      ],
+      "data": "0x",
+      "blockHash": "0xbf0e76fef0507ed0a5af429ee637f442c30d12d5914637ae0846535a59d5b378",
+      "blockNumber": "3047196",
+      "blockTimestamp": 1781868888,
+      "transactionHash": "0xadbbeba89746d91429ebb5e64b699f5a36ecb6dfca76111be7fff5fd9085386a",
+      "transactionIndex": 1,
+      "logIndex": 6,
+      "removed": false
+    },
+    "details": {
+      "id": "36",
+      "executor": "0x0eCc17597D292271836691358B22340b78F3035B",
+      "submittedAt": 1781867952,
+      "scheduledAt": 1781868720,
+      "status": 3
+    }
   }
 }
