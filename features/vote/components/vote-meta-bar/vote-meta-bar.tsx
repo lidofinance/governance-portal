@@ -30,9 +30,11 @@ type Props = {
   startDate: number;
   isEnded: boolean;
   dualGovernancePhase?: boolean;
+  isDgProposalLoading?: boolean;
   withLabels?: boolean;
 };
 
+// Note: timing params are subject to change and must be updated if `Voting.voteTime()` or `Voting.objectionPhaseTime()` changes.
 const GOVERNANCE_STAGES = [
   'Main phase — 72h to vote Yes or No.',
   'Objection phase — 48h to vote No or switch Yes to No.',
@@ -81,6 +83,7 @@ const getStatusLabel = (
 const getPhaseLabel = (
   status: VoteStatus,
   dualGovernancePhase?: boolean,
+  isDgProposalLoading?: boolean,
 ): PhaseLabel => {
   switch (status) {
     case VoteStatus.ActiveMain:
@@ -88,6 +91,9 @@ const getPhaseLabel = (
     case VoteStatus.ActiveObjection:
       return { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
     case VoteStatus.Executed:
+      if (isDgProposalLoading) {
+        return null;
+      }
       return dualGovernancePhase
         ? { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 }
         : { text: 'Enacted', variant: 'enacted' };
@@ -108,6 +114,7 @@ export const VoteMetaBar = ({
   startDate,
   isEnded,
   dualGovernancePhase,
+  isDgProposalLoading,
   withLabels = false,
 }: Props) => {
   const mainPhaseEnd = startDate + (voteTime - objectionPhaseTime);
@@ -118,7 +125,7 @@ export const VoteMetaBar = ({
     status === VoteStatus.ActiveMain || status === VoteStatus.ActiveObjection;
 
   const statusLabel = getStatusLabel(status, isQuorumReached);
-  const phase = getPhaseLabel(status, dualGovernancePhase);
+  const phase = getPhaseLabel(status, dualGovernancePhase, isDgProposalLoading);
 
   const timeValue = isActive ? (
     <CountdownText>

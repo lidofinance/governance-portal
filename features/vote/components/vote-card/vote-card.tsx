@@ -57,6 +57,7 @@ export const VoteCard = () => {
     voterDaoTokenBalance,
     totalDelegatedVotingPower,
     hasDelegated,
+    isDgProposalLoading,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
@@ -259,6 +260,7 @@ export const VoteCard = () => {
           startDate={Number(vote.startDate)}
           isEnded={isEnded}
           dualGovernancePhase={isDualGovernancePhase}
+          isDgProposalLoading={isDgProposalLoading}
           withLabels
         />
         <MobileSidebarSlot>{sidebarItems}</MobileSidebarSlot>

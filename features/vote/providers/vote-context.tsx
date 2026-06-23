@@ -44,6 +44,7 @@ type Value = {
       }
     | null
     | undefined;
+  isDgProposalLoading: boolean;
   isLoading: boolean;
   refetchers: {
     refetchVote: ReturnType<typeof useVote>['refetch'];
@@ -92,7 +93,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchVoterState,
   } = useVoterState(voteData?.vote.id, voteData?.vote.snapshotBlock);
 
-  const { data: dgProposal, isLoading: isProposalDataLoading } =
+  const { data: dgProposal, isLoading: isDgProposalLoading } =
     useVoteDualGovernanceStatus({
       voteId: voteData?.vote.id,
       eventExecuteVote: voteData?.eventExecute,
@@ -125,7 +126,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isCastVoteEventsDataLoading ||
     isVoterStateLoading ||
     isDelegatorsDataLoading ||
-    isProposalDataLoading ||
+    isDgProposalLoading ||
     isDelegationInfoLoading;
 
   const value = useMemo(() => {
@@ -153,6 +154,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
         delegatorsData?.delegatedVotersVotedThemselves ?? [],
       hasDelegated,
       dgProposal,
+      isDgProposalLoading,
       isLoading,
       refetchers,
     };
@@ -163,6 +165,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     delegatorsData?.totalDelegatedVotingPower,
     hasDelegated,
     dgProposal,
+    isDgProposalLoading,
     isLoading,
     refetchers,
     voteData,

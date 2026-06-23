@@ -45,11 +45,12 @@ export const DashboardVote = ({
 }: Props) => {
   const { startDate } = getVoteDetailsFormatted(vote);
 
-  const { data: voteDualGovernanceStatus } = useVoteDualGovernanceStatus({
-    voteId: vote.id,
-    eventExecuteVote: executeEvent,
-    isEventExecuteLoading: false,
-  });
+  const { data: voteDualGovernanceStatus, isLoading: isDgProposalLoading } =
+    useVoteDualGovernanceStatus({
+      voteId: vote.id,
+      eventExecuteVote: executeEvent,
+      isEventExecuteLoading: false,
+    });
 
   const isDualGovernancePhase =
     !!voteDualGovernanceStatus &&
@@ -107,6 +108,7 @@ export const DashboardVote = ({
             startDate={startDate}
             isEnded={isEnded}
             dualGovernancePhase={isDualGovernancePhase}
+            isDgProposalLoading={isDgProposalLoading}
           />
           {title && <VoteTitle>{title}</VoteTitle>}
           {hasDescription && (
