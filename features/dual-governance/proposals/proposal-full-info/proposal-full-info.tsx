@@ -310,6 +310,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return `${date.date} ${date.tz}`;
   }, [proposal]);
 
+  const proposalSubmittedLog = proposalEvents?.proposalSubmittedEvent ?? null;
   const proposalScheduledLog = proposalEvents?.proposalScheduledEvent ?? null;
 
   const scheduledAt = useMemo(() => {
@@ -361,11 +362,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
           <>
             {voteId && (
               <SubmitDate as="span">
-                {proposal.DGEvent?.transactionHash ? (
+                {proposalSubmittedLog &&
+                proposalSubmittedLog.transactionHash ? (
                   <Link
                     href={getEtherscanTxLink(
                       chainId,
-                      proposal.DGEvent?.transactionHash,
+                      proposalSubmittedLog.transactionHash,
                     )}
                   >
                     Submitted
@@ -382,11 +384,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
             )}
             {!voteId && (
               <SubmitDate as="span">
-                {proposal.DGEvent?.transactionHash ? (
+                {proposalSubmittedLog &&
+                proposalSubmittedLog.transactionHash ? (
                   <Link
                     href={getEtherscanTxLink(
                       chainId,
-                      proposal.DGEvent.transactionHash,
+                      proposalSubmittedLog.transactionHash,
                     )}
                   >
                     Submitted
@@ -448,7 +451,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
                 may include items not under Dual Governance
               </Text>
             </Box>
-            {proposal.DGEvent?.args?.metadata && (
+            {proposalSubmittedLog && proposalSubmittedLog.args.metadata && (
               <Box marginTop={30}>
                 <MarkdownWrap>
                   <ReactMarkdown
@@ -459,7 +462,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
                       code: replaceAddressAndCIDInMD,
                     }}
                   >
-                    {proposal?.DGEvent.args?.metadata}
+                    {proposalSubmittedLog.args.metadata}
                   </ReactMarkdown>
                 </MarkdownWrap>
               </Box>
@@ -471,7 +474,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
             <Text size={22}>
               Proposal submitted by{' '}
               <Text size={22} weight={500}>
-                {proposal?.DGEvent?.args.proposerAccount}
+                {proposalSubmittedLog?.args.proposerAccount}
               </Text>
             </Text>
           </SubmittedBy>

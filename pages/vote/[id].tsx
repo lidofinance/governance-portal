@@ -5,6 +5,7 @@ import { VoteProvider } from '@vote/providers/vote-context';
 import { VoteMeta } from '@vote/meta';
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
 import { BackButton } from 'shared/components/back-button';
+import { VotePageWrap } from '@vote/styles';
 
 export default function VotePage() {
   const { query, isReady } = useRouter();
@@ -14,11 +15,18 @@ export default function VotePage() {
     return null;
   }
 
+  const returnQuery = typeof query.q === 'string' ? query.q : '';
+  const backHref = returnQuery
+    ? `${VOTE_DASHBOARD_INDEX_PATH}?q=${encodeURIComponent(returnQuery)}`
+    : VOTE_DASHBOARD_INDEX_PATH;
+
   return (
     <>
       <VoteMeta />
-      <Layout metaTitle={`Vote #${id}`}>
-        <BackButton label="votes" href={VOTE_DASHBOARD_INDEX_PATH} />
+      <Layout containerSize="full" metaTitle={`Vote #${id}`}>
+        <VotePageWrap>
+          <BackButton label="votes" href={backHref} />
+        </VotePageWrap>
         <VoteProvider voteId={id}>
           <VoteCard />
         </VoteProvider>

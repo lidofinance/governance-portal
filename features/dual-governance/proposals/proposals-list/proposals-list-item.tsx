@@ -19,13 +19,12 @@ import { DGTooltip } from '@dg/tooltips';
 import { Address } from 'viem';
 import { ChainAddressMap } from 'shared/blockchain/types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { useProposalEvents } from '@dg/hooks/use-proposal-events';
 
 type Props = {
   id: number;
-  description: string;
   calls: SubmitProposalCall[] | undefined;
   proposalDetails: ProposalCombinedData['proposalDetails'];
-  proposer?: Address;
 };
 
 const getAddressFromMap = (
@@ -38,14 +37,10 @@ const getAddressFromMap = (
   return typeof entry === 'string' ? entry : entry.actual;
 };
 
-export const ProposalsListItem = ({
-  id,
-  description,
-  proposalDetails,
-  calls,
-  proposer,
-}: Props) => {
+export const ProposalsListItem = ({ id, proposalDetails, calls }: Props) => {
   const { chainId } = useLidoSDK();
+
+  const { data: events } = useProposalEvents({ proposalDetails });
 
   const { status, submittedAt } = proposalDetails;
 
@@ -54,6 +49,9 @@ export const ProposalsListItem = ({
     submittedAt: submittedAt,
     scheduledAt: proposalDetails.scheduledAt,
   });
+
+  const description = events?.proposalSubmittedEvent?.args.metadata ?? '';
+  const proposer = events?.proposalSubmittedEvent?.args.proposerAccount;
 
   const descriptionLines = description.split('\n');
 

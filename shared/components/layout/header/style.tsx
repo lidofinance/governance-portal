@@ -134,6 +134,22 @@ export const WalletInfo = styled.div`
   position: relative;
 `;
 
+export const MobileWalletWrapper = styled.div`
+  display: none;
+
+  @media ${devicesHeaderMedia.tablet} {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    > button,
+    > span {
+      height: 48px;
+    }
+  }
+`;
+
 export const UnsupportedChainBannerStyled = styled.div`
   background: var(--primary-color-black);
   padding: 30px;

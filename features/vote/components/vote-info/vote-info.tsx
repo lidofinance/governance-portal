@@ -7,13 +7,15 @@ import { useMemo } from 'react';
 import { getPublicDelegate } from '@vote/utils/get-public-delegate';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { useVoteContext } from '@vote/providers/vote-context';
+import { KnownToken } from 'shared/blockchain/tokens';
 
 interface Props {
   walletAddress: string | null | undefined;
 }
 
 export const VoteInfo = ({ walletAddress }: Props) => {
-  const { voteEvents, vote, voterDaoTokenBalance } = useVoteContext();
+  const { voteEvents, vote, voterDaoTokenBalance, hasDelegated } =
+    useVoteContext();
   const voteInfo = useMemo(() => {
     if (!walletAddress || !voteEvents) {
       return undefined;
@@ -52,9 +54,30 @@ export const VoteInfo = ({ walletAddress }: Props) => {
   }
 
   if (voteInfo === null) {
-    // If no balance at snapshot block, show nothing
-    if (!voterDaoTokenBalance) {
+    if (hasDelegated) {
+      return (
+        <InfoWrap>
+          <Text size={12} color="secondary">
+            {vote.phase === VotePhase.Closed
+              ? 'Delegate did not vote'
+              : 'Delegate has not voted yet'}
+          </Text>
+        </InfoWrap>
+      );
+    }
+
+    if (voterDaoTokenBalance === undefined) {
       return null;
+    }
+
+    if (voterDaoTokenBalance === 0n && vote.phase !== VotePhase.Closed) {
+      return (
+        <InfoWrap>
+          <Text size={12} color="secondary">
+            You didn&#39;t have {KnownToken.LDO.symbol} when the vote started
+          </Text>
+        </InfoWrap>
+      );
     }
 
     return (

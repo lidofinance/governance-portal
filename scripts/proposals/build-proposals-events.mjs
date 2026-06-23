@@ -1,5 +1,13 @@
 import { createPublicClient, http } from 'viem';
-import { writeFileSync } from 'fs';
+import {
+  writeFileSync,
+  readFileSync,
+  readdirSync,
+  existsSync,
+  mkdirSync,
+  unlinkSync,
+} from 'fs';
+import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { HISTORICAL_ADDRESSES } from '../../constants/historical-addresses.mjs';
@@ -9,16 +17,139 @@ import {
   fetchScheduledEvent,
   fetchExecutedEvent,
 } from '../../utils/proposals/fetch-proposal-events.mjs';
+import { PROPOSALS_PER_CHUNK } from '../../utils/proposals/constants.mjs';
+import { isCachedProposalComplete } from '../../utils/cache/status.mjs';
 import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' assert { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const OUTPUT_ROOT = join(__dirname, '../../public/proposals-events');
 
 const serializeBigInt = (key, value) => {
   if (typeof value === 'bigint') {
     return value.toString();
   }
   return value;
+};
+
+const getChainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
+const getManifestPath = (chainId) => join(getChainDir(chainId), 'manifest.json');
+const getChunkFileName = (chunkIndex, hash) =>
+  `chunk-${chunkIndex}.${hash}.json`;
+
+const hashChunk = (jsonString) =>
+  createHash('sha256').update(jsonString).digest('hex').slice(0, 10);
+
+const readExistingChainData = (chainId) => {
+  const manifestFile = getManifestPath(chainId);
+  if (!existsSync(manifestFile)) {
+    return {};
+  }
+  try {
+    const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+    const proposalsById = {};
+    for (const file of Object.values(manifest.chunks || {})) {
+      const chunkPath = join(getChainDir(chainId), file);
+      if (!existsSync(chunkPath)) {
+        continue;
+      }
+      const chunkData = JSON.parse(readFileSync(chunkPath, 'utf8'));
+      Object.assign(proposalsById, chunkData);
+    }
+    return proposalsById;
+  } catch (error) {
+    console.warn(
+      `Failed to read existing chain ${chainId} cache:`,
+      error.message,
+    );
+    return {};
+  }
+};
+
+const partitionByChunk = (proposalsMap, firstId) => {
+  const chunks = new Map();
+  for (const [idStr, entry] of Object.entries(proposalsMap)) {
+    const id = Number(idStr);
+    if (!Number.isFinite(id)) {
+      continue;
+    }
+    const idx = Math.floor((id - firstId) / PROPOSALS_PER_CHUNK);
+    if (!chunks.has(idx)) {
+      chunks.set(idx, {});
+    }
+    chunks.get(idx)[idStr] = entry;
+  }
+  return chunks;
+};
+
+const writeChainChunks = (chainId, proposalsMap) => {
+  const dir = getChainDir(chainId);
+  mkdirSync(dir, { recursive: true });
+
+  let firstId = 0;
+  let lastId = 0;
+  let hasIds = false;
+  for (const key of Object.keys(proposalsMap)) {
+    const id = Number(key);
+    if (!Number.isFinite(id)) {
+      continue;
+    }
+    if (!hasIds) {
+      firstId = id;
+      lastId = id;
+      hasIds = true;
+    } else {
+      if (id < firstId) {
+        firstId = id;
+      }
+      if (id > lastId) {
+        lastId = id;
+      }
+    }
+  }
+
+  const partitioned = partitionByChunk(proposalsMap, firstId);
+  const newChunkFiles = new Map();
+
+  for (const [idx, chunkData] of partitioned) {
+    const json = JSON.stringify(chunkData, serializeBigInt, 2);
+    const hash = hashChunk(json);
+    const filename = getChunkFileName(idx, hash);
+    const filepath = join(dir, filename);
+    if (!existsSync(filepath)) {
+      writeFileSync(filepath, `${json}\n`);
+      console.debug(`  wrote ${filename}`);
+    } else {
+      console.debug(`  unchanged ${filename}`);
+    }
+    newChunkFiles.set(idx, filename);
+  }
+
+  const manifest = {
+    chunkSize: PROPOSALS_PER_CHUNK,
+    firstId,
+    lastId,
+    chunks: Object.fromEntries(
+      [...newChunkFiles].sort(
+        ([indexA], [indexB]) => indexA - indexB,
+      ),
+    ),
+  };
+  writeFileSync(
+    getManifestPath(chainId),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+  );
+  console.debug(`  wrote manifest.json`);
+
+  const keep = new Set(newChunkFiles.values());
+  keep.add('manifest.json');
+  for (const file of readdirSync(dir)) {
+    if (!keep.has(file) && file.startsWith('chunk-') && file.endsWith('.json')) {
+      unlinkSync(join(dir, file));
+      console.debug(`  removed orphan ${file}`);
+    }
+  }
 };
 
 const fetchProposalsCount = async (
@@ -157,7 +288,6 @@ export const buildProposalsEvents = async () => {
       console.warn(
         `Could not obtain proposals count for chain ${chainId}, skipping proposals processing.`,
       );
-      eventsData[chainId] = { proposals: {} };
       continue;
     }
 
@@ -165,7 +295,6 @@ export const buildProposalsEvents = async () => {
       console.warn(
         `Unexpected proposalsCount type for chain ${chainId}: ${typeof proposalsCount}, treating as 0`,
       );
-      eventsData[chainId] = { proposals: {} };
       continue;
     }
 
@@ -173,7 +302,14 @@ export const buildProposalsEvents = async () => {
 
     if (proposalsCount === 0n) {
       console.debug(`No proposals found on chain ${chainId}`);
-      eventsData[chainId] = { proposals: {} };
+      const existingChainData = readExistingChainData(chainId);
+      const existingCount = Object.keys(existingChainData).length;
+      if (existingCount > 0) {
+        console.warn(
+          `⚠️ Chain ${chainId}: contract reports 0 proposals but cache has ${existingCount} entries. Wiping — verify this is intentional (devnet reset?).`,
+        );
+      }
+      writeChainChunks(chainId, {});
       continue;
     }
 
@@ -211,13 +347,37 @@ export const buildProposalsEvents = async () => {
       `Successfully fetched ${proposalsDetails.length} proposal details for chain ${chainId}`,
     );
 
+    const existingChainData = readExistingChainData(chainId);
+
+    const freshStatusById = new Map(
+      proposalsDetails.map((proposal) => [String(proposal.id), proposal.status]),
+    );
+    const seed = {};
+    for (const [idStr, cached] of Object.entries(existingChainData)) {
+      const freshStatus = freshStatusById.get(idStr);
+      if (
+        freshStatus === undefined ||
+        cached?.details?.status === freshStatus
+      ) {
+        seed[idStr] = cached;
+      }
+    }
+
     eventsData[chainId] = {
-      proposals: {},
+      proposals: seed,
     };
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const processProposal = async (proposal) => {
       if (!proposal) return null;
+
+      const cached = existingChainData[proposal.id];
+      if (isCachedProposalComplete(cached, proposal)) {
+        console.debug(
+          `Proposal ${proposal.id} is final and fully cached, skipping`,
+        );
+        return null;
+      }
 
       console.debug(
         `Processing event fetches for proposal ${proposal.id} on chain ${chainId}...`,
@@ -287,14 +447,13 @@ export const buildProposalsEvents = async () => {
       }
     }
     console.debug(`All proposals for chain ${chainId} processed.`);
+
+    console.debug(`Writing chunks for chain ${chainId}...`);
+    writeChainChunks(chainId, eventsData[chainId].proposals);
   }
 
   console.debug('Proposals events build completed successfully');
   console.debug('Built data for chains:', Object.keys(eventsData));
-
-  const outputPath = join(__dirname, '../../public/proposals-events-data.json');
-  writeFileSync(outputPath, JSON.stringify(eventsData, serializeBigInt, 2));
-  console.debug(`eventsData written to ${outputPath}`);
 
   return eventsData;
 };
@@ -302,7 +461,7 @@ export const buildProposalsEvents = async () => {
 void (async () => {
   try {
     await buildProposalsEvents();
-    console.log('Script buildProposalsEvents completed successfully.');
+    console.debug('Script buildProposalsEvents completed successfully.');
     process.exit(0);
   } catch (error) {
     console.error('Script failed:', error.message, error.stack);

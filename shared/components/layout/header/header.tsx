@@ -1,5 +1,10 @@
 import { LogoLido } from 'shared/components/logos/logos';
-import { HeaderActionsWrapper, HeaderContainer, WalletInfo } from './style';
+import {
+  HeaderActionsWrapper,
+  HeaderContainer,
+  MobileWalletWrapper,
+  WalletInfo,
+} from './style';
 import { NoSsrWrapper } from 'shared/components/no-ssr-wrapper';
 import { Nav, NavBurger, NavMobile } from './nav';
 import { useState } from 'react';
@@ -11,7 +16,6 @@ import { useAccount } from 'wagmi';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
 import { Text } from 'shared/components/text';
 import { FlexWrapper } from 'shared/styled-components';
-import { Box } from 'shared/components/box';
 import { useScrollLock } from 'shared/hooks/use-scroll-lock';
 import { TMC_MULTISIG_ADDRESS } from 'shared/blockchain/multisig-addresses';
 
@@ -40,6 +44,11 @@ export const Header = () => {
           </>
         </HeaderActionsWrapper>
 
+        <MobileWalletWrapper>
+          {isConnected ? <WalletButton /> : <ConnectWalletButton />}
+          {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
+        </MobileWalletWrapper>
+
         <NavBurger
           isOpened={isBurgerOpened}
           onClick={() => setBurgerOpened(!isBurgerOpened)}
@@ -54,14 +63,6 @@ export const Header = () => {
               <FlexWrapper $gap="12px">
                 <HeaderSettingsButton /> <Text>Settings</Text>
               </FlexWrapper>
-              <Box width="100%" marginTop={32}>
-                {isConnected ? (
-                  <WalletButton />
-                ) : (
-                  <ConnectWalletButton style={{ width: '100%' }} />
-                )}
-                {isConnected && !isSupportedChain && <UnsupportedChainBanner />}
-              </Box>
             </FlexWrapper>
           </NavMobile>
         )}

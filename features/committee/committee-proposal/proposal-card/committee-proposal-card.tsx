@@ -15,6 +15,8 @@ import { CommitteeProposalSignersInfo } from '../signers-info/committee-proposal
 import { TiebreakerQuorum } from '../tiebreaker-quorum';
 import { BaseCall } from 'utils/decode-evm-script-calls';
 import { useDecodedCalls } from 'shared/hooks';
+// eslint-disable-next-line import/no-restricted-paths
+import { useProposalEvents } from '@dg/hooks/use-proposal-events';
 
 type Props = {
   proposalId: number;
@@ -33,6 +35,10 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
     calls,
     `dg-proposal-${proposalId}`,
   );
+
+  const { data: proposalEvents } = useProposalEvents({
+    proposalDetails: proposal?.proposalDetails,
+  });
 
   if (!proposal) {
     return null;
@@ -81,7 +87,7 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
           {calls && calls.length > 0 && (
             <Script
               decodedCalls={decodedEvmScriptCalls}
-              metadata={proposal?.DGEvent?.args.metadata}
+              metadata={proposalEvents?.proposalSubmittedEvent?.args.metadata}
             />
           )}
         </Box>
@@ -98,7 +104,9 @@ export const CommitteeProposalCard = ({ proposalId, isTiebreaker }: Props) => {
             </Text>
           </Box>
           <Box marginTop={20}>
-            <Text color="primary">{proposal.DGEvent?.args?.metadata}</Text>
+            <Text color="primary">
+              {proposalEvents?.proposalSubmittedEvent?.args?.metadata}
+            </Text>
           </Box>
           <br />
           <StyledDGLink

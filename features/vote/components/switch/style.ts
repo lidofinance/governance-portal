@@ -11,8 +11,6 @@ export const SwitchWrapper = styled.div`
     cursor: pointer;
   }
   -webkit-user-select: none;
-  /* pointer remove blue highlight */
-  -webkit-tap-highlight-color: transparent;
   /* pointer remove context menu Apple */
   -webkit-touch-callout: none;
   display: flex;

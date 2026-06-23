@@ -1,0 +1,8 @@
+# Generated event-cache data files — large, machine-built from RPC, not
+# hand-edited. `linguist-generated` collapses them by default in the GitHub PR
+# file list and excludes them from language stats, so reviewers aren't drowned
+# in ~200k lines of generated JSON. The textual diff stays available ("Load
+# diff" on GitHub; `git diff`/`git log -p` locally) so a targeted change is
+# still auditable — we intentionally do NOT set `-diff`. Integrity is enforced
+# by the deterministic build + `validate-events`; never hand-edit these files.
+public/votes-events/** linguist-generated
