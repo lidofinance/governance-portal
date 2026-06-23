@@ -5,7 +5,12 @@ import {
   useVoteDashboard,
   VOTE_DASHBOARD_PAGE_SIZE,
 } from 'features/vote/hooks/use-vote-dashboard';
-import { GridWrap, DashboardGridHeading, LoadMoreCard } from './style';
+import {
+  DashboardWrap,
+  GridWrap,
+  DashboardGridHeading,
+  LoadMoreCard,
+} from './style';
 import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
 import { DashboardVote } from '../dashboard-vote';
 import { VoteSearch } from '../vote-search';
@@ -45,7 +50,7 @@ export const DashboardGrid = () => {
   }
 
   return (
-    <>
+    <DashboardWrap>
       <DashboardGridHeading>
         <Text size={26} weight={700}>
           All votes
@@ -88,6 +93,6 @@ export const DashboardGrid = () => {
           </LoadMoreCard>
         )}
       </GridWrap>
-    </>
+    </DashboardWrap>
   );
 };

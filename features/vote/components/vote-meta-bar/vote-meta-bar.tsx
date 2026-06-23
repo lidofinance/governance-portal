@@ -1,4 +1,3 @@
-import { Tooltip } from '@lidofinance/lido-ui';
 import { VoteStatus } from 'shared/votes/types';
 import { VoteDoneIcon, VoteFailIcon, InfoIcon } from 'shared/components/icons';
 import { VoteDetailsCountdown } from '@vote/components/vote-details-countdown';
@@ -15,7 +14,9 @@ import {
   EndedText,
   MetaLabel,
   MetaCell,
+  PhaseTooltip,
   TooltipText,
+  TooltipList,
   TooltipIconWrap,
 } from './style';
 import { FormattedDate } from 'shared/components/formatted-date';
@@ -29,11 +30,27 @@ type Props = {
   startDate: number;
   isEnded: boolean;
   dualGovernancePhase?: boolean;
+  isDgProposalLoading?: boolean;
   withLabels?: boolean;
 };
 
-const PHASE_TOOLTIP_TEXT =
-  'All proposals go through three stages before implementation: Main phase → Objection phase → Dual Governance phase.';
+// Note: timing params are subject to change and must be updated if `Voting.voteTime()` or `Voting.objectionPhaseTime()` changes.
+const GOVERNANCE_STAGES = [
+  'Main phase — 72h to vote Yes or No.',
+  'Objection phase — 48h to vote No or switch Yes to No.',
+  'Dual Governance — dynamic timelock that lets stETH holders extend execution delay based on the level of opposition.',
+];
+
+const PHASE_TOOLTIP_TITLE = (
+  <TooltipText>
+    Governance stages:
+    <TooltipList>
+      {GOVERNANCE_STAGES.map((stage) => (
+        <li key={stage}>{stage}</li>
+      ))}
+    </TooltipList>
+  </TooltipText>
+);
 
 type StatusLabel = {
   text: string;
@@ -66,6 +83,7 @@ const getStatusLabel = (
 const getPhaseLabel = (
   status: VoteStatus,
   dualGovernancePhase?: boolean,
+  isDgProposalLoading?: boolean,
 ): PhaseLabel => {
   switch (status) {
     case VoteStatus.ActiveMain:
@@ -73,6 +91,9 @@ const getPhaseLabel = (
     case VoteStatus.ActiveObjection:
       return { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
     case VoteStatus.Executed:
+      if (isDgProposalLoading) {
+        return null;
+      }
       return dualGovernancePhase
         ? { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 }
         : { text: 'Enacted', variant: 'enacted' };
@@ -93,6 +114,7 @@ export const VoteMetaBar = ({
   startDate,
   isEnded,
   dualGovernancePhase,
+  isDgProposalLoading,
   withLabels = false,
 }: Props) => {
   const mainPhaseEnd = startDate + (voteTime - objectionPhaseTime);
@@ -103,12 +125,7 @@ export const VoteMetaBar = ({
     status === VoteStatus.ActiveMain || status === VoteStatus.ActiveObjection;
 
   const statusLabel = getStatusLabel(status, isQuorumReached);
-  const phase = getPhaseLabel(status, dualGovernancePhase);
-
-  const activePhaseLabel =
-    status === VoteStatus.ActiveMain
-      ? 'Main phase ends in'
-      : 'Objection phase ends in';
+  const phase = getPhaseLabel(status, dualGovernancePhase, isDgProposalLoading);
 
   const timeValue = isActive ? (
     <CountdownText>
@@ -134,7 +151,7 @@ export const VoteMetaBar = ({
   );
 
   return (
-    <MetaWrap>
+    <MetaWrap $labeled={withLabels}>
       <BadgeGroup>
         <StatusBadge $variant={statusLabel.variant}>
           {statusLabel.variant === 'success' && <VoteDoneIcon />}
@@ -149,11 +166,11 @@ export const VoteMetaBar = ({
             )}
             {phase.text}
             {phase.variant === 'phase' && (
-              <Tooltip title={<TooltipText>{PHASE_TOOLTIP_TEXT}</TooltipText>}>
+              <PhaseTooltip placement="bottomRight" title={PHASE_TOOLTIP_TITLE}>
                 <TooltipIconWrap>
                   <InfoIcon />
                 </TooltipIconWrap>
-              </Tooltip>
+              </PhaseTooltip>
             )}
           </PhaseBadge>
         )}
@@ -165,10 +182,12 @@ export const VoteMetaBar = ({
               <MetaLabel>Proposal ID</MetaLabel>
               <VoteIdText>Vote #{voteId}</VoteIdText>
             </MetaCell>
-            <MetaCell>
-              <MetaLabel>{isActive ? activePhaseLabel : 'Ended on'}</MetaLabel>
-              {timeValue}
-            </MetaCell>
+            {!isActive && (
+              <MetaCell>
+                <MetaLabel>Ended on</MetaLabel>
+                {timeValue}
+              </MetaCell>
+            )}
           </>
         ) : (
           <>

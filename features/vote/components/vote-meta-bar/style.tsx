@@ -1,12 +1,61 @@
 import styled, { css } from 'styled-components';
+import { Tooltip } from '@lidofinance/lido-ui';
+import {
+  VOTE_CARD_MAX_WIDTH,
+  VOTE_CARD_MOBILE_MAX_WIDTH,
+  VOTE_MOBILE_MAX_WIDTH,
+} from 'styles/constants';
 
-export const MetaWrap = styled.div`
+export const MetaWrap = styled.div<{ $labeled?: boolean }>`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;
   margin-bottom: ${({ theme }) => theme.spaceMap.xl}px;
   font-size: 14px;
+
+  ${({ $labeled }) =>
+    $labeled &&
+    css`
+      ${StatusBadge},
+      ${PhaseBadge} {
+        font-size: 12px;
+      }
+
+      ${MetaLabel} {
+        font-size: 12px;
+      }
+
+      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+        ${VoteIdText},
+        ${CountdownText},
+        ${EndedText} {
+          font-size: 14px;
+        }
+      }
+    `}
+
+  ${({ $labeled }) =>
+    !$labeled &&
+    css`
+      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+        ${VoteIdText},
+        ${CountdownText},
+        ${EndedText} {
+          font-size: 14px;
+        }
+
+        ${StatusBadge},
+        ${PhaseBadge} {
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: ${VOTE_CARD_MOBILE_MAX_WIDTH}px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    `}
 `;
 
 export const BadgeGroup = styled.div`
@@ -20,7 +69,15 @@ export const TimeGroup = styled.div<{ $labeled?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${({ $labeled }) => ($labeled ? '54px' : '8px')};
-  margin-left: auto;
+  ${({ $labeled }) =>
+    $labeled &&
+    css`
+      margin-left: auto;
+
+      @media (max-width: ${VOTE_CARD_MAX_WIDTH - 1}px) {
+        margin-left: 0;
+      }
+    `}
 `;
 
 type StatusVariant = 'active' | 'success' | 'error' | 'warning';
@@ -188,8 +245,30 @@ export const EndedText = styled.span`
   color: var(--lido-color-textSecondary);
 `;
 
-export const TooltipText = styled.span`
+export const PhaseTooltip = styled(Tooltip)`
+  && {
+    max-width: 320px;
+
+    @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+      left: 16px !important;
+      right: 16px;
+      max-width: unset;
+    }
+  }
+`;
+
+export const TooltipText = styled.div`
   font-size: 12px;
+`;
+
+export const TooltipList = styled.ul`
+  margin: 4px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+
+  li:not(:first-child) {
+    margin-top: 4px;
+  }
 `;
 
 export const TooltipIconWrap = styled.span`

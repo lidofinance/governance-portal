@@ -18,16 +18,16 @@ import {
 } from './style';
 import { Button } from '@lidofinance/lido-ui';
 import { Button as DgButton } from 'shared/components/button';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { splitVoteDescription } from '@vote/utils/split-vote-description';
+import { useVoteTitle } from '@vote/hooks/use-vote-title';
 import { VoteDescription } from '../vote-description';
 import { VoteNotice } from '../vote-notice';
 import { VotersList } from '../voters-list';
 import { VoteScript } from '../vote-script/vote-script';
 import { useAccount } from 'wagmi';
 import { VotePhase, VoteStatus } from 'shared/votes/types';
-import { useConnect } from 'reef-knot/core-react';
+import { ConnectWalletButton } from 'shared/wallet';
 import { VoteInfo } from '../vote-info';
 import { VoteActions } from '../vote-actions';
 import { useVoteContext } from '@vote/providers/vote-context';
@@ -55,14 +55,15 @@ export const VoteCard = () => {
     dgProposal,
     voteEvents,
     voterDaoTokenBalance,
+    totalDelegatedVotingPower,
+    hasDelegated,
+    isDgProposalLoading,
   } = useVoteContext();
 
   const isSupportedChain = useIsSupportedChain();
 
   const { isConnected: isWalletConnected, address: walletAddress } =
     useAccount();
-
-  const { connect } = useConnect();
 
   const router = useRouter();
 
@@ -98,20 +99,17 @@ export const VoteCard = () => {
     setIsChangeMode(false);
   }, [userOwnVote?.supports]);
 
-  const openConnectWalletModal = useCallback(async () => {
-    await connect();
-  }, [connect]);
-
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
     vote.state.status === VoteStatus.Executed;
+  const isClosed = vote.phase === VotePhase.Closed;
 
   const isDualGovernancePhase =
     !!dgProposal &&
     (dgProposal.proposalStatus === ProposalStatus.Submitted ||
       dgProposal.proposalStatus === ProposalStatus.Scheduled);
 
-  const { title, body } = splitVoteDescription({
+  const { title, body } = useVoteTitle({
     description,
     metadata: eventStart?.args.metadata,
     truncateTitle: false,
@@ -124,7 +122,7 @@ export const VoteCard = () => {
       <SidebarSection>
         <VoteQuorumPanel vote={vote} />
       </SidebarSection>
-      {!isEnded && (
+      {!isClosed && (
         <SidebarSection>
           <VoteProgressBar
             startDate={Number(vote.startDate)}
@@ -159,20 +157,24 @@ export const VoteCard = () => {
     </>
   );
 
-  const isClosed = vote.phase === VotePhase.Closed;
   const hasOwnVote = !!userOwnVote;
   const hasVotingPower =
     voterDaoTokenBalance !== undefined && voterDaoTokenBalance > 0n;
+  const hasDelegatedPower = totalDelegatedVotingPower > 0n;
+  const hasNoVotingPower = voterDaoTokenBalance === 0n;
   const showYourVoteSection =
-    hasOwnVote || hasDelegateVote || (!isClosed && hasVotingPower);
+    hasOwnVote ||
+    hasDelegateVote ||
+    hasDelegated ||
+    hasNoVotingPower ||
+    (!isClosed && (hasVotingPower || hasDelegatedPower));
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
+  const isPending = vote.state.status === VoteStatus.Pending;
 
   const ctaItems = isDualGovernancePhase ? null : (
     <>
-      {!isWalletConnected && !isClosed && (
-        <Button fullwidth onClick={openConnectWalletModal}>
-          Connect wallet
-        </Button>
+      {!isWalletConnected && (!isClosed || isPending) && (
+        <ConnectWalletButton fullwidth>Connect wallet</ConnectWalletButton>
       )}
       {isWalletConnected && (
         <>
@@ -199,6 +201,14 @@ export const VoteCard = () => {
                   </span>
                 </PowerRow>
               )}
+              {!isClosed && hasDelegatedPower && (
+                <PowerRow>
+                  <span>Total delegated voting power</span>
+                  <span>
+                    {`${formatBalance(totalDelegatedVotingPower)} ${KnownToken.LDO.symbol}`}
+                  </span>
+                </PowerRow>
+              )}
               {showVoteButtons && (
                 <NoticeWrap>
                   <VoteNotice />
@@ -221,7 +231,7 @@ export const VoteCard = () => {
               </DgButton>
             </VoteActionsWrap>
           )}
-          {vote.state.status === VoteStatus.Pending && (
+          {isPending && (
             <EnactButtonWrap>
               <Button
                 fullwidth
@@ -250,6 +260,7 @@ export const VoteCard = () => {
           startDate={Number(vote.startDate)}
           isEnded={isEnded}
           dualGovernancePhase={isDualGovernancePhase}
+          isDgProposalLoading={isDgProposalLoading}
           withLabels
         />
         <MobileSidebarSlot>{sidebarItems}</MobileSidebarSlot>
@@ -259,8 +270,9 @@ export const VoteCard = () => {
           <DescriptionWrap data-testid="voteDescription">
             <VoteDescription
               metadata={eventStart?.args.metadata}
-              description={body}
+              description={description}
               allowMD
+              hideLeadingHeading
             />
           </DescriptionWrap>
         )}

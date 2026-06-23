@@ -141,6 +141,7 @@ const GlobalStyle = createGlobalStyle<GlobalLayoutProps>`
   *:after {
     box-sizing: border-box;
     font-family: 'Manrope', sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
   svg {
     box-sizing: content-box;

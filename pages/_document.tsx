@@ -8,9 +8,10 @@ import Document, {
 } from 'next/document';
 import { createHeadersObject } from 'next-secure-headers';
 import { ServerStyleSheet } from 'styled-components';
-import { Fonts, LidoUIHead } from '@lidofinance/lido-ui';
+import { Fonts, globalStyleDataAttribute } from '@lidofinance/lido-ui';
 
 import { config } from 'config';
+import { lightThemeGlobalCss } from 'styles';
 import { contentSecurityPolicy } from 'config/csp';
 
 const secureHeaders = createHeadersObject({ contentSecurityPolicy });
@@ -99,7 +100,10 @@ export default class MyDocument extends Document {
           />
           <meta name="currentChain" content={String(config.defaultChain)} />
           <Fonts />
-          <LidoUIHead />
+          <style
+            {...{ [globalStyleDataAttribute]: '' }}
+            dangerouslySetInnerHTML={{ __html: lightThemeGlobalCss }}
+          />
           {/* eslint-disable-next-line @next/next/no-sync-scripts */}
           <script src={`${config.BASE_PATH_ASSET}/runtime/window-env.js`} />
         </Head>

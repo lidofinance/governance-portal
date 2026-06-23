@@ -8,6 +8,6 @@ export const DashboardCard = styled.div`
   word-break: break-all;
   background-color: var(--lido-color-foreground);
   border-radius: ${({ theme }) => theme.borderRadiusesMap.xl}px;
-  box-shadow: 0px 4px 32px var(--lido-color-shadowLight);
+  box-shadow: 0 4px 32px var(--lido-color-shadowLight);
   text-decoration: none;
 `;

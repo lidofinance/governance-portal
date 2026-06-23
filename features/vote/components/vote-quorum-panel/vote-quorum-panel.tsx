@@ -1,4 +1,4 @@
-import { Text, Tooltip } from '@lidofinance/lido-ui';
+import { Text } from '@lidofinance/lido-ui';
 import { formatEther } from 'viem';
 import { Vote } from 'shared/votes/types';
 import { InfoIcon } from 'shared/components/icons';
@@ -10,8 +10,9 @@ import {
   QuorumRow,
   QuorumLabel,
   QuorumValue,
-  QuorumReachedWrap,
-  QuorumReached,
+  QuorumStatusWrap,
+  QuorumStatus,
+  QuorumTooltip,
   QuorumTooltipBody,
   QuorumTooltipRow,
   VoteTotalsRow,
@@ -38,35 +39,38 @@ export const VoteQuorumPanel = ({ vote }: Props) => {
   const totalSupply = Number(formatEther(vote.votingPower));
   const quorumAmount = totalSupply * Number(formatEther(vote.minAcceptQuorum));
 
+  const isQuorumReached = vote.state.isQuorumReached;
+
   return (
     <>
       <QuorumRow>
         <QuorumLabel>
           Quorum: <QuorumValue>{quorumPct}%</QuorumValue>
         </QuorumLabel>
-        {vote.state.isQuorumReached && (
-          <Tooltip
-            title={
-              <QuorumTooltipBody>
-                To reach quorum, more than {quorumPct}% of the total LDO supply
-                must vote for one option.
-                <QuorumTooltipRow>
-                  <span>Total Supply</span>
-                  <span>{formatVoteAmount(totalSupply)} LDO</span>
-                </QuorumTooltipRow>
-                <QuorumTooltipRow>
-                  <span>Quorum</span>
-                  <span>{formatVoteAmount(quorumAmount)} LDO</span>
-                </QuorumTooltipRow>
-              </QuorumTooltipBody>
-            }
-          >
-            <QuorumReachedWrap>
-              <QuorumReached>Reached</QuorumReached>
-              <InfoIcon />
-            </QuorumReachedWrap>
-          </Tooltip>
-        )}
+        <QuorumTooltip
+          placement="bottomRight"
+          title={
+            <QuorumTooltipBody>
+              To reach quorum, more than {quorumPct}% of the total LDO supply
+              must vote for one option.
+              <QuorumTooltipRow>
+                <span>Total Supply</span>
+                <span>{formatVoteAmount(totalSupply)} LDO</span>
+              </QuorumTooltipRow>
+              <QuorumTooltipRow>
+                <span>Quorum</span>
+                <span>{formatVoteAmount(quorumAmount)} LDO</span>
+              </QuorumTooltipRow>
+            </QuorumTooltipBody>
+          }
+        >
+          <QuorumStatusWrap $reached={isQuorumReached}>
+            <QuorumStatus $reached={isQuorumReached}>
+              {isQuorumReached ? 'Reached' : 'Not reached'}
+            </QuorumStatus>
+            <InfoIcon />
+          </QuorumStatusWrap>
+        </QuorumTooltip>
       </QuorumRow>
       <VoteYesNoBar
         yeaPct={yeaPct}

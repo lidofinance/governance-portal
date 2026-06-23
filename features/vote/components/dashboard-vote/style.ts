@@ -5,18 +5,30 @@ import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const VoteDashboardCard = styled(DashboardCard)`
   flex-direction: row;
-  justify-content: space-between;
-
+  gap: 64px;
+  padding: ${({ theme }) => theme.spaceMap.xxl}px;
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     flex-direction: column;
     height: auto;
+    gap: ${({ theme }) => theme.spaceMap.xl}px;
   }
 `;
 
 export const VoteTitle = styled(Text).attrs({
   size: 20,
   weight: 700,
-})``;
+})`
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+    && {
+      font-size: 16px;
+    }
+  }
+`;
 
 export const VoteDescriptionWrap = styled(Text).attrs({
   size: 14,
@@ -24,11 +36,10 @@ export const VoteDescriptionWrap = styled(Text).attrs({
 })`
   margin-top: ${({ theme }) => theme.spaceMap.sm}px;
   line-height: 20px;
-  max-height: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 
   span {
@@ -42,20 +53,26 @@ export const VoteDescriptionWrap = styled(Text).attrs({
 `;
 
 export const VoteSummary = styled.section`
-  width: 70%;
+  flex: 1 1 auto;
+  min-width: 0;
 
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+    flex: 0 0 auto;
     width: 100%;
   }
 `;
 
 export const VoteQuorum = styled.section`
-  width: 274px;
-  margin-left: auto;
+  flex: 0 0 274px;
 
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
+    flex: 0 0 auto;
     width: 100%;
-    margin-left: 0;
-    margin-top: ${({ theme }) => theme.spaceMap.xl}px;
   }
+`;
+
+export const VetoSupportWrap = styled.div`
+  margin-top: ${({ theme }) => theme.spaceMap.lg}px;
+  padding-top: ${({ theme }) => theme.spaceMap.lg}px;
+  border-top: 1px solid var(--lido-color-border);
 `;

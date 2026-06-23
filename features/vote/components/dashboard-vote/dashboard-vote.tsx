@@ -7,14 +7,16 @@ import {
   VoteDescriptionWrap,
   VoteSummary,
   VoteQuorum,
+  VetoSupportWrap,
 } from './style';
-import { splitVoteDescription } from '@vote/utils/split-vote-description';
+import { useVoteTitle } from '@vote/hooks/use-vote-title';
 import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
 import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
 import { votePage } from 'constants/urls';
 import { VoteDescription } from '../vote-description';
 import { VoteQuorumPanel } from '../vote-quorum-panel';
+import { VoteVetoSupport } from '../vote-veto-support';
 import { VoteMetaBar } from '../vote-meta-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
@@ -43,11 +45,12 @@ export const DashboardVote = ({
 }: Props) => {
   const { startDate } = getVoteDetailsFormatted(vote);
 
-  const { data: voteDualGovernanceStatus } = useVoteDualGovernanceStatus({
-    voteId: vote.id,
-    eventExecuteVote: executeEvent,
-    isEventExecuteLoading: false,
-  });
+  const { data: voteDualGovernanceStatus, isLoading: isDgProposalLoading } =
+    useVoteDualGovernanceStatus({
+      voteId: vote.id,
+      eventExecuteVote: executeEvent,
+      isEventExecuteLoading: false,
+    });
 
   const isDualGovernancePhase =
     !!voteDualGovernanceStatus &&
@@ -75,27 +78,12 @@ export const DashboardVote = ({
     onPass: handlePass,
   });
 
-  const { title: splitTitle, body: splitBody } = splitVoteDescription({
+  const { title, body } = useVoteTitle({
     description,
     metadata: startEvent?.args.metadata,
   });
 
-  const trimmedDescription = description?.trim() || null;
-  const hasCleanSplit = splitTitle !== null && splitBody !== null;
-
-  const title = trimmedDescription
-    ? hasCleanSplit
-      ? splitTitle
-      : 'Proposal'
-    : splitTitle;
-
-  const body = trimmedDescription
-    ? hasCleanSplit
-      ? splitBody
-      : trimmedDescription
-    : null;
-
-  const hasDescription = body !== null || !trimmedDescription;
+  const hasDescription = body !== null || !description?.trim();
 
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
@@ -120,19 +108,26 @@ export const DashboardVote = ({
             startDate={startDate}
             isEnded={isEnded}
             dualGovernancePhase={isDualGovernancePhase}
+            isDgProposalLoading={isDgProposalLoading}
           />
           {title && <VoteTitle>{title}</VoteTitle>}
           {hasDescription && (
             <VoteDescriptionWrap data-testid="voteDescription">
               <VoteDescription
                 metadata={startEvent?.args.metadata}
-                description={body}
+                description={description}
+                hideLeadingHeading
               />
             </VoteDescriptionWrap>
           )}
         </VoteSummary>
         <VoteQuorum>
           <VoteQuorumPanel vote={vote} />
+          {isDualGovernancePhase && (
+            <VetoSupportWrap>
+              <VoteVetoSupport />
+            </VetoSupportWrap>
+          )}
         </VoteQuorum>
       </VoteDashboardCard>
     </Link>

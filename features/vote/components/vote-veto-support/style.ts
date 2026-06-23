@@ -12,6 +12,7 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 4px;
 `;
 
 export const Title = styled(Text).attrs({
@@ -42,6 +43,10 @@ export const InfoIconWrap = styled.span`
   display: inline-flex;
   cursor: pointer;
   color: var(--lido-color-textSecondary);
+`;
+
+export const TooltipText = styled.span`
+  font-size: 12px;
 `;
 
 export const ProgressWrap = styled.div`

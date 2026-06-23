@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { VOTE_MOBILE_MAX_WIDTH } from 'styles/constants';
 
 export const Tabs = styled.div`
   position: relative;
@@ -43,11 +42,13 @@ export const Tab = styled.div<TabProps>`
   }
 
   &:first-child {
-    border-top-left-radius: 20px;
+    border-top-left-radius: ${({ $variant }) =>
+      $variant === 'voting' ? 10 : 20}px;
   }
 
   &:last-child {
-    border-top-right-radius: 20px;
+    border-top-right-radius: ${({ $variant }) =>
+      $variant === 'voting' ? 10 : 20}px;
   }
 
   ${({ $isActive }) =>
@@ -66,12 +67,15 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
   border: 1px solid var(--border-color-fog);
   background: #f0f2f6;
   line-height: 2;
+  overflow: hidden;
 
   ${({ $variant }) =>
     $variant &&
     $variant === 'voting' &&
     css`
-      border-top-right-radius: 20px;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
       color: white;
     `};
 `;
@@ -82,10 +86,6 @@ export const VoteScriptBodyInner = styled.div<Pick<TabProps, '$variant'>>`
     css`
       max-height: 524px;
       overflow-y: auto;
-
-      @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
-        max-height: none;
-      }
     `};
 `;
 

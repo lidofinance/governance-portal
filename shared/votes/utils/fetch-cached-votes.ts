@@ -6,6 +6,7 @@ import type {
   CachedVoteEvent,
 } from 'shared/votes/cache/types';
 import { fetchCachedVoteEvents } from 'features/vote/utils/fetch-cached-vote-events';
+import { isCachedVoteComplete } from 'utils/cache/status.mjs';
 import type { EventStartVote } from './get-event-start-vote';
 import type { EventExecuteVote, Vote, VoteEvent } from '../types';
 import { VotePhase } from '../types';
@@ -116,6 +117,9 @@ export const fetchCachedVotes = async ({
 
   const result: Record<string, CachedVoteResult> = {};
   for (const [id, cached] of Object.entries(subset)) {
+    if (!isCachedVoteComplete(cached)) {
+      continue;
+    }
     result[id] = parseCachedVote(cached);
   }
   return result;

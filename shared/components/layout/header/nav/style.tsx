@@ -80,8 +80,8 @@ export const NavBurgerStyled = styled.div<BurgerProps>`
   margin-left: 8px;
   border-radius: 50%;
   border: 1px solid #000a3d1f;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -89,7 +89,7 @@ export const NavBurgerStyled = styled.div<BurgerProps>`
   z-index: 5;
 
   @media ${devicesHeaderMedia.tablet} {
-    margin-left: auto;
+    margin-left: 10px;
     display: flex;
   }
 `;

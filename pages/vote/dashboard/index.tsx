@@ -6,7 +6,7 @@ const DashboardPage = () => {
   return (
     <>
       <VoteMeta />
-      <Layout containerSize="full">
+      <Layout containerSize="full" containerPaddingX={60}>
         <DashboardGrid />
       </Layout>
     </>

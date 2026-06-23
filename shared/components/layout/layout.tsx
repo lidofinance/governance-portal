@@ -16,8 +16,9 @@ import {
 type Props = {
   title?: string | null;
   subtitle?: string | null;
-  containerSize?: ContainerProps['size'];
+  containerSize?: NonNullable<ContainerProps['size']>;
   metaTitle?: string;
+  containerPaddingX?: number;
 };
 
 const META_DESCRIPTION =
@@ -29,6 +30,7 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
     subtitle,
     containerSize = 'tight',
     metaTitle: metaTitleProp,
+    containerPaddingX,
   } = props;
   const { children } = props;
 
@@ -55,7 +57,7 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
       <NoSsrWrapper>
         <TestModeBanner />
       </NoSsrWrapper>
-      <ContainerStyled size={containerSize}>
+      <ContainerStyled $size={containerSize} $paddingX={containerPaddingX}>
         {title && <LayoutTitleStyle>{title}</LayoutTitleStyle>}
         {subtitle && <LayoutSubTitleStyle>{subtitle}</LayoutSubTitleStyle>}
         {children}

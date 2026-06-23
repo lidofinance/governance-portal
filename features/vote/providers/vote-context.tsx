@@ -19,6 +19,7 @@ import { EligibleDelegator, VoterInfo } from '../types';
 import { ProposalStatus } from 'shared/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
+import { useDelegationInfo } from '../hooks/use-delegation-info';
 
 type Value = {
   vote: Vote;
@@ -35,6 +36,7 @@ type Value = {
   eligibleDelegatedVotingPower: bigint;
   totalDelegatedVotingPower: bigint;
   delegatorsVotedThemselves: VoterInfo[];
+  hasDelegated: boolean;
   dgProposal:
     | {
         proposalId: number;
@@ -42,6 +44,7 @@ type Value = {
       }
     | null
     | undefined;
+  isDgProposalLoading: boolean;
   isLoading: boolean;
   refetchers: {
     refetchVote: ReturnType<typeof useVote>['refetch'];
@@ -90,7 +93,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchVoterState,
   } = useVoterState(voteData?.vote.id, voteData?.vote.snapshotBlock);
 
-  const { data: dgProposal, isLoading: isProposalDataLoading } =
+  const { data: dgProposal, isLoading: isDgProposalLoading } =
     useVoteDualGovernanceStatus({
       voteId: voteData?.vote.id,
       eventExecuteVote: voteData?.eventExecute,
@@ -102,6 +105,10 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isLoading: isDelegatorsDataLoading,
     refetch: refetchDelegatorsData,
   } = useVoteDelegators(voteData?.vote.id);
+
+  const { data: delegationInfo, isLoading: isDelegationInfoLoading } =
+    useDelegationInfo();
+  const hasDelegated = !!delegationInfo?.aragonDelegateAddress;
 
   const refetchers = useMemo(
     () => ({
@@ -119,7 +126,8 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isCastVoteEventsDataLoading ||
     isVoterStateLoading ||
     isDelegatorsDataLoading ||
-    isProposalDataLoading;
+    isDgProposalLoading ||
+    isDelegationInfoLoading;
 
   const value = useMemo(() => {
     if (!voteData?.vote) {
@@ -144,7 +152,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
         delegatorsData?.totalDelegatedVotingPower ?? 0n,
       delegatorsVotedThemselves:
         delegatorsData?.delegatedVotersVotedThemselves ?? [],
+      hasDelegated,
       dgProposal,
+      isDgProposalLoading,
       isLoading,
       refetchers,
     };
@@ -153,7 +163,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     delegatorsData?.eligibleDelegatedVoters,
     delegatorsData?.eligibleDelegatedVotingPower,
     delegatorsData?.totalDelegatedVotingPower,
+    hasDelegated,
     dgProposal,
+    isDgProposalLoading,
     isLoading,
     refetchers,
     voteData,

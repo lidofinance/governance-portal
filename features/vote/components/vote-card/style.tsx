@@ -4,6 +4,7 @@ import { Text } from 'shared/components/text';
 import {
   VOTE_CARD_MAX_WIDTH,
   VOTE_CARD_MOBILE_MAX_WIDTH,
+  VOTE_CARD_FULL_BLEED_MAX_WIDTH,
   VOTE_MOBILE_MAX_WIDTH,
 } from 'styles/constants';
 
@@ -33,6 +34,14 @@ export const MainCard = styled(Block).attrs({
     flex: 1 0 auto;
     width: 100%;
   }
+
+  @media (max-width: ${VOTE_CARD_FULL_BLEED_MAX_WIDTH}px) {
+    width: calc(100% + ${({ theme }) => theme.spaceMap.lg * 2}px);
+    margin-left: -${({ theme }) => theme.spaceMap.lg}px;
+    margin-right: -${({ theme }) => theme.spaceMap.lg}px;
+    border-radius: 0;
+    box-shadow: none;
+  }
 `;
 
 export const SideCard = styled(Block).attrs({
@@ -51,6 +60,8 @@ export const SideCard = styled(Block).attrs({
 export const SidebarSection = styled.div`
   & + & {
     margin-top: ${({ theme }) => theme.spaceMap.xl}px;
+    padding-top: ${({ theme }) => theme.spaceMap.xl}px;
+    border-top: 1px solid var(--lido-color-border);
   }
 `;
 
@@ -60,6 +71,9 @@ export const MobileSidebarSlot = styled.div`
   @media (max-width: ${VOTE_MOBILE_MAX_WIDTH}px) {
     display: block;
     margin-bottom: ${({ theme }) => theme.spaceMap.xxl}px;
+    padding: ${({ theme }) => theme.spaceMap.xl}px 0;
+    border-top: 1px solid var(--lido-color-border);
+    border-bottom: 1px solid var(--lido-color-border);
   }
 `;
 
@@ -107,7 +121,7 @@ export const YourVoteHeading = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--lido-color-text);
 `;
@@ -137,6 +151,7 @@ export const PowerRow = styled.div`
 
   & > span:first-child {
     color: var(--lido-color-textSecondary);
+    font-size: 12px;
   }
 
   & > span:last-child {
