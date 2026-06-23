@@ -1,7 +1,7 @@
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useConfig } from 'config';
 import { useQuery } from '@tanstack/react-query';
 import {
-  CachedEventsData,
   EventsLogs,
   ProposalDetails,
   ProposalStatus,
@@ -11,7 +11,7 @@ import {
   fetchScheduledEvent,
   fetchSubmittedEvent,
 } from 'utils/proposals/fetch-proposal-events.mjs';
-import { fetchCachedEventsData } from '../utils/fetch-cached-events-data';
+import { fetchCachedProposalEvents } from '../utils/fetch-cached-events-data';
 
 type Args = {
   proposalDetails?: ProposalDetails;
@@ -36,6 +36,7 @@ const isEventMissing = (
 
 export const useProposalEvents = ({ proposalDetails }: Args) => {
   const { chainId } = useLidoSDK();
+  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const publicClient = usePublicClient();
 
   return useQuery({
@@ -44,6 +45,7 @@ export const useProposalEvents = ({ proposalDetails }: Args) => {
       chainId,
       proposalDetails?.id.toString(),
       proposalDetails?.status,
+      useLocalCache,
     ],
     queryFn: async () => {
       if (!proposalDetails || !publicClient) {
@@ -54,11 +56,13 @@ export const useProposalEvents = ({ proposalDetails }: Args) => {
         };
       }
 
-      const eventsData: CachedEventsData = await fetchCachedEventsData();
-
       const proposalStatus = proposalDetails.status;
-      const chainData = eventsData[chainId.toString()];
-      const proposalData = chainData?.proposals[proposalDetails.id.toString()];
+      const cachedChainData = await fetchCachedProposalEvents(
+        chainId,
+        [proposalDetails.id.toString()],
+        useLocalCache,
+      );
+      const proposalData = cachedChainData[proposalDetails.id.toString()];
 
       const events: EventsLogs = {
         proposalSubmittedEvent: proposalData?.proposalSubmittedEvent ?? null,

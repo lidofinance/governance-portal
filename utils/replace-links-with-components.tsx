@@ -20,7 +20,7 @@ export const replaceJsxElements = (text: string) => {
       replace: (address) => (
         <AddressPop address={address} isInline isPaddingless>
           <Box
-            display="flex"
+            display="inline-flex"
             alignItems="center"
             background="#EFF2F6"
             borderRadius={10}

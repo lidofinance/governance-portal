@@ -28,10 +28,6 @@ export const contentSecurityPolicy: ContentSecurityPolicyOption = {
     ],
     scriptSrc: [
       "'self'",
-      // Hash of the lido-ui inline theme-detection script (CookieThemeProvider).
-      // If lido-ui is updated and the script content changes, the hash must be
-      // recalculated: browser console will show the new hash in the CSP error.
-      "'sha256-wTvVT3oJ2rMAqNUILvSYccTn53N47S3NIZbPE0ql0No='",
       ...(config.developmentMode ? ["'unsafe-eval'"] : []), // for HMR
       ...trustedHosts,
     ],

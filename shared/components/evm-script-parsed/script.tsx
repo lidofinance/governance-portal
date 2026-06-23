@@ -1,6 +1,16 @@
-import { useState, useMemo } from 'react';
-import { Tabs, Tab, VoteScriptBodyWrap } from './style';
+import { useState, useMemo, useRef, useCallback } from 'react';
+import copy from 'copy-to-clipboard';
+import { ToastInfo } from '@lidofinance/lido-ui';
+import {
+  Tabs,
+  Tab,
+  VoteScriptBodyWrap,
+  VoteScriptBodyInner,
+  ScriptFooter,
+  ScriptFooterButton,
+} from './style';
 import { ScriptBody } from './script-body';
+import { CopyIcon } from 'shared/components/icons';
 import { DecodedCall } from 'utils/decode-evm-script-calls';
 import { Hex } from 'viem';
 
@@ -53,6 +63,7 @@ export const Script = ({
   metadata,
 }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const tabs = useMemo(() => {
     const tabMap = {
       Parsed: decodedCalls.length,
@@ -76,6 +87,30 @@ export const Script = ({
     }
   }, [decodedCalls]);
 
+  const handleCopy = useCallback(() => {
+    const tab = tabs[activeTab];
+    let text = '';
+    switch (tab) {
+      case 'JSON':
+        text = JSON.stringify(sanitizedCalls, null, 2);
+        break;
+      case 'Raw':
+        text = rawScript ?? '';
+        break;
+      case 'Items':
+        text = metadata ?? '';
+        break;
+      case 'Parsed':
+        text = bodyRef.current?.innerText ?? '';
+        break;
+    }
+    if (!text) {
+      return;
+    }
+    copy(text);
+    ToastInfo('Copied to clipboard');
+  }, [tabs, activeTab, sanitizedCalls, rawScript, metadata]);
+
   return (
     <>
       <Tabs>
@@ -91,13 +126,26 @@ export const Script = ({
         ))}
       </Tabs>
       <VoteScriptBodyWrap $variant={tabVariant}>
-        {tabs[activeTab] === 'JSON' && (
-          <ScriptBody binary={JSON.stringify(sanitizedCalls, null, 2)} />
-        )}
+        <VoteScriptBodyInner
+          ref={tabVariant === 'voting' ? bodyRef : null}
+          $variant={tabVariant}
+        >
+          {tabs[activeTab] === 'JSON' && (
+            <ScriptBody binary={JSON.stringify(sanitizedCalls, null, 2)} />
+          )}
 
-        {tabs[activeTab] === 'Parsed' && <ScriptBody calls={decodedCalls} />}
-        {tabs[activeTab] === 'Raw' && <ScriptBody binary={rawScript} />}
-        {tabs[activeTab] === 'Items' && <ScriptBody>{metadata}</ScriptBody>}
+          {tabs[activeTab] === 'Parsed' && <ScriptBody calls={decodedCalls} />}
+          {tabs[activeTab] === 'Raw' && <ScriptBody binary={rawScript} />}
+          {tabs[activeTab] === 'Items' && <ScriptBody>{metadata}</ScriptBody>}
+        </VoteScriptBodyInner>
+        {tabVariant === 'voting' && (
+          <ScriptFooter>
+            <ScriptFooterButton type="button" onClick={handleCopy}>
+              <CopyIcon />
+              Copy
+            </ScriptFooterButton>
+          </ScriptFooter>
+        )}
       </VoteScriptBodyWrap>
     </>
   );

@@ -1,15 +1,24 @@
 import styled, { css } from 'styled-components';
+import { Text } from 'shared/components/text';
 
 export const VotesTitleWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.spaceMap.xs}px;
+  margin-bottom: 12px;
+`;
+
+export const SupplyText = styled(Text).attrs({
+  as: 'span',
+  size: 14,
+})`
+  margin: 0 4px;
 `;
 
 type VotesBarWrapProps = { showOnForeground?: boolean };
 export const VotesBarWrap = styled.div<VotesBarWrapProps>`
+  position: relative;
   display: flex;
-  height: 4px;
+  height: 8px;
   border-radius: ${({ theme }) => theme.borderRadiusesMap.sm}px;
   overflow: hidden;
   ${({ showOnForeground }) =>
@@ -21,6 +30,18 @@ export const VotesBarWrap = styled.div<VotesBarWrapProps>`
           border: 1px solid var(--lido-color-foreground);
           background-color: var(--lido-color-foreground);
         `}
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+    background-color: var(--lido-color-text);
+    pointer-events: none;
+  }
 `;
 
 const VotesBar = styled.div`
@@ -34,4 +55,12 @@ export const VotesBarNay = styled(VotesBar)`
 
 export const VotesBarYea = styled(VotesBar)`
   background-color: var(--lido-color-success);
+`;
+
+export const VoteYeaNayText = styled(Text).attrs({ as: 'span', size: 14 })<{
+  $variant: 'success' | 'error';
+}>`
+  color: var(--lido-color-${({ $variant }) => $variant});
+  font-weight: 700;
+  font-size: 14px;
 `;

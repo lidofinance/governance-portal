@@ -1,9 +1,10 @@
 import { Text } from '@lidofinance/lido-ui';
 
 import {
+  BarSlot,
+  CountdownRow,
+  CountdownValue,
   LabelWrap,
-  MainPhaseCountWrap,
-  ProgressBarWrap,
   ProgressSection,
   Wrap,
 } from './style';
@@ -20,22 +21,6 @@ interface Props {
   isEnded: boolean;
   votePhase: VotePhase;
 }
-
-const formatterOptions: Intl.DateTimeFormatOptions = {
-  month: 'short',
-  day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false,
-  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  timeZoneName: 'short',
-};
-
-const formatDate = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000);
-
-  return date.toLocaleString('en-US', formatterOptions);
-};
 
 export const VoteProgressBar = ({
   startDate,
@@ -56,10 +41,9 @@ export const VoteProgressBar = ({
     objectionPhaseTime,
   );
 
-  // Derive effective phase from time so the UI updates immediately at the
-  // phase boundary, without waiting for a contract refetch.
   const isMainPhaseOver =
     timeDeltaMainPhase.isPassed || votePhase === VotePhase.Objection;
+  const isMainActive = !isMainPhaseOver && !isEnded;
   const isObjectionPhaseActive =
     isMainPhaseOver && !isEnded && !timeDeltaObjectionPhase.isPassed;
 
@@ -104,73 +88,68 @@ export const VoteProgressBar = ({
     isEnded,
   ]);
 
-  const formattedStartDate = useMemo(() => formatDate(startDate), [startDate]);
-  const formattedEndDate = useMemo(() => {
-    const endDate = startDate + voteTime;
-    return formatDate(endDate);
-  }, [startDate, voteTime]);
-
-  // Calculate absolute end times for countdown
   const mainPhaseEndTimestamp = startDate + (voteTime - objectionPhaseTime);
   const objectionPhaseEndTimestamp = startDate + voteTime;
+  const activeEndTimestamp = isMainActive
+    ? mainPhaseEndTimestamp
+    : objectionPhaseEndTimestamp;
+  const hasActiveCountdown = isMainActive || isObjectionPhaseActive;
 
   return (
     <Wrap>
       <LabelWrap>
-        <MainPhaseCountWrap>
-          <Text
-            data-testid="voteBarMainPhase"
-            color={!isMainPhaseOver ? 'primary' : 'secondary'}
-            size="xxs"
-          >
-            Main phase{!isMainPhaseOver ? ' ends in ' : ' ended'}
-          </Text>
-          {!isMainPhaseOver && (
-            <b>
-              <VoteDetailsCountdown
-                voteTime={mainPhaseEndTimestamp}
-                isEndedBeforeTime={isEnded}
-              />
-            </b>
-          )}
-        </MainPhaseCountWrap>
+        <Text
+          data-testid="voteBarMainPhase"
+          size={isMainActive ? 'xs' : 'xxs'}
+          weight={isMainActive ? 700 : 400}
+          color={isMainActive ? 'default' : 'secondary'}
+        >
+          Main phase
+        </Text>
         <Text
           data-testid="voteBarObjectionPhase"
-          color={isObjectionPhaseActive ? 'primary' : 'secondary'}
-          size="xxs"
+          size={isObjectionPhaseActive ? 'xs' : 'xxs'}
+          weight={isObjectionPhaseActive ? 700 : 400}
+          color={isObjectionPhaseActive ? 'default' : 'secondary'}
         >
-          {`Objection phase ${isObjectionPhaseActive ? 'ends in ' : ''}`}
-
-          {isObjectionPhaseActive && (
-            <b>
-              <VoteDetailsCountdown
-                voteTime={objectionPhaseEndTimestamp}
-                isEndedBeforeTime={isEnded}
-              />
-            </b>
-          )}
+          Objection phase
         </Text>
       </LabelWrap>
       <ProgressSection>
-        <ProgressBarWrap $alignDescription="flex-start" $width="60%">
+        <BarSlot
+          $grow={isObjectionPhaseActive ? 30 : 70}
+          $active={isMainActive}
+        >
           <ProgressBar
             progressPercent={mainPhaseProgress}
             totalPercent={100}
             variant={mainPhaseProgress > 0 ? 'primary' : 'default'}
             showProgressInfo={false}
           />
-          <div data-testid="voteStartDate"> {formattedStartDate} </div>
-        </ProgressBarWrap>
-        <ProgressBarWrap $alignDescription="flex-end" $width="40%">
+        </BarSlot>
+        <BarSlot
+          $grow={isObjectionPhaseActive ? 70 : 30}
+          $active={isObjectionPhaseActive}
+        >
           <ProgressBar
             progressPercent={objectionPhaseProgress}
             totalPercent={100}
             variant={objectionPhaseProgress > 0 ? 'primary' : 'default'}
             showProgressInfo={false}
           />
-          <div data-testid="voteEndDate">{formattedEndDate}</div>
-        </ProgressBarWrap>
+        </BarSlot>
       </ProgressSection>
+      {hasActiveCountdown && (
+        <CountdownRow>
+          Ends in{' '}
+          <CountdownValue>
+            <VoteDetailsCountdown
+              voteTime={activeEndTimestamp}
+              isEndedBeforeTime={isEnded}
+            />
+          </CountdownValue>
+        </CountdownRow>
+      )}
     </Wrap>
   );
 };

@@ -1,0 +1,3569 @@
+{
+  "200": {
+    "description": "\nTransfer 2500 stETH from Aragon Agent to Lido Labs Foundation operational multisig, [as proposed on the forum](https://research.lido.fi/t/lido-dao-contribution-to-coordinated-rseth-relief-effort/11483).\n",
+    "executeVoteEvent": {
+      "blockNumber": "24980862",
+      "executedAt": 1777406999,
+      "transactionHash": "0xd1890e23445b36647b77617eb85216958b16d7265c7889d4b7e1cd83f3aa700e"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1. Transfer 2500 stETH 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84 from Aragon Agent 0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c to Lido Labs Foundation operational multisig 0x95B521B4F55a447DB89f6a27f951713fC2035f3F.\nlidovoteipfs://bafkreidq5uylzwlkr4pahs2pmxwekglv5shmhmvaol7vio6g2sdwkp4efi",
+        "voteId": "200"
+      },
+      "blockNumber": "24944942",
+      "transactionHash": "0xecf2b54f222fa449d32e1a13c7aec43d8f7a38e8f4719c70f19c9741056b5d89"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 200,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "2229704688302506943919428",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001b9e5cbb9ca5b0d659238807e84d0176930753d8600000104f6364846000000000000000000000000ae7ab96520de3a18e5e111b5eaab095312d7fe8400000000000000000000000095b521b4f55a447db89f6a27f951713fc2035f3f0000000000000000000000000000000000000000000000878678326eac900000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000525472616e7366657220323530302073744554482066726f6d20417261676f6e204167656e7420746f204c69646f204c61627320466f756e646174696f6e206f7065726174696f6e616c206d756c74697369670000000000000000000000000000",
+      "snapshotBlock": "24944941",
+      "startDate": "1776974963",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "52724379848985852781963195"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0xECE4e341EbcC2B57c40FCf74f47bc61DfDC87fe2"
+          },
+          {
+            "stake": "2782547945205000000000000",
+            "supports": true,
+            "voter": "0xE289Cf875EBc11868bF1F7B9535Fd9aDBdb6A383"
+          },
+          {
+            "stake": "996544530000000000000000",
+            "supports": true,
+            "voter": "0xaB1cCdDefCB731E7409a448E6a6ABe1672A58D85"
+          },
+          {
+            "stake": "89170494084962158932784",
+            "supports": true,
+            "voter": "0x31e18739aD2d978344c1267377d194A3431E6D05"
+          },
+          {
+            "stake": "83333330000000000000000",
+            "supports": true,
+            "voter": "0x6cDC4F710BAbA4607f09BD55829604e1149EeCeE"
+          },
+          {
+            "stake": "57746843877290122203621",
+            "supports": true,
+            "voter": "0xC64d449baeCd972493C9F7CC171cf41aC1023dbd"
+          },
+          {
+            "stake": "50633069423653114489375",
+            "supports": true,
+            "voter": "0x0275c77993A5fEa99233B2A0A3A4E610006Dd06a"
+          },
+          {
+            "stake": "42391234409815883367336",
+            "supports": true,
+            "voter": "0x23D1508818EA7b49683aC98F9BA58A5c0A233524"
+          },
+          {
+            "stake": "30069449698724787888025",
+            "supports": true,
+            "voter": "0x28515c2E35D97Db1d8ECd9205Ed6304e38F50415"
+          },
+          {
+            "stake": "22953386015380130301417",
+            "supports": true,
+            "voter": "0xa05CB3b21C71C625a8BE51466dD8249166072F11"
+          },
+          {
+            "stake": "16623630000000000000000",
+            "supports": true,
+            "voter": "0x8f4a1b6071CEBf1d2Cd85688F6705F2612eB2fE1"
+          },
+          {
+            "stake": "12756474328295719573098",
+            "supports": true,
+            "voter": "0xD4F75efbe3A728dBe054C6F2989340399df8CD71"
+          },
+          {
+            "stake": "10120184677858640053065",
+            "supports": true,
+            "voter": "0xc76435658F686751d996093c8873bab78C4bB6Fb"
+          },
+          {
+            "stake": "9254466900854390067685",
+            "supports": true,
+            "voter": "0x0A92cBf55F80EE0A5AF77060Ba2C0e233601aD46"
+          },
+          {
+            "stake": "1457036469706821811544",
+            "supports": true,
+            "voter": "0x93821fd0Ca1e0F09864933D7b385FF6D2DA7a8F0"
+          },
+          {
+            "stake": "483376093887456921364",
+            "supports": true,
+            "voter": "0x332356E5508EA94Faccbf85Ff4A2007B3F540693"
+          },
+          {
+            "stake": "318036035589583114103",
+            "supports": true,
+            "voter": "0xa34Ff97e3A06C212556aEa209Ae0089370D615F2"
+          },
+          {
+            "stake": "101000000000000000000",
+            "supports": true,
+            "voter": "0x2cfaced1Bc7b2B61692bdBEA50BAD19981DCc41e"
+          },
+          {
+            "stake": "100074323028382017612",
+            "supports": true,
+            "voter": "0x35226E78809a5DaE4562B0B1fC4cf96cdb6A01A8"
+          },
+          {
+            "stake": "6900000000000000000",
+            "supports": true,
+            "voter": "0xf6F4b04cB453680F222c8f63c2C6554Fae501b1f"
+          },
+          {
+            "stake": "5197956131097447654",
+            "supports": true,
+            "voter": "0x64C0fF5C25925aCB33D68F79AD728Fd63361ffce"
+          },
+          {
+            "stake": "279145542373123989",
+            "supports": true,
+            "voter": "0xC3a2821727e9E5fa690F8C69C5d8E0899aA0E6Ee"
+          }
+        ],
+        "stake": "9206616938645720661312672",
+        "supports": true,
+        "voter": "0x1f76a6Bf03429480472B3695E08689219cE15ED6"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x28562FBe6d078d2526A0A8d1489245fF74fcA7eB"
+          },
+          {
+            "stake": "2189173746124479382007292",
+            "supports": true,
+            "voter": "0xAC665A44d46194EB9826D6F93Fb5Cc93bC2654b4"
+          },
+          {
+            "stake": "909670058696467375930537",
+            "supports": true,
+            "voter": "0x223ACb1D97b9A490Ef9FFaAeD391d6Ce75f05cCb"
+          },
+          {
+            "stake": "227220010116598153770928",
+            "supports": true,
+            "voter": "0x1ed34FfdfA9e42be13AAFF30062fa103881F5f21"
+          },
+          {
+            "stake": "158373160000000000000000",
+            "supports": true,
+            "voter": "0x5B8F0dD7E680200a46b4833FC074D73beb76541b"
+          },
+          {
+            "stake": "117586173802539326305909",
+            "supports": true,
+            "voter": "0x0e37227C414941380E152dE219F4f6FECc8Bfe1C"
+          },
+          {
+            "stake": "114639639213141672247528",
+            "supports": true,
+            "voter": "0x653Bc74DC32a00C69faA458F34281909d859FC02"
+          },
+          {
+            "stake": "85029980000000000000000",
+            "supports": true,
+            "voter": "0x65BCE0E8520C2944E0C8AF9F48f3c65b5EAD1631"
+          },
+          {
+            "stake": "59793546405538364767916",
+            "supports": true,
+            "voter": "0x535D9C211651F69D2a9dD0D68491417e72994c73"
+          },
+          {
+            "stake": "41875670000000000000000",
+            "supports": true,
+            "voter": "0x82fabb86E4E197C825d1cD271E71876b00cB0073"
+          },
+          {
+            "stake": "26542820517428606738154",
+            "supports": true,
+            "voter": "0x5b1F453D942367D362eCbb315B3ee0C8248a09a5"
+          },
+          {
+            "stake": "20507061371100000000000",
+            "supports": true,
+            "voter": "0xc882801DBbE218c2f210F4B4a0963156755B758E"
+          },
+          {
+            "stake": "12563443537513546657540",
+            "supports": true,
+            "voter": "0x1e3C0293A73a1b03616a87b48cEF357f18B7Cd66"
+          },
+          {
+            "stake": "9278491352083808654651",
+            "supports": true,
+            "voter": "0xb879c8C26594bAe2e77EA15EC41061e6C62f4f8c"
+          },
+          {
+            "stake": "6329079027865236900144",
+            "supports": true,
+            "voter": "0x65707Ac2958A6C4Cd42a0b530f1fA546586F223f"
+          },
+          {
+            "stake": "1069058862613126473496",
+            "supports": true,
+            "voter": "0xfE06AC9902fA42aBcD508F1eFB8a40c73403D430"
+          },
+          {
+            "stake": "700843035243119878872",
+            "supports": true,
+            "voter": "0xf8FEad458B6e9aEa9fDc36a66240dEf4D1656bD6"
+          },
+          {
+            "stake": "218062176766710886446",
+            "supports": true,
+            "voter": "0x7eb71D68181f2D219eeF78D834F6bA97D870AE85"
+          },
+          {
+            "stake": "168564177110257001174",
+            "supports": true,
+            "voter": "0xdD9Df31F1DBe1C1815D4Df96b2fA5F9694Cb3804"
+          },
+          {
+            "stake": "111469959285482308163",
+            "supports": true,
+            "voter": "0xCc44365d1Fd4e3241f8DCdfE8133572EC031DC23"
+          },
+          {
+            "stake": "69573108216716626540",
+            "supports": true,
+            "voter": "0x96e4e2EbbEfF1f45BFB678695628fa7a0398dE1C"
+          },
+          {
+            "stake": "30000000000000000000",
+            "supports": true,
+            "voter": "0x078b0b48AFca88a54AFf387DA0b4647F0207F93b"
+          },
+          {
+            "stake": "13000000000000000000",
+            "supports": true,
+            "voter": "0x3416ef25004223dE85AEdEdD5B2f59bbdF82432f"
+          },
+          {
+            "stake": "100000000000000000",
+            "supports": true,
+            "voter": "0xD6148eD52B81dc663C6AbcC30Ea9493815b86858"
+          }
+        ],
+        "stake": "8980963551483990887155290",
+        "supports": true,
+        "voter": "0xB6647e02AE6Dd74137cB80b1C24333852E4AF890"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x3d56d86a60b92132b37f226EA5A23F84C805Ce29"
+          },
+          {
+            "stake": "2830000000000000000000000",
+            "supports": true,
+            "voter": "0x3053DABb9761B3aF561150d62FfD18b1019940fc"
+          },
+          {
+            "stake": "48381213079776137464638",
+            "supports": true,
+            "voter": "0x26551631b8cBab36006904De04dFd10bF1163Da3"
+          },
+          {
+            "stake": "10000000000000000000000",
+            "supports": true,
+            "voter": "0xacFDaCadBe45a3F99DbE836EC7F4CB82cC7D1345"
+          },
+          {
+            "stake": "3356293853090000000000",
+            "supports": true,
+            "voter": "0xFe49e6da542ab0b03F0B4501F949962AAFaaA457"
+          },
+          {
+            "stake": "1246610624760000000000",
+            "supports": true,
+            "voter": "0x9A8d7f87Dd1c9bBCcD7275b524A9c9376d3b7101"
+          },
+          {
+            "stake": "1068667650000000000000",
+            "supports": true,
+            "voter": "0x168F87fBfe36B84E44B9d06278B2aA1CC73d7400"
+          },
+          {
+            "stake": "1000000000000000000000",
+            "supports": true,
+            "voter": "0x9c25a6b1bf3F6Fd2F68a62169c043045C2460482"
+          },
+          {
+            "stake": "225057190544456001156",
+            "supports": true,
+            "voter": "0x5DCecA88c237d5Ef2DdECDc019B73B97437fFca4"
+          },
+          {
+            "stake": "118485487587934881544",
+            "supports": true,
+            "voter": "0xA7a7Eaa8D6530C9195E41920E0C188320fAFdde1"
+          },
+          {
+            "stake": "109954445700000000000",
+            "supports": true,
+            "voter": "0x9406f40c6Dc3DF6Ff77D42178CD1cd7814731E00"
+          },
+          {
+            "stake": "105242126153351400668",
+            "supports": true,
+            "voter": "0xfcBB9d22209E641eb2B811B568be56fbfE2CAb1b"
+          },
+          {
+            "stake": "239976112044282097",
+            "supports": true,
+            "voter": "0x475E41b482aFC82BAE8025D09d128F30B680E10c"
+          },
+          {
+            "stake": "182090558827621992",
+            "supports": true,
+            "voter": "0xcFeBA2DBf3b36666462D90c4EB12891Ffcab3210"
+          }
+        ],
+        "stake": "7895611946524282751652095",
+        "supports": true,
+        "voter": "0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x7bd77405a7c28F50a1010e2185297A25165FD5C6"
+          },
+          {
+            "stake": "1000000000000000000000000",
+            "supports": true,
+            "voter": "0xd587796F10A50719338D4d349efB7520B4CAd22C"
+          },
+          {
+            "stake": "690345368203168917801",
+            "supports": true,
+            "voter": "0x5877022fe1a776E5275eD535b50d83A69634089C"
+          },
+          {
+            "stake": "250444430641824450341",
+            "supports": true,
+            "voter": "0x4a0884079ac2B0A71c93Ad0f81E766E2b94faacD"
+          },
+          {
+            "stake": "1036655480617864146",
+            "supports": true,
+            "voter": "0x4D4AC65513fEe380c596ac9EdfaC588782831bdf"
+          },
+          {
+            "stake": "912001745601542400",
+            "supports": true,
+            "voter": "0xa825Fec973CCCC89656081Ba9De7376092B8A2Cd"
+          },
+          {
+            "stake": "357298656409126221",
+            "supports": true,
+            "voter": "0xae2041045be9eC3557ba3Ba2d814dA98F30AB7ca"
+          },
+          {
+            "stake": "254760608959952480",
+            "supports": true,
+            "voter": "0x2BB965fDE72C17936950E17db029DC4f4ed32059"
+          },
+          {
+            "stake": "218738654385029561",
+            "supports": true,
+            "voter": "0x66339e64c3447F32251a3Baf79bc7f4192fD1386"
+          },
+          {
+            "stake": "98898453237722391",
+            "supports": true,
+            "voter": "0x996C2F3f23Aa2DF68D3665db33Fd8B09F6080966"
+          },
+          {
+            "stake": "98576071750666497",
+            "supports": true,
+            "voter": "0xea40b4EAad98dA0058FDBfDa40D31Cf6Fc0AE608"
+          },
+          {
+            "stake": "98447077503100841",
+            "supports": true,
+            "voter": "0x3FdD190787d587AcF40D5b3dD01C983a2e836e1A"
+          },
+          {
+            "stake": "49570276188847451",
+            "supports": true,
+            "voter": "0xC6615588BD57de5d69643acfa9f249640407A9Ce"
+          },
+          {
+            "stake": "49545517739602107",
+            "supports": true,
+            "voter": "0x99a3C248458a80f0026Fdd3f338d50d6Fba841e6"
+          },
+          {
+            "stake": "49540280036388896",
+            "supports": true,
+            "voter": "0x2822E90c9A581802a51Cc7A7e0C11896ea8b8CBf"
+          },
+          {
+            "stake": "49539043910605402",
+            "supports": true,
+            "voter": "0xa6C5b6FE16F0d059df6e0D51c1Ee2979CB1E2356"
+          },
+          {
+            "stake": "49536120898442745",
+            "supports": true,
+            "voter": "0xbe5327F1aac3ecF324Df532464086a36CcB4765f"
+          },
+          {
+            "stake": "49527128034911767",
+            "supports": true,
+            "voter": "0xC75F09ed4bd3a2C5D3193435538f19F69523d09E"
+          },
+          {
+            "stake": "49520715512263797",
+            "supports": true,
+            "voter": "0xd2ED47796EeD6F2fF266e91DDC35542bDE0FB673"
+          },
+          {
+            "stake": "49518452038617508",
+            "supports": true,
+            "voter": "0x489fBc137636ce821598a22F2AB86C1DE52497d9"
+          },
+          {
+            "stake": "49514202674833296",
+            "supports": true,
+            "voter": "0x03c387378298C469bDd48B8bBE93E15314BfD6e9"
+          },
+          {
+            "stake": "49513707315434439",
+            "supports": true,
+            "voter": "0x19cB1B49dA0C275e904d3CdBA5A47dfA99220D3F"
+          },
+          {
+            "stake": "49513400182281874",
+            "supports": true,
+            "voter": "0x096d597d2dC2962d4286d75a631AB9Dd8cd2C333"
+          },
+          {
+            "stake": "49509778013266448",
+            "supports": true,
+            "voter": "0x487dA7Cb178276a857Ff8318dA1a12C0e428eE89"
+          },
+          {
+            "stake": "49503428824826353",
+            "supports": true,
+            "voter": "0xc64131DD019327Dc2165f450f371BeC33f712272"
+          },
+          {
+            "stake": "49499010721515158",
+            "supports": true,
+            "voter": "0xb7b568e5885bB1F45C9606697E7242B03A1b99D9"
+          },
+          {
+            "stake": "49497717441768343",
+            "supports": true,
+            "voter": "0x35BeAF0528895Fe3208A0E7a6211dB04369c0387"
+          },
+          {
+            "stake": "49497233873141114",
+            "supports": true,
+            "voter": "0xB487DCA4dFf9a6e43e7B3133d7f12BCbf94e416E"
+          },
+          {
+            "stake": "49495034513100142",
+            "supports": true,
+            "voter": "0x05F5BaDCad1f7a5354AE1BCC0Ed4352a35cABBFf"
+          },
+          {
+            "stake": "49491240497522847",
+            "supports": true,
+            "voter": "0x78D1C56A4A09094e7477982855e9c7d14AB62aeA"
+          },
+          {
+            "stake": "49488240279131489",
+            "supports": true,
+            "voter": "0xfE4088E546A29B00E703159aB1e881d1c3ac7E3c"
+          },
+          {
+            "stake": "49487683486396985",
+            "supports": true,
+            "voter": "0xEd68913BcfE804f0C831A81Db5228651f5A9E920"
+          },
+          {
+            "stake": "49486555718881138",
+            "supports": true,
+            "voter": "0x0Ce929c36C556FdD645900A582A7d4aB056c035f"
+          },
+          {
+            "stake": "49486117620820513",
+            "supports": true,
+            "voter": "0xE8aC12c123D48cBAa5C4Dc7e096bE5ab6EDB3ccB"
+          },
+          {
+            "stake": "49485598777095039",
+            "supports": true,
+            "voter": "0xFbdBb31448974927C47898eA7b1ba6e56e20BB2a"
+          },
+          {
+            "stake": "49485044977473253",
+            "supports": true,
+            "voter": "0xcA8F06523916cc18E63493a6041066e90292c7EF"
+          },
+          {
+            "stake": "49483799932291408",
+            "supports": true,
+            "voter": "0x747e109B9BA062839C1cBB7608D420B03111ECD3"
+          },
+          {
+            "stake": "49482426499009677",
+            "supports": true,
+            "voter": "0xB21FeD4aaED0645207bBb898117ed161fcBe1d05"
+          },
+          {
+            "stake": "49481007987633402",
+            "supports": true,
+            "voter": "0xC9D43833b3939a0D152ba2E19DA3F553a9f905a8"
+          },
+          {
+            "stake": "49478605547055196",
+            "supports": true,
+            "voter": "0xc82Ef70fA397a9E2D2dBD1407B6F273f5697344c"
+          },
+          {
+            "stake": "49478357315469174",
+            "supports": true,
+            "voter": "0xAd2510656bCEF5cA1bbaBEB2b09e00ADF07F2539"
+          },
+          {
+            "stake": "49478026549570156",
+            "supports": true,
+            "voter": "0x4bdD395b2000bA7FDC48025f827720eACbafDF15"
+          },
+          {
+            "stake": "49477871207855408",
+            "supports": true,
+            "voter": "0x9d58a5c4c0f7DDFe3081091B0e0A144146a9bAcf"
+          },
+          {
+            "stake": "49477781136509506",
+            "supports": true,
+            "voter": "0x901B8Ee2F658B14BeA1B804Ae5d0bF6259E24618"
+          },
+          {
+            "stake": "49477445305131184",
+            "supports": true,
+            "voter": "0x761033CC81082f784c76b37cb5Baab0d2B20187e"
+          },
+          {
+            "stake": "49476212525379389",
+            "supports": true,
+            "voter": "0x4704CB99D61C563c98c06aA397A492105a4357Cf"
+          },
+          {
+            "stake": "49473880181988322",
+            "supports": true,
+            "voter": "0x73B5571C9913Cd21ca2DdCe62D3AB6F37FAe7a30"
+          },
+          {
+            "stake": "49470106941045665",
+            "supports": true,
+            "voter": "0x379d300fA8d9db80D0572ef54a533797d201941d"
+          },
+          {
+            "stake": "49465404353998861",
+            "supports": true,
+            "voter": "0x11f6aEe456040076C714C63318DE77F0986DC3dF"
+          },
+          {
+            "stake": "49465042232411323",
+            "supports": true,
+            "voter": "0x3a930b81A4D12E7583776AC6eF24E09255eEDe14"
+          },
+          {
+            "stake": "49464979498643334",
+            "supports": true,
+            "voter": "0x064F8D760eCE386B1a363C42d4404312f1D99e73"
+          },
+          {
+            "stake": "49464435795308333",
+            "supports": true,
+            "voter": "0x7bb5597d971Ba4384C14bBf1579b06fB8ed9CD2F"
+          },
+          {
+            "stake": "49464378979451107",
+            "supports": true,
+            "voter": "0xfecA1fe399E86608eB46d0293f1C914088953B3F"
+          },
+          {
+            "stake": "49463769588626458",
+            "supports": true,
+            "voter": "0x21f7d28755D917E02F6bA081f0926Cc57823B3FB"
+          },
+          {
+            "stake": "49461955539484583",
+            "supports": true,
+            "voter": "0x2Eb627E3351F510bE1da775cBAF19b9FFA319DA3"
+          },
+          {
+            "stake": "49459678136925937",
+            "supports": true,
+            "voter": "0xFa92751F871cAA385c2e48A9940Ae4293FfF01C6"
+          },
+          {
+            "stake": "49459297915834038",
+            "supports": true,
+            "voter": "0xb4D53171de07558730Ded5C185917225A27A2bCd"
+          },
+          {
+            "stake": "49457698603169984",
+            "supports": true,
+            "voter": "0x812F8f3385f5C02cdE6820638058166EdC275D80"
+          },
+          {
+            "stake": "49457633617889835",
+            "supports": true,
+            "voter": "0x7F59BCb74AB7486c992Aa25B9671906a18D5e730"
+          },
+          {
+            "stake": "49456947954507869",
+            "supports": true,
+            "voter": "0x74f2109a1ABdc1b4C8c42a8c1b0551fC88a8d185"
+          },
+          {
+            "stake": "49456639318934664",
+            "supports": true,
+            "voter": "0x9E5AaA55E59e0858868c696124fB71D581B5E418"
+          },
+          {
+            "stake": "49456224013294028",
+            "supports": true,
+            "voter": "0x58fdEb56FC9377623dF3D63e5494B4D59719A0DC"
+          },
+          {
+            "stake": "49454934851275189",
+            "supports": true,
+            "voter": "0x4bE811687A32Ed80454FB3A4cd7aCcfA281F1B35"
+          },
+          {
+            "stake": "49454095271076159",
+            "supports": true,
+            "voter": "0xD3ded5d519bBaa748c89C38234d7797FAf4f25b2"
+          },
+          {
+            "stake": "49453130460602792",
+            "supports": true,
+            "voter": "0x02F1A3d4652F4C700778815FA3b1e9F376219f75"
+          },
+          {
+            "stake": "49452868920605710",
+            "supports": true,
+            "voter": "0x8e8B23f36240A12acf27C5E0B4fE803dD296df52"
+          },
+          {
+            "stake": "49451641532019301",
+            "supports": true,
+            "voter": "0xAD34ED880cB16039907476FbcBb5891045ef4B58"
+          },
+          {
+            "stake": "49451186658962475",
+            "supports": true,
+            "voter": "0xCe200F462b56fe0c2f32B28f3AAdC9c387f28832"
+          },
+          {
+            "stake": "49451166287690335",
+            "supports": true,
+            "voter": "0xEF04c0d75d32BdE6F801d5ac7480E4aaC9D53dbc"
+          },
+          {
+            "stake": "49450616575248726",
+            "supports": true,
+            "voter": "0x963f9B08a1C52f5A995B8F94f96B18fB59Fc1599"
+          },
+          {
+            "stake": "49450581866026002",
+            "supports": true,
+            "voter": "0xBce3dC78E27e10c25F2F618135Ad356836AB45c8"
+          },
+          {
+            "stake": "49450056346311690",
+            "supports": true,
+            "voter": "0xa3144884153fac573A914077b42e4F54fB17d4C0"
+          },
+          {
+            "stake": "49449830821325143",
+            "supports": true,
+            "voter": "0x3cab2a2E1daB8D2C91CFdEF52895155a3BD19E7E"
+          },
+          {
+            "stake": "49448721117022247",
+            "supports": true,
+            "voter": "0xFE5888cc2b607CF84c62244eA89f4af7d1d0616B"
+          },
+          {
+            "stake": "49448510387309900",
+            "supports": true,
+            "voter": "0xA8a30a73f22605bb201CeB6d1631c72381d1C92e"
+          },
+          {
+            "stake": "49448414123632707",
+            "supports": true,
+            "voter": "0xfB0f6F4CB84c878013B875B67A478906C09518aF"
+          },
+          {
+            "stake": "49446453989271739",
+            "supports": true,
+            "voter": "0x495f9f25617640fd54f20d33414c985Ebe42fEd5"
+          },
+          {
+            "stake": "49445943258643630",
+            "supports": true,
+            "voter": "0xFdAEb25E0313DfdBb729Ece6D5628D9e3bF52b4d"
+          },
+          {
+            "stake": "49444489744559630",
+            "supports": true,
+            "voter": "0x6B78f977456695322466446291B324809f73b3EC"
+          },
+          {
+            "stake": "49442792212594506",
+            "supports": true,
+            "voter": "0xF353bE8274Af8e8C2e516E6Dc1B3168eFb70698A"
+          },
+          {
+            "stake": "49442606431657806",
+            "supports": true,
+            "voter": "0x281cC080FE247F6F58a189e3c8E97d1Ae623b911"
+          },
+          {
+            "stake": "49442067205946811",
+            "supports": true,
+            "voter": "0x27C5feF8d277918B2be025C590260d08D8dC848c"
+          },
+          {
+            "stake": "49441964983068665",
+            "supports": true,
+            "voter": "0x36B0925496938f745e9e2BB51BBC3EFB30a737a8"
+          },
+          {
+            "stake": "49434856983748236",
+            "supports": true,
+            "voter": "0xEB2b9ac47fe3518FB6cd4c003C719d36a7F02d56"
+          },
+          {
+            "stake": "49434182941659313",
+            "supports": true,
+            "voter": "0x5Aef2381604E3491096D493538D806F36DedC89d"
+          },
+          {
+            "stake": "49433796846803210",
+            "supports": true,
+            "voter": "0xa2dECEEA037d10C0A54879eaFAdf500Eec5AD58F"
+          },
+          {
+            "stake": "49433546473214908",
+            "supports": true,
+            "voter": "0xf125a926105dCc7a54dafC578345f7cCFd067f75"
+          },
+          {
+            "stake": "49431982355193122",
+            "supports": true,
+            "voter": "0xB3D6d82156d28F4e124293609c8D5487E3507B39"
+          },
+          {
+            "stake": "49431322182198393",
+            "supports": true,
+            "voter": "0x3e0155d56a4e634E7Bda68Dd9978B8A85f4CC010"
+          },
+          {
+            "stake": "49430953336853915",
+            "supports": true,
+            "voter": "0x02fb632AE4f7E26f96D85FBd1E22dD090c69fAAd"
+          },
+          {
+            "stake": "49429970250033153",
+            "supports": true,
+            "voter": "0xEeFBAA752a8Bf73029DFc3BE3F2b309DbDfd5F3c"
+          },
+          {
+            "stake": "49429779630086243",
+            "supports": true,
+            "voter": "0x3F10156a8184b6e8f48d1940D0EB68D6EE626689"
+          },
+          {
+            "stake": "49429345403288492",
+            "supports": true,
+            "voter": "0x1bE932E5c0F1477E2D80BC0948ffcaE7b254Db26"
+          },
+          {
+            "stake": "49428649241496404",
+            "supports": true,
+            "voter": "0x1aDbfB6381bCAfc598B83f8041a72Ab9a5882ed2"
+          },
+          {
+            "stake": "49427952450093176",
+            "supports": true,
+            "voter": "0x2A2515abaBF3c8ed3df1FecFfB081B7c6c1c1748"
+          },
+          {
+            "stake": "49427298938908080",
+            "supports": true,
+            "voter": "0x9F58bB7336257DaF14B9fC91EBA7f7bF26d336b0"
+          },
+          {
+            "stake": "49427096625378557",
+            "supports": true,
+            "voter": "0x88221A954183e05E2A2Fd5740d60A961db77c535"
+          },
+          {
+            "stake": "49426780442006657",
+            "supports": true,
+            "voter": "0x67dFA4C7a5D07bc3d7aEF4216bDe01e8Ff2091b8"
+          },
+          {
+            "stake": "49426691290324751",
+            "supports": true,
+            "voter": "0x8737fB66dABf42AdF594F9C0026659C1E03CED3c"
+          },
+          {
+            "stake": "49426217742549920",
+            "supports": true,
+            "voter": "0xc502078C6bD1796f3810Bd7336d986967dB9744B"
+          }
+        ],
+        "stake": "6000948218349225591647317",
+        "supports": true,
+        "voter": "0xa4181C75495f60106AE539B7C55c0D263f2fb737"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "3293684186619150000000000",
+            "supports": true,
+            "voter": "0x70a613eA53b71abcBd9b32eAFB86362a31D5164C"
+          },
+          {
+            "stake": "1503246002075630000000000",
+            "supports": true,
+            "voter": "0x7077c866CDf58d4a65cc02DfE8e3AB03e9B23A0D"
+          }
+        ],
+        "stake": "4796930188694780000000000",
+        "supports": true,
+        "voter": "0x81723Bcb2B490fCe5f3178df8760576C84fe922e"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1821382465336102032692615",
+            "supports": true,
+            "voter": "0xdC7b28976d6eb13082a5Be7C66f9dCFE0115738f"
+          },
+          {
+            "stake": "949103701044718756685097",
+            "supports": true,
+            "voter": "0x86b4EC24F35A21D76646350A47C06e042D05e3Dd"
+          },
+          {
+            "stake": "349666666666666740000023",
+            "supports": true,
+            "voter": "0x4f690f7000791ab7248bD4c9fD165D9E386EDfe6"
+          },
+          {
+            "stake": "147034231781927353128206",
+            "supports": true,
+            "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+          },
+          {
+            "stake": "129938125000000000000000",
+            "supports": true,
+            "voter": "0x0035Fc5208eF989c28d47e552E92b0C507D2B318"
+          },
+          {
+            "stake": "4471165613748072058081",
+            "supports": true,
+            "voter": "0x2D29c09eF733F48fe10074a2Dd7c38b50A9d4D89"
+          },
+          {
+            "stake": "2384463755250000000000",
+            "supports": true,
+            "voter": "0xDcD7d160815a1c256DDc73b3fAA89391114d8249"
+          },
+          {
+            "stake": "701330068730000000000",
+            "supports": true,
+            "voter": "0x7d36Fc0bD0057506e9937cA912B74C3a71a6091E"
+          },
+          {
+            "stake": "220000000000000000000",
+            "supports": true,
+            "voter": "0x75e48a83Bc67878271c95d7f23d57E31131E7bDb"
+          },
+          {
+            "stake": "118862618073089328435",
+            "supports": true,
+            "voter": "0x9113FD7dB15a824eaFDd7286C7eBe7C0F47C24b1"
+          },
+          {
+            "stake": "115000000000000000000",
+            "supports": true,
+            "voter": "0xF44B460228c77B48fF463c9569edD2cA5d76B7F9"
+          },
+          {
+            "stake": "1508434016008908905",
+            "supports": true,
+            "voter": "0x21d3ac53410871e4f489778aC63BCB00a0aA244b"
+          },
+          {
+            "stake": "14271935233520112",
+            "supports": true,
+            "voter": "0x477e89659cd4433DCb9Cb8a9C607B73413a3238B"
+          }
+        ],
+        "stake": "3405137534591167286321474",
+        "supports": true,
+        "voter": "0x6f9BB7e454f5B3eb2310343f0E99269dC2BB8A1d"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2875000000000000000000000",
+            "supports": true,
+            "voter": "0x3217b819EA2d25f1982BaE5dD9C8Fe4C6D546bfC"
+          }
+        ],
+        "stake": "2875000000000000000000000",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "2793609690000000000000000",
+        "supports": true,
+        "voter": "0x510a7cD4ba40F7b6643F566A5D45Ea55F5cd8d0E"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2301992380970000000000000",
+            "supports": true,
+            "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+          }
+        ],
+        "stake": "2301992380970000000000000",
+        "supports": true,
+        "voter": "0x79Ac4E8B1cAAcB24a91d1cbBbD975234eF0964C5"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1148387595080655793761796",
+            "supports": false,
+            "voter": "0x3dD48AD861F0B77D1312F9C95A13e52871Ca95e0"
+          },
+          {
+            "stake": "1080000000000000000000000",
+            "supports": false,
+            "voter": "0xA4E408e61342DaE8F7a494fbe98aa2Fd484f56f6"
+          },
+          {
+            "stake": "1090577997440000000000",
+            "supports": false,
+            "voter": "0x14fF1A847b2e00c7150293697FAA6c93B83437c0"
+          }
+        ],
+        "stake": "2229478173078095793761796",
+        "supports": false,
+        "voter": "0x3133e0C65779993d607B2B6d689378A012a05C00"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2041902037628265473922255",
+            "supports": true,
+            "voter": "0xC035818509540Ce16559c31409887E78384C6F15"
+          }
+        ],
+        "stake": "2041902037628265473922255",
+        "supports": true,
+        "voter": "0x45bc852B0Ddb1FCc9d6C1daB4038F0b2dFDafD99"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "269106783014523002083016",
+            "supports": true,
+            "voter": "0x3bEb576ecb050390EE763971a159325C32c860D2"
+          },
+          {
+            "stake": "148298479340820359716982",
+            "supports": true,
+            "voter": "0xc46A822209607c6EE2E31E096198757f160EdDBB"
+          },
+          {
+            "stake": "79551221331683307732724",
+            "supports": true,
+            "voter": "0xc34d3DCc1da85874cfE0D60dF695933e22529a11"
+          },
+          {
+            "stake": "75781707217777967906304",
+            "supports": true,
+            "voter": "0xD35b7237261d34960fC3F10C1670375D59803e57"
+          },
+          {
+            "stake": "75611884551348169696047",
+            "supports": true,
+            "voter": "0x66DB664E87Bb7f776f9Eae950f801412A5086133"
+          },
+          {
+            "stake": "72458136561761521466912",
+            "supports": true,
+            "voter": "0xe483c98B7Cc4305C7B0C312BC4704B46c4D2795c"
+          },
+          {
+            "stake": "60301920585570116231906",
+            "supports": true,
+            "voter": "0xae0A9782458b661B21b15E4F78C85aAc873390c4"
+          },
+          {
+            "stake": "59766798885943877227672",
+            "supports": true,
+            "voter": "0x99ed99274a040F3f5D092a2B714d69FFc98baA08"
+          },
+          {
+            "stake": "53087409032211812685375",
+            "supports": true,
+            "voter": "0x2cAA999cdb7f67d1EBB2901E2Fe2B74e540a9529"
+          },
+          {
+            "stake": "44241900000000000000000",
+            "supports": true,
+            "voter": "0x0860D1BFDE6f4b1aC3C472fB48bf0b3EDBD6ce4C"
+          },
+          {
+            "stake": "43180108174247743733056",
+            "supports": true,
+            "voter": "0xAca74fD71750D6F51E7D95e1666663D91983B2AB"
+          },
+          {
+            "stake": "37189898142652086977463",
+            "supports": true,
+            "voter": "0x5DF9482D02C29286BaB462F3E91a58FdeF881B53"
+          },
+          {
+            "stake": "35087100278347371156234",
+            "supports": true,
+            "voter": "0xd1d0B11Efc39957688aa684366E0B4837cD8e026"
+          },
+          {
+            "stake": "30915340000000000000000",
+            "supports": true,
+            "voter": "0xA9095830a026A1714b0627cE550C37D2eCC79E02"
+          },
+          {
+            "stake": "30521282700895505361624",
+            "supports": true,
+            "voter": "0x0daC0923f052cd11953E50b0B4BD3367533fE79f"
+          },
+          {
+            "stake": "29687823406654854442920",
+            "supports": true,
+            "voter": "0x0111756986a92af8365ac37B9134b4CDA0D4F59C"
+          },
+          {
+            "stake": "15156326893806563236748",
+            "supports": true,
+            "voter": "0x05BaD417F48b7c51Ab7D00aE3A7dAd5D1D192066"
+          },
+          {
+            "stake": "13825590000000000000000",
+            "supports": true,
+            "voter": "0xF93ac19938ddEF39731CB204549239170AAFCFba"
+          },
+          {
+            "stake": "10655408251641442948766",
+            "supports": true,
+            "voter": "0x255F2bb466Dd6479fBeeD84b5852C9aB46318D9e"
+          },
+          {
+            "stake": "9537753328427621238623",
+            "supports": true,
+            "voter": "0xB04C0991f5007Ae9bd6DB8842CE1134572E4Dc3a"
+          },
+          {
+            "stake": "9306698364213150010621",
+            "supports": true,
+            "voter": "0x02dcaC52edEeb8e4f95B6d02eF6d749C3783d20F"
+          },
+          {
+            "stake": "4942620000000000002776",
+            "supports": true,
+            "voter": "0x3C371DCF8c23F6e1ed3EC597272e8AD86795804a"
+          },
+          {
+            "stake": "3321660000000000000000",
+            "supports": true,
+            "voter": "0xbC5B233b7a17ACCE70A11d09ff67765F486589d2"
+          },
+          {
+            "stake": "3237961385014069510989",
+            "supports": true,
+            "voter": "0x39fe310c68C914aF8aa4E965895e47FDC45156b6"
+          },
+          {
+            "stake": "584941524772352876967",
+            "supports": true,
+            "voter": "0xC6803Bb97da1Ad2014FBCD023218dDce6D74caD6"
+          },
+          {
+            "stake": "403120676271959844856",
+            "supports": true,
+            "voter": "0x3BA691fF2742A8Dc39D564eb845b8a8bA71dAf27"
+          },
+          {
+            "stake": "51683033564022",
+            "supports": true,
+            "voter": "0x8304539a5f2744fA1a004EeDD36E1481d85B254f"
+          },
+          {
+            "stake": "1",
+            "supports": true,
+            "voter": "0x8a62A63b877877bd5B1209B9b67F3d2685284268"
+          }
+        ],
+        "stake": "1215759873700267889652604",
+        "supports": true,
+        "voter": "0x6D8D914205bB14104c0f95BfaDb4B1680EF60CCC"
+      },
+      {
+        "stake": "600102980701648274179776",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "58794527112100730093543",
+            "supports": true,
+            "voter": "0x93F143fDC9A0eBEC7c51F9cDa3eE398276Cc2664"
+          },
+          {
+            "stake": "34057260000000000000000",
+            "supports": true,
+            "voter": "0x52B80433EA762e3d9B5E39E10659e19E3683cC3B"
+          },
+          {
+            "stake": "31585133264259714174931",
+            "supports": true,
+            "voter": "0xdFb587012Fb3D0F4dB1Fa885d4F054eAb552E2D1"
+          },
+          {
+            "stake": "23724023088728151063452",
+            "supports": true,
+            "voter": "0x76DAff4c040BebF9C2e153FD14fE64ac04da8b80"
+          },
+          {
+            "stake": "19498290000000000000000",
+            "supports": true,
+            "voter": "0x215B5f40b6507d8398a23Af4D92A1AEeb6457901"
+          },
+          {
+            "stake": "4000000000000000000335",
+            "supports": true,
+            "voter": "0x78d1A0F002BceC82266627015eeD2Ca477eD753a"
+          },
+          {
+            "stake": "111377007450000000000",
+            "supports": true,
+            "voter": "0x1Daef601E5ce256Bc533FB420e87E99993b9092b"
+          },
+          {
+            "stake": "109000000000000000000",
+            "supports": true,
+            "voter": "0xf6dC93c168482Ae5a3058b88D71E903AB3dd4E03"
+          },
+          {
+            "stake": "108000000000000000000",
+            "supports": true,
+            "voter": "0x257b34f4BFbe2Aed96610df91FA29713585A9830"
+          },
+          {
+            "stake": "107600000000000000000",
+            "supports": true,
+            "voter": "0x0AB153F699D8958CAda9437A94Cd53b834807c6A"
+          },
+          {
+            "stake": "101676363948940067496",
+            "supports": true,
+            "voter": "0x958f598b383518542f5fc6254264599cdf613FC9"
+          }
+        ],
+        "stake": "172196886836487535399757",
+        "supports": true,
+        "voter": "0x06A90756e57bC7A016Eed0aB23fC36d11C42bBa0"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "100000476985540359761408",
+            "supports": true,
+            "voter": "0xD8c2e378c699b7E3E5F97cF4F0F46741296D8Cbf"
+          },
+          {
+            "stake": "51191494348120401030558",
+            "supports": true,
+            "voter": "0xd940072500f52A6A6f372De8Eb84617aF4A26681"
+          },
+          {
+            "stake": "611918482520000000000",
+            "supports": true,
+            "voter": "0x5c9E30def85334e587Cf36EB07bdd6A72Bf1452d"
+          },
+          {
+            "stake": "214036169199672647657",
+            "supports": true,
+            "voter": "0x4BF471Bf5e821db3d35b2aB365435C8CEbE5E982"
+          },
+          {
+            "stake": "1126808749321146288",
+            "supports": true,
+            "voter": "0xa5077B834b6C38B0b848ef482127ccaaB598139C"
+          }
+        ],
+        "stake": "152019052794129754585911",
+        "supports": true,
+        "voter": "0x3DDC7d25c7a1dc381443e491Bbf1Caa8928A05B0"
+      },
+      {
+        "stake": "73457060000000000000000",
+        "supports": true,
+        "voter": "0xf68A5973C9Cd2009Bb397FEd5fB51D07404e03dC"
+      },
+      {
+        "stake": "58406941507340371404374",
+        "supports": true,
+        "voter": "0x8788A096adEb6382E2727485E2608E1a36139Aa8"
+      },
+      {
+        "stake": "39528259668772524583644",
+        "supports": true,
+        "voter": "0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "30337000000000000000000",
+            "supports": true,
+            "voter": "0x196a2A9A22C2fD8f5107e97Df9ad14A23e81982B"
+          }
+        ],
+        "stake": "30337000000000000000000",
+        "supports": true,
+        "voter": "0xB933AEe47C438f22DE0747D57fc239FE37878Dd1"
+      },
+      {
+        "stake": "30001179205461537405418",
+        "supports": true,
+        "voter": "0xB6647e02AE6Dd74137cB80b1C24333852E4AF890"
+      },
+      {
+        "stake": "19606350000000000000000",
+        "supports": true,
+        "voter": "0x85E78B145Eec06225277679c10Cf8215D99956ca"
+      },
+      {
+        "stake": "16276000000000000000000",
+        "supports": true,
+        "voter": "0xa4181C75495f60106AE539B7C55c0D263f2fb737"
+      },
+      {
+        "stake": "14008842865086537961598",
+        "supports": true,
+        "voter": "0x5B60117255df27FDD885629c0210D9DD975fF975"
+      },
+      {
+        "stake": "1000001029590198236896",
+        "supports": true,
+        "voter": "0x3D5A107F7a5bcEC8734c49ed54d41bc6F93eB97F"
+      },
+      {
+        "stake": "1000000000000000000000",
+        "supports": true,
+        "voter": "0xf804A79836C6A8d1A9c56F1B00B84F17d33b9d2e"
+      },
+      {
+        "stake": "628448584948955684050",
+        "supports": true,
+        "voter": "0x2f4D62Ac8e9E5ea12c397F15EA41EB0ba86F63f4"
+      },
+      {
+        "stake": "500000000000000000000",
+        "supports": true,
+        "voter": "0x06A90756e57bC7A016Eed0aB23fC36d11C42bBa0"
+      },
+      {
+        "stake": "498540000000000000000",
+        "supports": true,
+        "voter": "0xf1cC678eE107b136Da59500EaB5CEeBC33a6AC93"
+      },
+      {
+        "stake": "123127480810842667737",
+        "supports": false,
+        "voter": "0xe8483A4ABed95547468e9fb92748031C29414173"
+      },
+      {
+        "stake": "121940000000000000000",
+        "supports": true,
+        "voter": "0x380507AC9FB6B071464822Bc5E36Abaf63a60636"
+      },
+      {
+        "stake": "103387743600307489895",
+        "supports": false,
+        "voter": "0x058E9d8448Cb27dB3DBe073dcB37695351C1d205"
+      },
+      {
+        "stake": "102591665150967457331",
+        "supports": true,
+        "voter": "0xdC05B6769C7de5B63eE804461922fe0bc206120B"
+      },
+      {
+        "stake": "101000000000000000000",
+        "supports": true,
+        "voter": "0x7B2754FcF4ED61eC204805c2a6d9D20AfC71A893"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "9391180156413912638",
+            "supports": true,
+            "voter": "0x3329C2E8e32D1D98b00f0D6039684Ea7B682edC5"
+          }
+        ],
+        "stake": "9391180156413912638",
+        "supports": true,
+        "voter": "0x1F3D3A7A9c548bE39539b39D7400302753E20591"
+      },
+      {
+        "stake": "4022359379169488095",
+        "supports": true,
+        "voter": "0xa40dc90ef7f965d530B03C814b9047F43Dd914a9"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1000000000000000000",
+            "supports": true,
+            "voter": "0x1ACD55Fe8F04cC2468AB7d2C6a9e6077C292757F"
+          }
+        ],
+        "stake": "1000000000000000000",
+        "supports": true,
+        "voter": "0x3FB19771947072629C8EEE7995a2eF23B72d4C8A"
+      }
+    ]
+  },
+  "201": {
+    "description": "\n1. **Extend Dual Governance Emergency Protection until June 20, 2027**, [as proposed on the forum](https://research.lido.fi/t/lip-28-dual-governance/10032/18). Item 1.1.\n2. **Grant MANAGE_SIGNING_KEYS role to Node Operator Consensys**, [as requested on the forum](https://research.lido.fi/t/node-operator-registry-name-reward-address-change/4170/54). Item 1.2.\n3. **Increase Alliance Ops stablecoins Easy Track factory limit from $250K per 3 months to $5M per 6 months**, [as per Snapshot decision](https://snapshot.box/#/s:lido-snapshot.eth/proposal/0x429bdf30549800d3ed87ffa701802d267f6a1e06d1719c6f0a4cb2ecefde521e). Item 1.3.\n4. **Reduce VEBO Reporting Frame from 75 to 45 epochs**, [as proposed on the forum](https://research.lido.fi/t/proposal-reduce-vebo-reporting-frame-from-8h-to-4-8h-75-45-epochs/11524). Items 1.4–1.7.\n",
+    "executeVoteEvent": {
+      "blockNumber": "25122802",
+      "executedAt": 1779115871,
+      "transactionHash": "0xc1c033346732292e72a1d6c9e482fcf6a6242ba0ed22b897c0dc9d4658787de1"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1. Submit a Dual Governance proposal to extend Dual Governance Emergency Protection until June 20 2027, grant MANAGE_SIGNING_KEYS role to Node Operator Consensys, increase Alliance Ops stablecoins Easy Track factory limit from $250K per 3 months to $5M per 6 months, reduce VEBO Reporting Frame from 75 to 45 epochs.\nlidovoteipfs://bafkreiay7vxccqbztfac2cpmi5l3gm62kl6foriikm4yzcmtxu6zv2uwlq",
+        "voteId": "201"
+      },
+      "blockNumber": "25086917",
+      "transactionHash": "0xd83fecc0e53e72bec944862b023dcc2c978410891b26db77b6db1b6db2b87fec"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 201,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001c1db28b3301331277e307fdcff8de28242a4486e00000ae453e51f8b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000009a0000000000000000000000000000000000000000000000000000000000000000700000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000001a0000000000000000000000000000000000000000000000000000000000000036000000000000000000000000000000000000000000000000000000000000004a000000000000000000000000000000000000000000000000000000000000005e000000000000000000000000000000000000000000000000000000000000007200000000000000000000000000000000000000000000000000000000000000860000000000000000000000000ce0425301c85c5ea2a0873a2dee44d78e02d2316000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000024a211a396000000000000000000000000000000000000000000000000000000006c170b80000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000124d948d468000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000e0000000019895f0f17cc1d1891b6f18ee0b483b6f221b37bb000000c46815c992000000000000000000000000f45c77eadd434612fcd93db978b3e36b0d58ec9900000000000000000000000055032650b14df07b85bf18a3a3ec8e0af2e028d575abc64490e17b40ea1e66691c3eb493647b24430b358bd87ec3e5127f1621ee000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000010001000000000000000000000000000000000000000000000000000000000015000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000013b525f4c059f246ca4aa995d21087204f30c9e2f000000443e0bde670000000000000000000000000000000000000000000422ca8b0a00a4250000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000017fadb6358950c5faa66cb5eb8ee5147de3df355a000000442f2ff15d921f40f434e049d23969cbe68d9cf3ac1013fbe8945da07963af6f3142de6afe0000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000017fadb6358950c5faa66cb5eb8ee5147de3df355a0000004434aa6753000000000000000000000000000000000000000000000000000000000000002d0000000000000000000000000000000000000000000000000000000000000064000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000017fadb6358950c5faa66cb5eb8ee5147de3df355a00000044d547741f921f40f434e049d23969cbe68d9cf3ac1013fbe8945da07963af6f3142de6afe0000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c000000000000000000000000000000000000000000000000000000000000000000000000000000002a30f5ac03187674553024296bed35aa49749dda0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000447a574578000000000000000000000000000000000000000000000000000000000000b6d0000000000000000000000000000000000000000000000000000000000000e808000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000113457874656e64204475616c20476f7665726e616e636520456d657267656e63792050726f74656374696f6e20756e74696c204a756e6520323020323032372c206772616e74204d414e4147455f5349474e494e475f4b45595320726f6c6520746f204e6f6465204f70657261746f7220436f6e73656e7379732c20696e63726561736520416c6c69616e6365204f707320737461626c65636f696e73204561737920547261636b20666163746f7279206c696d69742066726f6d20243235304b207065722033206d6f6e74687320746f2024354d207065722036206d6f6e7468732c20726564756365205645424f205265706f7274696e67204672616d652066726f6d20373520746f2034352065706f63687300000000000000000000000000",
+      "snapshotBlock": "25086916",
+      "startDate": "1778683787",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "56482441427844392911535353"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0xECE4e341EbcC2B57c40FCf74f47bc61DfDC87fe2"
+          },
+          {
+            "stake": "2782547945205000000000000",
+            "supports": true,
+            "voter": "0xE289Cf875EBc11868bF1F7B9535Fd9aDBdb6A383"
+          },
+          {
+            "stake": "996544530000000000000000",
+            "supports": true,
+            "voter": "0xaB1cCdDefCB731E7409a448E6a6ABe1672A58D85"
+          },
+          {
+            "stake": "89170494084962158932784",
+            "supports": true,
+            "voter": "0x31e18739aD2d978344c1267377d194A3431E6D05"
+          },
+          {
+            "stake": "83333330000000000000000",
+            "supports": true,
+            "voter": "0x6cDC4F710BAbA4607f09BD55829604e1149EeCeE"
+          },
+          {
+            "stake": "57746843877290122203621",
+            "supports": true,
+            "voter": "0xC64d449baeCd972493C9F7CC171cf41aC1023dbd"
+          },
+          {
+            "stake": "50633069423653114489375",
+            "supports": true,
+            "voter": "0x0275c77993A5fEa99233B2A0A3A4E610006Dd06a"
+          },
+          {
+            "stake": "42391234409815883367336",
+            "supports": true,
+            "voter": "0x23D1508818EA7b49683aC98F9BA58A5c0A233524"
+          },
+          {
+            "stake": "26912154141035411268607",
+            "supports": true,
+            "voter": "0x28515c2E35D97Db1d8ECd9205Ed6304e38F50415"
+          },
+          {
+            "stake": "22953386015380130301417",
+            "supports": true,
+            "voter": "0xa05CB3b21C71C625a8BE51466dD8249166072F11"
+          },
+          {
+            "stake": "16623630000000000000000",
+            "supports": true,
+            "voter": "0x8f4a1b6071CEBf1d2Cd85688F6705F2612eB2fE1"
+          },
+          {
+            "stake": "12756474328295719573098",
+            "supports": true,
+            "voter": "0xD4F75efbe3A728dBe054C6F2989340399df8CD71"
+          },
+          {
+            "stake": "10120184677858640053065",
+            "supports": true,
+            "voter": "0xc76435658F686751d996093c8873bab78C4bB6Fb"
+          },
+          {
+            "stake": "9254466900854390067685",
+            "supports": true,
+            "voter": "0x0A92cBf55F80EE0A5AF77060Ba2C0e233601aD46"
+          },
+          {
+            "stake": "1457036469706821811544",
+            "supports": true,
+            "voter": "0x93821fd0Ca1e0F09864933D7b385FF6D2DA7a8F0"
+          },
+          {
+            "stake": "483376093887456921364",
+            "supports": true,
+            "voter": "0x332356E5508EA94Faccbf85Ff4A2007B3F540693"
+          },
+          {
+            "stake": "318036035589583114103",
+            "supports": true,
+            "voter": "0xa34Ff97e3A06C212556aEa209Ae0089370D615F2"
+          },
+          {
+            "stake": "101000000000000000000",
+            "supports": true,
+            "voter": "0x2cfaced1Bc7b2B61692bdBEA50BAD19981DCc41e"
+          },
+          {
+            "stake": "100074323028382017612",
+            "supports": true,
+            "voter": "0x35226E78809a5DaE4562B0B1fC4cf96cdb6A01A8"
+          },
+          {
+            "stake": "6900000000000000000",
+            "supports": true,
+            "voter": "0xf6F4b04cB453680F222c8f63c2C6554Fae501b1f"
+          },
+          {
+            "stake": "5197956131097447654",
+            "supports": true,
+            "voter": "0x64C0fF5C25925aCB33D68F79AD728Fd63361ffce"
+          },
+          {
+            "stake": "279145542373123989",
+            "supports": true,
+            "voter": "0xC3a2821727e9E5fa690F8C69C5d8E0899aA0E6Ee"
+          }
+        ],
+        "stake": "9203459643088031284693254",
+        "supports": true,
+        "voter": "0x1f76a6Bf03429480472B3695E08689219cE15ED6"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x28562FBe6d078d2526A0A8d1489245fF74fcA7eB"
+          },
+          {
+            "stake": "2189173746124479382007292",
+            "supports": true,
+            "voter": "0xAC665A44d46194EB9826D6F93Fb5Cc93bC2654b4"
+          },
+          {
+            "stake": "909670058696467375930537",
+            "supports": true,
+            "voter": "0x223ACb1D97b9A490Ef9FFaAeD391d6Ce75f05cCb"
+          },
+          {
+            "stake": "227220010116598153770928",
+            "supports": true,
+            "voter": "0x1ed34FfdfA9e42be13AAFF30062fa103881F5f21"
+          },
+          {
+            "stake": "158373160000000000000000",
+            "supports": true,
+            "voter": "0x5B8F0dD7E680200a46b4833FC074D73beb76541b"
+          },
+          {
+            "stake": "117586173802539326305909",
+            "supports": true,
+            "voter": "0x0e37227C414941380E152dE219F4f6FECc8Bfe1C"
+          },
+          {
+            "stake": "114639639213141672247528",
+            "supports": true,
+            "voter": "0x653Bc74DC32a00C69faA458F34281909d859FC02"
+          },
+          {
+            "stake": "85029980000000000000000",
+            "supports": true,
+            "voter": "0x65BCE0E8520C2944E0C8AF9F48f3c65b5EAD1631"
+          },
+          {
+            "stake": "59793546405538364767916",
+            "supports": true,
+            "voter": "0x535D9C211651F69D2a9dD0D68491417e72994c73"
+          },
+          {
+            "stake": "41875670000000000000000",
+            "supports": true,
+            "voter": "0x82fabb86E4E197C825d1cD271E71876b00cB0073"
+          },
+          {
+            "stake": "26542820517428606738154",
+            "supports": true,
+            "voter": "0x5b1F453D942367D362eCbb315B3ee0C8248a09a5"
+          },
+          {
+            "stake": "20507061371100000000000",
+            "supports": true,
+            "voter": "0xc882801DBbE218c2f210F4B4a0963156755B758E"
+          },
+          {
+            "stake": "12563443537513546657540",
+            "supports": true,
+            "voter": "0x1e3C0293A73a1b03616a87b48cEF357f18B7Cd66"
+          },
+          {
+            "stake": "9278491352083808654651",
+            "supports": true,
+            "voter": "0xb879c8C26594bAe2e77EA15EC41061e6C62f4f8c"
+          },
+          {
+            "stake": "6329079027865236900144",
+            "supports": true,
+            "voter": "0x65707Ac2958A6C4Cd42a0b530f1fA546586F223f"
+          },
+          {
+            "stake": "1069058862613126473496",
+            "supports": true,
+            "voter": "0xfE06AC9902fA42aBcD508F1eFB8a40c73403D430"
+          },
+          {
+            "stake": "700843035243119878872",
+            "supports": true,
+            "voter": "0xf8FEad458B6e9aEa9fDc36a66240dEf4D1656bD6"
+          },
+          {
+            "stake": "218062176766710886446",
+            "supports": true,
+            "voter": "0x7eb71D68181f2D219eeF78D834F6bA97D870AE85"
+          },
+          {
+            "stake": "168564177110257001174",
+            "supports": true,
+            "voter": "0xdD9Df31F1DBe1C1815D4Df96b2fA5F9694Cb3804"
+          },
+          {
+            "stake": "111469959285482308163",
+            "supports": true,
+            "voter": "0xCc44365d1Fd4e3241f8DCdfE8133572EC031DC23"
+          },
+          {
+            "stake": "69573108216716626540",
+            "supports": true,
+            "voter": "0x96e4e2EbbEfF1f45BFB678695628fa7a0398dE1C"
+          },
+          {
+            "stake": "30000000000000000000",
+            "supports": true,
+            "voter": "0x078b0b48AFca88a54AFf387DA0b4647F0207F93b"
+          },
+          {
+            "stake": "13000000000000000000",
+            "supports": true,
+            "voter": "0x3416ef25004223dE85AEdEdD5B2f59bbdF82432f"
+          },
+          {
+            "stake": "100000000000000000",
+            "supports": true,
+            "voter": "0xD6148eD52B81dc663C6AbcC30Ea9493815b86858"
+          }
+        ],
+        "stake": "8980963551483990887155290",
+        "supports": true,
+        "voter": "0xB6647e02AE6Dd74137cB80b1C24333852E4AF890"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x3d56d86a60b92132b37f226EA5A23F84C805Ce29"
+          },
+          {
+            "stake": "2780000000000000000000000",
+            "supports": true,
+            "voter": "0x3053DABb9761B3aF561150d62FfD18b1019940fc"
+          },
+          {
+            "stake": "48381213079776137464638",
+            "supports": true,
+            "voter": "0x26551631b8cBab36006904De04dFd10bF1163Da3"
+          },
+          {
+            "stake": "10000000000000000000000",
+            "supports": true,
+            "voter": "0xacFDaCadBe45a3F99DbE836EC7F4CB82cC7D1345"
+          },
+          {
+            "stake": "3356293853090000000000",
+            "supports": true,
+            "voter": "0xFe49e6da542ab0b03F0B4501F949962AAFaaA457"
+          },
+          {
+            "stake": "1246610624760000000000",
+            "supports": true,
+            "voter": "0x9A8d7f87Dd1c9bBCcD7275b524A9c9376d3b7101"
+          },
+          {
+            "stake": "1068667650000000000000",
+            "supports": true,
+            "voter": "0x168F87fBfe36B84E44B9d06278B2aA1CC73d7400"
+          },
+          {
+            "stake": "1004000000000000000000",
+            "supports": true,
+            "voter": "0x9c25a6b1bf3F6Fd2F68a62169c043045C2460482"
+          },
+          {
+            "stake": "225057190544456001156",
+            "supports": true,
+            "voter": "0x5DCecA88c237d5Ef2DdECDc019B73B97437fFca4"
+          },
+          {
+            "stake": "118485487587934881544",
+            "supports": true,
+            "voter": "0xA7a7Eaa8D6530C9195E41920E0C188320fAFdde1"
+          },
+          {
+            "stake": "109954445700000000000",
+            "supports": true,
+            "voter": "0x9406f40c6Dc3DF6Ff77D42178CD1cd7814731E00"
+          },
+          {
+            "stake": "105242126153351400668",
+            "supports": true,
+            "voter": "0xfcBB9d22209E641eb2B811B568be56fbfE2CAb1b"
+          },
+          {
+            "stake": "239976112044282097",
+            "supports": true,
+            "voter": "0x475E41b482aFC82BAE8025D09d128F30B680E10c"
+          },
+          {
+            "stake": "182090558827621992",
+            "supports": true,
+            "voter": "0xcFeBA2DBf3b36666462D90c4EB12891Ffcab3210"
+          }
+        ],
+        "stake": "7845615946524282751652095",
+        "supports": true,
+        "voter": "0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0"
+      },
+      {
+        "stake": "7151384258000000000000000",
+        "supports": true,
+        "voter": "0x109B9744397ACf987A1abB5bB4EeF7362ab9Ff66"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "3293684186619150000000000",
+            "supports": true,
+            "voter": "0x70a613eA53b71abcBd9b32eAFB86362a31D5164C"
+          },
+          {
+            "stake": "1503246002075630000000000",
+            "supports": true,
+            "voter": "0x7077c866CDf58d4a65cc02DfE8e3AB03e9B23A0D"
+          }
+        ],
+        "stake": "4796930188694780000000000",
+        "supports": true,
+        "voter": "0x81723Bcb2B490fCe5f3178df8760576C84fe922e"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1821382465336102032692615",
+            "supports": true,
+            "voter": "0xdC7b28976d6eb13082a5Be7C66f9dCFE0115738f"
+          },
+          {
+            "stake": "949103701044718756685097",
+            "supports": true,
+            "voter": "0x86b4EC24F35A21D76646350A47C06e042D05e3Dd"
+          },
+          {
+            "stake": "349666666666666740000023",
+            "supports": true,
+            "voter": "0x4f690f7000791ab7248bD4c9fD165D9E386EDfe6"
+          },
+          {
+            "stake": "147034231781927353128206",
+            "supports": true,
+            "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+          },
+          {
+            "stake": "129938125000000000000000",
+            "supports": true,
+            "voter": "0x0035Fc5208eF989c28d47e552E92b0C507D2B318"
+          },
+          {
+            "stake": "4471165613748072058081",
+            "supports": true,
+            "voter": "0x2D29c09eF733F48fe10074a2Dd7c38b50A9d4D89"
+          },
+          {
+            "stake": "2384463755250000000000",
+            "supports": true,
+            "voter": "0xDcD7d160815a1c256DDc73b3fAA89391114d8249"
+          },
+          {
+            "stake": "701330068730000000000",
+            "supports": true,
+            "voter": "0x7d36Fc0bD0057506e9937cA912B74C3a71a6091E"
+          },
+          {
+            "stake": "220000000000000000000",
+            "supports": true,
+            "voter": "0x75e48a83Bc67878271c95d7f23d57E31131E7bDb"
+          },
+          {
+            "stake": "118862618073089328435",
+            "supports": true,
+            "voter": "0x9113FD7dB15a824eaFDd7286C7eBe7C0F47C24b1"
+          },
+          {
+            "stake": "115000000000000000000",
+            "supports": true,
+            "voter": "0xF44B460228c77B48fF463c9569edD2cA5d76B7F9"
+          },
+          {
+            "stake": "1508434016008908905",
+            "supports": true,
+            "voter": "0x21d3ac53410871e4f489778aC63BCB00a0aA244b"
+          },
+          {
+            "stake": "14271935233520112",
+            "supports": true,
+            "voter": "0x477e89659cd4433DCb9Cb8a9C607B73413a3238B"
+          }
+        ],
+        "stake": "3405137534591167286321474",
+        "supports": true,
+        "voter": "0x6f9BB7e454f5B3eb2310343f0E99269dC2BB8A1d"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1717250000000000000000000",
+            "supports": true,
+            "voter": "0xA4E408e61342DaE8F7a494fbe98aa2Fd484f56f6"
+          },
+          {
+            "stake": "1148387595080655793761796",
+            "supports": true,
+            "voter": "0x3dD48AD861F0B77D1312F9C95A13e52871Ca95e0"
+          },
+          {
+            "stake": "73457060000000000000000",
+            "supports": true,
+            "voter": "0xf68A5973C9Cd2009Bb397FEd5fB51D07404e03dC"
+          },
+          {
+            "stake": "58406941507340371404374",
+            "supports": true,
+            "voter": "0x8788A096adEb6382E2727485E2608E1a36139Aa8"
+          },
+          {
+            "stake": "19606350000000000000000",
+            "supports": true,
+            "voter": "0x85E78B145Eec06225277679c10Cf8215D99956ca"
+          },
+          {
+            "stake": "1090577997440000000000",
+            "supports": true,
+            "voter": "0x14fF1A847b2e00c7150293697FAA6c93B83437c0"
+          }
+        ],
+        "stake": "3018198524585436165166170",
+        "supports": true,
+        "voter": "0x3133e0C65779993d607B2B6d689378A012a05C00"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2875000000000000000000000",
+            "supports": true,
+            "voter": "0x3217b819EA2d25f1982BaE5dD9C8Fe4C6D546bfC"
+          }
+        ],
+        "stake": "2875000000000000000000000",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "2793609690000000000000000",
+        "supports": true,
+        "voter": "0x510a7cD4ba40F7b6643F566A5D45Ea55F5cd8d0E"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2301992380970000000000000",
+            "supports": true,
+            "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+          }
+        ],
+        "stake": "2301992380970000000000000",
+        "supports": true,
+        "voter": "0x79Ac4E8B1cAAcB24a91d1cbBbD975234eF0964C5"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2041902037628265473922255",
+            "supports": true,
+            "voter": "0xC035818509540Ce16559c31409887E78384C6F15"
+          }
+        ],
+        "stake": "2041902037628265473922255",
+        "supports": true,
+        "voter": "0x45bc852B0Ddb1FCc9d6C1daB4038F0b2dFDafD99"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "242963032198328824366205",
+            "supports": true,
+            "voter": "0x3bEb576ecb050390EE763971a159325C32c860D2"
+          },
+          {
+            "stake": "148298479340820359716982",
+            "supports": true,
+            "voter": "0xc46A822209607c6EE2E31E096198757f160EdDBB"
+          },
+          {
+            "stake": "79551221331683307732724",
+            "supports": true,
+            "voter": "0xc34d3DCc1da85874cfE0D60dF695933e22529a11"
+          },
+          {
+            "stake": "75781707217777967906304",
+            "supports": true,
+            "voter": "0xD35b7237261d34960fC3F10C1670375D59803e57"
+          },
+          {
+            "stake": "75611884551348169696047",
+            "supports": true,
+            "voter": "0x66DB664E87Bb7f776f9Eae950f801412A5086133"
+          },
+          {
+            "stake": "72458136561761521466912",
+            "supports": true,
+            "voter": "0xe483c98B7Cc4305C7B0C312BC4704B46c4D2795c"
+          },
+          {
+            "stake": "60301920585570116231906",
+            "supports": true,
+            "voter": "0xae0A9782458b661B21b15E4F78C85aAc873390c4"
+          },
+          {
+            "stake": "59766798885943877227672",
+            "supports": true,
+            "voter": "0x99ed99274a040F3f5D092a2B714d69FFc98baA08"
+          },
+          {
+            "stake": "53087409032211812685375",
+            "supports": true,
+            "voter": "0x2cAA999cdb7f67d1EBB2901E2Fe2B74e540a9529"
+          },
+          {
+            "stake": "44241900000000000000000",
+            "supports": true,
+            "voter": "0x0860D1BFDE6f4b1aC3C472fB48bf0b3EDBD6ce4C"
+          },
+          {
+            "stake": "43180108174247743733056",
+            "supports": true,
+            "voter": "0xAca74fD71750D6F51E7D95e1666663D91983B2AB"
+          },
+          {
+            "stake": "37189898142652086977463",
+            "supports": true,
+            "voter": "0x5DF9482D02C29286BaB462F3E91a58FdeF881B53"
+          },
+          {
+            "stake": "35087100278347371156234",
+            "supports": true,
+            "voter": "0xd1d0B11Efc39957688aa684366E0B4837cD8e026"
+          },
+          {
+            "stake": "30915340000000000000000",
+            "supports": true,
+            "voter": "0xA9095830a026A1714b0627cE550C37D2eCC79E02"
+          },
+          {
+            "stake": "30521282700895505361624",
+            "supports": true,
+            "voter": "0x0daC0923f052cd11953E50b0B4BD3367533fE79f"
+          },
+          {
+            "stake": "29687823406654854442920",
+            "supports": true,
+            "voter": "0x0111756986a92af8365ac37B9134b4CDA0D4F59C"
+          },
+          {
+            "stake": "15156326893806563236748",
+            "supports": true,
+            "voter": "0x05BaD417F48b7c51Ab7D00aE3A7dAd5D1D192066"
+          },
+          {
+            "stake": "13825590000000000000000",
+            "supports": true,
+            "voter": "0xF93ac19938ddEF39731CB204549239170AAFCFba"
+          },
+          {
+            "stake": "10655408251641442948766",
+            "supports": true,
+            "voter": "0x255F2bb466Dd6479fBeeD84b5852C9aB46318D9e"
+          },
+          {
+            "stake": "9537753328427621238623",
+            "supports": true,
+            "voter": "0xB04C0991f5007Ae9bd6DB8842CE1134572E4Dc3a"
+          },
+          {
+            "stake": "9306698364213150010621",
+            "supports": true,
+            "voter": "0x02dcaC52edEeb8e4f95B6d02eF6d749C3783d20F"
+          },
+          {
+            "stake": "4942620000000000002776",
+            "supports": true,
+            "voter": "0x3C371DCF8c23F6e1ed3EC597272e8AD86795804a"
+          },
+          {
+            "stake": "3932603927903520804755",
+            "supports": true,
+            "voter": "0xfaF9e6ef1D5183D3D25133C912bCD22362994444"
+          },
+          {
+            "stake": "3321660000000000000000",
+            "supports": true,
+            "voter": "0xbC5B233b7a17ACCE70A11d09ff67765F486589d2"
+          },
+          {
+            "stake": "3237961385014069510989",
+            "supports": true,
+            "voter": "0x39fe310c68C914aF8aa4E965895e47FDC45156b6"
+          },
+          {
+            "stake": "584941524772352876967",
+            "supports": true,
+            "voter": "0xC6803Bb97da1Ad2014FBCD023218dDce6D74caD6"
+          },
+          {
+            "stake": "403120676271959844856",
+            "supports": true,
+            "voter": "0x3BA691fF2742A8Dc39D564eb845b8a8bA71dAf27"
+          },
+          {
+            "stake": "51683033564022",
+            "supports": true,
+            "voter": "0x8304539a5f2744fA1a004EeDD36E1481d85B254f"
+          },
+          {
+            "stake": "1",
+            "supports": true,
+            "voter": "0x8a62A63b877877bd5B1209B9b67F3d2685284268"
+          }
+        ],
+        "stake": "1193548726811977232740548",
+        "supports": true,
+        "voter": "0x6D8D914205bB14104c0f95BfaDb4B1680EF60CCC"
+      },
+      {
+        "stake": "600102980701648274179776",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "58794527112100730093543",
+            "supports": true,
+            "voter": "0x93F143fDC9A0eBEC7c51F9cDa3eE398276Cc2664"
+          },
+          {
+            "stake": "34057260000000000000000",
+            "supports": true,
+            "voter": "0x52B80433EA762e3d9B5E39E10659e19E3683cC3B"
+          },
+          {
+            "stake": "31585133264259714174931",
+            "supports": true,
+            "voter": "0xdFb587012Fb3D0F4dB1Fa885d4F054eAb552E2D1"
+          },
+          {
+            "stake": "23724023088728151063452",
+            "supports": true,
+            "voter": "0x76DAff4c040BebF9C2e153FD14fE64ac04da8b80"
+          },
+          {
+            "stake": "19498290000000000000000",
+            "supports": true,
+            "voter": "0x215B5f40b6507d8398a23Af4D92A1AEeb6457901"
+          },
+          {
+            "stake": "4000000000000000000335",
+            "supports": true,
+            "voter": "0x78d1A0F002BceC82266627015eeD2Ca477eD753a"
+          },
+          {
+            "stake": "111377007450000000000",
+            "supports": true,
+            "voter": "0x1Daef601E5ce256Bc533FB420e87E99993b9092b"
+          },
+          {
+            "stake": "109000000000000000000",
+            "supports": true,
+            "voter": "0xf6dC93c168482Ae5a3058b88D71E903AB3dd4E03"
+          },
+          {
+            "stake": "108000000000000000000",
+            "supports": true,
+            "voter": "0x257b34f4BFbe2Aed96610df91FA29713585A9830"
+          },
+          {
+            "stake": "107600000000000000000",
+            "supports": true,
+            "voter": "0x0AB153F699D8958CAda9437A94Cd53b834807c6A"
+          },
+          {
+            "stake": "101676363948940067496",
+            "supports": true,
+            "voter": "0x958f598b383518542f5fc6254264599cdf613FC9"
+          }
+        ],
+        "stake": "172196886836487535399757",
+        "supports": true,
+        "voter": "0x06A90756e57bC7A016Eed0aB23fC36d11C42bBa0"
+      },
+      {
+        "stake": "39528259668772524583644",
+        "supports": true,
+        "voter": "0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "30337000000000000000000",
+            "supports": true,
+            "voter": "0x196a2A9A22C2fD8f5107e97Df9ad14A23e81982B"
+          }
+        ],
+        "stake": "30337000000000000000000",
+        "supports": true,
+        "voter": "0xB933AEe47C438f22DE0747D57fc239FE37878Dd1"
+      },
+      {
+        "stake": "30001179205461537405418",
+        "supports": true,
+        "voter": "0xB6647e02AE6Dd74137cB80b1C24333852E4AF890"
+      },
+      {
+        "stake": "1000000000000000000000",
+        "supports": true,
+        "voter": "0xf804A79836C6A8d1A9c56F1B00B84F17d33b9d2e"
+      },
+      {
+        "stake": "500000000000000000000",
+        "supports": true,
+        "voter": "0x06A90756e57bC7A016Eed0aB23fC36d11C42bBa0"
+      },
+      {
+        "stake": "498540000000000000000",
+        "supports": true,
+        "voter": "0xf1cC678eE107b136Da59500EaB5CEeBC33a6AC93"
+      },
+      {
+        "stake": "121940000000000000000",
+        "supports": true,
+        "voter": "0x380507AC9FB6B071464822Bc5E36Abaf63a60636"
+      },
+      {
+        "stake": "103266407819259202622",
+        "supports": true,
+        "voter": "0x9C9A11a94f95cd31c06E0252eD0cE908b90FBc0C"
+      },
+      {
+        "stake": "101400000000000000000",
+        "supports": true,
+        "voter": "0xb93EFD0e79b769D2b3Df7aa64d89F983D2fd02FC"
+      },
+      {
+        "stake": "101372934460775993020",
+        "supports": true,
+        "voter": "0xbFF486f6aB3d30e364F93e874a1179385882030f"
+      },
+      {
+        "stake": "101000000000000000000",
+        "supports": true,
+        "voter": "0x7B2754FcF4ED61eC204805c2a6d9D20AfC71A893"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2000000000000000000",
+            "supports": true,
+            "voter": "0x5Eb3c3d206effF3248Cddc386461AdEDAdb32c84"
+          }
+        ],
+        "stake": "2000000000000000000",
+        "supports": true,
+        "voter": "0xc5547B4907418C2EC0C2A95beC6fEE8354657759"
+      },
+      {
+        "stake": "1119711811923120030",
+        "supports": true,
+        "voter": "0xD8deA87ddcC0c3C1464Ded6102e4D3E829d0aE41"
+      },
+      {
+        "stake": "1000000000000000000",
+        "supports": true,
+        "voter": "0x026Ee5B77dF6dCcc0D0959753dBA79D851334520"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1000000000000000000",
+            "supports": true,
+            "voter": "0x1ACD55Fe8F04cC2468AB7d2C6a9e6077C292757F"
+          }
+        ],
+        "stake": "1000000000000000000",
+        "supports": true,
+        "voter": "0x3FB19771947072629C8EEE7995a2eF23B72d4C8A"
+      }
+    ]
+  },
+  "202": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "25373650",
+      "executedAt": 1782137423,
+      "transactionHash": "0x36a2ceae29af0dcf5509f7dd758fa8ea21930f5d0df1377dd766610830552e86"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0xf73a1260d222f447210581DDf212D915c09a3249",
+        "metadata": "Omnibus vote: 1. Submit a Dual Governance proposal to enable CircuitBreaker on-chain, increase LOL stETH Easy Track factory limit from 6K stETH to 8K stETH per 6 months, rename Node Operator Pier Two to MAVAN, deactivate Node Operator Chorus One.\nlidovoteipfs://bafkreigk4zf5r532gq7dl6k2ghfipbo243lx53jozuhnx67cogvmcirj4i",
+        "voteId": "202"
+      },
+      "blockNumber": "25337401",
+      "transactionHash": "0x834c5efc30e7d0a642086294aa66a532d92481c56e30f7760c86c27589f1ebb8"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 202,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "205819000000000000000",
+      "open": false,
+      "phase": 2,
+      "script": "0x00000001c1db28b3301331277e307fdcff8de28242a4486e0000330453e51f8b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000032000000000000000000000000000000000000000000000000000000000000000024000000000000000000000000000000000000000000000000000000000000048000000000000000000000000000000000000000000000000000000000000005c00000000000000000000000000000000000000000000000000000000000000700000000000000000000000000000000000000000000000000000000000000084000000000000000000000000000000000000000000000000000000000000009800000000000000000000000000000000000000000000000000000000000000ac00000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000d400000000000000000000000000000000000000000000000000000000000000e800000000000000000000000000000000000000000000000000000000000000fc000000000000000000000000000000000000000000000000000000000000011000000000000000000000000000000000000000000000000000000000000001240000000000000000000000000000000000000000000000000000000000000138000000000000000000000000000000000000000000000000000000000000014c000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000001740000000000000000000000000000000000000000000000000000000000000188000000000000000000000000000000000000000000000000000000000000019c00000000000000000000000000000000000000000000000000000000000001b000000000000000000000000000000000000000000000000000000000000001c400000000000000000000000000000000000000000000000000000000000001d800000000000000000000000000000000000000000000000000000000000001ec000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002140000000000000000000000000000000000000000000000000000000000000228000000000000000000000000000000000000000000000000000000000000023c000000000000000000000000000000000000000000000000000000000000025000000000000000000000000000000000000000000000000000000000000002640000000000000000000000000000000000000000000000000000000000000278000000000000000000000000000000000000000000000000000000000000028c00000000000000000000000000000000000000000000000000000000000002a000000000000000000000000000000000000000000000000000000000000002b400000000000000000000000000000000000000000000000000000000000002c800000000000000000000000000000000000000000000000000000000000002dc00000000000000000000000000000000000000000000000000000000000002f0000000000000000000000000000000000000000000000000000000000000030800000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001889edc2edab5f40e902b864ad4d7ade8e412f9b100000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000008a854c4e750cdf24f138f34a9061b2f556066912000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001889edc2edab5f40e902b864ad4d7ade8e412f9b1000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000889edc2edab5f40e902b864ad4d7ade8e412f9b10000000000000000000000008772e3a2d86b9347a2688f9bc1808a6d8917760c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000010de4ea0184c2ad0baca7183356aea5b8d5bf5c6e00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000a6bc802faa064414aa62117b4a53d27ffff741f1000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000010de4ea0184c2ad0baca7183356aea5b8d5bf5c6e000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc0000000000000000000000000de4ea0184c2ad0baca7183356aea5b8d5bf5c6e0000000000000000000000008772e3a2d86b9347a2688f9bc1808a6d8917760c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001dc00116a0d3e064427da2600449cfd2566b3037b00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000a6bc802faa064414aa62117b4a53d27ffff741f1000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001dc00116a0d3e064427da2600449cfd2566b3037b000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000dc00116a0d3e064427da2600449cfd2566b3037b0000000000000000000000008772e3a2d86b9347a2688f9bc1808a6d8917760c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000011d201be093d847f6446530efb0e8fb426d17670900000044d547741f8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a78000000000000000000000000881dad714679a6feaa636446a0499101375a365c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000011d201be093d847f6446530efb0e8fb426d176709000000442f2ff15d8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a780000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc0000000000000000000000001d201be093d847f6446530efb0e8fb426d1767090000000000000000000000008772e3a2d86b9347a2688f9bc1808a6d8917760c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001f4bf42c6d6a0e38825785048124dbad6c9eaaac300000044d547741f8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a78000000000000000000000000881dad714679a6feaa636446a0499101375a365c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001f4bf42c6d6a0e38825785048124dbad6c9eaaac3000000442f2ff15d8d0e4ae4847b49935b55c99f9c3ce025c87e7c4604c35b7ae56929bd32fa5a780000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000f4bf42c6d6a0e38825785048124dbad6c9eaaac30000000000000000000000008772e3a2d86b9347a2688f9bc1808a6d8917760c000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001da7de2ecddfccc6c3af10108db212acbbf9ea83f00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000e1686c2e90eb41a48356c1cc7faa17629af3adb3000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001da7de2ecddfccc6c3af10108db212acbbf9ea83f000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000da7de2ecddfccc6c3af10108db212acbbf9ea83f000000000000000000000000c52fc3081123073078698f1eac2f1dc7bd71880f000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000014d72bff1beac69925f8bd12526a39baab069e5da00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000e1686c2e90eb41a48356c1cc7faa17629af3adb3000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000014d72bff1beac69925f8bd12526a39baab069e5da000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc0000000000000000000000004d72bff1beac69925f8bd12526a39baab069e5da000000000000000000000000c52fc3081123073078698f1eac2f1dc7bd71880f000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000014d4074628678bd302921c20573eea1ed38ddf7fb00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000e1686c2e90eb41a48356c1cc7faa17629af3adb3000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000014d4074628678bd302921c20573eea1ed38ddf7fb000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc0000000000000000000000004d4074628678bd302921c20573eea1ed38ddf7fb000000000000000000000000c52fc3081123073078698f1eac2f1dc7bd71880f000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001dc5fe1782b6943f318e05230d688713a560063dc00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000e1686c2e90eb41a48356c1cc7faa17629af3adb3000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001dc5fe1782b6943f318e05230d688713a560063dc000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000dc5fe1782b6943f318e05230d688713a560063dc000000000000000000000000c52fc3081123073078698f1eac2f1dc7bd71880f000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001b314d4a76c457c93150d308787939063f4cc67e000000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000e1686c2e90eb41a48356c1cc7faa17629af3adb3000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001b314d4a76c457c93150d308787939063f4cc67e0000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000b314d4a76c457c93150d308787939063f4cc67e0000000000000000000000000c52fc3081123073078698f1eac2f1dc7bd71880f000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001c72b58aa02e0e98cf8a4a0e9dce75e763800802c00000044d547741f139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000e1686c2e90eb41a48356c1cc7faa17629af3adb3000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d4680000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006000000001c72b58aa02e0e98cf8a4a0e9dce75e763800802c000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d0000000000000000000000006019cb557978296ba3c08a7b73225c0975dfb2f7000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d46800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060000000016019cb557978296ba3c08a7b73225c0975dfb2f700000044338d93fc000000000000000000000000c72b58aa02e0e98cf8a4a0e9dce75e763800802c000000000000000000000000c52fc3081123073078698f1eac2f1dc7bd71880f000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a4d948d468000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000600000000148c4929630099b217136b64089e8543db0e5163a000000443e0bde670000000000000000000000000000000000000000000001b1ae4d6e2ef50000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000e4d948d468000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000a00000000155032650b14df07b85bf18a3a3ec8e0af2e028d5000000845e57d7420000000000000000000000000000000000000000000000000000000000000024000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000054d4156414e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003e40d73eb977dc6a537af587d48316fee66e9c8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000084d948d468000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000400000000155032650b14df07b85bf18a3a3ec8e0af2e028d50000002475a080d500000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c1456e61626c652043697263756974427265616b6572206f6e2d636861696e2c20696e637265617365204c4f4c207374455448204561737920547261636b20666163746f7279206c696d69742066726f6d20364b207374455448c2a0746f20384b207374455448c2a07065722036206d6f6e7468732c2072656e616d65204e6f6465204f70657261746f7220506965722054776f20746f204d4156414e2c2064656163746976617465204e6f6465204f70657261746f722043686f727573204f6e6500000000000000000000000000000000000000000000000000000000000000",
+      "snapshotBlock": "25337400",
+      "startDate": "1781700923",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000000",
+      "yea": "58370939828831931489514982"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0xECE4e341EbcC2B57c40FCf74f47bc61DfDC87fe2"
+          },
+          {
+            "stake": "2782547945205000000000000",
+            "supports": true,
+            "voter": "0xE289Cf875EBc11868bF1F7B9535Fd9aDBdb6A383"
+          },
+          {
+            "stake": "996544530000000000000000",
+            "supports": true,
+            "voter": "0xaB1cCdDefCB731E7409a448E6a6ABe1672A58D85"
+          },
+          {
+            "stake": "89170494084962158932784",
+            "supports": true,
+            "voter": "0x31e18739aD2d978344c1267377d194A3431E6D05"
+          },
+          {
+            "stake": "83333330000000000000000",
+            "supports": true,
+            "voter": "0x6cDC4F710BAbA4607f09BD55829604e1149EeCeE"
+          },
+          {
+            "stake": "57746843877290122203621",
+            "supports": true,
+            "voter": "0xC64d449baeCd972493C9F7CC171cf41aC1023dbd"
+          },
+          {
+            "stake": "50633069423653114489375",
+            "supports": true,
+            "voter": "0x0275c77993A5fEa99233B2A0A3A4E610006Dd06a"
+          },
+          {
+            "stake": "42391234409815883367336",
+            "supports": true,
+            "voter": "0x23D1508818EA7b49683aC98F9BA58A5c0A233524"
+          },
+          {
+            "stake": "26912154141035411268607",
+            "supports": true,
+            "voter": "0x28515c2E35D97Db1d8ECd9205Ed6304e38F50415"
+          },
+          {
+            "stake": "22953386015380130301417",
+            "supports": true,
+            "voter": "0xa05CB3b21C71C625a8BE51466dD8249166072F11"
+          },
+          {
+            "stake": "16623630000000000000000",
+            "supports": true,
+            "voter": "0x8f4a1b6071CEBf1d2Cd85688F6705F2612eB2fE1"
+          },
+          {
+            "stake": "12756474328295719573098",
+            "supports": true,
+            "voter": "0xD4F75efbe3A728dBe054C6F2989340399df8CD71"
+          },
+          {
+            "stake": "10120184677858640053065",
+            "supports": true,
+            "voter": "0xc76435658F686751d996093c8873bab78C4bB6Fb"
+          },
+          {
+            "stake": "9254466900854390067685",
+            "supports": true,
+            "voter": "0x0A92cBf55F80EE0A5AF77060Ba2C0e233601aD46"
+          },
+          {
+            "stake": "1457036469706821811544",
+            "supports": true,
+            "voter": "0x93821fd0Ca1e0F09864933D7b385FF6D2DA7a8F0"
+          },
+          {
+            "stake": "483376093887456921364",
+            "supports": true,
+            "voter": "0x332356E5508EA94Faccbf85Ff4A2007B3F540693"
+          },
+          {
+            "stake": "318036035589583114103",
+            "supports": true,
+            "voter": "0xa34Ff97e3A06C212556aEa209Ae0089370D615F2"
+          },
+          {
+            "stake": "101000000000000000000",
+            "supports": true,
+            "voter": "0x2cfaced1Bc7b2B61692bdBEA50BAD19981DCc41e"
+          },
+          {
+            "stake": "100074323028382017612",
+            "supports": true,
+            "voter": "0x35226E78809a5DaE4562B0B1fC4cf96cdb6A01A8"
+          },
+          {
+            "stake": "6900000000000000000",
+            "supports": true,
+            "voter": "0xf6F4b04cB453680F222c8f63c2C6554Fae501b1f"
+          },
+          {
+            "stake": "5197956131097447654",
+            "supports": true,
+            "voter": "0x64C0fF5C25925aCB33D68F79AD728Fd63361ffce"
+          },
+          {
+            "stake": "279145542373123989",
+            "supports": true,
+            "voter": "0xC3a2821727e9E5fa690F8C69C5d8E0899aA0E6Ee"
+          }
+        ],
+        "stake": "9203459643088031284693254",
+        "supports": true,
+        "voter": "0x1f76a6Bf03429480472B3695E08689219cE15ED6"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x28562FBe6d078d2526A0A8d1489245fF74fcA7eB"
+          },
+          {
+            "stake": "2189173746124479382007292",
+            "supports": true,
+            "voter": "0xAC665A44d46194EB9826D6F93Fb5Cc93bC2654b4"
+          },
+          {
+            "stake": "909670058696467375930537",
+            "supports": true,
+            "voter": "0x223ACb1D97b9A490Ef9FFaAeD391d6Ce75f05cCb"
+          },
+          {
+            "stake": "227220010116598153770928",
+            "supports": true,
+            "voter": "0x1ed34FfdfA9e42be13AAFF30062fa103881F5f21"
+          },
+          {
+            "stake": "158373160000000000000000",
+            "supports": true,
+            "voter": "0x5B8F0dD7E680200a46b4833FC074D73beb76541b"
+          },
+          {
+            "stake": "117586173802539326305909",
+            "supports": true,
+            "voter": "0x0e37227C414941380E152dE219F4f6FECc8Bfe1C"
+          },
+          {
+            "stake": "114639639213141672247528",
+            "supports": true,
+            "voter": "0x653Bc74DC32a00C69faA458F34281909d859FC02"
+          },
+          {
+            "stake": "85029980000000000000000",
+            "supports": true,
+            "voter": "0x65BCE0E8520C2944E0C8AF9F48f3c65b5EAD1631"
+          },
+          {
+            "stake": "59793546405538364767916",
+            "supports": true,
+            "voter": "0x535D9C211651F69D2a9dD0D68491417e72994c73"
+          },
+          {
+            "stake": "41875670000000000000000",
+            "supports": true,
+            "voter": "0x82fabb86E4E197C825d1cD271E71876b00cB0073"
+          },
+          {
+            "stake": "26542820517428606738154",
+            "supports": true,
+            "voter": "0x5b1F453D942367D362eCbb315B3ee0C8248a09a5"
+          },
+          {
+            "stake": "20507061371100000000000",
+            "supports": true,
+            "voter": "0xc882801DBbE218c2f210F4B4a0963156755B758E"
+          },
+          {
+            "stake": "12563443537513546657540",
+            "supports": true,
+            "voter": "0x1e3C0293A73a1b03616a87b48cEF357f18B7Cd66"
+          },
+          {
+            "stake": "9278491352083808654651",
+            "supports": true,
+            "voter": "0xb879c8C26594bAe2e77EA15EC41061e6C62f4f8c"
+          },
+          {
+            "stake": "6329079027865236900144",
+            "supports": true,
+            "voter": "0x65707Ac2958A6C4Cd42a0b530f1fA546586F223f"
+          },
+          {
+            "stake": "1069058862613126473496",
+            "supports": true,
+            "voter": "0xfE06AC9902fA42aBcD508F1eFB8a40c73403D430"
+          },
+          {
+            "stake": "700843035243119878872",
+            "supports": true,
+            "voter": "0xf8FEad458B6e9aEa9fDc36a66240dEf4D1656bD6"
+          },
+          {
+            "stake": "218062176766710886446",
+            "supports": true,
+            "voter": "0x7eb71D68181f2D219eeF78D834F6bA97D870AE85"
+          },
+          {
+            "stake": "168564177110257001174",
+            "supports": true,
+            "voter": "0xdD9Df31F1DBe1C1815D4Df96b2fA5F9694Cb3804"
+          },
+          {
+            "stake": "111469959285482308163",
+            "supports": true,
+            "voter": "0xCc44365d1Fd4e3241f8DCdfE8133572EC031DC23"
+          },
+          {
+            "stake": "69573108216716626540",
+            "supports": true,
+            "voter": "0x96e4e2EbbEfF1f45BFB678695628fa7a0398dE1C"
+          },
+          {
+            "stake": "30000000000000000000",
+            "supports": true,
+            "voter": "0x078b0b48AFca88a54AFf387DA0b4647F0207F93b"
+          },
+          {
+            "stake": "13000000000000000000",
+            "supports": true,
+            "voter": "0x3416ef25004223dE85AEdEdD5B2f59bbdF82432f"
+          },
+          {
+            "stake": "100000000000000000",
+            "supports": true,
+            "voter": "0xD6148eD52B81dc663C6AbcC30Ea9493815b86858"
+          }
+        ],
+        "stake": "8980963551483990887155290",
+        "supports": true,
+        "voter": "0xB6647e02AE6Dd74137cB80b1C24333852E4AF890"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x3d56d86a60b92132b37f226EA5A23F84C805Ce29"
+          },
+          {
+            "stake": "2600000000000000000000000",
+            "supports": true,
+            "voter": "0x3053DABb9761B3aF561150d62FfD18b1019940fc"
+          },
+          {
+            "stake": "48381213079776137464638",
+            "supports": true,
+            "voter": "0x26551631b8cBab36006904De04dFd10bF1163Da3"
+          },
+          {
+            "stake": "10000000000000000000000",
+            "supports": true,
+            "voter": "0xacFDaCadBe45a3F99DbE836EC7F4CB82cC7D1345"
+          },
+          {
+            "stake": "3356293853090000000000",
+            "supports": true,
+            "voter": "0xFe49e6da542ab0b03F0B4501F949962AAFaaA457"
+          },
+          {
+            "stake": "1538937184184456001156",
+            "supports": true,
+            "voter": "0x5DCecA88c237d5Ef2DdECDc019B73B97437fFca4"
+          },
+          {
+            "stake": "1246610624760000000000",
+            "supports": true,
+            "voter": "0x9A8d7f87Dd1c9bBCcD7275b524A9c9376d3b7101"
+          },
+          {
+            "stake": "1068667650000000000000",
+            "supports": true,
+            "voter": "0x168F87fBfe36B84E44B9d06278B2aA1CC73d7400"
+          },
+          {
+            "stake": "1004000000000000000000",
+            "supports": true,
+            "voter": "0x9c25a6b1bf3F6Fd2F68a62169c043045C2460482"
+          },
+          {
+            "stake": "118485487587934881544",
+            "supports": true,
+            "voter": "0xA7a7Eaa8D6530C9195E41920E0C188320fAFdde1"
+          },
+          {
+            "stake": "109954445700000000000",
+            "supports": true,
+            "voter": "0x9406f40c6Dc3DF6Ff77D42178CD1cd7814731E00"
+          },
+          {
+            "stake": "105242126153351400668",
+            "supports": true,
+            "voter": "0xfcBB9d22209E641eb2B811B568be56fbfE2CAb1b"
+          },
+          {
+            "stake": "239976112044282097",
+            "supports": true,
+            "voter": "0x475E41b482aFC82BAE8025D09d128F30B680E10c"
+          },
+          {
+            "stake": "182090558827621992",
+            "supports": true,
+            "voter": "0xcFeBA2DBf3b36666462D90c4EB12891Ffcab3210"
+          }
+        ],
+        "stake": "7666929826517922751652095",
+        "supports": true,
+        "voter": "0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "5000000000000000000000000",
+            "supports": true,
+            "voter": "0x7bd77405a7c28F50a1010e2185297A25165FD5C6"
+          },
+          {
+            "stake": "1000000000000000000000000",
+            "supports": true,
+            "voter": "0xd587796F10A50719338D4d349efB7520B4CAd22C"
+          },
+          {
+            "stake": "5581392619965283728006",
+            "supports": true,
+            "voter": "0x15e844bdcAF1a38b55aC76e40921c81282eF4c20"
+          },
+          {
+            "stake": "690345368203168917801",
+            "supports": true,
+            "voter": "0x5877022fe1a776E5275eD535b50d83A69634089C"
+          },
+          {
+            "stake": "353064844934821035288",
+            "supports": true,
+            "voter": "0x089ACc703D9Fd8b14d6E03D4D38561C1d4672dFd"
+          },
+          {
+            "stake": "345024541360499969580",
+            "supports": true,
+            "voter": "0x4a0884079ac2B0A71c93Ad0f81E766E2b94faacD"
+          },
+          {
+            "stake": "1036655480617864146",
+            "supports": true,
+            "voter": "0x4D4AC65513fEe380c596ac9EdfaC588782831bdf"
+          },
+          {
+            "stake": "912001745601542400",
+            "supports": true,
+            "voter": "0xa825Fec973CCCC89656081Ba9De7376092B8A2Cd"
+          },
+          {
+            "stake": "357298656409126221",
+            "supports": true,
+            "voter": "0xae2041045be9eC3557ba3Ba2d814dA98F30AB7ca"
+          },
+          {
+            "stake": "254760608959952480",
+            "supports": true,
+            "voter": "0x2BB965fDE72C17936950E17db029DC4f4ed32059"
+          },
+          {
+            "stake": "218738654385029561",
+            "supports": true,
+            "voter": "0x66339e64c3447F32251a3Baf79bc7f4192fD1386"
+          },
+          {
+            "stake": "98898453237722391",
+            "supports": true,
+            "voter": "0x996C2F3f23Aa2DF68D3665db33Fd8B09F6080966"
+          },
+          {
+            "stake": "98576071750666497",
+            "supports": true,
+            "voter": "0xea40b4EAad98dA0058FDBfDa40D31Cf6Fc0AE608"
+          },
+          {
+            "stake": "98447077503100841",
+            "supports": true,
+            "voter": "0x3FdD190787d587AcF40D5b3dD01C983a2e836e1A"
+          },
+          {
+            "stake": "49570276188847451",
+            "supports": true,
+            "voter": "0xC6615588BD57de5d69643acfa9f249640407A9Ce"
+          },
+          {
+            "stake": "49545517739602107",
+            "supports": true,
+            "voter": "0x99a3C248458a80f0026Fdd3f338d50d6Fba841e6"
+          },
+          {
+            "stake": "49540280036388896",
+            "supports": true,
+            "voter": "0x2822E90c9A581802a51Cc7A7e0C11896ea8b8CBf"
+          },
+          {
+            "stake": "49539043910605402",
+            "supports": true,
+            "voter": "0xa6C5b6FE16F0d059df6e0D51c1Ee2979CB1E2356"
+          },
+          {
+            "stake": "49536120898442745",
+            "supports": true,
+            "voter": "0xbe5327F1aac3ecF324Df532464086a36CcB4765f"
+          },
+          {
+            "stake": "49527128034911767",
+            "supports": true,
+            "voter": "0xC75F09ed4bd3a2C5D3193435538f19F69523d09E"
+          },
+          {
+            "stake": "49520715512263797",
+            "supports": true,
+            "voter": "0xd2ED47796EeD6F2fF266e91DDC35542bDE0FB673"
+          },
+          {
+            "stake": "49518452038617508",
+            "supports": true,
+            "voter": "0x489fBc137636ce821598a22F2AB86C1DE52497d9"
+          },
+          {
+            "stake": "49514202674833296",
+            "supports": true,
+            "voter": "0x03c387378298C469bDd48B8bBE93E15314BfD6e9"
+          },
+          {
+            "stake": "49513707315434439",
+            "supports": true,
+            "voter": "0x19cB1B49dA0C275e904d3CdBA5A47dfA99220D3F"
+          },
+          {
+            "stake": "49513400182281874",
+            "supports": true,
+            "voter": "0x096d597d2dC2962d4286d75a631AB9Dd8cd2C333"
+          },
+          {
+            "stake": "49509778013266448",
+            "supports": true,
+            "voter": "0x487dA7Cb178276a857Ff8318dA1a12C0e428eE89"
+          },
+          {
+            "stake": "49503428824826353",
+            "supports": true,
+            "voter": "0xc64131DD019327Dc2165f450f371BeC33f712272"
+          },
+          {
+            "stake": "49499010721515158",
+            "supports": true,
+            "voter": "0xb7b568e5885bB1F45C9606697E7242B03A1b99D9"
+          },
+          {
+            "stake": "49497717441768343",
+            "supports": true,
+            "voter": "0x35BeAF0528895Fe3208A0E7a6211dB04369c0387"
+          },
+          {
+            "stake": "49497233873141114",
+            "supports": true,
+            "voter": "0xB487DCA4dFf9a6e43e7B3133d7f12BCbf94e416E"
+          },
+          {
+            "stake": "49495034513100142",
+            "supports": true,
+            "voter": "0x05F5BaDCad1f7a5354AE1BCC0Ed4352a35cABBFf"
+          },
+          {
+            "stake": "49491240497522847",
+            "supports": true,
+            "voter": "0x78D1C56A4A09094e7477982855e9c7d14AB62aeA"
+          },
+          {
+            "stake": "49488240279131489",
+            "supports": true,
+            "voter": "0xfE4088E546A29B00E703159aB1e881d1c3ac7E3c"
+          },
+          {
+            "stake": "49487683486396985",
+            "supports": true,
+            "voter": "0xEd68913BcfE804f0C831A81Db5228651f5A9E920"
+          },
+          {
+            "stake": "49486555718881138",
+            "supports": true,
+            "voter": "0x0Ce929c36C556FdD645900A582A7d4aB056c035f"
+          },
+          {
+            "stake": "49486117620820513",
+            "supports": true,
+            "voter": "0xE8aC12c123D48cBAa5C4Dc7e096bE5ab6EDB3ccB"
+          },
+          {
+            "stake": "49485598777095039",
+            "supports": true,
+            "voter": "0xFbdBb31448974927C47898eA7b1ba6e56e20BB2a"
+          },
+          {
+            "stake": "49485044977473253",
+            "supports": true,
+            "voter": "0xcA8F06523916cc18E63493a6041066e90292c7EF"
+          },
+          {
+            "stake": "49483799932291408",
+            "supports": true,
+            "voter": "0x747e109B9BA062839C1cBB7608D420B03111ECD3"
+          },
+          {
+            "stake": "49482426499009677",
+            "supports": true,
+            "voter": "0xB21FeD4aaED0645207bBb898117ed161fcBe1d05"
+          },
+          {
+            "stake": "49481007987633402",
+            "supports": true,
+            "voter": "0xC9D43833b3939a0D152ba2E19DA3F553a9f905a8"
+          },
+          {
+            "stake": "49478605547055196",
+            "supports": true,
+            "voter": "0xc82Ef70fA397a9E2D2dBD1407B6F273f5697344c"
+          },
+          {
+            "stake": "49478357315469174",
+            "supports": true,
+            "voter": "0xAd2510656bCEF5cA1bbaBEB2b09e00ADF07F2539"
+          },
+          {
+            "stake": "49478026549570156",
+            "supports": true,
+            "voter": "0x4bdD395b2000bA7FDC48025f827720eACbafDF15"
+          },
+          {
+            "stake": "49477871207855408",
+            "supports": true,
+            "voter": "0x9d58a5c4c0f7DDFe3081091B0e0A144146a9bAcf"
+          },
+          {
+            "stake": "49477781136509506",
+            "supports": true,
+            "voter": "0x901B8Ee2F658B14BeA1B804Ae5d0bF6259E24618"
+          },
+          {
+            "stake": "49477445305131184",
+            "supports": true,
+            "voter": "0x761033CC81082f784c76b37cb5Baab0d2B20187e"
+          },
+          {
+            "stake": "49476212525379389",
+            "supports": true,
+            "voter": "0x4704CB99D61C563c98c06aA397A492105a4357Cf"
+          },
+          {
+            "stake": "49473880181988322",
+            "supports": true,
+            "voter": "0x73B5571C9913Cd21ca2DdCe62D3AB6F37FAe7a30"
+          },
+          {
+            "stake": "49470106941045665",
+            "supports": true,
+            "voter": "0x379d300fA8d9db80D0572ef54a533797d201941d"
+          },
+          {
+            "stake": "49465404353998861",
+            "supports": true,
+            "voter": "0x11f6aEe456040076C714C63318DE77F0986DC3dF"
+          },
+          {
+            "stake": "49465042232411323",
+            "supports": true,
+            "voter": "0x3a930b81A4D12E7583776AC6eF24E09255eEDe14"
+          },
+          {
+            "stake": "49464979498643334",
+            "supports": true,
+            "voter": "0x064F8D760eCE386B1a363C42d4404312f1D99e73"
+          },
+          {
+            "stake": "49464435795308333",
+            "supports": true,
+            "voter": "0x7bb5597d971Ba4384C14bBf1579b06fB8ed9CD2F"
+          },
+          {
+            "stake": "49464378979451107",
+            "supports": true,
+            "voter": "0xfecA1fe399E86608eB46d0293f1C914088953B3F"
+          },
+          {
+            "stake": "49463769588626458",
+            "supports": true,
+            "voter": "0x21f7d28755D917E02F6bA081f0926Cc57823B3FB"
+          },
+          {
+            "stake": "49461955539484583",
+            "supports": true,
+            "voter": "0x2Eb627E3351F510bE1da775cBAF19b9FFA319DA3"
+          },
+          {
+            "stake": "49459678136925937",
+            "supports": true,
+            "voter": "0xFa92751F871cAA385c2e48A9940Ae4293FfF01C6"
+          },
+          {
+            "stake": "49459297915834038",
+            "supports": true,
+            "voter": "0xb4D53171de07558730Ded5C185917225A27A2bCd"
+          },
+          {
+            "stake": "49457698603169984",
+            "supports": true,
+            "voter": "0x812F8f3385f5C02cdE6820638058166EdC275D80"
+          },
+          {
+            "stake": "49457633617889835",
+            "supports": true,
+            "voter": "0x7F59BCb74AB7486c992Aa25B9671906a18D5e730"
+          },
+          {
+            "stake": "49456947954507869",
+            "supports": true,
+            "voter": "0x74f2109a1ABdc1b4C8c42a8c1b0551fC88a8d185"
+          },
+          {
+            "stake": "49456639318934664",
+            "supports": true,
+            "voter": "0x9E5AaA55E59e0858868c696124fB71D581B5E418"
+          },
+          {
+            "stake": "49456224013294028",
+            "supports": true,
+            "voter": "0x58fdEb56FC9377623dF3D63e5494B4D59719A0DC"
+          },
+          {
+            "stake": "49454934851275189",
+            "supports": true,
+            "voter": "0x4bE811687A32Ed80454FB3A4cd7aCcfA281F1B35"
+          },
+          {
+            "stake": "49454095271076159",
+            "supports": true,
+            "voter": "0xD3ded5d519bBaa748c89C38234d7797FAf4f25b2"
+          },
+          {
+            "stake": "49453130460602792",
+            "supports": true,
+            "voter": "0x02F1A3d4652F4C700778815FA3b1e9F376219f75"
+          },
+          {
+            "stake": "49452868920605710",
+            "supports": true,
+            "voter": "0x8e8B23f36240A12acf27C5E0B4fE803dD296df52"
+          },
+          {
+            "stake": "49451641532019301",
+            "supports": true,
+            "voter": "0xAD34ED880cB16039907476FbcBb5891045ef4B58"
+          },
+          {
+            "stake": "49451186658962475",
+            "supports": true,
+            "voter": "0xCe200F462b56fe0c2f32B28f3AAdC9c387f28832"
+          },
+          {
+            "stake": "49451166287690335",
+            "supports": true,
+            "voter": "0xEF04c0d75d32BdE6F801d5ac7480E4aaC9D53dbc"
+          },
+          {
+            "stake": "49450616575248726",
+            "supports": true,
+            "voter": "0x963f9B08a1C52f5A995B8F94f96B18fB59Fc1599"
+          },
+          {
+            "stake": "49450581866026002",
+            "supports": true,
+            "voter": "0xBce3dC78E27e10c25F2F618135Ad356836AB45c8"
+          },
+          {
+            "stake": "49450056346311690",
+            "supports": true,
+            "voter": "0xa3144884153fac573A914077b42e4F54fB17d4C0"
+          },
+          {
+            "stake": "49449830821325143",
+            "supports": true,
+            "voter": "0x3cab2a2E1daB8D2C91CFdEF52895155a3BD19E7E"
+          },
+          {
+            "stake": "49448721117022247",
+            "supports": true,
+            "voter": "0xFE5888cc2b607CF84c62244eA89f4af7d1d0616B"
+          },
+          {
+            "stake": "49448510387309900",
+            "supports": true,
+            "voter": "0xA8a30a73f22605bb201CeB6d1631c72381d1C92e"
+          },
+          {
+            "stake": "49448414123632707",
+            "supports": true,
+            "voter": "0xfB0f6F4CB84c878013B875B67A478906C09518aF"
+          },
+          {
+            "stake": "49446453989271739",
+            "supports": true,
+            "voter": "0x495f9f25617640fd54f20d33414c985Ebe42fEd5"
+          },
+          {
+            "stake": "49445943258643630",
+            "supports": true,
+            "voter": "0xFdAEb25E0313DfdBb729Ece6D5628D9e3bF52b4d"
+          },
+          {
+            "stake": "49444489744559630",
+            "supports": true,
+            "voter": "0x6B78f977456695322466446291B324809f73b3EC"
+          },
+          {
+            "stake": "49442792212594506",
+            "supports": true,
+            "voter": "0xF353bE8274Af8e8C2e516E6Dc1B3168eFb70698A"
+          },
+          {
+            "stake": "49442606431657806",
+            "supports": true,
+            "voter": "0x281cC080FE247F6F58a189e3c8E97d1Ae623b911"
+          },
+          {
+            "stake": "49442067205946811",
+            "supports": true,
+            "voter": "0x27C5feF8d277918B2be025C590260d08D8dC848c"
+          },
+          {
+            "stake": "49441964983068665",
+            "supports": true,
+            "voter": "0x36B0925496938f745e9e2BB51BBC3EFB30a737a8"
+          },
+          {
+            "stake": "49434856983748236",
+            "supports": true,
+            "voter": "0xEB2b9ac47fe3518FB6cd4c003C719d36a7F02d56"
+          },
+          {
+            "stake": "49434182941659313",
+            "supports": true,
+            "voter": "0x5Aef2381604E3491096D493538D806F36DedC89d"
+          },
+          {
+            "stake": "49433796846803210",
+            "supports": true,
+            "voter": "0xa2dECEEA037d10C0A54879eaFAdf500Eec5AD58F"
+          },
+          {
+            "stake": "49433546473214908",
+            "supports": true,
+            "voter": "0xf125a926105dCc7a54dafC578345f7cCFd067f75"
+          },
+          {
+            "stake": "49431982355193122",
+            "supports": true,
+            "voter": "0xB3D6d82156d28F4e124293609c8D5487E3507B39"
+          },
+          {
+            "stake": "49431322182198393",
+            "supports": true,
+            "voter": "0x3e0155d56a4e634E7Bda68Dd9978B8A85f4CC010"
+          },
+          {
+            "stake": "49430953336853915",
+            "supports": true,
+            "voter": "0x02fb632AE4f7E26f96D85FBd1E22dD090c69fAAd"
+          },
+          {
+            "stake": "49429970250033153",
+            "supports": true,
+            "voter": "0xEeFBAA752a8Bf73029DFc3BE3F2b309DbDfd5F3c"
+          },
+          {
+            "stake": "49429779630086243",
+            "supports": true,
+            "voter": "0x3F10156a8184b6e8f48d1940D0EB68D6EE626689"
+          },
+          {
+            "stake": "49429345403288492",
+            "supports": true,
+            "voter": "0x1bE932E5c0F1477E2D80BC0948ffcaE7b254Db26"
+          },
+          {
+            "stake": "49428649241496404",
+            "supports": true,
+            "voter": "0x1aDbfB6381bCAfc598B83f8041a72Ab9a5882ed2"
+          },
+          {
+            "stake": "49427952450093176",
+            "supports": true,
+            "voter": "0x2A2515abaBF3c8ed3df1FecFfB081B7c6c1c1748"
+          },
+          {
+            "stake": "49427298938908080",
+            "supports": true,
+            "voter": "0x9F58bB7336257DaF14B9fC91EBA7f7bF26d336b0"
+          },
+          {
+            "stake": "49427096625378557",
+            "supports": true,
+            "voter": "0x88221A954183e05E2A2Fd5740d60A961db77c535"
+          },
+          {
+            "stake": "49426780442006657",
+            "supports": true,
+            "voter": "0x67dFA4C7a5D07bc3d7aEF4216bDe01e8Ff2091b8"
+          }
+        ],
+        "stake": "6006977157071935339055179",
+        "supports": true,
+        "voter": "0xa4181C75495f60106AE539B7C55c0D263f2fb737"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "3293684186619150000000000",
+            "supports": true,
+            "voter": "0x70a613eA53b71abcBd9b32eAFB86362a31D5164C"
+          },
+          {
+            "stake": "1503246002075630000000000",
+            "supports": true,
+            "voter": "0x7077c866CDf58d4a65cc02DfE8e3AB03e9B23A0D"
+          }
+        ],
+        "stake": "4796930188694780000000000",
+        "supports": true,
+        "voter": "0x81723Bcb2B490fCe5f3178df8760576C84fe922e"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1821382465336102032692615",
+            "supports": true,
+            "voter": "0xdC7b28976d6eb13082a5Be7C66f9dCFE0115738f"
+          },
+          {
+            "stake": "949103701044718756685097",
+            "supports": true,
+            "voter": "0x86b4EC24F35A21D76646350A47C06e042D05e3Dd"
+          },
+          {
+            "stake": "349666666666666740000023",
+            "supports": true,
+            "voter": "0x4f690f7000791ab7248bD4c9fD165D9E386EDfe6"
+          },
+          {
+            "stake": "147034231781927353128206",
+            "supports": true,
+            "voter": "0x0b304924fAa64b0f040dcA67bC5175Dd6078db52"
+          },
+          {
+            "stake": "129938125000000000000000",
+            "supports": true,
+            "voter": "0x0035Fc5208eF989c28d47e552E92b0C507D2B318"
+          },
+          {
+            "stake": "4471165613748072058081",
+            "supports": true,
+            "voter": "0x2D29c09eF733F48fe10074a2Dd7c38b50A9d4D89"
+          },
+          {
+            "stake": "2384463755250000000000",
+            "supports": true,
+            "voter": "0xDcD7d160815a1c256DDc73b3fAA89391114d8249"
+          },
+          {
+            "stake": "701330068730000000000",
+            "supports": true,
+            "voter": "0x7d36Fc0bD0057506e9937cA912B74C3a71a6091E"
+          },
+          {
+            "stake": "220000000000000000000",
+            "supports": true,
+            "voter": "0x75e48a83Bc67878271c95d7f23d57E31131E7bDb"
+          },
+          {
+            "stake": "118862618073089328435",
+            "supports": true,
+            "voter": "0x9113FD7dB15a824eaFDd7286C7eBe7C0F47C24b1"
+          },
+          {
+            "stake": "115000000000000000000",
+            "supports": true,
+            "voter": "0xF44B460228c77B48fF463c9569edD2cA5d76B7F9"
+          },
+          {
+            "stake": "1508434016008908905",
+            "supports": true,
+            "voter": "0x21d3ac53410871e4f489778aC63BCB00a0aA244b"
+          },
+          {
+            "stake": "14271935233520112",
+            "supports": true,
+            "voter": "0x477e89659cd4433DCb9Cb8a9C607B73413a3238B"
+          }
+        ],
+        "stake": "3405137534591167286321474",
+        "supports": true,
+        "voter": "0x6f9BB7e454f5B3eb2310343f0E99269dC2BB8A1d"
+      },
+      {
+        "stake": "3141597222000000000000000",
+        "supports": true,
+        "voter": "0xD655B972f2813C42DA7DaC475AD2aD5a6e14589D"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1717250000000000000000000",
+            "supports": true,
+            "voter": "0xA4E408e61342DaE8F7a494fbe98aa2Fd484f56f6"
+          },
+          {
+            "stake": "1148387595080655793761796",
+            "supports": true,
+            "voter": "0x3dD48AD861F0B77D1312F9C95A13e52871Ca95e0"
+          },
+          {
+            "stake": "73457060000000000000000",
+            "supports": true,
+            "voter": "0xf68A5973C9Cd2009Bb397FEd5fB51D07404e03dC"
+          },
+          {
+            "stake": "58406941507340371404374",
+            "supports": true,
+            "voter": "0x8788A096adEb6382E2727485E2608E1a36139Aa8"
+          },
+          {
+            "stake": "51031908812118851111629",
+            "supports": true,
+            "voter": "0x3C840360246FA952E3437f47DBD8001046471eA3"
+          },
+          {
+            "stake": "1090577997440000000000",
+            "supports": true,
+            "voter": "0x14fF1A847b2e00c7150293697FAA6c93B83437c0"
+          }
+        ],
+        "stake": "3049624083397555016277799",
+        "supports": true,
+        "voter": "0x3133e0C65779993d607B2B6d689378A012a05C00"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2875000000000000000000000",
+            "supports": true,
+            "voter": "0x3217b819EA2d25f1982BaE5dD9C8Fe4C6D546bfC"
+          }
+        ],
+        "stake": "2875000000000000000000000",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "stake": "2793609690000000000000000",
+        "supports": true,
+        "voter": "0x510a7cD4ba40F7b6643F566A5D45Ea55F5cd8d0E"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2301992380970000000000000",
+            "supports": true,
+            "voter": "0xD7f0dDcBb0117A53e9ff2cad814B8B810a314f59"
+          }
+        ],
+        "stake": "2301992380970000000000000",
+        "supports": true,
+        "voter": "0x79Ac4E8B1cAAcB24a91d1cbBbD975234eF0964C5"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "2041902037628265473922255",
+            "supports": true,
+            "voter": "0xC035818509540Ce16559c31409887E78384C6F15"
+          }
+        ],
+        "stake": "2041902037628265473922255",
+        "supports": true,
+        "voter": "0x45bc852B0Ddb1FCc9d6C1daB4038F0b2dFDafD99"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "234941545493817316974039",
+            "supports": true,
+            "voter": "0x3bEb576ecb050390EE763971a159325C32c860D2"
+          },
+          {
+            "stake": "148298479340820359716982",
+            "supports": true,
+            "voter": "0xc46A822209607c6EE2E31E096198757f160EdDBB"
+          },
+          {
+            "stake": "79551221331683307732724",
+            "supports": true,
+            "voter": "0xc34d3DCc1da85874cfE0D60dF695933e22529a11"
+          },
+          {
+            "stake": "75781707217777967906304",
+            "supports": true,
+            "voter": "0xD35b7237261d34960fC3F10C1670375D59803e57"
+          },
+          {
+            "stake": "75611884551348169696047",
+            "supports": true,
+            "voter": "0x66DB664E87Bb7f776f9Eae950f801412A5086133"
+          },
+          {
+            "stake": "72458136561761521466912",
+            "supports": true,
+            "voter": "0xe483c98B7Cc4305C7B0C312BC4704B46c4D2795c"
+          },
+          {
+            "stake": "60301920585570116231906",
+            "supports": true,
+            "voter": "0xae0A9782458b661B21b15E4F78C85aAc873390c4"
+          },
+          {
+            "stake": "59766798885943877227672",
+            "supports": true,
+            "voter": "0x99ed99274a040F3f5D092a2B714d69FFc98baA08"
+          },
+          {
+            "stake": "53087409032211812685375",
+            "supports": true,
+            "voter": "0x2cAA999cdb7f67d1EBB2901E2Fe2B74e540a9529"
+          },
+          {
+            "stake": "44241900000000000000000",
+            "supports": true,
+            "voter": "0x0860D1BFDE6f4b1aC3C472fB48bf0b3EDBD6ce4C"
+          },
+          {
+            "stake": "43180108174247743733056",
+            "supports": true,
+            "voter": "0xAca74fD71750D6F51E7D95e1666663D91983B2AB"
+          },
+          {
+            "stake": "37189898142652086977463",
+            "supports": true,
+            "voter": "0x5DF9482D02C29286BaB462F3E91a58FdeF881B53"
+          },
+          {
+            "stake": "35087100278347371156234",
+            "supports": true,
+            "voter": "0xd1d0B11Efc39957688aa684366E0B4837cD8e026"
+          },
+          {
+            "stake": "30915340000000000000000",
+            "supports": true,
+            "voter": "0xA9095830a026A1714b0627cE550C37D2eCC79E02"
+          },
+          {
+            "stake": "30521282700895505361624",
+            "supports": true,
+            "voter": "0x0daC0923f052cd11953E50b0B4BD3367533fE79f"
+          },
+          {
+            "stake": "29687823406654854442920",
+            "supports": true,
+            "voter": "0x0111756986a92af8365ac37B9134b4CDA0D4F59C"
+          },
+          {
+            "stake": "15156326893806563236748",
+            "supports": true,
+            "voter": "0x05BaD417F48b7c51Ab7D00aE3A7dAd5D1D192066"
+          },
+          {
+            "stake": "13825590000000000000000",
+            "supports": true,
+            "voter": "0xF93ac19938ddEF39731CB204549239170AAFCFba"
+          },
+          {
+            "stake": "11954090632415028196921",
+            "supports": true,
+            "voter": "0xfaF9e6ef1D5183D3D25133C912bCD22362994444"
+          },
+          {
+            "stake": "10655408251641442948766",
+            "supports": true,
+            "voter": "0x255F2bb466Dd6479fBeeD84b5852C9aB46318D9e"
+          },
+          {
+            "stake": "9537753328427621238623",
+            "supports": true,
+            "voter": "0xB04C0991f5007Ae9bd6DB8842CE1134572E4Dc3a"
+          },
+          {
+            "stake": "9306698364213150010621",
+            "supports": true,
+            "voter": "0x02dcaC52edEeb8e4f95B6d02eF6d749C3783d20F"
+          },
+          {
+            "stake": "4942620000000000002776",
+            "supports": true,
+            "voter": "0x3C371DCF8c23F6e1ed3EC597272e8AD86795804a"
+          },
+          {
+            "stake": "3321660000000000000000",
+            "supports": true,
+            "voter": "0xbC5B233b7a17ACCE70A11d09ff67765F486589d2"
+          },
+          {
+            "stake": "3237961385014069510989",
+            "supports": true,
+            "voter": "0x39fe310c68C914aF8aa4E965895e47FDC45156b6"
+          },
+          {
+            "stake": "584941524772352876967",
+            "supports": true,
+            "voter": "0xC6803Bb97da1Ad2014FBCD023218dDce6D74caD6"
+          },
+          {
+            "stake": "403120676271959844856",
+            "supports": true,
+            "voter": "0x3BA691fF2742A8Dc39D564eb845b8a8bA71dAf27"
+          },
+          {
+            "stake": "51683033564022",
+            "supports": true,
+            "voter": "0x8304539a5f2744fA1a004EeDD36E1481d85B254f"
+          },
+          {
+            "stake": "1",
+            "supports": true,
+            "voter": "0x8a62A63b877877bd5B1209B9b67F3d2685284268"
+          }
+        ],
+        "stake": "1193548726811977232740548",
+        "supports": true,
+        "voter": "0x6D8D914205bB14104c0f95BfaDb4B1680EF60CCC"
+      },
+      {
+        "stake": "600102980701648274179776",
+        "supports": true,
+        "voter": "0x55Bc991b2edF3DDb4c520B222bE4F378418ff0fA"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "100000476985540359761408",
+            "supports": true,
+            "voter": "0xD8c2e378c699b7E3E5F97cF4F0F46741296D8Cbf"
+          },
+          {
+            "stake": "51191494348120401030558",
+            "supports": true,
+            "voter": "0xd940072500f52A6A6f372De8Eb84617aF4A26681"
+          },
+          {
+            "stake": "611918482520000000000",
+            "supports": true,
+            "voter": "0x5c9E30def85334e587Cf36EB07bdd6A72Bf1452d"
+          },
+          {
+            "stake": "214036169199672647657",
+            "supports": true,
+            "voter": "0x4BF471Bf5e821db3d35b2aB365435C8CEbE5E982"
+          },
+          {
+            "stake": "1126808749321146288",
+            "supports": true,
+            "voter": "0xa5077B834b6C38B0b848ef482127ccaaB598139C"
+          }
+        ],
+        "stake": "152019052794129754585911",
+        "supports": true,
+        "voter": "0x3DDC7d25c7a1dc381443e491Bbf1Caa8928A05B0"
+      },
+      {
+        "stake": "39528259668772524583644",
+        "supports": true,
+        "voter": "0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0"
+      },
+      {
+        "stake": "36136840000000000000000",
+        "supports": true,
+        "voter": "0x018EE61C9E9444B39D8D66D0B63Bb58ac089B65A"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "30337000000000000000000",
+            "supports": true,
+            "voter": "0x196a2A9A22C2fD8f5107e97Df9ad14A23e81982B"
+          }
+        ],
+        "stake": "30337000000000000000000",
+        "supports": true,
+        "voter": "0xB933AEe47C438f22DE0747D57fc239FE37878Dd1"
+      },
+      {
+        "stake": "30001179205461537405418",
+        "supports": true,
+        "voter": "0xB6647e02AE6Dd74137cB80b1C24333852E4AF890"
+      },
+      {
+        "stake": "23699830000000000000000",
+        "supports": true,
+        "voter": "0xcf0f1fe3Dc5D04024425774EbaD7eC14257d2324"
+      },
+      {
+        "stake": "498540000000000000000",
+        "supports": true,
+        "voter": "0xf1cC678eE107b136Da59500EaB5CEeBC33a6AC93"
+      },
+      {
+        "stake": "250248491122818153934",
+        "supports": true,
+        "voter": "0xa17D25c57A3361000E3a6cf12c680Da71e0170b4"
+      },
+      {
+        "stake": "123127480810842667737",
+        "supports": true,
+        "voter": "0xe8483A4ABed95547468e9fb92748031C29414173"
+      },
+      {
+        "stake": "121940000000000000000",
+        "supports": true,
+        "voter": "0x380507AC9FB6B071464822Bc5E36Abaf63a60636"
+      },
+      {
+        "stake": "104819000000000000000",
+        "supports": false,
+        "voter": "0x725AB04F05eBf46C5A0b0462076023C53b26747C"
+      },
+      {
+        "stake": "102591665150967457331",
+        "supports": true,
+        "voter": "0xdC05B6769C7de5B63eE804461922fe0bc206120B"
+      },
+      {
+        "stake": "101000000000000000000",
+        "supports": true,
+        "voter": "0x0aE186FC7009CBBB5441306B741AAc0179140ffB"
+      },
+      {
+        "stake": "101000000000000000000",
+        "supports": true,
+        "voter": "0x7B2754FcF4ED61eC204805c2a6d9D20AfC71A893"
+      },
+      {
+        "stake": "101000000000000000000",
+        "supports": false,
+        "voter": "0x3767c879235dFe3B33F37a3c0C0226AFCb6f118A"
+      },
+      {
+        "stake": "100000000000000000000",
+        "supports": true,
+        "voter": "0xd476000c7f7765b4d88cf0762994B91358B9D932"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "32196569209498663337",
+            "supports": true,
+            "voter": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d"
+          },
+          {
+            "stake": "10000000000000000000",
+            "supports": true,
+            "voter": "0x07Fda67513EC0897866098a11dC3858089D4A505"
+          },
+          {
+            "stake": "1000000000000000000",
+            "supports": true,
+            "voter": "0x71B4aCE4E245506FFd7D7541012b16A2A56EaDFB"
+          }
+        ],
+        "stake": "43196569209498663337",
+        "supports": true,
+        "voter": "0x17296956b4E07Ff8931E4ff4eA06709FaB70b879"
+      },
+      {
+        "delegatedVotes": [
+          {
+            "stake": "1000000000000000000",
+            "supports": true,
+            "voter": "0x1ACD55Fe8F04cC2468AB7d2C6a9e6077C292757F"
+          }
+        ],
+        "stake": "1000000000000000000",
+        "supports": true,
+        "voter": "0x3FB19771947072629C8EEE7995a2eF23B72d4C8A"
+      }
+    ]
+  }
+}

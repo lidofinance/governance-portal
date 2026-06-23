@@ -1,10 +1,11 @@
 import { aragonVotingAbi } from 'abi/generated';
-import { RawVote, Vote, VoteStatus } from '../types';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { ContractFunctionParameters, PublicClient } from 'viem';
-import { parseVote } from './parse-vote';
-import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { getEventsStartVote } from './get-events-start-vote';
+import type { PublicClient } from 'viem';
+import type { Vote, VoteEvent, EventExecuteVote } from '../types';
+import { VoteStatus } from '../types';
+import type { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import type { EventStartVote } from './get-event-start-vote';
+import { fetchCachedVotes } from './fetch-cached-votes';
+import { fetchUncachedVotes } from './fetch-uncached-votes';
 
 type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
@@ -12,14 +13,21 @@ type VotingContract = ReturnType<
 
 type FetchArgs = {
   votingContract: VotingContract;
-  limit: number;
+  chainId: number;
+  limit?: number;
   offset?: number;
   client: PublicClient;
   onlyActive?: boolean;
+  voteIds?: number[];
+  voteTime: number;
+  useLocalCache: boolean;
 };
 
 type VoteResult = Vote & {
   startEvent: EventStartVote | null;
+  executeEvent: EventExecuteVote | null;
+  voteEvents: VoteEvent[] | null;
+  description: string | null;
 };
 
 const isVoteActive = (vote: Vote) => {
@@ -38,81 +46,67 @@ const isVoteActive = (vote: Vote) => {
 
 export const fetchAragonVotes = async ({
   votingContract,
+  chainId,
   limit,
   offset = 0,
   client,
   onlyActive = true,
+  voteIds: requestedVoteIds,
+  voteTime,
+  useLocalCache,
 }: FetchArgs): Promise<VoteResult[]> => {
-  const votesLengthBn = await votingContract.readContract('votesLength');
-  const votesLength = Number(votesLengthBn);
+  let voteIds = requestedVoteIds;
 
-  if (votesLength === 0) {
+  if (!voteIds) {
+    if (limit === undefined) {
+      throw new Error('fetchAragonVotes requires either voteIds or limit');
+    }
+    const votesLength = Number(
+      await votingContract.readContract('votesLength'),
+    );
+    const startId = votesLength - 1 - offset;
+    const endId = Math.max(startId - limit + 1, 0);
+    voteIds =
+      votesLength === 0
+        ? []
+        : Array.from(
+            { length: startId - endId + 1 },
+            (_, index) => startId - index,
+          );
+  }
+
+  if (voteIds.length === 0) {
     return [];
   }
 
-  const startId = votesLength - 1 - offset;
-  const endId = Math.max(startId - limit + 1, 0);
+  const cachedVotesMap = await fetchCachedVotes({
+    chainId,
+    votingAddress: votingContract.address,
+    voteIds,
+    useLocalCache,
+  });
 
-  const voteIds = Array.from(
-    { length: startId - endId + 1 },
-    (_, i) => startId - i,
-  );
+  const missingIds = voteIds.filter((id) => !(id.toString() in cachedVotesMap));
 
-  const contractConfig = {
-    address: votingContract.address,
-    abi: aragonVotingAbi,
-  } as const;
-
-  const getVotesBatch = async (voteIds: number[]) => {
-    const voteCalls: ContractFunctionParameters[] = voteIds.map((id) => ({
-      ...contractConfig,
-      functionName: 'getVote',
-      args: [id],
-    }));
-
-    const executeCalls: ContractFunctionParameters[] = voteIds.map((id) => ({
-      ...contractConfig,
-      functionName: 'canExecute',
-      args: [id],
-    }));
-
-    const results = await client.multicall({
-      contracts: [...voteCalls, ...executeCalls],
-    });
-
-    const voteResults = results.slice(0, voteIds.length);
-    const executeResults = results.slice(voteIds.length);
-
-    return voteIds.map((id, index) => {
-      return parseVote(
-        id,
-        voteResults[index].result as RawVote,
-        executeResults[index].result as boolean,
-      );
-    });
-  };
-
-  const allVotes = await getVotesBatch(voteIds);
-
-  const votesToProcess = onlyActive ? allVotes.filter(isVoteActive) : allVotes;
-
-  if (votesToProcess.length === 0) {
-    return [];
-  }
-
-  const startVoteArgs = {
-    votes: votesToProcess.map((v) => ({
-      id: v.id,
-      snapshotBlock: v.snapshotBlock,
-    })),
-    address: votingContract.address,
+  const uncachedVotes = await fetchUncachedVotes({
+    votingContract,
     client,
-  };
+    voteIds: missingIds,
+    voteTime,
+    withExecuteEvent: !onlyActive,
+  });
 
-  const startEvents = await getEventsStartVote(startVoteArgs);
+  const voteMap = new Map<number, VoteResult>();
+  for (const [id, vote] of Object.entries(cachedVotesMap)) {
+    voteMap.set(Number(id), vote);
+  }
+  for (const vote of uncachedVotes) {
+    voteMap.set(vote.id, vote);
+  }
 
-  return votesToProcess.map((v) => ({
-    ...v,
-    startEvent: startEvents[v.id.toString()] ?? null,
-  }));
+  const orderedVotes = voteIds
+    .map((id) => voteMap.get(id))
+    .filter((vote): vote is VoteResult => vote !== undefined);
+
+  return onlyActive ? orderedVotes.filter(isVoteActive) : orderedVotes;
 };

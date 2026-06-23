@@ -3,12 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { Voting } from 'shared/blockchain/contracts';
 import { getCastVoteEvents } from '../utils/get-cast-vote-events';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
-import { Vote } from 'shared/votes/types';
+import { Vote, VoteEvent } from 'shared/votes/types';
 import { estimateExecuteVoteBlockRange } from 'shared/votes/utils/estimate-execute-vote-block-range';
 
 export const useCastVoteEvents = (
   vote: Vote | undefined,
   voteTime: number | undefined,
+  cachedVoteEvents: VoteEvent[] | null | undefined,
 ) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const votingContractAddress = useContractAddress(Voting);
@@ -16,7 +17,8 @@ export const useCastVoteEvents = (
   return useQuery({
     queryKey: ['vote-cast-events', vote?.id, chainId],
     staleTime: Infinity,
-    enabled: !!vote && !!voteTime,
+    enabled: !!vote && !!voteTime && !cachedVoteEvents,
+    initialData: cachedVoteEvents ?? undefined,
     queryFn: async () => {
       if (!vote || !voteTime) {
         return [];
@@ -29,9 +31,6 @@ export const useCastVoteEvents = (
         voteTimeSecs: voteTime,
         latestBlock,
       });
-
-      // Cast votes only happen while the vote is open (before voteEndBlock).
-      // Cap at latestBlock for votes that are still active.
       const toBlock =
         voteEndBlock < latestBlock.number ? voteEndBlock : latestBlock.number;
 

@@ -1,33 +1,26 @@
 import { useCallback } from 'react';
 
 import Link from 'next/link';
-import { Text } from '@lidofinance/lido-ui';
 import {
-  VoteBody,
+  VoteDashboardCard,
   VoteTitle,
   VoteDescriptionWrap,
-  VotesBarWrap,
-  Footer,
-  NeededToQuorum,
+  VoteSummary,
+  VoteQuorum,
+  VetoSupportWrap,
 } from './style';
-import {
-  EventExecuteVote,
-  Vote,
-  VotePhase,
-  VoteStatus,
-} from 'shared/votes/types';
+import { useVoteTitle } from '@vote/hooks/use-vote-title';
+import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
 import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
-import { formatFloatPct } from '@vote/utils/format-float-pct';
 import { votePage } from 'constants/urls';
-import { VoteStatusBanner } from '../vote-status-banner';
 import { VoteDescription } from '../vote-description';
-import { VoteYesNoBar } from '../vote-yes-no-bar';
+import { VoteQuorumPanel } from '../vote-quorum-panel';
+import { VoteVetoSupport } from '../vote-veto-support';
+import { VoteMetaBar } from '../vote-meta-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
-import { formatEther } from 'viem';
 import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
-import { DashboardVoteSkeleton } from '../dashboard-vote-skeleton';
-import { DashboardCard } from 'shared/components/dashboard-card';
+import { ProposalStatus } from 'shared/types';
 
 type Props = {
   vote: Vote;
@@ -36,6 +29,8 @@ type Props = {
   objectionPhaseTime: number;
   onPass: () => void;
   executeEvent: EventExecuteVote | null;
+  description: string | null;
+  returnQuery: string;
 };
 
 export const DashboardVote = ({
@@ -45,25 +40,22 @@ export const DashboardVote = ({
   objectionPhaseTime,
   onPass,
   executeEvent,
+  description,
+  returnQuery,
 }: Props) => {
-  const {
-    nayPct,
-    yeaPct,
-    yeaNum,
-    nayNum,
-    yeaPctOfTotalSupply,
-    nayPctOfTotalSupplyFormatted,
-    yeaPctOfTotalSupplyFormatted,
-    startDate,
-    totalSupply,
-  } = getVoteDetailsFormatted(vote);
+  const { startDate } = getVoteDetailsFormatted(vote);
 
-  const { data: voteDualGovernanceStatus, isLoading } =
+  const { data: voteDualGovernanceStatus, isLoading: isDgProposalLoading } =
     useVoteDualGovernanceStatus({
       voteId: vote.id,
       eventExecuteVote: executeEvent,
       isEventExecuteLoading: false,
     });
+
+  const isDualGovernancePhase =
+    !!voteDualGovernanceStatus &&
+    (voteDualGovernanceStatus.proposalStatus === ProposalStatus.Submitted ||
+      voteDualGovernanceStatus.proposalStatus === ProposalStatus.Scheduled);
 
   const handlePass = useCallback(() => {
     // TODO:
@@ -86,73 +78,58 @@ export const DashboardVote = ({
     onPass: handlePass,
   });
 
-  const neededToQuorum =
-    Number(formatEther(vote.minAcceptQuorum)) - yeaPctOfTotalSupply;
-  const neededToQuorumFormatted = formatFloatPct(neededToQuorum, {
-    floor: true,
-  }).toFixed(2);
+  const { title, body } = useVoteTitle({
+    description,
+    metadata: startEvent?.args.metadata,
+  });
+
+  const hasDescription = body !== null || !description?.trim();
 
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
     vote.state.status === VoteStatus.Executed;
 
-  if (isLoading) {
-    return <DashboardVoteSkeleton />;
-  }
-
   return (
-    <Link passHref href={votePage(vote.id)}>
-      <DashboardCard data-testid={`voteCardPreview-${vote.id}`}>
-        {!isLoading && (
-          <VoteStatusBanner
-            executedAt={executeEvent?.executedAt}
+    <Link
+      passHref
+      href={{
+        pathname: votePage(vote.id),
+        query: returnQuery.trim() ? { q: returnQuery.trim() } : undefined,
+      }}
+    >
+      <VoteDashboardCard data-testid={`voteCardPreview-${vote.id}`}>
+        <VoteSummary>
+          <VoteMetaBar
+            voteId={vote.id}
+            status={vote.state.status}
+            isQuorumReached={vote.state.isQuorumReached}
             voteTime={voteTime}
             objectionPhaseTime={objectionPhaseTime}
-            status={vote.state.status}
-            isEnded={isEnded}
-            yeaNum={yeaNum}
-            nayNum={nayNum}
-            totalSupply={totalSupply}
-            fontSize="xxs"
-            minAcceptQuorum={Number(formatEther(vote.minAcceptQuorum))}
             startDate={startDate}
-            voteDualGovernanceStatus={
-              voteDualGovernanceStatus?.proposalStatus || null
-            }
+            isEnded={isEnded}
+            dualGovernancePhase={isDualGovernancePhase}
+            isDgProposalLoading={isDgProposalLoading}
           />
-        )}
-
-        <VoteBody>
-          <VoteTitle>Vote #{vote.id}</VoteTitle>
-          <VoteDescriptionWrap data-testid="voteDescription">
-            <VoteDescription metadata={startEvent?.args.metadata} />
-          </VoteDescriptionWrap>
-        </VoteBody>
-        <Footer>
-          <VotesBarWrap>
-            {vote.phase === VotePhase.Main && (
-              <NeededToQuorum>
-                <Text size="xxs" color="secondary">
-                  {neededToQuorum > 0 ? 'Needed to quorum' : 'Quorum reached'}
-                </Text>
-                {neededToQuorum > 0 && (
-                  <Text size="xxs">{neededToQuorumFormatted}%</Text>
-                )}
-              </NeededToQuorum>
-            )}
-
-            <VoteYesNoBar
-              yeaPct={yeaPct}
-              nayPct={nayPct}
-              yeaNum={yeaNum}
-              nayNum={nayNum}
-              yeaPctOfTotalSupply={yeaPctOfTotalSupplyFormatted}
-              nayPctOfTotalSupply={nayPctOfTotalSupplyFormatted}
-              showOnForeground
-            />
-          </VotesBarWrap>
-        </Footer>
-      </DashboardCard>
+          {title && <VoteTitle>{title}</VoteTitle>}
+          {hasDescription && (
+            <VoteDescriptionWrap data-testid="voteDescription">
+              <VoteDescription
+                metadata={startEvent?.args.metadata}
+                description={description}
+                hideLeadingHeading
+              />
+            </VoteDescriptionWrap>
+          )}
+        </VoteSummary>
+        <VoteQuorum>
+          <VoteQuorumPanel vote={vote} />
+          {isDualGovernancePhase && (
+            <VetoSupportWrap>
+              <VoteVetoSupport />
+            </VetoSupportWrap>
+          )}
+        </VoteQuorum>
+      </VoteDashboardCard>
     </Link>
   );
 };

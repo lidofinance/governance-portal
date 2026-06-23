@@ -42,11 +42,13 @@ export const Tab = styled.div<TabProps>`
   }
 
   &:first-child {
-    border-top-left-radius: 20px;
+    border-top-left-radius: ${({ $variant }) =>
+      $variant === 'voting' ? 10 : 20}px;
   }
 
   &:last-child {
-    border-top-right-radius: 20px;
+    border-top-right-radius: ${({ $variant }) =>
+      $variant === 'voting' ? 10 : 20}px;
   }
 
   ${({ $isActive }) =>
@@ -65,14 +67,63 @@ export const VoteScriptBodyWrap = styled.div<Pick<TabProps, '$variant'>>`
   border: 1px solid var(--border-color-fog);
   background: #f0f2f6;
   line-height: 2;
+  overflow: hidden;
 
   ${({ $variant }) =>
     $variant &&
     $variant === 'voting' &&
     css`
-      border-top-right-radius: 20px;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
       color: white;
     `};
+`;
+
+export const VoteScriptBodyInner = styled.div<Pick<TabProps, '$variant'>>`
+  ${({ $variant }) =>
+    $variant === 'voting' &&
+    css`
+      max-height: 524px;
+      overflow-y: auto;
+    `};
+`;
+
+export const ScriptFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-color-fog);
+`;
+
+export const ScriptFooterButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--accent-color-ocean-light);
+
+  & > svg {
+    width: 14px;
+    height: 14px;
+    transform: translateY(1px);
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;
 
 export const CallWrapper = styled.div<{ $withDg?: boolean }>`

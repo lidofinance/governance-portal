@@ -4,6 +4,9 @@ export const MarkdownWrap = styled.div`
   hyphens: auto;
   overflow-wrap: anywhere;
   word-break: break-word;
+  & a:visited {
+    color: var(--vote-visited-link);
+  }
   & p {
     white-space: pre-wrap;
   }
