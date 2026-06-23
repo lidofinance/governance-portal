@@ -64,7 +64,7 @@ export const formParts = createMotionFormPart({
   Component: ({ fieldNames, submitAction }) => {
     const { chainId } = useLidoSDK();
     const formMethods = useFormContext();
-    const { watch, setValue } = formMethods;
+    const { watch, setValue, getValues } = formMethods;
 
     const factoryContract = useReadContract(
       UpdateStakingModuleShareLimitsContract,
@@ -155,6 +155,34 @@ export const formParts = createMotionFormPart({
       return undefined;
     };
 
+    const validateRelations = (stakeRaw: string, priorityRaw: string) => {
+      if (
+        !factoryData ||
+        stakeRaw === '' ||
+        validateUintValue(stakeRaw) ||
+        priorityRaw === '' ||
+        validateUintValue(priorityRaw)
+      ) {
+        return undefined;
+      }
+
+      const stake = Number(stakeRaw);
+      const priority = Number(priorityRaw);
+
+      if (stake > priority) {
+        return 'Stake share limit must not exceed priority exit share threshold';
+      }
+
+      if (
+        stake === factoryData.currentStakeShareLimit &&
+        priority === factoryData.currentPriorityExitShareThreshold
+      ) {
+        return 'At least one value must differ from the current value';
+      }
+
+      return undefined;
+    };
+
     const validateNewStakeShareLimit = (value: string) => {
       const baseErr = validateBpValue(value);
       if (baseErr) {
@@ -174,6 +202,11 @@ export const formParts = createMotionFormPart({
       if (-delta > factoryData.maxStakeShareLimitDecrease) {
         return `Decrease exceeds max allowed (${factoryData.maxStakeShareLimitDecrease} BP)`;
       }
+
+      return validateRelations(
+        value,
+        getValues(fieldNames.newPriorityExitShareThreshold),
+      );
     };
 
     const validateNewPriorityExitShareThreshold = (value: string) => {
@@ -193,6 +226,8 @@ export const formParts = createMotionFormPart({
       if (-delta > factoryData.maxPriorityExitShareThresholdDecrease) {
         return `Decrease exceeds max allowed (${factoryData.maxPriorityExitShareThresholdDecrease} BP)`;
       }
+
+      return validateRelations(getValues(fieldNames.newStakeShareLimit), value);
     };
 
     const currentStakeShareLimitValue = watch(
@@ -270,7 +305,10 @@ export const formParts = createMotionFormPart({
             fieldName={fieldNames.newStakeShareLimit}
             label={`New stake share limit (BP, ${stakeShareLimitMin}..${stakeShareLimitMax})`}
             validateSync={validateNewStakeShareLimit}
-            rules={{ required: 'Field is required' }}
+            rules={{
+              required: 'Field is required',
+              deps: [fieldNames.newPriorityExitShareThreshold],
+            }}
           />
           <BpValueFormatted
             fieldName={fieldNames.newStakeShareLimit}
@@ -284,7 +322,10 @@ export const formParts = createMotionFormPart({
             fieldName={fieldNames.newPriorityExitShareThreshold}
             label={`New priority exit share threshold (BP, ${priorityExitShareThresholdMin}..${priorityExitShareThresholdMax})`}
             validateSync={validateNewPriorityExitShareThreshold}
-            rules={{ required: 'Field is required' }}
+            rules={{
+              required: 'Field is required',
+              deps: [fieldNames.newStakeShareLimit],
+            }}
           />
           <BpValueFormatted
             fieldName={fieldNames.newPriorityExitShareThreshold}
