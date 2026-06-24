@@ -10,16 +10,13 @@ import { MarkdownWrapper } from '../markdown-wrapper';
 
 type Props = {
   metadata?: string | undefined;
-  /**
-   * Pre-resolved IPFS description from the archived-vote cache. When a
-   * non-empty string is passed, the component renders it directly and
-   * skips the runtime IPFS fetch. `null`/`undefined` means "not cached" —
-   * fall through to the metadata → IPFS path.
-   */
+  /** Pre-resolved IPFS description from the archived-vote cache; rendered directly when non-empty. */
   description?: string | null;
   allowMD?: boolean;
   /** Drop the leading `# heading` line, which is rendered as the vote title. */
   hideLeadingHeading?: boolean;
+  /** Fetch the IPFS description at runtime when it isn't cached. Pass `false` for archived votes. */
+  shouldFetchIpfs: boolean;
 };
 
 const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
@@ -29,6 +26,7 @@ export const VoteDescription = ({
   description,
   allowMD,
   hideLeadingHeading,
+  shouldFetchIpfs,
 }: Props) => {
   const cid = metadata?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
 
@@ -45,7 +43,7 @@ export const VoteDescription = ({
   } = useQuery({
     queryKey: [cid],
     queryFn: async () => await fetcherIPFS(cid || ''),
-    enabled: !!cid && !hasCachedDescription,
+    enabled: !!cid && !hasCachedDescription && shouldFetchIpfs,
   });
 
   if (metadata === '') {

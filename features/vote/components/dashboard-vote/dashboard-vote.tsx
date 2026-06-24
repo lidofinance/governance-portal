@@ -78,16 +78,17 @@ export const DashboardVote = ({
     onPass: handlePass,
   });
 
-  const { title, body } = useVoteTitle({
-    description,
-    metadata: startEvent?.args.metadata,
-  });
-
-  const hasDescription = body !== null || !description?.trim();
-
   const isEnded =
     vote.state.status === VoteStatus.Rejected ||
     vote.state.status === VoteStatus.Executed;
+
+  const { title, body } = useVoteTitle({
+    description,
+    metadata: startEvent?.args.metadata,
+    shouldFetchIpfs: !isEnded,
+  });
+
+  const hasDescription = body !== null || !description?.trim();
 
   return (
     <Link
@@ -116,6 +117,7 @@ export const DashboardVote = ({
               <VoteDescription
                 metadata={startEvent?.args.metadata}
                 description={description}
+                shouldFetchIpfs={!isEnded}
                 hideLeadingHeading
               />
             </VoteDescriptionWrap>
