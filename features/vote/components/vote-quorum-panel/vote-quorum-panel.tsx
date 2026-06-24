@@ -65,7 +65,7 @@ export const VoteQuorumPanel = ({ vote }: Props) => {
           }
         >
           <QuorumStatusWrap $reached={isQuorumReached}>
-            <QuorumStatus $reached={isQuorumReached}>
+            <QuorumStatus $reached={isQuorumReached} data-testid="quorumStatus">
               {isQuorumReached ? 'Reached' : 'Not reached'}
             </QuorumStatus>
             <InfoIcon />
@@ -82,10 +82,10 @@ export const VoteQuorumPanel = ({ vote }: Props) => {
         showOnForeground
       />
       <VoteTotalsRow>
-        <Text size="xxs" color="secondary">
+        <Text size="xxs" color="secondary" data-testid="totalYea">
           {yeaNumFormatted}
         </Text>
-        <Text size="xxs" color="secondary">
+        <Text size="xxs" color="secondary" data-testid="totalNay">
           {nayNumFormatted}
         </Text>
       </VoteTotalsRow>
