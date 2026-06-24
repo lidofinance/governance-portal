@@ -10,16 +10,21 @@ export const DEFAULT_PARAMS = {
   },
 };
 
-const IPFS_TIMEOUT = 8000;
+const IPFS_FETCH_TIMEOUT = 8000;
 
-type FetcherIpfs = (cid: string, params?: RequestInit) => Promise<string>;
+type FetcherIpfs = (
+  cid: string,
+  params?: RequestInit,
+  timeoutMs?: number,
+) => Promise<string>;
 export const fetcherIPFS: FetcherIpfs = async (
   cid,
   params = DEFAULT_PARAMS,
+  timeoutMs = IPFS_FETCH_TIMEOUT,
 ) => {
   const paramsWithTimeout = {
     ...params,
-    signal: AbortSignal.timeout(IPFS_TIMEOUT),
+    signal: AbortSignal.timeout(timeoutMs),
   };
   const response = await fetch(getIpfsUrl(cid), paramsWithTimeout);
 
