@@ -3,6 +3,7 @@ import { InlineLoader } from '@lidofinance/lido-ui';
 import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
 import { useQuery } from '@tanstack/react-query';
 import { fetcherIPFS } from 'utils/fetcher-ipfs';
+import { ARCHIVED_VOTE_IPFS_TIMEOUT } from '@vote/constants';
 import { DescriptionText } from './style';
 import { replaceJsxElements } from 'utils/replace-links-with-components';
 import { splitLeadingHeading } from '@vote/utils/parse-vote-title';
@@ -20,6 +21,8 @@ type Props = {
   allowMD?: boolean;
   /** Drop the leading `# heading` line, which is rendered as the vote title. */
   hideLeadingHeading?: boolean;
+  /** Active votes wait the full IPFS timeout; archived votes use a shorter one. */
+  isActive: boolean;
 };
 
 const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
@@ -29,6 +32,7 @@ export const VoteDescription = ({
   description,
   allowMD,
   hideLeadingHeading,
+  isActive,
 }: Props) => {
   const cid = metadata?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
 
@@ -44,8 +48,14 @@ export const VoteDescription = ({
     isLoading: isIPFSLoading,
   } = useQuery({
     queryKey: [cid],
-    queryFn: async () => await fetcherIPFS(cid || ''),
+    queryFn: async () =>
+      await fetcherIPFS(
+        cid || '',
+        undefined,
+        isActive ? undefined : ARCHIVED_VOTE_IPFS_TIMEOUT,
+      ),
     enabled: !!cid && !hasCachedDescription,
+    retry: false,
   });
 
   if (metadata === '') {
