@@ -1,5 +1,5 @@
-import { Container, ContainerProps, H1 } from '@lidofinance/lido-ui';
-import styled from 'styled-components';
+import { ContainerProps, H1 } from '@lidofinance/lido-ui';
+import styled, { css } from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 
 export const LayoutTitleStyle = styled((props) => <H1 {...props} />)`
@@ -37,9 +37,41 @@ export const IPFSInfoBoxOnlyMobileAndPortableWrapper = styled.div`
   }
 `;
 
-export const ContainerStyled = styled(Container).attrs({
-  forwardedAs: 'main',
-})<ContainerProps>`
-  padding-top: 24px;
+const CONTAINER_MAX_WIDTH: Record<
+  NonNullable<ContainerProps['size']>,
+  number
+> = {
+  full: 1424,
+  content: 960,
+  tight: 560,
+};
+
+export const ContainerStyled = styled.main<{
+  $size: NonNullable<ContainerProps['size']>;
+  $paddingX?: number;
+}>`
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 320px;
+  margin: 0 auto;
   position: relative;
+  padding-top: 24px;
+  padding-left: ${({ $paddingX, theme }) => $paddingX ?? theme.spaceMap.xxl}px;
+  padding-right: ${({ $paddingX, theme }) => $paddingX ?? theme.spaceMap.xxl}px;
+  max-width: ${({ $size }) => CONTAINER_MAX_WIDTH[$size]}px;
+
+  ${({ theme }) => theme.mediaQueries.lg} {
+    padding-left: ${({ $paddingX, theme }) => $paddingX ?? theme.spaceMap.lg}px;
+    padding-right: ${({ $paddingX, theme }) =>
+      $paddingX ?? theme.spaceMap.lg}px;
+  }
+
+  @media (max-width: 600px) {
+    ${({ $paddingX }) =>
+      $paddingX !== undefined &&
+      css`
+        padding-left: 20px;
+        padding-right: 20px;
+      `}
+  }
 `;

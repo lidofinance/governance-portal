@@ -11,8 +11,7 @@ import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoterState } from '../hooks/use-voter-state';
 import { useCastVoteEvents } from '../hooks/use-cast-vote-events';
 import { useVotingConfig } from '../hooks/use-voting-config';
-import { useEventExecuteVote } from '../hooks/use-event-execute-vote';
-import { InlineVoteCardLoader } from '../styles';
+import { VoteCardSkeleton } from '../components/vote-card-skeleton';
 import { Box, Container } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { useVoteDelegators } from '../hooks/use-vote-delegators';
@@ -20,12 +19,15 @@ import { EligibleDelegator, VoterInfo } from '../types';
 import { ProposalStatus } from 'shared/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
+import { useDelegationInfo } from '../hooks/use-delegation-info';
 
 type Value = {
   vote: Vote;
-  eventStart: EventStartVote | undefined;
+  canExecute: boolean;
+  eventStart: EventStartVote | null;
   eventExecute: EventExecuteVote | null;
   voteEvents: VoteEvent[];
+  description: string | null;
   voterState: VoterState | undefined;
   voterDaoTokenBalance: bigint | undefined;
   voteTime: number;
@@ -34,6 +36,7 @@ type Value = {
   eligibleDelegatedVotingPower: bigint;
   totalDelegatedVotingPower: bigint;
   delegatorsVotedThemselves: VoterInfo[];
+  hasDelegated: boolean;
   dgProposal:
     | {
         proposalId: number;
@@ -41,6 +44,7 @@ type Value = {
       }
     | null
     | undefined;
+  isDgProposalLoading: boolean;
   isLoading: boolean;
   refetchers: {
     refetchVote: ReturnType<typeof useVote>['refetch'];
@@ -71,16 +75,17 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch: refetchVote,
-  } = useVote(Number(voteId));
-
-  const { data: eventExecute, isLoading: isEventExecuteLoading } =
-    useEventExecuteVote(voteData?.vote, votingConfig?.voteTime);
+  } = useVote(Number(voteId), votingConfig?.voteTime);
 
   const {
     data: voteEvents,
     isLoading: isCastVoteEventsDataLoading,
     refetch: refetchVoteEvents,
-  } = useCastVoteEvents(voteData?.vote, votingConfig?.voteTime);
+  } = useCastVoteEvents(
+    voteData?.vote,
+    votingConfig?.voteTime,
+    voteData?.voteEvents,
+  );
 
   const {
     data: voterState,
@@ -88,11 +93,11 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     refetch: refetchVoterState,
   } = useVoterState(voteData?.vote.id, voteData?.vote.snapshotBlock);
 
-  const { data: dgProposal, isLoading: isProposalDataLoading } =
+  const { data: dgProposal, isLoading: isDgProposalLoading } =
     useVoteDualGovernanceStatus({
       voteId: voteData?.vote.id,
-      eventExecuteVote: eventExecute,
-      isEventExecuteLoading,
+      eventExecuteVote: voteData?.eventExecute,
+      isEventExecuteLoading: isVoteDataLoading,
     });
 
   const {
@@ -100,6 +105,10 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isLoading: isDelegatorsDataLoading,
     refetch: refetchDelegatorsData,
   } = useVoteDelegators(voteData?.vote.id);
+
+  const { data: delegationInfo, isLoading: isDelegationInfoLoading } =
+    useDelegationInfo();
+  const hasDelegated = !!delegationInfo?.aragonDelegateAddress;
 
   const refetchers = useMemo(
     () => ({
@@ -117,7 +126,8 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     isCastVoteEventsDataLoading ||
     isVoterStateLoading ||
     isDelegatorsDataLoading ||
-    isProposalDataLoading;
+    isDgProposalLoading ||
+    isDelegationInfoLoading;
 
   const value = useMemo(() => {
     if (!voteData?.vote) {
@@ -126,8 +136,10 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
 
     return {
       vote: voteData.vote,
+      canExecute: voteData.canExecute,
       eventStart: voteData.eventStart,
-      eventExecute: eventExecute ?? null,
+      eventExecute: voteData.eventExecute,
+      description: voteData.description,
       voterState: voterState?.voterState,
       voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
       voteEvents: voteEvents ?? [],
@@ -140,7 +152,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
         delegatorsData?.totalDelegatedVotingPower ?? 0n,
       delegatorsVotedThemselves:
         delegatorsData?.delegatedVotersVotedThemselves ?? [],
+      hasDelegated,
       dgProposal,
+      isDgProposalLoading,
       isLoading,
       refetchers,
     };
@@ -149,8 +163,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     delegatorsData?.eligibleDelegatedVoters,
     delegatorsData?.eligibleDelegatedVotingPower,
     delegatorsData?.totalDelegatedVotingPower,
+    hasDelegated,
     dgProposal,
-    eventExecute,
+    isDgProposalLoading,
     isLoading,
     refetchers,
     voteData,
@@ -181,7 +196,7 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
   });
 
   if (isVotingConfigLoading || isVoteDataLoading) {
-    return <InlineVoteCardLoader />;
+    return <VoteCardSkeleton />;
   }
 
   if (!value) {

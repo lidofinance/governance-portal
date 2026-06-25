@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { Voting } from 'shared/blockchain/contracts';
+import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { fetchAragonVotes } from '../utils/fetch-aragon-votes';
 
@@ -12,26 +13,30 @@ type Props = {
 export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
   const votingContract = useReadContract(Voting);
   const { chainId, rpcProvider } = useLidoSDK();
+  const { useLocalCache } = useConfig().userConfig.savedUserConfig;
 
   return useQuery({
-    queryKey: ['active-votes', limit, chainId],
+    queryKey: ['active-votes', limit, chainId, useLocalCache],
     queryFn: async () => {
       try {
+        const [voteTime, objectionPhaseTime] = await Promise.all([
+          votingContract.readContract('voteTime'),
+          votingContract.readContract('objectionPhaseTime'),
+        ]);
+
         const votes = await fetchAragonVotes({
           votingContract,
+          chainId,
           limit,
           client: rpcProvider,
           onlyActive: shouldGetActive,
+          voteTime: Number(voteTime),
+          useLocalCache,
         });
 
         if (votes.length === 0) {
           return { votes: [] };
         }
-
-        const [voteTime, objectionPhaseTime] = await Promise.all([
-          votingContract.readContract('voteTime'),
-          votingContract.readContract('objectionPhaseTime'),
-        ]);
 
         const parsedVotes = votes.map((vote) => {
           return {

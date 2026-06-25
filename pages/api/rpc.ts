@@ -21,6 +21,9 @@ import {
   Voting,
   EasyTrack,
   DualGovernanceEscrow,
+  StETH,
+  WstETH,
+  WithdrawalQueue,
 } from 'shared/blockchain/contract-addresses';
 import { Address } from 'viem';
 import { HISTORICAL_ADDRESSES } from 'constants/historical-addresses';
@@ -33,6 +36,9 @@ const allowedLogContracts = (chainId: CHAINS) => {
     Voting[chainId],
     EasyTrack[chainId],
     DualGovernanceEscrow[chainId],
+    StETH[chainId],
+    WstETH[chainId],
+    WithdrawalQueue[chainId],
   ];
 
   const hardcodedAddresses: Address[] = [];

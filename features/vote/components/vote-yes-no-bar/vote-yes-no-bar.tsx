@@ -1,14 +1,13 @@
-import { Text } from '@lidofinance/lido-ui';
+import { Text } from 'shared/components/text';
+import { formatVoteAmount } from '@vote/utils/format-vote-amount';
 import {
+  SupplyText,
   VotesBarNay,
   VotesBarWrap,
   VotesBarYea,
   VotesTitleWrap,
+  VoteYeaNayText,
 } from './style';
-
-const vpFormatter = new Intl.NumberFormat('en', {
-  maximumFractionDigits: 0,
-});
 
 type Props = {
   yeaPct: number;
@@ -31,25 +30,42 @@ export const VoteYesNoBar = ({
   showOnForeground,
   showNumber,
 }: Props) => {
-  const nayInfo = showNumber
-    ? `"No" — ${vpFormatter.format(nayNum)} (${nayPctOfTotalSupply}%)`
-    : `"No" — ${nayPctOfTotalSupply}%`;
+  const yeaInfo = showNumber ? (
+    <span>
+      <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
+      {formatVoteAmount(yeaNum)} (<SupplyText>{yeaPctOfTotalSupply}</SupplyText>
+      %)
+    </span>
+  ) : (
+    <span>
+      <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
+      <SupplyText>{yeaPctOfTotalSupply}</SupplyText>%
+    </span>
+  );
 
-  const yeaInfo = showNumber
-    ? `"Yes" — ${vpFormatter.format(yeaNum)} (${yeaPctOfTotalSupply}%)`
-    : `"Yes" — ${yeaPctOfTotalSupply}%`;
+  const nayInfo = showNumber ? (
+    <span>
+      {formatVoteAmount(nayNum)} (<SupplyText>{nayPctOfTotalSupply}</SupplyText>
+      %) <VoteYeaNayText $variant="error">No</VoteYeaNayText>
+    </span>
+  ) : (
+    <span>
+      <SupplyText>{nayPctOfTotalSupply}% </SupplyText>
+      <VoteYeaNayText $variant="error">No</VoteYeaNayText>
+    </span>
+  );
 
   return (
     <>
       <VotesTitleWrap>
-        <Text size="xxs">
-          <Text data-testid="votesNo" as="span" size="xxs">
-            <span>{nayInfo}</span>
+        <Text size={14}>
+          <Text as="span" size={14} data-testid="votesYes">
+            <span>{yeaInfo}</span>
           </Text>
         </Text>
-        <Text size="xxs" style={{ textAlign: 'right' }}>
-          <Text as="span" size="xxs" data-testid="votesYes">
-            <span>{yeaInfo}</span>
+        <Text size={14}>
+          <Text data-testid="votesNo" as="span" size={14}>
+            <span>{nayInfo}</span>
           </Text>
         </Text>
       </VotesTitleWrap>
@@ -58,8 +74,8 @@ export const VoteYesNoBar = ({
         data-testid="votesYesNoBar"
         showOnForeground={showOnForeground}
       >
-        <VotesBarNay style={{ width: `${nayPct}%` }} />
         <VotesBarYea style={{ width: `${yeaPct}%` }} />
+        <VotesBarNay style={{ width: `${nayPct}%` }} />
       </VotesBarWrap>
     </>
   );

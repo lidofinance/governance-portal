@@ -3,19 +3,44 @@ import { InlineLoader } from '@lidofinance/lido-ui';
 import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
 import { useQuery } from '@tanstack/react-query';
 import { fetcherIPFS } from 'utils/fetcher-ipfs';
+import { ARCHIVED_VOTE_IPFS_TIMEOUT } from '@vote/constants';
 import { DescriptionText } from './style';
 import { replaceJsxElements } from 'utils/replace-links-with-components';
+import { splitLeadingHeading } from '@vote/utils/parse-vote-title';
 import { MarkdownWrapper } from '../markdown-wrapper';
 
 type Props = {
   metadata?: string | undefined;
+  /**
+   * Pre-resolved IPFS description from the archived-vote cache. When a
+   * non-empty string is passed, the component renders it directly and
+   * skips the runtime IPFS fetch. `null`/`undefined` means "not cached" —
+   * fall through to the metadata → IPFS path.
+   */
+  description?: string | null;
   allowMD?: boolean;
+  /** Drop the leading `# heading` line, which is rendered as the vote title. */
+  hideLeadingHeading?: boolean;
+  /** Active votes wait the full IPFS timeout; archived votes use a shorter one. */
+  isActive: boolean;
 };
 
 const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
 
-export const VoteDescription = ({ metadata, allowMD }: Props) => {
+export const VoteDescription = ({
+  metadata,
+  description,
+  allowMD,
+  hideLeadingHeading,
+  isActive,
+}: Props) => {
   const cid = metadata?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
+
+  const stripHeading = (text: string) =>
+    hideLeadingHeading ? (splitLeadingHeading(text).body ?? '') : text;
+
+  const cachedDescription = trimStart(description ?? '');
+  const hasCachedDescription = cachedDescription.length > 0;
 
   const {
     data = '',
@@ -23,8 +48,14 @@ export const VoteDescription = ({ metadata, allowMD }: Props) => {
     isLoading: isIPFSLoading,
   } = useQuery({
     queryKey: [cid],
-    queryFn: async () => await fetcherIPFS(cid || ''),
-    enabled: !!cid,
+    queryFn: async () =>
+      await fetcherIPFS(
+        cid || '',
+        undefined,
+        isActive ? undefined : ARCHIVED_VOTE_IPFS_TIMEOUT,
+      ),
+    enabled: !!cid && !hasCachedDescription,
+    retry: false,
   });
 
   if (metadata === '') {
@@ -36,6 +67,19 @@ export const VoteDescription = ({ metadata, allowMD }: Props) => {
       <DescriptionText>
         Failed to fetch vote description from RPC provider.
       </DescriptionText>
+    );
+  }
+
+  if (hasCachedDescription) {
+    const text = stripHeading(cachedDescription);
+    if (!text) {
+      return <DescriptionText>No description.</DescriptionText>;
+    }
+    if (allowMD) {
+      return <MarkdownWrapper>{text}</MarkdownWrapper>;
+    }
+    return (
+      <DescriptionText>{replaceJsxElements(removeMD(text))}</DescriptionText>
     );
   }
 
@@ -62,13 +106,16 @@ export const VoteDescription = ({ metadata, allowMD }: Props) => {
     );
   }
 
-  if (trimmedData && allowMD) {
-    return <MarkdownWrapper>{trimmedData}</MarkdownWrapper>;
+  const text = stripHeading(trimmedData);
+  if (!text) {
+    return <DescriptionText>No description.</DescriptionText>;
+  }
+
+  if (allowMD) {
+    return <MarkdownWrapper>{text}</MarkdownWrapper>;
   }
 
   return (
-    <DescriptionText>
-      {replaceJsxElements(removeMD(trimmedData))}
-    </DescriptionText>
+    <DescriptionText>{replaceJsxElements(removeMD(text))}</DescriptionText>
   );
 };

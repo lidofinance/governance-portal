@@ -32,7 +32,7 @@ export type ProposalCombinedData = {
 
 export type ProposalSubmittedLog = Log & {
   args: {
-    proposerAccount: string;
+    proposerAccount: Address;
     proposalId: bigint;
     metadata: string;
   };
@@ -63,4 +63,13 @@ export type CachedEventsData = {
       [proposalId: string]: EventsLogs & { details?: ProposalDetails };
     };
   };
+};
+
+export type ProposalEventsSubset = CachedEventsData[string]['proposals'];
+
+export type ProposalEventsManifest = {
+  chunkSize: number;
+  firstId: number;
+  lastId: number;
+  chunks: { [chunkIndex: string]: string };
 };

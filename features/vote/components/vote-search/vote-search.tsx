@@ -1,61 +1,32 @@
-import { StyledInput } from './style';
+import { StyledInput, ClearButton } from './style';
 import { VoteSearchIcon } from 'shared/components/icons';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { votePage } from 'constants/urls';
-import { useRouter } from 'next/router';
-import debounce from 'lodash/debounce';
+import { useCallback } from 'react';
 
-export const VoteSearch = () => {
-  const router = useRouter();
-  const [voteId, setVoteId] = useState('');
+type Props = {
+  value: string;
+  onChange: (value: string) => void;
+  onClear: () => void;
+};
 
-  const changeRoute = useCallback(
-    (value: string) => {
-      if (value) {
-        void router.push(votePage(value));
-      }
+export const VoteSearch = ({ value, onChange, onClear }: Props) => {
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(event.target.value);
     },
-    [router],
-  );
-
-  const debouncedChangeRoute = useMemo(
-    () => debounce(changeRoute, 500),
-    [changeRoute],
-  );
-
-  useEffect(() => {
-    return () => {
-      debouncedChangeRoute.cancel();
-    };
-  }, [debouncedChangeRoute]);
-
-  const handleVoteIdChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setVoteId(value);
-      debouncedChangeRoute(value);
-    },
-    [debouncedChangeRoute],
-  );
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        debouncedChangeRoute.cancel();
-        changeRoute(voteId);
-      }
-    },
-    [changeRoute, debouncedChangeRoute, voteId],
+    [onChange],
   );
 
   return (
     <StyledInput
-      value={voteId}
-      isInteger={true}
-      placeholder="DAO vote #"
-      onChange={handleVoteIdChange}
-      onKeyDown={handleKeyDown}
+      value={value}
+      placeholder="Search"
+      onChange={handleChange}
       leftDecorator={<VoteSearchIcon />}
+      rightDecorator={
+        value ? (
+          <ClearButton onClick={onClear} aria-label="Clear search" />
+        ) : null
+      }
     />
   );
 };

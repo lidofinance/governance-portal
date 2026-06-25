@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 import {
   replaceAddressAndCIDInMD,
   replaceImagesInMD,
-  replaceLinksInMD,
+  replaceLinksInMDAsAnchor,
 } from 'utils/replace-custom-elements-in-MD';
 
 import { MarkdownWrap } from './style';
@@ -17,7 +17,7 @@ export const MarkdownWrapper = ({ children: text, ...rest }: Props) => {
       <ReactMarkdown
         remarkPlugins={[[remarkGfm, {}]]}
         components={{
-          a: replaceLinksInMD,
+          a: replaceLinksInMDAsAnchor,
           img: replaceImagesInMD,
           code: replaceAddressAndCIDInMD,
         }}

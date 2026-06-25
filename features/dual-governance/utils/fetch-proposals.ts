@@ -1,26 +1,11 @@
 import {
   ProposalCombinedData,
   ProposalDetails,
-  ProposalSubmittedLog,
   SubmitProposalCall,
 } from '@dg/proposals/types';
-import { fetchCachedEventsData } from './fetch-cached-events-data';
-import { Address, PublicClient } from 'viem';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-import {
-  calculateAverageBlockTime,
-  estimateBlockRangeFromTimestamp,
-} from 'utils/estimate-block-range';
-import { findAbiItem } from 'utils/find-abi-item';
-import { DualGovernance } from 'shared/blockchain/contracts';
-import { expandGetLogsSearchWindow } from 'utils/expand-get-logs-search-window';
-
 type Props = {
   proposalsCount: bigint;
   EPTContract: any;
-  publicClient: PublicClient;
-  governanceAddresses: Address[];
-  chainId: CHAINS;
 };
 
 type ProposalDataResult = [ProposalDetails, SubmitProposalCall[]];
@@ -28,14 +13,7 @@ type ProposalDataResult = [ProposalDetails, SubmitProposalCall[]];
 export const fetchProposals = async ({
   proposalsCount,
   EPTContract,
-  publicClient,
-  governanceAddresses,
-  chainId,
 }: Props): Promise<(ProposalCombinedData | null)[]> => {
-  // Load cached events data to avoid RPC getLogs calls for known proposals
-  const cachedEventsData = await fetchCachedEventsData();
-  const cachedChainData = cachedEventsData[chainId.toString()]?.proposals || {};
-
   const proposalIds = Array.from({ length: Number(proposalsCount) }, (_, i) =>
     BigInt(i + 1),
   );
@@ -61,89 +39,5 @@ export const fetchProposals = async ({
     }
   });
 
-  const getProposalsData = await Promise.all(getProposalPromises);
-
-  const proposalsData = getProposalsData.filter(
-    (proposal): proposal is ProposalCombinedData => proposal !== null,
-  );
-
-  const proposalsMap = new Map<number, ProposalCombinedData>();
-  proposalsData.forEach((proposal) => {
-    proposalsMap.set(proposal.proposalId, proposal);
-  });
-
-  // Determine which proposals have cached events vs which need RPC fetching
-  const uncachedProposals = proposalsData.filter(
-    (p) => !cachedChainData[p.proposalId.toString()],
-  );
-
-  // Populate DGEvent from cache where available
-  for (const proposal of proposalsData) {
-    const cached = cachedChainData[proposal.proposalId.toString()];
-    if (cached?.proposalSubmittedEvent) {
-      proposalsMap.set(proposal.proposalId, {
-        ...proposal,
-        DGEvent: cached.proposalSubmittedEvent,
-      });
-    }
-  }
-
-  // Only do RPC getLogs for uncached proposals
-  if (uncachedProposals.length > 0) {
-    const eventAbi = findAbiItem({
-      abi: DualGovernance.abi,
-      name: 'ProposalSubmitted',
-      type: 'event',
-    });
-
-    const averageBlockTime = await calculateAverageBlockTime(publicClient);
-
-    for (const proposal of uncachedProposals) {
-      try {
-        const { fromBlock, toBlock } = await estimateBlockRangeFromTimestamp(
-          proposal.proposalDetails.submittedAt,
-          2499n, // Half of the RPC getLogs limit
-          averageBlockTime,
-          publicClient,
-        );
-
-        // Three ranges for log fetching to expand the search window up to ~15000 blocks
-        const ranges = expandGetLogsSearchWindow({ fromBlock, toBlock });
-
-        const eventPromises = governanceAddresses.flatMap((address) =>
-          ranges.map((range) =>
-            publicClient.getLogs({
-              address,
-              event: eventAbi,
-              fromBlock: range.fromBlock,
-              toBlock: range.toBlock,
-              args: {
-                proposalId: BigInt(proposal.proposalId),
-              },
-            }),
-          ),
-        );
-
-        const eventsResults = await Promise.all(eventPromises);
-        const events =
-          eventsResults.flat() as unknown as ProposalSubmittedLog[];
-
-        if (events.length > 0) {
-          proposalsMap.set(proposal.proposalId, {
-            ...proposal,
-            DGEvent: events[0],
-          });
-        }
-      } catch (error) {
-        console.error(
-          `Error fetching events for proposal ${proposal.proposalId}:`,
-          error,
-        );
-      }
-    }
-  }
-
-  return proposalsData.map(
-    (proposal) => proposalsMap.get(proposal.proposalId) || proposal,
-  );
+  return Promise.all(getProposalPromises);
 };

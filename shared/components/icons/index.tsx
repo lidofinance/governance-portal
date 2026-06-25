@@ -37,12 +37,12 @@ import { ReactComponent as BranchIcon } from 'assets/main-page/branch-icon.svg';
 import { ReactComponent as DocumentIcon } from 'assets/main-page/document-icon.svg';
 import { ReactComponent as DocumentUnknownIcon } from 'assets/main-page/document-unknown-icon.svg';
 import { ReactComponent as UnionIcon } from 'assets/union-icon.svg';
-import { ReactComponent as CrossIcon } from 'assets/cross-icon.svg';
-import { ReactComponent as CheckIcon } from 'assets/check-icon.svg';
 import { ReactComponent as TrashIcon } from 'assets/trash-icon.svg';
 import { ReactComponent as VoteDoneIcon } from 'assets/vote-done-icon.svg';
 import { ReactComponent as VoteFailIcon } from 'assets/vote-fail-icon.svg';
 import { ReactComponent as VoteSearchIcon } from 'assets/vote-search-icon.svg';
+import { ReactComponent as SimulateIcon } from 'assets/simulate-icon.svg';
+import { ReactComponent as CopyIcon } from 'assets/copy-icon.svg';
 
 export {
   RevokeIcon,
@@ -83,11 +83,11 @@ export {
   DocumentIcon,
   DocumentUnknownIcon,
   UnionIcon,
-  CrossIcon,
-  CheckIcon,
   TrashIcon,
   DualGovernancePlainIcon,
   VoteDoneIcon,
   VoteFailIcon,
   VoteSearchIcon,
+  SimulateIcon,
+  CopyIcon,
 };

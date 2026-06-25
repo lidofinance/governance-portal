@@ -21,6 +21,7 @@ export const Wrap = styled.span<{ $paddingless?: boolean; $inline?: boolean }>`
     $inline &&
     css`
       display: inline-flex;
+      vertical-align: middle;
     `}
 `;
 

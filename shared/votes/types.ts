@@ -4,6 +4,12 @@ import { ContractReadFunctionReturnType } from 'shared/types';
 import { UseFormRegister, UseFormWatch } from 'react-hook-form';
 import { EventStartVote } from './utils/get-event-start-vote';
 
+// Narrow event shape — only fields the UI reads.
+type MinimalEventLog = {
+  transactionHash: Hex | null;
+  blockNumber: bigint | null;
+};
+
 /**
  * VotePhase.Main if one can vote 'yes' or 'no',
  * VotePhase.Objection if one can vote only 'no' or
@@ -98,8 +104,8 @@ export type VoteEvent = VoteInfo & {
 };
 
 export type EventExecuteVote = {
-  event: Log;
-  executedAt: bigint;
+  event: MinimalEventLog;
+  executedAt: bigint | undefined;
 };
 
 export type DelegationInfo = {

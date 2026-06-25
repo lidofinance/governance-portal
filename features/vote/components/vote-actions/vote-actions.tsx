@@ -10,10 +10,14 @@ import { DelegatorsSelector } from './components/delegators-selector';
 import { FlexWrapper } from 'shared/styled-components';
 import { Address } from 'viem';
 import { useIsSupportedChain } from 'shared/hooks/use-is-supported-chain';
-import { useVoteAction } from '@vote/write-actions/vote/action';
+import { ProcessVote } from '@vote/write-actions/vote/action';
 import { KnownToken } from 'shared/blockchain/tokens';
 
-export const VoteActions = () => {
+type Props = {
+  processVote: ProcessVote;
+};
+
+export const VoteActions = ({ processVote }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
     vote,
@@ -35,8 +39,6 @@ export const VoteActions = () => {
     (canVoteWithOwnPower || canVoteWithDelegatedVotePower);
 
   const [selectedDelegators, setSelectedDelegators] = useState<Address[]>([]);
-
-  const processVote = useVoteAction();
 
   const [currentMode, setCurrentMode] = useState<VoteMode>('yay');
 

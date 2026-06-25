@@ -1,5 +1,5 @@
 import { getLogs } from 'viem/actions';
-import { Address, Log, PublicClient } from 'viem';
+import { Address, Hex, PublicClient } from 'viem';
 import { findAbiItem } from 'utils/find-abi-item';
 import { aragonVotingAbi } from 'abi/generated';
 
@@ -17,7 +17,10 @@ export type StartVoteEventArgs = {
 };
 
 export type EventStartVote = {
-  event: Log;
+  event: {
+    transactionHash: Hex | null;
+    blockNumber: bigint | null;
+  };
   args: StartVoteEventArgs;
 };
 

@@ -8,7 +8,7 @@ import { ProgressBar } from 'shared/components/progress-bar';
 import { RageQuitProgress } from './rage-quit-progress';
 import { DGTooltip } from '@dg/tooltips';
 import { FlexWrapper } from 'shared/styled-components';
-import { calculateCurrentThresholdProgress } from '@dg/utils';
+import { calculateCurrentThresholdProgress } from 'shared/utils/calculate-current-threshold-progress';
 import { useMemo } from 'react';
 import { useEscrowContext } from 'providers/escrow';
 import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
