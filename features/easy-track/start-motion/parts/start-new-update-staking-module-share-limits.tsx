@@ -159,9 +159,9 @@ export const formParts = createMotionFormPart({
       if (
         !factoryData ||
         stakeRaw === '' ||
-        validateUintValue(stakeRaw) ||
+        validateBpValue(stakeRaw) ||
         priorityRaw === '' ||
-        validateUintValue(priorityRaw)
+        validateBpValue(priorityRaw)
       ) {
         return undefined;
       }

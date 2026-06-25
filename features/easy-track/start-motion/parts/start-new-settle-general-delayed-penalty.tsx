@@ -185,7 +185,8 @@ export const formParts = ({
       };
 
       // Validates the lock and mirrors the bond-lock nonce into form state.
-      // Runs on submit, so the nonce is guaranteed present before populateTx encodes it.
+      // Runs on change; submit is blocked until validation passes, so the nonce
+      // is guaranteed present before populateTx encodes it.
       // The factory requires it to match the current onchain nonce.
       const validateIdAsync = (fieldIndex: number) => async (value: string) => {
         const info = await fetchLockInfo(value);

@@ -235,7 +235,7 @@ export const formParts = ({
           const isSlashed = await fetchIsValidatorSlashed(idValue, value);
 
           if (isSlashed === null) {
-            return 'Failed to fetch slashed status';
+            return 'No slashed status found for this node operator and key index';
           }
 
           if (!isSlashed) {

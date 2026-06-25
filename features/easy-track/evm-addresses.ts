@@ -383,9 +383,9 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xaccaE3755d63EeaAF2e525E780aEeA8D58700Ab9',
 
     [MotionType.CSMSetMerkleGateTree]:
-      '0x9F4BB90d6D0bB3B18a7156F3648c1e5256BAD1a7',
+      '0xDAf4afD2dD5DcA705900b9e526150C1a00057994',
     [MotionType.CuratedSetMerkleGateTree]:
-      '0x5194cC02B6F477B4a23DFA422fFC238c8B5b1736',
+      '0x9F4BB90d6D0bB3B18a7156F3648c1e5256BAD1a7',
 
     [MotionType.CSMSettleGeneralDelayedPenalty]:
       '0x029239CDF35d5669d81D32A83EbF783b87aD1AEE',
