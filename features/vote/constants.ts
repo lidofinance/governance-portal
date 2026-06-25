@@ -10,6 +10,8 @@ export const SNAPSHOT_LIDO_SPACE_NAME =
 
 export const ONE_LDO = parseEther('1');
 
+export const ARCHIVED_VOTE_IPFS_TIMEOUT = 4000;
+
 export const VOTE_MODE_MAP: Record<VoteMode, string> = {
   yay: 'Yes',
   nay: 'No',

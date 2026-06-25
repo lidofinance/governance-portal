@@ -113,6 +113,7 @@ export const VoteCard = () => {
     description,
     metadata: eventStart?.args.metadata,
     truncateTitle: false,
+    isActive: !isEnded,
   });
 
   const hasBody = body !== null || !description?.trim();
@@ -273,6 +274,7 @@ export const VoteCard = () => {
               description={description}
               allowMD
               hideLeadingHeading
+              isActive={!isEnded}
             />
           </DescriptionWrap>
         )}

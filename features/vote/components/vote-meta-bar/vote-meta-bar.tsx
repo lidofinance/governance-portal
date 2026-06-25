@@ -145,22 +145,22 @@ export const VoteMetaBar = ({
   const timeNodeInline = isActive ? (
     timeValue
   ) : (
-    <EndedText>
+    <EndedText data-testid="voteEnded">
       Ended on <FormattedDate date={endTimestamp} format="DD MMM YYYY" />
     </EndedText>
   );
 
   return (
-    <MetaWrap $labeled={withLabels}>
+    <MetaWrap $labeled={withLabels} data-testid="voteHeader">
       <BadgeGroup>
-        <StatusBadge $variant={statusLabel.variant}>
+        <StatusBadge $variant={statusLabel.variant} data-testid="voteStatus">
           {statusLabel.variant === 'success' && <VoteDoneIcon />}
           {statusLabel.variant === 'error' && <VoteFailIcon />}
           {statusLabel.variant === 'warning' && <VoteFailIcon />}
           {statusLabel.text}
         </StatusBadge>
         {phase && (
-          <PhaseBadge $variant={phase.variant}>
+          <PhaseBadge $variant={phase.variant} data-testid="votePhase">
             {phase.iconNumber !== undefined && (
               <PhaseNumber>{phase.iconNumber}</PhaseNumber>
             )}
@@ -180,10 +180,10 @@ export const VoteMetaBar = ({
           <>
             <MetaCell>
               <MetaLabel>Proposal ID</MetaLabel>
-              <VoteIdText>Vote #{voteId}</VoteIdText>
+              <VoteIdText data-testid="voteId">Vote #{voteId}</VoteIdText>
             </MetaCell>
             {!isActive && (
-              <MetaCell>
+              <MetaCell data-testid="voteEnded">
                 <MetaLabel>Ended on</MetaLabel>
                 {timeValue}
               </MetaCell>
@@ -191,7 +191,7 @@ export const VoteMetaBar = ({
           </>
         ) : (
           <>
-            <VoteIdText>Vote #{voteId}</VoteIdText>
+            <VoteIdText data-testid="voteId">Vote #{voteId}</VoteIdText>
             <Separator />
             {timeNodeInline}
           </>
