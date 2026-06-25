@@ -383,5 +383,15 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "Omnibus vote: 1. Submit DG proposal: upgrade CSM and Curated Module v2 Accounting implementations;\n 2. Remove the OLD SetMerkleGateTree (CSM) factory;\n 3. Add the NEW SetMerkleGateTree (CSM) factory;\n 4. Remove the OLD ReportWithdrawalsForSlashedValidators (CSM) factory;\n 5. Add the NEW ReportWithdrawalsForSlashedValidators (CSM) factory;\n 6. Remove the OLD SettleGeneralDelayedPenalty (CSM) factory;\n 7. Add the NEW SettleGeneralDelayedPenalty (CSM) factory;\n 8. Remove the OLD UpdateStakingModuleShareLimits (CSM) factory;\n 9. Add the NEW UpdateStakingModuleShareLimits (CSM) factory;\n 10. Remove the OLD SetMerkleGateTree (CM) factory;\n 11. Add the NEW SetMerkleGateTree (CM) factory;\n 12. Remove the OLD ReportWithdrawalsForSlashedValidators (CM) factory;\n 13. Add the NEW ReportWithdrawalsForSlashedValidators (CM) factory;\n 14. Remove the OLD SettleGeneralDelayedPenalty (CM) factory;\n 15. Add the NEW SettleGeneralDelayedPenalty (CM) factory;\n 16. Remove the OLD CreateOrUpdateOperatorGroup (CM) factory;\n 17. Add the NEW CreateOrUpdateOperatorGroup (CM) factory.\nlidovoteipfs://bafkreiefwrvdwaun4jm7byvoe5lmz2pvgrwopbd24okiv77mnnql3jhgma"
+  },
+  "77": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "SRv3/CMv2 hoodi DSM/OSC upgrade (update2)"
+  },
+  "78": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "SRv3/CMv2 hoodi AO fix (update3)"
   }
 }
