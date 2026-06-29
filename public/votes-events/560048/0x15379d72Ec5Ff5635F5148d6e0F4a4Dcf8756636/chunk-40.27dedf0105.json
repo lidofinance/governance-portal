@@ -335,7 +335,11 @@
   },
   "406": {
     "description": null,
-    "executeVoteEvent": null,
+    "executeVoteEvent": {
+      "blockNumber": "3081799",
+      "executedAt": 1782322548,
+      "transactionHash": "0xb7ae56786247fc82ab79ee8655311408ce4d611e778452e700068cb7d0117373"
+    },
     "startVoteEvent": {
       "args": {
         "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
@@ -346,8 +350,8 @@
       "transactionHash": "0x80d1e8bc79322c5eff08f1368a82842721a9ffbcf0449d68094620acdd0224b4"
     },
     "voteDetails": {
-      "canExecute": true,
-      "executed": false,
+      "canExecute": false,
+      "executed": true,
       "id": 406,
       "minAcceptQuorum": "50000000000000000",
       "nay": "15001782407407407407",

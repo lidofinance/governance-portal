@@ -153,7 +153,9 @@ export const accountingAbi = [
   { type: 'error', inputs: [], name: 'InvalidBondCurveLength' },
   { type: 'error', inputs: [], name: 'InvalidBondCurveValues' },
   { type: 'error', inputs: [], name: 'InvalidBondLockAmount' },
+  { type: 'error', inputs: [], name: 'InvalidBondLockNonce' },
   { type: 'error', inputs: [], name: 'InvalidBondLockPeriod' },
+  { type: 'error', inputs: [], name: 'InvalidChargePenaltyRecipientAddress' },
   { type: 'error', inputs: [], name: 'InvalidInitialization' },
   { type: 'error', inputs: [], name: 'InvalidInitializationCurveId' },
   { type: 'error', inputs: [], name: 'InvalidSplitRecipient' },
@@ -531,6 +533,25 @@ export const accountingAbi = [
     anonymous: false,
     inputs: [
       {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'newNonce',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'BondLockNonceIncremented',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'period',
         internalType: 'uint256',
         type: 'uint256',
@@ -683,19 +704,6 @@ export const accountingAbi = [
       },
     ],
     name: 'EtherRecovered',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'nodeOperatorId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'ExpiredBondLockRemoved',
   },
   {
     type: 'event',
@@ -1260,6 +1268,15 @@ export const accountingAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getBondLockNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
     name: 'getBondLockPeriod',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -1792,12 +1809,10 @@ export const accountingAbi = [
     type: 'function',
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
-      { name: 'maxAmount', internalType: 'uint256', type: 'uint256' },
+      { name: 'bondLockNonce', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'settleLockedBond',
-    outputs: [
-      { name: 'amountSettled', internalType: 'uint256', type: 'uint256' },
-    ],
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'nonpayable',
   },
   {

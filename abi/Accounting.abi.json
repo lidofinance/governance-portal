@@ -184,7 +184,13 @@
   { "inputs": [], "name": "InvalidBondCurveLength", "type": "error" },
   { "inputs": [], "name": "InvalidBondCurveValues", "type": "error" },
   { "inputs": [], "name": "InvalidBondLockAmount", "type": "error" },
+  { "inputs": [], "name": "InvalidBondLockNonce", "type": "error" },
   { "inputs": [], "name": "InvalidBondLockPeriod", "type": "error" },
+  {
+    "inputs": [],
+    "name": "InvalidChargePenaltyRecipientAddress",
+    "type": "error"
+  },
   { "inputs": [], "name": "InvalidInitialization", "type": "error" },
   { "inputs": [], "name": "InvalidInitializationCurveId", "type": "error" },
   { "inputs": [], "name": "InvalidSplitRecipient", "type": "error" },
@@ -588,6 +594,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "nodeOperatorId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newNonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "BondLockNonceIncremented",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "period",
@@ -740,19 +765,6 @@
       }
     ],
     "name": "EtherRecovered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "nodeOperatorId",
-        "type": "uint256"
-      }
-    ],
-    "name": "ExpiredBondLockRemoved",
     "type": "event"
   },
   {
@@ -1416,6 +1428,15 @@
     "type": "function"
   },
   {
+    "inputs": [
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
+    ],
+    "name": "getBondLockNonce",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getBondLockPeriod",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -2060,12 +2081,10 @@
         "name": "nodeOperatorId",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "maxAmount", "type": "uint256" }
+      { "internalType": "uint256", "name": "bondLockNonce", "type": "uint256" }
     ],
     "name": "settleLockedBond",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountSettled", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },

@@ -51,22 +51,26 @@ const FORM_ACTIONS = [
   { value: 'clear', label: 'Clear existing group' },
 ] as const;
 
+const OPERATOR_GROUP_TUPLE = {
+  type: 'tuple',
+  components: [
+    { type: 'string' },
+    {
+      type: 'tuple[]',
+      components: [{ type: 'uint64' }, { type: 'uint16' }],
+    },
+    {
+      type: 'tuple[]',
+      components: [{ type: 'bytes' }],
+    },
+  ],
+} as const;
+
+// Calldata: (uint256 groupId, OperatorGroup currentGroupInfo, OperatorGroup newGroupInfo)
 const ABI_PARAMS = [
   { type: 'uint256' },
-  {
-    type: 'tuple',
-    components: [
-      { type: 'string' },
-      {
-        type: 'tuple[]',
-        components: [{ type: 'uint64' }, { type: 'uint16' }],
-      },
-      {
-        type: 'tuple[]',
-        components: [{ type: 'bytes' }],
-      },
-    ],
-  },
+  OPERATOR_GROUP_TUPLE,
+  OPERATOR_GROUP_TUPLE,
 ] as const;
 
 type Action = (typeof FORM_ACTIONS)[number]['value'];
@@ -80,6 +84,13 @@ type ExternalOperatorField = {
   nodeOperatorId: string;
 };
 
+// On-chain group snapshot for the factory's hash check.
+type OperatorGroupInfo = {
+  name: string;
+  subNodeOperators: readonly { nodeOperatorId: bigint; share: number }[];
+  externalOperators: readonly { data: `0x${string}` }[];
+};
+
 type FormData = {
   groupId: string;
   name: string;
@@ -89,6 +100,8 @@ type FormData = {
   // mirrored into form state so populateTx (module scope) can read it without
   // its own contract round-trip.
   allowedExternalModuleId: string;
+  // On-chain group snapshot, mirrored for the same reason (null for create).
+  currentGroupInfo: OperatorGroupInfo | null;
   action: Action;
 };
 
@@ -148,8 +161,29 @@ export const formParts = createMotionFormPart({
           })),
         );
 
+    // currentGroupInfo is the byte-exact on-chain snapshot for the factory's
+    // hash check; empty for create. Passed through unsorted with raw `data`.
+    const currentGroupInfo =
+      isClear || formData.action === 'update'
+        ? formData.currentGroupInfo
+        : null;
+
+    invariant(
+      formData.action === 'create' || currentGroupInfo,
+      'Current group info must be loaded for update/clear',
+    );
+
     const encodedCallData = encodeAbiParameters(ABI_PARAMS, [
       BigInt(groupId),
+      [
+        currentGroupInfo?.name ?? '',
+        (currentGroupInfo?.subNodeOperators ?? []).map(
+          (s) => [s.nodeOperatorId, s.share] as const,
+        ),
+        (currentGroupInfo?.externalOperators ?? []).map(
+          (e) => [e.data] as const,
+        ),
+      ],
       [
         groupName,
         sortedSubs.map((s) => [s.nodeOperatorId, s.share] as const),
@@ -177,6 +211,7 @@ export const formParts = createMotionFormPart({
     subNodeOperators: [{ nodeOperatorId: '', share: '' }],
     externalOperators: [],
     allowedExternalModuleId: '',
+    currentGroupInfo: null,
     action: 'create',
   }),
   Component: ({ fieldNames, submitAction }) => {
@@ -323,6 +358,15 @@ export const formParts = createMotionFormPart({
         ]);
       },
     });
+
+    // Mirror the onchain group snapshot into form state so populateTx can
+    // encode it as currentGroupInfo for the factory's hash check.
+    useEffect(() => {
+      setValue(fieldNames.currentGroupInfo, existingGroup ?? null, {
+        shouldDirty: false,
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [existingGroup]);
 
     // Apply a group to the definition fields for update/clear
     // Update fills the operators from the group, clear empties them

@@ -37,8 +37,19 @@
     ],
     "name": "decodeEVMScriptCallData",
     "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "nodeOperatorId",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "nonce", "type": "uint256" }
+        ],
+        "internalType": "struct SettleGeneralDelayedPenalty.LockInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
     ],
     "stateMutability": "pure",
     "type": "function"

@@ -2048,5 +2048,40 @@
     "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
     "description": null,
     "metadata": "test vote with DG items"
+  },
+  "410": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "411": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "lidovoteipfs://bafkreibuqkptilvncq3axz52ewwfee3gm2bxn34avuivsa7ekp6zwwkqry"
+  },
+  "412": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "lidovoteipfs://bafkreiart3j6kpt4v6efghqtu6gydsq2l2t5n4fyh3vk642amlegqgshgy"
+  },
+  "413": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "lidovoteipfs://bafkreiart3j6kpt4v6efghqtu6gydsq2l2t5n4fyh3vk642amlegqgshgy"
+  },
+  "414": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "415": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "416": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
   }
 }

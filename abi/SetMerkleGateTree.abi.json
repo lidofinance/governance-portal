@@ -27,11 +27,15 @@
     ],
     "name": "decodeEVMScriptCallData",
     "outputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "bytes32", "name": "", "type": "bytes32" },
-      { "internalType": "string", "name": "", "type": "string" },
-      { "internalType": "bytes32", "name": "", "type": "bytes32" },
-      { "internalType": "string", "name": "", "type": "string" }
+      { "internalType": "address", "name": "gate", "type": "address" },
+      {
+        "internalType": "bytes32",
+        "name": "currentTreeRoot",
+        "type": "bytes32"
+      },
+      { "internalType": "string", "name": "currentTreeCid", "type": "string" },
+      { "internalType": "bytes32", "name": "newTreeRoot", "type": "bytes32" },
+      { "internalType": "string", "name": "newTreeCid", "type": "string" }
     ],
     "stateMutability": "pure",
     "type": "function"
@@ -47,6 +51,23 @@
     "inputs": [],
     "name": "trustedCaller",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "gate", "type": "address" },
+      {
+        "internalType": "bytes32",
+        "name": "currentTreeRoot",
+        "type": "bytes32"
+      },
+      { "internalType": "string", "name": "currentTreeCid", "type": "string" },
+      { "internalType": "bytes32", "name": "newTreeRoot", "type": "bytes32" },
+      { "internalType": "string", "name": "newTreeCid", "type": "string" }
+    ],
+    "name": "validateInputData",
+    "outputs": [],
     "stateMutability": "view",
     "type": "function"
   }

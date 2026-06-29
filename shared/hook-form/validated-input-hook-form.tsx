@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 import type { ComponentProps } from 'react';
 import type { RegisterOptions } from 'react-hook-form';
 
@@ -26,31 +26,45 @@ export const ValidatedInputHookForm = ({
   const Component =
     valueType === 'number' ? InputNumberHookForm : InputHookForm;
   const latestToken = useRef(0);
+  // Stale calls return this, not `true`, so they can't wipe a real error.
+  const lastResult = useRef<string | true>(true);
 
-  const validate = useCallback(
-    async (value: string) => {
-      // Bump the token on every call so any in-flight async work from a prior
-      // call is marked stale, even if this call exits early (empty/sync-fail).
-      const token = ++latestToken.current;
+  const validate = async (value: string) => {
+    // Bump the token on every call so any in-flight async work from a prior
+    // call is marked stale, even if this call exits early (empty/sync-fail).
+    const token = ++latestToken.current;
 
-      // Empty is "valid" here; consumers wire `required` via `rules` if needed.
-      if (!value) return true;
+    // Empty is "valid" here; consumers wire `required` via `rules` if needed.
+    if (!value) {
+      lastResult.current = true;
+      return true;
+    }
 
-      // Sync first — fails fast without waiting on the debounce.
-      const syncErr = validateSync?.(value);
-      if (syncErr) return syncErr;
-      if (!validateAsync) return true;
+    // Sync first — fails fast without waiting on the debounce.
+    const syncErr = validateSync?.(value);
+    if (syncErr) {
+      lastResult.current = syncErr;
+      return syncErr;
+    }
 
-      await new Promise((resolve) => setTimeout(resolve, debounceTimeoutMs));
-      if (token !== latestToken.current) return true;
+    if (!validateAsync) {
+      lastResult.current = true;
+      return true;
+    }
 
-      const asyncErr = await validateAsync(value);
-      if (token !== latestToken.current) return true;
-      // RHF expects `true` for valid or a string error message.
-      return asyncErr ?? true;
-    },
-    [validateSync, validateAsync, debounceTimeoutMs],
-  );
+    await new Promise((resolve) => setTimeout(resolve, debounceTimeoutMs));
+    if (token !== latestToken.current) {
+      return lastResult.current;
+    }
+
+    const asyncErr = await validateAsync(value);
+    if (token !== latestToken.current) {
+      return lastResult.current;
+    }
+    // RHF expects `true` for valid or a string error message.
+    lastResult.current = asyncErr ?? true;
+    return lastResult.current;
+  };
 
   return (
     <Component {...rest} rules={{ ...rules, validate } as RegisterOptions} />

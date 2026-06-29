@@ -38,8 +38,15 @@ export const settleGeneralDelayedPenaltyAbi = [
     ],
     name: 'decodeEVMScriptCallData',
     outputs: [
-      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
-      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      {
+        name: '',
+        internalType: 'struct SettleGeneralDelayedPenalty.LockInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
     ],
     stateMutability: 'pure',
   },
