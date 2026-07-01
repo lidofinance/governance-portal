@@ -8,6 +8,7 @@ import { fetchCastVoteEvents } from '../../utils/votes/fetch-vote-events.mjs';
 import {
   APPROX_BLOCK_TIME_SECONDS,
   VOTE_END_BLOCK_BUFFER,
+  isTestVotingAddress,
 } from '../../utils/votes/constants.mjs';
 import { diffEntry } from '../cache-entry-diff.mjs';
 
@@ -494,6 +495,10 @@ const main = async () => {
       }
 
       for (const votingAddress of addresses) {
+        if (isTestVotingAddress(votingAddress)) {
+          console.info(`Skipping test contract ${votingAddress}`);
+          continue;
+        }
         const votes = readAddressVotes(chainId, votingAddress);
         if (!votes) {
           console.info(`No manifest for ${votingAddress}`);

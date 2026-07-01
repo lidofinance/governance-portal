@@ -13,6 +13,16 @@ export const VOTING_ADDRESSES = {
   ],
 };
 
+// Mirrors the `test` voting addresses in shared/blockchain/contract-addresses.ts.
+export const TEST_VOTING_ADDRESSES = new Set(
+  ['0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636'].map((address) =>
+    address.toLowerCase(),
+  ),
+);
+
+export const isTestVotingAddress = (address) =>
+  TEST_VOTING_ADDRESSES.has(address.toLowerCase());
+
 export const startVoteEventAbi = {
   anonymous: false,
   inputs: [

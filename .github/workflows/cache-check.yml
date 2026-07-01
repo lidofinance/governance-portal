@@ -1,6 +1,8 @@
 name: Cache Check
 
-on: push
+on:
+  pull_request:
+    branches: [develop, main]
 
 permissions:
   contents: read
@@ -21,3 +23,5 @@ jobs:
 
       - name: Check events cache
         run: yarn check-all-cache
+        env:
+          CACHE_CHECK_MAINNET_ONLY: ${{ github.base_ref == 'main' }}

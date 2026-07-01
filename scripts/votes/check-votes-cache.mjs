@@ -5,6 +5,7 @@ import {
   VOTING_ADDRESSES,
   VOTES_PER_CHUNK,
   CONCURRENT_LIMIT,
+  isTestVotingAddress,
 } from '../../utils/votes/constants.mjs';
 import { getPublicClient } from '../../utils/public-rpc.mjs';
 import { canonicalStringify } from '../../utils/canonical-stringify.mjs';
@@ -13,6 +14,7 @@ import {
   checkManifestStructure,
   processInBatches,
   reportAndExit,
+  getChainFilter,
 } from '../cache-base-check.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -118,11 +120,19 @@ const checkAddressCompleteness = async (chainId, votingAddress, votesById) => {
 };
 
 const main = async () => {
+  const chainFilter = getChainFilter();
   for (const [chainIdStr, votingAddresses] of Object.entries(
     VOTING_ADDRESSES,
   )) {
     const chainId = Number(chainIdStr);
+    if (chainFilter && !chainFilter.has(chainId)) {
+      continue;
+    }
     for (const votingAddress of votingAddresses) {
+      if (isTestVotingAddress(votingAddress)) {
+        console.info(`${chainId}/${votingAddress}: test contract, skipping`);
+        continue;
+      }
       const addressDir = join(INPUT_ROOT, String(chainId), votingAddress);
       let votesById = {};
       if (existsSync(join(addressDir, 'manifest.json'))) {
