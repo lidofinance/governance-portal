@@ -184,7 +184,10 @@ export const VoteCard = () => {
               <YourVoteHeading>
                 Your vote
                 {hasOwnVote && (
-                  <VotedPill $supports={userOwnVote.supports}>
+                  <VotedPill
+                    $supports={userOwnVote.supports}
+                    data-testid="yourVoteValue"
+                  >
                     {userOwnVote.supports ? '“Yes”' : '“No”'}
                   </VotedPill>
                 )}
@@ -193,7 +196,7 @@ export const VoteCard = () => {
               {!isClosed && (
                 <PowerRow>
                   <span>My voting power</span>
-                  <span>
+                  <span data-testid="myOwnVP">
                     {voterDaoTokenBalance === undefined ? (
                       <SkeletonBar width={60} />
                     ) : (
@@ -205,7 +208,7 @@ export const VoteCard = () => {
               {!isClosed && hasDelegatedPower && (
                 <PowerRow>
                   <span>Total delegated voting power</span>
-                  <span>
+                  <span data-testid="totalDelegatedVP">
                     {`${formatBalance(totalDelegatedVotingPower)} ${KnownToken.LDO.symbol}`}
                   </span>
                 </PowerRow>

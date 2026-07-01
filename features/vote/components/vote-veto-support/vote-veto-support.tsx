@@ -64,7 +64,7 @@ export const VoteVetoSupport = () => {
             </InfoIconWrap>
           </Tooltip>
         </Title>
-        <Value>
+        <Value data-testid="vetoSupportPercent">
           {isDataLoading ? (
             <SkeletonBar width={36} />
           ) : (
@@ -81,7 +81,7 @@ export const VoteVetoSupport = () => {
         />
       </ProgressWrap>
       <FooterRow>
-        <span>
+        <span data-testid="vetoSupportValue">
           {isDataLoading ? (
             <SkeletonBar width={24} />
           ) : (
