@@ -128,7 +128,7 @@ yarn check-vote-cache    # scripts/votes/check-votes-cache.mjs
 yarn check-all-cache
 ```
 
-Runs in CI on every push (`.github/workflows/cache-check.yml`). It uses no secrets: keyless public RPC endpoints (`utils/public-rpc.mjs`) and ABIs read via `readFileSync` so it stays Node-version-agnostic. Two passes, with shared mechanics in `scripts/cache-base-check.mjs`.
+Runs in CI on pull requests targeting `develop` or `main` (`.github/workflows/cache-check.yml`). It uses no secrets: keyless public RPC endpoints (`utils/public-rpc.mjs`) and ABIs read via `readFileSync` so it stays Node-version-agnostic. Two passes, with shared mechanics in `scripts/cache-base-check.mjs`.
 
 Pass A, structural (`checkManifestStructure`), for each chain/address with a manifest:
 
@@ -146,7 +146,7 @@ Pass B uses its own event-presence predicates: `isCachedProposalFinal` for propo
 
 ```bash
 yarn validate-dg-events     # scripts/proposals/validate-proposals-events.mjs
-yarn validate-vote-events   # scripts/votes/validate-vote-events.mjs
+yarn validate-vote-events   # scripts/votes/validate-votes-events.mjs
 yarn validate-all-events    # both; exits non-zero if either fails
 ```
 
@@ -159,7 +159,7 @@ Heavier and secret-bearing (`--env-file=.env.local`, your own `EL_RPC_URLS_*`), 
 
 |          | `check-*-cache`                            | `validate-*-events`             |
 | -------- | ------------------------------------------ | ------------------------------- |
-| Runs in  | CI (every push)                            | locally, after rebuild          |
+| Runs in  | CI (pull requests to `develop`/`main`)     | locally, after rebuild          |
 | Secrets  | none (public RPC)                          | yes (`.env.local`)              |
 | Cost     | light                                      | heavy (per-receipt, 1 s/item)   |
 | Verifies | manifest, hashes, shape, terminal coverage | full field-level chain equality |
@@ -170,7 +170,7 @@ The app reads the static manifest and chunks for terminal items, and falls back 
 
 ## When CI `check-all-cache` fails
 
-The check runs on every push (`.github/workflows/cache-check.yml`). A failure is one of two kinds.
+The check runs on pull requests targeting `develop` or `main` (`.github/workflows/cache-check.yml`). A failure is one of two kinds.
 
 Structural / hash mismatch:
 
@@ -194,7 +194,7 @@ Do not suppress the check. Skipping it means the runtime spends RPC rate-limit o
 | `scripts/votes/check-votes-cache.mjs`             | CI structural and completeness check (votes)                    |
 | `scripts/cache-base-check.mjs`                    | Shared check mechanics (manifest, hash, shape, batching)        |
 | `scripts/proposals/validate-proposals-events.mjs` | Deep on-chain field validation (proposals)                      |
-| `scripts/votes/validate-vote-events.mjs`          | Deep on-chain field validation (votes)                          |
+| `scripts/votes/validate-votes-events.mjs`         | Deep on-chain field validation (votes)                          |
 | `scripts/cache-entry-diff.mjs`                    | Recursive field diff used by validators                         |
 | `utils/cache/status.mjs`                          | Shared terminal/complete predicates (build and runtime)         |
 | `utils/canonical-stringify.mjs`                   | Deterministic, key-sorted, bigint-safe stringify                |

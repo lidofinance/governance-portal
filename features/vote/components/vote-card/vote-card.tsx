@@ -152,9 +152,9 @@ export const VoteCard = () => {
         Your vote
         {hasOwnVote && (
           <VotedPill
-                    $supports={userOwnVote.supports}
-                    data-testid="yourVoteValue"
-                  >
+            $supports={userOwnVote.supports}
+            data-testid="yourVoteValue"
+          >
             {userOwnVote.supports ? '“Yes”' : '“No”'}
           </VotedPill>
         )}
