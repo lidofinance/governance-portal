@@ -97,6 +97,12 @@ export const VoteCard = () => {
     (dgProposal.proposalStatus === ProposalStatus.Submitted ||
       dgProposal.proposalStatus === ProposalStatus.Scheduled);
 
+  const hasDgProposal =
+    !!dgProposal &&
+    (dgProposal.proposalStatus === ProposalStatus.Submitted ||
+      dgProposal.proposalStatus === ProposalStatus.Scheduled ||
+      dgProposal.proposalStatus === ProposalStatus.Executed);
+
   const { title, body } = useVoteTitle({
     description,
     metadata: eventStart?.args.metadata,
@@ -138,10 +144,7 @@ export const VoteCard = () => {
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
   const isPending = vote.state.status === VoteStatus.Pending;
   const showConnectButton = !isWalletConnected && (!isClosed || isPending);
-  const hasCta =
-    showConnectButton ||
-    isWalletConnected ||
-    (isDualGovernancePhase && !!dgProposal);
+  const hasCta = showConnectButton || isWalletConnected || hasDgProposal;
 
   const yourVoteResult = (
     <>
@@ -226,7 +229,7 @@ export const VoteCard = () => {
           )}
         </>
       )}
-      {isDualGovernancePhase && dgProposal && (
+      {hasDgProposal && dgProposal && (
         <SeeOnDgWrap>
           <DgButton
             fullwidth
