@@ -50,6 +50,17 @@ export const VoteDescriptionWrap = styled(Text).attrs({
     display: inline-flex;
     vertical-align: middle;
   }
+
+  && > div > * {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  && p {
+    white-space: normal;
+  }
 `;
 
 export const VoteSummary = styled.section`
