@@ -7,6 +7,7 @@ import { REGEX_ETH_ADDRESS_ONLY } from './regex-eth-address';
 import { AddressBadge } from '../shared/wallet/address-badge/address-badge';
 import { REGEX_URL_ONLY } from './regex-url';
 import { ExternalLink } from '../shared/components/external-link/external-link';
+import { OffChainTag } from '../shared/components/off-chain-tag';
 
 type CodeType = Components['code'];
 export const replaceAddressAndCIDInMD: CodeType = ({
@@ -26,6 +27,10 @@ export const replaceAddressAndCIDInMD: CodeType = ({
 
   if (inline && value.match(REGEX_ETH_ADDRESS_ONLY)) {
     return <AddressBadge address={value} />;
+  }
+
+  if (inline && value.toLowerCase() === 'off-chain') {
+    return <OffChainTag />;
   }
 
   return <code {...props}>{children}</code>;
