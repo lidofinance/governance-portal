@@ -86,26 +86,6 @@ export const VoteScriptBodyInner = styled.div<Pick<TabProps, '$variant'>>`
     css`
       max-height: 524px;
       overflow-y: auto;
-
-      scrollbar-width: thin;
-      scrollbar-color: var(--border-color-fog) transparent;
-
-      &::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--border-color-fog);
-        border-radius: 8px;
-        border: 2px solid transparent;
-        background-clip: padding-box;
-      }
-      &::-webkit-scrollbar-thumb:hover {
-        background-color: var(--accent-color-ocean-light);
-      }
     `};
 `;
 
