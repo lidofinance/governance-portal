@@ -1,5 +1,9 @@
 name: Checks
 on: push
+
+permissions:
+  contents: read
+
 jobs:
   security:
     uses: lidofinance/linters/.github/workflows/security.yml@3b91bdb6e6078574c4f436509af2193e293c1e43
