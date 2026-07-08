@@ -9,32 +9,19 @@ import {
 } from './style';
 import { ProposalName } from '@dg/proposals/shared-components/proposal-name/proposal-name';
 import { ProposalCombinedData, SubmitProposalCall } from '@dg/proposals/types';
-import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { WarningIconTransparent } from 'shared/components/icons';
 import { useProposalStatus } from '@dg/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
 import { Box } from 'shared/components/box';
 import { DGTooltip } from '@dg/tooltips';
-import { Address } from 'viem';
-import { ChainAddressMap } from 'shared/blockchain/types';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { getContractName } from 'utils/get-contract-name';
 import { useProposalEvents } from '@dg/hooks/use-proposal-events';
 
 type Props = {
   id: number;
   calls: SubmitProposalCall[] | undefined;
   proposalDetails: ProposalCombinedData['proposalDetails'];
-};
-
-const getAddressFromMap = (
-  addressMap: ChainAddressMap | Record<number, string | string[]>,
-  chainId: CHAINS,
-): Address | undefined => {
-  const entry = (addressMap as any)[chainId];
-  if (!entry) return undefined;
-  if (Array.isArray(entry)) return undefined; // Skip arrays
-  return typeof entry === 'string' ? entry : entry.actual;
 };
 
 export const ProposalsListItem = ({ id, proposalDetails, calls }: Props) => {
@@ -56,21 +43,7 @@ export const ProposalsListItem = ({ id, proposalDetails, calls }: Props) => {
   const descriptionLines = description.split('\n');
 
   const isUnknownContractCalled = calls
-    ? calls.some((call) => {
-        const addressMaps = Object.entries(contractAddresses);
-
-        const isKnown = addressMaps.some(([, addressMap]) => {
-          const address = getAddressFromMap(addressMap, chainId as CHAINS);
-
-          if (!address) {
-            return false;
-          }
-
-          return address.toLowerCase() === call.target.toLowerCase();
-        });
-
-        return !isKnown;
-      })
+    ? calls.some((call) => getContractName(chainId, call.target) === null)
     : false;
 
   return (

@@ -274,4 +274,5 @@ export const TooltipList = styled.ul`
 export const TooltipIconWrap = styled.span`
   display: inline-flex;
   align-items: center;
+  cursor: pointer;
 `;

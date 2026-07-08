@@ -64,23 +64,14 @@ export const InlineLoaderStyled = styled(InlineLoader)`
   border-radius: 20px;
 `;
 
-export const ArrowIconWrapper = styled(Link)`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transform: rotate(180deg);
-  border: 1px solid var(--border-color-fog);
-  cursor: pointer;
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
 export const SubmittedBy = styled.div`
   margin: 30px 0;
   word-break: break-word;
+`;
+
+export const SubmitterAddressWrap = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
 `;

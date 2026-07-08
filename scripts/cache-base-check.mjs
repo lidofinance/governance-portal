@@ -97,6 +97,15 @@ export const checkManifestStructure = ({
   return entriesById;
 };
 
+const MAINNET_CHAIN_ID = 1;
+
+export const getChainFilter = () => {
+  if (process.env.CACHE_CHECK_MAINNET_ONLY === 'true') {
+    return new Set([MAINNET_CHAIN_ID]);
+  }
+  return null;
+};
+
 export const processInBatches = async (ids, batchSize, handler) => {
   for (let start = 0; start < ids.length; start += batchSize) {
     await Promise.all(ids.slice(start, start + batchSize).map(handler));

@@ -9,6 +9,7 @@ import {
   NoticeWrap,
   PowerRow,
   SectionHeading,
+  SeeOnDgWrap,
   SideCard,
   SidebarSection,
   VoteActionsWrap,
@@ -56,7 +57,6 @@ export const VoteCard = () => {
     voteEvents,
     voterDaoTokenBalance,
     totalDelegatedVotingPower,
-    hasDelegated,
     isDgProposalLoading,
   } = useVoteContext();
 
@@ -83,18 +83,6 @@ export const VoteCard = () => {
     );
   }, [walletAddress, voteEvents]);
 
-  const hasDelegateVote = useMemo(() => {
-    if (!walletAddress || voteEvents.length === 0) {
-      return false;
-    }
-    return voteEvents.some((event) =>
-      event.delegatedVotes?.some(
-        (delegatedVote) =>
-          delegatedVote.voter.toLowerCase() === walletAddress.toLowerCase(),
-      ),
-    );
-  }, [walletAddress, voteEvents]);
-
   useEffect(() => {
     setIsChangeMode(false);
   }, [userOwnVote?.supports]);
@@ -108,6 +96,12 @@ export const VoteCard = () => {
     !!dgProposal &&
     (dgProposal.proposalStatus === ProposalStatus.Submitted ||
       dgProposal.proposalStatus === ProposalStatus.Scheduled);
+
+  const hasDgProposal =
+    !!dgProposal &&
+    (dgProposal.proposalStatus === ProposalStatus.Submitted ||
+      dgProposal.proposalStatus === ProposalStatus.Scheduled ||
+      dgProposal.proposalStatus === ProposalStatus.Executed);
 
   const { title, body } = useVoteTitle({
     description,
@@ -138,61 +132,47 @@ export const VoteCard = () => {
         <VoteDetailsList />
       </SidebarSection>
       {isDualGovernancePhase && dgProposal && (
-        <>
-          <SidebarSection>
-            <VoteVetoSupport />
-          </SidebarSection>
-          <SidebarSection>
-            <DgButton
-              fullwidth
-              size="sm"
-              onClick={() =>
-                router.push(`${PROPOSALS_PATH}/${dgProposal.proposalId}`)
-              }
-            >
-              See on Dual Governance
-            </DgButton>
-          </SidebarSection>
-        </>
+        <SidebarSection>
+          <VoteVetoSupport />
+        </SidebarSection>
       )}
     </>
   );
 
   const hasOwnVote = !!userOwnVote;
-  const hasVotingPower =
-    voterDaoTokenBalance !== undefined && voterDaoTokenBalance > 0n;
   const hasDelegatedPower = totalDelegatedVotingPower > 0n;
-  const hasNoVotingPower = voterDaoTokenBalance === 0n;
-  const showYourVoteSection =
-    hasOwnVote ||
-    hasDelegateVote ||
-    hasDelegated ||
-    hasNoVotingPower ||
-    (!isClosed && (hasVotingPower || hasDelegatedPower));
   const showVoteButtons = !isClosed && (!hasOwnVote || isChangeMode);
   const isPending = vote.state.status === VoteStatus.Pending;
+  const showConnectButton = !isWalletConnected && (!isClosed || isPending);
+  const hasCta = showConnectButton || isWalletConnected || hasDgProposal;
 
-  const ctaItems = isDualGovernancePhase ? null : (
+  const yourVoteResult = (
     <>
-      {!isWalletConnected && (!isClosed || isPending) && (
+      <YourVoteHeading>
+        Your vote
+        {hasOwnVote && (
+          <VotedPill
+            $supports={userOwnVote.supports}
+            data-testid="yourVoteValue"
+          >
+            {userOwnVote.supports ? '“Yes”' : '“No”'}
+          </VotedPill>
+        )}
+      </YourVoteHeading>
+      {!hasOwnVote && <VoteInfo walletAddress={walletAddress} />}
+    </>
+  );
+
+  const ctaItems = (
+    <>
+      {showConnectButton && (
         <ConnectWalletButton fullwidth>Connect wallet</ConnectWalletButton>
       )}
       {isWalletConnected && (
         <>
-          {showYourVoteSection && (
+          {yourVoteResult}
+          {!isDualGovernancePhase && (
             <>
-              <YourVoteHeading>
-                Your vote
-                {hasOwnVote && (
-                  <VotedPill
-                    $supports={userOwnVote.supports}
-                    data-testid="yourVoteValue"
-                  >
-                    {userOwnVote.supports ? '“Yes”' : '“No”'}
-                  </VotedPill>
-                )}
-              </YourVoteHeading>
-              {!hasOwnVote && <VoteInfo walletAddress={walletAddress} />}
               {!isClosed && (
                 <PowerRow>
                   <span>My voting power</span>
@@ -218,36 +198,49 @@ export const VoteCard = () => {
                   <VoteNotice />
                 </NoticeWrap>
               )}
+              <VoteActionsWrap $hidden={!showVoteButtons}>
+                <VoteActions processVote={processVote} />
+              </VoteActionsWrap>
+              {hasOwnVote && !isChangeMode && !isClosed && (
+                <VoteActionsWrap>
+                  <DgButton
+                    fullwidth
+                    size="sm"
+                    variant="outlined"
+                    onClick={() => setIsChangeMode(true)}
+                  >
+                    Change your vote
+                  </DgButton>
+                </VoteActionsWrap>
+              )}
+              {isPending && (
+                <EnactButtonWrap>
+                  <Button
+                    fullwidth
+                    color="success"
+                    onClick={processEnact}
+                    disabled={!isSupportedChain}
+                  >
+                    Enact
+                  </Button>
+                </EnactButtonWrap>
+              )}
             </>
           )}
-          <VoteActionsWrap $hidden={!showVoteButtons}>
-            <VoteActions processVote={processVote} />
-          </VoteActionsWrap>
-          {hasOwnVote && !isChangeMode && !isClosed && (
-            <VoteActionsWrap>
-              <DgButton
-                fullwidth
-                size="sm"
-                variant="outlined"
-                onClick={() => setIsChangeMode(true)}
-              >
-                Change your vote
-              </DgButton>
-            </VoteActionsWrap>
-          )}
-          {isPending && (
-            <EnactButtonWrap>
-              <Button
-                fullwidth
-                color="success"
-                onClick={processEnact}
-                disabled={!isSupportedChain}
-              >
-                Enact
-              </Button>
-            </EnactButtonWrap>
-          )}
         </>
+      )}
+      {hasDgProposal && dgProposal && (
+        <SeeOnDgWrap>
+          <DgButton
+            fullwidth
+            size="sm"
+            onClick={() =>
+              router.push(`${PROPOSALS_PATH}/${dgProposal.proposalId}`)
+            }
+          >
+            See on Dual Governance
+          </DgButton>
+        </SeeOnDgWrap>
       )}
     </>
   );
@@ -288,12 +281,12 @@ export const VoteCard = () => {
             metadata={eventStart?.args.metadata || ''}
           />
         </DetailsBoxWrap>
-        {ctaItems && <MobileCTASlot>{ctaItems}</MobileCTASlot>}
+        {hasCta && <MobileCTASlot>{ctaItems}</MobileCTASlot>}
         <VotersList walletAddress={walletAddress} />
       </MainCard>
       <SideCard>
         {sidebarItems}
-        {ctaItems && <SidebarSection>{ctaItems}</SidebarSection>}
+        {hasCta && <SidebarSection>{ctaItems}</SidebarSection>}
       </SideCard>
     </Layout>
   );

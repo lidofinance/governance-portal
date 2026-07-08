@@ -39,7 +39,7 @@ export const VoteYesNoBar = ({
   ) : (
     <span>
       <VoteYeaNayText $variant="success">Yes</VoteYeaNayText>{' '}
-      <SupplyText>{yeaPctOfTotalSupply}</SupplyText>%
+      <SupplyText>{yeaPctOfTotalSupply}%</SupplyText>
     </span>
   );
 
