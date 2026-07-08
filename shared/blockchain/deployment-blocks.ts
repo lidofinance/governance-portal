@@ -12,10 +12,6 @@ export const CONTRACT_DEPLOYMENT_BLOCKS: ChainContractsMap = {
     dualGovernance: 22537924n,
     emergencyProtectedTimelock: 22537921n,
   },
-  [CHAINS.Holesky]: {
-    dualGovernance: 16123456n,
-    emergencyProtectedTimelock: 3278184n,
-  },
   [CHAINS.Hoodi]: {
     // DualGovernance: 252981n,
     dualGovernance: 391701n,
