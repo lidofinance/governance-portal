@@ -1080,5 +1080,119 @@
     "inputs": [{ "indexed": false, "name": "version", "type": "uint256" }],
     "name": "ContractVersionSet",
     "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "BUFFER_RESERVE_MANAGER_ROLE",
+    "outputs": [{ "name": "", "type": "bytes32" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "name": "_newDepositsReserveTarget", "type": "uint256" }],
+    "name": "setDepositsReserveTarget",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getDepositsReserveTarget",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "name": "_amount", "type": "uint256" },
+      { "name": "_seedDepositsCount", "type": "uint256" }
+    ],
+    "name": "withdrawDepositableEther",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getBalanceStats",
+    "outputs": [
+      { "name": "clValidatorsBalanceAtLastReport", "type": "uint256" },
+      { "name": "clPendingBalanceAtLastReport", "type": "uint256" },
+      { "name": "depositedSinceLastReport", "type": "uint256" },
+      { "name": "depositedForCurrentReport", "type": "uint256" }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getWithdrawalsReserve",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "name": "_depositsReserveTarget", "type": "uint256" }],
+    "name": "finalizeUpgrade_v4",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getDepositsReserve",
+    "outputs": [{ "name": "depositsReserve", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "reportTimestamp", "type": "uint256" },
+      { "indexed": false, "name": "clValidatorsBalance", "type": "uint256" },
+      { "indexed": false, "name": "clPendingBalance", "type": "uint256" }
+    ],
+    "name": "CLBalancesUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "name": "depositedPostReport", "type": "uint256" }
+    ],
+    "name": "DepositedPostReportUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "name": "depositsReserve", "type": "uint256" }
+    ],
+    "name": "DepositsReserveSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "name": "depositsReserveTarget", "type": "uint256" }
+    ],
+    "name": "DepositsReserveTargetSet",
+    "type": "event"
   }
 ]

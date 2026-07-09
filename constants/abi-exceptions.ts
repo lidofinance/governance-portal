@@ -9,6 +9,7 @@ export const ABI_EXCEPTIONS = {
   StETH: abis.stethAbi,
   HashConsensusAccountingOracle: abis.hashConsensusAbi,
   HashConsensusValidatorsExitBus: abis.hashConsensusAbi,
+  HashConsensusCuratedModule: abis.hashConsensusAbi,
   LidoAppRepo: abis.repoAbi,
   NodeOperatorsRegistryRepo: abis.repoAbi,
   OracleRepo: abis.repoAbi,
