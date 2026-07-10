@@ -624,15 +624,15 @@ export const Accounting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x23ed611be0e1a820978875c0122f92260804cddf',
 };
 
-export const CSParametersRegistry: ChainAddressMap = {
+export const ParametersRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x9d28ad303c90df524ba960d7a2dac56dcc31e428',
 };
 
-export const CSExitPenalties: ChainAddressMap = {
+export const ExitPenalties: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x06cd61045f958A209a0f8D746e103eCc625f4193',
 };
 
-export const CSStrikes: ChainAddressMap = {
+export const ValidatorStrikes: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xaa328816027F2D32B9F56d190BC9Fa4A5C07637f',
 };
 
@@ -644,6 +644,6 @@ export const CuratedModule: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1',
 };
 
-export const HashConsensusCuratedModule: ChainAddressMap = {
+export const HashConsensus: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x902D64c93F6595339aA46105627a085591051aFb',
 };
