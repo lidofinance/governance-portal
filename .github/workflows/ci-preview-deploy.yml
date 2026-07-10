@@ -34,7 +34,7 @@ jobs:
 
       - name: Set ref
         id: ref
-        run: echo "short_ref=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        run: echo "short_ref=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
 
       - name: Preview stand deploying
         uses: lidofinance/dispatch-workflow@f6160026f09afc4076f8350b5e23a1a12e2c36b6
@@ -49,18 +49,18 @@ jobs:
           INPUTS_INVENTORY: "${{ inputs.inventory || 'testnet' }}"
 
       - name: Define repo short name
-        run: echo "short_name=$(echo ${{ github.repository }} | cut -d "/" -f 2)" >> $GITHUB_OUTPUT
+        run: echo "short_name=$(echo ${{ github.repository }} | cut -d "/" -f 2)" >> "$GITHUB_OUTPUT"
         id: repo
 
       - name: Define branch hash
-        run: echo "hash=$(echo "$HEAD_REF" | shasum -a 256 | cut -c -10)" >> $GITHUB_OUTPUT
+        run: echo "hash=$(echo "$HEAD_REF" | shasum -a 256 | cut -c -10)" >> "$GITHUB_OUTPUT"
         id: branch
         env:
           HEAD_REF: ${{ github.head_ref || steps.ref.outputs.short_ref }}
 
       - name: Extract stand url
         if: always()
-        run: echo "url=https://$SHORT_NAME-$BRANCH_HASH.branch-preview.org" >> $GITHUB_OUTPUT
+        run: echo "url=https://$SHORT_NAME-$BRANCH_HASH.branch-preview.org" >> "$GITHUB_OUTPUT"
         id: stand
         env:
           SHORT_NAME: ${{ steps.repo.outputs.short_name }}

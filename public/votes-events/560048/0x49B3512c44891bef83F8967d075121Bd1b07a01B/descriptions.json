@@ -393,5 +393,15 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "SRv3/CMv2 hoodi AO fix (update3)"
+  },
+  "79": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "SRv3/CMv2 hoodi StakingRouter fix (update4)"
+  },
+  "80": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "SRv3/CMv2 hoodi StakingRouter fix (update4)"
   }
 }
