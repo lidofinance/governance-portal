@@ -29,12 +29,26 @@ interface FormatOptions {
   depth?: number;
 }
 
+const formatNestedCallsRef = (
+  count: number,
+  parentId?: string | number,
+): string => {
+  const firstIndex = `${parentId}.1`;
+  if (count === 1) {
+    return `See 1 parsed call at ${firstIndex}`;
+  }
+  return `See ${count} parsed calls at ${firstIndex} — ${parentId}.${count}`;
+};
+
 const formatArg = (
   arg: unknown,
   chainId: CHAINS,
   parentId?: string | number,
-  isNestedCallsArg?: boolean,
+  nestedCallsCount?: number,
 ): string => {
+  if (nestedCallsCount) {
+    return formatNestedCallsRef(nestedCallsCount, parentId);
+  }
   if (typeof arg === 'string') {
     if (arg.startsWith('0x') && arg.length === 42) {
       const contractName = getContractName(chainId, arg);
@@ -56,13 +70,6 @@ const formatArg = (
     return arg.toString();
   }
   if (Array.isArray(arg)) {
-    // Caller marks the arg whose bytes were recursively decoded into `nestedCalls`;
-    // point the user at the decoded list instead of dumping the raw tuple array.
-    if (isNestedCallsArg) {
-      const firstIndex = `${parentId}.1`;
-      const lastIndex = `${parentId}.${arg.length}`;
-      return `See ${arg.length} parsed calls at ${firstIndex} — ${lastIndex}`;
-    }
     return `[${arg.map((item) => formatArg(item, chainId, parentId)).join(', ')}]`;
   }
   if (typeof arg === 'object' && arg !== null) {
@@ -165,16 +172,16 @@ const FormatSingleCall: React.FC<{
   const hasNestedCalls = !!nestedCalls?.length;
   const callData = args?.length ? (
     args
-      .map((arg, i) => {
+      .map((arg, index) => {
         const formatted = formatArg(
           arg,
           chainId,
           id,
-          hasNestedCalls && i === 0,
+          hasNestedCalls && index === 0 ? nestedCalls.length : undefined,
         );
         return formatted ? (
-          <CallDataItem key={`${id}-arg-${i}`}>
-            [{i + 1}] {formatted}
+          <CallDataItem key={`${id}-arg-${index}`}>
+            [{index + 1}] {formatted}
           </CallDataItem>
         ) : null;
       })
