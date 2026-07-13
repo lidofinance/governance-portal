@@ -541,3 +541,35 @@ export const CircuitBreaker: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x44a5789dFeDa59cD176Ab5709ec2F4829dE4d555',
   [CHAINS.Mainnet]: '0x6019CB557978296BA3C08a7B73225C0975DFB2F7',
 };
+
+export const SRUpgradeTemplate: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xd92b6303ba39297cb69a3a17a88b47586a6af14c',
+};
+
+export const Accounting: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x23ed611be0e1a820978875c0122f92260804cddf',
+};
+
+export const ParametersRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x9d28ad303c90df524ba960d7a2dac56dcc31e428',
+};
+
+export const ExitPenalties: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x06cd61045f958A209a0f8D746e103eCc625f4193',
+};
+
+export const ValidatorStrikes: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xaa328816027F2D32B9F56d190BC9Fa4A5C07637f',
+};
+
+export const CSCurveSetup: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x711985E069f4d702e0457C0dACAde3D3894Ce4E3',
+};
+
+export const CuratedModule: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1',
+};
+
+export const HashConsensus: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x902D64c93F6595339aA46105627a085591051aFb',
+};
