@@ -1,5 +1,5 @@
 import Hash from 'ipfs-only-hash';
-import { getIpfsUrl } from './get-ipfs-url';
+import { getIpfsUrls } from './get-ipfs-url';
 
 export const DEFAULT_PARAMS = {
   method: 'GET',
@@ -17,16 +17,16 @@ type FetcherIpfs = (
   params?: RequestInit,
   timeoutMs?: number,
 ) => Promise<string>;
-export const fetcherIPFS: FetcherIpfs = async (
-  cid,
-  params = DEFAULT_PARAMS,
-  timeoutMs = IPFS_FETCH_TIMEOUT,
-) => {
-  const paramsWithTimeout = {
+const fetchAndValidate = async (
+  cid: string,
+  url: string,
+  params: RequestInit,
+  timeoutMs: number,
+): Promise<string> => {
+  const response = await fetch(url, {
     ...params,
     signal: AbortSignal.timeout(timeoutMs),
-  };
-  const response = await fetch(getIpfsUrl(cid), paramsWithTimeout);
+  });
 
   if (!response.ok) {
     throw new Error('An error occurred while fetching the data.');
@@ -44,4 +44,20 @@ export const fetcherIPFS: FetcherIpfs = async (
   }
 
   return text;
+};
+
+export const fetcherIPFS: FetcherIpfs = async (
+  cid,
+  params = DEFAULT_PARAMS,
+  timeoutMs = IPFS_FETCH_TIMEOUT,
+) => {
+  let lastError: unknown;
+  for (const url of getIpfsUrls(cid)) {
+    try {
+      return await fetchAndValidate(cid, url, params, timeoutMs);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError;
 };

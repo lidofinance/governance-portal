@@ -1,10 +1,14 @@
-const w3sPrefix = 'https://';
-const w3sSuffix = '.ipfs.w3s.link';
+const dwebPrefix = 'https://';
+const dwebSuffix = '.ipfs.dweb.link';
+
+const pinataPrefix = 'https://gateway.pinata.cloud/ipfs/';
 
 const defaultPrefix = 'https://cloudflare-ipfs.com/ipfs/';
 const defaultSuffix = '';
 
-export const getIpfsUrl = (cid: string) =>
+export const getIpfsUrls = (cid: string): string[] =>
   `${cid}`.match(/^b/i)
-    ? `${w3sPrefix}${cid}${w3sSuffix}`
-    : `${defaultPrefix}${cid}${defaultSuffix}`;
+    ? [`${dwebPrefix}${cid}${dwebSuffix}`, `${pinataPrefix}${cid}`]
+    : [`${defaultPrefix}${cid}${defaultSuffix}`, `${pinataPrefix}${cid}`];
+
+export const getIpfsUrl = (cid: string) => getIpfsUrls(cid)[0];
