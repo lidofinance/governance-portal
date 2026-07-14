@@ -7,14 +7,14 @@ import { useEscrowContext } from 'providers/escrow';
 // eslint-disable-next-line import/no-restricted-paths
 import { useDualGovernanceConfig } from '@dg/hooks/use-dual-governance-config';
 import { calculateCurrentThresholdProgress } from 'shared/utils/calculate-current-threshold-progress';
-import { parsePercent16 } from 'shared/blockchain/utils';
-import { formatBalance } from 'utils/format-balance';
+import { formatEth, parsePercent16 } from 'shared/blockchain/utils';
 import {
   Wrap,
   Header,
   Title,
   Value,
   FooterRow,
+  ThresholdLabel,
   InfoIconWrap,
   ProgressWrap,
   TooltipText,
@@ -48,23 +48,8 @@ export const VoteVetoSupport = () => {
   return (
     <Wrap>
       <Header>
-        <Title>
-          Veto support
-          <Tooltip
-            title={
-              <TooltipText>
-                Total stETH locked in the veto signalling escrow as a share of
-                the VetoSignalling threshold. If support reaches 100%, Dual
-                Governance enters VetoSignalling and blocks the proposal.
-              </TooltipText>
-            }
-          >
-            <InfoIconWrap>
-              <InfoIcon />
-            </InfoIconWrap>
-          </Tooltip>
-        </Title>
-        <Value>
+        <Title>Veto support</Title>
+        <Value data-testid="vetoSupportPercent">
           {isDataLoading ? (
             <SkeletonBar width={36} />
           ) : (
@@ -81,14 +66,29 @@ export const VoteVetoSupport = () => {
         />
       </ProgressWrap>
       <FooterRow>
-        <span>
+        <span data-testid="vetoSupportValue">
           {isDataLoading ? (
             <SkeletonBar width={24} />
           ) : (
-            formatBalance(totalStEthInEscrow, 1)
+            `${formatEth(totalStEthInEscrow)} stETH`
           )}
         </span>
-        <span>VetoSignalling threshold</span>
+        <ThresholdLabel>
+          VetoSignalling threshold
+          <Tooltip
+            title={
+              <TooltipText>
+                Total stETH locked in the veto signalling escrow as a share of
+                the VetoSignalling threshold. If support reaches 100%, Dual
+                Governance enters VetoSignalling and blocks the proposal.
+              </TooltipText>
+            }
+          >
+            <InfoIconWrap>
+              <InfoIcon />
+            </InfoIconWrap>
+          </Tooltip>
+        </ThresholdLabel>
       </FooterRow>
     </Wrap>
   );

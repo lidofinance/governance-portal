@@ -3,7 +3,6 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
 import {
   ActionsWrapper,
-  ArrowIconWrapper,
   InlineLoaderStyled,
   ProposalContainer,
   ProposalHeader,
@@ -12,6 +11,7 @@ import {
   ProposalStateLogWrapper,
   SubmitDate,
   SubmittedBy,
+  SubmitterAddressWrap,
 } from './style';
 import { Text } from 'shared/components/text';
 import { ProposalCombinedData } from '@dg/proposals/types';
@@ -25,10 +25,10 @@ import { useScheduleProposalAction } from '@dg/write-actions/schedule-proposal';
 import { useExecuteProposalAction } from '@dg/write-actions/execute-proposal';
 import { useConfig } from 'config';
 import { isTestnet as getIsTestnet } from 'shared/blockchain/utils/is-testnet';
-import { ArrowRight } from 'shared/components/icons';
+import { BackButton } from 'shared/components/back-button';
 import { useProposalStatus } from '@dg/hooks/use-proposal-status';
 import { Badge } from '../shared-components/vote-status-badge/style';
-import { Box, Link } from '@lidofinance/lido-ui';
+import { Box, Link, Identicon, trimAddress } from '@lidofinance/lido-ui';
 import { useAccount } from 'wagmi';
 import { ConnectWalletButton } from 'shared/wallet';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -53,6 +53,7 @@ import { MarkdownWrap } from '../proposals-list/style';
 import { BaseCall } from 'utils/decode-evm-script-calls';
 import { useDecodedCalls } from 'shared/hooks';
 import { GOVERNANCE_PATH, votePage } from 'constants/urls';
+import { AddressPop } from 'shared/components/address-pop';
 
 type Props = {
   id: number;
@@ -342,10 +343,8 @@ export const ProposalFullInfo = ({ id }: Props) => {
 
   return (
     <ProposalContainer>
+      <BackButton label="proposals" href={GOVERNANCE_PATH} />
       <ProposalHeader>
-        <ArrowIconWrapper target="_self" href={GOVERNANCE_PATH}>
-          <ArrowRight />
-        </ArrowIconWrapper>
         {proposalStatusInfo && proposalStatusInfo.badge && (
           <Badge $variant={proposalStatusInfo.badge.variant}>
             {proposalStatusInfo.badge.text}{' '}
@@ -376,7 +375,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
                   <span>Submitted</span>
                 )}{' '}
                 from{' '}
-                <ProposalLink href={votePage(voteId)} target="_blank">
+                <ProposalLink href={votePage(voteId)} target="_self">
                   Vote #{voteId}
                 </ProposalLink>{' '}
                 on {submittedAt}
@@ -469,12 +468,23 @@ export const ProposalFullInfo = ({ id }: Props) => {
             )}
           </>
         )}
-        {!voteId && (
+        {!voteId && proposalSubmittedLog?.args.proposerAccount && (
           <SubmittedBy>
-            <Text size={22}>
+            <Text size={14}>
               Proposal submitted by{' '}
-              <Text size={22} weight={500}>
-                {proposalSubmittedLog?.args.proposerAccount}
+              <Text size={14} weight={500} as="span">
+                <AddressPop
+                  address={proposalSubmittedLog.args.proposerAccount}
+                  isInline
+                >
+                  <SubmitterAddressWrap>
+                    <Identicon
+                      address={proposalSubmittedLog.args.proposerAccount}
+                      diameter={20}
+                    />
+                    {trimAddress(proposalSubmittedLog.args.proposerAccount, 4)}
+                  </SubmitterAddressWrap>
+                </AddressPop>
               </Text>
             </Text>
           </SubmittedBy>

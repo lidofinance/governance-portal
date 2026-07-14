@@ -128,7 +128,7 @@ export const VoteMetaBar = ({
   const phase = getPhaseLabel(status, dualGovernancePhase, isDgProposalLoading);
 
   const timeValue = isActive ? (
-    <CountdownText>
+    <CountdownText data-testid="voteTimer">
       <VoteDetailsCountdown
         voteTime={
           status === VoteStatus.ActiveMain ? mainPhaseEnd : objectionPhaseEnd

@@ -64,6 +64,9 @@ export default withBundleAnalyzer({
   compiler: {
     styledComponents: true,
   },
+  images: {
+    loader: 'custom',
+  },
   experimental: {
     // Fixes a build error with importing Pure ESM modules, e.g. reef-knot
     // Some docs are here:
@@ -213,7 +216,6 @@ export default withBundleAnalyzer({
 
     defaultChain: process.env.DEFAULT_CHAIN,
     rpcUrls_1: process.env.EL_RPC_URLS_1,
-    rpcUrls_17000: process.env.EL_RPC_URLS_17000,
     rpcUrls_560048: process.env.EL_RPC_URLS_560048,
 
     cspTrustedHosts: process.env.CSP_TRUSTED_HOSTS,

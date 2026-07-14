@@ -1,5 +1,3 @@
-import { InlineLoader } from '@lidofinance/lido-ui';
-import { Text } from 'shared/components/text';
 import styled from 'styled-components';
 import { devicesHeaderMedia } from 'styles/global';
 import Link from 'next/link';
@@ -52,31 +50,6 @@ export const IPFSInfoBoxOnlyDesktopWrapper = styled.div`
   }
 `;
 
-export const VaultInfoButton = styled.button`
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 8px;
-  margin-right: 8px;
-  border: 1px solid var(--custom-border);
-  padding: 10px;
-  border-radius: 30px;
-  color: #131217b8;
-  background: transparent;
-  &:not(:disabled) {
-    cursor: pointer;
-  }
-`;
-
-export const VaultInfoPopupTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: ${({ theme }) => theme.spaceMap.lg}px;
-  p {
-    text-align: center;
-  }
-`;
 export const HeaderControlButton = styled(Link)`
   border-radius: 50%;
   flex-shrink: 0;
@@ -111,23 +84,6 @@ export const HeaderControlButton = styled(Link)`
     margin-left: 2px;
     margin-top: 2px;
   }
-`;
-
-export const VaultInfoLoader = styled((props) => <InlineLoader {...props} />)`
-  width: 48px;
-`;
-
-export const TokensList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spaceMap.xxl}px;
-`;
-
-export const VaultInfoSubtitle = styled(Text).attrs({
-  size: 14,
-  color: 'secondary',
-})`
-  margin: ${({ theme }) => theme.spaceMap.md}px 0;
 `;
 
 export const WalletInfo = styled.div`

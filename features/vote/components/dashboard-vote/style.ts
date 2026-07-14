@@ -39,7 +39,7 @@ export const VoteDescriptionWrap = styled(Text).attrs({
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
 
   span {
@@ -49,6 +49,17 @@ export const VoteDescriptionWrap = styled(Text).attrs({
   button > div {
     display: inline-flex;
     vertical-align: middle;
+  }
+
+  && > div > * {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  && p {
+    white-space: normal;
   }
 `;
 

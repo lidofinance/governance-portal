@@ -2048,5 +2048,75 @@
     "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
     "description": null,
     "metadata": "test vote with DG items"
+  },
+  "410": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "411": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": "# A demo of `react-markdown`\r\n\r\n\r\n`react-markdown` is a markdown component for React.\r\n\r\n\r\n👉 Changes are re-rendered as you type.\r\n\r\n\r\n👈 Try writing some markdown on the left.\r\n\r\n\r\n## Overview\r\n\r\n\r\n* Follows [CommonMark](https://commonmark.org)\r\n* Optionally follows [GitHub Flavored Markdown](https://github.github.com/gfm/)\r\n* Renders actual React elements instead of using `dangerouslySetInnerHTML`\r\n* Lets you define your own components (to render `MyHeading` instead of `'h1'`)\r\n* Has a lot of plugins\r\n\r\n\r\n## Contents\r\n\r\n\r\nHere is an example of a plugin in action\r\n([`remark-toc`](https://github.com/remarkjs/remark-toc)).\r\n**This section is replaced by an actual table of contents**.\r\n\r\n\r\n## Syntax highlighting\r\n\r\n\r\nHere is an example of a plugin to highlight code:\r\n[`rehype-starry-night`](https://github.com/rehypejs/rehype-starry-night).\r\n\r\n\r\n```js\r\nimport React from 'react'\r\nimport ReactDom from 'react-dom'\r\nimport {MarkdownHooks} from 'react-markdown'\r\nimport rehypeStarryNight from 'rehype-starry-night'\r\n\r\n\r\nconst markdown = `\r\n# Your markdown here\r\n`\r\n\r\n\r\nReactDom.render(\r\n  <MarkdownHooks rehypePlugins={[rehypeStarryNight]}>{markdown}</MarkdownHooks>,\r\n  document.querySelector('#content')\r\n)\r\n```\r\n\r\n\r\nPretty neat, eh?\r\n\r\n\r\n## GitHub flavored markdown (GFM)\r\n\r\n\r\nFor GFM, you can *also* use a plugin:\r\n[`remark-gfm`](https://github.com/remarkjs/react-markdown#use).\r\nIt adds support for GitHub-specific extensions to the language:\r\ntables, strikethrough, tasklists, and literal URLs.\r\n\r\n\r\nThese features **do not work by default**.\r\n👆 Use the toggle above to add the plugin.\r\n\r\n\r\n| Feature    | Support              |\r\n| ---------: | :------------------- |\r\n| CommonMark | 100%                 |\r\n| GFM        | 100% w/ `remark-gfm` |\r\n\r\n\r\n~~strikethrough~~\r\n\r\n\r\n* [ ] task list\r\n* [x] checked item\r\n\r\n\r\nhttps://example.com\r\n\r\n\r\n## HTML in markdown\r\n\r\n\r\n⚠️ HTML in markdown is quite unsafe, but if you want to support it, you can\r\nuse [`rehype-raw`](https://github.com/rehypejs/rehype-raw).\r\nYou should probably combine it with\r\n[`rehype-sanitize`](https://github.com/rehypejs/rehype-sanitize).\r\n\r\n\r\n<blockquote>\r\n  👆 Use the toggle above to add the plugin.\r\n</blockquote>\r\n\r\n\r\n## Components\r\n\r\n\r\nYou can pass components to change things:\r\n\r\n\r\n```js\r\nimport React from 'react'\r\nimport ReactDom from 'react-dom'\r\nimport Markdown from 'react-markdown'\r\nimport MyFancyRule from './components/my-fancy-rule.js'\r\n\r\n\r\nconst markdown = `\r\n# Your markdown here\r\n`\r\n\r\n\r\nReactDom.render(\r\n  <Markdown\r\n    components={{\r\n      // Use h2s instead of h1s\r\n      h1: 'h2',\r\n      // Use a component instead of hrs\r\n      hr(props) {\r\n        const {node, ...rest} = props\r\n        return <MyFancyRule {...rest} />\r\n      }\r\n    }}\r\n  >\r\n    {markdown}\r\n  </Markdown>,\r\n  document.querySelector('#content')\r\n)\r\n```\r\n\r\n\r\n## More info?\r\n\r\n\r\nMuch more info is available in the\r\n[readme on GitHub](https://github.com/remarkjs/react-markdown)!\r\n\r\n\r\n***\r\n\r\n\r\nA component by [Espen Hovlandsdal](https://espen.codes/)",
+    "metadata": "lidovoteipfs://bafkreibuqkptilvncq3axz52ewwfee3gm2bxn34avuivsa7ekp6zwwkqry"
+  },
+  "412": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "lidovoteipfs://bafkreiart3j6kpt4v6efghqtu6gydsq2l2t5n4fyh3vk642amlegqgshgy"
+  },
+  "413": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "lidovoteipfs://bafkreiart3j6kpt4v6efghqtu6gydsq2l2t5n4fyh3vk642amlegqgshgy"
+  },
+  "414": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "415": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "416": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "417": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "418": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "419": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "420": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "421": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "lidovoteipfs://bafkreihff7tsago6c7op266khnfuamccmxr5wlrv556db3fhcvkck3h7wy"
+  },
+  "422": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "test vote with DG items"
+  },
+  "423": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "Test vote"
   }
 }

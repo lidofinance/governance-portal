@@ -39,6 +39,12 @@ export const FooterRow = styled.div`
   color: var(--lido-color-textSecondary);
 `;
 
+export const ThresholdLabel = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+`;
+
 export const InfoIconWrap = styled.span`
   display: inline-flex;
   cursor: pointer;

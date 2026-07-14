@@ -3,11 +3,7 @@ import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { MotionType } from './motion-types';
 import { Address } from 'viem';
 
-const EvmSupportedChains = [
-  CHAINS.Mainnet,
-  CHAINS.Holesky,
-  CHAINS.Hoodi,
-] as const;
+const EvmSupportedChains = [CHAINS.Mainnet, CHAINS.Hoodi] as const;
 
 export type EvmSupportedChain = (typeof EvmSupportedChains)[number];
 
@@ -173,104 +169,6 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x73f80240ad9363d5d3C5C3626953C351cA36Bfe9',
   },
 
-  // Holesky
-  [CHAINS.Holesky]: {
-    [MotionType.NodeOperatorIncreaseLimit]:
-      '0x18Ff3bD97739bf910cDCDb8d138976c6afDB4449',
-    [MotionType.AllowedRecipientTopUpTrpLdo]:
-      '0xD618F0CF48F057B5256e102dC18d8011e08c19D3',
-    [MotionType.LegoLDOTopUp]: '0xCfaFcD35ACcc4383e2CCDf7DD3F58114914F1955',
-    [MotionType.StethRewardProgramAdd]:
-      '0xf0968B9bE18282dD23bbbC79a1c9C8996CE6984D',
-    [MotionType.StethRewardProgramRemove]:
-      '0xF0F34b82241cD49BB3952149BD30A08Eb9D8B54E',
-    [MotionType.StethRewardProgramTopUp]:
-      '0xBB06DD9a3C7eE8cE093860094e769a1E3D6F97F6',
-    [MotionType.StethGasSupplyAdd]:
-      '0x13dB9E1ddE54d2641f571EA288D9e79C0E8bce2e',
-    [MotionType.StethGasSupplyRemove]:
-      '0x64CE36D2DC7e7786BF56D2DF8A5F3c788977Fb19',
-    [MotionType.StethGasSupplyTopUp]:
-      '0xf97E048A952d170d5D5E817C8D9c8253f4D50F96',
-    [MotionType.RewardsShareProgramAdd]:
-      '0x49D3211203e8E18B4e60F74C1126934da2520987',
-    [MotionType.RewardsShareProgramRemove]:
-      '0x112c48c4659A9a1d42a3e45EBc8e37B6150F2B0C',
-    [MotionType.RewardsShareProgramTopUp]:
-      '0x089bc04630c056D76fF4Ec172e752A7d5B855e16',
-
-    [MotionType.SDVTNodeOperatorsAdd]:
-      '0xeF5233A5bbF243149E35B353A73FFa8931FDA02b',
-    [MotionType.SDVTNodeOperatorsActivate]:
-      '0x5b4A9048176D5bA182ceec8e673D8aA6927A40D6',
-    [MotionType.SDVTNodeOperatorsDeactivate]:
-      '0x88d247cdf4ff4A4AAA8B3DD9dd22D1b89219FB3B',
-    [MotionType.SDVTVettedValidatorsLimitsSet]:
-      '0x30Cb36DBb0596aD9Cf5159BD2c4B1456c18e47E8',
-    [MotionType.SDVTTargetValidatorLimitsUpdateV2]:
-      '0x431a156BEba95803a95452441C1959c4479710e1',
-    [MotionType.SDVTNodeOperatorRewardAddressesSet]:
-      '0x6Bfc576018C7f3D2a9180974E5c8e6CFa021f617',
-    [MotionType.SDVTNodeOperatorNamesSet]:
-      '0x4792BaC0a262200fA7d3b68e7622bFc1c2c3a72d',
-    [MotionType.SDVTNodeOperatorManagerChange]:
-      '0xb8C4728bc0826bA5864D02FA53148de7A44C2f7E',
-
-    [MotionType.SandboxNodeOperatorIncreaseLimit]:
-      '0xbD37e55748c6f4Ece637AeD3e278e7575346B587',
-    [MotionType.SandboxStablesAdd]:
-      '0xB238fB1e7c8da5da022140dA956Fc3052808fC56',
-    [MotionType.SandboxStablesRemove]:
-      '0x1dd16B520380d60405732a65453FEEAc7911144a',
-    [MotionType.SandboxStablesTopUp]:
-      '0x71bcEf1f4E4945005e1D22d68F02085D5167ab43',
-    [MotionType.RccStethTopUp]: '0xe3bCa174A8b031C61a58aa56a0f622D4FFCA47d7',
-    [MotionType.PmlStethTopUp]: '0x8612A51e4914FfFb25D96d1A310D4C6342c2091E',
-    [MotionType.AtcStethTopUp]: '0x1395970895282333dC914172944f52F15Df63620',
-    [MotionType.LegoStablesTopUp]: '0x7Bb5C5965a63aFb6a05D19bB03e3f170E2d7d684',
-    [MotionType.RccStablesTopUp]: '0xD497E7e039FeFBc64dBB7b75368afb06D07Bc73F',
-    [MotionType.PmlStablesTopUp]: '0x5BAE56ECfB616eAbbDB048AC930FA1Db82f18900',
-    [MotionType.AtcStablesTopUp]: '0xfa54cf78474cD4A7f4408Dd0efA36e44b6269813',
-    [MotionType.StonksStethTopUp]: '0x1240775f1857fB8317bD9ba63f4A8A6A78D9af06',
-    [MotionType.StonksStablesTopUp]:
-      '0x65A9913467A9793Bb23726d72C99A470bb9294Ad',
-    [MotionType.CSMSettleElStealingPenalty]:
-      '0x07696EA8A5b53C3E35d9cce10cc62c6c79C4691D',
-    [MotionType.AllianceOpsStablesTopUp]:
-      '0x343FA5F0C79277E2d27e440F40420D619F962A23',
-    [MotionType.EcosystemOpsStablesTopUp]:
-      '0x167caEDde0F3230eB18763270B11c970409F389e',
-    [MotionType.EcosystemOpsStethTopUp]:
-      '0x4F2dA002a7bD5F7C63B62d4C9e4b762c689Dd8Ac',
-    [MotionType.LabsOpsStablesTopUp]:
-      '0xf7304738E9d4F572b909FaEd32504F558E234cdB',
-    [MotionType.LabsOpsStethTopUp]:
-      '0xef0Df040B76252cC7fa31a5fc2f36e85c1C8c4f9',
-
-    [MotionType.SetLiabilitySharesTargetInVaultHub]:
-      '0xc5dCd2A9642ceA9B71A632BF5b8ff52424Ea1B40',
-
-    // next motion factories are @deprecated
-    // we are keeping them here to display history data
-    [MotionType.LEGOTopUp]: '',
-    [MotionType.GasFunderETHTopUp]: '',
-    [MotionType.RewardProgramAdd]: '',
-    [MotionType.RewardProgramRemove]: '',
-    [MotionType.RewardProgramTopUp]: '',
-    [MotionType.ReferralPartnerAdd]: '',
-    [MotionType.ReferralPartnerRemove]: '',
-    [MotionType.ReferralPartnerTopUp]: '',
-    [MotionType.AllowedRecipientAdd]: '',
-    [MotionType.AllowedRecipientRemove]: '',
-    [MotionType.AllowedRecipientTopUp]: '',
-    [MotionType.AllowedRecipientAddReferralDai]: '',
-    [MotionType.AllowedRecipientRemoveReferralDai]: '',
-    [MotionType.AllowedRecipientTopUpReferralDai]: '',
-    [MotionType.LegoDAITopUp]: '0xBCcfe42cc3EF530db9888dC8F82B1B4A4DfB9DB4',
-    [MotionType.SDVTTargetValidatorLimitsUpdateV1]:
-      '0xC91a676A69Eb49be9ECa1954fE6fc861AE07A9A2',
-  },
-
   // Hoodi
   [CHAINS.Hoodi]: {
     [MotionType.NodeOperatorIncreaseLimit]:
@@ -334,9 +232,9 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.AllowConsolidationPair]:
       '0x22D36e7616F541A527989C5652fDA4d527bB461C',
     [MotionType.CreateOrUpdateOperatorGroup]:
-      '0xD3De4d7dCc0E81131032Fb4C32243f4b2B90e8b7',
+      '0xF5Dd3789AC14fd4be9C0D24f4d2218B4024047DD',
     [MotionType.UpdateStakingModuleShareLimits]:
-      '0xD63cf25df1bA6144db27A81A98120Dfc53dE4540',
+      '0xEE8E0d3087f09f56E3fdb80dd1DB3Fb37de0bfFF',
 
     [MotionType.StonksStethTopUp]: '',
     [MotionType.StonksStablesTopUp]: '',
@@ -383,19 +281,19 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xaccaE3755d63EeaAF2e525E780aEeA8D58700Ab9',
 
     [MotionType.CSMSetMerkleGateTree]:
-      '0xf71fcB20B9FB8468653Bcb24E31F39bc069D5995',
+      '0xDAf4afD2dD5DcA705900b9e526150C1a00057994',
     [MotionType.CuratedSetMerkleGateTree]:
-      '0x5194cC02B6F477B4a23DFA422fFC238c8B5b1736',
+      '0x9F4BB90d6D0bB3B18a7156F3648c1e5256BAD1a7',
 
     [MotionType.CSMSettleGeneralDelayedPenalty]:
-      '0xd0c38B2F0C1F760976dA010C1c35D828331Ff9E2',
+      '0x029239CDF35d5669d81D32A83EbF783b87aD1AEE',
     [MotionType.CuratedSettleGeneralDelayedPenalty]:
-      '0x3486B872768D361309e405A046C4BF995c21CC6c',
+      '0x6B5b2147E2B7Ae08E4486D41741D805A869d2338',
 
     [MotionType.CSMReportWithdrawalsForSlashedValidators]:
-      '0x4EaB04775837A6F0218750A10454119f349258FE',
+      '0x5732943077210FD18d9d5d2A9d4D8847A5069713',
     [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
-      '0x6E40FED7c28bAA93a798cA10f8A93965a19eC52e',
+      '0xE1EDc1857B47a3188d9cA16E3e6A2DF2Af494FDD',
 
     // next motion factories are @deprecated
     // we are keeping them here to display history data

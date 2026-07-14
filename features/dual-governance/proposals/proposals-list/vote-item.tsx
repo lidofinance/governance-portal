@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 import { VoteStatusBadge } from '@dg/proposals/shared-components/vote-status-badge';
 
@@ -15,7 +14,6 @@ import {
 import { ProposalName } from '@dg/proposals/shared-components/proposal-name/proposal-name';
 import { VoteData } from 'shared/votes/types';
 import { useDecodedScript } from 'shared/hooks';
-import * as contractAddresses from 'shared/blockchain/contract-addresses';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
 import { fetcherIPFS } from 'utils/fetcher-ipfs';
@@ -27,7 +25,7 @@ import {
   replaceLinksInMD,
 } from 'utils/replace-custom-elements-in-MD';
 import { WarningIconTransparent } from 'shared/components/icons';
-import { getContractAddress } from 'shared/blockchain/get-contract-address';
+import { getContractName } from 'utils/get-contract-name';
 
 type Props = {
   script: string;
@@ -51,7 +49,6 @@ export const VoteItem = ({
   nay,
   script,
 }: Props) => {
-  const [isUnknownContractCalled, setIsUnknownContractCalled] = useState(false);
   const { chainId } = useLidoSDK();
 
   const cid = description?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
@@ -68,28 +65,11 @@ export const VoteItem = ({
 
   const { decoded } = useDecodedScript(script);
 
-  useEffect(() => {
-    if (decoded && decoded.calls.length > 0) {
-      const isUnknownContractCalled = decoded.calls
-        ? decoded.calls.some((call) => {
-            const contractNames = Object.keys(contractAddresses);
-
-            return !contractNames.some((contractName) => {
-              try {
-                const address = getContractAddress(
-                  contractName as any,
-                  chainId,
-                );
-                return address?.toLowerCase() === call.address.toLowerCase();
-              } catch {
-                return false;
-              }
-            });
-          })
-        : false;
-      setIsUnknownContractCalled(isUnknownContractCalled);
-    }
-  }, [chainId, decoded]);
+  const isUnknownContractCalled =
+    !!decoded &&
+    decoded.calls.some(
+      (call) => getContractName(chainId, call.address) === null,
+    );
 
   return (
     <ProposalListItemWrapper>

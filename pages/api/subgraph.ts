@@ -107,13 +107,7 @@ const subgraph = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Forward the status code
   res.status(upstream.status);
-
-  // Copy headers except content-encoding and content-length
-  upstream.headers.forEach((value, key) => {
-    const name = key.toLowerCase();
-    if (name === 'content-encoding' || name === 'content-length') return;
-    res.setHeader(key, value);
-  });
+  res.setHeader('Content-Type', 'application/json');
 
   // Stream the response body
   if (upstream.body) {

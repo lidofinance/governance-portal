@@ -1,0 +1,461 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "accounting_", "type": "address" },
+      { "internalType": "address", "name": "registry_", "type": "address" },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "minKeysCount",
+                "type": "uint256"
+              },
+              { "internalType": "uint256", "name": "trend", "type": "uint256" }
+            ],
+            "internalType": "struct IBondCurve.BondCurveIntervalInput[]",
+            "name": "bondCurve",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "keyRemovalCharge",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "generalDelayedPenaltyFine",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "keysLimit",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              {
+                "internalType": "uint256",
+                "name": "priority",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxDeposits",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IOneShotCurveSetup.QueueConfigOverride",
+            "name": "queueConfig",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "minKeyNumber",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct IParametersRegistry.KeyNumberValueInterval[]",
+                "name": "data",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IOneShotCurveSetup.KeyNumberValueIntervalsOverride",
+            "name": "rewardShareData",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "minKeyNumber",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct IParametersRegistry.KeyNumberValueInterval[]",
+                "name": "data",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IOneShotCurveSetup.KeyNumberValueIntervalsOverride",
+            "name": "performanceLeewayData",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              {
+                "internalType": "uint256",
+                "name": "lifetime",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "threshold",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IOneShotCurveSetup.StrikesOverride",
+            "name": "strikesParams",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "badPerformancePenalty",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              {
+                "internalType": "uint256",
+                "name": "attestationsWeight",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "blocksWeight",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "syncWeight",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IOneShotCurveSetup.PerformanceCoefficientsOverride",
+            "name": "performanceCoefficients",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "allowedExitDelay",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "exitDelayFee",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "bool", "name": "isSet", "type": "bool" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct IOneShotCurveSetup.ScalarOverride",
+            "name": "maxElWithdrawalRequestFee",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IOneShotCurveSetup.ConstructorParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "AlreadyExecuted", "type": "error" },
+  { "inputs": [], "name": "EmptyBondCurve", "type": "error" },
+  { "inputs": [], "name": "ZeroAccountingAddress", "type": "error" },
+  { "inputs": [], "name": "ZeroRegistryAddress", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "curveId",
+        "type": "uint256"
+      }
+    ],
+    "name": "BondCurveDeployed",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "ACCOUNTING",
+    "outputs": [
+      { "internalType": "contract IAccounting", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "REGISTRY",
+    "outputs": [
+      {
+        "internalType": "contract IParametersRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allowedExitDelayOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "badPerformancePenaltyOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "bondCurve",
+    "outputs": [
+      { "internalType": "uint256", "name": "minKeysCount", "type": "uint256" },
+      { "internalType": "uint256", "name": "trend", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deployedCurveId",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "execute",
+    "outputs": [
+      { "internalType": "uint256", "name": "curveId", "type": "uint256" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "executed",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "exitDelayFeeOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "generalDelayedPenaltyFineOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBondCurve",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "minKeysCount",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "trend", "type": "uint256" }
+        ],
+        "internalType": "struct IBondCurve.BondCurveIntervalInput[]",
+        "name": "bondCurve_",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPerformanceLeewayDataOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "minKeyNumber",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "value", "type": "uint256" }
+        ],
+        "internalType": "struct IParametersRegistry.KeyNumberValueInterval[]",
+        "name": "data",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRewardShareDataOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "minKeyNumber",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "value", "type": "uint256" }
+        ],
+        "internalType": "struct IParametersRegistry.KeyNumberValueInterval[]",
+        "name": "data",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "keyRemovalChargeOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "keysLimitOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxElWithdrawalRequestFeeOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "performanceCoefficientsOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      {
+        "internalType": "uint256",
+        "name": "attestationsWeight",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "blocksWeight", "type": "uint256" },
+      { "internalType": "uint256", "name": "syncWeight", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "performanceLeewayDataOverride",
+    "outputs": [{ "internalType": "bool", "name": "isSet", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "queueConfigOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "priority", "type": "uint256" },
+      { "internalType": "uint256", "name": "maxDeposits", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardShareDataOverride",
+    "outputs": [{ "internalType": "bool", "name": "isSet", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "strikesParamsOverride",
+    "outputs": [
+      { "internalType": "bool", "name": "isSet", "type": "bool" },
+      { "internalType": "uint256", "name": "lifetime", "type": "uint256" },
+      { "internalType": "uint256", "name": "threshold", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

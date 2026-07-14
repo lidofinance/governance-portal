@@ -18,6 +18,7 @@ import {
   checkManifestStructure,
   processInBatches,
   reportAndExit,
+  getChainFilter,
 } from '../cache-base-check.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -125,7 +126,10 @@ const checkChainCompleteness = async (chainId, proposalsById) => {
 };
 
 const main = async () => {
-  const chainIds = Object.keys(HISTORICAL_ADDRESSES).map(Number);
+  const chainFilter = getChainFilter();
+  const chainIds = Object.keys(HISTORICAL_ADDRESSES)
+    .map(Number)
+    .filter((chainId) => !chainFilter || chainFilter.has(chainId));
 
   for (const chainId of chainIds) {
     const chainDir = join(INPUT_ROOT, String(chainId));

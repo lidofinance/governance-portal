@@ -1,10 +1,15 @@
 import { EvmUnrecognized } from '@easy-track/evm-addresses';
 import { getMotionTypeByScriptFactory } from '@easy-track/utils/get-motion-type';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import { zeroAddress } from 'viem';
 import * as addressMaps from 'shared/blockchain/contract-addresses';
 
 export const getContractName = (chainId: CHAINS, address: string) => {
   const lowerAddress = address.toLowerCase();
+  if (lowerAddress === zeroAddress) {
+    return null;
+  }
+
   const name = (Object.keys(addressMaps) as (keyof typeof addressMaps)[]).find(
     (contractName) => {
       const chainAddressMap = addressMaps[contractName];

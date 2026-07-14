@@ -9,7 +9,6 @@ export type SecretConfigType = Modify<
     defaultChain: number;
 
     rpcUrls_1: [string, ...string[]];
-    rpcUrls_17000: [string, ...string[]];
     rpcUrls_560048: [string, ...string[]];
 
     // Dynamic keys like rpcUrls_<number>
@@ -37,10 +36,6 @@ export const getSecretConfig = (): SecretConfigType => {
 
     // Hack: in the current implementation we can treat an empty array as a "tuple" (conditionally)
     rpcUrls_1: (serverRuntimeConfig.rpcUrls_1?.split(',') ?? []) as [
-      string,
-      ...string[],
-    ],
-    rpcUrls_17000: (serverRuntimeConfig.rpcUrls_17000?.split(',') ?? []) as [
       string,
       ...string[],
     ],

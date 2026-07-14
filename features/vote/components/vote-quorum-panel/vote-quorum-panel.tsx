@@ -45,7 +45,8 @@ export const VoteQuorumPanel = ({ vote }: Props) => {
     <>
       <QuorumRow>
         <QuorumLabel>
-          Quorum: <QuorumValue>{quorumPct}%</QuorumValue>
+          Quorum:{' '}
+          <QuorumValue data-testid="quorumValue">{quorumPct}%</QuorumValue>
         </QuorumLabel>
         <QuorumTooltip
           placement="bottomRight"

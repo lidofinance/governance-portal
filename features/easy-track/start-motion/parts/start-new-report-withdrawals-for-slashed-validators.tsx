@@ -2,11 +2,13 @@ import { Fragment } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
 import { encodeAbiParameters, parseEther } from 'viem';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import invariant from 'tiny-invariant';
 
 import { PageLoader } from 'shared/components/page-loader';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
+import { ValidatedInputHookForm } from 'shared/hook-form/validated-input-hook-form';
 import {
   CSMReportWithdrawalsForSlashedValidators,
   CuratedReportWithdrawalsForSlashedValidators,
@@ -57,6 +59,19 @@ const REPORT_WITHDRAWALS_FOR_SLASHED_VALIDATORS_MAP = {
   },
 } as const;
 
+const validatePositiveEther = (value: string) => {
+  const amountError = validateEtherValue(value);
+  if (amountError) {
+    return amountError;
+  }
+
+  if (parseEther(value) === 0n) {
+    return `Value must be greater than zero`;
+  }
+
+  return true;
+};
+
 export const formParts = ({
   motionType,
 }: {
@@ -70,9 +85,10 @@ export const formParts = ({
       formData,
       contract,
     }: PopulateTxArgs<FormData>) => {
-      const sortedReports = [...formData.reports].sort(
-        (a, b) => Number(a.id) - Number(b.id),
-      );
+      const sortedReports = [...formData.reports].sort((a, b) => {
+        const idComp = Number(a.id) - Number(b.id);
+        return idComp !== 0 ? idComp : Number(a.keyIndex) - Number(b.keyIndex);
+      });
 
       const encodedCallData = encodeAbiParameters(
         [
@@ -111,6 +127,7 @@ export const formParts = ({
     }),
     Component: ({ fieldNames, submitAction }) => {
       const { chainId } = useLidoSDK();
+      const queryClient = useQueryClient();
       const { factory } =
         REPORT_WITHDRAWALS_FOR_SLASHED_VALIDATORS_MAP[motionType];
 
@@ -142,8 +159,7 @@ export const formParts = ({
         useIsTrustedCaller(factory);
 
       const fieldsArr = useFieldArray({ name: fieldNames.reports });
-      const { watch } = useFormContext();
-      const selectedReports: Report[] = watch(fieldNames.reports);
+      const { getValues, trigger } = useFormContext();
 
       const handleAddReport = () =>
         fieldsArr.append({
@@ -152,6 +168,82 @@ export const formParts = ({
           exitBalance: '',
           slashingPenalty: '',
         });
+
+      const fetchIsValidatorSlashed = (
+        nodeOperatorId: string,
+        keyIndex: string,
+      ) => {
+        invariant(
+          factoryData?.stakingModuleAddress,
+          'staking module address is required to check slashed status',
+        );
+        return queryClient.fetchQuery({
+          queryKey: [
+            'is-validator-slashed',
+            chainId,
+            factoryData.stakingModuleAddress,
+            nodeOperatorId,
+            keyIndex,
+          ],
+          queryFn: () =>
+            readModuleContract(factoryData.stakingModuleAddress)(
+              'isValidatorSlashed',
+              [BigInt(nodeOperatorId), BigInt(keyIndex)],
+            ),
+        });
+      };
+
+      const validateKeyIndexSync = (fieldIndex: number) => (value: string) => {
+        const uintError = validateUintValue(value);
+        if (uintError) {
+          return uintError;
+        }
+
+        const reports: Report[] = getValues(fieldNames.reports);
+        const currentId = reports[fieldIndex]?.id;
+        const isDuplicatePair = reports.some(
+          (report, index) =>
+            index !== fieldIndex &&
+            report.id === currentId &&
+            report.keyIndex === value,
+        );
+
+        if (isDuplicatePair) {
+          return 'This node operator and key index pair is already in use';
+        }
+
+        return undefined;
+      };
+
+      // Verifies onchain that the validator is actually slashed.
+      const validateKeyIndexAsync =
+        (fieldIndex: number) => async (value: string) => {
+          const idValue: string = getValues(
+            `${fieldNames.reports}.${fieldIndex}.id`,
+          );
+
+          // Defer to the id field's own validators until it has a usable value.
+          if (
+            !idValue ||
+            validateUintValue(idValue) ||
+            factoryData?.nodeOperatorsCount === undefined ||
+            Number(idValue) >= factoryData.nodeOperatorsCount
+          ) {
+            return undefined;
+          }
+
+          const isSlashed = await fetchIsValidatorSlashed(idValue, value);
+
+          if (isSlashed === null) {
+            return 'No slashed status found for this node operator and key index';
+          }
+
+          if (!isSlashed) {
+            return 'Validator is not slashed for this node operator and key index';
+          }
+
+          return undefined;
+        };
 
       if (isTrustedCallerLoading || isFactoryDataLoading) {
         return <PageLoader />;
@@ -203,14 +295,10 @@ export const formParts = ({
                           return 'Invalid node operator ID';
                         }
 
-                        const isAlreadyInInput = selectedReports.some(
-                          ({ id }, index) =>
-                            id === value && index !== fieldIndex,
+                        // Pair uniqueness and slashed status depend on the id
+                        void trigger(
+                          `${fieldNames.reports}.${fieldIndex}.keyIndex`,
                         );
-
-                        if (isAlreadyInInput) {
-                          return 'ID is already in use by another report';
-                        }
 
                         return true;
                       },
@@ -219,13 +307,12 @@ export const formParts = ({
                 </Fieldset>
 
                 <Fieldset>
-                  <InputHookForm
+                  <ValidatedInputHookForm
                     fieldName={`${fieldNames.reports}.${fieldIndex}.keyIndex`}
                     label="Key index"
-                    rules={{
-                      required: 'Field is required',
-                      validate: (value) => validateUintValue(value) ?? true,
-                    }}
+                    validateSync={validateKeyIndexSync(fieldIndex)}
+                    validateAsync={validateKeyIndexAsync(fieldIndex)}
+                    rules={{ required: 'Field is required' }}
                   />
                 </Fieldset>
 
@@ -235,18 +322,7 @@ export const formParts = ({
                     label="Exit balance (ETH)"
                     rules={{
                       required: 'Field is required',
-                      validate: (value) => {
-                        const amountError = validateEtherValue(value);
-                        if (amountError) {
-                          return amountError;
-                        }
-
-                        if (parseEther(value) === 0n) {
-                          return 'Exit balance must be greater than zero';
-                        }
-
-                        return true;
-                      },
+                      validate: validatePositiveEther,
                     }}
                   />
                 </Fieldset>
@@ -257,18 +333,7 @@ export const formParts = ({
                     label="Slashing penalty (ETH)"
                     rules={{
                       required: 'Field is required',
-                      validate: (value) => {
-                        const amountError = validateEtherValue(value);
-                        if (amountError) {
-                          return amountError;
-                        }
-
-                        if (parseEther(value) === 0n) {
-                          return 'Slashing penalty must be greater than zero';
-                        }
-
-                        return true;
-                      },
+                      validate: validatePositiveEther,
                     }}
                   />
                 </Fieldset>
@@ -276,20 +341,18 @@ export const formParts = ({
             </Fragment>
           ))}
 
-          {selectedReports.length < factoryData.nodeOperatorsCount && (
-            <Fieldset>
-              <ButtonIcon
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={handleAddReport}
-                icon={<Plus />}
-                color="secondary"
-              >
-                One more report
-              </ButtonIcon>
-            </Fieldset>
-          )}
+          <Fieldset>
+            <ButtonIcon
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleAddReport}
+              icon={<Plus />}
+              color="secondary"
+            >
+              One more report
+            </ButtonIcon>
+          </Fieldset>
 
           {submitAction}
         </>

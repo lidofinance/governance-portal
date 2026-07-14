@@ -117,6 +117,10 @@ export const EnactButtonWrap = styled.div`
   margin-top: ${({ theme }) => theme.spaceMap.xl}px;
 `;
 
+export const SeeOnDgWrap = styled.div`
+  margin-top: ${({ theme }) => theme.spaceMap.xl}px;
+`;
+
 export const YourVoteHeading = styled.div`
   display: flex;
   align-items: center;

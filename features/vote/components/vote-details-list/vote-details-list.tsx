@@ -21,7 +21,7 @@ export const VoteDetailsList = () => {
         <Value>
           {creator ? (
             <AddressPop address={creator} isPaddingless isInline>
-              <ProposerWrap>
+              <ProposerWrap data-testid="voteProposer">
                 <Identicon address={creator} diameter={20} />
                 {trimAddress(creator, 4)}
               </ProposerWrap>
@@ -33,7 +33,7 @@ export const VoteDetailsList = () => {
       </Row>
       <Row>
         <Label>Started at</Label>
-        <Value>
+        <Value data-testid="startedDate">
           <FormattedDate
             date={Number(vote.startDate)}
             format="MMM D, HH:mm"

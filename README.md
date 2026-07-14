@@ -1,43 +1,82 @@
 # Governance Portal UI
 
-Provides information on the current governance activities, including voting, Dual Governance state and proposals, Easy Track motions
+Web interface for Lido protocol governance: Aragon voting, Dual Governance
+proposals and state, and Easy Track motions.
 
-### Prerequisites
+- Event cache internals: [`docs/events-cache.md`](docs/events-cache.md)
+- Security policy and disclosure: [`SECURITY.md`](SECURITY.md)
 
-- Node.js ^20.0.0
-- Yarn package manager v1
+## Stack
 
-This project requires an .env file which is distributed via private communication channels. A sample can be found in .env.example
+- Next.js 12 (pages router), React 18
+- wagmi 2 + viem 2, @tanstack/react-query 5
+- styled-components 5, @lidofinance/lido-ui
 
-### Development
+## Prerequisites
 
-Step 1. Copy the contents of `.env.example` to `.env.local`
+- Node.js 20 (see `.nvmrc`)
+- Yarn v1
+
+This project requires a `.env.local`, distributed via private communication
+channels. A sample can be found in `.env.example`.
+
+## Development
+
+Step 1. Copy the sample env file:
 
 ```bash
-cp .env.local.example .env.local.local
+cp .env.example .env.local
 ```
 
-Step 2. Fill out the `.env.local`. You will need to provide RPC provider urls with keys included.
+Step 2. Fill out `.env.local`. You will need to provide RPC provider URLs with
+keys included.
 
-Step 3. Install dependencies
+Step 3. Install dependencies:
 
 ```bash
 yarn
 ```
 
-Step 4. Start the development server
+Step 4. Start the development server:
 
 ```bash
 yarn dev
 ```
 
-for IPFS mode below:
+PRs target the `develop` branch. Commits follow
+[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) —
+versioning is derived from them.
+
+## Event cache
+
+Lifecycle events for Dual Governance proposals and Aragon votes are pre-fetched
+at build time, committed to `public/` as static JSON, and served instead of a
+per-item `getLogs` scan at runtime. Non-terminal items still fetch fresh from
+RPC. Full design: [`docs/events-cache.md`](docs/events-cache.md).
+
+Build (reads `SUPPORTED_CHAINS` and `EL_RPC_URLS_<chainId>` from `.env.local`):
 
 ```bash
-yarn dev:ipfs ## will start with HMR
+yarn build-all-events    # proposals + votes
 ```
 
-# Release flow
+Verify:
+
+```bash
+yarn check-all-cache     # structural + completeness via keyless public RPC (runs in CI)
+yarn validate-all-events # deep field-by-field diff against chain (local, uses .env.local)
+```
+
+CI runs `check-all-cache` on PRs to `develop`/`main`. On failure, rebuild with
+`yarn build-all-events` and commit the result — never hand-edit chunk files.
+
+## Production
+
+```bash
+yarn build && yarn start
+```
+
+## Release flow
 
 To create a new release:
 
@@ -46,5 +85,3 @@ To create a new release:
 1. When you need to release, go to Repo → Releases.
 1. Publish the desired release draft manually by clicking the edit button - this release is now the `Latest Published`.
 1. After publication, the action to create a release bump will be triggered automatically.
-
-Learn more about [App Release Flow](https://www.notion.so/App-Release-Flow-f8a3484deecb40cb9d8da4d82c1afe96).
