@@ -2503,17 +2503,17 @@
     ua-parser-js "^1.0.35"
     use-callback-ref "1.2.5"
 
-"@lidofinance/next-api-wrapper@^0.45.1", "@lidofinance/next-api-wrapper@~0.45.1":
-  version "0.45.1"
-  resolved "https://registry.npmjs.org/@lidofinance/next-api-wrapper/-/next-api-wrapper-0.45.1.tgz"
-  integrity sha512-SUAc520aooNwNJZ0Q1391Yz8iONPiVMQrRC0wWXWDETMFy0ZhCsQ5VCuRKf6rmZwxYjK7K600GV8ke06IIetaw==
+"@lidofinance/next-api-wrapper@^0.60.0", "@lidofinance/next-api-wrapper@~0.60.0":
+  version "0.60.0"
+  resolved "https://registry.yarnpkg.com/@lidofinance/next-api-wrapper/-/next-api-wrapper-0.60.0.tgz#3ab577681ed33be0116662b22c5b8675bf7ad0f5"
+  integrity sha512-PUrmw4j2Sey2eeyWY+m2GkQ3Qh3vxyIMQLLWfQrm5y3h1EbWHuRAfk1ZR+TgxM8wDFn/aOh2uZNgFCtEdgzgDA==
 
-"@lidofinance/next-ip-rate-limit@^0.45.1":
-  version "0.45.1"
-  resolved "https://registry.npmjs.org/@lidofinance/next-ip-rate-limit/-/next-ip-rate-limit-0.45.1.tgz"
-  integrity sha512-8d0l6zi4IqX08Op5UCnGM5Z76tkX6GjzzfyjD6Mt7cNt/eNS8AGGKK9wbhUGmumu97l5L0hTZgEW3rNxA8+ptg==
+"@lidofinance/next-ip-rate-limit@^0.60.0":
+  version "0.60.0"
+  resolved "https://registry.yarnpkg.com/@lidofinance/next-ip-rate-limit/-/next-ip-rate-limit-0.60.0.tgz#ec946afb9e06d846f1cd7ef96894ffa032a5802b"
+  integrity sha512-aU+N66NxU3+MOX7qCloTfg2Lkw8Bj92tNu/Kj4dWjcbzudyvtwbuiZMYLpJq9K1B/uUHKYqEWD2w7qnL2xrXmw==
   dependencies:
-    "@lidofinance/next-api-wrapper" "~0.45.1"
+    "@lidofinance/next-api-wrapper" "~0.60.0"
 
 "@lidofinance/next-pages@^0.45.1":
   version "0.45.1"
