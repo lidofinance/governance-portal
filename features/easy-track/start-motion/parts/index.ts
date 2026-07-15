@@ -12,7 +12,6 @@ import * as StartNewMEVBoostRelaysAdd from './start-new-mev-boost-relays-add';
 import * as StartNewMEVBoostRelaysEdit from './start-new-mev-boost-relays-edit';
 import * as StartNewMEVBoostRelaysRemove from './start-new-mev-boost-relays-remove';
 import * as StartNewSetMerkleGateTree from './start-new-set-merkle-gate-tree';
-import * as StartNewCSMSetVettedGateTree from './start-new-csm-set-vetted-gate-tree';
 import * as StartNewSettleGeneralDelayedPenalty from './start-new-settle-general-delayed-penalty';
 import * as StartNewReportWithdrawalsForSlashedValidators from './start-new-report-withdrawals-for-slashed-validators';
 
@@ -150,8 +149,6 @@ export const formParts = {
     StartNewSetMerkleGateTree.formParts({
       motionType: MotionTypeForms.CuratedSetMerkleGateTree,
     }),
-  [MotionTypeForms.CSMSetVettedGateTree]:
-    StartNewCSMSetVettedGateTree.formParts,
   [MotionTypeForms.CSMSettleGeneralDelayedPenalty]:
     StartNewSettleGeneralDelayedPenalty.formParts({
       motionType: MotionTypeForms.CSMSettleGeneralDelayedPenalty,

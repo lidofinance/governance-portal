@@ -49,7 +49,6 @@ export const MotionTypeForms = {
     'CSMReportWithdrawalsForSlashedValidators',
   CuratedReportWithdrawalsForSlashedValidators:
     'CuratedReportWithdrawalsForSlashedValidators',
-  CSMSetVettedGateTree: 'CSMSetVettedGateTree',
   CSMSetMerkleGateTree: 'CSMSetMerkleGateTree',
   CuratedSetMerkleGateTree: 'CuratedSetMerkleGateTree',
 
@@ -120,6 +119,7 @@ export const MotionTypeDisplayOnly = {
   AlterTiersInOperatorGridOld: 'AlterTiersInOperatorGridOld',
 
   CSMSettleElStealingPenalty: 'CSMSettleElStealingPenalty',
+  CSMSetVettedGateTree: 'CSMSetVettedGateTree',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare
