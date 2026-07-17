@@ -68,8 +68,6 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x0d2aefA542aFa8d9D1Ec35376068B88042FEF5f6',
     [MotionType.AllianceOpsStablesTopUp]:
       '0xe5656eEe7eeD02bdE009d77C88247BC8271e26Eb',
-    [MotionType.CSMSettleElStealingPenalty]:
-      '0xF6B6E7997338C48Ea3a8BCfa4BB64a315fDa76f4',
     [MotionType.EcosystemOpsStablesTopUp]:
       '0xf2476f967C826722F5505eDfc4b2561A34033477',
     [MotionType.LabsOpsStablesTopUp]:
@@ -104,8 +102,28 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x4F716AD3Cc7A3A5cdA2359e5B2c84335c171dCde',
     [MotionType.SDVTExitRequestHashesSubmit]:
       '0x58A59dDC6Aea9b1D5743D024E15DfA4badB56E37',
-    [MotionType.CSMSetVettedGateTree]:
-      '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
+
+    [MotionType.AllowConsolidationPair]:
+      '0x29e23B1EF0c9fffAc8330F9abaCebDDD827E4b5C',
+    [MotionType.CreateOrUpdateOperatorGroup]:
+      '0x2fC78638b77381e9D040163Bd6EB1cac967bDBdF',
+    [MotionType.UpdateStakingModuleShareLimits]:
+      '0x0C6703F1d8D9DdfB6c6e5F57b4f7432a6500D6D8',
+
+    [MotionType.CSMSetMerkleGateTree]:
+      '0xf3ec30B86c3dC1b8a1C754D885F9bE3160e15B4c',
+    [MotionType.CuratedSetMerkleGateTree]:
+      '0xa121667D1780a1D54EAEd67AE17ee13d0f872D60',
+
+    [MotionType.CSMSettleGeneralDelayedPenalty]:
+      '0xB71755bE764abB4Ce26cb4dADf056Be57fB8880F',
+    [MotionType.CuratedSettleGeneralDelayedPenalty]:
+      '0xfffEFC16231eDC6Dc9C93e364ff4D4E3f787f416',
+
+    [MotionType.CSMReportWithdrawalsForSlashedValidators]:
+      '0xE330516a03bDdEBA4209b5591112f1aa3dd90F0A',
+    [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
+      '0x71862Abd99819597670007bb992A7a7562fE50f2',
 
     // next motion factories are @deprecated
     // we are keeping them here to display history data
@@ -167,6 +185,10 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x5292A1284e4695B95C0840CF8ea25A818751C17F',
     [MotionType.AlterTiersInOperatorGridOld]:
       '0x73f80240ad9363d5d3C5C3626953C351cA36Bfe9',
+    [MotionType.CSMSettleElStealingPenalty]:
+      '0xF6B6E7997338C48Ea3a8BCfa4BB64a315fDa76f4',
+    [MotionType.CSMSetVettedGateTree]:
+      '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
   },
 
   // Hoodi
