@@ -107,12 +107,13 @@ export const fetchLogsInParallelChunks = async <T>({
 
   if (!returnOnFirstMatch) {
     try {
-      const logs = await client.getLogs(
+      const logs = await getLogsWithRetry(
+        client,
         buildFilter(address, event, fromBlock, toBlock, args),
       );
       return logs as unknown as T[];
     } catch {
-      // full-range request failed — fall back to the chunked scan below
+      // full-range request kept failing after retries — fall back to chunks
     }
   }
 
@@ -123,6 +124,11 @@ export const fetchLogsInParallelChunks = async <T>({
   if (totalBlocks <= MAX_BLOCKS_PER_CHUNK) {
     chunks.push({ fromBlock, toBlock });
   } else {
+    chunkCount = Math.max(1, Math.floor(chunkCount));
+    if (BigInt(chunkCount) > totalBlocks) {
+      chunkCount = Number(totalBlocks);
+    }
+
     let blocksPerChunk = totalBlocks / BigInt(chunkCount);
 
     if (blocksPerChunk > MAX_BLOCKS_PER_CHUNK) {
