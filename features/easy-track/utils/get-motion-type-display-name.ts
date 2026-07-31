@@ -57,6 +57,9 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.StonksStablesTopUp]: 'Top up stonks stablecoins',
   [MotionType.StonksStethTopUp]: 'Top up stonks stETH',
   [MotionType.AllianceOpsStablesTopUp]: 'Top up Alliance Ops stablecoins',
+  [MotionType.LOLStablecoinsTopUp]: 'Top up LOL stablecoins',
+  [MotionType.LOLStablecoinsAdd]: 'Add LOL stablecoins recipient',
+  [MotionType.LOLStablecoinsRemove]: 'Remove LOL stablecoins recipient',
 
   [MotionType.AllowConsolidationPair]: 'Allow consolidation pair',
   [MotionType.CreateOrUpdateOperatorGroup]:
@@ -139,6 +142,9 @@ export const MotionTypeDisplayNames: Record<
     'Register tiers in Operator Grid (Old)',
   [MotionType.AlterTiersInOperatorGridOld]:
     'Alter tiers in Operator Grid (Old)',
+
+  [MotionType.UpdateStakingModuleShareLimitsOld]:
+    'Update staking module share limits (Old)',
 } as const;
 
 export const getMotionTypeDisplayName = (

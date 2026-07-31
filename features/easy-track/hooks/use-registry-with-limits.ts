@@ -15,6 +15,7 @@ import {
   LabsOpsStethAllowedRecipientsRegistry,
   LegoLDORegistry,
   LegoStablesRegistry,
+  LOLStablecoinsAllowedRecipientsRegistry,
   PmlStablesRegistry,
   PmlStethAllowedRecipientsRegistry,
   RccStablesRegistry,
@@ -88,6 +89,9 @@ export const REGISTRY_WITH_LIMITS_BY_MOTION_TYPE = {
   [MotionType.LabsOpsStethTopUp]: LabsOpsStethAllowedRecipientsRegistry,
   [MotionType.SandboxStethRemove]: SandboxStethAllowedRecipientsRegistry,
   [MotionType.SandboxStethAdd]: SandboxStethAllowedRecipientsRegistry,
+  [MotionType.LOLStablecoinsTopUp]: LOLStablecoinsAllowedRecipientsRegistry,
+  [MotionType.LOLStablecoinsAdd]: LOLStablecoinsAllowedRecipientsRegistry,
+  [MotionType.LOLStablecoinsRemove]: LOLStablecoinsAllowedRecipientsRegistry,
 } as const;
 
 type HookArgs = {
@@ -191,6 +195,9 @@ const TOKEN_BY_MOTION_TYPE: Record<
   [MotionType.LabsOpsStethTopUp]: { label: 'stETH', decimals: 18 },
   [MotionType.SandboxStethRemove]: { label: 'stETH', decimals: 18 },
   [MotionType.SandboxStethAdd]: { label: 'stETH', decimals: 18 },
+  [MotionType.LOLStablecoinsTopUp]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.LOLStablecoinsAdd]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.LOLStablecoinsRemove]: { label: 'Stablecoins', decimals: 18 },
 };
 
 export const useTokenByTopUpType = ({ registryType }: HookArgs) => {

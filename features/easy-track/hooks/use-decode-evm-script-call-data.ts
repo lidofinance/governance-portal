@@ -80,6 +80,9 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.AllianceOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.EcosystemOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.LabsOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
+  [MotionType.LOLStablecoinsTopUp]: abi.topUpWithLimitsStablesAbi,
+  [MotionType.LOLStablecoinsAdd]: abi.addAllowedRecipientAbi,
+  [MotionType.LOLStablecoinsRemove]: abi.removeAllowedRecipientAbi,
   [MotionType.EcosystemOpsStethTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.LabsOpsStethTopUp]: abi.topUpWithLimitsAbi,
   [MotionType.MEVBoostRelaysAdd]: abi.addMevBoostRelaysAbi,
@@ -126,6 +129,8 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.AllowConsolidationPair]: abi.allowConsolidationPairAbi,
   [MotionType.CreateOrUpdateOperatorGroup]: abi.createOrUpdateOperatorGroupAbi,
   [MotionType.UpdateStakingModuleShareLimits]:
+    abi.evmUpdateStakingModuleShareLimitsAbi,
+  [MotionType.UpdateStakingModuleShareLimitsOld]:
     abi.evmUpdateStakingModuleShareLimitsAbi,
 } as const;
 

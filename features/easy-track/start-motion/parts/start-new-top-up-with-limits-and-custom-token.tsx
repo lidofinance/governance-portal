@@ -17,6 +17,7 @@ import {
   EcosystemOpsStablesTopUp,
   LabsOpsStablesTopUp,
   LegoStablesTopUp,
+  LOLStablecoinsTopUp,
   PmlStablesTopUp,
   RccStablesTopUp,
   SandboxStablesTopUp,
@@ -97,6 +98,10 @@ export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.LabsOpsStablesTopUp]: {
     evmContract: LabsOpsStablesTopUp,
     motionType: MotionType.LabsOpsStablesTopUp,
+  },
+  [MotionType.LOLStablecoinsTopUp]: {
+    evmContract: LOLStablecoinsTopUp,
+    motionType: MotionType.LOLStablecoinsTopUp,
   },
 };
 

@@ -1,5 +1,6 @@
 import { MotionType } from '../../motion-types';
 import {
+  LOLStablecoinsRemove,
   RewardsShareProgramRemove,
   SandboxStethRemove,
   StethGasSupplyRemove,
@@ -38,6 +39,10 @@ export const ALLOWED_RECIPIENT_REMOVE_MAP = {
   [MotionType.SandboxStethRemove]: {
     evmContract: SandboxStethRemove,
     motionType: MotionType.SandboxStethRemove,
+  },
+  [MotionType.LOLStablecoinsRemove]: {
+    evmContract: LOLStablecoinsRemove,
+    motionType: MotionType.LOLStablecoinsRemove,
   },
 };
 

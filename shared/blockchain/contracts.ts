@@ -826,6 +826,38 @@ export const LabsOpsStablesTopUp: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.LabsOpsStablesTopUp],
 };
 
+export const LOLStablecoinsAllowedRecipientsRegistry: ContractObject<
+  typeof abi.registryWithLimitsAbi
+> = {
+  name: 'LOLStablecoinsAllowedRecipientsRegistry',
+  abi: abi.registryWithLimitsAbi,
+  chainAddressMap: addr.LOLStablecoinsAllowedRecipientsRegistry,
+};
+
+export const LOLStablecoinsTopUp: ContractObject<
+  typeof abi.topUpWithLimitsStablesAbi
+> = {
+  name: 'LOLStablecoinsTopUp',
+  abi: abi.topUpWithLimitsStablesAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.LOLStablecoinsTopUp],
+};
+
+export const LOLStablecoinsAdd: ContractObject<
+  typeof abi.addAllowedRecipientAbi
+> = {
+  name: 'LOLStablecoinsAdd',
+  abi: abi.addAllowedRecipientAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.LOLStablecoinsAdd],
+};
+
+export const LOLStablecoinsRemove: ContractObject<
+  typeof abi.removeAllowedRecipientAbi
+> = {
+  name: 'LOLStablecoinsRemove',
+  abi: abi.removeAllowedRecipientAbi,
+  chainAddressMap: EvmAddressesByType[MotionType.LOLStablecoinsRemove],
+};
+
 export const EcosystemOpsStethAllowedRecipientsRegistry: ContractObject<
   typeof abi.registryWithLimitsAbi
 > = {
