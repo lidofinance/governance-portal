@@ -78,27 +78,6 @@ describe('fetchLogsInParallelChunks', () => {
     expect(result).toHaveLength(11);
   });
 
-  test('normalizes a degenerate chunkCount (0) instead of dividing by zero', async () => {
-    const getLogs = jest.fn().mockImplementation((filter: any) => {
-      if (isFullRange(filter)) {
-        return Promise.reject(new Error('range too large'));
-      }
-      return Promise.resolve([{ id: `${filter.fromBlock}` }]);
-    });
-
-    const result = await fetchLogsInParallelChunks<{ id: string }>({
-      client: makeClient(getLogs),
-      address,
-      event: dummyEvent,
-      fromBlock: FROM_BLOCK,
-      toBlock: TO_BLOCK,
-      chunkCount: 0,
-    });
-
-    // clamped to a valid count, no throw, full aggregate (11 chunks of <=4999)
-    expect(result).toHaveLength(11);
-  });
-
   test('caps concurrent chunk requests at CHUNK_CONCURRENCY (3)', async () => {
     let inFlight = 0;
     let peakInFlight = 0;

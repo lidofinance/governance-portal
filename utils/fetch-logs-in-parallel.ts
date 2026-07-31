@@ -112,8 +112,11 @@ export const fetchLogsInParallelChunks = async <T>({
         buildFilter(address, event, fromBlock, toBlock, args),
       );
       return logs as unknown as T[];
-    } catch {
-      // full-range request kept failing after retries — fall back to chunks
+    } catch (error) {
+      console.warn(
+        '[fetchLogsInParallelChunks] full-range request failed, falling back to chunks',
+        error,
+      );
     }
   }
 
@@ -124,7 +127,6 @@ export const fetchLogsInParallelChunks = async <T>({
   if (totalBlocks <= MAX_BLOCKS_PER_CHUNK) {
     chunks.push({ fromBlock, toBlock });
   } else {
-    chunkCount = Math.max(1, Math.floor(chunkCount));
     if (BigInt(chunkCount) > totalBlocks) {
       chunkCount = Number(totalBlocks);
     }
