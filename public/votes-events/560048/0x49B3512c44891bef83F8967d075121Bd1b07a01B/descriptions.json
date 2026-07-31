@@ -403,5 +403,10 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "SRv3/CMv2 hoodi StakingRouter fix (update4)"
+  },
+  "81": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call proxy__upgradeTo(0xa519Be1BBfd95445cEdFea56C12AB0B28330CC2F) at 0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
   }
 }
