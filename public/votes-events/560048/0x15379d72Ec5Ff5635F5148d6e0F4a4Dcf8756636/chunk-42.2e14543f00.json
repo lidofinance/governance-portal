@@ -52,7 +52,7 @@
     ]
   },
   "421": {
-    "description": null,
+    "description": "\\# A demo of \\`react-markdown\\`\n\n\\`react-markdown\\` is a markdown component for React.\n\n👉 Changes are re-rendered as you type.`off-chain`\n\n👈 Try writing some markdown on the left. `off-chain`\n\n\\#\\# Overview `off-chain`\n\n\\* Follows \\[CommonMark\\](https://commonmark.org)  \n\\* Optionally follows \\[GitHub Flavored Markdown\\](https://github.github.com/gfm/)  \n\\* Renders actual React elements instead of using \\`dangerouslySetInnerHTML\\`  \n\\* Lets you define your own components (to render \\`MyHeading\\` instead of \\`'h1'\\`)  \n\\* Has a lot of plugins\n\n\\#\\# Contents `off-chain`\n\nHere is an example of a plugin in action  \n(\\[\\`remark-toc\\`\\](https://github.com/remarkjs/remark-toc)).  \n\\*\\*This section is replaced by an actual table of contents\\*\\*.\n\n`off-chain`\n\n\\#\\# Syntax highlighting\n\nHere is an example of a plugin to highlight code:  \n\\[\\`rehype-starry-night\\`\\](https://github.com/rehypejs/rehype-starry-night).\n\n\\`\\`\\`js  \nimport React from 'react'  \nimport ReactDom from 'react-dom'  \nimport {MarkdownHooks} from 'react-markdown'  \nimport rehypeStarryNight from 'rehype-starry-night'\n\nconst markdown \\= \\`  \n\\# Your markdown here  \n\\`\n\nReactDom.render(  \n  \\<MarkdownHooks rehypePlugins={\\[rehypeStarryNight\\]}\\>{markdown}\\</MarkdownHooks\\>,  \n  document.querySelector('\\#content')  \n)  \n\\`\\`\\`\n\nPretty neat, eh? `off-chain`\n\n\\#\\# GitHub flavored markdown (GFM)\n\nFor GFM, you can \\*also\\* use a plugin:  \n\\[\\`remark-gfm\\`\\](https://github.com/remarkjs/react-markdown\\#use).  \nIt adds support for GitHub-specific extensions to the language:  \ntables, strikethrough, tasklists, and literal URLs.\n\nThese features \\*\\*do not work by default\\*\\*.  \n👆 Use the toggle above to add the plugin.\n\n| Feature    | Support              |  \n| \\---------: | :------------------- |  \n| CommonMark | 100%                 |  \n| GFM        | 100% w/ \\`remark-gfm\\` |\n\n\\~\\~strikethrough\\~\\~\n\n\\* \\[ \\] task list  \n\\* \\[x\\] checked item\n\nhttps://example.com\n\n\\#\\# HTML in markdown\n\n⚠️ HTML in markdown is quite unsafe, but if you want to support it, you can  \nuse \\[\\`rehype-raw\\`\\](https://github.com/rehypejs/rehype-raw).  \nYou should probably combine it with  \n\\[\\`rehype-sanitize\\`\\](https://github.com/rehypejs/rehype-sanitize).\n\n\\<blockquote\\>  \n  👆 Use the toggle above to add the plugin.  \n\\</blockquote\\>\n\n\\#\\# Components\n\nYou can pass components to change things:\n\n\\`\\`\\`js  \nimport React from 'react'  \nimport ReactDom from 'react-dom'  \nimport Markdown from 'react-markdown'  \nimport MyFancyRule from './components/my-fancy-rule.js'\n\nconst markdown \\= \\`  \n\\# Your markdown here  \n\\`\n\nReactDom.render(  \n  \\<Markdown  \n    components={{  \n      // Use h2s instead of h1s  \n      h1: 'h2',  \n      // Use a component instead of hrs  \n      hr(props) {  \n        const {node, ...rest} \\= props  \n        return \\<MyFancyRule {...rest} /\\>  \n      }  \n    }}  \n  \\>  \n    {markdown}  \n  \\</Markdown\\>,  \n  document.querySelector('\\#content')  \n)  \n\\`\\`\\`\n\n\\#\\# More info?\n\nMuch more info is available in the  \n\\[readme on GitHub\\](https://github.com/remarkjs/react-markdown)\\!\n\n\\*\\*\\*\n\nA component by \\[Espen Hovlandsdal\\](https://espen.codes/)  \n",
     "executeVoteEvent": null,
     "startVoteEvent": {
       "args": {
@@ -164,5 +164,66 @@
       "yea": "0"
     },
     "voteEvents": []
+  },
+  "424": {
+    "description": null,
+    "executeVoteEvent": {
+      "blockNumber": "3206733",
+      "executedAt": 1783952460,
+      "transactionHash": "0xce2e412e074c66be7d4804b054d13acefa18b9c2e5717f527932756493b7b81a"
+    },
+    "startVoteEvent": {
+      "args": {
+        "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+        "metadata": "test vote with DG items",
+        "voteId": "424"
+      },
+      "blockNumber": "3206650",
+      "transactionHash": "0xcd809e5872baaa359a9d2be0a8a2b1ab6ad9cd78d9339935e38acffbf7199377"
+    },
+    "voteDetails": {
+      "canExecute": false,
+      "executed": true,
+      "id": 424,
+      "minAcceptQuorum": "50000000000000000",
+      "nay": "0",
+      "open": false,
+      "phase": 2,
+      "script": "0x000000013dec3c5ef9c53234b55705ddc892b106a1c47bca0000026453e51f8b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000003dec3c5ef9c53234b55705ddc892b106a1c47bca0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000042ca7d9fa000000000000000000000000000000000000000000000000000000000000000000000000000000003dec3c5ef9c53234b55705ddc892b106a1c47bca00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000002474ec29a0000000000000000000000000f60db021f00eb7aeda94c2a2dd9c5bd6448eda49000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000038546573742070726f706f73616c3a2061637469766174654e657874537461746520616e64206765742070726f706f736572207374617475730000000000000000",
+      "snapshotBlock": "3206649",
+      "startDate": "1783951380",
+      "supportRequired": "500000000000000000",
+      "votingPower": "1000000000000000000000000",
+      "yea": "60077169834325396825394"
+    },
+    "voteEvents": [
+      {
+        "delegatedVotes": [
+          {
+            "stake": "60000000000000000000000",
+            "supports": true,
+            "voter": "0x3052Bc916De361395d7D67c3Cf710D0AcA154670"
+          },
+          {
+            "stake": "2020983796296296296",
+            "supports": true,
+            "voter": "0x55f2A98125A2984345018E74c1A975e396Ad4B7F"
+          },
+          {
+            "stake": "979016203703703704",
+            "supports": true,
+            "voter": "0x5a01f64e6427cC8ffA1d1745Ab137b3BAC9D4210"
+          }
+        ],
+        "stake": "60003000000000000000000",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      },
+      {
+        "stake": "74169834325396825394",
+        "supports": true,
+        "voter": "0x9a9B0b60842051a2ED51407b179f35Ac37f262F3"
+      }
+    ]
   }
 }
