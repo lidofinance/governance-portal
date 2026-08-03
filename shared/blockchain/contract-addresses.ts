@@ -433,6 +433,10 @@ export const StonksStablesAllowedRecipientsRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x3f0534CCcFb952470775C516DC2eff8396B8A368',
 };
 
+export const LOLStablecoinsAllowedRecipientsRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x8d8b35cA51e7808098afF4918C21Ce428c943F89',
+};
+
 export const CSMVettedGate: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xB314D4A76C457c93150d308787939063F4Cc67E0',
   [CHAINS.Hoodi]: '0x10a254E724fe2b7f305F76f3F116a3969c53845f',
@@ -573,4 +577,20 @@ export const CuratedModule: ChainAddressMap = {
 
 export const HashConsensus: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x902D64c93F6595339aA46105627a085591051aFb',
+};
+
+export const OracleRouter: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x79ef3a538200Fe4981D67E7e886bfb36D4Cb5a31',
+};
+
+export const TokenRateNotifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xbe05d12Fd10919F1881125006523452F6aFF791b',
+};
+
+export const BuybackExecutor: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x6c213ca5A10Cc26548C742229569B4AeD2A9C9B7',
+};
+
+export const BuybackAllocator: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xAA568141c051f2D1132b110f8391F18D48E8D889',
 };

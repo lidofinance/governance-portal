@@ -127,7 +127,7 @@ export const PUBLIC_DELEGATES: PublicDelegate[] = [
   {
     name: 'Kuzmich',
     avatar: `${basePath}/delegates/kuzmich.jpeg`,
-    address: '0x3133e0C65779993d607B2B6d689378A012a05C00',
+    address: '0x1778e0c68e13c6730091b576ece9a1da05f8488e',
     lido: 'https://research.lido.fi/t/kuzmich-delegate-thread/10191',
     twitter: null,
   },

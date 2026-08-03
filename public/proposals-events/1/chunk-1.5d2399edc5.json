@@ -67,5 +67,74 @@
       "scheduledAt": 1782396659,
       "status": 3
     }
+  },
+  "12": {
+    "proposalSubmittedEvent": {
+      "eventName": "ProposalSubmitted",
+      "args": {
+        "proposerAccount": "0x2e59A20f205bB85a89C53f1936454680651E618e",
+        "proposalId": "12",
+        "metadata": "Activate Staking Router v3, Community Staking Module v3 and Curated Module v2"
+      },
+      "address": "0xc1db28b3301331277e307fdcff8de28242a4486e",
+      "topics": [
+        "0x232ce03ddb9384ef5aeb6333cad16b1c7e68e1977e0e6e5a3666e934569a15fc",
+        "0x0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e",
+        "0x000000000000000000000000000000000000000000000000000000000000000c"
+      ],
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004d4163746976617465205374616b696e6720526f757465722076332c20436f6d6d756e697479205374616b696e67204d6f64756c6520763320616e642043757261746564204d6f64756c6520763200000000000000000000000000000000000000",
+      "blockHash": "0xf2e2ff2ead973715add3acc3b09cb06a0f136a8e67814031daa9fee8390df0e2",
+      "blockNumber": "25574582",
+      "blockTimestamp": "0x6a5e3357",
+      "transactionHash": "0x3abacd66e9ba3f83f6c09978d3506cc322b0d18946c26b04db427d2223f2ee96",
+      "transactionIndex": 10,
+      "logIndex": 38,
+      "removed": false
+    },
+    "proposalScheduledEvent": {
+      "eventName": "ProposalScheduled",
+      "args": {
+        "id": "12"
+      },
+      "address": "0xce0425301c85c5ea2a0873a2dee44d78e02d2316",
+      "topics": [
+        "0x8b9c2cfee0d20895490bae51f33d88197032bb221b15e360155508136257569a",
+        "0x000000000000000000000000000000000000000000000000000000000000000c"
+      ],
+      "data": "0x",
+      "blockNumber": "25596093",
+      "transactionHash": "0x50139c2d62cc5bb0cf6924462da90afac881151a2e8965a07612e4ecb288b474",
+      "transactionIndex": 11,
+      "blockHash": "0xcf4a4c700a7d76bf6b26dbf656845325e99016a5e79418966b597b5222ec98fd",
+      "logIndex": 33,
+      "removed": false,
+      "blockTimestamp": "0x6a62282b"
+    },
+    "proposalExecutedEvent": {
+      "eventName": "ProposalExecuted",
+      "args": {
+        "id": "12"
+      },
+      "address": "0xce0425301c85c5ea2a0873a2dee44d78e02d2316",
+      "topics": [
+        "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f",
+        "0x000000000000000000000000000000000000000000000000000000000000000c"
+      ],
+      "data": "0x",
+      "blockHash": "0xa31412a73b5ccca8b27c1fab860e946177c87d2e6a9f9339264ebd7769ac39dc",
+      "blockNumber": "25603297",
+      "blockTimestamp": 1784904479,
+      "transactionHash": "0x297042b4e5fd41399634f124beec7afc37712bc3374c3419b72932caf52714aa",
+      "transactionIndex": 24,
+      "logIndex": 418,
+      "removed": false
+    },
+    "details": {
+      "id": "12",
+      "executor": "0x23E0B465633FF5178808F4A75186E2F2F9537021",
+      "submittedAt": 1784558423,
+      "scheduledAt": 1784817707,
+      "status": 3
+    }
   }
 }
