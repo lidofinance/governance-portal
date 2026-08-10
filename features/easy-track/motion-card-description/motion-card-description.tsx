@@ -145,6 +145,9 @@ const MOTION_DESCRIPTIONS: Record<
   [MotionType.AllianceOpsStablesTopUp]: TopUpWithLimitsAndCustomToken,
   [MotionType.EcosystemOpsStablesTopUp]: TopUpWithLimitsAndCustomToken,
   [MotionType.LabsOpsStablesTopUp]: TopUpWithLimitsAndCustomToken,
+  [MotionType.LOLStablecoinsTopUp]: TopUpWithLimitsAndCustomToken,
+  [MotionType.LOLStablecoinsAdd]: AllowedRecipientAdd,
+  [MotionType.LOLStablecoinsRemove]: AllowedRecipientRemove,
   [MotionType.EcosystemOpsStethTopUp]: TopUpWithLimits,
   [MotionType.LabsOpsStethTopUp]: TopUpWithLimits,
   [MotionType.MEVBoostRelaysAdd]: MevBoostRelaysAdd,
@@ -194,6 +197,8 @@ const MOTION_DESCRIPTIONS: Record<
   [MotionType.AllowConsolidationPair]: AllowConsolidationPair,
   [MotionType.CreateOrUpdateOperatorGroup]: CreateOrUpdateOperatorGroup,
   [MotionType.UpdateStakingModuleShareLimits]: UpdateStakingModuleShareLimits,
+  [MotionType.UpdateStakingModuleShareLimitsOld]:
+    UpdateStakingModuleShareLimits,
 };
 
 type Props = {
