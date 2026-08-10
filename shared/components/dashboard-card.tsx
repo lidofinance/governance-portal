@@ -5,7 +5,7 @@ export const DashboardCard = styled.div`
   flex-direction: column;
   padding: ${({ theme }) => theme.spaceMap.lg}px;
   height: 280px;
-  word-break: break-all;
+  word-break: break-word;
   background-color: var(--lido-color-foreground);
   border-radius: ${({ theme }) => theme.borderRadiusesMap.xl}px;
   box-shadow: 0 4px 32px var(--lido-color-shadowLight);

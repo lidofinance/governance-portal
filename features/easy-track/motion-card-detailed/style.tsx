@@ -67,6 +67,7 @@ export const Description = styled.div`
   ul {
     padding-left: 20px;
     line-height: 1.8;
+    word-break: break-word;
   }
 
   code {
