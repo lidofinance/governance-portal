@@ -8,6 +8,7 @@ import {
   GasFunderETHRegistry,
   LegoLDORegistry,
   LegoStablesRegistry,
+  LOLStablecoinsAllowedRecipientsRegistry,
   PmlStablesRegistry,
   RccStablesRegistry,
   StethRewardProgramRegistry,
@@ -104,6 +105,7 @@ const registryByMotionType: {
   [MotionType.LegoStablesTopUp]: LegoStablesRegistry,
   [MotionType.AllianceOpsStablesTopUp]:
     AllianceOpsStablesAllowedRecipientsRegistry,
+  [MotionType.LOLStablecoinsTopUp]: LOLStablecoinsAllowedRecipientsRegistry,
 };
 
 export const usePeriodLimitsInfoByMotionType = (props: {

@@ -1,5 +1,6 @@
 import { MotionType } from '../../motion-types';
 import {
+  LOLStablecoinsAdd,
   RewardsShareProgramAdd,
   SandboxStethAdd,
   StethGasSupplyAdd,
@@ -39,6 +40,10 @@ export const ALLOWED_RECIPIENT_ADD_MAP = {
   [MotionType.SandboxStethAdd]: {
     evmContract: SandboxStethAdd,
     motionType: MotionType.SandboxStethAdd,
+  },
+  [MotionType.LOLStablecoinsAdd]: {
+    evmContract: LOLStablecoinsAdd,
+    motionType: MotionType.LOLStablecoinsAdd,
   },
 };
 

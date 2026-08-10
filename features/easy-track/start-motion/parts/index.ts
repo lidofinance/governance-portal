@@ -85,6 +85,10 @@ export const formParts = {
     StartNewTopUpWithLimitsAndCustomToken.formParts({
       registryType: MotionTypeForms.LabsOpsStablesTopUp,
     }),
+  [MotionTypeForms.LOLStablecoinsTopUp]:
+    StartNewTopUpWithLimitsAndCustomToken.formParts({
+      registryType: MotionTypeForms.LOLStablecoinsTopUp,
+    }),
   [MotionTypeForms.StethRewardProgramAdd]: formAllowedRecipientAdd.formParts({
     registryType: MotionTypeForms.StethRewardProgramAdd,
   }),
@@ -96,6 +100,9 @@ export const formParts = {
   }),
   [MotionTypeForms.SandboxStethAdd]: formAllowedRecipientAdd.formParts({
     registryType: MotionTypeForms.SandboxStethAdd,
+  }),
+  [MotionTypeForms.LOLStablecoinsAdd]: formAllowedRecipientAdd.formParts({
+    registryType: MotionTypeForms.LOLStablecoinsAdd,
   }),
   [MotionTypeForms.StethRewardProgramRemove]:
     formAllowedRecipientRemove.formParts({
@@ -110,6 +117,9 @@ export const formParts = {
     }),
   [MotionTypeForms.SandboxStethRemove]: formAllowedRecipientRemove.formParts({
     registryType: MotionTypeForms.SandboxStethRemove,
+  }),
+  [MotionTypeForms.LOLStablecoinsRemove]: formAllowedRecipientRemove.formParts({
+    registryType: MotionTypeForms.LOLStablecoinsRemove,
   }),
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,

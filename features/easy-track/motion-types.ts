@@ -42,6 +42,9 @@ export const MotionTypeForms = {
   EcosystemOpsStethTopUp: 'EcosystemOpsStethTopUp',
   LabsOpsStablesTopUp: 'LabsOpsStablesTopUp',
   LabsOpsStethTopUp: 'LabsOpsStethTopUp',
+  LOLStablecoinsTopUp: 'LOLStablecoinsTopUp',
+  LOLStablecoinsAdd: 'LOLStablecoinsAdd',
+  LOLStablecoinsRemove: 'LOLStablecoinsRemove',
 
   CSMSettleGeneralDelayedPenalty: 'CSMSettleGeneralDelayedPenalty',
   CuratedSettleGeneralDelayedPenalty: 'CuratedSettleGeneralDelayedPenalty',
@@ -120,6 +123,8 @@ export const MotionTypeDisplayOnly = {
 
   CSMSettleElStealingPenalty: 'CSMSettleElStealingPenalty',
   CSMSetVettedGateTree: 'CSMSetVettedGateTree',
+
+  UpdateStakingModuleShareLimitsOld: 'UpdateStakingModuleShareLimitsOld',
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare

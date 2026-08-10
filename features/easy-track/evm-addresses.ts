@@ -72,6 +72,12 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xf2476f967C826722F5505eDfc4b2561A34033477',
     [MotionType.LabsOpsStablesTopUp]:
       '0xE1f6BaBb445F809B97e3505Ea91749461050F780',
+    [MotionType.LOLStablecoinsTopUp]:
+      '0xc72d4C3e86b681D7c9EE306D41193C64D709C303',
+    [MotionType.LOLStablecoinsAdd]:
+      '0xe24230619e9218C1eed3de3489a22f6BC3ce18FF',
+    [MotionType.LOLStablecoinsRemove]:
+      '0xF4d5D97C85eD18f77F99B57f55E9E11d52992632',
 
     [MotionType.MEVBoostRelaysAdd]:
       '0x00A3D6260f70b1660c8646Ef25D0820EFFd7bE60',
@@ -108,7 +114,7 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.CreateOrUpdateOperatorGroup]:
       '0x2fC78638b77381e9D040163Bd6EB1cac967bDBdF',
     [MotionType.UpdateStakingModuleShareLimits]:
-      '0x0C6703F1d8D9DdfB6c6e5F57b4f7432a6500D6D8',
+      '0xde3e46E3129fA4e4e3f66c9024B0A3Ad509b27a1',
 
     [MotionType.CSMSetMerkleGateTree]:
       '0xf3ec30B86c3dC1b8a1C754D885F9bE3160e15B4c',
@@ -189,6 +195,8 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xF6B6E7997338C48Ea3a8BCfa4BB64a315fDa76f4',
     [MotionType.CSMSetVettedGateTree]:
       '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
+    [MotionType.UpdateStakingModuleShareLimitsOld]:
+      '0x0C6703F1d8D9DdfB6c6e5F57b4f7432a6500D6D8',
   },
 
   // Hoodi
@@ -265,6 +273,9 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.EcosystemOpsStethTopUp]: '',
     [MotionType.LabsOpsStablesTopUp]: '',
     [MotionType.LabsOpsStethTopUp]: '',
+    [MotionType.LOLStablecoinsTopUp]: '',
+    [MotionType.LOLStablecoinsAdd]: '',
+    [MotionType.LOLStablecoinsRemove]: '',
 
     // Vaults
     // Phase one
