@@ -2123,5 +2123,10 @@
     "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
     "description": null,
     "metadata": "test vote with DG items"
+  },
+  "425": {
+    "creator": "0x15a88E1fB2e6D43E6E1eAE2f9c6518e8a0E5E4E5",
+    "description": null,
+    "metadata": "Test vote"
   }
 }
