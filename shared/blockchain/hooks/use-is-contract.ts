@@ -1,7 +1,7 @@
-import { Address, Hex } from 'viem';
+import { Address } from 'viem';
 import { useAccount, useBytecode } from 'wagmi';
 
-const toBool = (data: Hex | undefined) => Boolean(data && data != '0x');
+import { isContractBytecode } from '../utils/is-contract-bytecode';
 
 export const useIsContract = (address?: Address) => {
   const { address: accountAddress, chainId } = useAccount();
@@ -13,7 +13,7 @@ export const useIsContract = (address?: Address) => {
     chainId,
     query: {
       enabled: !!mergedAddress,
-      select: toBool,
+      select: isContractBytecode,
     },
   });
 };

@@ -136,5 +136,38 @@
       "scheduledAt": 1784817707,
       "status": 3
     }
+  },
+  "13": {
+    "proposalSubmittedEvent": {
+      "eventName": "ProposalSubmitted",
+      "args": {
+        "proposerAccount": "0x2e59A20f205bB85a89C53f1936454680651E618e",
+        "proposalId": "13",
+        "metadata": "Activate NEST and add LOL stablecoins Easy Track factories to add/remove allowed recipients"
+      },
+      "address": "0xc1db28b3301331277e307fdcff8de28242a4486e",
+      "topics": [
+        "0x232ce03ddb9384ef5aeb6333cad16b1c7e68e1977e0e6e5a3666e934569a15fc",
+        "0x0000000000000000000000002e59a20f205bb85a89c53f1936454680651e618e",
+        "0x000000000000000000000000000000000000000000000000000000000000000d"
+      ],
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000005b4163746976617465204e45535420616e6420616464204c4f4c20737461626c65636f696e73204561737920547261636b20666163746f7269657320746f206164642f72656d6f766520616c6c6f77656420726563697069656e74730000000000",
+      "blockNumber": "25724759",
+      "transactionHash": "0xd34730fe6f821e3f05eff51f1606276e10eaf40c5854e2d2793a1cd1373d8aee",
+      "transactionIndex": 65,
+      "blockHash": "0x54269517a909afde9996e40f03f3e8e8d562301e8e7002a7a4d49241c81373ea",
+      "logIndex": 406,
+      "removed": false,
+      "blockTimestamp": "0x6a79cba3"
+    },
+    "proposalScheduledEvent": null,
+    "proposalExecutedEvent": null,
+    "details": {
+      "id": "13",
+      "executor": "0x23E0B465633FF5178808F4A75186E2F2F9537021",
+      "submittedAt": 1786366883,
+      "scheduledAt": 0,
+      "status": 1
+    }
   }
 }

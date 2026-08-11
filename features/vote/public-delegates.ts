@@ -20,20 +20,6 @@ export const PUBLIC_DELEGATES: PublicDelegate[] = [
     twitter: 'https://x.com/wintermute_t',
   },
   {
-    name: 'Tane',
-    avatar: `${basePath}/delegates/tane.png`,
-    address: '0xB79294D00848a3A4C00c22D9367F19B4280689D7',
-    lido: 'https://research.lido.fi/t/tane-delegate-thread/7639',
-    twitter: 'https://x.com/tanelabs',
-  },
-  {
-    name: 'SEEDOrg',
-    avatar: `${basePath}/delegates/seedorg.jpeg`,
-    address: '0xc1c2e8a21b86e41d1e706c232a2db5581b3524f8',
-    lido: 'https://research.lido.fi/t/seedgov-delegate-thread/7643',
-    twitter: 'https://x.com/SEEDGov',
-  },
-  {
     name: 'Anthony Leuts',
     avatar: `${basePath}/delegates/leuts.jpeg`,
     address: '0x42E6DD8D517abB3E4f6611Ca53a8D1243C183fB0',
@@ -102,13 +88,6 @@ export const PUBLIC_DELEGATES: PublicDelegate[] = [
     address: '0x8Ab6612BbcF7E133A6BB03b3264718d30f25e0BA',
     lido: 'https://research.lido.fi/t/governance-grove-delegate-thread/9379',
     twitter: 'https://x.com/stakesaurus',
-  },
-  {
-    name: 'Deucee Deuce',
-    avatar: `${basePath}/delegates/deucee.jpeg`,
-    address: '0x27D36879e84A94455F54E22250F6f7dc8163f70A',
-    lido: 'https://research.lido.fi/t/deuceedeuce-delegate-thread-alignment-engineering/9381',
-    twitter: 'https://x.com/BartekDeuce',
   },
   {
     name: 'BCV Finance',
