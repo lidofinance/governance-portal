@@ -111,6 +111,16 @@ const keysInfo = async (req: NextApiRequest, res: NextApiResponse) => {
   const walletAddress = String(req.query.walletAddress);
   const moduleAddress = String(req.query.moduleAddress);
 
+  const usesOperatorAddresses =
+    chainId === CHAINS.Mainnet || chainId === CHAINS.Hoodi;
+  if (
+    usesOperatorAddresses &&
+    (!utils.isAddress(moduleAddress) || !utils.isAddress(walletAddress))
+  ) {
+    res.status(400).json({ message: 'Invalid address' });
+    return;
+  }
+
   let result;
   switch (chainId) {
     case CHAINS.Mainnet:
