@@ -2527,10 +2527,10 @@
   dependencies:
     isomorphic-fetch "^3.0.0"
 
-"@lidofinance/satanizer@^0.45.1":
-  version "0.45.1"
-  resolved "https://registry.npmjs.org/@lidofinance/satanizer/-/satanizer-0.45.1.tgz"
-  integrity sha512-RC9jKEKykFhHFHUJNziFzvTP4LEIr1idRHgK96myKOn2w5GsiZkTd6SiaI7H9/X+Rg9ZbnTb0zcLZdYQPG946A==
+"@lidofinance/satanizer@^0.63.0":
+  version "0.63.0"
+  resolved "https://registry.yarnpkg.com/@lidofinance/satanizer/-/satanizer-0.63.0.tgz#c7cba6e41bc90a4f76555bd945f4169647157170"
+  integrity sha512-7SttOvEYz+qYh05VlRzLQzeNzb95NuYoMWuQpFwqKAiWlefpPJSMQxml9I6OL9Zba/ug+kNKmY2jrd9BcH+c0Q==
 
 "@lit-labs/ssr-dom-shim@^1.5.0":
   version "1.5.1"
