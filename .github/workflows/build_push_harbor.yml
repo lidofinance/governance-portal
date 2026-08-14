@@ -19,9 +19,9 @@ env:
   IMAGE_TAG_STAGING: staging
 
 jobs:
-  build-and-push:
+  build-dev:
     runs-on: ubuntu-22.04
-    name: Build and push dev & staging images
+    name: Build and push dev image
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,15 +37,6 @@ jobs:
           username: ${{ env.REGISTRY_USER }}
           password: ${{ secrets.HARBOR_ROBOT_TOKEN }}
 
-      - name: Login to staging Harbor
-        id: login-staging
-        continue-on-error: true
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY_STAGING }}
-          username: ${{ env.REGISTRY_USER }}
-          password: ${{ secrets.HARBOR_ROBOT_TOKEN }}
-
       - name: Build and push dev image
         uses: docker/build-push-action@v6
         with:
@@ -54,11 +45,33 @@ jobs:
           tags: ${{ env.REGISTRY_DEV }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_DEV }}
           builder: ${{ steps.buildx.outputs.name }}
 
-      - name: Push staging image
-        if: steps.login-staging.outcome == 'success'
-        uses: docker/build-push-action@v6
+  # Separate job: the environment is branch-restricted by terraform, and a job denied by that
+  # policy fails before its steps run — keeping it apart means dev never depends on staging.
+  push-staging:
+    runs-on: ubuntu-22.04
+    name: Copy dev image to staging Harbor
+    needs: build-dev
+    environment: harbor_stage_release
+    steps:
+      - name: Setup buildx
+        uses: docker/setup-buildx-action@v3.3.0
+
+      - name: Login to dev Harbor
+        uses: docker/login-action@v3
         with:
-          context: .
-          push: true
-          tags: ${{ env.REGISTRY_STAGING }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_STAGING }}
-          builder: ${{ steps.buildx.outputs.name }}
+          registry: ${{ env.REGISTRY_DEV }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ secrets.HARBOR_ROBOT_TOKEN }}
+
+      - name: Login to staging Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_STAGING }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ secrets.HARBOR_STAGE_TOKEN }}
+
+      - name: Copy image
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.REGISTRY_STAGING }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_STAGING }} \
+            ${{ env.REGISTRY_DEV }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_DEV }}
