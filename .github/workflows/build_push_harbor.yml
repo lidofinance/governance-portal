@@ -38,18 +38,27 @@ jobs:
           password: ${{ secrets.HARBOR_ROBOT_TOKEN }}
 
       - name: Login to staging Harbor
+        id: login-staging
+        continue-on-error: true
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY_STAGING }}
           username: ${{ env.REGISTRY_USER }}
-          password: ${{ secrets.HARBOR_ROBOT_TOKEN_STAGING }}
+          password: ${{ secrets.HARBOR_ROBOT_TOKEN }}
 
-      - name: Build and push docker image
+      - name: Build and push dev image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: |
-            ${{ env.REGISTRY_DEV }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_DEV }}
-            ${{ env.REGISTRY_STAGING }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_STAGING }}
+          tags: ${{ env.REGISTRY_DEV }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_DEV }}
+          builder: ${{ steps.buildx.outputs.name }}
+
+      - name: Push staging image
+        if: steps.login-staging.outcome == 'success'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY_STAGING }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.IMAGE_TAG_STAGING }}
           builder: ${{ steps.buildx.outputs.name }}
