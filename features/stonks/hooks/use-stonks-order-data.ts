@@ -2,18 +2,57 @@ import { useQuery } from '@tanstack/react-query';
 import { erc20Abi, stonksOrderAbi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { Address } from 'viem';
+import { Address, getContractAddress, PublicClient } from 'viem';
+import { getTransactionCount } from 'viem/actions';
 import { MIN_STONKS_BALANCE_WEI } from '@stonks/constants';
 import { STONKS_MAP } from '@stonks/addresses';
 import { isAddress } from 'viem';
 import { OrderData } from '@stonks/types';
 import { AragonAgent } from 'shared/blockchain/contract-addresses';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const isValidAddress = (address: string | undefined): address is Address =>
   !!address && isAddress(address);
 
+// Stonks places every order with Clones.clone, so an order address is always
+// CREATE(stonks, nonce) for a nonce below the current nonce of that Stonks
+// contract. Enumerating them proves who created the order, unlike stonks().
+const findOrderCreator = async (
+  client: PublicClient,
+  chainId: CHAINS,
+  orderAddress: Address,
+) => {
+  const stonksList = STONKS_MAP[chainId] ?? [];
+  if (stonksList.length === 0) {
+    return null;
+  }
+
+  const matches = await Promise.all(
+    stonksList.map(async (stonksMetadata) => {
+      const nonce = await getTransactionCount(client, {
+        address: stonksMetadata.address,
+      });
+
+      for (let i = 1; i < nonce; i++) {
+        const createdAddress = getContractAddress({
+          from: stonksMetadata.address,
+          nonce: BigInt(i),
+        });
+
+        if (createdAddress.toLowerCase() === orderAddress.toLowerCase()) {
+          return stonksMetadata;
+        }
+      }
+
+      return null;
+    }),
+  );
+
+  return matches.find(Boolean) ?? null;
+};
+
 export const useStonksOrderData = (orderAddress: string | undefined) => {
-  const { chainId } = useLidoSDK();
+  const { chainId, rpcProvider } = useLidoSDK();
 
   const getOrderContract = useReadContractGetter(stonksOrderAbi);
   const getErc20Contract = useReadContractGetter(erc20Abi);
@@ -25,23 +64,19 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
       if (!isValidAddress(orderAddress)) {
         throw new Error(`Invalid order address`);
       }
-      const orderContractReader = getOrderContract(orderAddress);
-      const stonksAddress = await orderContractReader('stonks');
-      if (stonksAddress === null) {
-        throw new Error(
-          `Could not fetch stonks address for order ${orderAddress}`,
-        );
-      }
-
-      const stonksMetadata = STONKS_MAP[chainId]?.find(
-        (s) => s.address.toLowerCase() === stonksAddress.toLowerCase(),
+      const stonksMetadata = await findOrderCreator(
+        rpcProvider,
+        chainId,
+        orderAddress,
       );
 
       if (!stonksMetadata) {
         throw new Error(
-          `Could not link stonks order to stonks contract: ${stonksAddress}`,
+          `Order ${orderAddress} was not created by a known Stonks contract`,
         );
       }
+
+      const orderContractReader = getOrderContract(orderAddress);
 
       const [, tokenFromAddress, , sellAmount, buyAmount, validTo] =
         await orderContractReader('getOrderDetails');
