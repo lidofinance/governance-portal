@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { erc20Abi, stonksOrderAbi } from 'abi/generated';
+import { erc20Abi, stonksOrderAbi, stonksV2Abi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { Address, getContractAddress, PublicClient } from 'viem';
@@ -8,7 +8,6 @@ import { MIN_STONKS_BALANCE_WEI } from '@stonks/constants';
 import { STONKS_MAP } from '@stonks/addresses';
 import { isAddress } from 'viem';
 import { OrderData } from '@stonks/types';
-import { AragonAgent } from 'shared/blockchain/contract-addresses';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const isValidAddress = (address: string | undefined): address is Address =>
@@ -55,6 +54,7 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
   const { chainId, rpcProvider } = useLidoSDK();
 
   const getOrderContract = useReadContractGetter(stonksOrderAbi);
+  const getStonksContract = useReadContractGetter(stonksV2Abi);
   const getErc20Contract = useReadContractGetter(erc20Abi);
 
   return useQuery<OrderData>({
@@ -77,6 +77,7 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
       }
 
       const orderContractReader = getOrderContract(orderAddress);
+      const stonksContractReader = getStonksContract(stonksMetadata.address);
 
       const [, tokenFromAddress, , sellAmount, buyAmount, validTo] =
         await orderContractReader('getOrderDetails');
@@ -94,9 +95,15 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
       const isRecoverable = isExpired && hasBalance;
       const recoverableAmount = isRecoverable ? tokenFromBalance : 0n;
 
-      // TODO: update receiver address logic after Stonks dynamic receiver implementation
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const receiverAddress = AragonAgent[chainId]! as Address;
+      // Stonks v2 settles to a configurable RECEIVER, while v1 orders always go to Agent.
+      let receiverAddress: Address | null = null;
+      if (stonksMetadata.version === 2) {
+        receiverAddress = await stonksContractReader('RECEIVER');
+      }
+
+      if (!receiverAddress) {
+        receiverAddress = await stonksContractReader('AGENT');
+      }
 
       return {
         address: orderAddress,
