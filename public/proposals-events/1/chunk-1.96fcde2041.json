@@ -156,18 +156,54 @@
       "transactionHash": "0xd34730fe6f821e3f05eff51f1606276e10eaf40c5854e2d2793a1cd1373d8aee",
       "transactionIndex": 65,
       "blockHash": "0x54269517a909afde9996e40f03f3e8e8d562301e8e7002a7a4d49241c81373ea",
+      "blockTimestamp": "0x6a79cba3",
       "logIndex": 406,
-      "removed": false,
-      "blockTimestamp": "0x6a79cba3"
+      "removed": false
     },
-    "proposalScheduledEvent": null,
-    "proposalExecutedEvent": null,
+    "proposalScheduledEvent": {
+      "eventName": "ProposalScheduled",
+      "args": {
+        "id": "13"
+      },
+      "address": "0xce0425301c85c5ea2a0873a2dee44d78e02d2316",
+      "topics": [
+        "0x8b9c2cfee0d20895490bae51f33d88197032bb221b15e360155508136257569a",
+        "0x000000000000000000000000000000000000000000000000000000000000000d"
+      ],
+      "data": "0x",
+      "blockNumber": "25746266",
+      "transactionHash": "0x4b5757918ee9112516263f0b11c6de55385e00795e5bf26ab56104feee4ff2f3",
+      "transactionIndex": 153,
+      "blockHash": "0x9270f0cf88c19d9d081fec1114ae4ddcbcca0749ba996710c58418d2dae5f385",
+      "blockTimestamp": "0x6a7dc053",
+      "logIndex": 423,
+      "removed": false
+    },
+    "proposalExecutedEvent": {
+      "eventName": "ProposalExecuted",
+      "args": {
+        "id": "13"
+      },
+      "address": "0xce0425301c85c5ea2a0873a2dee44d78e02d2316",
+      "topics": [
+        "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f",
+        "0x000000000000000000000000000000000000000000000000000000000000000d"
+      ],
+      "data": "0x",
+      "blockNumber": "25753465",
+      "transactionHash": "0x5a7868439de1003dc5f3d7ecf99826410c17883794bcd38ff75dd0e0bcce57c4",
+      "transactionIndex": 99,
+      "blockHash": "0x9f803b6bd291c8ac78e2c41512520495c7d59a7a429775f2f6e5858153e0dbfe",
+      "blockTimestamp": 1786712795,
+      "logIndex": 357,
+      "removed": false
+    },
     "details": {
       "id": "13",
       "executor": "0x23E0B465633FF5178808F4A75186E2F2F9537021",
       "submittedAt": 1786366883,
-      "scheduledAt": 0,
-      "status": 1
+      "scheduledAt": 1786626131,
+      "status": 3
     }
   }
 }
