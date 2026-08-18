@@ -19,7 +19,7 @@ import {
 } from '../../utils/proposals/fetch-proposal-events.mjs';
 import { PROPOSALS_PER_CHUNK } from '../../utils/proposals/constants.mjs';
 import { isCachedProposalComplete } from '../../utils/cache/status.mjs';
-import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' assert { type: 'json' };
+import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
