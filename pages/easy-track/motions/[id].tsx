@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+import { isNumericId } from 'utils/is-numeric-id';
 import { Layout } from 'shared/components';
 import { MotionCardDetailed } from 'features/easy-track/motion-card-detailed';
 
@@ -25,7 +26,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = getDefaultStaticProps(
   async ({ params }) => {
     const id = params?.id;
-    if (!id) {
+    if (!isNumericId(id)) {
       return {
         notFound: true,
       };

@@ -6,12 +6,13 @@ import { VoteMeta } from '@vote/meta';
 import { VOTE_DASHBOARD_INDEX_PATH } from 'constants/urls';
 import { BackButton } from 'shared/components/back-button';
 import { VotePageWrap } from '@vote/styles';
+import { isNumericId } from 'utils/is-numeric-id';
 
 export default function VotePage() {
   const { query, isReady } = useRouter();
   const id = query.id;
 
-  if (!isReady || typeof id !== 'string') {
+  if (!isReady || !isNumericId(id)) {
     return null;
   }
 
