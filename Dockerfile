@@ -1,5 +1,5 @@
 # build env
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -18,16 +18,12 @@ RUN rm -rf /app/.next/cache
 RUN rm -rf /app/public/runtime && mkdir /app/public/runtime && chown node /app/public/runtime
 
 # final image
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache curl=~8 
     
-# ownership is set during COPY on purpose: a separate `chown -R` rewrites every file and so
-# duplicates the whole /app tree into an extra image layer
-COPY --from=build --chown=node:node /app /app
-# WORKDIR created /app as root, so hand over the directory itself too — without -R, which is what
-# would rewrite every file
-RUN chown node:node /app
+# no chown: COPY --from keeps the build stage ownership, where public/runtime is already node's
+COPY --from=build /app /app
 # the app runs through yarn, so npm is unused here — and the tar it bundles carries CVEs
 RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 
