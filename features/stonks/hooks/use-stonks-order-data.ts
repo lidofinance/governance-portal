@@ -2,53 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { erc20Abi, stonksOrderAbi, stonksV2Abi } from 'abi/generated';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
-import { Address, getContractAddress, PublicClient } from 'viem';
-import { getTransactionCount } from 'viem/actions';
+import { Address } from 'viem';
+import { getCode } from 'viem/actions';
 import { MIN_STONKS_BALANCE_WEI } from '@stonks/constants';
 import { STONKS_MAP } from '@stonks/addresses';
 import { isAddress } from 'viem';
 import { OrderData } from '@stonks/types';
-import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 const isValidAddress = (address: string | undefined): address is Address =>
   !!address && isAddress(address);
-
-// Stonks places every order with Clones.clone, so an order address is always
-// CREATE(stonks, nonce) for a nonce below the current nonce of that Stonks
-// contract. Enumerating them proves who created the order, unlike stonks().
-const findOrderCreator = async (
-  client: PublicClient,
-  chainId: CHAINS,
-  orderAddress: Address,
-) => {
-  const stonksList = STONKS_MAP[chainId] ?? [];
-  if (stonksList.length === 0) {
-    return null;
-  }
-
-  const matches = await Promise.all(
-    stonksList.map(async (stonksMetadata) => {
-      const nonce = await getTransactionCount(client, {
-        address: stonksMetadata.address,
-      });
-
-      for (let i = 1; i < nonce; i++) {
-        const createdAddress = getContractAddress({
-          from: stonksMetadata.address,
-          nonce: BigInt(i),
-        });
-
-        if (createdAddress.toLowerCase() === orderAddress.toLowerCase()) {
-          return stonksMetadata;
-        }
-      }
-
-      return null;
-    }),
-  );
-
-  return matches.find(Boolean) ?? null;
-};
 
 export const useStonksOrderData = (orderAddress: string | undefined) => {
   const { chainId, rpcProvider } = useLidoSDK();
@@ -64,10 +26,14 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
       if (!isValidAddress(orderAddress)) {
         throw new Error(`Invalid order address`);
       }
-      const stonksMetadata = await findOrderCreator(
-        rpcProvider,
-        chainId,
-        orderAddress,
+
+      const orderContractReader = getOrderContract(orderAddress);
+
+      const stonksAddress = await orderContractReader('stonks');
+
+      const stonksMetadata = STONKS_MAP[chainId]?.find(
+        (metadata) =>
+          metadata.address.toLowerCase() === stonksAddress?.toLowerCase(),
       );
 
       if (!stonksMetadata) {
@@ -76,8 +42,21 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
         );
       }
 
-      const orderContractReader = getOrderContract(orderAddress);
       const stonksContractReader = getStonksContract(stonksMetadata.address);
+
+      const [orderSample, orderCode] = await Promise.all([
+        stonksContractReader('ORDER_SAMPLE'),
+        getCode(rpcProvider, { address: orderAddress }),
+      ]);
+
+      // Orders are EIP-1167 clones (fixed prefix + implementation + fixed suffix) of
+      // the immutable ORDER_SAMPLE, and Order.initialize stores its caller as stonks().
+      // So a real clone naming a known Stonks contract was created by that contract.
+      const expectedCode = `0x363d3d373d3d3d363d73${orderSample.slice(2)}5af43d82803e903d91602b57fd5bf3`;
+
+      if (orderCode?.toLowerCase() !== expectedCode.toLowerCase()) {
+        throw new Error(`Order ${orderAddress} is not a Stonks order contract`);
+      }
 
       const [, tokenFromAddress, , sellAmount, buyAmount, validTo] =
         await orderContractReader('getOrderDetails');
@@ -95,14 +74,22 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
       const isRecoverable = isExpired && hasBalance;
       const recoverableAmount = isRecoverable ? tokenFromBalance : 0n;
 
-      // Stonks v2 settles to a configurable RECEIVER, while v1 orders always go to Agent.
+      // Stonks v2 settles to a configurable RECEIVER, while v1 bakes the order's own
+      // AGENT into the CoW order, so that is the value the payload has to match.
       let receiverAddress: Address | null = null;
       if (stonksMetadata.version === 2) {
         receiverAddress = await stonksContractReader('RECEIVER');
       }
 
       if (!receiverAddress) {
-        receiverAddress = await stonksContractReader('AGENT');
+        receiverAddress = await orderContractReader('AGENT');
+      }
+
+      // reads return null on failure, and a null receiver would break the CoW payload
+      if (!receiverAddress) {
+        throw new Error(
+          `Could not resolve the receiver for order ${orderAddress}`,
+        );
       }
 
       return {
