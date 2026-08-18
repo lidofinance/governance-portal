@@ -3,6 +3,7 @@ import { Layout } from 'shared/components';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ProposalPage as ProposalPageComponent } from '@dg/pages/proposal-page';
 import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+import { isNumericId } from 'utils/is-numeric-id';
 import { DualGovernanceProposalsProvider } from 'providers/dual-governance-proposals';
 
 interface Props {
@@ -31,7 +32,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = getDefaultStaticProps(
   async ({ params }) => {
     const id = params?.id;
-    if (!id) {
+    if (!isNumericId(id)) {
       return {
         notFound: true,
       };
