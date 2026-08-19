@@ -142,6 +142,11 @@ const MOTION_DESCRIPTIONS: Record<
     ReportWithdrawalsForSlashedValidators,
   [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
     ReportWithdrawalsForSlashedValidators,
+  [MotionType.CSM2SettleGeneralDelayedPenalty]: SettleGeneralDelayedPenalty,
+  [MotionType.CSM2ReportWithdrawalsForSlashedValidators]:
+    ReportWithdrawalsForSlashedValidators,
+  [MotionType.CSM2UpdateStakingModuleShareLimits]:
+    UpdateStakingModuleShareLimits,
   [MotionType.AllianceOpsStablesTopUp]: TopUpWithLimitsAndCustomToken,
   [MotionType.EcosystemOpsStablesTopUp]: TopUpWithLimitsAndCustomToken,
   [MotionType.LabsOpsStablesTopUp]: TopUpWithLimitsAndCustomToken,

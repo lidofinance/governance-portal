@@ -763,6 +763,24 @@ export const CuratedReportWithdrawalsForSlashedValidators: ContractObject<
     EvmAddressesByType[MotionType.CuratedReportWithdrawalsForSlashedValidators],
 };
 
+export const CSM2SettleGeneralDelayedPenalty: ContractObject<
+  typeof abi.settleGeneralDelayedPenaltyAbi
+> = {
+  name: 'CSM2SettleGeneralDelayedPenalty',
+  abi: abi.settleGeneralDelayedPenaltyAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSM2SettleGeneralDelayedPenalty],
+};
+
+export const CSM2ReportWithdrawalsForSlashedValidators: ContractObject<
+  typeof abi.evmReportWithdrawalsForSlashedValidatorsAbi
+> = {
+  name: 'CSM2ReportWithdrawalsForSlashedValidators',
+  abi: abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSM2ReportWithdrawalsForSlashedValidators],
+};
+
 export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {
   name: 'CSMRegistry',
   abi: abi.csmRegistryAbi,
@@ -1099,4 +1117,13 @@ export const UpdateStakingModuleShareLimits: ContractObject<
   abi: abi.evmUpdateStakingModuleShareLimitsAbi,
   chainAddressMap:
     EvmAddressesByType[MotionType.UpdateStakingModuleShareLimits],
+};
+
+export const CSM2UpdateStakingModuleShareLimits: ContractObject<
+  typeof abi.evmUpdateStakingModuleShareLimitsAbi
+> = {
+  name: 'CSM2UpdateStakingModuleShareLimits',
+  abi: abi.evmUpdateStakingModuleShareLimitsAbi,
+  chainAddressMap:
+    EvmAddressesByType[MotionType.CSM2UpdateStakingModuleShareLimits],
 };

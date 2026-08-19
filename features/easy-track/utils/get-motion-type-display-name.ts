@@ -34,15 +34,21 @@ export const MotionTypeDisplayNames: Record<
     '[NOR SandBox] Increase node operator staking limit',
   [MotionType.LegoStablesTopUp]: 'Top up LEGO stablecoins',
   [MotionType.CSMSettleGeneralDelayedPenalty]:
-    '[CSM] Settle General Delayed Penalty',
+    '[CSM 0x01] Settle General Delayed Penalty',
   [MotionType.CuratedSettleGeneralDelayedPenalty]:
     '[Curated] Settle General Delayed Penalty',
   [MotionType.CSMReportWithdrawalsForSlashedValidators]:
-    '[CSM] Report withdrawals for slashed validators',
+    '[CSM 0x01] Report withdrawals for slashed validators',
   [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
     '[Curated] Report withdrawals for slashed validators',
-  [MotionType.CSMSetVettedGateTree]: 'Set CSM vetted gate tree',
-  [MotionType.CSMSetMerkleGateTree]: '[CSM] Set merkle gate tree',
+  [MotionType.CSM2SettleGeneralDelayedPenalty]:
+    '[CSM 0x02] Settle General Delayed Penalty',
+  [MotionType.CSM2ReportWithdrawalsForSlashedValidators]:
+    '[CSM 0x02] Report withdrawals for slashed validators',
+  [MotionType.CSM2UpdateStakingModuleShareLimits]:
+    '[CSM 0x02] Update staking module share limits',
+  [MotionType.CSMSetVettedGateTree]: '[CSM 0x01] Set vetted gate tree',
+  [MotionType.CSMSetMerkleGateTree]: '[CSM 0x01] Set merkle gate tree',
   [MotionType.CuratedSetMerkleGateTree]: '[Curated] Set merkle gate tree',
   [MotionType.CuratedExitRequestHashesSubmit]:
     '[Curated] Submit Exit Request Hashes',
@@ -65,7 +71,7 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.CreateOrUpdateOperatorGroup]:
     'Create or update MetaRegistry operator group',
   [MotionType.UpdateStakingModuleShareLimits]:
-    'Update staking module share limits',
+    '[CSM 0x01] Update staking module share limits',
 
   [EvmUnrecognized]: 'Unrecognized evm factory',
 
@@ -104,7 +110,7 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.PmlStethTopUp]: 'Top up PML stETH',
   [MotionType.AtcStethTopUp]: 'Top up ATC stETH',
   [MotionType.CSMSettleElStealingPenalty]:
-    'Settle EL Rewards Stealing penalty for CSM operators',
+    '[CSM 0x01] Settle EL Rewards Stealing penalty',
 
   // Vaults
   [MotionType.RegisterGroupsInOperatorGrid]: 'Register groups in Operator Grid',
@@ -144,7 +150,7 @@ export const MotionTypeDisplayNames: Record<
     'Alter tiers in Operator Grid (Old)',
 
   [MotionType.UpdateStakingModuleShareLimitsOld]:
-    'Update staking module share limits (Old)',
+    '[CSM 0x01] Update staking module share limits (Old)',
 } as const;
 
 export const getMotionTypeDisplayName = (

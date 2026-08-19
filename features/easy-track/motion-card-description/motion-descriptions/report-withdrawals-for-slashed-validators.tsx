@@ -20,7 +20,8 @@ export const ReportWithdrawalsForSlashedValidators = ({
   );
 
   const isCSM =
-    motionType === MotionType.CSMReportWithdrawalsForSlashedValidators;
+    motionType === MotionType.CSMReportWithdrawalsForSlashedValidators ||
+    motionType === MotionType.CSM2ReportWithdrawalsForSlashedValidators;
 
   const { data: stakingModuleAddress } = useQuery({
     queryKey: [

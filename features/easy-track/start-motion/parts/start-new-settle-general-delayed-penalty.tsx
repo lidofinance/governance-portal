@@ -10,6 +10,7 @@ import { ValidatedInputHookForm } from 'shared/hook-form/validated-input-hook-fo
 import {
   CuratedSettleGeneralDelayedPenalty,
   CSMSettleGeneralDelayedPenalty,
+  CSM2SettleGeneralDelayedPenalty,
 } from 'shared/blockchain/contracts';
 import {
   useReadContract,
@@ -52,6 +53,10 @@ const SETTLE_GENERAL_DELAYED_PENALTY_MAP = {
   [MotionType.CuratedSettleGeneralDelayedPenalty]: {
     motionType: MotionType.CuratedSettleGeneralDelayedPenalty,
     factory: CuratedSettleGeneralDelayedPenalty,
+  },
+  [MotionType.CSM2SettleGeneralDelayedPenalty]: {
+    motionType: MotionType.CSM2SettleGeneralDelayedPenalty,
+    factory: CSM2SettleGeneralDelayedPenalty,
   },
 } as const;
 
