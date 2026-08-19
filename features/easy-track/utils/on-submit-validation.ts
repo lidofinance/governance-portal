@@ -31,6 +31,8 @@ const EXTRA_VALIDATION_MAP: {
   [MotionType.CreateOrUpdateOperatorGroup]: validateCreateOrUpdateOperatorGroup,
   [MotionType.UpdateStakingModuleShareLimits]:
     validateUpdateStakingModuleShareLimits,
+  [MotionType.CSM2UpdateStakingModuleShareLimits]:
+    validateUpdateStakingModuleShareLimits,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

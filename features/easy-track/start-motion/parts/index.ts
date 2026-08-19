@@ -175,6 +175,14 @@ export const formParts = {
     StartNewReportWithdrawalsForSlashedValidators.formParts({
       motionType: MotionTypeForms.CuratedReportWithdrawalsForSlashedValidators,
     }),
+  [MotionTypeForms.CSM2SettleGeneralDelayedPenalty]:
+    StartNewSettleGeneralDelayedPenalty.formParts({
+      motionType: MotionTypeForms.CSM2SettleGeneralDelayedPenalty,
+    }),
+  [MotionTypeForms.CSM2ReportWithdrawalsForSlashedValidators]:
+    StartNewReportWithdrawalsForSlashedValidators.formParts({
+      motionType: MotionTypeForms.CSM2ReportWithdrawalsForSlashedValidators,
+    }),
   [MotionTypeForms.CuratedExitRequestHashesSubmit]:
     StartNewExitRequestHashesSubmit.formParts('curated'),
   [MotionTypeForms.SDVTExitRequestHashesSubmit]:
@@ -205,7 +213,13 @@ export const formParts = {
   [MotionTypeForms.CreateOrUpdateOperatorGroup]:
     StartNewCreateOrUpdateOperatorGroup.formParts,
   [MotionTypeForms.UpdateStakingModuleShareLimits]:
-    StartNewUpdateStakingModuleShareLimits.formParts,
+    StartNewUpdateStakingModuleShareLimits.formParts({
+      motionType: MotionTypeForms.UpdateStakingModuleShareLimits,
+    }),
+  [MotionTypeForms.CSM2UpdateStakingModuleShareLimits]:
+    StartNewUpdateStakingModuleShareLimits.formParts({
+      motionType: MotionTypeForms.CSM2UpdateStakingModuleShareLimits,
+    }),
 } as const;
 
 export type FormData = {

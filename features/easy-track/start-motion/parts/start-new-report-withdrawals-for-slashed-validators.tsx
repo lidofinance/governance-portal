@@ -12,6 +12,7 @@ import { ValidatedInputHookForm } from 'shared/hook-form/validated-input-hook-fo
 import {
   CSMReportWithdrawalsForSlashedValidators,
   CuratedReportWithdrawalsForSlashedValidators,
+  CSM2ReportWithdrawalsForSlashedValidators,
 } from 'shared/blockchain/contracts';
 import {
   useReadContract,
@@ -56,6 +57,10 @@ const REPORT_WITHDRAWALS_FOR_SLASHED_VALIDATORS_MAP = {
   [MotionType.CuratedReportWithdrawalsForSlashedValidators]: {
     motionType: MotionType.CuratedReportWithdrawalsForSlashedValidators,
     factory: CuratedReportWithdrawalsForSlashedValidators,
+  },
+  [MotionType.CSM2ReportWithdrawalsForSlashedValidators]: {
+    motionType: MotionType.CSM2ReportWithdrawalsForSlashedValidators,
+    factory: CSM2ReportWithdrawalsForSlashedValidators,
   },
 } as const;
 
