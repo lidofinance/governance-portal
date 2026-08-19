@@ -555,6 +555,13 @@ export const stonksV2Abi = [
   {
     type: 'function',
     inputs: [],
+    name: 'RECEIVER',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
     name: 'TOKEN_FROM',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
