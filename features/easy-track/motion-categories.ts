@@ -7,7 +7,8 @@ export type MotionCategory =
   | 'Treasury'
   | 'stVaults'
   | 'MEV Boost'
-  | 'Archive';
+  | 'Deprecated'
+  | 'Unknown';
 
 export type MotionSubcategory =
   | 'Curated'
@@ -108,30 +109,30 @@ export const MOTION_TAGS: MotionTagsMap = {
 
   // next motion types are retired
   // we are keeping them here to display history data
-  [MotionType.LEGOTopUp]: ['Archive'],
-  [MotionType.LegoDAITopUp]: ['Archive'],
-  [MotionType.GasFunderETHTopUp]: ['Archive'],
-  [MotionType.RewardProgramAdd]: ['Archive'],
-  [MotionType.RewardProgramRemove]: ['Archive'],
-  [MotionType.RewardProgramTopUp]: ['Archive'],
-  [MotionType.AllowedRecipientAdd]: ['Archive'],
-  [MotionType.AllowedRecipientRemove]: ['Archive'],
-  [MotionType.AllowedRecipientTopUp]: ['Archive'],
-  [MotionType.ReferralPartnerAdd]: ['Archive'],
-  [MotionType.ReferralPartnerRemove]: ['Archive'],
-  [MotionType.ReferralPartnerTopUp]: ['Archive'],
-  [MotionType.AllowedRecipientAddReferralDai]: ['Archive'],
-  [MotionType.AllowedRecipientRemoveReferralDai]: ['Archive'],
-  [MotionType.AllowedRecipientTopUpReferralDai]: ['Archive'],
-  [MotionType.RccDAITopUp]: ['Archive'],
-  [MotionType.RccStethTopUp]: ['Archive'],
-  [MotionType.RccStablesTopUp]: ['Archive'],
-  [MotionType.PmlDAITopUp]: ['Archive'],
-  [MotionType.PmlStethTopUp]: ['Archive'],
-  [MotionType.PmlStablesTopUp]: ['Archive'],
-  [MotionType.AtcDAITopUp]: ['Archive'],
-  [MotionType.AtcStethTopUp]: ['Archive'],
-  [MotionType.AtcStablesTopUp]: ['Archive'],
+  [MotionType.LEGOTopUp]: ['Deprecated'],
+  [MotionType.LegoDAITopUp]: ['Deprecated'],
+  [MotionType.GasFunderETHTopUp]: ['Deprecated'],
+  [MotionType.RewardProgramAdd]: ['Deprecated'],
+  [MotionType.RewardProgramRemove]: ['Deprecated'],
+  [MotionType.RewardProgramTopUp]: ['Deprecated'],
+  [MotionType.AllowedRecipientAdd]: ['Deprecated'],
+  [MotionType.AllowedRecipientRemove]: ['Deprecated'],
+  [MotionType.AllowedRecipientTopUp]: ['Deprecated'],
+  [MotionType.ReferralPartnerAdd]: ['Deprecated'],
+  [MotionType.ReferralPartnerRemove]: ['Deprecated'],
+  [MotionType.ReferralPartnerTopUp]: ['Deprecated'],
+  [MotionType.AllowedRecipientAddReferralDai]: ['Deprecated'],
+  [MotionType.AllowedRecipientRemoveReferralDai]: ['Deprecated'],
+  [MotionType.AllowedRecipientTopUpReferralDai]: ['Deprecated'],
+  [MotionType.RccDAITopUp]: ['Deprecated'],
+  [MotionType.RccStethTopUp]: ['Deprecated'],
+  [MotionType.RccStablesTopUp]: ['Deprecated'],
+  [MotionType.PmlDAITopUp]: ['Deprecated'],
+  [MotionType.PmlStethTopUp]: ['Deprecated'],
+  [MotionType.PmlStablesTopUp]: ['Deprecated'],
+  [MotionType.AtcDAITopUp]: ['Deprecated'],
+  [MotionType.AtcStethTopUp]: ['Deprecated'],
+  [MotionType.AtcStablesTopUp]: ['Deprecated'],
   [MotionType.SDVTTargetValidatorLimitsUpdateV1]: ['Staking', 'SimpleDVT'],
   [MotionType.CSMSettleElStealingPenalty]: ['Staking', 'CSM0x01'],
   [MotionType.CSMSetVettedGateTree]: ['Staking', 'CSM0x01'],
@@ -146,7 +147,8 @@ export const MOTION_TAGS: MotionTagsMap = {
   [MotionType.RegisterGroupsInOperatorGridOld]: ['stVaults'],
   [MotionType.RegisterTiersInOperatorGridOld]: ['stVaults'],
   [MotionType.AlterTiersInOperatorGridOld]: ['stVaults'],
-  EvmUnrecognized: ['Staking'],
+
+  [EvmUnrecognized]: ['Unknown'],
 };
 
 export const MOTION_CATEGORY_VARIANT_MAP: Record<MotionCategory, BadgeVariant> =
@@ -155,10 +157,11 @@ export const MOTION_CATEGORY_VARIANT_MAP: Record<MotionCategory, BadgeVariant> =
     Treasury: 'deepGreen',
     stVaults: 'deepYellow',
     'MEV Boost': 'pink',
-    Archive: 'blue',
+    Deprecated: 'purple',
+    Unknown: 'purple',
   };
 
-export type FilterCategory = Exclude<MotionCategory, 'Archive'>;
+export type FilterCategory = Exclude<MotionCategory, 'Deprecated' | 'Unknown'>;
 
 export const FILTER_CATEGORIES: readonly FilterCategory[] = [
   'Staking',

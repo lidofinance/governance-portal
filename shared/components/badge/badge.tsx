@@ -1,7 +1,6 @@
 import { BadgeVariant, Wrap, BadgeType } from './style';
 
-type Props = {
-  children: React.ReactNode;
+type Props = React.ComponentPropsWithoutRef<'span'> & {
   variant?: BadgeVariant;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -14,9 +13,11 @@ export const Badge = ({
   rightIcon,
   variant = 'blue',
   type = 'primary',
+  ...rest
 }: Props) => {
   return (
     <Wrap
+      {...rest}
       $variant={variant}
       $withLeftIcon={!!leftIcon}
       $withRightIcon={!!rightIcon}

@@ -17,6 +17,7 @@ export const MotionCategoryFilter = ({ selected, onChange }: Props) => {
       <Text size={14}>Filter by category:</Text>
       <CategoryButton
         type="button"
+        aria-pressed={selected.length === 0}
         $isActive={selected.length === 0}
         onClick={() => onChange([])}
       >
@@ -29,6 +30,7 @@ export const MotionCategoryFilter = ({ selected, onChange }: Props) => {
           <CategoryButton
             key={category}
             type="button"
+            aria-pressed={isActive}
             $isActive={isActive}
             $category={category}
             onClick={() =>
