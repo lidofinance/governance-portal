@@ -24,7 +24,7 @@ export const MotionDetailedObjections = ({ motion }: Props) => {
 
   return (
     <ObjectionsInfo isSucceed={isSucceed} isDangered={isDangered}>
-      <ObjectionsTitle>Objections:</ObjectionsTitle>
+      <ObjectionsTitle>Objections</ObjectionsTitle>
       <ObjectionsValue>
         {!progress ? (
           'Loading...'

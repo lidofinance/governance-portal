@@ -13,10 +13,14 @@ export const MotionContainer = styled(Container).attrs({
 `;
 
 export const MotionCard = styled(Block)`
-  padding: 50px 60px;
+  padding: 32px;
   border-radius: 20px;
   box-shadow: ${({ theme }) => theme.boxShadows.xl}
     var(--lido-color-shadowLight);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   @media (max-width: ${BREAKPOINT_MOBILE}) {
     padding: 20px;
@@ -24,45 +28,38 @@ export const MotionCard = styled(Block)`
 `;
 
 export const Header = styled.div`
-  margin-bottom: 64px;
   display: flex;
   justify-content: space-between;
 `;
 
-export const MotionNumber = styled(Text).attrs({
-  size: 16,
-  weight: 700,
-  color: 'textv1-secondary',
-})`
-  margin-bottom: 3px;
-`;
-
-export const HeaderAside = styled.div`
+export const HeaderMeta = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
 `;
 
-export const StatusLabel = styled(Text).attrs({
-  size: 12,
-  weight: 500,
-  color: 'textv1-secondary',
-})`
-  margin-bottom: 3px;
+export const StatusWrap = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
+export const Badges = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 export const StatusValue = styled(Text).attrs({
-  size: 16,
+  size: 12,
   weight: 700,
 })<{ $displayStatus: MotionDisplayStatus }>`
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-
   color: ${({ $displayStatus }) => MOTION_STATUS_COLOR_MAP[$displayStatus]};
 `;
 
 export const Description = styled.div`
   font-weight: 400;
-  margin-bottom: 64px;
+  margin-bottom: 8px;
 
   ul {
     padding-left: 20px;
@@ -80,11 +77,8 @@ export const DescriptionMeta = styled(Text).attrs({
   size: 12,
   color: 'textv1-secondary',
 })`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 32px;
-  margin-bottom: 16px;
+  margin-top: 16px;
+  margin-bottom: 24px;
 `;
 
 export const InfoRow = styled.div`
@@ -145,4 +139,14 @@ export const EnactWarningBox = styled.div`
   font-weight: 500;
   margin: 20px 0 20px 0;
   padding: 12px;
+`;
+
+export const AddressWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+
+  & button > div {
+    margin: 0;
+  }
 `;
