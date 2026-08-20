@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Option } from '@lidofinance/lido-ui';
 import { Text } from 'shared/components/text';
 import { SkeletonBar } from 'shared/components/skeleton-bar';
 
@@ -51,5 +52,13 @@ export const RetryHint = styled(Text).attrs({
     background: none;
     cursor: pointer;
     color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+export const MotionTypeOption = styled(Option)`
+  & > span:last-child {
+    margin-left: auto;
+    gap: 8px;
+    cursor: inherit;
   }
 `;
