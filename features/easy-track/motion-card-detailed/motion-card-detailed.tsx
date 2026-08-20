@@ -124,7 +124,7 @@ const MotionCardDetailedInner = () => {
       <Description>
         <MotionDescription motion={motion as Motion} />
         <DescriptionMeta>
-          Snapshot block:
+          Snapshot block:{' '}
           <Link
             href={getEtherscanLink(
               chainId,

@@ -60,6 +60,7 @@ export const StatusValue = styled(Text).attrs({
 export const Description = styled.div`
   font-weight: 400;
   margin-bottom: 8px;
+  word-break: break-word;
 
   ul {
     padding-left: 20px;
