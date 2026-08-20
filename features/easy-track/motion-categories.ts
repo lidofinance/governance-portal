@@ -149,10 +149,20 @@ export const MOTION_TAGS: MotionTagsMap = {
   EvmUnrecognized: ['Staking'],
 };
 
-export const MOTION_CATEGORY_COLOR_MAP: Record<MotionCategory, BadgeVariant> = {
-  Staking: 'deepBlue',
-  Treasury: 'deepGreen',
-  stVaults: 'deepYellow',
-  'MEV Boost': 'pink',
-  Archive: 'blue',
-};
+export const MOTION_CATEGORY_VARIANT_MAP: Record<MotionCategory, BadgeVariant> =
+  {
+    Staking: 'deepBlue',
+    Treasury: 'deepGreen',
+    stVaults: 'deepYellow',
+    'MEV Boost': 'pink',
+    Archive: 'blue',
+  };
+
+export type FilterCategory = Exclude<MotionCategory, 'Archive'>;
+
+export const FILTER_CATEGORIES: readonly FilterCategory[] = [
+  'Staking',
+  'Treasury',
+  'MEV Boost',
+  'stVaults',
+];

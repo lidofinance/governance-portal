@@ -95,10 +95,10 @@ export const MotionCard = ({ motion }: Props) => {
             </Text>
           </CardStatusWrapper>
           <Box display="flex" gap={4}>
-            <Text size={12} weight={600} color="secondary">
+            <Text size={10} weight={600} color="secondary">
               OBJECTIONS
             </Text>
-            <Text size={12} strong>
+            <Text size={10} strong>
               {!progress ? 'Loading...' : `${progress.objectionsPctFormatted}%`}
             </Text>
           </Box>
