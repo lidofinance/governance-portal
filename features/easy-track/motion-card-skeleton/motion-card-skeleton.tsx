@@ -9,12 +9,12 @@ import {
   TailingSkeleton,
   TitleSkeleton,
 } from './style';
-import { DashboardCard } from 'shared/components/dashboard-card';
+import { MotionDashboardCard } from '@easy-track/style';
 import { MotionDisplayStatus } from '@easy-track/types';
 
 export const MotionCardSkeleton = () => {
   return (
-    <DashboardCard>
+    <MotionDashboardCard>
       <TitleSkeleton width="70%" size={14} />
       <DescSkeleton width="100%" size={12} />
       <TailingSkeleton width="55%" size={12} />
@@ -29,6 +29,6 @@ export const MotionCardSkeleton = () => {
         </Box>
         <ActionBarSkeleton />
       </Box>
-    </DashboardCard>
+    </MotionDashboardCard>
   );
 };

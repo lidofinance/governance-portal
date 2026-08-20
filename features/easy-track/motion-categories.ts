@@ -1,5 +1,6 @@
 import { MotionType } from './motion-types';
 import { EvmUnrecognized } from './evm-addresses';
+import { BadgeVariant } from 'shared/components/badge';
 
 export type MotionCategory =
   | 'Staking'
@@ -146,4 +147,12 @@ export const MOTION_TAGS: MotionTagsMap = {
   [MotionType.RegisterTiersInOperatorGridOld]: ['stVaults'],
   [MotionType.AlterTiersInOperatorGridOld]: ['stVaults'],
   EvmUnrecognized: ['Staking'],
+};
+
+export const MOTION_CATEGORY_COLOR_MAP: Record<MotionCategory, BadgeVariant> = {
+  Staking: 'deepBlue',
+  Treasury: 'deepGreen',
+  stVaults: 'deepYellow',
+  'MEV Boost': 'pink',
+  Archive: 'blue',
 };

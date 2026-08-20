@@ -30,24 +30,22 @@ export const DescWrapper = styled.div`
   }
 `;
 
-export const BadgeWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px;
-  border-radius: 24px;
-  background: rgba(39, 56, 82, 0.1);
-`;
-
 export const CardStatusWrapper = styled.section<{
   $displayStatus: MotionDisplayStatus;
 }>`
   display: flex;
   flex-direction: column;
-  margin-top: auto;
-  margin-bottom: ${({ theme }) => theme.spaceMap.md}px;
+  gap: 8px;
 
   & > * {
     color: ${({ $displayStatus }) => MOTION_STATUS_COLOR_MAP[$displayStatus]};
+    line-height: 1;
   }
+`;
+
+export const CardFooter = styled.div`
+  margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 `;

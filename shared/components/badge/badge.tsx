@@ -1,10 +1,11 @@
-import { BadgeVariant, Wrap } from './style';
+import { BadgeVariant, Wrap, BadgeType } from './style';
 
 type Props = {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   variant?: BadgeVariant;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  type?: BadgeType;
 };
 
 export const Badge = ({
@@ -12,12 +13,14 @@ export const Badge = ({
   leftIcon,
   rightIcon,
   variant = 'blue',
+  type = 'primary',
 }: Props) => {
   return (
     <Wrap
       $variant={variant}
       $withLeftIcon={!!leftIcon}
       $withRightIcon={!!rightIcon}
+      $type={type}
     >
       {leftIcon}
       {children}
