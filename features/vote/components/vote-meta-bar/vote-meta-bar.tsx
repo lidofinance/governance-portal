@@ -5,8 +5,6 @@ import {
   MetaWrap,
   BadgeGroup,
   TimeGroup,
-  StatusBadge,
-  PhaseBadge,
   PhaseNumber,
   Separator,
   VoteIdText,
@@ -20,6 +18,7 @@ import {
   TooltipIconWrap,
 } from './style';
 import { FormattedDate } from 'shared/components/formatted-date';
+import { Badge, BadgeVariant } from 'shared/components/badge';
 
 type Props = {
   voteId: number;
@@ -54,12 +53,13 @@ const PHASE_TOOLTIP_TITLE = (
 
 type StatusLabel = {
   text: string;
-  variant: 'active' | 'success' | 'error' | 'warning';
+  variant: BadgeVariant;
+  icon?: React.ReactNode;
 };
 
 type PhaseLabel = {
   text: string;
-  variant: 'default' | 'enacted' | 'enactable' | 'phase';
+  variant: BadgeVariant;
   iconNumber?: number;
 } | null;
 
@@ -70,13 +70,13 @@ const getStatusLabel = (
   switch (status) {
     case VoteStatus.ActiveMain:
     case VoteStatus.ActiveObjection:
-      return { text: 'Active', variant: 'active' };
+      return { text: 'Active', variant: 'yellow' };
     case VoteStatus.Rejected:
       return isQuorumReached
-        ? { text: 'Rejected', variant: 'error' }
-        : { text: 'No quorum', variant: 'warning' };
+        ? { text: 'Rejected', variant: 'red', icon: <VoteFailIcon /> }
+        : { text: 'No quorum', variant: 'yellow', icon: <VoteFailIcon /> };
     default:
-      return { text: 'Passed', variant: 'success' };
+      return { text: 'Passed', variant: 'green', icon: <VoteDoneIcon /> };
   }
 };
 
@@ -87,19 +87,19 @@ const getPhaseLabel = (
 ): PhaseLabel => {
   switch (status) {
     case VoteStatus.ActiveMain:
-      return { text: 'Main phase', variant: 'phase', iconNumber: 1 };
+      return { text: 'Main phase', variant: 'blue', iconNumber: 1 };
     case VoteStatus.ActiveObjection:
-      return { text: 'Objection phase', variant: 'phase', iconNumber: 2 };
+      return { text: 'Objection phase', variant: 'blue', iconNumber: 2 };
     case VoteStatus.Executed:
       if (isDgProposalLoading) {
         return null;
       }
       return dualGovernancePhase
-        ? { text: 'Dual Governance phase', variant: 'phase', iconNumber: 3 }
-        : { text: 'Enacted', variant: 'enacted' };
+        ? { text: 'Dual Governance phase', variant: 'blue', iconNumber: 3 }
+        : { text: 'Enacted', variant: 'green' };
     case VoteStatus.Passed:
     case VoteStatus.Pending:
-      return { text: 'Enactable', variant: 'enactable' };
+      return { text: 'Enactable', variant: 'yellow' };
     default:
       return null;
   }
@@ -153,26 +153,37 @@ export const VoteMetaBar = ({
   return (
     <MetaWrap $labeled={withLabels} data-testid="voteHeader">
       <BadgeGroup>
-        <StatusBadge $variant={statusLabel.variant} data-testid="voteStatus">
-          {statusLabel.variant === 'success' && <VoteDoneIcon />}
-          {statusLabel.variant === 'error' && <VoteFailIcon />}
-          {statusLabel.variant === 'warning' && <VoteFailIcon />}
+        <Badge
+          variant={statusLabel.variant}
+          leftIcon={statusLabel.icon}
+          data-testid="voteStatus"
+        >
           {statusLabel.text}
-        </StatusBadge>
+        </Badge>
         {phase && (
-          <PhaseBadge $variant={phase.variant} data-testid="votePhase">
-            {phase.iconNumber !== undefined && (
-              <PhaseNumber>{phase.iconNumber}</PhaseNumber>
-            )}
+          <Badge
+            variant={phase.variant}
+            leftIcon={
+              phase.iconNumber !== undefined && (
+                <PhaseNumber>{phase.iconNumber}</PhaseNumber>
+              )
+            }
+            rightIcon={
+              phase.variant === 'blue' && (
+                <PhaseTooltip
+                  placement="bottomRight"
+                  title={PHASE_TOOLTIP_TITLE}
+                >
+                  <TooltipIconWrap>
+                    <InfoIcon />
+                  </TooltipIconWrap>
+                </PhaseTooltip>
+              )
+            }
+            data-testid="votePhase"
+          >
             {phase.text}
-            {phase.variant === 'phase' && (
-              <PhaseTooltip placement="bottomRight" title={PHASE_TOOLTIP_TITLE}>
-                <TooltipIconWrap>
-                  <InfoIcon />
-                </TooltipIconWrap>
-              </PhaseTooltip>
-            )}
-          </PhaseBadge>
+          </Badge>
         )}
       </BadgeGroup>
       <TimeGroup $labeled={withLabels}>
