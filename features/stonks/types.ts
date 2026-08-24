@@ -1,3 +1,4 @@
+import { MutableRefObject } from 'react';
 import { KnownToken } from 'shared/blockchain/tokens';
 import { Address } from 'viem';
 
@@ -28,6 +29,7 @@ export type PlaceOrderFormNetworkData = {
 
 export type PlaceOrderFormContextValue = PlaceOrderFormNetworkData & {
   stonksMetadata: StonksMetadata;
+  estimatedOutputRef: MutableRefObject<bigint | undefined>;
 };
 
 export type OrderData = {

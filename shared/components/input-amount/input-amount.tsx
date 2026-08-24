@@ -139,6 +139,9 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
       [onChange, decimals],
     );
 
+    // No dependency array bc the DOM value can be overwritten from outside without
+    // a `value` change (react-hook-form writes raw values via the input ref),
+    // so the string is re-checked on every render.
     useEffect(() => {
       const input = inputRef.current;
       if (!input) return;
@@ -154,7 +157,7 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
           lastInputValue.current = input.value;
         }
       }
-    }, [value, decimals]);
+    });
 
     const handleClickMax =
       onChange && maxValue && maxValue > 0n

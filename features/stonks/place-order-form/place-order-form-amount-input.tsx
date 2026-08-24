@@ -7,10 +7,19 @@ import { MIN_BUY_AMOUNT_NAME, SELL_AMOUNT_NAME } from './constants';
 import { MIN_STONKS_BALANCE_WEI } from '@stonks/constants';
 
 export const PlaceOrderFormAmountInput = () => {
-  const { setError, setValue, formState } = useFormContext();
+  const { setError, setValue, trigger, formState } = useFormContext();
+  const isMinBuyDirty = !!formState.dirtyFields[MIN_BUY_AMOUNT_NAME];
 
-  const { stonksMetadata, balance, isFetched, fetchEstimatedOutput } =
-    usePlaceOrderFormData();
+  const {
+    stonksMetadata,
+    balance,
+    isFetched,
+    fetchEstimatedOutput,
+    estimatedOutputRef,
+  } = usePlaceOrderFormData();
+
+  // Stonks v1 `placeOrder` always sells the full balance, so the amount is not editable
+  const isV1 = stonksMetadata.version === 1;
 
   const fieldValue = useWatch({ name: SELL_AMOUNT_NAME });
 
@@ -30,7 +39,14 @@ export const PlaceOrderFormAmountInput = () => {
 
         if (!isCurrent) return;
 
-        setValue(MIN_BUY_AMOUNT_NAME, estimatedOutput);
+        estimatedOutputRef.current = estimatedOutput;
+
+        if (isMinBuyDirty) {
+          // Keep the manually edited value, revalidate it against the new estimate
+          void trigger(MIN_BUY_AMOUNT_NAME);
+        } else {
+          setValue(MIN_BUY_AMOUNT_NAME, estimatedOutput);
+        }
       } catch (error) {
         if (!isCurrent) return;
 
@@ -54,7 +70,8 @@ export const PlaceOrderFormAmountInput = () => {
 
   return (
     <TokenAmountInputHookForm
-      disabled={!isFetched}
+      disabled={!isFetched || isV1}
+      showMaxButton={!isV1}
       fieldName={SELL_AMOUNT_NAME}
       token={stonksMetadata.tokenFrom.symbol}
       data-testid="stonksPlaceOrderInput"
