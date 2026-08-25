@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   rateLimit,
   responseTimeMetric,
-  defaultErrorHandler,
+  errorAndCacheDefaultWrappers,
   httpMethodGuard,
   HttpMethod,
 } from 'utils-api';
@@ -150,5 +150,5 @@ export default wrapNextRequest([
   httpMethodGuard([HttpMethod.GET]),
   rateLimit,
   responseTimeMetric(Metrics.request.apiTimings, API_ROUTES.KEYS_INFO),
-  defaultErrorHandler,
+  ...errorAndCacheDefaultWrappers,
 ])(keysInfo);

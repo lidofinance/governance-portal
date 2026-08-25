@@ -26,7 +26,9 @@ export const CACHE_CONTROL_PAGES = [
   '/',
   '/manifest.json',
   '/favicon:size*',
-  '/public/runtime/window-env.js',
+  '/apple-touch-icon.png',
+  '/delegates/:file*',
+  '/runtime/window-env.js',
   '/vote/dashboard',
   '/vote/:id',
   '/vote/delegation',
@@ -36,6 +38,9 @@ export const CACHE_CONTROL_PAGES = [
   '/easy-track/motions',
   '/easy-track/motions/:id',
   '/easy-track/start-motion',
+  '/stonks',
+  '/stonks/:stonksAddress',
+  '/stonks/orders/:orderAddress',
   '/500',
 ];
 export const CACHE_CONTROL_VALUE =
@@ -144,7 +149,8 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, must-revalidate',
+            value:
+              'public, max-age=60, stale-if-error=1200, stale-while-revalidate=30',
           },
         ],
       },
@@ -162,7 +168,8 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, must-revalidate',
+            value:
+              'public, max-age=60, stale-if-error=1200, stale-while-revalidate=30',
           },
         ],
       },
@@ -171,7 +178,8 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, must-revalidate',
+            value:
+              'public, max-age=60, stale-if-error=1200, stale-while-revalidate=30',
           },
         ],
       },
