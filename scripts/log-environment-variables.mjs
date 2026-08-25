@@ -1,30 +1,24 @@
 export const openKeys = [
-  'ROOT_ORIGIN',
-  // 'DOCS_ORIGIN',
-  // 'HELP_ORIGIN',
-  // 'RESEARCH_ORIGIN',
-
   'SUPPORTED_CHAINS',
   'DEFAULT_CHAIN',
 
-  // 'CSP_TRUSTED_HOSTS',
-  // 'CSP_REPORT_ONLY',
-  // 'CSP_REPORT_URI',
+  'CSP_TRUSTED_HOSTS',
+  'CSP_REPORT_ONLY',
+  'CSP_REPORT_URI',
 
-  // 'ENABLE_QA_HELPERS',
+  'RATE_LIMIT',
+  'RATE_LIMIT_TIME_FRAME',
 
-  // 'REWARDS_BACKEND',
-
-  // 'RATE_LIMIT',
-  // 'RATE_LIMIT_TIME_FRAME',
-
-  // 'ETH_API_BASE_PATH',
-  // 'WQ_API_BASE_PATH',
   'WALLETCONNECT_PROJECT_ID',
-  // 'REWARDS_BACKEND_BASE_PATH',
 ];
 
-export const secretKeys = ['EL_RPC_URLS_1', 'EL_RPC_URLS_560048'];
+export const secretKeys = [
+  'EL_RPC_URLS_1',
+  'EL_RPC_URLS_560048',
+  'ETHERSCAN_API_KEY',
+  'SUBGRAPH_MAINNET',
+  'SUBGRAPH_HOODI',
+];
 
 /* eslint-disable no-console */
 
