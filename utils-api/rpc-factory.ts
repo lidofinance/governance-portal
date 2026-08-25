@@ -5,6 +5,7 @@ import { Counter, Registry } from 'prom-client';
 import type { TrackedFetchRPC } from '@lidofinance/api-rpc';
 import type { FetchRpcInitBody } from '@lidofinance/rpc';
 import { iterateUrls } from '@lidofinance/rpc';
+import { USER_AGENT } from 'utils-api/fetch-external';
 
 export type RpcProviders = Record<string | number, [string, ...string[]]>;
 
@@ -37,6 +38,21 @@ export class SizeTooLargeError extends ClientError {
     super(message || 'Invalid Request');
   }
 }
+
+const isRpcRequest = (entry: unknown): entry is FetchRpcInitBody => {
+  if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) {
+    return false;
+  }
+  const { jsonrpc, method, id } = entry as Record<string, unknown>;
+  const hasValidId =
+    id === undefined ||
+    id === null ||
+    typeof id === 'string' ||
+    typeof id === 'number';
+  return (
+    typeof jsonrpc === 'string' && typeof method === 'string' && hasValidId
+  );
+};
 
 export type RPCFactoryParams = {
   metrics: {
@@ -122,10 +138,13 @@ export const rpcFactory = ({
       // Check if provided methods are allowed
       // We throw HTTP error for ANY invalid RPC request out of batch
       // because we assume that frontend must not send invalid requests
-      for (const { method, params } of requests) {
-        if (typeof method !== 'string') {
-          throw new InvalidRequestError(`RPC method isn't string`);
+      for (const request of requests) {
+        if (!isRpcRequest(request)) {
+          throw new InvalidRequestError(
+            `RPC request doesn't match JSON-RPC schema`,
+          );
         }
+        const { method, params } = request;
         if (!allowedRPCMethods.includes(method)) {
           rpcRequestBlocked.inc();
           throw new InvalidRequestError(`RPC method ${method} isn't allowed`);
@@ -182,9 +201,15 @@ export const rpcFactory = ({
 
       const requested = await iterateUrls(
         providers[chainId],
-        // TODO: consider adding verification that body is actually matches FetchRpcInitBody
         (url) =>
-          fetchRPC(url, { body: req.body as FetchRpcInitBody }, { chainId }),
+          fetchRPC(
+            url,
+            {
+              body: req.body,
+              headers: { 'User-Agent': USER_AGENT },
+            },
+            { chainId },
+          ),
         // eslint-disable-next-line @typescript-eslint/unbound-method
         console.error,
       );

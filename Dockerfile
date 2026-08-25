@@ -3,6 +3,9 @@ FROM node:24-alpine AS build
 
 WORKDIR /app
 
+# apk pins are major-only on purpose (curl below too): Alpine repos keep only the latest
+# build of a package, so an exact pin (git=2.x.y-rN) breaks the build on every upstream
+# patch release; the accepted drift is patch/minor updates within the same major
 RUN apk add --no-cache git=~2
 COPY package.json yarn.lock ./
 

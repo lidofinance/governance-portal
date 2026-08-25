@@ -1,7 +1,9 @@
+import packageJson from 'package.json';
 import Metrics from 'utils-api/metrics';
 import { createStandardFetcher } from 'utils/standard-fetcher';
 
 const NETWORK_ERROR_STATUS = 'network_error';
+export const USER_AGENT = `${packageJson.name}/${packageJson.version}`;
 
 export const fetchExternal = async (
   url: string,
@@ -11,7 +13,10 @@ export const fetchExternal = async (
   const endTimer = Metrics.request.apiTimingsExternal.startTimer({ hostname });
 
   try {
-    const response = await fetch(url, params);
+    const response = await fetch(url, {
+      ...params,
+      headers: { 'User-Agent': USER_AGENT, ...params?.headers },
+    });
     endTimer({ status: response.status });
     Metrics.request.externalRequestCounter.inc({
       hostname,
