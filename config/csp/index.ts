@@ -31,6 +31,8 @@ export const contentSecurityPolicy: ContentSecurityPolicyOption = {
       ...(config.developmentMode ? ["'unsafe-eval'"] : []), // for HMR
       ...trustedHosts,
     ],
+    scriptSrcAttr: ["'none'"],
+    mediaSrc: ["'none'"],
 
     // Allow fetch connections to any secure host
     connectSrc: [
