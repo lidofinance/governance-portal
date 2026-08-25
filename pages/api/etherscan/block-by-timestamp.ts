@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { wrapRequest as wrapNextRequest } from '@lidofinance/next-api-wrapper';
 import {
-  defaultErrorHandler,
+  errorAndCacheDefaultWrappers,
   HttpMethod,
   httpMethodGuard,
   rateLimit,
@@ -77,9 +77,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       'Etherscan block-by-timestamp error:',
       error instanceof Error ? error.message : error,
     );
-    res
-      .status(502)
-      .json({ error: 'Failed to fetch block number from Etherscan' });
+    res.status(502);
+    throw new Error('Failed to fetch block number from Etherscan');
   }
 };
 
@@ -90,5 +89,5 @@ export default wrapNextRequest([
     Metrics.request.apiTimings,
     API_ROUTES.ETHERSCAN_BLOCK_BY_TIMESTAMP,
   ),
-  defaultErrorHandler,
+  ...errorAndCacheDefaultWrappers,
 ])(handler);
