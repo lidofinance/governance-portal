@@ -19,15 +19,23 @@ const extractError = async (response: Response) => {
 
 type StandardFetcher = <T>(url: string, params?: RequestInit) => Promise<T>;
 
-export const standardFetcher: StandardFetcher = async (url, params) => {
-  const response = await fetch(url, {
-    ...DEFAULT_PARAMS,
-    ...params,
-  });
+type FetchImpl = (url: string, params?: RequestInit) => Promise<Response>;
 
-  if (!response.ok) {
-    throw new FetcherError(await extractError(response), response.status);
-  }
+export const createStandardFetcher =
+  (fetchImpl: FetchImpl): StandardFetcher =>
+  async (url, params) => {
+    const response = await fetchImpl(url, {
+      ...DEFAULT_PARAMS,
+      ...params,
+    });
 
-  return await response.json();
-};
+    if (!response.ok) {
+      throw new FetcherError(await extractError(response), response.status);
+    }
+
+    return await response.json();
+  };
+
+export const standardFetcher = createStandardFetcher((url, params) =>
+  fetch(url, params),
+);

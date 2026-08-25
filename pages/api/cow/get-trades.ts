@@ -14,7 +14,7 @@ import {
 } from 'utils-api';
 import { API_ROUTES } from 'constants/api';
 import Metrics from 'utils-api/metrics';
-import { standardFetcher } from 'utils/standard-fetcher';
+import { standardFetcherExternal } from 'utils-api/fetch-external';
 import { API } from 'types';
 import { COW_API_URL } from 'shared/external-urls';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
@@ -50,7 +50,7 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const data = await standardFetcher<CowApiTrade[]>(
+  const data = await standardFetcherExternal<CowApiTrade[]>(
     `${COW_API_URL}/v2/trades?orderUid=${encodeURIComponent(orderUid)}`,
     {
       headers: {
