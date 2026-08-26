@@ -79,9 +79,12 @@ export default withBundleAnalyzer({
   },
   webpack(config) {
     config.module.rules.push(
-      // Teach webpack to import svg and md files
+      // Teach webpack to import svg and md files.
+      // `issuer` limits svgr to JS/TS imports; SVGs referenced from CSS
+      // (e.g. @lidofinance/lido-app-ui) use Next.js built-in asset handling.
       {
         test: /\.svg$/,
+        issuer: /\.[jt]sx?$/,
         use: ['@svgr/webpack', 'url-loader'],
       },
       {

@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { AppProps } from 'next/app';
 import 'nprogress/nprogress.css';
+import '@lidofinance/lido-app-ui/index.css';
 import Head from 'next/head';
 
 import {

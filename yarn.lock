@@ -2480,6 +2480,14 @@
     "@ethersproject/abi" "^5.0.7"
     keccak256 "^1.0.3"
 
+"@lidofinance/lido-app-ui@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@lidofinance/lido-app-ui/-/lido-app-ui-1.1.2.tgz#1d68058fbe3c876c292cc9ceaa1c45522329d9cc"
+  integrity sha512-AS8EcjaYOjy7ZAfKbqMlUB1HKsPPALdyNhlfzAc+tiUQzJENirERPopWiL0Y21VtQJAueH27lAjAEi8JAdCUSw==
+  dependencies:
+    "@lidofinance/lido-shared-ui" "^1.1.2"
+    classnames "2.5.1"
+
 "@lidofinance/lido-ethereum-sdk@4.6.0":
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@lidofinance/lido-ethereum-sdk/-/lido-ethereum-sdk-4.6.0.tgz#688be309fe41b11cf0276d6a4d498c31a041a5e5"
@@ -2488,6 +2496,11 @@
     "@ethersproject/bytes" "^5.7.0"
     graphql "^16.8.1"
     graphql-request "^6.1.0"
+
+"@lidofinance/lido-shared-ui@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@lidofinance/lido-shared-ui/-/lido-shared-ui-1.1.2.tgz#0bb1aee31f3b19f97e20a98786f672b656072c3b"
+  integrity sha512-38e8Q0+RLPFSANGMRO5OGhhS1eyV+YmRsGtOU14C7A6U7/9kuevGiQt0CZrE5VrYO1bmD2rfjGGO3JwCb7wpCQ==
 
 "@lidofinance/lido-ui@^3.18.0", "@lidofinance/lido-ui@^3.31.0":
   version "3.34.0"
@@ -5331,6 +5344,11 @@ cjs-module-lexer@^1.0.0:
   version "1.4.3"
   resolved "https://registry.npmjs.org/cjs-module-lexer/-/cjs-module-lexer-1.4.3.tgz"
   integrity sha512-9z8TZaGM1pfswYeXrUpzPrkx8UnWYdhJclsiYMm6x/w5+nN+8Tf/LnAgfLGQCm59qAOxU8WwHEq2vNwF6i4j+Q==
+
+classnames@2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.5.1.tgz#ba774c614be0f016da105c858e7159eae8e7687b"
+  integrity sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==
 
 clean-regexp@^1.0.0:
   version "1.0.0"
