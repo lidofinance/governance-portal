@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useCallback,
+  useRef,
 } from 'react';
 import invariant from 'tiny-invariant';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -97,7 +98,11 @@ export const PlaceOrderFormProvider: FC<PlaceOrderFormProviderProps> = ({
 
   const { watch, reset, register } = formObject;
 
+  // Latest estimated output, used as the lower bound for minBuyAmount validation
+  const estimatedOutputRef = useRef<bigint | undefined>(undefined);
+
   const resetForm = useCallback(() => {
+    estimatedOutputRef.current = networkData.estimatedOutputFromBalance;
     reset({
       sellAmount: networkData.balance,
       minBuyAmount: networkData.estimatedOutputFromBalance,
@@ -122,6 +127,7 @@ export const PlaceOrderFormProvider: FC<PlaceOrderFormProviderProps> = ({
     () => ({
       ...networkData,
       stonksMetadata,
+      estimatedOutputRef,
       register,
       watch,
     }),

@@ -77,6 +77,10 @@ export const MOTION_TYPE_ABI_MAP = {
     abi.evmReportWithdrawalsForSlashedValidatorsAbi,
   [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
     abi.evmReportWithdrawalsForSlashedValidatorsAbi,
+  [MotionType.CSM2SettleGeneralDelayedPenalty]:
+    abi.settleGeneralDelayedPenaltyAbi,
+  [MotionType.CSM2ReportWithdrawalsForSlashedValidators]:
+    abi.evmReportWithdrawalsForSlashedValidatorsAbi,
   [MotionType.AllianceOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.EcosystemOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
   [MotionType.LabsOpsStablesTopUp]: abi.topUpWithLimitsStablesAbi,
@@ -131,6 +135,8 @@ export const MOTION_TYPE_ABI_MAP = {
   [MotionType.UpdateStakingModuleShareLimits]:
     abi.evmUpdateStakingModuleShareLimitsAbi,
   [MotionType.UpdateStakingModuleShareLimitsOld]:
+    abi.evmUpdateStakingModuleShareLimitsAbi,
+  [MotionType.CSM2UpdateStakingModuleShareLimits]:
     abi.evmUpdateStakingModuleShareLimitsAbi,
 } as const;
 

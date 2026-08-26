@@ -3,17 +3,15 @@ import {
   evmUpdateStakingModuleShareLimitsAbi,
   stakingRouterAbi,
 } from 'abi/generated';
-import {
-  useReadContract,
-  useReadContractGetter,
-} from 'shared/blockchain/hooks/use-read-contract';
+import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { UpdateStakingModuleShareLimits as UpdateStakingModuleShareLimitsContract } from 'shared/blockchain/contracts';
+import { getScriptFactoryByMotionType } from '@easy-track/utils/get-motion-type';
 import { MotionDescriptionProps } from '../types';
 import { formatBp } from '@easy-track/vaults/utils/format-vault-param';
 
 export const UpdateStakingModuleShareLimits = ({
   callData,
+  motionType,
 }: MotionDescriptionProps<typeof evmUpdateStakingModuleShareLimitsAbi>) => {
   const {
     currentStakeShareLimit,
@@ -23,22 +21,30 @@ export const UpdateStakingModuleShareLimits = ({
   } = callData;
 
   const { chainId } = useLidoSDK();
-  const factoryContract = useReadContract(
-    UpdateStakingModuleShareLimitsContract,
+  const getFactoryContractReader = useReadContractGetter(
+    evmUpdateStakingModuleShareLimitsAbi,
   );
   const readStakingRouter = useReadContractGetter(stakingRouterAbi);
 
   const { data: moduleInfo, isLoading } = useQuery({
     queryKey: [
       'update-staking-module-share-limits-module-info',
+      motionType,
       chainId,
-      factoryContract.address,
     ],
     staleTime: Infinity,
     queryFn: async () => {
+      const factoryAddress = getScriptFactoryByMotionType(chainId, motionType);
+
+      if (!factoryAddress) {
+        return;
+      }
+
+      const readFactory = getFactoryContractReader(factoryAddress);
+
       const [stakingRouterAddress, stakingModuleId] = await Promise.all([
-        factoryContract.readContract('stakingRouter'),
-        factoryContract.readContract('stakingModuleId'),
+        readFactory('stakingRouter'),
+        readFactory('stakingModuleId'),
       ]);
 
       const stakingModule = await readStakingRouter(stakingRouterAddress)(

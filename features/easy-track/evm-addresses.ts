@@ -328,6 +328,13 @@ export const EvmAddressesByChain: EvmAddresses = {
     [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
       '0xE1EDc1857B47a3188d9cA16E3e6A2DF2Af494FDD',
 
+    [MotionType.CSM2SettleGeneralDelayedPenalty]:
+      '0x2eCf179d5e840e56054E214438008F19E46711bC',
+    [MotionType.CSM2ReportWithdrawalsForSlashedValidators]:
+      '0x0b384D661101Fe7F56caa421547b243e03ED4E65',
+    [MotionType.CSM2UpdateStakingModuleShareLimits]:
+      '0x05F2F2eb01A8e8C20FDD07EAb93640cd8304aaC9',
+
     // next motion factories are @deprecated
     // we are keeping them here to display history data
     [MotionType.LEGOTopUp]: '',

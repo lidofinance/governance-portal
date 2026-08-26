@@ -55,6 +55,12 @@ export const MotionTypeForms = {
   CSMSetMerkleGateTree: 'CSMSetMerkleGateTree',
   CuratedSetMerkleGateTree: 'CuratedSetMerkleGateTree',
 
+  // Not CSM v2 but CSM 0x02 module
+  CSM2ReportWithdrawalsForSlashedValidators:
+    'CSM2ReportWithdrawalsForSlashedValidators',
+  CSM2SettleGeneralDelayedPenalty: 'CSM2SettleGeneralDelayedPenalty',
+  CSM2UpdateStakingModuleShareLimits: 'CSM2UpdateStakingModuleShareLimits',
+
   MEVBoostRelaysAdd: 'MEVBoostRelaysAdd',
   MEVBoostRelaysEdit: 'MEVBoostRelaysEdit',
   MEVBoostRelaysRemove: 'MEVBoostRelaysRemove',

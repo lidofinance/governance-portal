@@ -17,7 +17,9 @@ export const SettleGeneralDelayedPenalty = ({
     settleGeneralDelayedPenaltyAbi,
   );
 
-  const isCSM = motionType === MotionType.CSMSettleGeneralDelayedPenalty;
+  const isCSM =
+    motionType === MotionType.CSMSettleGeneralDelayedPenalty ||
+    motionType === MotionType.CSM2SettleGeneralDelayedPenalty;
 
   const { data: stakingModuleAddress } = useQuery({
     queryKey: [`settle-general-delayed-penalty-module`, motionType, chainId],
