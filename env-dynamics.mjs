@@ -7,7 +7,7 @@
  * - another values to false
  * @returns {Boolean}
  */
-const toBoolean = (val) => {
+export const toBoolean = (val) => {
   return !!(
     val?.toLowerCase?.() === 'true' ||
     val === true ||
