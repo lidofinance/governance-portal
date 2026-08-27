@@ -4,6 +4,9 @@ import { Layout } from 'shared/components';
 import { useState } from 'react';
 import { StonksTabsWrapper } from '@stonks/styles';
 import { ToggleButton } from 'shared/components/toggle-button';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+
+export const getStaticProps = getDefaultStaticProps();
 
 export default function StonksIndexPage() {
   const [mode, setMode] = useState('create');

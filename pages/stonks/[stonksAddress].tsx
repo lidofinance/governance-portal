@@ -1,3 +1,4 @@
+import { GetStaticPaths } from 'next';
 import { STONKS_MAP } from '@stonks/addresses';
 import { StonksPlaceOrderForm } from '@stonks/place-order-form';
 import { ErrorBox } from '@stonks/styles';
@@ -6,6 +7,16 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
 import { useParsedQuery } from 'shared/hooks/use-parsed-query';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps = getDefaultStaticProps();
 
 export default function StonksDetailsPage() {
   const { isReady } = useRouter();
@@ -16,9 +27,12 @@ export default function StonksDetailsPage() {
     (s) => s.address.toLowerCase() === stonksAddress?.toLowerCase(),
   );
 
-  const pairLabel = stonksMetadata
-    ? `${stonksMetadata.tokenFrom.symbol} -> ${stonksMetadata.tokenTo.symbol} `
-    : '';
+  // isReady-gated: the SSG server render sees route params while the client's
+  // first render does not — unguarded param-derived output hydration-mismatches
+  const pairLabel =
+    isReady && stonksMetadata
+      ? `${stonksMetadata.tokenFrom.symbol} -> ${stonksMetadata.tokenTo.symbol} `
+      : '';
 
   return (
     <Layout
