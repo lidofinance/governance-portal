@@ -151,7 +151,12 @@ export const InputAmount = forwardRef<HTMLInputElement, Props>(
         const parsedValue = parseUnitsSafe(input.value, decimals);
         // only change string state if casted values differ
         // this allows user to enter 0.100 without immediate change to 0.1
-        if (parsedValue === null || parsedValue !== value) {
+        // an empty string parses to 0n, so it must not pass as an existing 0n value
+        if (
+          input.value === '' ||
+          parsedValue === null ||
+          parsedValue !== value
+        ) {
           input.value = formatUnits(value, decimals);
           // prevents rollback to incorrect value in onChange
           lastInputValue.current = input.value;

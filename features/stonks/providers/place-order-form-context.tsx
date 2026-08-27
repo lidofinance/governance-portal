@@ -47,7 +47,7 @@ const usePlaceOrderFormNetworkData = (
   const {
     data: balanceMap,
     isLoading: isBalanceMapLoading,
-    isFetchedAfterMount: isBalanceMapFetched,
+    isSuccess: isBalanceMapSuccess,
     refetch: refetchBalanceMap,
   } = useStonksBalanceMap(stonksMetadata.address);
 
@@ -56,7 +56,7 @@ const usePlaceOrderFormNetworkData = (
   const {
     data: estimatedOutputFromBalance,
     isLoading: isEstimatedOutputLoading,
-    isFetchedAfterMount: isEstimatedOutputFetched,
+    isSuccess: isEstimatedOutputSuccess,
     refetch: refetchEstimatedOutput,
     fetchEstimatedOutput,
   } = useStonksEstimatedOutput(stonksMetadata.address, balance);
@@ -66,7 +66,7 @@ const usePlaceOrderFormNetworkData = (
     estimatedOutputFromBalance,
     isLoading:
       isBalanceMapLoading || isEstimatedOutputLoading || isStonksManagerLoading,
-    isFetched: isBalanceMapFetched && isEstimatedOutputFetched,
+    isFetched: isBalanceMapSuccess && isEstimatedOutputSuccess,
     isStonksManagerConnected,
     fetchEstimatedOutput,
     refetch: async () => {
