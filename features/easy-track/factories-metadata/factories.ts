@@ -1,5 +1,5 @@
-// import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
-// import * as abi from 'abi/generated';
+import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
+import * as abi from 'abi/generated';
 
 import { defineFactories } from './define-factories';
 
@@ -9,13 +9,13 @@ import { defineFactories } from './define-factories';
 // A runtime import from elsewhere in the feature (a form part, or
 // `shared/blockchain/contracts`) cycles back through `motion-types` and fails
 export const FACTORIES = defineFactories({
-  // LidoLendTest: {
-  //   startable: true,
-  //   abi: abi.lidoLendTestAbi,
-  //   displayName: 'Lend to borrower (test)',
-  //   tags: ['Treasury'],
-  //   addresses: {
-  //     [CHAINS.Hoodi]: '0x1111111111111111111111111111111111111111',
-  //   },
-  // },
+  SetDepositsReserveTarget: {
+    startable: true,
+    abi: abi.setDepositsReserveTargetAbi,
+    displayName: 'Set deposits reserve target',
+    tags: ['Staking'],
+    addresses: {
+      [CHAINS.Hoodi]: '0x68009122a394504E8fD7fee58F92Cd73c6A60717',
+    },
+  },
 } as const);
