@@ -11,6 +11,10 @@ export const PlaceOrderFormInfoWrapper = styled(Block)`
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const PlaceOrderFormInfoRow = styled.div`

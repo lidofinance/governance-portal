@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useCallback,
+  useRef,
 } from 'react';
 import invariant from 'tiny-invariant';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -46,7 +47,7 @@ const usePlaceOrderFormNetworkData = (
   const {
     data: balanceMap,
     isLoading: isBalanceMapLoading,
-    isFetchedAfterMount: isBalanceMapFetched,
+    isSuccess: isBalanceMapSuccess,
     refetch: refetchBalanceMap,
   } = useStonksBalanceMap(stonksMetadata.address);
 
@@ -55,7 +56,7 @@ const usePlaceOrderFormNetworkData = (
   const {
     data: estimatedOutputFromBalance,
     isLoading: isEstimatedOutputLoading,
-    isFetchedAfterMount: isEstimatedOutputFetched,
+    isSuccess: isEstimatedOutputSuccess,
     refetch: refetchEstimatedOutput,
     fetchEstimatedOutput,
   } = useStonksEstimatedOutput(stonksMetadata.address, balance);
@@ -65,7 +66,7 @@ const usePlaceOrderFormNetworkData = (
     estimatedOutputFromBalance,
     isLoading:
       isBalanceMapLoading || isEstimatedOutputLoading || isStonksManagerLoading,
-    isFetched: isBalanceMapFetched && isEstimatedOutputFetched,
+    isFetched: isBalanceMapSuccess && isEstimatedOutputSuccess,
     isStonksManagerConnected,
     fetchEstimatedOutput,
     refetch: async () => {
@@ -97,7 +98,11 @@ export const PlaceOrderFormProvider: FC<PlaceOrderFormProviderProps> = ({
 
   const { watch, reset, register } = formObject;
 
+  // Latest estimated output, used as the lower bound for minBuyAmount validation
+  const estimatedOutputRef = useRef<bigint | undefined>(undefined);
+
   const resetForm = useCallback(() => {
+    estimatedOutputRef.current = networkData.estimatedOutputFromBalance;
     reset({
       sellAmount: networkData.balance,
       minBuyAmount: networkData.estimatedOutputFromBalance,
@@ -122,6 +127,7 @@ export const PlaceOrderFormProvider: FC<PlaceOrderFormProviderProps> = ({
     () => ({
       ...networkData,
       stonksMetadata,
+      estimatedOutputRef,
       register,
       watch,
     }),
