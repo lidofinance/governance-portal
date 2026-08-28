@@ -69,7 +69,7 @@ export const useStonksOrderData = (orderAddress: string | undefined) => {
         orderAddress,
       ]);
 
-      const hasBalance = tokenFromBalance > MIN_STONKS_BALANCE_WEI;
+      const hasBalance = tokenFromBalance >= MIN_STONKS_BALANCE_WEI;
 
       const isRecoverable = isExpired && hasBalance;
       const recoverableAmount = isRecoverable ? tokenFromBalance : 0n;
