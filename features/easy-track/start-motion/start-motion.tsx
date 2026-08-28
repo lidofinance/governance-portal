@@ -172,8 +172,13 @@ export const StartMotion = ({ onComplete }: Props) => {
       : null;
 
   // Filter available motions to only show supported ones
-  const supportedMotions =
-    availableMotions?.filter((motion) => motion.motionType in formParts) || [];
+  const supportedMotions = (
+    availableMotions?.filter((motion) => motion.motionType in formParts) || []
+  ).sort((a, b) =>
+    getMotionTypeDisplayName(a.motionType).localeCompare(
+      getMotionTypeDisplayName(b.motionType),
+    ),
+  );
 
   if (isMotionsLoading) {
     return <StartMotionSkeleton />;
