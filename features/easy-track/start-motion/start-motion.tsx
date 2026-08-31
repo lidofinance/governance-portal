@@ -164,18 +164,21 @@ export const StartMotion = ({ onComplete }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [motionType]);
 
-  const CurrentFormPart =
+  const currentFormPart =
     motionType && motionType in formParts
-      ? (
-          formParts[
-            motionType as keyof typeof formParts
-          ] as unknown as AnyFormPart
-        ).Component
+      ? (formParts[
+          motionType as keyof typeof formParts
+        ] as unknown as AnyFormPart)
       : null;
 
   // Filter available motions to only show supported ones
-  const supportedMotions =
-    availableMotions?.filter((motion) => motion.motionType in formParts) || [];
+  const supportedMotions = (
+    availableMotions?.filter((motion) => motion.motionType in formParts) || []
+  ).sort((a, b) =>
+    getMotionTypeDisplayName(a.motionType).localeCompare(
+      getMotionTypeDisplayName(b.motionType),
+    ),
+  );
 
   if (isMotionsLoading) {
     return <StartMotionSkeleton />;
@@ -217,8 +220,9 @@ export const StartMotion = ({ onComplete }: Props) => {
               ))}
             </SelectHookForm>
           </Fieldset>
-          {CurrentFormPart && motionType && (
-            <CurrentFormPart
+          {currentFormPart && motionType && (
+            <currentFormPart.Component
+              factory={currentFormPart.factory}
               fieldNames={
                 formParts[motionType as keyof typeof formParts].fieldNames
               }

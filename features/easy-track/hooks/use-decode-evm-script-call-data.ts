@@ -5,6 +5,7 @@ import {
 } from 'viem';
 import * as abi from 'abi/generated';
 import { MotionType } from '../motion-types';
+import { FACTORY_ABIS } from '../factories-metadata';
 
 // Map motion types to their corresponding ABIs
 export const MOTION_TYPE_ABI_MAP = {
@@ -138,6 +139,8 @@ export const MOTION_TYPE_ABI_MAP = {
     abi.evmUpdateStakingModuleShareLimitsAbi,
   [MotionType.CSM2UpdateStakingModuleShareLimits]:
     abi.evmUpdateStakingModuleShareLimitsAbi,
+
+  ...FACTORY_ABIS,
 } as const;
 
 type DecodeOverride = (data: `0x${string}`) => unknown;

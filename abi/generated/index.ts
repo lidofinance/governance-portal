@@ -106,6 +106,7 @@ export * from './Repo';
 export * from './ResealManager';
 export * from './RewardProgramRegistry';
 export * from './SRUpgradeTemplate';
+export * from './SetDepositsReserveTarget';
 export * from './SetMerkleGateTree';
 export * from './SetNodeOperatorNames';
 export * from './SetNodeOperatorRewardAddresses';

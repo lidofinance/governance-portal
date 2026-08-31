@@ -1,5 +1,6 @@
 import { MotionType } from '../motion-types';
 import { EvmUnrecognized } from '../evm-addresses';
+import { FACTORY_DISPLAY_NAMES } from '../factories-metadata';
 
 export const MotionTypeDisplayNames: Record<
   MotionType | EvmUnrecognized,
@@ -149,6 +150,8 @@ export const MotionTypeDisplayNames: Record<
 
   [MotionType.UpdateStakingModuleShareLimitsOld]:
     'Update staking module share limits (Old)',
+
+  ...FACTORY_DISPLAY_NAMES,
 } as const;
 
 export const getMotionTypeDisplayName = (

@@ -1,5 +1,6 @@
 import { MotionType } from './motion-types';
 import { EvmUnrecognized } from './evm-addresses';
+import { FACTORY_TAGS } from './factories-metadata';
 import { BadgeVariant } from 'shared/components/badge';
 
 export type MotionCategory =
@@ -147,6 +148,8 @@ export const MOTION_TAGS: MotionTagsMap = {
   [MotionType.RegisterGroupsInOperatorGridOld]: ['stVaults'],
   [MotionType.RegisterTiersInOperatorGridOld]: ['stVaults'],
   [MotionType.AlterTiersInOperatorGridOld]: ['stVaults'],
+
+  ...FACTORY_TAGS,
 
   [EvmUnrecognized]: ['Unknown'],
 };

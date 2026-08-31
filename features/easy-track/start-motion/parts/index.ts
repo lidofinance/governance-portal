@@ -1,4 +1,5 @@
 import { MotionTypeForms } from '../../motion-types';
+import type { FactoryFormName } from '../../factories-metadata';
 
 import * as formAllowedRecipientAdd from './start-new-allowed-recipient-add';
 import * as formAllowedRecipientTopUp from './start-new-allowed-recipient-top-up';
@@ -38,6 +39,7 @@ import * as StartNewSDVTNodeOperatorManagersChange from './start-new-sdvt-node-o
 import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation-pair';
 import * as StartNewCreateOrUpdateOperatorGroup from './start-new-create-or-update-operator-group';
 import * as StartNewUpdateStakingModuleShareLimits from './start-new-update-staking-module-share-limits';
+import * as StartNewSetDepositsReserveTarget from './start-new-set-deposits-reserve-target';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -220,7 +222,16 @@ export const formParts = {
     StartNewUpdateStakingModuleShareLimits.formParts({
       motionType: MotionTypeForms.CSM2UpdateStakingModuleShareLimits,
     }),
+
+  [MotionTypeForms.SetDepositsReserveTarget]:
+    StartNewSetDepositsReserveTarget.formParts,
 } as const;
+
+// Every startable factory in FACTORIES must have a form part here,
+// otherwise it silently never appears in the motion type select.
+const _startableFactoriesHaveFormParts: Record<FactoryFormName, unknown> =
+  formParts;
+void _startableFactoriesHaveFormParts;
 
 export type FormData = {
   motionType: MotionTypeForms | null;

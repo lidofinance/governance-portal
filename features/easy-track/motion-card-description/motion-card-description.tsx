@@ -61,6 +61,7 @@ import { VaultsSetLiabilitySharesTargetInVaultHub } from '@easy-track/motion-car
 import { AllowConsolidationPair } from './motion-descriptions/allow-consolidation-pair';
 import { CreateOrUpdateOperatorGroup } from './motion-descriptions/create-or-update-operator-group';
 import { UpdateStakingModuleShareLimits } from './motion-descriptions/update-staking-module-share-limits';
+import { SetDepositsReserveTarget } from './motion-descriptions/set-deposits-reserve-target';
 import { Abi } from 'viem';
 import { MotionDescriptionProps } from './types';
 
@@ -204,6 +205,8 @@ const MOTION_DESCRIPTIONS: Record<
   [MotionType.UpdateStakingModuleShareLimits]: UpdateStakingModuleShareLimits,
   [MotionType.UpdateStakingModuleShareLimitsOld]:
     UpdateStakingModuleShareLimits,
+
+  [MotionType.SetDepositsReserveTarget]: SetDepositsReserveTarget,
 };
 
 type Props = {
@@ -237,7 +240,7 @@ export const MotionDescription = ({ motion }: Props) => {
     );
   }
 
-  if (!callData || isLoading) {
+  if (isLoading || callData == null) {
     return <>Loading...</>;
   }
 
