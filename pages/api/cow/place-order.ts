@@ -11,7 +11,7 @@ import {
 } from 'utils-api';
 import { API_ROUTES } from 'constants/api';
 import Metrics from 'utils-api/metrics';
-import { standardFetcher } from 'utils/standard-fetcher';
+import { standardFetcherExternal } from 'utils-api/fetch-external';
 import { API } from 'types';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { COW_API_URL } from 'shared/external-urls';
@@ -94,31 +94,34 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const uid = await standardFetcher<string>(`${COW_API_URL}/v1/orders`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+  const uid = await standardFetcherExternal<string>(
+    `${COW_API_URL}/v1/orders`,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        sellToken,
+        buyToken,
+        receiver,
+        sellAmount,
+        buyAmount,
+        validTo,
+        appData,
+        feeAmount,
+        kind,
+        partiallyFillable,
+        signingScheme,
+        sellTokenBalance,
+        buyTokenBalance,
+        signature,
+      }),
+      signal: AbortSignal.timeout(10_000),
     },
-    body: JSON.stringify({
-      from,
-      sellToken,
-      buyToken,
-      receiver,
-      sellAmount,
-      buyAmount,
-      validTo,
-      appData,
-      feeAmount,
-      kind,
-      partiallyFillable,
-      signingScheme,
-      sellTokenBalance,
-      buyTokenBalance,
-      signature,
-    }),
-    signal: AbortSignal.timeout(10_000),
-  });
+  );
 
   res.status(201).json(uid);
 };

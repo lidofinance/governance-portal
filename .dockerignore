@@ -46,3 +46,10 @@ yarn-error.log*
 
 public/runtime/
 Dockerfile
+
+# docs
+**/*.md
+
+# dev tooling
+.claude
+.settings
