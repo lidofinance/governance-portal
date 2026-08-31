@@ -1,9 +1,4 @@
-import {
-  BadgeWrapper,
-  CardStatusWrapper,
-  CardTitle,
-  DescWrapper,
-} from './style';
+import { CardFooter, CardStatusWrapper, CardTitle, DescWrapper } from './style';
 import { Motion } from '../types';
 import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -18,13 +13,13 @@ import { FormattedDate } from 'shared/components/formatted-date';
 import { useMotionTimeCountdown } from '../hooks/use-motion-time-countdown';
 import { useMotionProgress } from '../hooks/use-motion-progress';
 import { MOTION_ATTENTION_PERIOD } from '../constants';
-import { AddressPop } from 'shared/components/address-pop';
-import { Identicon, trimAddress } from '@lidofinance/lido-ui';
 import { MotionDescription } from '../motion-card-description';
 import { Box } from 'shared/components/box';
 import { motionPage } from 'constants/urls';
 import Link from 'next/link';
-import { DashboardCard } from 'shared/components/dashboard-card';
+import { MotionCardBadges, MotionDashboardCard } from '@easy-track/style';
+import { Badge } from 'shared/components/badge';
+import { getMotionCategoryTags } from '@easy-track/utils/get-motion-category-tags';
 
 type Props = {
   motion: Motion;
@@ -51,41 +46,55 @@ export const MotionCard = ({ motion }: Props) => {
     isAttentionTime,
   });
 
+  const motionType = getMotionTypeByScriptFactory(
+    chainId,
+    motion.evmScriptFactory,
+  );
+
+  const motionTags = getMotionCategoryTags(motionType);
+
   return (
     <Link passHref href={motionPage(motion.id.toString())}>
-      <DashboardCard>
+      <MotionDashboardCard>
+        <MotionCardBadges>
+          {motionTags.map((tag, index) => (
+            <Badge
+              key={index}
+              variant={tag.variant}
+              type={tag.isSubCategory ? 'secondary' : 'primary'}
+            >
+              {tag.text}
+            </Badge>
+          ))}
+        </MotionCardBadges>
         <CardTitle>
-          #{motion.id.toString()}{' '}
-          {getMotionTypeDisplayName(
-            getMotionTypeByScriptFactory(chainId, motion.evmScriptFactory),
-          )}
+          #{motion.id.toString()} {getMotionTypeDisplayName(motionType)}
         </CardTitle>
         <DescWrapper>
           <MotionDescription motion={motion} />
         </DescWrapper>
-        <CardStatusWrapper $displayStatus={displayStatus}>
-          <Text size={12} weight={800}>
-            {motionStatus}
-          </Text>
-          <Text size={26} weight={600}>
-            {isArchived ? (
-              <FormattedDate
-                format="MMM DD, YYYY"
-                date={
-                  motion.enacted_at ??
-                  Number(motion.startDate) + Number(motion.duration)
-                }
-              />
-            ) : isPassed ? (
-              `—`
-            ) : (
-              diffFormatted
-            )}
-          </Text>
-        </CardStatusWrapper>
-
-        <Box display="flex" justifyContent="space-between">
-          <Box display="flex" flexDirection="column" gap={4}>
+        <CardFooter>
+          <CardStatusWrapper $displayStatus={displayStatus}>
+            <Text size={12} weight={800}>
+              {motionStatus}
+            </Text>
+            <Text size={26} weight={600}>
+              {isArchived ? (
+                <FormattedDate
+                  format="MMM DD, YYYY"
+                  date={
+                    motion.enacted_at ??
+                    Number(motion.startDate) + Number(motion.duration)
+                  }
+                />
+              ) : isPassed ? (
+                `—`
+              ) : (
+                diffFormatted
+              )}
+            </Text>
+          </CardStatusWrapper>
+          <Box display="flex" gap={4}>
             <Text size={10} weight={600} color="secondary">
               OBJECTIONS
             </Text>
@@ -93,16 +102,8 @@ export const MotionCard = ({ motion }: Props) => {
               {!progress ? 'Loading...' : `${progress.objectionsPctFormatted}%`}
             </Text>
           </Box>
-          <AddressPop address={motion.creator}>
-            <BadgeWrapper>
-              <Text size={12} color="secondary">
-                {trimAddress(motion.creator, 4)}
-              </Text>
-              <Identicon address={motion.creator} diameter={20} />
-            </BadgeWrapper>
-          </AddressPop>
-        </Box>
-      </DashboardCard>
+        </CardFooter>
+      </MotionDashboardCard>
     </Link>
   );
 };

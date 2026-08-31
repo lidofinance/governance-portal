@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useActiveMotions, useArchivedMotions } from '../hooks/use-motions';
 import { MotionCard } from '../motion-card';
 import { MotionCardSkeleton } from '../motion-card-skeleton/motion-card-skeleton';
 import { MotionsGrid } from './style';
 import { InlineLoader, Button } from '@lidofinance/lido-ui';
 import styled from 'styled-components';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { MotionCategory } from '../motion-categories';
+import { getCategoryFactories } from '../utils/get-category-factories';
 
 const INITIAL_TOTAL = 8;
 const ARCHIVE_PAGE_SIZE = 8;
@@ -15,7 +18,20 @@ const LoadMoreWrapper = styled.div`
   margin-top: 24px;
 `;
 
-export const Motions = () => {
+export const MotionsSkeleton = () => (
+  <MotionsGrid>
+    {Array.from({ length: INITIAL_TOTAL }, (_, i) => (
+      <MotionCardSkeleton key={i} />
+    ))}
+  </MotionsGrid>
+);
+
+type Props = {
+  categories: MotionCategory[];
+};
+
+export const Motions = ({ categories }: Props) => {
+  const { chainId } = useLidoSDK();
   const { data: activeMotions, isLoading: activeLoading } = useActiveMotions();
   const {
     data: archivedData,
@@ -23,7 +39,23 @@ export const Motions = () => {
     fetchNextPage,
     isFetchingNextPage,
     isFetching: archiveFetching,
-  } = useArchivedMotions();
+  } = useArchivedMotions(categories);
+
+  const filteredActiveMotions = useMemo(() => {
+    if (!activeMotions) {
+      return [];
+    }
+
+    if (categories.length === 0) {
+      return activeMotions;
+    }
+
+    const factories = new Set(getCategoryFactories(chainId, categories));
+
+    return activeMotions.filter((motion) =>
+      factories.has(motion.evmScriptFactory.toLowerCase()),
+    );
+  }, [activeMotions, categories, chainId]);
 
   const allArchived = archivedData?.pages.flat() ?? [];
 
@@ -31,12 +63,19 @@ export const Motions = () => {
     null,
   );
 
+  const categoriesKey = categories.join(',');
+
+  useEffect(() => {
+    setArchiveDisplayCount(null);
+  }, [categoriesKey]);
+
   useEffect(() => {
     if (!activeLoading && archiveDisplayCount === null) {
-      const activeCount = activeMotions?.length ?? 0;
-      setArchiveDisplayCount(Math.max(0, INITIAL_TOTAL - activeCount));
+      setArchiveDisplayCount(
+        Math.max(0, INITIAL_TOTAL - filteredActiveMotions.length),
+      );
     }
-  }, [activeLoading, activeMotions, archiveDisplayCount]);
+  }, [activeLoading, filteredActiveMotions, archiveDisplayCount]);
 
   const canLoadMore =
     archiveDisplayCount !== null &&
@@ -51,24 +90,25 @@ export const Motions = () => {
   };
 
   const motionsToShow = [
-    ...(activeMotions ?? []),
+    ...filteredActiveMotions,
     ...allArchived.slice(0, archiveDisplayCount ?? 0),
   ];
 
-  if (activeLoading) {
-    return (
-      <MotionsGrid>
-        {Array.from({ length: INITIAL_TOTAL }, (_, i) => (
-          <MotionCardSkeleton key={i} />
-        ))}
-      </MotionsGrid>
-    );
+  const hasMotions = motionsToShow.length > 0;
+  const isArchivePending = archivedData === undefined && archiveFetching;
+
+  if (activeLoading || (!hasMotions && isArchivePending)) {
+    return <MotionsSkeleton />;
   }
 
-  const hasMotions = motionsToShow.length > 0;
-
-  if (!hasMotions && archiveDisplayCount !== null) {
-    return <div>No motions at the moment</div>;
+  if (!hasMotions && !archiveFetching && archiveDisplayCount !== null) {
+    return (
+      <div>
+        {categories.length > 0
+          ? 'No motions in the selected categories'
+          : 'No motions at the moment'}
+      </div>
+    );
   }
 
   return (

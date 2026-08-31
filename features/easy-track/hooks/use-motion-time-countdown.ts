@@ -10,7 +10,7 @@ export type MotionTimeData = {
 const DEFAULT_TIME_DATA: MotionTimeData = {
   isPassed: false,
   diff: 0,
-  diffFormatted: '0\u00A0min',
+  diffFormatted: '0m',
 };
 
 export const useMotionTimeCountdown = (
@@ -32,9 +32,9 @@ export const useMotionTimeCountdown = (
         const hours = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
         const parts: string[] = [];
-        if (hours > 0) parts.push(`${hours}\u00A0h`);
-        if (minutes > 0) parts.push(`${minutes}\u00A0min`);
-        return parts.length === 0 ? `1\u00A0min` : parts.join(' ');
+        if (hours > 0) parts.push(`${hours}h`);
+        if (minutes > 0) parts.push(`${minutes}m`);
+        return parts.length === 0 ? `1m` : parts.join(' ');
       })(),
     };
   }, [motion]);

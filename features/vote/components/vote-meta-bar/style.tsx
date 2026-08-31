@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Tooltip } from '@lidofinance/lido-ui';
+import { Wrap as BadgeWrap } from 'shared/components/badge/style';
 import {
   VOTE_CARD_MAX_WIDTH,
   VOTE_CARD_MOBILE_MAX_WIDTH,
@@ -17,11 +18,7 @@ export const MetaWrap = styled.div<{ $labeled?: boolean }>`
   ${({ $labeled }) =>
     $labeled &&
     css`
-      ${StatusBadge},
-      ${PhaseBadge} {
-        font-size: 12px;
-      }
-
+      ${BadgeWrap},
       ${MetaLabel} {
         font-size: 12px;
       }
@@ -45,8 +42,7 @@ export const MetaWrap = styled.div<{ $labeled?: boolean }>`
           font-size: 14px;
         }
 
-        ${StatusBadge},
-        ${PhaseBadge} {
+        ${BadgeWrap} {
           font-size: 12px;
         }
       }
@@ -78,118 +74,6 @@ export const TimeGroup = styled.div<{ $labeled?: boolean }>`
         margin-left: 0;
       }
     `}
-`;
-
-type StatusVariant = 'active' | 'success' | 'error' | 'warning';
-
-const variantStyles: Record<StatusVariant, ReturnType<typeof css>> = {
-  active: css`
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    color: var(--lido-color-warning);
-    background-color: #ec860026;
-  `,
-  success: css`
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 12px 4px 4px;
-    border-radius: 20px;
-    color: var(--lido-color-success);
-    background-color: #53ba9526;
-
-    & svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-  `,
-  error: css`
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 12px 4px 4px;
-    border-radius: 20px;
-    color: var(--lido-color-error);
-    background-color: #e14d4d26;
-
-    & svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-  `,
-  warning: css`
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 12px 4px 4px;
-    border-radius: 20px;
-    color: var(--lido-color-warning);
-    background-color: #ec860026;
-
-    & svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-  `,
-};
-
-export const StatusBadge = styled.span<{ $variant: StatusVariant }>`
-  font-weight: 700;
-  ${({ $variant }) => variantStyles[$variant]}
-`;
-
-type PhaseVariant = 'default' | 'enacted' | 'enactable' | 'phase';
-
-const phaseVariantStyles: Record<PhaseVariant, ReturnType<typeof css>> = {
-  default: css`
-    color: var(--lido-color-textSecondary);
-  `,
-  enacted: css`
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    color: var(--lido-color-success);
-    background-color: #53ba9526;
-    font-weight: 700;
-  `,
-  enactable: css`
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    color: var(--lido-color-warning);
-    background-color: #ec860026;
-    font-weight: 700;
-  `,
-  phase: css`
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 20px;
-    color: var(--accent-color-sky);
-    background-color: #00a3ff26;
-    font-weight: 700;
-
-    & svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    & svg path {
-      fill-opacity: 1;
-    }
-  `,
-};
-
-export const PhaseBadge = styled.span<{ $variant?: PhaseVariant }>`
-  ${({ $variant = 'default' }) => phaseVariantStyles[$variant]}
 `;
 
 export const PhaseNumber = styled.span`

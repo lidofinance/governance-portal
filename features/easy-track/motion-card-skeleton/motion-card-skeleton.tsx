@@ -1,34 +1,31 @@
-import { CardStatusWrapper } from '../motion-card/style';
+import { CardFooter, CardStatusWrapper } from '../motion-card/style';
 import { SkeletonText } from 'shared/components/skeleton-text';
 import { Box } from 'shared/components/box';
-import {
-  ActionBarSkeleton,
-  DescSkeleton,
-  StatusLabelSkeleton,
-  StatusValueSkeleton,
-  TailingSkeleton,
-  TitleSkeleton,
-} from './style';
-import { DashboardCard } from 'shared/components/dashboard-card';
+import { BadgeSkeleton, DescSkeleton, TitleSkeleton } from './style';
+import { MotionCardBadges, MotionDashboardCard } from '@easy-track/style';
 import { MotionDisplayStatus } from '@easy-track/types';
 
 export const MotionCardSkeleton = () => {
   return (
-    <DashboardCard>
-      <TitleSkeleton width="70%" size={14} />
-      <DescSkeleton width="100%" size={12} />
-      <TailingSkeleton width="55%" size={12} />
-      <CardStatusWrapper $displayStatus={MotionDisplayStatus.DEFAULT}>
-        <StatusLabelSkeleton width={50} size={12} />
-        <StatusValueSkeleton width={110} size={26} />
-      </CardStatusWrapper>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box display="flex" flexDirection="column" gap={4}>
-          <SkeletonText width={60} size={10} />
-          <SkeletonText width={36} size={10} />
+    <MotionDashboardCard>
+      <MotionCardBadges>
+        <BadgeSkeleton width={110} />
+        <BadgeSkeleton width={80} />
+      </MotionCardBadges>
+      <TitleSkeleton width="70%" size={16} />
+      <DescSkeleton width="100%" size={14} />
+      <DescSkeleton width="100%" size={14} />
+      <DescSkeleton width="55%" size={14} />
+      <CardFooter>
+        <CardStatusWrapper $displayStatus={MotionDisplayStatus.DEFAULT}>
+          <SkeletonText width={50} size={12} />
+          <SkeletonText width={110} size={26} />
+        </CardStatusWrapper>
+        <Box display="flex" alignItems="center" gap={4}>
+          <SkeletonText width={70} size={12} />
+          <SkeletonText width={30} size={12} />
         </Box>
-        <ActionBarSkeleton />
-      </Box>
-    </DashboardCard>
+      </CardFooter>
+    </MotionDashboardCard>
   );
 };

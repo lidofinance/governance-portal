@@ -13,6 +13,8 @@ import { usePublicClient } from 'wagmi';
 import invariant from 'tiny-invariant';
 import { formatMotionDataOnchain } from '../utils/format-motion-data-onchain';
 import { formatMotionDataSubgraph } from '../utils/format-motion-data-subgraph';
+import { getCategoryFactories } from '../utils/get-category-factories';
+import { MotionCategory } from '../motion-categories';
 
 export const useActiveMotions = () => {
   const easyTrack = useReadContract(EasyTrack);
@@ -52,15 +54,19 @@ export const useActiveMotions = () => {
 
 const PAGE_SIZE = 8;
 
-export const useArchivedMotions = () => {
+export const useArchivedMotions = (categories: MotionCategory[] = []) => {
   const { chainId } = useLidoSDK();
 
   return useInfiniteQuery({
-    queryKey: ['archived-motions', chainId],
+    queryKey: ['archived-motions', chainId, [...categories].sort().join(',')],
     queryFn: async ({ pageParam = 0 }) => {
       const query = getQuerySubgraphMotions({
         first: PAGE_SIZE,
         skip: pageParam * PAGE_SIZE,
+        evmScriptFactories:
+          categories.length > 0
+            ? getCategoryFactories(chainId, categories)
+            : undefined,
       });
       const rawMotions = await fetchMotionsSubgraphList(chainId, query);
       return rawMotions.map(formatMotionDataSubgraph);

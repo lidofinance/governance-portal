@@ -47,7 +47,7 @@ export const MotionDetailedTime = ({
   if (isPassed) {
     return (
       <Wrap $displayStatus={displayStatus}>
-        <Title>Time left:</Title>
+        <Title>Time left</Title>
         <Value>—</Value>
       </Wrap>
     );
@@ -55,7 +55,7 @@ export const MotionDetailedTime = ({
 
   return (
     <Wrap $displayStatus={displayStatus}>
-      <Title>Time left:</Title>
+      <Title>Time left</Title>
       <Value>{diffFormatted}</Value>
     </Wrap>
   );
