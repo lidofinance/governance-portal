@@ -23,7 +23,8 @@ export type MotionSubcategory =
   | 'Stonks'
   | 'LOL'
   | 'Dev'
-  | 'Ops';
+  | 'Ops'
+  | 'Curated v2';
 
 export type MotionTags = readonly [MotionCategory, ...MotionSubcategory[]];
 
@@ -32,12 +33,12 @@ type MotionTagsMap = Record<MotionType | EvmUnrecognized, MotionTags>;
 export const MOTION_TAGS: MotionTagsMap = {
   [MotionType.NodeOperatorIncreaseLimit]: ['Staking', 'Curated'],
   [MotionType.CuratedExitRequestHashesSubmit]: ['Staking', 'Curated'],
-  [MotionType.CuratedSettleGeneralDelayedPenalty]: ['Staking', 'Curated'],
+  [MotionType.CuratedSettleGeneralDelayedPenalty]: ['Staking', 'Curated v2'],
   [MotionType.CuratedReportWithdrawalsForSlashedValidators]: [
     'Staking',
-    'Curated',
+    'Curated v2',
   ],
-  [MotionType.CuratedSetMerkleGateTree]: ['Staking', 'Curated'],
+  [MotionType.CuratedSetMerkleGateTree]: ['Staking', 'Curated v2'],
 
   [MotionType.SDVTNodeOperatorsAdd]: ['Staking', 'SimpleDVT'],
   [MotionType.SDVTNodeOperatorsActivate]: ['Staking', 'SimpleDVT'],
@@ -62,7 +63,7 @@ export const MOTION_TAGS: MotionTagsMap = {
   [MotionType.CSM2UpdateStakingModuleShareLimits]: ['Staking', 'CSM0x02'],
 
   [MotionType.SandboxNodeOperatorIncreaseLimit]: ['Staking', 'Dev'],
-  [MotionType.CreateOrUpdateOperatorGroup]: ['Staking'],
+  [MotionType.CreateOrUpdateOperatorGroup]: ['Staking', 'Curated v2'],
   [MotionType.AllowConsolidationPair]: ['Staking'],
 
   [MotionType.AllowedRecipientTopUpTrpLdo]: ['Treasury', 'TRP'],
