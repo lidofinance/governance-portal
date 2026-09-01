@@ -1,3 +1,5 @@
+import { FactoryForms, FactoryDisplayOnly } from './factories-metadata';
+
 // Only motions currently supported to start
 export const MotionTypeForms = {
   // Curated Module
@@ -79,6 +81,8 @@ export const MotionTypeForms = {
   AllowConsolidationPair: 'AllowConsolidationPair',
   CreateOrUpdateOperatorGroup: 'CreateOrUpdateOperatorGroup',
   UpdateStakingModuleShareLimits: 'UpdateStakingModuleShareLimits',
+
+  ...FactoryForms,
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -131,6 +135,8 @@ export const MotionTypeDisplayOnly = {
   CSMSetVettedGateTree: 'CSMSetVettedGateTree',
 
   UpdateStakingModuleShareLimitsOld: 'UpdateStakingModuleShareLimitsOld',
+
+  ...FactoryDisplayOnly,
 } as const;
 // intentionally
 // eslint-disable-next-line @typescript-eslint/no-redeclare

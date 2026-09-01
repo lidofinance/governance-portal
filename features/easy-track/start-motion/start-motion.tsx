@@ -1,5 +1,5 @@
 import { useAvailableMotions } from '../hooks/use-available-motions';
-import { Container, Option, ToastError } from '@lidofinance/lido-ui';
+import { Container, ToastError } from '@lidofinance/lido-ui';
 import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
 import { useForm, FormProvider } from 'react-hook-form';
 import { formParts, getDefaultFormPartsData, FormData } from './parts';
@@ -7,7 +7,7 @@ import { type AnyFormPart } from './parts/create-motion-form-part';
 import { Fieldset, MessageBox } from './parts/style';
 import { SelectHookForm } from 'shared/hook-form/select-hook-form';
 import { Button } from 'shared/components/button';
-import { MotionTypeSelectSkeleton, RetryHint } from './style';
+import { MotionTypeOption, MotionTypeSelectSkeleton, RetryHint } from './style';
 import { useCallback, useEffect, useState } from 'react';
 import { getScriptFactoryByMotionType } from '../utils/get-motion-type';
 import { useLidoSDK } from 'providers/lido-sdk';
@@ -20,6 +20,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTxModalMotion } from '@easy-track/write-actions/create-motion/modal-stages';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
 import { useIsContract } from 'shared/blockchain/hooks/use-is-contract';
+import { getMotionCategoryTags } from '@easy-track/utils/get-motion-category-tags';
+import { Badge } from 'shared/components/badge';
 
 type Props = {
   onComplete: (txHash: Hex) => void;
@@ -162,18 +164,21 @@ export const StartMotion = ({ onComplete }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [motionType]);
 
-  const CurrentFormPart =
+  const currentFormPart =
     motionType && motionType in formParts
-      ? (
-          formParts[
-            motionType as keyof typeof formParts
-          ] as unknown as AnyFormPart
-        ).Component
+      ? (formParts[
+          motionType as keyof typeof formParts
+        ] as unknown as AnyFormPart)
       : null;
 
   // Filter available motions to only show supported ones
-  const supportedMotions =
-    availableMotions?.filter((motion) => motion.motionType in formParts) || [];
+  const supportedMotions = (
+    availableMotions?.filter((motion) => motion.motionType in formParts) || []
+  ).sort((a, b) =>
+    getMotionTypeDisplayName(a.motionType).localeCompare(
+      getMotionTypeDisplayName(b.motionType),
+    ),
+  );
 
   if (isMotionsLoading) {
     return <StartMotionSkeleton />;
@@ -195,14 +200,29 @@ export const StartMotion = ({ onComplete }: Props) => {
           <Fieldset>
             <SelectHookForm fieldName="motionType" label="Motion type">
               {supportedMotions.map((motion) => (
-                <Option key={motion.address} value={motion.motionType}>
+                <MotionTypeOption
+                  key={motion.address}
+                  value={motion.motionType}
+                  rightDecorator={getMotionCategoryTags(motion.motionType).map(
+                    (tag, index) => (
+                      <Badge
+                        key={index}
+                        variant={tag.variant}
+                        type={tag.isSubCategory ? 'secondary' : 'primary'}
+                      >
+                        {tag.text}
+                      </Badge>
+                    ),
+                  )}
+                >
                   {getMotionTypeDisplayName(motion.motionType)}
-                </Option>
+                </MotionTypeOption>
               ))}
             </SelectHookForm>
           </Fieldset>
-          {CurrentFormPart && motionType && (
-            <CurrentFormPart
+          {currentFormPart && motionType && (
+            <currentFormPart.Component
+              factory={currentFormPart.factory}
               fieldNames={
                 formParts[motionType as keyof typeof formParts].fieldNames
               }

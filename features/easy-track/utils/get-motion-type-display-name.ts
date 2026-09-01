@@ -1,5 +1,6 @@
 import { MotionType } from '../motion-types';
 import { EvmUnrecognized } from '../evm-addresses';
+import { FACTORY_DISPLAY_NAMES } from '../factories-metadata';
 
 export const MotionTypeDisplayNames: Record<
   MotionType | EvmUnrecognized,
@@ -31,28 +32,26 @@ export const MotionTypeDisplayNames: Record<
   [MotionType.SDVTNodeOperatorManagerChange]: 'Change node operators managers',
   [MotionType.SDVTNodeOperatorNamesSet]: 'Set node operators names',
   [MotionType.SandboxNodeOperatorIncreaseLimit]:
-    '[NOR SandBox] Increase node operator staking limit',
+    'Increase node operator staking limit',
   [MotionType.LegoStablesTopUp]: 'Top up LEGO stablecoins',
-  [MotionType.CSMSettleGeneralDelayedPenalty]:
-    '[CSM 0x01] Settle General Delayed Penalty',
+  [MotionType.CSMSettleGeneralDelayedPenalty]: 'Settle General Delayed Penalty',
   [MotionType.CuratedSettleGeneralDelayedPenalty]:
-    '[Curated] Settle General Delayed Penalty',
+    'Settle General Delayed Penalty',
   [MotionType.CSMReportWithdrawalsForSlashedValidators]:
-    '[CSM 0x01] Report withdrawals for slashed validators',
+    'Report withdrawals for slashed validators',
   [MotionType.CuratedReportWithdrawalsForSlashedValidators]:
-    '[Curated] Report withdrawals for slashed validators',
+    'Report withdrawals for slashed validators',
   [MotionType.CSM2SettleGeneralDelayedPenalty]:
-    '[CSM 0x02] Settle General Delayed Penalty',
+    'Settle General Delayed Penalty',
   [MotionType.CSM2ReportWithdrawalsForSlashedValidators]:
-    '[CSM 0x02] Report withdrawals for slashed validators',
+    'Report withdrawals for slashed validators',
   [MotionType.CSM2UpdateStakingModuleShareLimits]:
-    '[CSM 0x02] Update staking module share limits',
-  [MotionType.CSMSetVettedGateTree]: '[CSM 0x01] Set vetted gate tree',
-  [MotionType.CSMSetMerkleGateTree]: '[CSM 0x01] Set merkle gate tree',
-  [MotionType.CuratedSetMerkleGateTree]: '[Curated] Set merkle gate tree',
-  [MotionType.CuratedExitRequestHashesSubmit]:
-    '[Curated] Submit Exit Request Hashes',
-  [MotionType.SDVTExitRequestHashesSubmit]: '[SDVT] Submit Exit Request Hashes',
+    'Update staking module share limits',
+  [MotionType.CSMSetVettedGateTree]: 'Set vetted gate tree',
+  [MotionType.CSMSetMerkleGateTree]: 'Set merkle gate tree',
+  [MotionType.CuratedSetMerkleGateTree]: 'Set merkle gate tree',
+  [MotionType.CuratedExitRequestHashesSubmit]: 'Submit Exit Request Hashes',
+  [MotionType.SDVTExitRequestHashesSubmit]: 'Submit Exit Request Hashes',
   [MotionType.EcosystemOpsStablesTopUp]: 'Top up Ecosystem Ops stablecoins',
   [MotionType.EcosystemOpsStethTopUp]: 'Top up Ecosystem Ops stETH',
   [MotionType.LabsOpsStablesTopUp]: 'Top up Labs Ops stablecoins',
@@ -150,7 +149,9 @@ export const MotionTypeDisplayNames: Record<
     'Alter tiers in Operator Grid (Old)',
 
   [MotionType.UpdateStakingModuleShareLimitsOld]:
-    '[CSM 0x01] Update staking module share limits (Old)',
+    'Update staking module share limits (Old)',
+
+  ...FACTORY_DISPLAY_NAMES,
 } as const;
 
 export const getMotionTypeDisplayName = (

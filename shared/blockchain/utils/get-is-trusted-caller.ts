@@ -4,6 +4,7 @@ import * as contracts from 'shared/blockchain/contracts';
 import { ContractObject } from '../types';
 import { readContract } from 'viem/actions';
 import { MotionType } from 'features/easy-track/motion-types';
+import { FACTORY_CONTRACTS } from '@easy-track/factories-metadata';
 
 type Args = {
   chainId: CHAINS;
@@ -17,7 +18,10 @@ export const getIsTrustedCaller = async ({
   callerAddress,
   client,
 }: Args) => {
-  const allContracts = Object.values(contracts) as ContractObject<any>[];
+  const allContracts = [
+    ...Object.values(contracts),
+    ...Object.values(FACTORY_CONTRACTS),
+  ] as ContractObject<any>[];
   const contractInstance = allContracts.find(
     (c) => c.name === contract.motionType,
   );

@@ -1,6 +1,7 @@
 import { flow, map, toPairs, fromPairs, mapValues } from 'lodash/fp';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { MotionType } from './motion-types';
+import { FACTORY_ADDRESSES } from './factories-metadata';
 import { Address } from 'viem';
 
 const EvmSupportedChains = [CHAINS.Mainnet, CHAINS.Hoodi] as const;
@@ -197,6 +198,8 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0xBc5642bDD6F2a54b01A75605aAe9143525D97308',
     [MotionType.UpdateStakingModuleShareLimitsOld]:
       '0x0C6703F1d8D9DdfB6c6e5F57b4f7432a6500D6D8',
+
+    ...FACTORY_ADDRESSES[CHAINS.Mainnet],
   },
 
   // Hoodi
@@ -363,6 +366,8 @@ export const EvmAddressesByChain: EvmAddresses = {
       '0x5c0af5b9f96921d3F61503e1006CF0ab9867279E',
     [MotionType.CSMSetVettedGateTree]:
       '0xa890fc73e1b771Ee6073e2402E631c312FF92Cd9',
+
+    ...FACTORY_ADDRESSES[CHAINS.Hoodi],
   },
 };
 

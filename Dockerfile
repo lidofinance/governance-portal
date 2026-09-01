@@ -8,7 +8,8 @@ COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile --non-interactive --ignore-scripts && yarn cache clean
 COPY . .
-RUN NODE_NO_BUILD_DYNAMICS=true yarn build
+# webpack fs-cache is build-only: ISR writes to .next/server/pages, image cache is recreated on demand
+RUN NODE_NO_BUILD_DYNAMICS=true yarn build && rm -rf /app/.next/cache
 # public/runtime is used to inject runtime vars; it should exist and user node should have write access there for it
 RUN rm -rf /app/public/runtime && mkdir /app/public/runtime && chown node /app/public/runtime
 
@@ -17,8 +18,7 @@ FROM node:20-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache curl=~8 
     
-COPY --from=build /app /app
-RUN chown -R node:node /app
+COPY --from=build --chown=node:node /app /app
 
 USER node
 EXPOSE 3000

@@ -6,11 +6,12 @@ import { Motion, MotionStatus, RawMotionSubgraph } from '@easy-track/types';
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EasyTrack, GovernanceToken } from 'shared/blockchain/contracts';
-import { formatEther, Hex } from 'viem';
+import { Hex } from 'viem';
 import { useConnect } from 'reef-knot/core-react';
 import { useMotionContext } from '@easy-track/providers/motion-detailed-context';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { KnownToken } from 'shared/blockchain/tokens';
+import { formatToken } from 'shared/blockchain/utils';
 
 type Props = {
   motion: Motion | RawMotionSubgraph;
@@ -41,7 +42,9 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
           'balanceOfAt',
           [walletAddress, BigInt(motion.snapshotBlock)],
         );
-        return balance ? formatEther(balance) : null;
+        return balance
+          ? formatToken({ amount: balance, decimals: KnownToken.LDO.decimals })
+          : null;
       },
     });
 
