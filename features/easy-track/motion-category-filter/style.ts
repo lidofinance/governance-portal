@@ -6,7 +6,6 @@ const FILTER_CATEGORY_FILL_COLOR_MAP: Record<FilterCategory, string> = {
   Staking: '#175cd3',
   Treasury: '#087c72',
   stVaults: '#a85600',
-  'MEV Boost': '#b4238a',
 };
 
 export const Wrap = styled.div`
