@@ -128,6 +128,7 @@ export * from './TokenManager';
 export * from './TokenRateNotifier';
 export * from './TokenRecovererForManagerContracts';
 export * from './TopUpAllowedRecipients';
+export * from './TopUpGateway';
 export * from './TopUpWithLimits';
 export * from './TopUpWithLimitsStables';
 export * from './TriggerableWithdrawalsGateway';

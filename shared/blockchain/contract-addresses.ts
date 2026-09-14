@@ -594,3 +594,8 @@ export const BuybackExecutor: ChainAddressMap = {
 export const BuybackAllocator: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xAA568141c051f2D1132b110f8391F18D48E8D889',
 };
+
+export const TopUpGateway: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x3FC2C71579D80790Aaa3fc7Be8B66ac39dC57374',
+  [CHAINS.Hoodi]: '0x10DBEb3367876826d00D21718D1d893e0fbD2956',
+};
