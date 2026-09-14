@@ -575,7 +575,7 @@ export const CuratedModule: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1',
 };
 
-export const HashConsensus: ChainAddressMap = {
+export const FeeOracleHashConsensus: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x902D64c93F6595339aA46105627a085591051aFb',
 };
 
