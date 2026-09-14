@@ -575,7 +575,7 @@ export const CuratedModule: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1',
 };
 
-export const HashConsensus: ChainAddressMap = {
+export const FeeOracleHashConsensus: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x902D64c93F6595339aA46105627a085591051aFb',
 };
 
@@ -593,4 +593,9 @@ export const BuybackExecutor: ChainAddressMap = {
 
 export const BuybackAllocator: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xAA568141c051f2D1132b110f8391F18D48E8D889',
+};
+
+export const TopUpGateway: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x3FC2C71579D80790Aaa3fc7Be8B66ac39dC57374',
+  [CHAINS.Hoodi]: '0x10DBEb3367876826d00D21718D1d893e0fbD2956',
 };
