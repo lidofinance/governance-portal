@@ -62,6 +62,7 @@ import { AllowConsolidationPair } from './motion-descriptions/allow-consolidatio
 import { CreateOrUpdateOperatorGroup } from './motion-descriptions/create-or-update-operator-group';
 import { UpdateStakingModuleShareLimits } from './motion-descriptions/update-staking-module-share-limits';
 import { SetDepositsReserveTarget } from './motion-descriptions/set-deposits-reserve-target';
+import { LidoLendActivateMarket } from './motion-descriptions/lido-lend-activate-market';
 import { Abi } from 'viem';
 import { MotionDescriptionProps } from './types';
 
@@ -207,6 +208,8 @@ const MOTION_DESCRIPTIONS: Record<
     UpdateStakingModuleShareLimits,
 
   [MotionType.SetDepositsReserveTarget]: SetDepositsReserveTarget,
+
+  [MotionType.LidoLendActivateMarket]: LidoLendActivateMarket,
 };
 
 type Props = {

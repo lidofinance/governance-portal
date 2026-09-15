@@ -81,6 +81,7 @@ export * from './L1ERC20TokenBridge';
 export * from './LazyOracle';
 export * from './LegacyOracle';
 export * from './LidoDAO';
+export * from './LidoLendActivateMarket';
 export * from './LidoLocator';
 export * from './LidoV3Template';
 export * from './LimitChecker';

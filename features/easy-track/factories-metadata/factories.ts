@@ -18,4 +18,14 @@ export const FACTORIES = defineFactories({
       [CHAINS.Hoodi]: '0x68009122a394504E8fD7fee58F92Cd73c6A60717',
     },
   },
+  LidoLendActivateMarket: {
+    startable: true,
+    abi: abi.lidoLendActivateMarketAbi,
+    displayName: 'Activate market',
+    tags: ['Lido Lend'],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x443161F34026eC906D33D8575a4D69E3332C9181',
+    },
+  },
 } as const);
