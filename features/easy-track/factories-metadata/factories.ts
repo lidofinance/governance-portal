@@ -18,6 +18,25 @@ export const FACTORIES = defineFactories({
       [CHAINS.Hoodi]: '0x68009122a394504E8fD7fee58F92Cd73c6A60717',
     },
   },
+  LidoLendMarketManagerActions: {
+    startable: true,
+    abi: abi.lidoLendMarketManagerActionsAbi,
+    displayName: 'Market Manager Actions',
+    tags: ['Lido Lend', 'Market Manager'],
+    // Order mirrors the `Action` enum in LidoLendMarketManagerActions.sol.
+    actionTitles: [
+      'Set instant activation',
+      'Set collateral activation config',
+      'Set settlement config',
+      'Set supply cap',
+      'Unfreeze markets',
+      'Set market fee',
+    ],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x4A863A1ECf6461e93ea43266B293e8AD445FbDDE',
+    },
+  },
   LidoLendActivateMarket: {
     startable: true,
     abi: abi.lidoLendActivateMarketAbi,

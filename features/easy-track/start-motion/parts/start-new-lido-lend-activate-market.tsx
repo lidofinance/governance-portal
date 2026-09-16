@@ -13,11 +13,13 @@ import { validateAddress } from 'utils/validate-address';
 import {
   ACTIVATION_PARAMS,
   MAX_FEE,
+  WAD,
+} from '@easy-track/lido-lend/constants';
+import {
   parsePercentInput,
   validateFeePercent,
   validatePercentValue,
-  WAD,
-} from '@easy-track/lido-lend/constants';
+} from '@easy-track/lido-lend/validation';
 import { MotionType } from '../../motion-types';
 import {
   createMotionFormPart,
@@ -197,7 +199,7 @@ export const formParts = createMotionFormPart({
             label="Fee (% of accrued interest, 0 skips setFee)"
             rules={{
               required: 'Field is required',
-              validate: validateFeePercent,
+              validate: (value: string) => validateFeePercent(value) ?? true,
             }}
           />
         </Fieldset>

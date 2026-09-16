@@ -4,16 +4,25 @@ import {
   ContractFunctionRevertedError,
   createPublicClient,
   http,
+  type Abi,
   type Address,
+  type Hex,
   type PublicClient,
 } from 'viem';
 import { readContract } from 'viem/actions';
-import { lidoLendActivateMarketAbi } from 'abi/generated';
+import {
+  lidoLendActivateMarketAbi,
+  lidoLendMarketManagerActionsAbi,
+} from 'abi/generated';
 import { MotionType } from '@easy-track/motion-types';
 import {
   encodeActivateMarketCallData,
   type FormData as ActivateMarketFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-activate-market';
+import {
+  encodeManagerActionsCallData,
+  type FormData as ManagerActionsFormData,
+} from '@easy-track/start-motion/parts/lido-lend-market-manager-actions';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -41,20 +50,32 @@ const REVERT_REASONS: Record<string, string> = {
   PRESEED_EXCEEDS_MAX_DEPOSIT: 'Preseed amount is above the vault deposit cap',
   INSUFFICIENT_ASSET_BALANCE:
     'The preseeder does not hold enough of the loan token to seed this market',
+  MARKET_NOT_FOUND: 'No market with this ID exists',
+  MARKET_IS_NOT_FROZEN: 'One of the listed markets is not frozen',
+  FEE_ALREADY_SET: 'The market already has this fee',
+  SAME_CONFIG: 'The market already has this config',
+  SAME_INSTANT_ACTIVATION_STATUS:
+    'Instant activation is already in this state for this caller',
+  INVALID_ACTIVATION_DELAYS:
+    'Min activation delay must not exceed max activation delay',
+  INVALID_MAX_GUARDIANS_QUORUM_DELAY:
+    'Max guardians quorum delay must be zero or exceed max activation delay',
+  INVALID_MIN_DEPOSIT_AMOUNT:
+    'Min deposit amount must not exceed min activation amount',
+  SETTLEMENT_CONFIG_OUT_OF_RANGE: 'Settlement config values are out of range',
 };
 
-// The Lido Lend factory runs every check inside `createEVMScript`, a view
+// The Lido Lend factories run every check inside `createEVMScript`, a view
 // function whose trusted-caller check reads its `_creator` argument rather than
 // msg.sender. Dry-running it surfaces the contract's own revert reason, which
 // covers the market, preseeder and controller state no form can check alone.
-export const validateLidoLendActivateMarket = async (
-  formData: ActivateMarketFormData,
+const dryRunCreateEvmScript = async (
+  abi: Abi,
+  motionType: MotionType,
+  encodeCallData: () => Hex,
   { chainId, provider, address, rpcUrl }: ChainArgs,
 ) => {
-  const factory = getScriptFactoryByMotionType(
-    chainId,
-    MotionType.LidoLendActivateMarket,
-  );
+  const factory = getScriptFactoryByMotionType(chainId, motionType);
 
   if (!factory || !address) {
     return null;
@@ -68,10 +89,10 @@ export const validateLidoLendActivateMarket = async (
 
   try {
     await readContract(client, {
-      abi: lidoLendActivateMarketAbi,
+      abi,
       address: factory,
       functionName: 'createEVMScript',
-      args: [address, encodeActivateMarketCallData(formData)],
+      args: [address, encodeCallData()],
     });
 
     return null;
@@ -99,3 +120,25 @@ export const validateLidoLendActivateMarket = async (
     return REVERT_REASONS[reason] ?? `Factory rejected the motion: ${reason}`;
   }
 };
+
+export const validateLidoLendActivateMarket = (
+  formData: ActivateMarketFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendActivateMarketAbi,
+    MotionType.LidoLendActivateMarket,
+    () => encodeActivateMarketCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendMarketManagerActions = (
+  formData: ManagerActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendMarketManagerActionsAbi,
+    MotionType.LidoLendMarketManagerActions,
+    () => encodeManagerActionsCallData(formData),
+    chainArgs,
+  );

@@ -76,6 +76,13 @@ const getBadgeColorStyles = (variant: BadgeVariant, type: BadgeType) => {
         color: #6c3bd1;
       `;
     case 'indigo':
+      if (type === 'secondary') {
+        return css`
+          background-color: #f3f4fd;
+          color: #5558c8;
+        `;
+      }
+
       return css`
         background-color: #e4e7fb;
         color: #3538cd;
