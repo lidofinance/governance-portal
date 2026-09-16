@@ -1,11 +1,3 @@
-import { getAbiItem } from 'viem';
-import { lidoLendActivateMarketAbi } from 'abi/generated';
-
-export const ACTIVATION_PARAMS = getAbiItem({
-  abi: lidoLendActivateMarketAbi,
-  name: 'decodeEVMScriptCallData',
-}).outputs;
-
 // BPS in LidoLendMarketManagerActions.sol
 export const BPS = 10_000n;
 

@@ -1,7 +1,12 @@
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
-import { encodeAbiParameters, formatUnits, type Address } from 'viem';
+import {
+  encodeAbiParameters,
+  formatUnits,
+  getAbiItem,
+  type Address,
+} from 'viem';
 import { PageLoader } from 'shared/components/page-loader';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
@@ -10,11 +15,7 @@ import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import { CheckboxHookForm } from 'shared/hook-form/checkbox-hook-form';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
 import { validateAddress } from 'utils/validate-address';
-import {
-  ACTIVATION_PARAMS,
-  MAX_FEE,
-  WAD,
-} from '@easy-track/lido-lend/constants';
+import { MAX_FEE, WAD } from '@easy-track/lido-lend/constants';
 import {
   parsePercentInput,
   validateFeePercent,
@@ -26,6 +27,7 @@ import {
   PopulateTxArgs,
 } from './create-motion-form-part';
 import { ErrorBox, Fieldset, MessageBox } from './style';
+import { lidoLendActivateMarketAbi } from 'abi/generated';
 
 export type FormData = {
   loanToken: Address;
@@ -42,43 +44,39 @@ export type FormData = {
   fee: string;
 };
 
-const ADDRESS_FIELDS: readonly {
-  readonly name: keyof FormData;
-  readonly label: string;
-}[] = [
-  { name: 'loanToken', label: 'Loan token' },
-  { name: 'collateralToken', label: 'Collateral token' },
-  { name: 'oracle', label: 'Oracle' },
-  { name: 'irmConfig', label: 'IRM config' },
-  { name: 'controller', label: 'Market controller' },
-  { name: 'steward', label: 'Risk steward' },
-  { name: 'pauserCommittee', label: 'Pauser committee' },
-  { name: 'preseedVault', label: 'Preseed vault (ERC4626)' },
-];
+const ADDRESS_RULES = {
+  required: 'Field is required',
+  validate: (value: string) => validateAddress(value) ?? true,
+};
 
-const validateLltv = (value: string) =>
-  validatePercentValue(value) ??
-  (parsePercentInput(value) < WAD || 'LLTV must be below 100%');
-
-export const encodeActivateMarketCallData = (formData: FormData) =>
-  encodeAbiParameters(ACTIVATION_PARAMS, [
-    {
-      marketParams: {
-        loanToken: formData.loanToken,
-        collateralToken: formData.collateralToken,
-        oracle: formData.oracle,
-        irm: formData.irm,
-        lltv: parsePercentInput(formData.lltv),
+export const encodeActivateMarketCallData = ({
+  loanToken,
+  collateralToken,
+  oracle,
+  irm,
+  lltv,
+  fee,
+  ...rest
+}: FormData) =>
+  encodeAbiParameters(
+    getAbiItem({
+      abi: lidoLendActivateMarketAbi,
+      name: 'decodeEVMScriptCallData',
+    }).outputs,
+    [
+      {
+        marketParams: {
+          loanToken,
+          collateralToken,
+          oracle,
+          irm,
+          lltv: parsePercentInput(lltv),
+        },
+        ...rest,
+        fee: parsePercentInput(fee),
       },
-      irmConfig: formData.irmConfig,
-      controller: formData.controller,
-      enableSettlement: formData.enableSettlement,
-      steward: formData.steward,
-      pauserCommittee: formData.pauserCommittee,
-      preseedVault: formData.preseedVault,
-      fee: parsePercentInput(formData.fee),
-    },
-  ]);
+    ],
+  );
 
 export const formParts = createMotionFormPart({
   motionType: MotionType.LidoLendActivateMarket,
@@ -172,24 +170,80 @@ export const formParts = createMotionFormPart({
           Maximum fee: <b>{formatUnits(MAX_FEE, 16)}%</b> of accrued interest
         </MessageBox>
 
-        {ADDRESS_FIELDS.map(({ name, label }) => (
-          <Fieldset key={name}>
-            <InputHookForm
-              fieldName={fieldNames[name]}
-              label={label}
-              rules={{
-                required: 'Field is required',
-                validate: (value: string) => validateAddress(value) ?? true,
-              }}
-            />
-          </Fieldset>
-        ))}
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.loanToken}
+            label="Loan token"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.collateralToken}
+            label="Collateral token"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.oracle}
+            label="Oracle"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.irmConfig}
+            label="IRM config"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.controller}
+            label="Market controller"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.steward}
+            label="Risk steward"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.pauserCommittee}
+            label="Pauser committee"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
+
+        <Fieldset>
+          <InputHookForm
+            fieldName={fieldNames.preseedVault}
+            label="Preseed vault (ERC4626)"
+            rules={ADDRESS_RULES}
+          />
+        </Fieldset>
 
         <Fieldset>
           <InputNumberHookForm
             fieldName={fieldNames.lltv}
             label="LLTV (%)"
-            rules={{ required: 'Field is required', validate: validateLltv }}
+            rules={{
+              required: 'Field is required',
+              validate: (value: string) =>
+                validatePercentValue(value) ??
+                (parsePercentInput(value) < WAD || 'LLTV must be below 100%'),
+            }}
           />
         </Fieldset>
 
