@@ -22,7 +22,7 @@ import {
 import {
   encodeManagerActionsCallData,
   type FormData as ManagerActionsFormData,
-} from '@easy-track/start-motion/parts/lido-lend-market-manager-actions';
+} from '@easy-track/start-motion/parts/start-new-lido-lend-market-manager-actions';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
