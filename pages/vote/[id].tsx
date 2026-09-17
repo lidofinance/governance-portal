@@ -20,10 +20,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps = getDefaultStaticProps();
 
 export default function VotePage() {
-  const { query, isReady } = useRouter();
+  const { query } = useRouter();
   const id = query.id;
 
-  if (!isReady || !isNumericId(id)) {
+  if (!isNumericId(id)) {
     return null;
   }
 

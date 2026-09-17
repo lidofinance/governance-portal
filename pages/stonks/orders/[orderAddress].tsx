@@ -1,5 +1,4 @@
 import { GetStaticPaths } from 'next';
-import { useRouter } from 'next/router';
 import { Loader } from '@lidofinance/lido-ui';
 import { useCowOrderData } from '@stonks/hooks/use-cow-order-data';
 import { useStonksOrderData } from '@stonks/hooks/use-stonks-order-data';
@@ -20,7 +19,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps = getDefaultStaticProps();
 
 export default function StonksOrderPage() {
-  const { isReady } = useRouter();
   const [orderAddress] = useParsedQuery('orderAddress');
 
   const {
@@ -52,28 +50,21 @@ export default function StonksOrderPage() {
       }
       containerSize="tight"
     >
-      {/* isReady-gated: the SSG server render sees route params while the
-          client's first render does not — the query fires server-side and
-          renders a Loader the client's first render would not */}
-      {!isReady ? null : (
-        <>
-          {error ? (
-            <ErrorBox>
-              <Text>{error.message ?? 'Unknown error'}</Text>
-            </ErrorBox>
-          ) : null}
-          {orderData ? (
-            <StonksOrderCard
-              order={orderData}
-              cowOrderData={cowOrderData}
-              isLoading={isLoading}
-              onInvalidate={handleInvalidate}
-            />
-          ) : isLoading && !error ? (
-            <Loader />
-          ) : null}
-        </>
-      )}
+      {error ? (
+        <ErrorBox>
+          <Text>{error.message ?? 'Unknown error'}</Text>
+        </ErrorBox>
+      ) : null}
+      {orderData ? (
+        <StonksOrderCard
+          order={orderData}
+          cowOrderData={cowOrderData}
+          isLoading={isLoading}
+          onInvalidate={handleInvalidate}
+        />
+      ) : isLoading && !error ? (
+        <Loader />
+      ) : null}
     </Layout>
   );
 }
