@@ -12,6 +12,7 @@ import {
 import { readContract } from 'viem/actions';
 import {
   lidoLendActivateMarketAbi,
+  lidoLendGuardianActionsAbi,
   lidoLendMarketManagerActionsAbi,
 } from 'abi/generated';
 import { MotionType } from '@easy-track/motion-types';
@@ -23,6 +24,10 @@ import {
   encodeManagerActionsCallData,
   type FormData as ManagerActionsFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-market-manager-actions';
+import {
+  encodeGuardianActionsCallData,
+  type FormData as GuardianActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-guardian-actions';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -63,6 +68,17 @@ const REVERT_REASONS: Record<string, string> = {
   INVALID_MIN_DEPOSIT_AMOUNT:
     'Min deposit amount must not exceed min activation amount',
   SETTLEMENT_CONFIG_OUT_OF_RANGE: 'Settlement config values are out of range',
+  GUARDIAN_ALREADY_ADDED: 'This account is already a guardian of the market',
+  GUARDIAN_NOT_FOUND: 'This account is not a guardian of the market',
+  ACCOUNT_IS_DELEGATE:
+    'This account is already a delegate of another guardian on the market',
+  MAX_GUARDIANS_REACHED: 'The market already has the maximum guardian count',
+  INVALID_QUORUM:
+    'Quorum must be non-zero and no greater than the resulting guardian count',
+  SAME_QUORUM: 'The market already has this guardians quorum',
+  SAME_SUSPECT_WINDOW: 'The market already has this suspect window',
+  SUSPECT_WINDOW_TOO_HIGH:
+    'Suspect window is above the maximum the market allows',
 };
 
 // The Lido Lend factories run every check inside `createEVMScript`, a view
@@ -140,5 +156,16 @@ export const validateLidoLendMarketManagerActions = (
     lidoLendMarketManagerActionsAbi,
     MotionType.LidoLendMarketManagerActions,
     () => encodeManagerActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendGuardianActions = (
+  formData: GuardianActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendGuardianActionsAbi,
+    MotionType.LidoLendGuardianActions,
+    () => encodeGuardianActionsCallData(formData),
     chainArgs,
   );

@@ -7,6 +7,7 @@ import { validateCreateOrUpdateOperatorGroup } from '@easy-track/utils/validate-
 import { validateUpdateStakingModuleShareLimits } from '@easy-track/utils/validate-update-staking-module-share-limits';
 import {
   validateLidoLendActivateMarket,
+  validateLidoLendGuardianActions,
   validateLidoLendMarketManagerActions,
 } from '@easy-track/utils/validate-lido-lend';
 import { Address, PublicClient } from 'viem';
@@ -42,6 +43,7 @@ const EXTRA_VALIDATION_MAP: {
   [MotionType.LidoLendActivateMarket]: validateLidoLendActivateMarket,
   [MotionType.LidoLendMarketManagerActions]:
     validateLidoLendMarketManagerActions,
+  [MotionType.LidoLendGuardianActions]: validateLidoLendGuardianActions,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

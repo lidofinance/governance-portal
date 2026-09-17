@@ -34,7 +34,26 @@ export const FACTORIES = defineFactories({
     ],
     // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0x4A863A1ECf6461e93ea43266B293e8AD445FbDDE',
+      [CHAINS.Mainnet]: '0x400c07eACb636ecD4D98A255a9C385a5EAeF7679',
+    },
+  },
+  LidoLendGuardianActions: {
+    startable: true,
+    abi: abi.lidoLendGuardianActionsAbi,
+    displayName: 'Guardian Actions',
+    tags: ['Lido Lend', 'Guardian'],
+    // Order mirrors the `Action` enum in LidoLendGuardianActions.sol.
+    actionTitles: [
+      'Add guardian',
+      'Remove guardian',
+      'Replace guardian',
+      'Set guardians quorum',
+      'Set suspect window',
+      'Unban accounts',
+    ],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0xe96c1712c88d6289Fc1A9C2db0845f482b52347C',
     },
   },
   LidoLendActivateMarket: {
@@ -44,7 +63,7 @@ export const FACTORIES = defineFactories({
     tags: ['Lido Lend'],
     // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0x443161F34026eC906D33D8575a4D69E3332C9181',
+      [CHAINS.Mainnet]: '0xfDA856f1DDD1d9ECb891a7D09DFF686A5b0a7642',
     },
   },
 } as const);

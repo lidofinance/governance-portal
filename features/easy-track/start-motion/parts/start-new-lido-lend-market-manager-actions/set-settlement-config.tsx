@@ -2,7 +2,7 @@ import { encodeFunctionResult, maxUint96, type Hex } from 'viem';
 import { lidoLendMarketManagerActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
-import { MarketIdField } from './market-id-field';
+import { MarketIdField } from '@easy-track/lido-lend/market-id-field';
 import { BPS } from '@easy-track/lido-lend/constants';
 import { validateInteger } from '@easy-track/lido-lend/validation';
 import { Fieldset, FieldsWrapper, FieldsHeader } from '../style';

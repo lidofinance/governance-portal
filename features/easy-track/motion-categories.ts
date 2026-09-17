@@ -26,7 +26,8 @@ export type MotionSubcategory =
   | 'Dev'
   | 'Ops'
   | 'Curated v2'
-  | 'Market Manager';
+  | 'Market Manager'
+  | 'Guardian';
 
 export type MotionTags = readonly [MotionCategory, ...MotionSubcategory[]];
 
