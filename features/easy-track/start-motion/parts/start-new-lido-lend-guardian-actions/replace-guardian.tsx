@@ -2,6 +2,7 @@ import { encodeFunctionResult, type Hex } from 'viem';
 import { useFormContext } from 'react-hook-form';
 import { lidoLendGuardianActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
+import type { FieldNames } from '../create-motion-form-part';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
 import { MarketIdField } from '@easy-track/lido-lend/market-id-field';
@@ -10,11 +11,7 @@ import { Fieldset } from '../style';
 export const ReplaceGuardianFields = ({
   fieldNames,
 }: {
-  fieldNames: {
-    marketId: string;
-    oldGuardian: string;
-    newGuardian: string;
-  };
+  fieldNames: FieldNames<FormData, 'marketId' | 'oldGuardian' | 'newGuardian'>;
 }) => {
   const { getValues, trigger } = useFormContext();
 

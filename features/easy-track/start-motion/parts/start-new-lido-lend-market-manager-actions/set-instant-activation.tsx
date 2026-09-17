@@ -1,6 +1,7 @@
 import { encodeFunctionResult, type Hex } from 'viem';
 import { lidoLendMarketManagerActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
+import type { FieldNames } from '../create-motion-form-part';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { CheckboxHookForm } from 'shared/hook-form/checkbox-hook-form';
 import { validateAddress } from 'utils/validate-address';
@@ -10,11 +11,7 @@ import { Fieldset } from '../style';
 export const SetInstantActivationFields = ({
   fieldNames,
 }: {
-  fieldNames: {
-    marketId: string;
-    caller: string;
-    enabled: string;
-  };
+  fieldNames: FieldNames<FormData, 'marketId' | 'caller' | 'enabled'>;
 }) => (
   <>
     <MarketIdField fieldName={fieldNames.marketId} />

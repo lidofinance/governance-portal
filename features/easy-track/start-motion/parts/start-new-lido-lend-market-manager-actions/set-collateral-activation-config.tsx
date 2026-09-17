@@ -1,6 +1,7 @@
 import { encodeFunctionResult, maxUint128, type Hex } from 'viem';
 import { lidoLendMarketManagerActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
+import type { FieldNames } from '../create-motion-form-part';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import { MarketIdField } from '@easy-track/lido-lend/market-id-field';
 import { MAX_DELAY_DURATION } from '@easy-track/lido-lend/constants';
@@ -10,10 +11,7 @@ import { Fieldset, FieldsWrapper, FieldsHeader } from '../style';
 export const SetCollateralActivationConfigFields = ({
   fieldNames,
 }: {
-  fieldNames: {
-    marketId: string;
-    collateralActivationConfig: string;
-  };
+  fieldNames: FieldNames<FormData, 'marketId' | 'collateralActivationConfig'>;
 }) => (
   <>
     <MarketIdField fieldName={fieldNames.marketId} />

@@ -14,6 +14,7 @@ import { MOTION_TYPE_ABI_MAP } from '../../hooks/use-decode-evm-script-call-data
 import {
   createMotionFormPart,
   type FactoryContractObject,
+  type FieldNames,
 } from './create-motion-form-part';
 import { Fieldset, MessageBox } from './style';
 
@@ -30,9 +31,7 @@ type Args<FormData extends ActionFormData, M extends ActionFactoryName> = {
     FactoryAction<M>,
     {
       encode: (formData: FormData) => Hex;
-      Fields: React.ComponentType<{
-        fieldNames: Record<keyof FormData, string>;
-      }>;
+      Fields: React.ComponentType<{ fieldNames: FieldNames<FormData> }>;
     }
   >;
 };
@@ -85,7 +84,7 @@ export const createActionFormPart = <
     submitAction,
     factory,
   }: {
-    fieldNames: Record<keyof FormData, string>;
+    fieldNames: FieldNames<FormData>;
     submitAction: React.ReactNode;
     factory: FactoryContractObject<M>;
   }) => {

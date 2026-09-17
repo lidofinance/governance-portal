@@ -1,6 +1,7 @@
 import { encodeFunctionResult, maxUint96, type Hex } from 'viem';
 import { lidoLendMarketManagerActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
+import type { FieldNames } from '../create-motion-form-part';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import { MarketIdField } from '@easy-track/lido-lend/market-id-field';
 import { BPS } from '@easy-track/lido-lend/constants';
@@ -10,10 +11,7 @@ import { Fieldset, FieldsWrapper, FieldsHeader } from '../style';
 export const SetSettlementConfigFields = ({
   fieldNames,
 }: {
-  fieldNames: {
-    marketId: string;
-    settlementConfig: string;
-  };
+  fieldNames: FieldNames<FormData, 'marketId' | 'settlementConfig'>;
 }) => (
   <>
     <MarketIdField fieldName={fieldNames.marketId} />

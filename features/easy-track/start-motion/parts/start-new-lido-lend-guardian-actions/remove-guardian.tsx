@@ -1,6 +1,7 @@
 import { encodeFunctionResult, type Hex } from 'viem';
 import { lidoLendGuardianActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
+import type { FieldNames } from '../create-motion-form-part';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
 import { MarketIdField } from '@easy-track/lido-lend/market-id-field';
@@ -10,11 +11,7 @@ import { Fieldset } from '../style';
 export const RemoveGuardianFields = ({
   fieldNames,
 }: {
-  fieldNames: {
-    marketId: string;
-    guardian: string;
-    newQuorum: string;
-  };
+  fieldNames: FieldNames<FormData, 'marketId' | 'guardian' | 'newQuorum'>;
 }) => (
   <>
     <MarketIdField fieldName={fieldNames.marketId} />

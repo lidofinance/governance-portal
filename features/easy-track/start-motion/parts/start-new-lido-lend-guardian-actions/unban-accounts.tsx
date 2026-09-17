@@ -3,6 +3,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
 import { lidoLendGuardianActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
+import type { FieldNames } from '../create-motion-form-part';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
 import { MarketIdListFields } from '@easy-track/lido-lend/market-id-list-fields';
@@ -16,9 +17,7 @@ import {
 export const UnbanAccountsFields = ({
   fieldNames,
 }: {
-  fieldNames: {
-    unbanRequests: string;
-  };
+  fieldNames: FieldNames<FormData, 'unbanRequests'>;
 }) => {
   const { watch } = useFormContext();
   const requestsFieldArray = useFieldArray({ name: fieldNames.unbanRequests });
