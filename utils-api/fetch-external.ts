@@ -13,10 +13,11 @@ export const fetchExternal = async (
   const endTimer = Metrics.request.apiTimingsExternal.startTimer({ hostname });
 
   try {
-    const response = await fetch(url, {
-      ...params,
-      headers: { 'User-Agent': USER_AGENT, ...params?.headers },
-    });
+    const headers = new Headers(params?.headers);
+    if (!headers.has('User-Agent')) {
+      headers.set('User-Agent', USER_AGENT);
+    }
+    const response = await fetch(url, { ...params, headers });
     endTimer({ status: response.status });
     Metrics.request.externalRequestCounter.inc({
       hostname,

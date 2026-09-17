@@ -49,9 +49,7 @@ const isRpcRequest = (entry: unknown): entry is FetchRpcInitBody => {
     id === null ||
     typeof id === 'string' ||
     typeof id === 'number';
-  return (
-    typeof jsonrpc === 'string' && typeof method === 'string' && hasValidId
-  );
+  return jsonrpc === '2.0' && typeof method === 'string' && hasValidId;
 };
 
 export type RPCFactoryParams = {
