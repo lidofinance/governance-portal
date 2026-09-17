@@ -32,9 +32,9 @@ FROM node:24-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache curl=~8 
     
-# no chown: COPY --from keeps the stage ownership, where public/runtime is already node's
+# ISR writes rendered pages into .next/server/pages, so .next must belong to node; the rest keeps stage ownership
 COPY --from=production-deps /app/node_modules ./node_modules
-COPY --from=build /app/.next ./.next
+COPY --from=build --chown=node:node /app/.next ./.next
 COPY --from=build /app/public ./public
 COPY --from=build \
   /app/package.json \
