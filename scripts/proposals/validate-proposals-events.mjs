@@ -3,8 +3,8 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { createPublicClient, http, decodeEventLog, isAddress } from 'viem';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
-import DualGovernanceAbi from '../../abi/DualGovernance.abi.json' assert { type: 'json' };
-import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' assert { type: 'json' };
+import DualGovernanceAbi from '../../abi/DualGovernance.abi.json' with { type: 'json' };
+import EmergencyProtectedTimelockAbi from '../../abi/EmergencyProtectedTimelock.abi.json' with { type: 'json' };
 import { HISTORICAL_ADDRESSES } from '../../constants/historical-addresses.mjs';
 import { diffEntry } from '../cache-entry-diff.mjs';
 

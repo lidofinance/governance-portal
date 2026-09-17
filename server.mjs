@@ -1,6 +1,8 @@
 import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
+import { createHeadersObject } from 'next-secure-headers';
+import { getContentSecurityPolicy } from './config/csp/policy.mjs';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -31,12 +33,34 @@ const overrideSetHeader = (res) => {
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 app.prepare().then(() => {
+  // The only place that puts CSP on every response, including SSG/ISR cache
+  // hits (per-render hooks never fire for those). Computed after prepare()
+  // so Next has loaded .env files; dev intentionally runs without CSP.
+  // Non-CSP rules are explicitly disabled: createHeadersObject emits defaults
+  // for omitted rules (X-Frame-Options: deny would break iframe embedding —
+  // Safe Apps), and next.config.mjs headers() owns the non-CSP headers.
+  const secureHeaders = dev
+    ? {}
+    : createHeadersObject({
+        contentSecurityPolicy: getContentSecurityPolicy(),
+        frameGuard: false,
+        forceHTTPSRedirect: false,
+        noopen: false,
+        nosniff: false,
+        expectCT: false,
+        referrerPolicy: false,
+        xssProtection: false,
+      });
+
   const server = createServer(async (req, res) => {
     // Be sure to pass `true` as the second argument to `url.parse`.
     // This tells it to parse the query portion of the URL.
     const parsedUrl = parse(req.url, true);
 
     overrideSetHeader(res);
+    for (const [headerName, headerValue] of Object.entries(secureHeaders)) {
+      res.setHeader(headerName, headerValue);
+    }
 
     await handle(req, res, parsedUrl);
   })

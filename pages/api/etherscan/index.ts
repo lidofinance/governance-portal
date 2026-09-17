@@ -12,6 +12,7 @@ import { API_ROUTES } from 'constants/api';
 import { ETHERSCAN_REMOTE_API_URL } from 'constants/network';
 import { config, secretConfig } from 'config';
 import { etherscanQueue } from 'utils-api/etherscan-queue';
+import { fetchExternal } from 'utils-api/fetch-external';
 import { Cache } from 'memory-cache';
 
 const ALLOWED_MODULES = ['contract'] as const;
@@ -67,7 +68,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const data = await etherscanQueue.add(async () => {
-      const response = await fetch(url, { method: 'GET' });
+      const response = await fetchExternal(url, { method: 'GET' });
       if (!response.ok) {
         throw new Error(`Etherscan API error: ${response.status}`);
       }

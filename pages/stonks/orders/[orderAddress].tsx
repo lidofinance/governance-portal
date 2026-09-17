@@ -1,3 +1,4 @@
+import { GetStaticPaths } from 'next';
 import { Loader } from '@lidofinance/lido-ui';
 import { useCowOrderData } from '@stonks/hooks/use-cow-order-data';
 import { useStonksOrderData } from '@stonks/hooks/use-stonks-order-data';
@@ -6,6 +7,16 @@ import { ErrorBox } from '@stonks/styles';
 import { Layout } from 'shared/components';
 import { Text } from 'shared/components/text';
 import { useParsedQuery } from 'shared/hooks/use-parsed-query';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps = getDefaultStaticProps();
 
 export default function StonksOrderPage() {
   const [orderAddress] = useParsedQuery('orderAddress');

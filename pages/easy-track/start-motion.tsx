@@ -16,6 +16,9 @@ import { Title } from '@easy-track/style';
 import { Text } from 'shared/components/text';
 import { Box } from 'shared/components/box';
 import { Hex } from 'viem';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
+
+export const getStaticProps = getDefaultStaticProps();
 
 export default function StartMotionPage() {
   const { isConnected } = useAccount();

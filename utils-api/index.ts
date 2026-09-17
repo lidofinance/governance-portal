@@ -1,2 +1,2 @@
 export * from './next-api-wrappers';
-export * from './fetch-api-wrapper';
+export * from './fetch-external';

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { Layout } from 'shared/components';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 import { Text } from 'shared/components/text';
 import { Motions, MotionsSkeleton } from '@easy-track/motions';
 import { Button } from 'shared/components/button';
@@ -78,5 +79,7 @@ const MotionsPage = () => {
     </Layout>
   );
 };
+
+export const getStaticProps = getDefaultStaticProps();
 
 export default MotionsPage;
