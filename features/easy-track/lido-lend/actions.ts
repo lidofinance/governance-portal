@@ -19,3 +19,11 @@ export enum LidoLendGuardianAction {
   SetSuspectWindow = 4,
   UnbanAccounts = 5,
 }
+
+// IDs mirror the Action enum in LidoLendCircuitBreakerActions.sol.
+// They are part of the calldata ABI and must not be reordered.
+export enum LidoLendCircuitBreakerAction {
+  RegisterPauser = 0,
+  SetPauseDuration = 1,
+  SetHeartbeatInterval = 2,
+}

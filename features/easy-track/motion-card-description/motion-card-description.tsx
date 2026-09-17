@@ -64,6 +64,7 @@ import { UpdateStakingModuleShareLimits } from './motion-descriptions/update-sta
 import { SetDepositsReserveTarget } from './motion-descriptions/set-deposits-reserve-target';
 import { LidoLendMarketManagerActions } from './motion-descriptions/lido-lend-market-manager-actions';
 import { LidoLendGuardianActions } from './motion-descriptions/lido-lend-guardian-actions';
+import { LidoLendCircuitBreakerActions } from './motion-descriptions/lido-lend-circuit-breaker-actions';
 import { LidoLendActivateMarket } from './motion-descriptions/lido-lend-activate-market';
 import { Abi } from 'viem';
 import { MotionDescriptionProps } from './types';
@@ -214,6 +215,8 @@ const MOTION_DESCRIPTIONS: Record<
   [MotionType.LidoLendMarketManagerActions]: LidoLendMarketManagerActions,
 
   [MotionType.LidoLendGuardianActions]: LidoLendGuardianActions,
+
+  [MotionType.LidoLendCircuitBreakerActions]: LidoLendCircuitBreakerActions,
 
   [MotionType.LidoLendActivateMarket]: LidoLendActivateMarket,
 };

@@ -56,6 +56,22 @@ export const FACTORIES = defineFactories({
       [CHAINS.Mainnet]: '0xe96c1712c88d6289Fc1A9C2db0845f482b52347C',
     },
   },
+  LidoLendCircuitBreakerActions: {
+    startable: true,
+    abi: abi.lidoLendCircuitBreakerActionsAbi,
+    displayName: 'Circuit Breaker Actions',
+    tags: ['Lido Lend', 'Circuit Breaker'],
+    // Order mirrors the `Action` enum in LidoLendCircuitBreakerActions.sol.
+    actionTitles: [
+      'Register pauser',
+      'Set pause duration',
+      'Set heartbeat interval',
+    ],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0xDeC8507CdFb624Ce3281f9304Fbb80f9D2b6eE7b',
+    },
+  },
   LidoLendActivateMarket: {
     startable: true,
     abi: abi.lidoLendActivateMarketAbi,

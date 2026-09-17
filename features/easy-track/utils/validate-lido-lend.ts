@@ -12,6 +12,7 @@ import {
 import { readContract } from 'viem/actions';
 import {
   lidoLendActivateMarketAbi,
+  lidoLendCircuitBreakerActionsAbi,
   lidoLendGuardianActionsAbi,
   lidoLendMarketManagerActionsAbi,
 } from 'abi/generated';
@@ -28,6 +29,10 @@ import {
   encodeGuardianActionsCallData,
   type FormData as GuardianActionsFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-guardian-actions';
+import {
+  encodeCircuitBreakerActionsCallData,
+  type FormData as CircuitBreakerActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-circuit-breaker-actions';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -79,6 +84,12 @@ const REVERT_REASONS: Record<string, string> = {
   SAME_SUSPECT_WINDOW: 'The market already has this suspect window',
   SUSPECT_WINDOW_TOO_HIGH:
     'Suspect window is above the maximum the market allows',
+  CIRCUIT_BREAKER_NOT_PAUSER:
+    'The circuit breaker does not hold the PAUSER_ROLE on this market',
+  PAUSE_DURATION_OUT_OF_RANGE:
+    'Pause duration is outside the range the circuit breaker allows',
+  HEARTBEAT_INTERVAL_OUT_OF_RANGE:
+    'Heartbeat interval is outside the range the circuit breaker allows',
 };
 
 // The Lido Lend factories run every check inside `createEVMScript`, a view
@@ -167,5 +178,16 @@ export const validateLidoLendGuardianActions = (
     lidoLendGuardianActionsAbi,
     MotionType.LidoLendGuardianActions,
     () => encodeGuardianActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendCircuitBreakerActions = (
+  formData: CircuitBreakerActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendCircuitBreakerActionsAbi,
+    MotionType.LidoLendCircuitBreakerActions,
+    () => encodeCircuitBreakerActionsCallData(formData),
     chainArgs,
   );
