@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - develop
-      - feat/k8s
     paths-ignore:
       - "**.md"
 
