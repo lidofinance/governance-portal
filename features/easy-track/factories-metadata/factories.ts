@@ -72,6 +72,21 @@ export const FACTORIES = defineFactories({
       [CHAINS.Mainnet]: '0xDeC8507CdFb624Ce3281f9304Fbb80f9D2b6eE7b',
     },
   },
+  LidoLendExitBookActions: {
+    startable: true,
+    abi: abi.lidoLendExitBookActionsAbi,
+    displayName: 'Exit Book Actions',
+    tags: ['Lido Lend', 'Exit Book'],
+    // Order mirrors the `Action` enum in LidoLendExitBookActions.sol.
+    actionTitles: [
+      'Update Morpho exit book markets',
+      'Update ERC-4626 exit book vaults',
+    ],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x823Bcc60FB1f545DEF7Ac4094e5894495B00EAB4',
+    },
+  },
   LidoLendActivateMarket: {
     startable: true,
     abi: abi.lidoLendActivateMarketAbi,

@@ -28,7 +28,8 @@ export type MotionSubcategory =
   | 'Curated v2'
   | 'Market Manager'
   | 'Guardian'
-  | 'Circuit Breaker';
+  | 'Circuit Breaker'
+  | 'Exit Book';
 
 export type MotionTags = readonly [MotionCategory, ...MotionSubcategory[]];
 

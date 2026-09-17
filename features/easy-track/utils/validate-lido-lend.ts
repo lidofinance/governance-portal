@@ -13,6 +13,7 @@ import { readContract } from 'viem/actions';
 import {
   lidoLendActivateMarketAbi,
   lidoLendCircuitBreakerActionsAbi,
+  lidoLendExitBookActionsAbi,
   lidoLendGuardianActionsAbi,
   lidoLendMarketManagerActionsAbi,
 } from 'abi/generated';
@@ -33,6 +34,10 @@ import {
   encodeCircuitBreakerActionsCallData,
   type FormData as CircuitBreakerActionsFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-circuit-breaker-actions';
+import {
+  encodeExitBookActionsCallData,
+  type FormData as ExitBookActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-exit-book-actions';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -90,6 +95,8 @@ const REVERT_REASONS: Record<string, string> = {
     'Pause duration is outside the range the circuit breaker allows',
   HEARTBEAT_INTERVAL_OUT_OF_RANGE:
     'Heartbeat interval is outside the range the circuit breaker allows',
+  EMPTY_MARKETS_LIST: 'At least one market is required',
+  EMPTY_VAULTS: 'At least one vault is required',
 };
 
 // The Lido Lend factories run every check inside `createEVMScript`, a view
@@ -189,5 +196,16 @@ export const validateLidoLendCircuitBreakerActions = (
     lidoLendCircuitBreakerActionsAbi,
     MotionType.LidoLendCircuitBreakerActions,
     () => encodeCircuitBreakerActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendExitBookActions = (
+  formData: ExitBookActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendExitBookActionsAbi,
+    MotionType.LidoLendExitBookActions,
+    () => encodeExitBookActionsCallData(formData),
     chainArgs,
   );

@@ -8,6 +8,7 @@ import { validateUpdateStakingModuleShareLimits } from '@easy-track/utils/valida
 import {
   validateLidoLendActivateMarket,
   validateLidoLendCircuitBreakerActions,
+  validateLidoLendExitBookActions,
   validateLidoLendGuardianActions,
   validateLidoLendMarketManagerActions,
 } from '@easy-track/utils/validate-lido-lend';
@@ -47,6 +48,7 @@ const EXTRA_VALIDATION_MAP: {
   [MotionType.LidoLendGuardianActions]: validateLidoLendGuardianActions,
   [MotionType.LidoLendCircuitBreakerActions]:
     validateLidoLendCircuitBreakerActions,
+  [MotionType.LidoLendExitBookActions]: validateLidoLendExitBookActions,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

@@ -83,6 +83,7 @@ export * from './LegacyOracle';
 export * from './LidoDAO';
 export * from './LidoLendActivateMarket';
 export * from './LidoLendCircuitBreakerActions';
+export * from './LidoLendExitBookActions';
 export * from './LidoLendGuardianActions';
 export * from './LidoLendMarketManagerActions';
 export * from './LidoLocator';

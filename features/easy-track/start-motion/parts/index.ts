@@ -43,6 +43,7 @@ import * as StartNewSetDepositsReserveTarget from './start-new-set-deposits-rese
 import * as StartNewLidoLendMarketManagerActions from './start-new-lido-lend-market-manager-actions';
 import * as StartNewLidoLendGuardianActions from './start-new-lido-lend-guardian-actions';
 import * as StartNewLidoLendCircuitBreakerActions from './start-new-lido-lend-circuit-breaker-actions';
+import * as StartNewLidoLendExitBookActions from './start-new-lido-lend-exit-book-actions';
 import * as StartNewLidoLendActivateMarket from './start-new-lido-lend-activate-market';
 
 export const formParts = {
@@ -238,6 +239,9 @@ export const formParts = {
 
   [MotionTypeForms.LidoLendCircuitBreakerActions]:
     StartNewLidoLendCircuitBreakerActions.formParts,
+
+  [MotionTypeForms.LidoLendExitBookActions]:
+    StartNewLidoLendExitBookActions.formParts,
 
   [MotionTypeForms.LidoLendActivateMarket]:
     StartNewLidoLendActivateMarket.formParts,
