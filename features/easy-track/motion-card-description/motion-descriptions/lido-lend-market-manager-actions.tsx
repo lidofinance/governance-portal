@@ -1,20 +1,11 @@
-import { decodeFunctionResult, formatUnits, type Hex } from 'viem';
+import { decodeFunctionResult, formatUnits } from 'viem';
 import { lidoLendMarketManagerActionsAbi } from 'abi/generated';
 import { LidoLendMarketManagerAction } from '@easy-track/lido-lend/actions';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 import { MotionDescriptionProps } from '../types';
+import { Amount, MarketId } from './lido-lend-parts';
 
 const abi = lidoLendMarketManagerActionsAbi;
-
-const MarketId = ({ marketId }: { marketId: Hex }) => (
-  <b title={marketId}>
-    {marketId.slice(0, 10)}…{marketId.slice(-8)}
-  </b>
-);
-
-const Amount = ({ value }: { value: bigint | number }) => (
-  <b>{value.toLocaleString('en-US')}</b>
-);
 
 export const LidoLendMarketManagerActions = ({
   callData,

@@ -1,6 +1,6 @@
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateBytes32 } from 'utils/validate-bytes32';
-import { Fieldset } from '../style';
+import { Fieldset } from '@easy-track/start-motion/parts/style';
 
 export const MarketIdField = ({ fieldName }: { fieldName: string }) => (
   <Fieldset>

@@ -1,5 +1,5 @@
 import { encodeFunctionResult, type Hex } from 'viem';
-import { lidoLendMarketManagerActionsAbi as abi } from 'abi/generated';
+import { lidoLendGuardianActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
 import type { FieldNames } from '../create-motion-form-part';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
@@ -7,17 +7,17 @@ import { MarketIdField } from '@easy-track/lido-lend/market-id-field';
 import { validateInteger } from '@easy-track/lido-lend/validation';
 import { Fieldset } from '../style';
 
-export const SetSupplyCapFields = ({
+export const SetSuspectWindowFields = ({
   fieldNames,
 }: {
-  fieldNames: FieldNames<FormData, 'marketId' | 'newCap'>;
+  fieldNames: FieldNames<FormData, 'marketId' | 'newSuspectWindow'>;
 }) => (
   <>
     <MarketIdField fieldName={fieldNames.marketId} />
     <Fieldset>
       <InputNumberHookForm
-        fieldName={fieldNames.newCap}
-        label="New supply cap"
+        fieldName={fieldNames.newSuspectWindow}
+        label="New suspect window (s)"
         rules={{
           required: 'Field is required',
           validate: (value: string) => validateInteger(value) ?? true,
@@ -27,9 +27,9 @@ export const SetSupplyCapFields = ({
   </>
 );
 
-export const encodeSetSupplyCap = (formData: FormData) =>
+export const encodeSetSuspectWindow = (formData: FormData) =>
   encodeFunctionResult({
     abi,
-    functionName: 'decodeSetSupplyCapPayload',
-    result: [formData.marketId as Hex, BigInt(formData.newCap)],
+    functionName: 'decodeSetSuspectWindowPayload',
+    result: [formData.marketId as Hex, BigInt(formData.newSuspectWindow)],
   });
