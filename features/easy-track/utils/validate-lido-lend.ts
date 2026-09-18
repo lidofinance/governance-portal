@@ -12,6 +12,7 @@ import {
 import { readContract } from 'viem/actions';
 import {
   lidoLendActivateMarketAbi,
+  lidoLendApplyIrmConfigAbi,
   lidoLendCircuitBreakerActionsAbi,
   lidoLendExitBookActionsAbi,
   lidoLendGuardianActionsAbi,
@@ -43,6 +44,10 @@ import {
   encodeRiskStewardActionsCallData,
   type FormData as RiskStewardActionsFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-risk-steward-actions';
+import {
+  encodeApplyIrmConfigCallData,
+  type FormData as ApplyIrmConfigFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-apply-irm-config';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -105,6 +110,11 @@ const REVERT_REASONS: Record<string, string> = {
   ZERO_STEWARD: 'Risk steward is the zero address',
   STEWARD_ALREADY_ADDED: 'This account is already a risk steward of the market',
   STEWARD_NOT_FOUND: 'This account is not a risk steward of the market',
+  IRM_NOT_ROUTER:
+    'This market is not routed through the IrmRouter, so its IRM config cannot be changed',
+  IRM_NOT_ACTIVE:
+    'The market is not currently using the configurable Adaptive Curve IRM',
+  MARKET_PAUSED: 'The market is paused',
 };
 
 // The Lido Lend factories run every check inside `createEVMScript`, a view
@@ -226,5 +236,16 @@ export const validateLidoLendRiskStewardActions = (
     lidoLendRiskStewardActionsAbi,
     MotionType.LidoLendRiskStewardActions,
     () => encodeRiskStewardActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendApplyIrmConfig = (
+  formData: ApplyIrmConfigFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendApplyIrmConfigAbi,
+    MotionType.LidoLendApplyIrmConfig,
+    () => encodeApplyIrmConfigCallData(formData),
     chainArgs,
   );

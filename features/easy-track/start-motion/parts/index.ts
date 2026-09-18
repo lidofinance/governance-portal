@@ -46,6 +46,7 @@ import * as StartNewLidoLendCircuitBreakerActions from './start-new-lido-lend-ci
 import * as StartNewLidoLendExitBookActions from './start-new-lido-lend-exit-book-actions';
 import * as StartNewLidoLendRiskStewardActions from './start-new-lido-lend-risk-steward-actions';
 import * as StartNewLidoLendActivateMarket from './start-new-lido-lend-activate-market';
+import * as StartNewLidoLendApplyIrmConfig from './start-new-lido-lend-apply-irm-config';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -249,6 +250,9 @@ export const formParts = {
 
   [MotionTypeForms.LidoLendActivateMarket]:
     StartNewLidoLendActivateMarket.formParts,
+
+  [MotionTypeForms.LidoLendApplyIrmConfig]:
+    StartNewLidoLendApplyIrmConfig.formParts,
 } as const;
 
 // Every startable factory in FACTORIES must have a form part here,

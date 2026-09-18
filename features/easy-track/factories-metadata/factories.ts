@@ -109,4 +109,14 @@ export const FACTORIES = defineFactories({
       [CHAINS.Mainnet]: '0xfDA856f1DDD1d9ECb891a7D09DFF686A5b0a7642',
     },
   },
+  LidoLendApplyIrmConfig: {
+    startable: true,
+    abi: abi.lidoLendApplyIrmConfigAbi,
+    displayName: 'Apply IRM config',
+    tags: ['Lido Lend'],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x5DDa1C0C11462Cc84C1d9c8A6B93808c902dceBa',
+    },
+  },
 } as const);
