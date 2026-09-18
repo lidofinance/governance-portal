@@ -1,5 +1,11 @@
 import { formatUnits, maxUint256, parseUnits } from 'viem';
+import { validateAddress } from 'utils/validate-address';
 import { MAX_FEE } from './constants';
+
+export const DEFAULT_ADDRESS_RULES = {
+  required: 'Field is required',
+  validate: (value: string) => validateAddress(value) ?? true,
+};
 
 export const validateInteger = (value: string, max = maxUint256) => {
   if (value.trim() !== value || !/^\d+$/.test(value)) {

@@ -72,6 +72,33 @@ export const FACTORIES = defineFactories({
       [CHAINS.Mainnet]: '0xDeC8507CdFb624Ce3281f9304Fbb80f9D2b6eE7b',
     },
   },
+  LidoLendExitBookActions: {
+    startable: true,
+    abi: abi.lidoLendExitBookActionsAbi,
+    displayName: 'Exit Book Actions',
+    tags: ['Lido Lend', 'Exit Book'],
+    // Order mirrors the `Action` enum in LidoLendExitBookActions.sol.
+    actionTitles: [
+      'Update Morpho exit book markets',
+      'Update ERC-4626 exit book vaults',
+    ],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x823Bcc60FB1f545DEF7Ac4094e5894495B00EAB4',
+    },
+  },
+  LidoLendRiskStewardActions: {
+    startable: true,
+    abi: abi.lidoLendRiskStewardActionsAbi,
+    displayName: 'Risk Steward Actions',
+    tags: ['Lido Lend', 'Risk Steward'],
+    // Order mirrors the `Action` enum in LidoLendRiskStewardActions.sol.
+    actionTitles: ['Add risk steward', 'Remove risk steward'],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x90b958366aDbdFE13dB1dAAFdC9B5F9F83D5C7BB',
+    },
+  },
   LidoLendActivateMarket: {
     startable: true,
     abi: abi.lidoLendActivateMarketAbi,
@@ -80,6 +107,16 @@ export const FACTORIES = defineFactories({
     // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
       [CHAINS.Mainnet]: '0xfDA856f1DDD1d9ECb891a7D09DFF686A5b0a7642',
+    },
+  },
+  LidoLendApplyIrmConfig: {
+    startable: true,
+    abi: abi.lidoLendApplyIrmConfigAbi,
+    displayName: 'Apply IRM config',
+    tags: ['Lido Lend'],
+    // TODO: replace with real addresses once deployed. Local anvil fork only.
+    addresses: {
+      [CHAINS.Mainnet]: '0x5DDa1C0C11462Cc84C1d9c8A6B93808c902dceBa',
     },
   },
 } as const);

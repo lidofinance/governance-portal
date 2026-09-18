@@ -14,9 +14,9 @@ import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import { CheckboxHookForm } from 'shared/hook-form/checkbox-hook-form';
 import { useIsTrustedCaller } from '@easy-track/hooks/use-is-trusted-caller';
-import { validateAddress } from 'utils/validate-address';
 import { MAX_FEE, WAD } from '@easy-track/lido-lend/constants';
 import {
+  DEFAULT_ADDRESS_RULES,
   parsePercentInput,
   validateFeePercent,
   validatePercentValue,
@@ -42,11 +42,6 @@ export type FormData = {
   pauserCommittee: Address;
   preseedVault: Address;
   fee: string;
-};
-
-const ADDRESS_RULES = {
-  required: 'Field is required',
-  validate: (value: string) => validateAddress(value) ?? true,
 };
 
 export const encodeActivateMarketCallData = ({
@@ -174,7 +169,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.loanToken}
             label="Loan token"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -182,7 +177,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.collateralToken}
             label="Collateral token"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -190,7 +185,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.oracle}
             label="Oracle"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -198,7 +193,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.irmConfig}
             label="IRM config"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -206,7 +201,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.controller}
             label="Market controller"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -214,7 +209,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.steward}
             label="Risk steward"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -222,7 +217,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.pauserCommittee}
             label="Pauser committee"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 
@@ -230,7 +225,7 @@ export const formParts = createMotionFormPart({
           <InputHookForm
             fieldName={fieldNames.preseedVault}
             label="Preseed vault (ERC4626)"
-            rules={ADDRESS_RULES}
+            rules={DEFAULT_ADDRESS_RULES}
           />
         </Fieldset>
 

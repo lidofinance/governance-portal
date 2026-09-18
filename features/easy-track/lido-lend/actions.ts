@@ -27,3 +27,17 @@ export enum LidoLendCircuitBreakerAction {
   SetPauseDuration = 1,
   SetHeartbeatInterval = 2,
 }
+
+// IDs mirror the Action enum in LidoLendExitBookActions.sol.
+// They are part of the calldata ABI and must not be reordered.
+export enum LidoLendExitBookAction {
+  SetMorphoExitBookAllowed = 0,
+  SetErc4626ExitBookAllowed = 1,
+}
+
+// IDs mirror the Action enum in LidoLendRiskStewardActions.sol.
+// They are part of the calldata ABI and must not be reordered.
+export enum LidoLendRiskStewardAction {
+  AddRiskSteward = 0,
+  RemoveRiskSteward = 1,
+}
