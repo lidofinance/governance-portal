@@ -11,6 +11,7 @@ import {
   validateLidoLendExitBookActions,
   validateLidoLendGuardianActions,
   validateLidoLendMarketManagerActions,
+  validateLidoLendRiskStewardActions,
 } from '@easy-track/utils/validate-lido-lend';
 import { Address, PublicClient } from 'viem';
 
@@ -49,6 +50,7 @@ const EXTRA_VALIDATION_MAP: {
   [MotionType.LidoLendCircuitBreakerActions]:
     validateLidoLendCircuitBreakerActions,
   [MotionType.LidoLendExitBookActions]: validateLidoLendExitBookActions,
+  [MotionType.LidoLendRiskStewardActions]: validateLidoLendRiskStewardActions,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

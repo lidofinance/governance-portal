@@ -86,6 +86,7 @@ export * from './LidoLendCircuitBreakerActions';
 export * from './LidoLendExitBookActions';
 export * from './LidoLendGuardianActions';
 export * from './LidoLendMarketManagerActions';
+export * from './LidoLendRiskStewardActions';
 export * from './LidoLocator';
 export * from './LidoV3Template';
 export * from './LimitChecker';

@@ -16,6 +16,7 @@ import {
   lidoLendExitBookActionsAbi,
   lidoLendGuardianActionsAbi,
   lidoLendMarketManagerActionsAbi,
+  lidoLendRiskStewardActionsAbi,
 } from 'abi/generated';
 import { MotionType } from '@easy-track/motion-types';
 import {
@@ -38,6 +39,10 @@ import {
   encodeExitBookActionsCallData,
   type FormData as ExitBookActionsFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-exit-book-actions';
+import {
+  encodeRiskStewardActionsCallData,
+  type FormData as RiskStewardActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-risk-steward-actions';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -97,6 +102,9 @@ const REVERT_REASONS: Record<string, string> = {
     'Heartbeat interval is outside the range the circuit breaker allows',
   EMPTY_MARKETS_LIST: 'At least one market is required',
   EMPTY_VAULTS: 'At least one vault is required',
+  ZERO_STEWARD: 'Risk steward is the zero address',
+  STEWARD_ALREADY_ADDED: 'This account is already a risk steward of the market',
+  STEWARD_NOT_FOUND: 'This account is not a risk steward of the market',
 };
 
 // The Lido Lend factories run every check inside `createEVMScript`, a view
@@ -207,5 +215,16 @@ export const validateLidoLendExitBookActions = (
     lidoLendExitBookActionsAbi,
     MotionType.LidoLendExitBookActions,
     () => encodeExitBookActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendRiskStewardActions = (
+  formData: RiskStewardActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendRiskStewardActionsAbi,
+    MotionType.LidoLendRiskStewardActions,
+    () => encodeRiskStewardActionsCallData(formData),
     chainArgs,
   );

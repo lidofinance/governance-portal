@@ -44,6 +44,7 @@ import * as StartNewLidoLendMarketManagerActions from './start-new-lido-lend-mar
 import * as StartNewLidoLendGuardianActions from './start-new-lido-lend-guardian-actions';
 import * as StartNewLidoLendCircuitBreakerActions from './start-new-lido-lend-circuit-breaker-actions';
 import * as StartNewLidoLendExitBookActions from './start-new-lido-lend-exit-book-actions';
+import * as StartNewLidoLendRiskStewardActions from './start-new-lido-lend-risk-steward-actions';
 import * as StartNewLidoLendActivateMarket from './start-new-lido-lend-activate-market';
 
 export const formParts = {
@@ -242,6 +243,9 @@ export const formParts = {
 
   [MotionTypeForms.LidoLendExitBookActions]:
     StartNewLidoLendExitBookActions.formParts,
+
+  [MotionTypeForms.LidoLendRiskStewardActions]:
+    StartNewLidoLendRiskStewardActions.formParts,
 
   [MotionTypeForms.LidoLendActivateMarket]:
     StartNewLidoLendActivateMarket.formParts,
