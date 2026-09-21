@@ -32,9 +32,8 @@ export const FACTORIES = defineFactories({
       'Unfreeze markets',
       'Set market fee',
     ],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0x400c07eACb636ecD4D98A255a9C385a5EAeF7679',
+      [CHAINS.Hoodi]: '0x915570870A6e9D141BF25ab155684e7fa2843356',
     },
   },
   LidoLendGuardianActions: {
@@ -51,9 +50,8 @@ export const FACTORIES = defineFactories({
       'Set suspect window',
       'Unban accounts',
     ],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0xe96c1712c88d6289Fc1A9C2db0845f482b52347C',
+      [CHAINS.Hoodi]: '0x8df659bC546c1FED3eB761b14922098c0AD3Ad5B',
     },
   },
   LidoLendCircuitBreakerActions: {
@@ -67,9 +65,8 @@ export const FACTORIES = defineFactories({
       'Set pause duration',
       'Set heartbeat interval',
     ],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0xDeC8507CdFb624Ce3281f9304Fbb80f9D2b6eE7b',
+      [CHAINS.Hoodi]: '0x812Ea1494d53d8D1ba479c4c1D88c9d680ea88C5',
     },
   },
   LidoLendExitBookActions: {
@@ -82,9 +79,8 @@ export const FACTORIES = defineFactories({
       'Update Morpho exit book markets',
       'Update ERC-4626 exit book vaults',
     ],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0x823Bcc60FB1f545DEF7Ac4094e5894495B00EAB4',
+      [CHAINS.Hoodi]: '0xC520f27acEF637B4F07Cce4a2B18c643F27f4D14',
     },
   },
   LidoLendRiskStewardActions: {
@@ -94,9 +90,8 @@ export const FACTORIES = defineFactories({
     tags: ['Lido Lend', 'Risk Steward'],
     // Order mirrors the `Action` enum in LidoLendRiskStewardActions.sol.
     actionTitles: ['Add risk steward', 'Remove risk steward'],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0x90b958366aDbdFE13dB1dAAFdC9B5F9F83D5C7BB',
+      [CHAINS.Hoodi]: '0xeF584E7fBbE0fCe7463dC00c063462973e5cbDa4',
     },
   },
   LidoLendActivateMarket: {
@@ -104,9 +99,8 @@ export const FACTORIES = defineFactories({
     abi: abi.lidoLendActivateMarketAbi,
     displayName: 'Activate market',
     tags: ['Lido Lend'],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0xfDA856f1DDD1d9ECb891a7D09DFF686A5b0a7642',
+      [CHAINS.Hoodi]: '0xC4F75E3Da78230Ff9235A2E5Cf6F1962C56A4C69',
     },
   },
   LidoLendApplyIrmConfig: {
@@ -114,9 +108,8 @@ export const FACTORIES = defineFactories({
     abi: abi.lidoLendApplyIrmConfigAbi,
     displayName: 'Apply IRM config',
     tags: ['Lido Lend'],
-    // TODO: replace with real addresses once deployed. Local anvil fork only.
     addresses: {
-      [CHAINS.Mainnet]: '0x5DDa1C0C11462Cc84C1d9c8A6B93808c902dceBa',
+      [CHAINS.Hoodi]: '0xca22a45A392d201EaaE540Fb12cA360Db9d847B2',
     },
   },
 } as const);
