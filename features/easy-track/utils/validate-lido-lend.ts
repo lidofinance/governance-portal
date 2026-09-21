@@ -12,7 +12,12 @@ import {
 import { readContract } from 'viem/actions';
 import {
   lidoLendActivateMarketAbi,
+  lidoLendApplyIrmConfigAbi,
+  lidoLendCircuitBreakerActionsAbi,
+  lidoLendExitBookActionsAbi,
+  lidoLendGuardianActionsAbi,
   lidoLendMarketManagerActionsAbi,
+  lidoLendRiskStewardActionsAbi,
 } from 'abi/generated';
 import { MotionType } from '@easy-track/motion-types';
 import {
@@ -23,6 +28,26 @@ import {
   encodeManagerActionsCallData,
   type FormData as ManagerActionsFormData,
 } from '@easy-track/start-motion/parts/start-new-lido-lend-market-manager-actions';
+import {
+  encodeGuardianActionsCallData,
+  type FormData as GuardianActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-guardian-actions';
+import {
+  encodeCircuitBreakerActionsCallData,
+  type FormData as CircuitBreakerActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-circuit-breaker-actions';
+import {
+  encodeExitBookActionsCallData,
+  type FormData as ExitBookActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-exit-book-actions';
+import {
+  encodeRiskStewardActionsCallData,
+  type FormData as RiskStewardActionsFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-risk-steward-actions';
+import {
+  encodeApplyIrmConfigCallData,
+  type FormData as ApplyIrmConfigFormData,
+} from '@easy-track/start-motion/parts/start-new-lido-lend-apply-irm-config';
 import { getScriptFactoryByMotionType } from './get-motion-type';
 
 type ChainArgs = {
@@ -63,6 +88,33 @@ const REVERT_REASONS: Record<string, string> = {
   INVALID_MIN_DEPOSIT_AMOUNT:
     'Min deposit amount must not exceed min activation amount',
   SETTLEMENT_CONFIG_OUT_OF_RANGE: 'Settlement config values are out of range',
+  GUARDIAN_ALREADY_ADDED: 'This account is already a guardian of the market',
+  GUARDIAN_NOT_FOUND: 'This account is not a guardian of the market',
+  ACCOUNT_IS_DELEGATE:
+    'This account is already a delegate of another guardian on the market',
+  MAX_GUARDIANS_REACHED: 'The market already has the maximum guardian count',
+  INVALID_QUORUM:
+    'Quorum must be non-zero and no greater than the resulting guardian count',
+  SAME_QUORUM: 'The market already has this guardians quorum',
+  SAME_SUSPECT_WINDOW: 'The market already has this suspect window',
+  SUSPECT_WINDOW_TOO_HIGH:
+    'Suspect window is above the maximum the market allows',
+  CIRCUIT_BREAKER_NOT_PAUSER:
+    'The circuit breaker does not hold the PAUSER_ROLE on this market',
+  PAUSE_DURATION_OUT_OF_RANGE:
+    'Pause duration is outside the range the circuit breaker allows',
+  HEARTBEAT_INTERVAL_OUT_OF_RANGE:
+    'Heartbeat interval is outside the range the circuit breaker allows',
+  EMPTY_MARKETS_LIST: 'At least one market is required',
+  EMPTY_VAULTS: 'At least one vault is required',
+  ZERO_STEWARD: 'Risk steward is the zero address',
+  STEWARD_ALREADY_ADDED: 'This account is already a risk steward of the market',
+  STEWARD_NOT_FOUND: 'This account is not a risk steward of the market',
+  IRM_NOT_ROUTER:
+    'This market is not routed through the IrmRouter, so its IRM config cannot be changed',
+  IRM_NOT_ACTIVE:
+    'The market is not currently using the configurable Adaptive Curve IRM',
+  MARKET_PAUSED: 'The market is paused',
 };
 
 // The Lido Lend factories run every check inside `createEVMScript`, a view
@@ -140,5 +192,60 @@ export const validateLidoLendMarketManagerActions = (
     lidoLendMarketManagerActionsAbi,
     MotionType.LidoLendMarketManagerActions,
     () => encodeManagerActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendGuardianActions = (
+  formData: GuardianActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendGuardianActionsAbi,
+    MotionType.LidoLendGuardianActions,
+    () => encodeGuardianActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendCircuitBreakerActions = (
+  formData: CircuitBreakerActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendCircuitBreakerActionsAbi,
+    MotionType.LidoLendCircuitBreakerActions,
+    () => encodeCircuitBreakerActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendExitBookActions = (
+  formData: ExitBookActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendExitBookActionsAbi,
+    MotionType.LidoLendExitBookActions,
+    () => encodeExitBookActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendRiskStewardActions = (
+  formData: RiskStewardActionsFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendRiskStewardActionsAbi,
+    MotionType.LidoLendRiskStewardActions,
+    () => encodeRiskStewardActionsCallData(formData),
+    chainArgs,
+  );
+
+export const validateLidoLendApplyIrmConfig = (
+  formData: ApplyIrmConfigFormData,
+  chainArgs: ChainArgs,
+) =>
+  dryRunCreateEvmScript(
+    lidoLendApplyIrmConfigAbi,
+    MotionType.LidoLendApplyIrmConfig,
+    () => encodeApplyIrmConfigCallData(formData),
     chainArgs,
   );

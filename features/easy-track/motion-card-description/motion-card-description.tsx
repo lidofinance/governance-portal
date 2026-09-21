@@ -63,7 +63,12 @@ import { CreateOrUpdateOperatorGroup } from './motion-descriptions/create-or-upd
 import { UpdateStakingModuleShareLimits } from './motion-descriptions/update-staking-module-share-limits';
 import { SetDepositsReserveTarget } from './motion-descriptions/set-deposits-reserve-target';
 import { LidoLendMarketManagerActions } from './motion-descriptions/lido-lend-market-manager-actions';
+import { LidoLendGuardianActions } from './motion-descriptions/lido-lend-guardian-actions';
+import { LidoLendCircuitBreakerActions } from './motion-descriptions/lido-lend-circuit-breaker-actions';
+import { LidoLendExitBookActions } from './motion-descriptions/lido-lend-exit-book-actions';
+import { LidoLendRiskStewardActions } from './motion-descriptions/lido-lend-risk-steward-actions';
 import { LidoLendActivateMarket } from './motion-descriptions/lido-lend-activate-market';
+import { LidoLendApplyIrmConfig } from './motion-descriptions/lido-lend-apply-irm-config';
 import { Abi } from 'viem';
 import { MotionDescriptionProps } from './types';
 
@@ -212,7 +217,17 @@ const MOTION_DESCRIPTIONS: Record<
 
   [MotionType.LidoLendMarketManagerActions]: LidoLendMarketManagerActions,
 
+  [MotionType.LidoLendGuardianActions]: LidoLendGuardianActions,
+
+  [MotionType.LidoLendCircuitBreakerActions]: LidoLendCircuitBreakerActions,
+
+  [MotionType.LidoLendExitBookActions]: LidoLendExitBookActions,
+
+  [MotionType.LidoLendRiskStewardActions]: LidoLendRiskStewardActions,
+
   [MotionType.LidoLendActivateMarket]: LidoLendActivateMarket,
+
+  [MotionType.LidoLendApplyIrmConfig]: LidoLendApplyIrmConfig,
 };
 
 type Props = {
