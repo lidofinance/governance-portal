@@ -408,5 +408,25 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "Omnibus: \n1) call proxy__upgradeTo(0xa519Be1BBfd95445cEdFea56C12AB0B28330CC2F) at 0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
+  },
+  "82": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the EDF/DSM v5 upgrade to Dual Governance;\n 2. Add SetDepositsReserveTarget factory 0x68009122a394504E8fD7fee58F92Cd73c6A60717 to Easy Track with the permission to call Lido.setDepositsReserveTarget(uint256).\nlidovoteipfs://bafkreibhmdbfrshklwnjvubqn3ff5jgtsxmufbvmvi2fjofhc337fo5i4a"
+  },
+  "83": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the EDF/DSM v5 upgrade to Dual Governance;\n 2. Add SetDepositsReserveTarget factory 0x68009122a394504E8fD7fee58F92Cd73c6A60717 to Easy Track with the permission to call Lido.setDepositsReserveTarget(uint256).\nlidovoteipfs://bafkreibhmdbfrshklwnjvubqn3ff5jgtsxmufbvmvi2fjofhc337fo5i4a"
+  },
+  "84": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit a Dual Governance proposal to activate CSM 0x02;\n 2. Add ReportWithdrawalsForSlashedValidators for CSM 0x02 to Easy Track;\n 3. Add SettleGeneralDelayedPenalty for CSM 0x02 to Easy Track;\n 4. Add UpdateStakingModuleShareLimits for CSM 0x02 to Easy Track.\nlidovoteipfs://bafkreibyrua66ib3nigsbmpiz6i4gklift4yl5agalwn2ecrat2yu35x4a"
+  },
+  "85": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Add Lend EasyTrack factories"
   }
 }
