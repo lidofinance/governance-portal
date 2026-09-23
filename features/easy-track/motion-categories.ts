@@ -8,6 +8,7 @@ export type MotionCategory =
   | 'Treasury'
   | 'stVaults'
   | 'MEV Boost'
+  | 'Lido Lend'
   | 'Deprecated'
   | 'Unknown';
 
@@ -24,7 +25,12 @@ export type MotionSubcategory =
   | 'LOL'
   | 'Dev'
   | 'Ops'
-  | 'Curated v2';
+  | 'Curated v2'
+  | 'Market Manager'
+  | 'Guardian'
+  | 'Circuit Breaker'
+  | 'Exit Book'
+  | 'Risk Steward';
 
 export type MotionTags = readonly [MotionCategory, ...MotionSubcategory[]];
 
@@ -161,6 +167,7 @@ export const MOTION_CATEGORY_VARIANT_MAP: Record<MotionCategory, BadgeVariant> =
     Treasury: 'deepGreen',
     stVaults: 'deepYellow',
     'MEV Boost': 'pink',
+    'Lido Lend': 'indigo',
     Deprecated: 'purple',
     Unknown: 'purple',
   };
@@ -172,4 +179,5 @@ export const FILTER_CATEGORIES: readonly FilterCategory[] = [
   'Treasury',
   'MEV Boost',
   'stVaults',
+  'Lido Lend',
 ];

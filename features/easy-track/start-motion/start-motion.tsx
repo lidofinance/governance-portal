@@ -11,11 +11,13 @@ import { MotionTypeOption, MotionTypeSelectSkeleton, RetryHint } from './style';
 import { useCallback, useEffect, useState } from 'react';
 import { getScriptFactoryByMotionType } from '../utils/get-motion-type';
 import { useLidoSDK } from 'providers/lido-sdk';
+import { useRpcUrl } from 'config/rpc';
 import { validateMotionExtraData } from '../utils/on-submit-validation';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { EasyTrack } from 'shared/blockchain/contracts';
 import { Hex } from 'viem';
+import { useAccount } from 'wagmi';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTxModalMotion } from '@easy-track/write-actions/create-motion/modal-stages';
 import { useTxConfirmation } from 'shared/hooks/use-tx-conformation';
@@ -43,6 +45,8 @@ export const StartMotion = ({ onComplete }: Props) => {
   const easyTrackAddress = useContractAddress(EasyTrack);
 
   const { chainId, rpcProvider } = useLidoSDK();
+  const { address } = useAccount();
+  const rpcUrl = useRpcUrl();
   const { txModalStages } = useTxModalMotion();
   const waitForTx = useTxConfirmation();
   const { data: isMultisig } = useIsContract();
@@ -89,7 +93,7 @@ export const StartMotion = ({ onComplete }: Props) => {
         const extraValidationError = await validateMotionExtraData(
           validMotionType,
           formData[validMotionType],
-          { chainId, provider: rpcProvider },
+          { chainId, provider: rpcProvider, address, rpcUrl },
         );
 
         if (extraValidationError) {
@@ -141,7 +145,9 @@ export const StartMotion = ({ onComplete }: Props) => {
       }
     },
     [
+      address,
       chainId,
+      rpcUrl,
       contractEasyTrack,
       easyTrackAddress,
       formMethods,
