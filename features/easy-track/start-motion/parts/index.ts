@@ -40,6 +40,13 @@ import * as StartNewAllowConsolidationPair from './start-new-allow-consolidation
 import * as StartNewCreateOrUpdateOperatorGroup from './start-new-create-or-update-operator-group';
 import * as StartNewUpdateStakingModuleShareLimits from './start-new-update-staking-module-share-limits';
 import * as StartNewSetDepositsReserveTarget from './start-new-set-deposits-reserve-target';
+import * as StartNewLidoLendMarketManagerActions from './start-new-lido-lend-market-manager-actions';
+import * as StartNewLidoLendGuardianActions from './start-new-lido-lend-guardian-actions';
+import * as StartNewLidoLendCircuitBreakerActions from './start-new-lido-lend-circuit-breaker-actions';
+import * as StartNewLidoLendExitBookActions from './start-new-lido-lend-exit-book-actions';
+import * as StartNewLidoLendRiskStewardActions from './start-new-lido-lend-risk-steward-actions';
+import * as StartNewLidoLendActivateMarket from './start-new-lido-lend-activate-market';
+import * as StartNewLidoLendApplyIrmConfig from './start-new-lido-lend-apply-irm-config';
 
 export const formParts = {
   [MotionTypeForms.AllowedRecipientTopUpTrpLdo]:
@@ -225,6 +232,27 @@ export const formParts = {
 
   [MotionTypeForms.SetDepositsReserveTarget]:
     StartNewSetDepositsReserveTarget.formParts,
+
+  [MotionTypeForms.LidoLendMarketManagerActions]:
+    StartNewLidoLendMarketManagerActions.formParts,
+
+  [MotionTypeForms.LidoLendGuardianActions]:
+    StartNewLidoLendGuardianActions.formParts,
+
+  [MotionTypeForms.LidoLendCircuitBreakerActions]:
+    StartNewLidoLendCircuitBreakerActions.formParts,
+
+  [MotionTypeForms.LidoLendExitBookActions]:
+    StartNewLidoLendExitBookActions.formParts,
+
+  [MotionTypeForms.LidoLendRiskStewardActions]:
+    StartNewLidoLendRiskStewardActions.formParts,
+
+  [MotionTypeForms.LidoLendActivateMarket]:
+    StartNewLidoLendActivateMarket.formParts,
+
+  [MotionTypeForms.LidoLendApplyIrmConfig]:
+    StartNewLidoLendApplyIrmConfig.formParts,
 } as const;
 
 // Every startable factory in FACTORIES must have a form part here,

@@ -7,6 +7,7 @@ const FILTER_CATEGORY_FILL_COLOR_MAP: Record<FilterCategory, string> = {
   Treasury: '#087c72',
   stVaults: '#a85600',
   'MEV Boost': '#b4238a',
+  'Lido Lend': '#3538CD',
 };
 
 export const Wrap = styled.div`
