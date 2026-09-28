@@ -8,7 +8,6 @@ import {
 } from './style';
 import { PublicDelegateListItem } from './public-delegate-list-item';
 import { useAccount } from 'wagmi';
-import { AragonSmallLogo } from 'shared/components/icons';
 import { useProcessedPublicDelegatesList } from '@vote/hooks/use-processed-public-delegates-list';
 import { useDelegateFromPublicList } from '@vote/providers/delegate-form-public-list-context';
 
@@ -39,9 +38,7 @@ export const PublicDelegateList = () => {
               Delegate
             </Text>
             <Tooltip placement="top" title="Voting Power">
-              <HeaderTitleWithIcon>
-                VP <AragonSmallLogo />
-              </HeaderTitleWithIcon>
+              <HeaderTitleWithIcon>VP</HeaderTitleWithIcon>
             </Tooltip>
             <Tooltip
               placement="top"

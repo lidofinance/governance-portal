@@ -25,10 +25,7 @@ export type DelegationFormNetworkData = {
 
 export type DelegationType = 'Aragon' | 'Snapshot';
 
-export type DelegationFormMode = 'simple' | DelegationType;
-
 export type DelegationFormContextValue = DelegationFormNetworkData & {
-  mode: DelegationFormMode;
   onRevoke: (type: DelegationType) => Promise<boolean>;
   register: UseFormRegister<DelegationFormInput>;
   watch: UseFormWatch<DelegationFormInput>;
@@ -42,19 +39,15 @@ export type PublicDelegate = {
   twitter: string | null;
 };
 
-export type DelegationFormAsyncValidationContext = {
-  mode: DelegationFormMode;
-} & (
+export type DelegationFormAsyncValidationContext =
   | {
       isWalletActive: true;
       walletAddress: string;
       aragonDelegateAddress: string | null | undefined;
-      snapshotDelegateAddress: string | null | undefined;
     }
   | {
       isWalletActive: false;
-    }
-);
+    };
 
 export type DelegationFormValidationContext = {
   asyncContext: Promise<DelegationFormAsyncValidationContext>;
