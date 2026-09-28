@@ -78,8 +78,12 @@ export const CompositePostRebaseBeaconReceiver: ChainAddressMap = {
 };
 
 export const DepositSecurityModule: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xffa96d84def2ea035c7ab153d8b991128e3d72fd',
+  [CHAINS.Mainnet]: '0x39BB5d491e98A44D1bfe8047A737a81E296a63E0',
   [CHAINS.Hoodi]: '0x2F0303F20E0795E6CCd17BD5efE791A586f28E03',
+};
+
+export const DepositSecurityModuleLegacy: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xF573E9E3de1f86B085417ab294f56E7920B4e9Be',
 };
 
 export const WithdrawalVault: ChainAddressMap = {
@@ -102,7 +106,7 @@ export const LidoLocator: ChainAddressMap = {
 };
 
 export const OracleReportSanityChecker: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xf1647c86E6D7959f638DD9CE1d90e2F3C9503129',
+  [CHAINS.Mainnet]: '0x147f8d3cf3004FAf9Bf94E88B54b6C06De507be9',
   [CHAINS.Hoodi]: '0x26AED10459e1096d242ABf251Ff55f8DEaf52348',
 };
 
@@ -205,8 +209,12 @@ export const CSMRegistry: ChainAddressMap = {
 };
 
 export const CSVerifier: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xdC5FE1782B6943f318E05230d688713a560063DC',
+  [CHAINS.Mainnet]: '0xfce7aB839e55de77730716D05b3553e45ab3A5Ba',
   [CHAINS.Hoodi]: '0xB6bafBD970a4537077dE59cebE33081d794513d6',
+};
+
+export const CSVerifierLegacy: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xdC5FE1782B6943f318E05230d688713a560063DC',
 };
 
 export const SandboxNodeOperatorsRegistry: ChainAddressMap = {
@@ -517,7 +525,7 @@ export const DualGovernanceUpgradeStateVerifier: ChainAddressMap = {
 };
 
 export const OracleReportSanityCheckerLegacy: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0x6232397ebac4f5772e53285b26c47914e9461e75',
+  [CHAINS.Mainnet]: '0xf1647c86E6D7959f638DD9CE1d90e2F3C9503129',
 };
 
 export const ZkSyncL1ERC20Bridge: ChainAddressMap = {
@@ -539,6 +547,10 @@ export const ConsolidationMigrator: ChainAddressMap = {
 };
 
 export const CSEjector: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x610B517D380f287c239C93F8eF6FfBd567AA4bA5',
+};
+
+export const CSEjectorLegacy: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xc72b58aa02E0e98cF8A4a0E9Dce75e763800802C',
 };
 
