@@ -1,7 +1,7 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { ChainAddressMap } from './types';
 
-export const DaoToken: ChainAddressMap = {
+export const LDOToken: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
   [CHAINS.Hoodi]: {
     actual: '0xEf2573966D009CcEA0Fc74451dee2193564198dc',
@@ -19,7 +19,7 @@ export const AragonFinance: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x254Ae22bEEba64127F0e59fe8593082F3cd13f6b',
 };
 
-export const NodeOperatorsRegistry: ChainAddressMap = {
+export const CuratedV1NodeOperatorsRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5',
   [CHAINS.Hoodi]: '0x5cDbE1590c083b5A2A64427fAA63A7cfDB91FbB5',
 };
@@ -158,7 +158,7 @@ export const BurnerLegacy: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xD15a672319Cf0352560eE76d9e89eAB0889046D3',
 };
 
-export const SimpleDVT: ChainAddressMap = {
+export const SimpleDVTNodeOperatorsRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xaE7B191A31f627b4eB1d4DaC64eaB9976995b433',
   [CHAINS.Hoodi]: '0x0B5236BECA68004DB89434462DfC3BB074d2c830',
 };
@@ -203,7 +203,7 @@ export const CSHashConsensus: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x54f74a10e4397dDeF85C4854d9dfcA129D72C637',
 };
 
-export const CSMRegistry: ChainAddressMap = {
+export const CSModule: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F',
   [CHAINS.Hoodi]: '0x79CEf36D84743222f37765204Bec41E92a93E59d',
 };
@@ -246,7 +246,7 @@ export const WithdrawalQueue: ChainAddressMap = {
   },
 };
 
-export const Voting: ChainAddressMap = {
+export const AragonVoting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x2e59A20f205bB85a89C53f1936454680651E618e',
   [CHAINS.Hoodi]: {
     actual: '0x49B3512c44891bef83F8967d075121Bd1b07a01B',
@@ -333,7 +333,7 @@ export const DualGovernanceTimeConstraints: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x2a30F5aC03187674553024296bed35Aa49749DDa',
 };
 
-export const DualGovernanceEscrow: ChainAddressMap = {
+export const VetoSignalingEscrow: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x165813A31446a98c84E20Dda8C101BB3C8228e1c',
   [CHAINS.Hoodi]: '0x5e2EE9DCBE8C9433F22Dd3c5EFDe0Af6DC293405',
 };
@@ -352,7 +352,7 @@ export const AllowedTokensRegistry: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x40Db7E8047C487bD8359289272c717eA3C34D1D3',
 };
 
-export const InsuranceFund: ChainAddressMap = {
+export const ReserveFund: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x8B3f33234ABD88493c0Cd28De33D583B70beDe35',
 };
 
@@ -445,7 +445,7 @@ export const LOLStablecoinsAllowedRecipientsRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x8d8b35cA51e7808098afF4918C21Ce428c943F89',
 };
 
-export const CSMVettedGate: ChainAddressMap = {
+export const CSMVettedCommunityStakersGate: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xB314D4A76C457c93150d308787939063F4Cc67E0',
   [CHAINS.Hoodi]: '0x10a254E724fe2b7f305F76f3F116a3969c53845f',
 };
@@ -474,11 +474,6 @@ export const USDC: ChainAddressMap = {
 export const USDT: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
   [CHAINS.Hoodi]: '0x64f1904d1b419c6889BDf3238e31A138E258eA68',
-};
-
-export const SDVTRegistry: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xaE7B191A31f627b4eB1d4DaC64eaB9976995b433',
-  [CHAINS.Hoodi]: '0x0B5236BECA68004DB89434462DfC3BB074d2c830',
 };
 
 export const SandboxAllowedRecipientsRegistry: ChainAddressMap = {
@@ -537,7 +532,7 @@ export const LazyOracle: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xf41491c79c30e8f4862d3f4a5b790171adb8e04a',
 };
 
-export const MetaRegistry: ChainAddressMap = {
+export const CuratedMetaRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xA64b339eebD3dC3De848298B6a140955932901d8',
   [CHAINS.Hoodi]: '0x857289cCBFBc4C134Cc312022a104CD9b38d8AAE',
 };
@@ -563,19 +558,19 @@ export const SRUpgradeTemplate: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xd92b6303ba39297cb69a3a17a88b47586a6af14c',
 };
 
-export const Accounting: ChainAddressMap = {
+export const CoreAccounting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x23ed611be0e1a820978875c0122f92260804cddf',
 };
 
-export const ParametersRegistry: ChainAddressMap = {
+export const CSMParametersRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x9d28ad303c90df524ba960d7a2dac56dcc31e428',
 };
 
-export const ExitPenalties: ChainAddressMap = {
+export const CSMExitPenalties: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x06cd61045f958A209a0f8D746e103eCc625f4193',
 };
 
-export const ValidatorStrikes: ChainAddressMap = {
+export const CSMValidatorStrikes: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xaa328816027F2D32B9F56d190BC9Fa4A5C07637f',
 };
 
@@ -587,7 +582,7 @@ export const CuratedModule: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1',
 };
 
-export const FeeOracleHashConsensus: ChainAddressMap = {
+export const CuratedHashConsensus: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x902D64c93F6595339aA46105627a085591051aFb',
 };
 
