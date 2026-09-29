@@ -14,37 +14,31 @@ export const useDelegateAction = ({ onConfirm, onRetry }: ActionArgs) => {
   const sendDelegateTx = useDelegateTxSender();
   const waitForTx = useTxConfirmation();
 
-  const proceedWithDelegation = useCallback(
-    async (args: DelegationFormInput) => {
-      txModalStages.sign();
-
-      const txHash = await sendDelegateTx(args);
-
-      if (isMultisig) {
-        txModalStages.successMultisig();
-        return;
-      }
-
-      txModalStages.pending(txHash);
-
-      const response = await waitForTx(txHash);
-
-      if (response.status === 'reverted') {
-        txModalStages.failed(
-          new Error('Failed to delegate, please, try again.'),
-          onRetry,
-        );
-      }
-    },
-    [txModalStages, isMultisig, sendDelegateTx, waitForTx, onRetry],
-  );
-
   return useCallback(
     async ({ delegateAddress }: DelegationFormInput) => {
       try {
         invariant(delegateAddress, 'Delegate address is required');
 
-        await proceedWithDelegation({ delegateAddress });
+        txModalStages.sign();
+
+        const txHash = await sendDelegateTx({ delegateAddress });
+
+        if (isMultisig) {
+          txModalStages.successMultisig();
+          return true;
+        }
+
+        txModalStages.pending(txHash);
+
+        const response = await waitForTx(txHash);
+
+        if (response.status === 'reverted') {
+          txModalStages.failed(
+            new Error('Failed to delegate, please, try again.'),
+            onRetry,
+          );
+          return false;
+        }
 
         txModalStages.success();
         await onConfirm?.();
@@ -56,6 +50,6 @@ export const useDelegateAction = ({ onConfirm, onRetry }: ActionArgs) => {
         return false;
       }
     },
-    [txModalStages, onConfirm, proceedWithDelegation, onRetry],
+    [txModalStages, isMultisig, sendDelegateTx, waitForTx, onConfirm, onRetry],
   );
 };
