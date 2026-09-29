@@ -80,3 +80,19 @@ export const Version = styled(FooterLink)`
   border-radius: ${({ theme }) => theme.borderRadiusesMap.xs}px;
   background: rgba(122, 138, 160, 0.1);
 `;
+
+export const PrivacyNoticeText = styled.p`
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--footer-max-width);
+  margin: 20px auto 0;
+  padding: 0 var(--footer-desktop-padding-x);
+  text-align: center;
+  line-height: 20px;
+  color: var(--lido-color-textSecondary);
+  font-size: ${({ theme }) => theme.fontSizesMap.xxs}px;
+
+  @media ${devicesHeaderMedia.tablet} {
+    padding: 0 var(--footer-mobile-padding-y);
+  }
+`;
