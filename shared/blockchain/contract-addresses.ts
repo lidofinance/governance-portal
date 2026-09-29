@@ -83,7 +83,7 @@ export const DepositSecurityModule: ChainAddressMap = {
 };
 
 export const DepositSecurityModuleLegacy: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xF573E9E3de1f86B085417ab294f56E7920B4e9Be',
+  [CHAINS.Mainnet]: '0xffa96d84def2ea035c7ab153d8b991128e3d72fd',
 };
 
 export const WithdrawalVault: ChainAddressMap = {
@@ -520,7 +520,7 @@ export const DualGovernanceUpgradeStateVerifier: ChainAddressMap = {
 };
 
 export const OracleReportSanityCheckerLegacy: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xf1647c86E6D7959f638DD9CE1d90e2F3C9503129',
+  [CHAINS.Mainnet]: '0x6232397ebac4f5772e53285b26c47914e9461e75',
 };
 
 export const ZkSyncL1ERC20Bridge: ChainAddressMap = {
