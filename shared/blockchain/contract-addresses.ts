@@ -79,7 +79,7 @@ export const CompositePostRebaseBeaconReceiver: ChainAddressMap = {
 
 export const DepositSecurityModule: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x39BB5d491e98A44D1bfe8047A737a81E296a63E0',
-  [CHAINS.Hoodi]: '0x2F0303F20E0795E6CCd17BD5efE791A586f28E03',
+  [CHAINS.Hoodi]: '0x8E63F0aF403ffd3Cbd5dB18b4ee632314ab49B51',
 };
 
 export const DepositSecurityModuleLegacy: ChainAddressMap = {
@@ -107,7 +107,7 @@ export const LidoLocator: ChainAddressMap = {
 
 export const OracleReportSanityChecker: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x147f8d3cf3004FAf9Bf94E88B54b6C06De507be9',
-  [CHAINS.Hoodi]: '0x26AED10459e1096d242ABf251Ff55f8DEaf52348',
+  [CHAINS.Hoodi]: '0xD0261b0032A00a7449ee7fbE14d3f98702996441',
 };
 
 export const OracleDaemonConfig: ChainAddressMap = {
@@ -151,7 +151,7 @@ export const ExecutionLayerRewardsVault: ChainAddressMap = {
 
 export const Burner: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xE76c52750019b80B43E36DF30bf4060EB73F573a',
-  [CHAINS.Hoodi]: '0x4e9A9ea2F154bA34BE919CD16a4A953DCd888165',
+  [CHAINS.Hoodi]: '0xb2c99cd38a2636a6281a849C8de938B3eF4A7C3D',
 };
 
 export const BurnerLegacy: ChainAddressMap = {
@@ -210,7 +210,7 @@ export const CSModule: ChainAddressMap = {
 
 export const CSVerifier: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xfce7aB839e55de77730716D05b3553e45ab3A5Ba',
-  [CHAINS.Hoodi]: '0xB6bafBD970a4537077dE59cebE33081d794513d6',
+  [CHAINS.Hoodi]: '0xC96406b0eADdAC5708aFCa04DcCA67BAdC9642Fd',
 };
 
 export const CSVerifierLegacy: ChainAddressMap = {
@@ -292,7 +292,7 @@ export const EmergencyGovernance: ChainAddressMap = {
 
 export const TiebreakerCoreCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xf65614d73952Be91ce0aE7Dd9cFf25Ba15bEE2f5',
-  [CHAINS.Hoodi]: '0x1648dF6CeA35eA413d6bF611aFd6eB9aFE21339A',
+  [CHAINS.Hoodi]: '0x9Ce4bA766C87cC87e507307163eA54C5003A3563',
 };
 
 // DG Tiebreaker Sub Committee
@@ -335,7 +335,7 @@ export const DualGovernanceTimeConstraints: ChainAddressMap = {
 
 export const VetoSignalingEscrow: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x165813A31446a98c84E20Dda8C101BB3C8228e1c',
-  [CHAINS.Hoodi]: '0x5e2EE9DCBE8C9433F22Dd3c5EFDe0Af6DC293405',
+  [CHAINS.Hoodi]: '0x781afe6C8D768CEaA9a97f2A75714e80AE0e83B9',
 };
 
 export const DualGovernanceResealManager: ChainAddressMap = {
@@ -543,6 +543,7 @@ export const ConsolidationMigrator: ChainAddressMap = {
 
 export const CSEjector: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x610B517D380f287c239C93F8eF6FfBd567AA4bA5',
+  [CHAINS.Hoodi]: '0xCAe028378d69D54dc8bF809e6C44CF751F997b80',
 };
 
 export const CSEjectorLegacy: ChainAddressMap = {
@@ -560,6 +561,7 @@ export const SRUpgradeTemplate: ChainAddressMap = {
 
 export const CoreAccounting: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x23ed611be0e1a820978875c0122f92260804cddf',
+  [CHAINS.Hoodi]: '0x9b5b78D1C9A3238bF24662067e34c57c83E8c354',
 };
 
 export const CSMParametersRegistry: ChainAddressMap = {
@@ -592,6 +594,7 @@ export const OracleRouter: ChainAddressMap = {
 
 export const TokenRateNotifier: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xbe05d12Fd10919F1881125006523452F6aFF791b',
+  [CHAINS.Hoodi]: '0xe2d1307a8e0eb6996eE9eB6FB5949124F17EDf65',
 };
 
 export const BuybackExecutor: ChainAddressMap = {
@@ -605,4 +608,63 @@ export const BuybackAllocator: ChainAddressMap = {
 export const TopUpGateway: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x3FC2C71579D80790Aaa3fc7Be8B66ac39dC57374',
   [CHAINS.Hoodi]: '0x10DBEb3367876826d00D21718D1d893e0fbD2956',
+};
+
+export const ConsolidationGateway: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x17be979344f2c2cC806229a532D92f8742C10462',
+  [CHAINS.Hoodi]: '0xC9991Bb865d025364BCbBd99f36e85889Fb68e69',
+};
+
+export const CSMPermissionlessGate: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xb8cd8F059Ad7a5dB8CAfDe34aAb007317F7156C8',
+  [CHAINS.Hoodi]: '0xd7bD8D2A9888D1414c770B35ACF55890B15de26a',
+};
+
+export const CSMVettedDVTGate: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xa12760721A72A7199aB38059DA6690b9Cd4ed7B8',
+  [CHAINS.Hoodi]: '0x887F8512F9998045f4b5993e6eaa6BCfE5F02A94',
+};
+
+export const CuratedAccounting: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x2F91e3A8C5d6593bf4F8403fCfeCcd62dF59f6F6',
+  [CHAINS.Hoodi]: '0x7f7356D29aCd915F1934220956c3305808ceB235',
+};
+
+export const CuratedFeeOracle: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x8EeFCdbD984c30E472BcbF545783D051CB5114e5',
+  [CHAINS.Hoodi]: '0x5D2F27000C80f6f7A03015Fd49dB7FEba3fBfa83',
+};
+
+export const CuratedVerifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xC392F457960f1B13Ebaf1aa6C065479dD507E1E3',
+  [CHAINS.Hoodi]: '0x209190Ebc2Be80367a15d05e626784Eb94d6A880',
+};
+
+export const CuratedEjector: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xe181A377A2d2BDE9A83f1474BC3DB7A412de091E',
+  [CHAINS.Hoodi]: '0xfDbde2B3554B69C84e0f8d7daB68D390Ff0f4394',
+};
+
+export const LOLMultisig: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x87D93d9B2C672bf9c9642d853a8682546a5012B5',
+};
+
+export const ValidatorExitDelayVerifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xbDb567672c867DB533119C2dcD4FB9d8b44EC82f',
+  [CHAINS.Hoodi]: '0xa5F5A9360275390fF9728262a29384399f38d2f0',
+};
+
+export const VaultFactory: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x02Ca7772FF14a9F6c1a08aF385aA96bb1b34175A',
+  [CHAINS.Hoodi]: '0x7Ba269a03eeD86f2f54CB04CA3b4b7626636Df4E',
+};
+
+export const DualGovernanceResealCommittee: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xFFe21561251c49AdccFad065C94Fb4931dF49081',
+  [CHAINS.Hoodi]: '0x83BCE68B4e8b7071b2a664a26e6D3Bc17eEe3102',
+};
+
+export const DualGovernanceConfigProvider: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xa1692Af6FDfdD1030E4E9c4Bc429986FA64CB5EF',
+  [CHAINS.Hoodi]: '0x2b685e6fB288bBb7A82533BAfb679FfDF6E5bb33',
 };
