@@ -43,7 +43,7 @@ export const ABI_EXCEPTIONS = {
   EcosystemOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   LabsOpsStethAllowedRecipientsRegistry: abis.registryWithLimitsAbi,
   BurnerLegacy: abis.burnerAbi,
-  OracleReportSanityCheckerLegacy: abis.oracleReportSanityCheckerAbi,
+  OracleReportSanityCheckerLegacy: abis.oracleReportSanityCheckerV2Abi,
   DepositSecurityModuleLegacy: abis.depositSecurityModuleAbi,
   CSVerifierLegacy: abis.csVerifierAbi,
   CSEjectorLegacy: abis.csEjectorAbi,

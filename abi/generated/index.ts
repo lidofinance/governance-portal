@@ -96,6 +96,7 @@ export * from './OperatorGrid';
 export * from './OptimismL1CrossDomainMessengerProxy';
 export * from './OracleDaemonConfig';
 export * from './OracleReportSanityChecker';
+export * from './OracleReportSanityCheckerV2';
 export * from './OracleRouter';
 export * from './ParametersRegistry';
 export * from './PredepositGuarantee';
