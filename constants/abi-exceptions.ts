@@ -55,6 +55,7 @@ export const ABI_EXCEPTIONS = {
   SimpleDVTRepo: abis.repoAbi,
   DualGovernanceResealManager: abis.resealManagerAbi,
   VetoSignalingEscrow: abis.dgEscrowAbi,
+  DualGovernanceConfigProvider: abis.dgConfigProviderAbi,
   ReserveFund: abis.insuranceFundAbi,
   CSModule: abis.csmRegistryAbi,
   CoreAccounting: abis.accountingAbi,
@@ -63,6 +64,11 @@ export const ABI_EXCEPTIONS = {
   CSMValidatorStrikes: abis.validatorStrikesAbi,
   CuratedMetaRegistry: abis.metaRegistryAbi,
   CSMVettedCommunityStakersGate: abis.csmVettedGateAbi,
+  CSMVettedDVTGate: abis.csmVettedGateAbi,
+  CuratedAccounting: abis.accountingAbi,
+  CuratedFeeOracle: abis.csFeeOracleAbi,
+  CuratedVerifier: abis.csVerifierAbi,
+  CuratedEjector: abis.csEjectorAbi,
 } as const;
 
 export type AbiExceptionContractName = keyof typeof ABI_EXCEPTIONS;
