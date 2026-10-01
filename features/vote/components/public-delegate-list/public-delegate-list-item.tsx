@@ -11,7 +11,11 @@ import { Button, Text, trimAddress } from '@lidofinance/lido-ui';
 import { PublicDelegateAvatar } from '../public-delegate-avatar';
 import { AddressPop } from 'shared/components/address-pop';
 import { ExternalLink } from 'shared/components/external-link/external-link';
-import { LidoSocialIcon, XSocialIcon } from 'shared/components/icons';
+import {
+  AragonSmallLogo,
+  LidoSocialIcon,
+  XSocialIcon,
+} from 'shared/components/icons';
 
 type Props = {
   delegate: ProcessedDelegate;
@@ -54,7 +58,8 @@ export const PublicDelegateListItem = ({
         </DelegateInfo>
         <DelegateNumbersMobile>
           <HeaderTitleWithIcon data-testid="AragonVP">
-            VP {delegate.delegatedVotingPowerFormatted}
+            VP <AragonSmallLogo />
+            {delegate.delegatedVotingPowerFormatted}
           </HeaderTitleWithIcon>
           <Text size="xxs" weight={700} data-testid="delegatorsCount">
             From {delegate.delegatorsCount.toString()}

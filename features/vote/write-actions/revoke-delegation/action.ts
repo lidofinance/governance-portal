@@ -22,7 +22,10 @@ export const useRevokeDelegationAction = ({
     async (type: DelegationType) => {
       try {
         const hasApprove = await confirm({
-          title: `Revoke ${type} delegation?`,
+          title:
+            type === 'Aragon'
+              ? 'Revoke delegation?'
+              : `Revoke ${type} delegation?`,
           confirmText: 'Revoke',
           cancelText: 'Cancel',
         });
@@ -47,7 +50,9 @@ export const useRevokeDelegationAction = ({
         if (response.status === 'reverted') {
           txModalStages.failed(
             new Error(
-              `Failed to revoke delegation on ${type}, please, try again.`,
+              type === 'Aragon'
+                ? 'Failed to revoke delegation, please, try again.'
+                : `Failed to revoke delegation on ${type}, please, try again.`,
             ),
             onRetry,
           );
