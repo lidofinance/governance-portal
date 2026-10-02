@@ -3,7 +3,6 @@ import { useDappStatus } from 'shared/hooks/use-dapp-status';
 import { useAwaiter } from 'shared/hooks/use-awaiter';
 import {
   DelegationFormAsyncValidationContext,
-  DelegationFormMode,
   DelegationFormNetworkData,
   DelegationFormValidationContext,
 } from '../types';
@@ -11,17 +10,14 @@ import { useAccount } from 'wagmi';
 
 type Args = {
   networkData: DelegationFormNetworkData;
-  mode: DelegationFormMode;
 };
 
 export const useDelegationFormValidationContext = ({
   networkData,
-  mode,
 }: Args): DelegationFormValidationContext => {
   const { address: walletAddress } = useAccount();
   const { isDappActive } = useDappStatus();
-  const { aragonDelegateAddress, snapshotDelegateAddress, loading } =
-    networkData;
+  const { aragonDelegateAddress, loading } = networkData;
 
   const asyncContextValue: DelegationFormAsyncValidationContext | undefined =
     useMemo(() => {
@@ -29,9 +25,7 @@ export const useDelegationFormValidationContext = ({
         ? {
             isWalletActive: isDappActive,
             aragonDelegateAddress,
-            snapshotDelegateAddress,
             walletAddress,
-            mode,
           }
         : undefined;
     }, [
@@ -39,8 +33,6 @@ export const useDelegationFormValidationContext = ({
       walletAddress,
       loading.isDelegationInfoLoading,
       aragonDelegateAddress,
-      snapshotDelegateAddress,
-      mode,
     ]);
 
   const asyncContext = useAwaiter(asyncContextValue).awaiter;
