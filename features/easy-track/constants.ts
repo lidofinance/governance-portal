@@ -1,10 +1,10 @@
 import { MotionType } from './motion-types';
 import {
   NodeOperatorIncreaseLimit,
-  CuratedV1NodeOperatorsRegistry,
+  NodeOperatorsRegistry,
   SandboxNodeOperatorIncreaseLimit,
   SandboxNodeOperatorsRegistry,
-  SimpleDVTNodeOperatorsRegistry,
+  SDVTRegistry,
 } from 'shared/blockchain/contracts';
 import { MotionDisplayStatus } from './types';
 
@@ -35,8 +35,8 @@ export type IncreaseLimitMotionType = keyof typeof INCREASE_LIMIT_MOTION_MAP;
 export const MAX_SUBMIT_HASH_COUNT = 200;
 
 export const NODE_OPERATORS_REGISTRY_MAP = {
-  curated: CuratedV1NodeOperatorsRegistry,
-  sdvt: SimpleDVTNodeOperatorsRegistry,
+  curated: NodeOperatorsRegistry,
+  sdvt: SDVTRegistry,
   sandbox: SandboxNodeOperatorsRegistry,
 } as const;
 

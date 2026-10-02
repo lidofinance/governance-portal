@@ -22,7 +22,7 @@ import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import {
   AragonAcl,
   SDVTNodeOperatorsActivate,
-  SimpleDVTNodeOperatorsRegistry,
+  SDVTRegistry,
 } from 'shared/blockchain/contracts';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import { NodeOperatorSelectControl } from '../../motions/ui/node-operator-select-control/node-operator-select-control';
@@ -76,7 +76,7 @@ export const formParts = createMotionFormPart({
     const { data: nodeOperatorsList, isLoading: isNodeOperatorsDataLoading } =
       useNodeOperatorsList('sdvt');
 
-    const sdvtRegistry = useReadContract(SimpleDVTNodeOperatorsRegistry);
+    const sdvtRegistry = useReadContract(SDVTRegistry);
     const aragonAcl = useReadContract(AragonAcl);
 
     const deactivatedNodeOperators = nodeOperatorsList?.filter(

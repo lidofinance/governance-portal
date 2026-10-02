@@ -2,7 +2,7 @@ import { PUBLIC_DELEGATES } from '../public-delegates';
 import { PublicDelegate } from '../types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { formatToken } from 'shared/blockchain/utils';
 import { fetchDelegateData } from '../utils/fetch-delegate-data';
@@ -16,7 +16,7 @@ export type ProcessedDelegate = PublicDelegate & {
 
 export const useProcessedPublicDelegatesList = () => {
   const { chainId } = useLidoSDK();
-  const votingContract = useReadContract(AragonVoting);
+  const votingContract = useReadContract(Voting);
 
   return useQuery({
     queryKey: [

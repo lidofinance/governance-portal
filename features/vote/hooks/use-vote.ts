@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { fetchCachedVotes } from 'shared/votes/utils/fetch-cached-votes';
 import { fetchUncachedVotes } from 'shared/votes/utils/fetch-uncached-votes';
@@ -25,7 +25,7 @@ export type VoteFull = {
 export const useVote = (voteId: number, voteTime: number | undefined) => {
   const { chainId, rpcProvider } = useLidoSDK();
   const { useLocalCache } = useConfig().userConfig.savedUserConfig;
-  const votingContract = useReadContract(AragonVoting);
+  const votingContract = useReadContract(Voting);
 
   return useQuery({
     queryKey: ['vote', voteId, chainId, useLocalCache],

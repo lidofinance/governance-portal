@@ -10,7 +10,7 @@ import { aragonVotingAbi } from 'abi/generated';
 import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { useDebounce } from 'shared/hooks/use-debounce';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
 import { fetchVotesDescriptions } from 'shared/votes/utils/fetch-votes-descriptions';
@@ -24,7 +24,7 @@ export const VOTE_DASHBOARD_PAGE_SIZE = PAGE_SIZE;
 export const useVoteDashboard = () => {
   const { chainId, rpcProvider } = useLidoSDK();
   const { useLocalCache } = useConfig().userConfig.savedUserConfig;
-  const votingContract = useReadContract(AragonVoting);
+  const votingContract = useReadContract(Voting);
   const queryClient = useQueryClient();
 
   const router = useRouter();

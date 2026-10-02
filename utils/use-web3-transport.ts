@@ -134,11 +134,10 @@ const runtimeMutableTransport = (
   ];
 };
 
-// returns Viem transport map that uses browser wallet RPC provider when avaliable and no user RPC is set, fallbacked by our RPC
+// returns Viem transport map that uses browser wallet RPC provider when avaliable fallbacked by our RPC
 export const useWeb3Transport = (
   supportedChains: Chain[],
   backendRpcMap: Record<number, string>,
-  userRpcMap: Partial<Record<number, string>>,
 ) => {
   const { transportMap, setTransportMap } = useMemo(() => {
     return supportedChains.reduce(
@@ -179,8 +178,7 @@ export const useWeb3Transport = (
         if (
           activeConnection &&
           chain.id === activeConnection.chainId &&
-          activeConnection.connector.type === 'injected' &&
-          !userRpcMap[chain.id]
+          activeConnection.connector.type === 'injected'
         ) {
           const provider = (await activeConnection.connector?.getProvider?.({
             chainId: chain.id,
@@ -190,7 +188,7 @@ export const useWeb3Transport = (
         } else setTransport(null);
       }
     },
-    [setTransportMap, supportedChains, userRpcMap],
+    [setTransportMap, supportedChains],
   );
 
   return { transportMap, onActiveConnection };

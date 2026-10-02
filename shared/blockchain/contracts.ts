@@ -24,10 +24,10 @@ export const WithdrawalQueue: ContractObject<
   chainAddressMap: addr.WithdrawalQueue,
 };
 
-export const AragonVoting: ContractObject<typeof abi.aragonVotingAbi> = {
+export const Voting: ContractObject<typeof abi.aragonVotingAbi> = {
   name: 'AragonVoting',
   abi: abi.aragonVotingAbi,
-  chainAddressMap: addr.AragonVoting,
+  chainAddressMap: addr.Voting,
 };
 
 export const DualGovernance: ContractObject<typeof abi.dualGovernanceAbi> = {
@@ -52,10 +52,10 @@ export const EmergencyGovernance: ContractObject<
   chainAddressMap: addr.EmergencyGovernance,
 };
 
-export const LDOToken: ContractObject<typeof abi.miniMeTokenAbi> = {
-  name: 'LDOToken',
+export const DaoToken: ContractObject<typeof abi.miniMeTokenAbi> = {
+  name: 'DaoToken',
   abi: abi.miniMeTokenAbi,
-  chainAddressMap: addr.LDOToken,
+  chainAddressMap: addr.DaoToken,
 };
 
 export const Snapshot: ContractObject<typeof abi.snapshotAbi> = {
@@ -70,12 +70,12 @@ export const EasyTrack: ContractObject<typeof abi.easyTrackAbi> = {
   chainAddressMap: addr.EasyTrack,
 };
 
-export const CuratedV1NodeOperatorsRegistry: ContractObject<
+export const NodeOperatorsRegistry: ContractObject<
   typeof abi.nodeOperatorsRegistryAbi
 > = {
-  name: 'CuratedV1NodeOperatorsRegistry',
+  name: 'NodeOperatorsRegistry',
   abi: abi.nodeOperatorsRegistryAbi,
-  chainAddressMap: addr.CuratedV1NodeOperatorsRegistry,
+  chainAddressMap: addr.NodeOperatorsRegistry,
 };
 
 export const AragonAcl: ContractObject<typeof abi.aragonAclAbi> = {
@@ -253,7 +253,7 @@ export const GasFunderETHRegistry: ContractObject<
 export const GovernanceToken: ContractObject<typeof abi.miniMeTokenAbi> = {
   name: 'GovernanceToken',
   abi: abi.miniMeTokenAbi,
-  chainAddressMap: addr.LDOToken,
+  chainAddressMap: addr.DaoToken,
 };
 
 export const NodeOperatorIncreaseLimit: ContractObject<
@@ -438,13 +438,12 @@ export const RewardsShareProgramTopUp: ContractObject<
   chainAddressMap: EvmAddressesByType[MotionType.RewardsShareProgramTopUp],
 };
 
-export const SimpleDVTNodeOperatorsRegistry: ContractObject<
-  typeof abi.nodeOperatorsRegistryAbi
-> = {
-  name: 'SimpleDVTNodeOperatorsRegistry',
-  abi: abi.nodeOperatorsRegistryAbi,
-  chainAddressMap: addr.SimpleDVTNodeOperatorsRegistry,
-};
+export const SDVTRegistry: ContractObject<typeof abi.nodeOperatorsRegistryAbi> =
+  {
+    name: 'SDVTRegistry',
+    abi: abi.nodeOperatorsRegistryAbi,
+    chainAddressMap: addr.SDVTRegistry,
+  };
 
 export const SDVTNodeOperatorsAdd: ContractObject<
   typeof abi.addNodeOperatorsAbi
@@ -782,10 +781,10 @@ export const CSM2ReportWithdrawalsForSlashedValidators: ContractObject<
     EvmAddressesByType[MotionType.CSM2ReportWithdrawalsForSlashedValidators],
 };
 
-export const CSModule: ContractObject<typeof abi.csmRegistryAbi> = {
-  name: 'CSModule',
+export const CSMRegistry: ContractObject<typeof abi.csmRegistryAbi> = {
+  name: 'CSMRegistry',
   abi: abi.csmRegistryAbi,
-  chainAddressMap: addr.CSModule,
+  chainAddressMap: addr.CSMRegistry,
 };
 
 export const AllianceOpsStablesAllowedRecipientsRegistry: ContractObject<
@@ -1097,10 +1096,10 @@ export const ConsolidationMigrator: ContractObject<
   chainAddressMap: addr.ConsolidationMigrator,
 };
 
-export const CuratedMetaRegistry: ContractObject<typeof abi.metaRegistryAbi> = {
-  name: 'CuratedMetaRegistry',
+export const MetaRegistry: ContractObject<typeof abi.metaRegistryAbi> = {
+  name: 'MetaRegistry',
   abi: abi.metaRegistryAbi,
-  chainAddressMap: addr.CuratedMetaRegistry,
+  chainAddressMap: addr.MetaRegistry,
 };
 
 export const CreateOrUpdateOperatorGroup: ContractObject<

@@ -1,4 +1,4 @@
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { VoterState } from 'shared/votes/types';
 import { Address } from 'viem';
@@ -14,7 +14,7 @@ type DelegateData = {
 };
 
 export const fetchDelegateData = async (
-  votingContract: ReturnType<typeof useReadContract<typeof AragonVoting.abi>>,
+  votingContract: ReturnType<typeof useReadContract<typeof Voting.abi>>,
   delegateAddress: Address,
   voteId?: bigint,
 ): Promise<DelegateData> => {

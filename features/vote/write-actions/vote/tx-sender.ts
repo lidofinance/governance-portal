@@ -2,14 +2,14 @@ import { useCallback } from 'react';
 import invariant from 'tiny-invariant';
 import { useWriteContract } from 'shared/blockchain/hooks/use-write-contract';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { VoteTxArgs } from './types';
 import { useAccount } from 'wagmi';
 
 export const useVoteTxSender = () => {
   const { isConnected } = useAccount();
-  const writeVotingContract = useWriteContract(AragonVoting.abi);
-  const votingContractAddress = useContractAddress(AragonVoting);
+  const writeVotingContract = useWriteContract(Voting.abi);
+  const votingContractAddress = useContractAddress(Voting);
 
   return useCallback(
     async ({ mode, voteId, delegatedVoters }: VoteTxArgs) => {
