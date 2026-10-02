@@ -4,14 +4,14 @@ import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { Snapshot, AragonVoting } from 'shared/blockchain/contracts';
+import { Snapshot, Voting } from 'shared/blockchain/contracts';
 import { getPublicDelegate } from '../utils/get-public-delegate';
 import { SNAPSHOT_LIDO_SPACE_NAME } from '../constants';
 
 export const useDelegationInfo = () => {
   const { chainId } = useLidoSDK();
   const account = useAccount();
-  const votingContract = useReadContract(AragonVoting);
+  const votingContract = useReadContract(Voting);
   const snapshotContract = useReadContract(Snapshot);
 
   return useQuery({

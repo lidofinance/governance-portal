@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { fetchAragonVotes } from '../utils/fetch-aragon-votes';
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
-  const votingContract = useReadContract(AragonVoting);
+  const votingContract = useReadContract(Voting);
   const { chainId, rpcProvider } = useLidoSDK();
   const { useLocalCache } = useConfig().userConfig.savedUserConfig;
 

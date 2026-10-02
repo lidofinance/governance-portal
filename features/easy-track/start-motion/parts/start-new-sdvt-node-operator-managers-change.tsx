@@ -20,7 +20,7 @@ import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import {
   SDVTNodeOperatorManagerChange,
-  SimpleDVTNodeOperatorsRegistry,
+  SDVTRegistry,
 } from 'shared/blockchain/contracts';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
@@ -80,7 +80,7 @@ export const formParts = createMotionFormPart({
   Component: ({ fieldNames, submitAction }) => {
     const { data: nodeOperatorsList, isLoading: isNodeOperatorsDataLoading } =
       useNodeOperatorsList('sdvt');
-    const sdvtRegistry = useReadContract(SimpleDVTNodeOperatorsRegistry);
+    const sdvtRegistry = useReadContract(SDVTRegistry);
 
     const activeNodeOperators = nodeOperatorsList?.filter(
       (nodeOperator) => nodeOperator.active,

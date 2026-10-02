@@ -1,6 +1,6 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useQuery } from '@tanstack/react-query';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { getCastVoteEvents } from '../utils/get-cast-vote-events';
 import { useContractAddress } from 'shared/blockchain/hooks/use-contract-address';
 import { Vote, VoteEvent } from 'shared/votes/types';
@@ -12,7 +12,7 @@ export const useCastVoteEvents = (
   cachedVoteEvents: VoteEvent[] | null | undefined,
 ) => {
   const { chainId, rpcProvider } = useLidoSDK();
-  const votingContractAddress = useContractAddress(AragonVoting);
+  const votingContractAddress = useContractAddress(Voting);
 
   return useQuery({
     queryKey: ['vote-cast-events', vote?.id, chainId],

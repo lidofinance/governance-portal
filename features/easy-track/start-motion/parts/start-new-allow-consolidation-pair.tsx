@@ -36,7 +36,7 @@ import {
 import { nodeOperatorsRegistryAbi } from 'abi/generated';
 import {
   AllowConsolidationPair,
-  CuratedMetaRegistry,
+  MetaRegistry,
   StakingRouter,
 } from 'shared/blockchain/contracts';
 import invariant from 'tiny-invariant';
@@ -97,7 +97,7 @@ export const formParts = createMotionFormPart({
     );
 
     const stakingRouter = useReadContract(StakingRouter);
-    const metaRegistry = useReadContract(CuratedMetaRegistry);
+    const metaRegistry = useReadContract(MetaRegistry);
     const readNodeOperatorsRegistry = useReadContractGetter(
       nodeOperatorsRegistryAbi,
     );

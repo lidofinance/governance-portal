@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { AragonVoting } from 'shared/blockchain/contracts';
+import { Voting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 
 export const useVotingConfig = () => {
   const { chainId } = useLidoSDK();
-  const { readContract: readVotingContract } = useReadContract(AragonVoting);
+  const { readContract: readVotingContract } = useReadContract(Voting);
 
   return useQuery({
     queryKey: ['voting-config', chainId],

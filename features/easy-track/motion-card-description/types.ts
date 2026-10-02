@@ -5,9 +5,9 @@ import {
 } from 'viem';
 import { REGISTRY_WITH_LIMITS_BY_MOTION_TYPE } from '../hooks/use-registry-with-limits';
 import {
-  CuratedV1NodeOperatorsRegistry,
+  NodeOperatorsRegistry,
   SandboxNodeOperatorsRegistry,
-  SimpleDVTNodeOperatorsRegistry,
+  SDVTRegistry,
 } from 'shared/blockchain/contracts';
 import { MOTION_TYPE_ABI_MAP } from '@easy-track/hooks/use-decode-evm-script-call-data';
 
@@ -21,8 +21,8 @@ export type NestProps<T> =
         : T;
 
 export const NODE_OPERATORS_REGISTRY_MAP = {
-  curated: CuratedV1NodeOperatorsRegistry,
-  sdvt: SimpleDVTNodeOperatorsRegistry,
+  curated: NodeOperatorsRegistry,
+  sdvt: SDVTRegistry,
   sandbox: SandboxNodeOperatorsRegistry,
 } as const;
 
