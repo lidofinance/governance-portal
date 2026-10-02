@@ -1,0 +1,851 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "admin",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "lidoLocator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "maxConsolidationRequestsLimit",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "consolidationsPerFrame",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "frameDurationInSec",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_gIFirstValidatorPrev",
+        "type": "bytes32",
+        "internalType": "GIndex"
+      },
+      {
+        "name": "_gIFirstValidatorCurr",
+        "type": "bytes32",
+        "internalType": "GIndex"
+      },
+      {
+        "name": "_pivotSlot",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "AccessControlBadConfirmation",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "AccessControlUnauthorizedAccount",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "neededRole",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "name": "AdminCannotBeZero",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "ConsolidationRequestsLimitExceeded",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "requestsCount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "remainingLimit",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "name": "DSMDepositsPaused",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "EmptyGroup",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "groupIndex",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "name": "FeeRefundFailed",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "IndexOutOfRange",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "InsufficientFee",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "feeRequired",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "passedValue",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "name": "InvalidPubkeyLength",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "InvalidSlot",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "LidoDepositsPaused",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "LimitExceeded",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "PauseUntilMustBeInFuture",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "PausedExpected",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "ResumedExpected",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "RootNotFound",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "TooLargeFrameDuration",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "TooLargeItemsPerFrame",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "TooLargeMaxLimit",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "ZeroArgument",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "name",
+        "type": "string",
+        "internalType": "string"
+      }
+    ]
+  },
+  {
+    "name": "ZeroFrameDuration",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "ZeroPauseDuration",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "ConsolidationRequestsLimitSet",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "maxConsolidationRequestsLimit",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "consolidationsPerFrame",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "frameDurationInSec",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "Paused",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "duration",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "Resumed",
+    "type": "event",
+    "inputs": [],
+    "anonymous": false
+  },
+  {
+    "name": "RoleAdminChanged",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "previousAdminRole",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "newAdminRole",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "RoleGranted",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "RoleRevoked",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "ADD_CONSOLIDATION_REQUEST_ROLE",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "BEACON_ROOTS",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "CONSOLIDATION_LIMIT_POSITION",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "DEFAULT_ADMIN_ROLE",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "EXIT_LIMIT_MANAGER_ROLE",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "GI_FIRST_VALIDATOR_CURR",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "GIndex"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "GI_FIRST_VALIDATOR_PREV",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "GIndex"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "GI_PUBKEY_WC_PARENT",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "GIndex"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "GI_STATE_ROOT",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "GIndex"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "PAUSE_INFINITELY",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "PAUSE_ROLE",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "PIVOT_SLOT",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "RESUME_ROLE",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "addConsolidationRequests",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "groups",
+        "type": "tuple[]",
+        "components": [
+          {
+            "name": "sourcePubkeys",
+            "type": "bytes[]",
+            "internalType": "bytes[]"
+          },
+          {
+            "name": "targetWitness",
+            "type": "tuple",
+            "components": [
+              {
+                "name": "proof",
+                "type": "bytes32[]",
+                "internalType": "bytes32[]"
+              },
+              {
+                "name": "pubkey",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "validatorIndex",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "childBlockTimestamp",
+                "type": "uint64",
+                "internalType": "uint64"
+              },
+              {
+                "name": "slot",
+                "type": "uint64",
+                "internalType": "uint64"
+              },
+              {
+                "name": "proposerIndex",
+                "type": "uint64",
+                "internalType": "uint64"
+              }
+            ],
+            "internalType": "struct IPredepositGuarantee.ValidatorWitness"
+          }
+        ],
+        "internalType": "struct ConsolidationGateway.ConsolidationWitnessGroup[]"
+      },
+      {
+        "name": "refundRecipient",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "name": "getConsolidationRequestLimitFullInfo",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "maxConsolidationRequestsLimit",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "consolidationsPerFrame",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "frameDurationInSec",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "prevConsolidationRequestsLimit",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "currentConsolidationRequestsLimit",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getResumeSinceTimestamp",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getRoleAdmin",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getRoleMember",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getRoleMemberCount",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getRoleMembers",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address[]",
+        "internalType": "address[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "grantRole",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "hasRole",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "isPaused",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "pauseFor",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_duration",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "pauseUntil",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_pauseUntilInclusive",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "renounceRole",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "callerConfirmation",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "resume",
+    "type": "function",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "revokeRole",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "role",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "setConsolidationRequestLimit",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "maxConsolidationRequestsLimit",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "consolidationsPerFrame",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "frameDurationInSec",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "supportsInterface",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "interfaceId",
+        "type": "bytes4",
+        "internalType": "bytes4"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  }
+]
