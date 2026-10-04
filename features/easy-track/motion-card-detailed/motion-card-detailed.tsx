@@ -22,7 +22,7 @@ import { useMotionDetails } from '../hooks/use-motion-details';
 import { Container, IdenticonBadge, Link } from '@lidofinance/lido-ui';
 import { MotionCardDetailedSkeleton } from '../motion-card-detailed-skeleton/motion-card-detailed-skeleton';
 import { Box } from 'shared/components/box';
-import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
+import { getMotionTitle } from '../utils/get-motion-title';
 import { Text } from 'shared/components/text';
 import { Motion, MotionStatus, RawMotionSubgraph } from '../types';
 import { useAccount } from 'wagmi';
@@ -107,7 +107,7 @@ const MotionCardDetailedInner = () => {
       </Badges>
       <Header>
         <Text size={20} weight={700} color="textv1">
-          {getMotionTypeDisplayName(motionType)}
+          {getMotionTitle(motionType, motion.evmScriptCalldata)}
           {motionType === 'EvmUnrecognized' && (
             <>
               <br />
