@@ -14,7 +14,7 @@ import { useDebounce } from 'shared/hooks/use-debounce';
 import { nodeOperatorsRegistryAbi } from 'abi/generated';
 import {
   CreateOrUpdateOperatorGroup as CreateOrUpdateOperatorGroupContract,
-  MetaRegistry,
+  CuratedMetaRegistry,
   StakingRouter,
 } from 'shared/blockchain/contracts';
 
@@ -222,7 +222,7 @@ export const formParts = createMotionFormPart({
       CreateOrUpdateOperatorGroupContract,
     );
     const stakingRouter = useReadContract(StakingRouter);
-    const metaRegistry = useReadContract(MetaRegistry);
+    const metaRegistry = useReadContract(CuratedMetaRegistry);
 
     const readNodeOperatorsRegistry = useReadContractGetter(
       nodeOperatorsRegistryAbi,

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getContractAddress } from 'shared/blockchain/get-contract-address';
-import { DaoToken, StETH } from 'shared/blockchain/contracts';
+import { LDOToken, StETH } from 'shared/blockchain/contracts';
 import { useConfig } from 'config';
 import { isTestnet as getIsTestnet } from 'shared/blockchain/utils/is-testnet';
 import { Address } from 'viem';
@@ -15,7 +15,7 @@ export const useLegoTokenOptions = () => {
   const isInTestMode = userConfig.savedUserConfig.useTestContracts && isTestnet;
 
   return useMemo(() => {
-    const daoTokenAddress = getContractAddress(DaoToken, chainId, isInTestMode);
+    const daoTokenAddress = getContractAddress(LDOToken, chainId, isInTestMode);
     const stethAddress = getContractAddress(StETH, chainId, isInTestMode);
 
     // DAI doesn't have a contract object, so we resolve it manually
