@@ -12,7 +12,9 @@ import {
 import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts/success-text';
 
 const getInProgressText = (type: DelegationType) => {
-  return `You are revoking your delegation on ${type}`;
+  return type === 'Aragon'
+    ? 'You are revoking your delegation'
+    : `You are revoking your delegation on ${type}`;
 };
 
 const getTxModalStagesRevokeDelegation = (
