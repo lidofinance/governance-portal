@@ -8,32 +8,19 @@ import { useRevokeDelegationTxSender } from './tx-sender';
 import { DelegationType } from '@vote/types';
 import { useConfirmModal } from 'shared/hooks/use-confirm-modal';
 
-export const useRevokeDelegationAction = ({
-  onConfirm,
-  onRetry,
-}: ActionArgs) => {
+export const useRevokeDelegationAction = ({ onConfirm }: ActionArgs) => {
   const { data: isMultisig } = useIsContract();
   const { txModalStages } = useTxModalRevokeDelegation();
   const sendRevokeDelegationTx = useRevokeDelegationTxSender();
   const waitForTx = useTxConfirmation();
   const { confirm } = useConfirmModal();
 
-  return useCallback(
-    async (type: DelegationType) => {
+  const revoke = useCallback(
+    async (type: DelegationType): Promise<boolean> => {
+      // Retry re-sends the same revoke; the form's retry event would submit a delegation
+      const onRetry = () => void revoke(type);
+
       try {
-        const hasApprove = await confirm({
-          title:
-            type === 'Aragon'
-              ? 'Revoke delegation?'
-              : `Revoke ${type} delegation?`,
-          confirmText: 'Revoke',
-          cancelText: 'Cancel',
-        });
-
-        if (!hasApprove) {
-          return false;
-        }
-
         txModalStages.sign(type);
 
         const txHash = await sendRevokeDelegationTx(type);
@@ -70,14 +57,26 @@ export const useRevokeDelegationAction = ({
         return false;
       }
     },
-    [
-      txModalStages,
-      isMultisig,
-      sendRevokeDelegationTx,
-      waitForTx,
-      onConfirm,
-      onRetry,
-      confirm,
-    ],
+    [txModalStages, isMultisig, sendRevokeDelegationTx, waitForTx, onConfirm],
+  );
+
+  return useCallback(
+    async (type: DelegationType) => {
+      const hasApprove = await confirm({
+        title:
+          type === 'Aragon'
+            ? 'Revoke delegation?'
+            : `Revoke ${type} delegation?`,
+        confirmText: 'Revoke',
+        cancelText: 'Cancel',
+      });
+
+      if (!hasApprove) {
+        return false;
+      }
+
+      return revoke(type);
+    },
+    [confirm, revoke],
   );
 };
