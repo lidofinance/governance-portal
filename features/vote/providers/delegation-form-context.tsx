@@ -97,7 +97,6 @@ export const DelegationFormProvider: FC<{ children?: React.ReactNode }> = ({
 
   const processRevoke = useRevokeDelegationAction({
     onConfirm: networkData.refetch,
-    onRetry: retryFire,
   });
 
   const value = useMemo(
