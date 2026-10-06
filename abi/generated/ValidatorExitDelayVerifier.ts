@@ -1,0 +1,358 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ValidatorExitDelayVerifier
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const validatorExitDelayVerifierAbi = [
+  {
+    type: 'constructor',
+    inputs: [
+      { name: 'lidoLocator', internalType: 'address', type: 'address' },
+      {
+        name: 'gIndices',
+        internalType: 'struct GIndices',
+        type: 'tuple',
+        components: [
+          {
+            name: 'gIFirstValidatorPrev',
+            internalType: 'GIndex',
+            type: 'bytes32',
+          },
+          {
+            name: 'gIFirstValidatorCurr',
+            internalType: 'GIndex',
+            type: 'bytes32',
+          },
+          {
+            name: 'gIFirstHistoricalSummaryPrev',
+            internalType: 'GIndex',
+            type: 'bytes32',
+          },
+          {
+            name: 'gIFirstHistoricalSummaryCurr',
+            internalType: 'GIndex',
+            type: 'bytes32',
+          },
+          {
+            name: 'gIFirstBlockRootInSummaryPrev',
+            internalType: 'GIndex',
+            type: 'bytes32',
+          },
+          {
+            name: 'gIFirstBlockRootInSummaryCurr',
+            internalType: 'GIndex',
+            type: 'bytes32',
+          },
+        ],
+      },
+      { name: 'firstSupportedSlot', internalType: 'uint64', type: 'uint64' },
+      { name: 'pivotSlot', internalType: 'uint64', type: 'uint64' },
+      { name: 'capellaSlot', internalType: 'uint64', type: 'uint64' },
+      {
+        name: 'slotsPerHistoricalRoot',
+        internalType: 'uint64',
+        type: 'uint64',
+      },
+      { name: 'slotsPerEpoch', internalType: 'uint32', type: 'uint32' },
+      { name: 'secondsPerSlot', internalType: 'uint32', type: 'uint32' },
+      { name: 'genesisTime', internalType: 'uint64', type: 'uint64' },
+      {
+        name: 'shardCommitteePeriodInSeconds',
+        internalType: 'uint32',
+        type: 'uint32',
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'provableBeaconBlockTimestamp',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      {
+        name: 'eligibleExitRequestTimestamp',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'ExitIsNotEligibleOnProvableBeaconBlock',
+  },
+  { type: 'error', inputs: [], name: 'HistoricalSummaryDoesNotExist' },
+  { type: 'error', inputs: [], name: 'IndexOutOfRange' },
+  { type: 'error', inputs: [], name: 'InvalidBlockHeader' },
+  { type: 'error', inputs: [], name: 'InvalidCapellaSlot' },
+  { type: 'error', inputs: [], name: 'InvalidGIndex' },
+  { type: 'error', inputs: [], name: 'InvalidPerHistoricalRootSlot' },
+  { type: 'error', inputs: [], name: 'InvalidPivotSlot' },
+  { type: 'error', inputs: [], name: 'RootNotFound' },
+  {
+    type: 'error',
+    inputs: [{ name: 'slot', internalType: 'uint64', type: 'uint64' }],
+    name: 'UnsupportedSlot',
+  },
+  { type: 'error', inputs: [], name: 'ZeroLidoLocatorAddress' },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'BEACON_ROOTS',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'CAPELLA_SLOT',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'FIRST_SUPPORTED_SLOT',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GENESIS_TIME',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GI_FIRST_BLOCK_ROOT_IN_SUMMARY_CURR',
+    outputs: [{ name: '', internalType: 'GIndex', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GI_FIRST_BLOCK_ROOT_IN_SUMMARY_PREV',
+    outputs: [{ name: '', internalType: 'GIndex', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GI_FIRST_HISTORICAL_SUMMARY_CURR',
+    outputs: [{ name: '', internalType: 'GIndex', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GI_FIRST_HISTORICAL_SUMMARY_PREV',
+    outputs: [{ name: '', internalType: 'GIndex', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GI_FIRST_VALIDATOR_CURR',
+    outputs: [{ name: '', internalType: 'GIndex', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'GI_FIRST_VALIDATOR_PREV',
+    outputs: [{ name: '', internalType: 'GIndex', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'LOCATOR',
+    outputs: [
+      { name: '', internalType: 'contract ILidoLocator', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'PIVOT_SLOT',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'SECONDS_PER_SLOT',
+    outputs: [{ name: '', internalType: 'uint32', type: 'uint32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'SHARD_COMMITTEE_PERIOD_IN_SECONDS',
+    outputs: [{ name: '', internalType: 'uint32', type: 'uint32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'SLOTS_PER_EPOCH',
+    outputs: [{ name: '', internalType: 'uint32', type: 'uint32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'SLOTS_PER_HISTORICAL_ROOT',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'beaconBlock',
+        internalType: 'struct ProvableBeaconBlockHeader',
+        type: 'tuple',
+        components: [
+          {
+            name: 'header',
+            internalType: 'struct BeaconBlockHeader',
+            type: 'tuple',
+            components: [
+              { name: 'slot', internalType: 'uint64', type: 'uint64' },
+              { name: 'proposerIndex', internalType: 'uint64', type: 'uint64' },
+              { name: 'parentRoot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'stateRoot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'bodyRoot', internalType: 'bytes32', type: 'bytes32' },
+            ],
+          },
+          { name: 'rootsTimestamp', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+      {
+        name: 'oldBlock',
+        internalType: 'struct HistoricalHeaderWitness',
+        type: 'tuple',
+        components: [
+          {
+            name: 'header',
+            internalType: 'struct BeaconBlockHeader',
+            type: 'tuple',
+            components: [
+              { name: 'slot', internalType: 'uint64', type: 'uint64' },
+              { name: 'proposerIndex', internalType: 'uint64', type: 'uint64' },
+              { name: 'parentRoot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'stateRoot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'bodyRoot', internalType: 'bytes32', type: 'bytes32' },
+            ],
+          },
+          { name: 'proof', internalType: 'bytes32[]', type: 'bytes32[]' },
+        ],
+      },
+      {
+        name: 'validatorWitnesses',
+        internalType: 'struct ValidatorWitness[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'exitRequestIndex', internalType: 'uint32', type: 'uint32' },
+          {
+            name: 'withdrawalCredentials',
+            internalType: 'bytes32',
+            type: 'bytes32',
+          },
+          { name: 'effectiveBalance', internalType: 'uint64', type: 'uint64' },
+          { name: 'slashed', internalType: 'bool', type: 'bool' },
+          {
+            name: 'activationEligibilityEpoch',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'activationEpoch', internalType: 'uint64', type: 'uint64' },
+          { name: 'withdrawableEpoch', internalType: 'uint64', type: 'uint64' },
+          {
+            name: 'validatorProof',
+            internalType: 'bytes32[]',
+            type: 'bytes32[]',
+          },
+        ],
+      },
+      {
+        name: 'exitRequests',
+        internalType: 'struct ExitRequestData',
+        type: 'tuple',
+        components: [
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'dataFormat', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'verifyHistoricalValidatorExitDelay',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: 'beaconBlock',
+        internalType: 'struct ProvableBeaconBlockHeader',
+        type: 'tuple',
+        components: [
+          {
+            name: 'header',
+            internalType: 'struct BeaconBlockHeader',
+            type: 'tuple',
+            components: [
+              { name: 'slot', internalType: 'uint64', type: 'uint64' },
+              { name: 'proposerIndex', internalType: 'uint64', type: 'uint64' },
+              { name: 'parentRoot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'stateRoot', internalType: 'bytes32', type: 'bytes32' },
+              { name: 'bodyRoot', internalType: 'bytes32', type: 'bytes32' },
+            ],
+          },
+          { name: 'rootsTimestamp', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+      {
+        name: 'validatorWitnesses',
+        internalType: 'struct ValidatorWitness[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'exitRequestIndex', internalType: 'uint32', type: 'uint32' },
+          {
+            name: 'withdrawalCredentials',
+            internalType: 'bytes32',
+            type: 'bytes32',
+          },
+          { name: 'effectiveBalance', internalType: 'uint64', type: 'uint64' },
+          { name: 'slashed', internalType: 'bool', type: 'bool' },
+          {
+            name: 'activationEligibilityEpoch',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'activationEpoch', internalType: 'uint64', type: 'uint64' },
+          { name: 'withdrawableEpoch', internalType: 'uint64', type: 'uint64' },
+          {
+            name: 'validatorProof',
+            internalType: 'bytes32[]',
+            type: 'bytes32[]',
+          },
+        ],
+      },
+      {
+        name: 'exitRequests',
+        internalType: 'struct ExitRequestData',
+        type: 'tuple',
+        components: [
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'dataFormat', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'verifyValidatorExitDelay',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;

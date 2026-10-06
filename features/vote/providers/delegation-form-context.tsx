@@ -4,7 +4,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import {
   DelegationFormContextValue,
   DelegationFormInput,
-  DelegationFormMode,
   DelegationFormNetworkData,
 } from '../types';
 import { useDaoTokenBalance } from '../hooks/use-dao-token-balance';
@@ -70,19 +69,12 @@ const useDelegationFormNetworkData = (): DelegationFormNetworkData => {
   };
 };
 
-export type DelegationFormProviderProps = {
-  mode: DelegationFormMode;
-  children?: React.ReactNode;
-};
-
-export const DelegationFormProvider: FC<DelegationFormProviderProps> = ({
+export const DelegationFormProvider: FC<{ children?: React.ReactNode }> = ({
   children,
-  mode,
 }) => {
   const networkData = useDelegationFormNetworkData();
   const validationContextPromise = useDelegationFormValidationContext({
     networkData,
-    mode,
   });
   const { retryEvent, retryFire } = useFormControllerRetry();
 
@@ -99,25 +91,22 @@ export const DelegationFormProvider: FC<DelegationFormProviderProps> = ({
   const { watch, reset, register } = formObject;
 
   const processDelegation = useDelegateAction({
-    mode,
     onConfirm: networkData.refetch,
     onRetry: retryFire,
   });
 
   const processRevoke = useRevokeDelegationAction({
     onConfirm: networkData.refetch,
-    onRetry: retryFire,
   });
 
   const value = useMemo(
     () => ({
       ...networkData,
-      mode,
       onRevoke: processRevoke,
       register,
       watch,
     }),
-    [networkData, mode, processRevoke, register, watch],
+    [networkData, processRevoke, register, watch],
   );
 
   const formControllerValue = useMemo(
