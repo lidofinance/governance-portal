@@ -19,4 +19,13 @@ export const FACTORIES = defineFactories({
       [CHAINS.Hoodi]: '0x68009122a394504E8fD7fee58F92Cd73c6A60717',
     },
   },
+  LOLLDOTopUp: {
+    startable: true,
+    abi: abi.topUpWithLimitsAbi,
+    displayName: 'Top up LOL LDO',
+    tags: ['Treasury', 'LOL'],
+    addresses: {
+      [CHAINS.Mainnet]: '0xa3e98cb26F1277B623Edb95cee3bd33269b305F7',
+    },
+  },
 } as const);

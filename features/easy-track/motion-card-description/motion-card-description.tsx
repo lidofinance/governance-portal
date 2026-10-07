@@ -154,6 +154,7 @@ const MOTION_DESCRIPTIONS: Record<
   [MotionType.LOLStablecoinsTopUp]: TopUpWithLimitsAndCustomToken,
   [MotionType.LOLStablecoinsAdd]: AllowedRecipientAdd,
   [MotionType.LOLStablecoinsRemove]: AllowedRecipientRemove,
+  [MotionType.LOLLDOTopUp]: TopUpWithLimits,
   [MotionType.EcosystemOpsStethTopUp]: TopUpWithLimits,
   [MotionType.LabsOpsStethTopUp]: TopUpWithLimits,
   [MotionType.MEVBoostRelaysAdd]: MevBoostRelaysAdd,
