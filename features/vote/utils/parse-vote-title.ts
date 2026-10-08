@@ -1,7 +1,18 @@
-import removeMD from 'remove-markdown';
-
 const TITLE_MAX_LEN = 120;
-const HEADING_LINE = /^#{1,6}[ \t]+(.+?)[ \t]*(?:\r?\n|$)/;
+// Bound untrusted input to the inline-Markdown stripper, independently of display truncation.
+const HEADING_MAX_LEN = 1024;
+const HEADING_PREFIX = /^#{1,6}[ \t]+/;
+
+const stripInlineMarkdown = (text: string) =>
+  text
+    // links and images -> their text
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    // html tags
+    .replace(/<[^>]*>/g, '')
+    // paired *emphasis*, ~~strike~~, `code` -> inner text
+    .replace(/(\*{1,3}|~~|`+)(\S(?:.*?\S)?)\1/g, '$2')
+    // paired _emphasis_ at word boundaries only, so snake_case survives
+    .replace(/(^|\W)(_{1,3})(\S(?:.*?\S)?)\2(?=$|\W)/g, '$1$3');
 
 const truncate = (text: string) => {
   if (text.length <= TITLE_MAX_LEN) {
@@ -30,11 +41,22 @@ export const splitLeadingHeading = (
     return { title: null, body: null };
   }
 
-  const heading = trimmed.match(HEADING_LINE);
+  // Find the line boundary separately to avoid overlapping whitespace matches.
+  const lineEnd = trimmed.indexOf('\n');
+  const firstLine = lineEnd === -1 ? trimmed : trimmed.slice(0, lineEnd);
+  const heading = firstLine.match(HEADING_PREFIX);
   if (heading) {
-    const cleanedTitle = removeMD(heading[1]).trim();
+    const headingText = firstLine
+      .slice(heading[0].length)
+      .replace(/[ \t]+#+[ \t]*$/, '')
+      .trim();
+    if (headingText.length > HEADING_MAX_LEN) {
+      // Keep oversized headings in the description and use the default title.
+      return { title: null, body: trimmed };
+    }
+    const cleanedTitle = stripInlineMarkdown(headingText).trim();
     if (cleanedTitle) {
-      const body = trimmed.slice(heading[0].length).trimStart();
+      const body = lineEnd === -1 ? '' : trimmed.slice(lineEnd + 1).trimStart();
       return { title: cleanedTitle, body: body.length > 0 ? body : null };
     }
   }

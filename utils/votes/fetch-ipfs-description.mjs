@@ -4,12 +4,34 @@ const CID_1_32 = '[bB][A-Za-z2-7]{58,128}';
 const REGEX_LIDO_VOTE_CID = new RegExp(`\\blidovoteipfs://(${CID_1_32})\\s*$`);
 
 const IPFS_TIMEOUT_MS = 8000;
-const MAX_BYTES = 100_000;
+const MAX_BYTES = 32_000;
 
 const getIpfsUrl = (cid) =>
   /^b/i.test(cid)
     ? `https://${cid}.ipfs.w3s.link`
     : `https://cloudflare-ipfs.com/ipfs/${cid}`;
+
+// The range header is advisory; gateways may ignore it, so stop reading past the limit.
+const readTextWithLimit = async (response) => {
+  if (!response.body) {
+    return '';
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let text = '';
+  let bytesRead = 0;
+  let chunk = await reader.read();
+  while (!chunk.done) {
+    bytesRead += chunk.value.byteLength;
+    if (bytesRead > MAX_BYTES) {
+      await reader.cancel();
+      throw new Error('IPFS content exceeds the size limit.');
+    }
+    text += decoder.decode(chunk.value, { stream: true });
+    chunk = await reader.read();
+  }
+  return text + decoder.decode();
+};
 
 const fetchCid = async (cid) => {
   const response = await fetch(getIpfsUrl(cid), {
@@ -25,7 +47,7 @@ const fetchCid = async (cid) => {
     throw new Error(`IPFS gateway returned ${response.status}`);
   }
 
-  const text = await response.text();
+  const text = await readTextWithLimit(response);
 
   const [hash, hashBOM] = await Promise.all([
     Hash.of(text, { cidVersion: 1, rawLeaves: true }),

@@ -1,9 +1,11 @@
-import removeMD from 'remove-markdown';
 import { InlineLoader } from '@lidofinance/lido-ui';
 import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
 import { useQuery } from '@tanstack/react-query';
 import { fetcherIPFS } from 'utils/fetcher-ipfs';
-import { ARCHIVED_VOTE_IPFS_TIMEOUT } from '@vote/constants';
+import {
+  ARCHIVED_VOTE_IPFS_TIMEOUT,
+  VOTE_DESCRIPTION_MAX_BYTES,
+} from '@vote/constants';
 import { DescriptionText } from './style';
 import { replaceJsxElements } from 'utils/replace-links-with-components';
 import { splitLeadingHeading } from '@vote/utils/parse-vote-title';
@@ -18,7 +20,6 @@ type Props = {
    * fall through to the metadata → IPFS path.
    */
   description?: string | null;
-  allowMD?: boolean;
   /** Drop the leading `# heading` line, which is rendered as the vote title. */
   hideLeadingHeading?: boolean;
   /** Active votes wait the full IPFS timeout; archived votes use a shorter one. */
@@ -30,7 +31,6 @@ const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
 export const VoteDescription = ({
   metadata,
   description,
-  allowMD,
   hideLeadingHeading,
   isActive,
 }: Props) => {
@@ -51,7 +51,7 @@ export const VoteDescription = ({
     queryFn: async () =>
       await fetcherIPFS(
         cid || '',
-        undefined,
+        VOTE_DESCRIPTION_MAX_BYTES,
         isActive ? undefined : ARCHIVED_VOTE_IPFS_TIMEOUT,
       ),
     enabled: !!cid && !hasCachedDescription,
@@ -75,12 +75,7 @@ export const VoteDescription = ({
     if (!text) {
       return <DescriptionText>No description.</DescriptionText>;
     }
-    if (allowMD) {
-      return <MarkdownWrapper>{text}</MarkdownWrapper>;
-    }
-    return (
-      <DescriptionText>{replaceJsxElements(removeMD(text))}</DescriptionText>
-    );
+    return <MarkdownWrapper>{text}</MarkdownWrapper>;
   }
 
   if (!cid && metadata) {
@@ -111,11 +106,5 @@ export const VoteDescription = ({
     return <DescriptionText>No description.</DescriptionText>;
   }
 
-  if (allowMD) {
-    return <MarkdownWrapper>{text}</MarkdownWrapper>;
-  }
-
-  return (
-    <DescriptionText>{replaceJsxElements(removeMD(text))}</DescriptionText>
-  );
+  return <MarkdownWrapper>{text}</MarkdownWrapper>;
 };
