@@ -6,10 +6,11 @@ const REGEX_LIDO_VOTE_CID = new RegExp(`\\blidovoteipfs://(${CID_1_32})\\s*$`);
 const IPFS_TIMEOUT_MS = 8000;
 const MAX_BYTES = 32_000;
 
-const getIpfsUrl = (cid) =>
-  /^b/i.test(cid)
-    ? `https://${cid}.ipfs.w3s.link`
-    : `https://cloudflare-ipfs.com/ipfs/${cid}`;
+// Keep in sync with utils/get-ipfs-url.ts.
+const getIpfsUrls = (cid) => [
+  `https://ipfs.filebase.io/ipfs/${cid}`,
+  `https://gateway.pinata.cloud/ipfs/${cid}`,
+];
 
 // The range header is advisory; gateways may ignore it, so stop reading past the limit.
 const readTextWithLimit = async (response) => {
@@ -33,8 +34,8 @@ const readTextWithLimit = async (response) => {
   return text + decoder.decode();
 };
 
-const fetchCid = async (cid) => {
-  const response = await fetch(getIpfsUrl(cid), {
+const fetchCid = async (cid, url) => {
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-type': 'text/plain',
@@ -79,16 +80,16 @@ export const fetchIpfsDescription = async (metadata) => {
     return null;
   }
 
-  try {
-    return await fetchCid(cid);
-  } catch (firstError) {
+  let lastError;
+  for (const url of getIpfsUrls(cid)) {
     try {
-      return await fetchCid(cid);
-    } catch (secondError) {
-      console.warn(
-        `    [IPFS] Failed to fetch description for CID ${cid}: ${secondError.message}`,
-      );
-      return null;
+      return await fetchCid(cid, url);
+    } catch (error) {
+      lastError = error;
     }
   }
+  console.warn(
+    `    [IPFS] Failed to fetch description for CID ${cid}: ${lastError.message}`,
+  );
+  return null;
 };
