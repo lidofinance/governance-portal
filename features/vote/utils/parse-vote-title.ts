@@ -1,18 +1,7 @@
 const TITLE_MAX_LEN = 120;
-// Bound untrusted input to the inline-Markdown stripper, independently of display truncation.
+// The vote page shows the title untruncated; longer headings stay in the description.
 const HEADING_MAX_LEN = 1024;
 const HEADING_PREFIX = /^#{1,6}[ \t]+/;
-
-const stripInlineMarkdown = (text: string) =>
-  text
-    // links and images -> their text
-    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-    // html tags
-    .replace(/<[^>]*>/g, '')
-    // paired *emphasis*, ~~strike~~, `code` -> inner text
-    .replace(/(\*{1,3}|~~|`+)(\S(?:.*?\S)?)\1/g, '$2')
-    // paired _emphasis_ at word boundaries only, so snake_case survives
-    .replace(/(^|\W)(_{1,3})(\S(?:.*?\S)?)\2(?=$|\W)/g, '$1$3');
 
 const truncate = (text: string) => {
   if (text.length <= TITLE_MAX_LEN) {
@@ -46,18 +35,10 @@ export const splitLeadingHeading = (
   const firstLine = lineEnd === -1 ? trimmed : trimmed.slice(0, lineEnd);
   const heading = firstLine.match(HEADING_PREFIX);
   if (heading) {
-    const headingText = firstLine
-      .slice(heading[0].length)
-      .replace(/[ \t]+#+[ \t]*$/, '')
-      .trim();
-    if (headingText.length > HEADING_MAX_LEN) {
-      // Keep oversized headings in the description and use the default title.
-      return { title: null, body: trimmed };
-    }
-    const cleanedTitle = stripInlineMarkdown(headingText).trim();
-    if (cleanedTitle) {
+    const title = firstLine.slice(heading[0].length).trim();
+    if (title && title.length <= HEADING_MAX_LEN) {
       const body = lineEnd === -1 ? '' : trimmed.slice(lineEnd + 1).trimStart();
-      return { title: cleanedTitle, body: body.length > 0 ? body : null };
+      return { title, body: body.length > 0 ? body : null };
     }
   }
 
