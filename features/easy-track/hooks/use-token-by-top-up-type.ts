@@ -83,6 +83,10 @@ const TOKEN = {
     label: 'stETH',
     value: (chainId: CHAINS) => StETH[chainId],
   },
+  [MotionType.LOLLDOTopUp]: {
+    label: 'LDO',
+    value: (chainId: CHAINS) => GovernanceToken.chainAddressMap[chainId],
+  },
 };
 
 const isTopUpType = (type: unknown): type is keyof typeof TOKEN => {

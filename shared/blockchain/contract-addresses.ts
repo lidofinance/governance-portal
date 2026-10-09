@@ -445,6 +445,10 @@ export const LOLStablecoinsAllowedRecipientsRegistry: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x8d8b35cA51e7808098afF4918C21Ce428c943F89',
 };
 
+export const LOLLDOAllowedRecipientsRegistry: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xf1e9c3bD021ED1419Dd3b37f9b6E49Eb662877Fe',
+};
+
 export const CSMVettedCommunityStakersGate: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xB314D4A76C457c93150d308787939063F4Cc67E0',
   [CHAINS.Hoodi]: '0x10a254E724fe2b7f305F76f3F116a3969c53845f',
