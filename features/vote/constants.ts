@@ -11,6 +11,8 @@ export const SNAPSHOT_LIDO_SPACE_NAME =
 export const ONE_LDO = parseEther('1');
 
 export const ARCHIVED_VOTE_IPFS_TIMEOUT = 4000;
+// 32kb per vote description
+export const VOTE_DESCRIPTION_MAX_BYTES = 32_000;
 
 export const VOTE_MODE_MAP: Record<VoteMode, string> = {
   yay: 'Yes',
