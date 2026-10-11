@@ -1,4 +1,3 @@
-import remarkGfm from 'remark-gfm';
 import { VoteStatusBadge } from '@dg/proposals/shared-components/vote-status-badge';
 
 import {
@@ -16,14 +15,9 @@ import { VoteData } from 'shared/votes/types';
 import { useDecodedScript } from 'shared/hooks';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
-import { fetcherIPFS } from 'utils/fetcher-ipfs';
+import { fetcherIPFS, VOTE_DESCRIPTION_MAX_BYTES } from 'utils/fetcher-ipfs';
 import { useQuery } from '@tanstack/react-query';
-import ReactMarkdown from 'react-markdown';
-import {
-  replaceAddressAndCIDInMD,
-  replaceImagesInMD,
-  replaceLinksInMD,
-} from 'utils/replace-custom-elements-in-MD';
+import { VoteMarkdown } from 'shared/components/vote-markdown';
 import { WarningIconTransparent } from 'shared/components/icons';
 import { getContractName } from 'utils/get-contract-name';
 
@@ -55,7 +49,8 @@ export const VoteItem = ({
 
   const { data = '', isLoading: isIPFSLoading } = useQuery({
     queryKey: [cid],
-    queryFn: async () => await fetcherIPFS(cid || ''),
+    queryFn: async () =>
+      await fetcherIPFS(cid || '', VOTE_DESCRIPTION_MAX_BYTES),
     enabled: !!cid,
   });
 
@@ -90,16 +85,7 @@ export const VoteItem = ({
       <ProposalDescription>
         {trimmedData && cid && !isIPFSLoading && (
           <MarkdownWrap>
-            <ReactMarkdown
-              remarkPlugins={[[remarkGfm, {}]]}
-              components={{
-                a: replaceLinksInMD,
-                img: replaceImagesInMD,
-                code: replaceAddressAndCIDInMD,
-              }}
-            >
-              {trimmedData}
-            </ReactMarkdown>
+            <VoteMarkdown>{trimmedData}</VoteMarkdown>
           </MarkdownWrap>
         )}
         {descriptionLines.length > 0 && !trimmedData && !isIPFSLoading && (
@@ -107,13 +93,13 @@ export const VoteItem = ({
             {descriptionLines.slice(0, 10).map((line, index) => (
               <DescriptionText key={index}>{line}</DescriptionText>
             ))}
-            {isUnknownContractCalled && (
-              <UnknownContract>
-                <WarningIconTransparent />
-                <span>Unknown Contract Called</span>
-              </UnknownContract>
-            )}
           </DescriptionContent>
+        )}
+        {isUnknownContractCalled && (
+          <UnknownContract>
+            <WarningIconTransparent />
+            <span>Unknown Contract Called</span>
+          </UnknownContract>
         )}
       </ProposalDescription>
     </ProposalListItemWrapper>

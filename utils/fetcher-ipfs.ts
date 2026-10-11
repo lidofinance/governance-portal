@@ -4,6 +4,9 @@ import { getIpfsUrls } from './get-ipfs-url';
 // Range hint for callers without a size limit: 100kb
 const DEFAULT_MAX_BYTES = 100_000;
 
+// 32kb per vote description
+export const VOTE_DESCRIPTION_MAX_BYTES = 32_000;
+
 const IPFS_FETCH_TIMEOUT = 8000;
 
 type FetcherIpfs = (

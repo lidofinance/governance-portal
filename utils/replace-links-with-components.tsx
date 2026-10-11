@@ -1,4 +1,4 @@
-import { Identicon, Link, Text, trimAddress } from '@lidofinance/lido-ui';
+import { Identicon, Text, trimAddress } from '@lidofinance/lido-ui';
 
 import { REGEX_URL } from './regex-url';
 import { REGEX_ETH_ADDRESS } from './regex-eth-address';
@@ -38,9 +38,9 @@ export const replaceJsxElements = (text: string) => {
     {
       regex: REGEX_CID,
       replace: (cid) => (
-        <Link href={getIpfsUrl(cid)}>
+        <ExternalLink href={getIpfsUrl(cid)} asLink>
           {cid.replace(REGEX_CID_CUTER, '$1..$2')}
-        </Link>
+        </ExternalLink>
       ),
     },
   ]);
