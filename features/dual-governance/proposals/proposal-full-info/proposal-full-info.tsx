@@ -42,13 +42,7 @@ import { useDualGovernanceProposalsContext } from 'providers/dual-governance-pro
 import { useProposals } from '@dg/hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { getEtherscanTxLink } from 'utils/etherscan';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import {
-  replaceAddressAndCIDInMD,
-  replaceImagesInMD,
-  replaceLinksInMD,
-} from 'utils/replace-custom-elements-in-MD';
+import { VoteMarkdown } from 'shared/components/vote-markdown';
 import { MarkdownWrap } from '../proposals-list/style';
 import { BaseCall } from 'utils/decode-evm-script-calls';
 import { useDecodedCalls } from 'shared/hooks';
@@ -453,16 +447,9 @@ export const ProposalFullInfo = ({ id }: Props) => {
             {proposalSubmittedLog && proposalSubmittedLog.args.metadata && (
               <Box marginTop={30}>
                 <MarkdownWrap>
-                  <ReactMarkdown
-                    remarkPlugins={[[remarkGfm, {}]]}
-                    components={{
-                      a: replaceLinksInMD,
-                      img: replaceImagesInMD,
-                      code: replaceAddressAndCIDInMD,
-                    }}
-                  >
+                  <VoteMarkdown>
                     {proposalSubmittedLog.args.metadata}
-                  </ReactMarkdown>
+                  </VoteMarkdown>
                 </MarkdownWrap>
               </Box>
             )}
