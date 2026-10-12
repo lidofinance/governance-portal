@@ -69,6 +69,12 @@ export const ABI_EXCEPTIONS = {
   CuratedFeeOracle: abis.csFeeOracleAbi,
   CuratedVerifier: abis.csVerifierAbi,
   CuratedEjector: abis.csEjectorAbi,
+  CSM2Module: abis.csmRegistryAbi,
+  CSM2Accounting: abis.accountingAbi,
+  CSM2FeeOracle: abis.csFeeOracleAbi,
+  CSM2HashConsensus: abis.csHashConsensusAbi,
+  CSM2Verifier: abis.csVerifierAbi,
+  CSM2Ejector: abis.csEjectorAbi,
 } as const;
 
 export type AbiExceptionContractName = keyof typeof ABI_EXCEPTIONS;

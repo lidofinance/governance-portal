@@ -668,3 +668,39 @@ export const DualGovernanceConfigProvider: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xa1692Af6FDfdD1030E4E9c4Bc429986FA64CB5EF',
   [CHAINS.Hoodi]: '0x2b685e6fB288bBb7A82533BAfb679FfDF6E5bb33',
 };
+
+// CSM 0x02: the second Community Staking Module instance, for 0x02 withdrawal credentials
+export const CSM2Module: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x792Cd25e4aE3578375031FB55e048E163A804F7B',
+  [CHAINS.Hoodi]: '0xbb7dd81FAC80f3Effa10eA8b973c15AE65a4CAf9',
+};
+
+export const CSM2Accounting: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x3696dDd942A9e156F5D4728505D1b9a32dCef900',
+  [CHAINS.Hoodi]: '0x04A0294bF3306532309D7DD776D4A7eF502313e0',
+};
+
+export const CSM2FeeOracle: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x0fB5EC09Cc975d8E1aF43063e51882798814f311',
+  [CHAINS.Hoodi]: '0x9B8bBA11bbE1a351CC8dD1CFCa6719FF7274A208',
+};
+
+export const CSM2HashConsensus: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xd5a965FAab2d02D3cC2286A9da42d09F0F2aE210',
+  [CHAINS.Hoodi]: '0x41142D077860906B0A7Debb270f1B8e7d1c8BF34',
+};
+
+export const CSM2Verifier: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x69b4C32a43565e768794D41b4A265F86dE61b861',
+  [CHAINS.Hoodi]: '0xFdE0FD9aDa4E898D3b34Dd4EA3433b75f0B6dd30',
+};
+
+export const CSM2Ejector: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0x2EE500885870b020e84E86a09A5d26D1EEec3E5E',
+  [CHAINS.Hoodi]: '0xf8a71C08DBe7D2efaD76D3951a3065B8cE20e4f0',
+};
+
+export const CSMCommittee: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f',
+  [CHAINS.Hoodi]: '0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53',
+};
