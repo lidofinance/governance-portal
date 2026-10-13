@@ -268,7 +268,6 @@ export const VoteCard = () => {
             <VoteDescription
               metadata={eventStart?.args.metadata}
               description={description}
-              allowMD
               hideLeadingHeading
               isActive={!isEnded}
             />
