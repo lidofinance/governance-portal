@@ -6,6 +6,7 @@ import {
   isEventForMotion,
 } from '../utils/get-motion-created-event';
 import { usePublicClient } from 'wagmi';
+import { Hex, keccak256 } from 'viem';
 import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
 import { fetchMotionsSubgraphItem } from '../subgraph/motions-subgraph-fetchers';
@@ -37,7 +38,7 @@ export const useMotionDetails = ({ motionId }: Args) => {
           chainId,
           motionId,
         );
-        if (!subgraphMotion) {
+        if (!subgraphMotion || BigInt(subgraphMotion.id) !== BigInt(motionId)) {
           return undefined;
         }
 
@@ -55,8 +56,13 @@ export const useMotionDetails = ({ motionId }: Args) => {
 
         return {
           ...subgraphMotion,
+          // the subgraph's evmScriptHash holds the full script, not its hash
           evmScript:
-            event && isEventForMotion(event, subgraphMotion)
+            event &&
+            isEventForMotion(event, {
+              ...subgraphMotion,
+              evmScriptHash: keccak256(subgraphMotion.evmScriptHash as Hex),
+            })
               ? event.args._evmScript
               : undefined,
         };
