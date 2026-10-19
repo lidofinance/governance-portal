@@ -48,6 +48,7 @@ const usePlaceOrderFormNetworkData = (
     data: balanceMap,
     isLoading: isBalanceMapLoading,
     isSuccess: isBalanceMapSuccess,
+    isFetching: isBalanceMapFetching,
     refetch: refetchBalanceMap,
   } = useStonksBalanceMap(stonksMetadata.address);
 
@@ -66,7 +67,8 @@ const usePlaceOrderFormNetworkData = (
     estimatedOutputFromBalance,
     isLoading:
       isBalanceMapLoading || isEstimatedOutputLoading || isStonksManagerLoading,
-    isFetched: isBalanceMapSuccess && isEstimatedOutputSuccess,
+    isFetched:
+      isBalanceMapSuccess && !isBalanceMapFetching && isEstimatedOutputSuccess,
     isStonksManagerConnected,
     fetchEstimatedOutput,
     refetch: async () => {
@@ -109,7 +111,7 @@ export const PlaceOrderFormProvider: FC<PlaceOrderFormProviderProps> = ({
     });
   }, [networkData.balance, networkData.estimatedOutputFromBalance, reset]);
 
-  // Set default form values when network data is fetched for the first time
+  // Reset form values each time a balance read completes
   useEffect(() => {
     if (networkData.isFetched) {
       resetForm();
