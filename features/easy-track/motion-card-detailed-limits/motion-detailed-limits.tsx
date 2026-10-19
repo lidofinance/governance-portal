@@ -16,7 +16,12 @@ export const MotionDetailedLimits = () => {
     isArchived,
   } = useMotionContext();
 
-  if (!periodLimitsData || isArchived || !motion.evmScriptCalldata) {
+  if (
+    !periodLimitsData ||
+    motionTopUpAmount === undefined ||
+    isArchived ||
+    !motion.evmScriptCalldata
+  ) {
     return null;
   }
 
