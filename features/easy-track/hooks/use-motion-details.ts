@@ -46,8 +46,8 @@ export const useMotionDetails = ({ motionId }: Args) => {
             motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
             client,
           });
-        } catch {
-          // evmScript is optional — return subgraph data without it
+        } catch (error) {
+          console.error(`Failed to fetch motion ${motionId} event:`, error);
         }
 
         return {
@@ -56,12 +56,17 @@ export const useMotionDetails = ({ motionId }: Args) => {
         };
       }
 
-      const event = await getMotionCreatedEvent({
-        easyTrackContract,
-        motionId: onChainMotionData.id,
-        motionSnapshotBlock: onChainMotionData.snapshotBlock,
-        client,
-      });
+      let event;
+      try {
+        event = await getMotionCreatedEvent({
+          easyTrackContract,
+          motionId: onChainMotionData.id,
+          motionSnapshotBlock: onChainMotionData.snapshotBlock,
+          client,
+        });
+      } catch (error) {
+        console.error(`Failed to fetch motion ${motionId} event:`, error);
+      }
 
       return formatMotionDataOnchain(event, onChainMotionData);
     },

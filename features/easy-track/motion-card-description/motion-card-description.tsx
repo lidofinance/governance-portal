@@ -240,6 +240,14 @@ export const MotionDescription = ({ motion }: Props) => {
     );
   }
 
+  if (!callDataRaw) {
+    return (
+      <Text size={14} color="warning">
+        Calldata unavailable
+      </Text>
+    );
+  }
+
   if (isLoading || callData == null) {
     return <>Loading...</>;
   }

@@ -16,8 +16,6 @@ export type MotionCreatedEventLog = Log<
   true
 >;
 
-const GET_LOGS_RANGE = 2499n;
-
 type Args = {
   client: PublicClient;
   easyTrackContract: ReturnType<typeof useReadContract<typeof easyTrackAbi>>;
@@ -43,8 +41,9 @@ export const getMotionCreatedEvent = async ({
     args: {
       _motionId: motionId,
     },
-    fromBlock: motionSnapshotBlock - GET_LOGS_RANGE,
-    toBlock: motionSnapshotBlock + GET_LOGS_RANGE,
+    // EasyTrack sets snapshotBlock to the block that emits MotionCreated
+    fromBlock: motionSnapshotBlock,
+    toBlock: motionSnapshotBlock,
     strict: true,
   });
 
