@@ -15,6 +15,7 @@ import {
   LabsOpsStethAllowedRecipientsRegistry,
   LegoLDORegistry,
   LegoStablesRegistry,
+  LOLLDOAllowedRecipientsRegistry,
   LOLStablecoinsAllowedRecipientsRegistry,
   PmlStablesRegistry,
   PmlStethAllowedRecipientsRegistry,
@@ -92,6 +93,7 @@ export const REGISTRY_WITH_LIMITS_BY_MOTION_TYPE = {
   [MotionType.LOLStablecoinsTopUp]: LOLStablecoinsAllowedRecipientsRegistry,
   [MotionType.LOLStablecoinsAdd]: LOLStablecoinsAllowedRecipientsRegistry,
   [MotionType.LOLStablecoinsRemove]: LOLStablecoinsAllowedRecipientsRegistry,
+  [MotionType.LOLLDOTopUp]: LOLLDOAllowedRecipientsRegistry,
 } as const;
 
 type HookArgs = {
@@ -198,6 +200,7 @@ const TOKEN_BY_MOTION_TYPE: Record<
   [MotionType.LOLStablecoinsTopUp]: { label: 'Stablecoins', decimals: 18 },
   [MotionType.LOLStablecoinsAdd]: { label: 'Stablecoins', decimals: 18 },
   [MotionType.LOLStablecoinsRemove]: { label: 'Stablecoins', decimals: 18 },
+  [MotionType.LOLLDOTopUp]: { label: 'LDO', decimals: 18 },
 };
 
 export const useTokenByTopUpType = ({ registryType }: HookArgs) => {

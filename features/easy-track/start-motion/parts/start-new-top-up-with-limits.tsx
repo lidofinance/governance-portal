@@ -46,6 +46,7 @@ import { validateTransitionLimit } from '../../utils/validate-transition-limit';
 import { checkInputsGreaterThanLimit } from '../../utils/check-inputs-greater-than-limit';
 import { periodLimitError } from './start-new-top-up-with-limits-and-custom-token';
 import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
+import { FACTORY_CONTRACTS } from '../../factories-metadata';
 
 export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.LegoLDOTopUp]: {
@@ -63,6 +64,10 @@ export const TOP_UP_WITH_LIMITS_MAP = {
   [MotionType.LabsOpsStethTopUp]: {
     evmContract: LabsOpsStethTopUp,
     motionType: MotionType.LabsOpsStethTopUp,
+  },
+  [MotionType.LOLLDOTopUp]: {
+    evmContract: FACTORY_CONTRACTS.LOLLDOTopUp,
+    motionType: MotionType.LOLLDOTopUp,
   },
 };
 

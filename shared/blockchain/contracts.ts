@@ -853,6 +853,14 @@ export const LOLStablecoinsAllowedRecipientsRegistry: ContractObject<
   chainAddressMap: addr.LOLStablecoinsAllowedRecipientsRegistry,
 };
 
+export const LOLLDOAllowedRecipientsRegistry: ContractObject<
+  typeof abi.registryWithLimitsAbi
+> = {
+  name: 'LOLLDOAllowedRecipientsRegistry',
+  abi: abi.registryWithLimitsAbi,
+  chainAddressMap: addr.LOLLDOAllowedRecipientsRegistry,
+};
+
 export const LOLStablecoinsTopUp: ContractObject<
   typeof abi.topUpWithLimitsStablesAbi
 > = {
