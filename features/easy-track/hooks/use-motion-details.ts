@@ -1,7 +1,10 @@
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EasyTrack } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { getMotionCreatedEvent } from '../utils/get-motion-created-event';
+import {
+  getMotionCreatedEvent,
+  isEventForMotion,
+} from '../utils/get-motion-created-event';
 import { usePublicClient } from 'wagmi';
 import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
@@ -52,7 +55,10 @@ export const useMotionDetails = ({ motionId }: Args) => {
 
         return {
           ...subgraphMotion,
-          evmScript: event?.args._evmScript,
+          evmScript:
+            event && isEventForMotion(event, subgraphMotion)
+              ? event.args._evmScript
+              : undefined,
         };
       }
 
