@@ -11,7 +11,7 @@ import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
-import AragonVotingAbi from '../../abi/AragonVoting.abi.json' assert { type: 'json' };
+import AragonVotingAbi from '../../abi/AragonVoting.abi.json' with { type: 'json' };
 import {
   VOTING_ADDRESSES,
   VOTES_PER_CHUNK,
