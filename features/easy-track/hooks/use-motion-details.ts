@@ -1,8 +1,12 @@
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { EasyTrack } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { getMotionCreatedEvent } from '../utils/get-motion-created-event';
+import {
+  getMotionCreatedEvent,
+  isEventForMotion,
+} from '../utils/get-motion-created-event';
 import { usePublicClient } from 'wagmi';
+import { Hex, keccak256 } from 'viem';
 import { useLidoSDK } from 'providers/lido-sdk';
 import invariant from 'tiny-invariant';
 import { fetchMotionsSubgraphItem } from '../subgraph/motions-subgraph-fetchers';
@@ -34,7 +38,7 @@ export const useMotionDetails = ({ motionId }: Args) => {
           chainId,
           motionId,
         );
-        if (!subgraphMotion) {
+        if (!subgraphMotion || BigInt(subgraphMotion.id) !== BigInt(motionId)) {
           return undefined;
         }
 
@@ -46,22 +50,35 @@ export const useMotionDetails = ({ motionId }: Args) => {
             motionSnapshotBlock: BigInt(subgraphMotion.snapshotBlock),
             client,
           });
-        } catch {
-          // evmScript is optional — return subgraph data without it
+        } catch (error) {
+          console.error(`Failed to fetch motion ${motionId} event:`, error);
         }
 
         return {
           ...subgraphMotion,
-          evmScript: event?.args._evmScript,
+          // the subgraph's evmScriptHash holds the full script, not its hash
+          evmScript:
+            event &&
+            isEventForMotion(event, {
+              ...subgraphMotion,
+              evmScriptHash: keccak256(subgraphMotion.evmScriptHash as Hex),
+            })
+              ? event.args._evmScript
+              : undefined,
         };
       }
 
-      const event = await getMotionCreatedEvent({
-        easyTrackContract,
-        motionId: onChainMotionData.id,
-        motionSnapshotBlock: onChainMotionData.snapshotBlock,
-        client,
-      });
+      let event;
+      try {
+        event = await getMotionCreatedEvent({
+          easyTrackContract,
+          motionId: onChainMotionData.id,
+          motionSnapshotBlock: onChainMotionData.snapshotBlock,
+          client,
+        });
+      } catch (error) {
+        console.error(`Failed to fetch motion ${motionId} event:`, error);
+      }
 
       return formatMotionDataOnchain(event, onChainMotionData);
     },

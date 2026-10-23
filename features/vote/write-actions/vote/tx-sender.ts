@@ -18,7 +18,11 @@ export const useVoteTxSender = () => {
 
       const isSupporting = mode === 'yay';
 
-      if (delegatedVoters?.length) {
+      if (delegatedVoters) {
+        invariant(
+          delegatedVoters.length > 0,
+          'At least one delegator must be selected',
+        );
         return writeVotingContract({
           address: votingContractAddress,
           functionName: 'attemptVoteForMultiple',

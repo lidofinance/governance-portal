@@ -41,7 +41,12 @@ export const VoteConfirmDelegatedModal = ({
         <Text>Vote with Delegated VP</Text>
       </Box>
       <Box margin="10px 0">
-        <Button color="secondary" onClick={handleSubmit} fullwidth>
+        <Button
+          color="secondary"
+          onClick={handleSubmit}
+          disabled={selectedAddresses.length === 0}
+          fullwidth
+        >
           {`"${VOTE_MODE_MAP[mode]}" (${formatBalance(selectedBalance)} ${KnownToken.LDO.symbol})`}
         </Button>
       </Box>
