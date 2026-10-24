@@ -65,12 +65,15 @@ export const formParts = ({
       const isNodeOperatorConnected = !!currentNodeOperator;
 
       const connectedKeysInfo = useMemo(() => {
-        if (!isNodeOperatorConnected || !keysInfo.data || !walletAddress)
+        if (!currentNodeOperator || !keysInfo.data || !walletAddress) {
           return null;
+        }
         return keysInfo.data.operators?.find(
-          (o) => getAddress(o.info.rewardAddress) === getAddress(walletAddress),
+          (o) =>
+            o.info.index === currentNodeOperator.id &&
+            getAddress(o.info.rewardAddress) === getAddress(walletAddress),
         );
-      }, [isNodeOperatorConnected, keysInfo.data, walletAddress]);
+      }, [currentNodeOperator, keysInfo.data, walletAddress]);
 
       useEffect(() => {
         if (currentNodeOperator) {
@@ -115,6 +118,14 @@ export const formParts = ({
             usedSigningKeys={usedSigningKeys}
             totalSigningKeys={totalSigningKeys}
           />
+
+          {!connectedKeysInfo && (
+            <MessageBox>
+              Unable to check your keys for invalid signatures and duplicates.
+              Make sure your unused keys are valid and unique before starting
+              the motion.
+            </MessageBox>
+          )}
 
           <Fieldset>
             <InputHookForm

@@ -1,5 +1,5 @@
 # build env
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN NODE_NO_BUILD_DYNAMICS=true yarn build && rm -rf /app/.next/cache
 RUN rm -rf /app/public/runtime && mkdir /app/public/runtime && chown node /app/public/runtime
 
 # final image
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache curl=~8 
     

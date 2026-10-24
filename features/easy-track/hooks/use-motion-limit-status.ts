@@ -9,7 +9,7 @@ import {
 type Props = {
   motionType: MotionType | EvmUnrecognized;
   isPending: boolean;
-  motionTopUpAmount: number;
+  motionTopUpAmount: number | undefined;
 };
 
 type Result = {
@@ -29,7 +29,9 @@ export const useMotionLimitStatus = ({
   });
 
   const isOverPeriodLimit = useMemo(() => {
-    if (!periodLimitsData) return false;
+    if (!periodLimitsData || motionTopUpAmount === undefined) {
+      return false;
+    }
     const newSpentAmount =
       Number(periodLimitsData.periodData.alreadySpentAmount) +
       motionTopUpAmount;
