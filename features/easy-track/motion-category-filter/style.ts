@@ -6,7 +6,7 @@ const FILTER_CATEGORY_FILL_COLOR_MAP: Record<FilterCategory, string> = {
   Staking: '#175cd3',
   Treasury: '#087c72',
   stVaults: '#a85600',
-  'Lido Lend': '#3538CD',
+  'Lido Lend': '#3538cd',
 };
 
 export const Wrap = styled.div`

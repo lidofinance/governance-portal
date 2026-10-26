@@ -20,10 +20,7 @@ type TrustedCallerAbi = readonly [
   },
 ];
 
-export const useIsTrustedCaller = (
-  contractObject: ContractObject,
-  { enabled = true } = {},
-) => {
+export const useIsTrustedCaller = (contractObject: ContractObject) => {
   const { chainId } = useLidoSDK();
   const { address } = useAccount();
 
@@ -42,7 +39,7 @@ export const useIsTrustedCaller = (
 
       return trustedCaller.toLowerCase() === address?.toLowerCase();
     },
-    enabled: enabled && !!address,
+    enabled: !!address,
   });
 
   return {

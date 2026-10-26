@@ -18,14 +18,10 @@ import {
 } from './create-motion-form-part';
 import { Fieldset, MessageBox } from './style';
 
-// Encodes calldata as (Action, bytes) and uses factory metadata for action titles.
-// Each factory provides its action fields, validation, and payload encoders.
-
 export type ActionFormData = { action: string };
 
 type Args<FormData extends ActionFormData, M extends ActionFactoryName> = {
   motionType: M;
-  requiresTrustedCaller?: boolean;
   getDefaultFormData: () => FormData;
   actions: Record<
     FactoryAction<M>,
@@ -41,7 +37,6 @@ export const createActionFormPart = <
   M extends ActionFactoryName,
 >({
   motionType,
-  requiresTrustedCaller = false,
   getDefaultFormData,
   actions,
 }: Args<FormData, M>) => {
@@ -60,7 +55,6 @@ export const createActionFormPart = <
     const ordinal = actionTitles.findIndex(
       (_, index) => String(index) === value,
     );
-    // The lookup accepts only ordinals present in this factory's title tuple.
     if (ordinal === -1) {
       return null;
     }
@@ -90,7 +84,7 @@ export const createActionFormPart = <
   }) => {
     const { watch, trigger } = useFormContext();
     const { isTrustedCallerConnected, isTrustedCallerLoading } =
-      useIsTrustedCaller(factory, { enabled: requiresTrustedCaller });
+      useIsTrustedCaller(factory);
 
     const action = parseAction(watch(fieldNames.action));
 
@@ -102,11 +96,11 @@ export const createActionFormPart = <
       }
     }, [action, trigger]);
 
-    if (requiresTrustedCaller && isTrustedCallerLoading) {
+    if (isTrustedCallerLoading) {
       return <PageLoader />;
     }
 
-    if (requiresTrustedCaller && !isTrustedCallerConnected) {
+    if (!isTrustedCallerConnected) {
       return <MessageBox>You should be connected as trusted caller</MessageBox>;
     }
 

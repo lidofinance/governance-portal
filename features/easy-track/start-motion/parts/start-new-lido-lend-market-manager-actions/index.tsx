@@ -61,7 +61,6 @@ const actions = {
 
 export const formParts = createActionFormPart({
   motionType: MotionType.LidoLendMarketManagerActions,
-  requiresTrustedCaller: true,
   actions,
   getDefaultFormData: (): FormData => ({
     action: '',

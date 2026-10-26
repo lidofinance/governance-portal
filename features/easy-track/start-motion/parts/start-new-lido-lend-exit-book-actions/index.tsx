@@ -36,7 +36,6 @@ const actions = {
 
 export const formParts = createActionFormPart({
   motionType: MotionType.LidoLendExitBookActions,
-  requiresTrustedCaller: true,
   actions,
   getDefaultFormData: (): FormData => ({
     action: '',

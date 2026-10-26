@@ -1111,12 +1111,6 @@ export const CuratedMetaRegistry: ContractObject<typeof abi.metaRegistryAbi> = {
   chainAddressMap: addr.CuratedMetaRegistry,
 };
 
-export const CircuitBreaker: ContractObject<typeof abi.circuitBreakerAbi> = {
-  name: 'CircuitBreaker',
-  abi: abi.circuitBreakerAbi,
-  chainAddressMap: addr.CircuitBreaker,
-};
-
 export const CreateOrUpdateOperatorGroup: ContractObject<
   typeof abi.createOrUpdateOperatorGroupAbi
 > = {

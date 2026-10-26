@@ -103,12 +103,12 @@ export const LidoLendGuardianActions = ({
           Unban <b>{requests.length}</b> account
           {requests.length === 1 ? '' : 's'} from guardian signals
           <ul>
-            {requests.map((request) => (
-              <li key={request.account}>
+            {requests.map((request, requestIndex) => (
+              <li key={requestIndex}>
                 <AddressPopInline address={request.account} /> on market
                 {request.marketIds.length === 1 ? '' : 's'}:{' '}
                 {request.marketIds.map((marketId, index) => (
-                  <span key={marketId}>
+                  <span key={index}>
                     {index > 0 && ', '}
                     <MarketId marketId={marketId} />
                   </span>

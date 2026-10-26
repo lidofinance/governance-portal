@@ -57,7 +57,6 @@ const actions = {
 
 export const formParts = createActionFormPart({
   motionType: MotionType.LidoLendGuardianActions,
-  requiresTrustedCaller: true,
   actions,
   getDefaultFormData: (): FormData => ({
     action: '',

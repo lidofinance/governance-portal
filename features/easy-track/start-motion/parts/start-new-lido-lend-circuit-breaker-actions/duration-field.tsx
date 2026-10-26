@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
-import { CircuitBreaker } from 'shared/blockchain/contracts';
-import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
+import { circuitBreakerAbi } from 'abi/generated';
+import {
+  useReadContract,
+  useReadContractGetter,
+} from 'shared/blockchain/hooks/use-read-contract';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
-import { validateUintValue } from '@easy-track/utils/validate-uint-value';
+import { validateInteger } from '@easy-track/lido-lend/validation';
+import { FACTORY_CONTRACTS } from '../../../factories-metadata';
 import { Fieldset } from '../style';
 
 type Bounds = { min: bigint; max: bigint };
@@ -23,18 +27,33 @@ export const DurationField = ({
   label: string;
 } & BoundsNames) => {
   const { trigger } = useFormContext();
-  const circuitBreaker = useReadContract(CircuitBreaker);
+  const factory = useReadContract(
+    FACTORY_CONTRACTS.LidoLendCircuitBreakerActions,
+  );
+  const getCircuitBreakerReader = useReadContractGetter(circuitBreakerAbi);
 
-  const { data: bounds } = useQuery<Bounds | null>({
-    queryKey: ['ll-circuit-breaker-bounds', circuitBreaker.address, minName],
+  // The bounds belong to the breaker the factory checks against, which is not
+  // the protocol CircuitBreaker in contract-addresses.ts.
+  const { data: bounds } = useQuery<Bounds>({
+    queryKey: ['ll-circuit-breaker-bounds', factory.address, minName],
     staleTime: Infinity,
     queryFn: async () => {
+      const circuitBreaker = await factory.readContract('circuitBreaker');
+      if (circuitBreaker === null) {
+        throw new Error('Failed to read LidoLendCircuitBreakerActions data');
+      }
+
+      const readCircuitBreaker = getCircuitBreakerReader(circuitBreaker);
       const [min, max] = await Promise.all([
-        circuitBreaker.readContract(minName),
-        circuitBreaker.readContract(maxName),
+        readCircuitBreaker(minName),
+        readCircuitBreaker(maxName),
       ]);
 
-      return min === null || max === null ? null : { min, max };
+      if (min === null || max === null) {
+        throw new Error('Failed to read circuit breaker bounds');
+      }
+
+      return { min, max };
     },
   });
 
@@ -57,7 +76,10 @@ export const DurationField = ({
         rules={{
           required: 'Field is required',
           validate: (value: string) =>
-            validateUintValue(value, bounds ?? {}) ?? true,
+            validateInteger(value, bounds?.max) ??
+            (!bounds ||
+              BigInt(value) >= bounds.min ||
+              `Value must be at least ${bounds.min}`),
         }}
       />
     </Fieldset>

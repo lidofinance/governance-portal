@@ -133,8 +133,8 @@ export const LidoLendMarketManagerActions = ({
           Unfreeze <b>{marketIds.length}</b> market
           {marketIds.length === 1 ? '' : 's'}
           <ul>
-            {marketIds.map((marketId) => (
-              <li key={marketId}>
+            {marketIds.map((marketId, index) => (
+              <li key={index}>
                 <MarketId marketId={marketId} />
               </li>
             ))}

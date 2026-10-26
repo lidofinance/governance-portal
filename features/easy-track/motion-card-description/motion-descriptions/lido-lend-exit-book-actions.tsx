@@ -53,8 +53,8 @@ export const LidoLendExitBookActions = ({
           Set <b>{vaults.length}</b> vault{vaults.length === 1 ? '' : 's'} to{' '}
           <b>{allowed ? 'allowed' : 'disallowed'}</b> on the ERC-4626 exit book
           <ul>
-            {vaults.map((vault) => (
-              <li key={vault}>
+            {vaults.map((vault, index) => (
+              <li key={index}>
                 <AddressPopInline address={vault} />
               </li>
             ))}

@@ -36,7 +36,6 @@ const actions = {
 
 export const formParts = createActionFormPart({
   motionType: MotionType.LidoLendCircuitBreakerActions,
-  requiresTrustedCaller: true,
   actions,
   getDefaultFormData: (): FormData => ({
     action: '',

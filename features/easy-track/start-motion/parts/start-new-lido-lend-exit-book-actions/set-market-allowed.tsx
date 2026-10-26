@@ -1,5 +1,5 @@
 import { encodeFunctionResult, type Address } from 'viem';
-import { useFieldArray } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, ButtonIcon } from '@lidofinance/lido-ui';
 import { lidoLendExitBookActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
@@ -19,6 +19,16 @@ import {
   RemoveItemButton,
 } from '../style';
 
+type Market = FormData['markets'][number];
+
+const isSameMarket = (a: Market, b: Market) =>
+  (['loanToken', 'collateralToken', 'oracle', 'irm'] as const).every(
+    (key) => a[key].toLowerCase() === b[key].toLowerCase(),
+  ) &&
+  validatePercentValue(a.lltv) === null &&
+  validatePercentValue(b.lltv) === null &&
+  parsePercentInput(a.lltv) === parsePercentInput(b.lltv);
+
 // LidoLendExitBookActions.Action.SetMorphoExitBookAllowed
 // -> IMorphoExitBook.setMarketAllowed(MarketParams, bool) on `morphoExitBook`
 export const SetMarketAllowedFields = ({
@@ -26,7 +36,9 @@ export const SetMarketAllowedFields = ({
 }: {
   fieldNames: FieldNames<FormData, 'markets' | 'allowed'>;
 }) => {
+  const { watch } = useFormContext();
   const marketsFieldArray = useFieldArray({ name: fieldNames.markets });
+  const markets: FormData['markets'] = watch(fieldNames.markets);
 
   return (
     <>
@@ -74,8 +86,26 @@ export const SetMarketAllowedFields = ({
               label="LLTV (%)"
               rules={{
                 required: 'Field is required',
-                validate: (value: string) =>
-                  validatePercentValue(value) ?? true,
+                validate: (value: string) => {
+                  const lltvErr = validatePercentValue(value);
+                  if (lltvErr) {
+                    return lltvErr;
+                  }
+
+                  // The factory emits one call per market, so a repeated
+                  // market would set the same flag twice in the same motion.
+                  const market = { ...markets[index], lltv: value };
+                  const duplicateIndex = markets.findIndex(
+                    (other, otherIndex) =>
+                      otherIndex !== index && isSameMarket(other, market),
+                  );
+
+                  if (duplicateIndex !== -1) {
+                    return 'Value must not duplicate another market';
+                  }
+
+                  return true;
+                },
               }}
             />
           </Fieldset>
