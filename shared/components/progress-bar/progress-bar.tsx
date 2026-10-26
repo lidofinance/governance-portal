@@ -37,10 +37,16 @@ export const ProgressBar = (props: Props) => {
       </ProgressBarOutline>
       {showProgressInfo && (
         <ProgressBarInfo>
-          <Text as="span" size={14} weight={600}>
+          <Text as="span" size={14} weight={600} data-testid="progressPercent">
             {progressPercent}% {progressTitle ? progressTitle : ''}
           </Text>
-          <Text as="span" size={14} weight={600} color="secondary">
+          <Text
+            as="span"
+            size={14}
+            weight={600}
+            color="secondary"
+            data-testid="progressTotalTitle"
+          >
             {totalTitle || ''}
           </Text>
         </ProgressBarInfo>

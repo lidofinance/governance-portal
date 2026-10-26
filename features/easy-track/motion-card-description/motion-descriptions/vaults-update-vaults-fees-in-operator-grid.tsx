@@ -17,7 +17,7 @@ export const VaultsUpdateVaultsFeesInOperatorGrid = ({
   const operatorGrid = useReadContract(OperatorGrid);
 
   const { data } = useQuery({
-    queryKey: [`desc-vaults-fee-updates-${vaults.join('-')}`],
+    queryKey: [`desc-vaults-fee-updates-${vaults.join('-')}`, isOnChain],
     queryFn: async () => {
       if (!isOnChain) {
         return null;

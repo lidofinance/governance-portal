@@ -199,7 +199,7 @@ export const useProposalStatus = ({
           variant: 'warning',
         },
         info: (
-          <Text color="primary">
+          <Text color="primary" data-testid="proposalStatusInfo">
             {statusText.vetoPossible}{' '}
             <Text as="span">
               <b>{targetCountdown}</b>
@@ -222,7 +222,11 @@ export const useProposalStatus = ({
           text: statusText.blocked,
           variant: 'danger',
         },
-        info: <Text color="primary">{emergencyCommitteeLinkText}</Text>,
+        info: (
+          <Text color="primary" data-testid="proposalStatusInfo">
+            {emergencyCommitteeLinkText}
+          </Text>
+        ),
       };
     }
     return {
@@ -234,9 +238,15 @@ export const useProposalStatus = ({
       },
       info: isCountdownFinished ? null : visibleState ===
         VisibleGovernanceState.BlockedDeactivation ? (
-        <Text>Executable in {deactivationTimeFormatted}</Text>
+        <Text data-testid="proposalStatusInfo">
+          Executable in {deactivationTimeFormatted}
+        </Text>
       ) : (
-        <Text color="primary" onClick={(e) => e.stopPropagation()}>
+        <Text
+          color="primary"
+          onClick={(e) => e.stopPropagation()}
+          data-testid="proposalStatusInfo"
+        >
           {emergencyCommitteeLinkText}
           {' for '}
           <Text as="span">

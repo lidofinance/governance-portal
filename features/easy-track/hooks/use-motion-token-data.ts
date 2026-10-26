@@ -3,7 +3,6 @@ import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract
 import { erc20Abi } from 'abi/generated/ERC20';
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
-import { ETH_DECIMALS } from 'shared/blockchain/constants';
 
 export const useMotionTokenData = (
   tokenAddress: Address | null | undefined,
@@ -14,24 +13,23 @@ export const useMotionTokenData = (
   return useQuery({
     queryKey: ['motion-token-data', tokenAddress, chainId],
     queryFn: async () => {
-      if (!tokenAddress?.length) return null;
-      try {
-        const tokenContract = connectErc20Contract(tokenAddress);
-        const label = await tokenContract('symbol');
-        const decimals = await tokenContract('decimals');
-
-        return {
-          label,
-          address: tokenAddress,
-          decimals,
-        };
-      } catch (error) {
-        return {
-          label: 'Unknown token',
-          address: tokenAddress,
-          decimals: ETH_DECIMALS,
-        };
+      if (!tokenAddress?.length) {
+        return null;
       }
+
+      const tokenContract = connectErc20Contract(tokenAddress);
+      const label = await tokenContract('symbol');
+      const decimals = await tokenContract('decimals');
+
+      if (label === null || decimals === null) {
+        throw new Error(`Failed to read metadata of token ${tokenAddress}`);
+      }
+
+      return {
+        label,
+        address: tokenAddress,
+        decimals,
+      };
     },
     enabled: !!tokenAddress && tokenAddress.length > 0,
   });

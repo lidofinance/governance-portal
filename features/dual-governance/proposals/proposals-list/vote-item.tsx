@@ -82,7 +82,7 @@ export const VoteItem = ({
         </VoteStatusWrapper>
       </SummarySection>
 
-      <ProposalDescription>
+      <ProposalDescription data-testid="voteDescription">
         {trimmedData && cid && !isIPFSLoading && (
           <MarkdownWrap>
             <VoteMarkdown>{trimmedData}</VoteMarkdown>

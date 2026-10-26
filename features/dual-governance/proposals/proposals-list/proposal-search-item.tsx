@@ -31,6 +31,7 @@ export const ProposalSearchItem = ({ id }: { id: string }) => {
         <Link
           href={`${PROPOSALS_PATH}/${proposal.proposalId}`}
           key={proposal.proposalId}
+          data-testid={`proposalCardPreview-${proposal.proposalId}`}
         >
           <ProposalsListItem
             id={proposal.proposalId}

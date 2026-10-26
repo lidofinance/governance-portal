@@ -27,6 +27,10 @@ export const useAllowedTokens = () => {
             tokenContract('decimals'),
           ]);
 
+          if (label === null || decimals === null) {
+            throw new Error(`Failed to read metadata of token ${tokenAddress}`);
+          }
+
           return { address: tokenAddress, label, decimals };
         }),
       );

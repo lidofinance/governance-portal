@@ -328,7 +328,9 @@ export const ProposalFullInfo = ({ id }: Props) => {
     return (
       <>
         <ProposalContainer>
-          <ProposalName>Proposal #{id}</ProposalName>
+          <ProposalName data-testid="proposalTitle">
+            Proposal #{id}
+          </ProposalName>
           <InlineLoaderStyled />
         </ProposalContainer>
       </>
@@ -340,7 +342,10 @@ export const ProposalFullInfo = ({ id }: Props) => {
       <BackButton label="proposals" href={GOVERNANCE_PATH} />
       <ProposalHeader>
         {proposalStatusInfo && proposalStatusInfo.badge && (
-          <Badge $variant={proposalStatusInfo.badge.variant}>
+          <Badge
+            $variant={proposalStatusInfo.badge.variant}
+            data-testid="proposalStatus"
+          >
             {proposalStatusInfo.badge.text}{' '}
             {proposalStatusInfo.badge.text === 'Ready to execute' && (
               <DGTooltip topic="readyToExecute" />
@@ -349,12 +354,12 @@ export const ProposalFullInfo = ({ id }: Props) => {
         )}
         {proposalStatusInfo?.info && proposalStatusInfo.info}
       </ProposalHeader>
-      <ProposalName>Proposal #{id}</ProposalName>
+      <ProposalName data-testid="proposalTitle">Proposal #{id}</ProposalName>
       <ProposalStateLogWrapper>
         {submittedAt && (
           <>
             {voteId && (
-              <SubmitDate as="span">
+              <SubmitDate as="span" data-testid="proposalSubmitted">
                 {proposalSubmittedLog &&
                 proposalSubmittedLog.transactionHash ? (
                   <Link
@@ -369,14 +374,18 @@ export const ProposalFullInfo = ({ id }: Props) => {
                   <span>Submitted</span>
                 )}{' '}
                 from{' '}
-                <ProposalLink href={votePage(voteId)} target="_self">
+                <ProposalLink
+                  href={votePage(voteId)}
+                  target="_self"
+                  data-testid="proposalVoteLink"
+                >
                   Vote #{voteId}
                 </ProposalLink>{' '}
                 on {submittedAt}
               </SubmitDate>
             )}
             {!voteId && (
-              <SubmitDate as="span">
+              <SubmitDate as="span" data-testid="proposalSubmitted">
                 {proposalSubmittedLog &&
                 proposalSubmittedLog.transactionHash ? (
                   <Link
@@ -398,7 +407,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
         {scheduledAt && (
           <>
             {proposalScheduledLog && proposalScheduledLog.transactionHash ? (
-              <SubmitDate as="span">
+              <SubmitDate as="span" data-testid="proposalScheduled">
                 <Link
                   href={getEtherscanTxLink(
                     chainId,
@@ -410,12 +419,14 @@ export const ProposalFullInfo = ({ id }: Props) => {
                 on {scheduledAt}
               </SubmitDate>
             ) : (
-              <SubmitDate as="span">Scheduled on {scheduledAt}</SubmitDate>
+              <SubmitDate as="span" data-testid="proposalScheduled">
+                Scheduled on {scheduledAt}
+              </SubmitDate>
             )}
           </>
         )}
         {proposalExecutedAt && (
-          <SubmitDate as="span">
+          <SubmitDate as="span" data-testid="proposalExecuted">
             {proposalEvents?.proposalExecutedEvent?.transactionHash ? (
               <Link
                 href={getEtherscanTxLink(
@@ -446,7 +457,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
             </Box>
             {proposalSubmittedLog && proposalSubmittedLog.args.metadata && (
               <Box marginTop={30}>
-                <MarkdownWrap>
+                <MarkdownWrap data-testid="proposalDescription">
                   <VoteMarkdown>
                     {proposalSubmittedLog.args.metadata}
                   </VoteMarkdown>
@@ -479,7 +490,7 @@ export const ProposalFullInfo = ({ id }: Props) => {
       </Box>
 
       {calls && calls.length > 0 && (
-        <Box marginTop={30}>
+        <Box marginTop={30} data-testid="proposalScript">
           <Script decodedCalls={decodedEvmScriptCalls} />
         </Box>
       )}

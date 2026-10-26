@@ -41,9 +41,11 @@ export const ProposalName = ({
         )}
 
         <FlexWrapper $flexDirection="column" $alignItems="flex-start">
-          <Title>{isAragon ? `Vote #${id}` : `Proposal #${id}`}</Title>
+          <Title data-testid={isAragon ? 'voteTitle' : 'proposalTitle'}>
+            {isAragon ? `Vote #${id}` : `Proposal #${id}`}
+          </Title>
           {proposer && (
-            <Text size={14} color="secondary">
+            <Text size={14} color="secondary" data-testid="proposalProposer">
               by{' '}
               <Link href={getEtherscanAddressLink(chainId, proposer)}>
                 <AddressUI as="span" address={proposer} />

@@ -94,7 +94,7 @@ export const SupportInfo = () => {
         <InlineLoaderStyled />
       ) : (
         <>
-          <Text size={22} weight={600}>
+          <Text size={22} weight={600} data-testid="vetoSupportAmount">
             {formatEth(totalStEthInEscrow || 0n)} stETH
           </Text>
 

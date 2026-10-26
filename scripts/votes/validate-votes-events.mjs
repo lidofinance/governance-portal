@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'node:path';
 import { createPublicClient, http, decodeEventLog } from 'viem';
 import { RPC_TIMEOUT_MS } from '../startup-checks/rpc.mjs';
-import AragonVotingAbi from '../../abi/AragonVoting.abi.json' assert { type: 'json' };
+import AragonVotingAbi from '../../abi/AragonVoting.abi.json' with { type: 'json' };
 import { fetchCastVoteEvents } from '../../utils/votes/fetch-vote-events.mjs';
 import {
   APPROX_BLOCK_TIME_SECONDS,

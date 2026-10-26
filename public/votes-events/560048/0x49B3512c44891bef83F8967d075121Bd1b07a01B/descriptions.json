@@ -428,5 +428,10 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "Add Lend EasyTrack factories"
+  },
+  "86": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the Gloas upgrade to Dual Governance.\nlidovoteipfs://bafkreidwrq3a3xqb7b4p4gcfdqhd3hbam3b5orw2axnclqsnkn6k74m5qq"
   }
 }
