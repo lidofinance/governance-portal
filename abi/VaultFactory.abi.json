@@ -1,0 +1,301 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_lidoLocator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_beacon",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_dashboardImpl",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_previousFactory",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "CloneArgumentsTooLong",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "FailedDeployment",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "InsufficientBalance",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "balance",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "needed",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "name": "InsufficientFunds",
+    "type": "error",
+    "inputs": []
+  },
+  {
+    "name": "ZeroArgument",
+    "type": "error",
+    "inputs": [
+      {
+        "name": "argument",
+        "type": "string",
+        "internalType": "string"
+      }
+    ]
+  },
+  {
+    "name": "DashboardCreated",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "dashboard",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "vault",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "admin",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "VaultCreated",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "vault",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "BEACON",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "DASHBOARD_IMPL",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "LIDO_LOCATOR",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "PREVIOUS_FACTORY",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "createVaultWithDashboard",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_defaultAdmin",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_nodeOperator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_nodeOperatorManager",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_nodeOperatorFeeBP",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_confirmExpiry",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_roleAssignments",
+        "type": "tuple[]",
+        "components": [
+          {
+            "name": "account",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "role",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          }
+        ],
+        "internalType": "struct Permissions.RoleAssignment[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "vault",
+        "type": "address",
+        "internalType": "contract IStakingVault"
+      },
+      {
+        "name": "dashboard",
+        "type": "address",
+        "internalType": "contract Dashboard"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "name": "createVaultWithDashboardWithoutConnectingToVaultHub",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_defaultAdmin",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_nodeOperator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_nodeOperatorManager",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_nodeOperatorFeeBP",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_confirmExpiry",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_roleAssignments",
+        "type": "tuple[]",
+        "components": [
+          {
+            "name": "account",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "role",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          }
+        ],
+        "internalType": "struct Permissions.RoleAssignment[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "vault",
+        "type": "address",
+        "internalType": "contract IStakingVault"
+      },
+      {
+        "name": "dashboard",
+        "type": "address",
+        "internalType": "contract Dashboard"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "deployedVaults",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_vault",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  }
+]

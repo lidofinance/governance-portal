@@ -2,7 +2,7 @@ import { VoterState } from 'shared/votes/types';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useAccount } from 'wagmi';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { Voting } from 'shared/blockchain/contracts';
+import { AragonVoting } from 'shared/blockchain/contracts';
 import { useQuery } from '@tanstack/react-query';
 import invariant from 'tiny-invariant';
 import { Address } from 'viem';
@@ -77,7 +77,7 @@ const processEligibleDelegatedVoters = (
 export const useVoteDelegators = (voteId: number | undefined) => {
   const { chainId } = useLidoSDK();
   const { address: walletAddress } = useAccount();
-  const voting = useReadContract(Voting);
+  const voting = useReadContract(AragonVoting);
 
   return useQuery({
     queryKey: [

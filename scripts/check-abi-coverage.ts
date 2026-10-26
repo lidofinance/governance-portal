@@ -13,7 +13,7 @@ for (const name of Object.keys(ADDR)) {
   const key = getAbiKey(name);
   if (
     (!(key in abis) || !Array.isArray((abis as any)[key])) &&
-    !name.toLowerCase().includes('committee') // no need to check committees since we store their addresses only for potential voting script references
+    !/committee|multisig/i.test(name) // no need to check committees or multisigs since we store their addresses only for potential voting script references
   ) {
     console.log(`MISSING: ${name} (tried ${key})`);
   }

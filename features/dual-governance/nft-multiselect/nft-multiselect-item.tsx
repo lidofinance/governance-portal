@@ -31,6 +31,7 @@ export const NftMultiselectItem = (props: NftMultiselectItemProps) => {
       $interactive={customNftData === null || selectable}
       $checked={checked}
       onClick={selectable ? undefined : onClick}
+      data-testid={`nftItem-${id}`}
     >
       {selectable && (
         <CheckboxStyled
@@ -38,6 +39,7 @@ export const NftMultiselectItem = (props: NftMultiselectItemProps) => {
           onChange={handleCheckboxChange}
           onClick={(event) => event.stopPropagation()}
           checked={!!checked}
+          data-testid="nftItemCheckbox"
         />
       )}
       <UnstethIcon />

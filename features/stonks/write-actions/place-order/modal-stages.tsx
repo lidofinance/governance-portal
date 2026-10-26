@@ -15,11 +15,18 @@ import { formatToken } from 'shared/blockchain/utils';
 type Args = PlaceOrderFormInput & { stonksMetadata: StonksMetadata };
 
 const getInProgressText = (args: Args) => {
-  return `Placing order to sell ${formatToken({
+  const sellAmount = formatToken({
     amount: args.sellAmount,
     decimals: args.stonksMetadata.tokenFrom.decimals,
     symbol: args.stonksMetadata.tokenFrom.symbol,
-  })} for at least ${formatToken({
+  });
+  // Stonks v1 `placeOrder` sells the balance held at execution, not the form value
+  const sellText =
+    args.stonksMetadata.version === 1
+      ? `the entire balance (currently ${sellAmount})`
+      : sellAmount;
+
+  return `Placing order to sell ${sellText} for at least ${formatToken({
     amount: args.minBuyAmount,
     decimals: args.stonksMetadata.tokenTo.decimals,
     symbol: args.stonksMetadata.tokenTo.symbol,

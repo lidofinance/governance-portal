@@ -7,13 +7,12 @@ import {
   StatusWithIcon,
 } from './style';
 import { useDelegationFormData } from '@vote/providers/delegation-form-context';
-import { AragonSmallLogo, SnapshotLogo } from 'shared/components/icons';
+import { SnapshotLogo } from 'shared/components/icons';
 import { DelegationAddressBadge } from './delegation-address-badge';
 
 export const DelegationStatus = () => {
   const { isConnected } = useAccount();
   const {
-    mode,
     aragonDelegateAddress,
     snapshotDelegateAddress,
     aragonPublicDelegate,
@@ -25,66 +24,43 @@ export const DelegationStatus = () => {
     return null;
   }
 
-  if (mode === 'simple') {
-    return (
-      <StatusesWrap>
-        <DelegationStatusStyled>
-          <StatusWithIcon>
-            <AragonSmallLogo />
-            <StatusLabel>On Aragon</StatusLabel>
-          </StatusWithIcon>
-          {aragonDelegateAddress ? (
-            <DelegationAddressBadge
-              publicDelegate={aragonPublicDelegate}
-              address={aragonDelegateAddress}
-              type="Aragon"
-            />
-          ) : (
-            <StatusValue data-testid="delegationStatusAragon">
-              {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
-            </StatusValue>
-          )}
-        </DelegationStatusStyled>
-        <DelegationStatusStyled>
-          <StatusWithIcon>
-            <SnapshotLogo />
-            <StatusLabel>On Snapshot</StatusLabel>
-          </StatusWithIcon>
-          {snapshotDelegateAddress ? (
+  return (
+    <StatusesWrap>
+      <DelegationStatusStyled>
+        <StatusWithIcon>
+          <StatusLabel>On Aragon & Snapshot</StatusLabel>
+        </StatusWithIcon>
+        {aragonDelegateAddress ? (
+          <DelegationAddressBadge
+            publicDelegate={aragonPublicDelegate}
+            address={aragonDelegateAddress}
+            type="Aragon"
+          />
+        ) : (
+          <StatusValue data-testid="delegationStatusAragon">
+            {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
+          </StatusValue>
+        )}
+      </DelegationStatusStyled>
+      {snapshotDelegateAddress && (
+        <>
+          <DelegationStatusStyled>
+            <StatusWithIcon>
+              <SnapshotLogo />
+              <StatusLabel>On Snapshot</StatusLabel>
+            </StatusWithIcon>
             <DelegationAddressBadge
               address={snapshotDelegateAddress}
               publicDelegate={snapshotPublicDelegate}
               type="Snapshot"
             />
-          ) : (
-            <StatusValue data-testid="delegationStatusSnapshot">
-              {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
-            </StatusValue>
-          )}
-        </DelegationStatusStyled>
-      </StatusesWrap>
-    );
-  }
-
-  const delegateAddress =
-    mode === 'Aragon' ? aragonDelegateAddress : snapshotDelegateAddress;
-  const publicDelegate =
-    mode === 'Aragon' ? aragonPublicDelegate : snapshotPublicDelegate;
-
-  return (
-    <DelegationStatusStyled>
-      <StatusLabel>Delegated to</StatusLabel>
-      {delegateAddress ? (
-        <DelegationAddressBadge
-          address={delegateAddress}
-          publicDelegate={publicDelegate}
-          type={mode}
-        />
-      ) : (
-        <StatusValue data-testid="delegationStatus">
-          {loading.isDelegationInfoLoading ? 'Loading...' : 'Not delegated'}
-        </StatusValue>
+          </DelegationStatusStyled>
+          <StatusValue data-testid="snapshotDelegationFootNote">
+            Aragon delegation now applies to Snapshot too, so a separate
+            Snapshot delegation is no longer needed.
+          </StatusValue>
+        </>
       )}
-    </DelegationStatusStyled>
+    </StatusesWrap>
   );
 };

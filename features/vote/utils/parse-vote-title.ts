@@ -1,7 +1,7 @@
-import removeMD from 'remove-markdown';
-
 const TITLE_MAX_LEN = 120;
-const HEADING_LINE = /^#{1,6}[ \t]+(.+?)[ \t]*(?:\r?\n|$)/;
+// The vote page shows the title untruncated; longer headings stay in the description.
+const HEADING_MAX_LEN = 1024;
+const HEADING_PREFIX = /^#{1,6}[ \t]+/;
 
 const truncate = (text: string) => {
   if (text.length <= TITLE_MAX_LEN) {
@@ -30,12 +30,15 @@ export const splitLeadingHeading = (
     return { title: null, body: null };
   }
 
-  const heading = trimmed.match(HEADING_LINE);
+  // Find the line boundary separately to avoid overlapping whitespace matches.
+  const lineEnd = trimmed.indexOf('\n');
+  const firstLine = lineEnd === -1 ? trimmed : trimmed.slice(0, lineEnd);
+  const heading = firstLine.match(HEADING_PREFIX);
   if (heading) {
-    const cleanedTitle = removeMD(heading[1]).trim();
-    if (cleanedTitle) {
-      const body = trimmed.slice(heading[0].length).trimStart();
-      return { title: cleanedTitle, body: body.length > 0 ? body : null };
+    const title = firstLine.slice(heading[0].length).trim();
+    if (title && title.length <= HEADING_MAX_LEN) {
+      const body = lineEnd === -1 ? '' : trimmed.slice(lineEnd + 1).trimStart();
+      return { title, body: body.length > 0 ? body : null };
     }
   }
 

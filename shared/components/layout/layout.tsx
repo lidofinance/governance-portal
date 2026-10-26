@@ -3,6 +3,8 @@ import Head from 'next/head';
 
 import { ContainerProps } from '@lidofinance/lido-ui';
 
+import { config } from 'config';
+
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
 import { TestEnvBanner } from 'shared/components/test-env-banner';
@@ -25,6 +27,8 @@ type Props = {
 const META_DESCRIPTION =
   'Lido Governance Portal: follow Lido DAO governance, votes, decisions, on-chain voting, Aragon proposals, and Dual Governance.';
 
+const META_IMAGE_URL = `${config.selfOrigin}/social-preview.png`;
+
 export const Layout: FC<PropsWithChildren<Props>> = (props) => {
   const {
     title,
@@ -46,13 +50,15 @@ export const Layout: FC<PropsWithChildren<Props>> = (props) => {
           content={`${metaTitleProp ?? title ?? 'Governance Portal'} | Lido`}
         />
         <meta property="og:description" content={META_DESCRIPTION} />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content={META_IMAGE_URL} />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@lidofinance" />
         <meta
           name="twitter:title"
           content={`${metaTitleProp ?? title ?? 'Governance Portal'} | Lido`}
         />
         <meta name="twitter:description" content={META_DESCRIPTION} />
+        <meta name="twitter:image" content={META_IMAGE_URL} />
       </Head>
       <NoSsrWrapper>
         <TestEnvBanner />

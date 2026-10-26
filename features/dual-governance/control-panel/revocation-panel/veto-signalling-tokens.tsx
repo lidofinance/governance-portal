@@ -118,7 +118,7 @@ export const VetoSignallingTokens = ({
           'contract'
         )}
       </Text>
-      <RevocableTokensList>
+      <RevocableTokensList data-testid="vetoSignallingTokens">
         <RevocableTokenItem
           ref={popupAnchorRef}
           token={Token.stETH}

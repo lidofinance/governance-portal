@@ -9,26 +9,19 @@ import {
   TxStageSuccess,
 } from 'shared/blockchain/transaction-modal/tx-stages-basic';
 import { SuccessText } from 'shared/blockchain/transaction-modal/tx-stages-parts/success-text';
-import { DelegateTxArgs } from './types';
 
-const getInProgressText = (args: DelegateTxArgs) => {
-  return `You are delegating your voting power on ${args.type}`;
-};
+const IN_PROGRESS_TEXT = 'You are delegating your voting power';
 
 const getTxModalStagesDelegate = (
   transitStage: TransactionModalTransitStage,
 ) => ({
   ...getGeneralTransactionModalStages(transitStage),
 
-  sign: (args: DelegateTxArgs) =>
-    transitStage(
-      <TxStageSign title={getInProgressText(args)} description="" />,
-    ),
+  sign: () =>
+    transitStage(<TxStageSign title={IN_PROGRESS_TEXT} description="" />),
 
-  pending: (args: DelegateTxArgs, txHash?: string) =>
-    transitStage(
-      <TxStagePending title={getInProgressText(args)} txHash={txHash} />,
-    ),
+  pending: (txHash?: string) =>
+    transitStage(<TxStagePending title={IN_PROGRESS_TEXT} txHash={txHash} />),
 
   success: (txHash?: string) => {
     return transitStage(

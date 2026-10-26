@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { orderBy } from 'lodash';
 import { useActiveMotions, useArchivedMotions } from '../hooks/use-motions';
 import { MotionCard } from '../motion-card';
 import { MotionCardSkeleton } from '../motion-card-skeleton/motion-card-skeleton';
@@ -8,6 +9,8 @@ import styled from 'styled-components';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { MotionCategory } from '../motion-categories';
 import { getCategoryFactories } from '../utils/get-category-factories';
+import { getMotionStatus } from '../utils/get-motion-status';
+import { MotionStatus } from '../types';
 
 const INITIAL_TOTAL = 8;
 const ARCHIVE_PAGE_SIZE = 8;
@@ -89,10 +92,15 @@ export const Motions = ({ categories }: Props) => {
     }
   };
 
-  const motionsToShow = [
-    ...filteredActiveMotions,
-    ...allArchived.slice(0, archiveDisplayCount ?? 0),
-  ];
+  const motionsToShow = orderBy(
+    [
+      ...filteredActiveMotions,
+      ...allArchived.slice(0, archiveDisplayCount ?? 0),
+    ],
+    // Show all motions in order desc by id, but pending motions always come first
+    [(motion) => getMotionStatus(motion) === MotionStatus.PENDING, 'id'],
+    ['desc', 'desc'],
+  );
 
   const hasMotions = motionsToShow.length > 0;
   const isArchivePending = archivedData === undefined && archiveFetching;

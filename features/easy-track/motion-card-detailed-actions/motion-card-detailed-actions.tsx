@@ -141,7 +141,7 @@ const ActionsBody = ({ motion }: Pick<Props, 'motion'>) => {
             onClick={() =>
               handleEnact(BigInt(motion.id), motion.evmScriptCalldata as Hex)
             }
-            disabled={isOverPeriodLimit}
+            disabled={isOverPeriodLimit || !motion.evmScriptCalldata}
           >
             Enact
           </ButtonStyled>

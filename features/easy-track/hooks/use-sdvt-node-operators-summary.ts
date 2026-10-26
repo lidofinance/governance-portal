@@ -1,6 +1,6 @@
 import { useLidoSDK } from 'providers/lido-sdk';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
-import { SDVTRegistry } from 'shared/blockchain/contracts';
+import { SimpleDVTNodeOperatorsRegistry } from 'shared/blockchain/contracts';
 import { useNodeOperatorsList } from './use-node-operators-list';
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,7 +17,7 @@ type NodeOperatorSummary = {
 
 export const useSDVTNodeOperatorsSummaryMap = () => {
   const { chainId } = useLidoSDK();
-  const registry = useReadContract(SDVTRegistry);
+  const registry = useReadContract(SimpleDVTNodeOperatorsRegistry);
   const { data: nodeOperatorsList } = useNodeOperatorsList('sdvt');
 
   return useQuery({

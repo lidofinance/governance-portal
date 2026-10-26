@@ -109,6 +109,7 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
         rightDecorator={<ArrowDown />}
         disabled={disabled}
         $isOpen={isPopupOpen}
+        data-testid="selectNftsInput"
       />
       <PopupMenuStyled
         ref={popupRef}
@@ -119,7 +120,11 @@ export const NftMultiselect = (props: NftMultiselectProps) => {
         <PopupHeader>
           <Text>Select NFTs</Text>
           {optionsArray.length > 0 && (
-            <PopupSelectAllButton onClick={handleSelectAll} disabled={disabled}>
+            <PopupSelectAllButton
+              onClick={handleSelectAll}
+              disabled={disabled}
+              data-testid="selectAllNftsBtn"
+            >
               {Object.keys(selectedOptions || {}).length === optionsArray.length
                 ? 'Deselect All'
                 : 'Select All'}

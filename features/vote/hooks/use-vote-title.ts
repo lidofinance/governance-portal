@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
 import { fetcherIPFS } from 'utils/fetcher-ipfs';
-import { ARCHIVED_VOTE_IPFS_TIMEOUT } from '@vote/constants';
+import {
+  ARCHIVED_VOTE_IPFS_TIMEOUT,
+  VOTE_DESCRIPTION_MAX_BYTES,
+} from '@vote/constants';
 import {
   formatVoteTitle,
   splitLeadingHeading,
@@ -29,7 +32,7 @@ export const useVoteTitle = ({
     queryFn: async () =>
       await fetcherIPFS(
         cid || '',
-        undefined,
+        VOTE_DESCRIPTION_MAX_BYTES,
         isActive ? undefined : ARCHIVED_VOTE_IPFS_TIMEOUT,
       ),
     enabled: !!cid && !hasCachedDescription,

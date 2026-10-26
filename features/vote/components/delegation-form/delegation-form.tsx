@@ -1,34 +1,20 @@
 import { DelegationStatus } from './delegation-status';
-import { DelegationFormSubtitle } from './delegation-form-subtitle';
 import { DelegationAddressInput } from './delegation-address-input';
 import { DelegationFormBalance } from './delegation-form-balance';
 import { DelegationFormSubmitButton } from './delegation-form-submit-button';
-import { DelegationFormFootNote } from './delegation-form-foot-note';
 import { DelegationFormController } from './delegation-form-controller';
 import { DelegationFormPublicDelegateTooltip } from './delegation-form-public-delegate-tooltip';
-import {
-  DelegationFormProvider,
-  DelegationFormProviderProps,
-} from '@vote/providers/delegation-form-context';
+import { DelegationFormProvider } from '@vote/providers/delegation-form-context';
 
-type Props = DelegationFormProviderProps & {
-  onCustomizeClick?: () => void;
-};
-
-export const DelegationForm = ({
-  onCustomizeClick,
-  ...providerProps
-}: Props) => {
+export const DelegationForm = () => {
   return (
-    <DelegationFormProvider {...providerProps}>
+    <DelegationFormProvider>
       <DelegationFormController>
-        <DelegationFormSubtitle />
         <DelegationStatus />
         <DelegationAddressInput />
         <DelegationFormPublicDelegateTooltip />
-        <DelegationFormBalance onCustomizeClick={onCustomizeClick} />
-        <DelegationFormSubmitButton onCustomizeClick={onCustomizeClick} />
-        <DelegationFormFootNote />
+        <DelegationFormBalance />
+        <DelegationFormSubmitButton />
       </DelegationFormController>
     </DelegationFormProvider>
   );

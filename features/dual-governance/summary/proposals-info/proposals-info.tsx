@@ -10,7 +10,11 @@ export const ProposalsInfo = () => {
       <>
         <Text color="secondary">Active Proposals</Text>
         {isLoading && <InlineLoaderStyled />}
-        {!isLoading && <Text>{activeProposals.length}</Text>}
+        {!isLoading && (
+          <Text data-testid="activeProposalsCount">
+            {activeProposals.length}
+          </Text>
+        )}
       </>
     </ProposalsInfoStyled>
   );

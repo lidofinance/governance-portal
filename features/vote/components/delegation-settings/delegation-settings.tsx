@@ -1,48 +1,23 @@
-import { useState } from 'react';
-import { Button, Text, useBreakpoint } from '@lidofinance/lido-ui';
+import { Text, useBreakpoint } from '@lidofinance/lido-ui';
 
 import { FormTitle, FormWrap, Wrap } from './style';
 import { DelegateFromPublicListProvider } from '@vote/providers/delegate-form-public-list-context';
 import { DelegationForm } from '../delegation-form';
 import { PublicDelegateList } from '../public-delegate-list';
 
-type Props = {
-  customizeMode: boolean;
-};
-
-export const DelegationSettings = ({ customizeMode }: Props) => {
-  const [isSimpleModeOn, setIsSimpleModeOn] = useState(!customizeMode);
+export const DelegationSettings = () => {
   const isMobile = useBreakpoint('md');
 
   return (
     <Wrap>
       <DelegateFromPublicListProvider>
-        <FormWrap $customizable={!isSimpleModeOn}>
+        <FormWrap>
           <FormTitle>
             <Text size={isMobile ? 'lg' : 'xl'} weight={700}>
               Delegation
             </Text>
-            {!isSimpleModeOn && (
-              <Button
-                variant="outlined"
-                size="xs"
-                onClick={() => setIsSimpleModeOn(true)}
-              >
-                Back
-              </Button>
-            )}
           </FormTitle>
-          {isSimpleModeOn ? (
-            <DelegationForm
-              mode="simple"
-              onCustomizeClick={() => setIsSimpleModeOn(false)}
-            />
-          ) : (
-            <>
-              <DelegationForm mode="Aragon" />
-              <DelegationForm mode="Snapshot" />
-            </>
-          )}
+          <DelegationForm />
         </FormWrap>
         <PublicDelegateList />
       </DelegateFromPublicListProvider>

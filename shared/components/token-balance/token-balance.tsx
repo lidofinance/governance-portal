@@ -94,7 +94,11 @@ export const TokenBalance = (props: Props) => {
                 </span>
               }
             >
-              <Text size={14} color="secondary">
+              <Text
+                size={14}
+                color="secondary"
+                data-testid="tokenBalanceAmount"
+              >
                 {balance === 0n
                   ? '\u2014'
                   : formatEthCompact(
@@ -130,7 +134,7 @@ export const TokenBalance = (props: Props) => {
               </span>
             }
           >
-            <TokenLabel size={22}>
+            <TokenLabel size={22} data-testid="tokenBalanceAmount">
               {formatEth(
                 shouldConvertShares && convertedStETHLockedShares
                   ? convertedStETHLockedShares

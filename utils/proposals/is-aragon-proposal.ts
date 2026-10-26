@@ -1,5 +1,5 @@
 import { decodeEventLog, keccak256, PublicClient, stringToBytes } from 'viem';
-import { Voting } from 'shared/blockchain/contracts';
+import { AragonVoting } from 'shared/blockchain/contracts';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { findAbiItem } from '../find-abi-item';
 import invariant from 'tiny-invariant';
@@ -29,7 +29,7 @@ export const isAragonProposal = async ({
 
   let aragonAddress: `0x${string}`;
   try {
-    aragonAddress = getContractAddress(Voting, chainId, isInTestMode);
+    aragonAddress = getContractAddress(AragonVoting, chainId, isInTestMode);
   } catch {
     console.warn(`No Aragon voting contract address for chainId: ${chainId}`);
     return false;
@@ -48,7 +48,7 @@ export const isAragonProposal = async ({
   );
 
   const executeVoteEventAbi = findAbiItem({
-    abi: Voting.abi,
+    abi: AragonVoting.abi,
     name: 'ExecuteVote',
     type: 'event',
   });

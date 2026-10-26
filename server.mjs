@@ -29,26 +29,32 @@ const overrideSetHeader = (res) => {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-app.prepare().then(() => {
-  const server = createServer(async (req, res) => {
-    // Be sure to pass `true` as the second argument to `url.parse`.
-    // This tells it to parse the query portion of the URL.
-    const parsedUrl = parse(req.url, true);
+// Next can swallow startup rejections; log the error and exit nonzero.
+app
+  .prepare()
+  .then(() => {
+    const server = createServer(async (req, res) => {
+      // Be sure to pass `true` as the second argument to `url.parse`.
+      // This tells it to parse the query portion of the URL.
+      const parsedUrl = parse(req.url, true);
 
-    overrideSetHeader(res);
+      overrideSetHeader(res);
 
-    await handle(req, res, parsedUrl);
-  })
-    .once('error', (err) => {
-      console.error(err);
-      process.exit(1);
+      await handle(req, res, parsedUrl);
     })
-    .listen(port, () => {
-      console.debug(`> Ready on http://${hostname}:${port}`);
-    });
-  // prevents malicious client from slowly sending headers and rest of request
-  server.headersTimeout = 10_000;
-  server.requestTimeout = 30_000;
-  server.maxHeadersCount = 50;
-});
+      .once('error', (err) => {
+        console.error(err);
+        process.exit(1);
+      })
+      .listen(port, () => {
+        console.debug(`> Ready on http://${hostname}:${port}`);
+      });
+    // prevents malicious client from slowly sending headers and rest of request
+    server.headersTimeout = 10_000;
+    server.requestTimeout = 30_000;
+    server.maxHeadersCount = 50;
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

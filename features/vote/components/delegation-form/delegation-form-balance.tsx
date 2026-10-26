@@ -1,16 +1,12 @@
 import { Text } from '@lidofinance/lido-ui';
 import { useFormState } from 'react-hook-form';
-import { Balance, CustomizeButton, DelegationFormBalanceStyled } from './style';
+import { Balance, DelegationFormBalanceStyled } from './style';
 import { useAccount } from 'wagmi';
 import { useDelegationFormData } from '@vote/providers/delegation-form-context';
 import { formatToken } from 'shared/blockchain/utils';
 import { KnownToken } from 'shared/blockchain/tokens';
 
-type Props = {
-  onCustomizeClick?: () => void;
-};
-
-export const DelegationFormBalance = ({ onCustomizeClick }: Props) => {
+export const DelegationFormBalance = () => {
   const { daoTokenBalance } = useDelegationFormData();
   const { isConnected } = useAccount();
   const { errors } = useFormState();
@@ -33,14 +29,6 @@ export const DelegationFormBalance = ({ onCustomizeClick }: Props) => {
               })}
         </Text>
       </Balance>
-      {onCustomizeClick && (
-        <CustomizeButton
-          onClick={onCustomizeClick}
-          data-testid="customizeButton"
-        >
-          Customize
-        </CustomizeButton>
-      )}
     </DelegationFormBalanceStyled>
   );
 };

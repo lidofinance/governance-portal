@@ -21,14 +21,13 @@ const DelegationPage: FC<DelegationTabsLayoutProps> = ({ mode }) => {
 export default DelegationPage;
 
 type DelegationModePageParams = {
-  mode: ['delegators'] | ['customize'] | undefined;
+  mode: ['delegators'] | undefined;
 };
 
 export const getStaticPaths: GetStaticPaths<DelegationModePageParams> = () => {
   return {
     paths: [
       { params: { mode: undefined } },
-      { params: { mode: ['customize'] } },
       { params: { mode: ['delegators'] } },
     ],
     fallback: false, // return 404 on non match

@@ -15,7 +15,9 @@ export const StateInfo = () => {
       </Text>
 
       <StateStatus>
-        <Text size={34}>Emergency governance</Text>
+        <Text size={34} data-testid="dgStateLabel">
+          Emergency governance
+        </Text>
         <StateIndicator $state={VisibleGovernanceState.Warning} />
       </StateStatus>
       <Text size={22} weight={300}>

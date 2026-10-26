@@ -2502,13 +2502,13 @@
   resolved "https://registry.yarnpkg.com/@lidofinance/lido-shared-ui/-/lido-shared-ui-1.1.2.tgz#0bb1aee31f3b19f97e20a98786f672b656072c3b"
   integrity sha512-38e8Q0+RLPFSANGMRO5OGhhS1eyV+YmRsGtOU14C7A6U7/9kuevGiQt0CZrE5VrYO1bmD2rfjGGO3JwCb7wpCQ==
 
-"@lidofinance/lido-ui@^3.18.0", "@lidofinance/lido-ui@^3.31.0":
-  version "3.34.0"
-  resolved "https://registry.npmjs.org/@lidofinance/lido-ui/-/lido-ui-3.34.0.tgz"
-  integrity sha512-dhPEcY7NyNOkfWGxfijJ6G37NlpRp6NPSHBdmBnQ0+EjirjlhTA2VnBf/XkR1SP2fJw7fXlESftNJ6oImgRttA==
+"@lidofinance/lido-ui@3.45.0", "@lidofinance/lido-ui@^3.18.0":
+  version "3.45.0"
+  resolved "https://registry.yarnpkg.com/@lidofinance/lido-ui/-/lido-ui-3.45.0.tgz#d2a0c55d7655eac01d06a953964179ec850113c2"
+  integrity sha512-iEOnQX9nyR/dLsNPslEqU30yNqOLuJH02DV8IyXC+IUcjyjN0p5asmGOfEODsTeXkPMP1mhPMg1YCVwSfO0qBg==
   dependencies:
     "@styled-system/should-forward-prop" "5.1.5"
-    react-collapsed "3.0.2"
+    react-collapsed "4.2.0"
     react-jazzicon "^1.0.4"
     react-toastify "7.0.4"
     react-transition-group "4"
@@ -3897,11 +3897,6 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
-
-"@types/remove-markdown@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/@types/remove-markdown/-/remove-markdown-0.3.1.tgz"
-  integrity sha512-JpJNEJEsmmltyL2LdE8KRjJ0L2ad5vgLibqNj85clohT9AyTrfN6jvHxStPshDkmtcL/ShFu0p2tbY7DBS1mqQ==
 
 "@types/scheduler@*":
   version "0.26.0"
@@ -9748,11 +9743,6 @@ pathe@^1.1.2:
   resolved "https://registry.npmjs.org/pathe/-/pathe-1.1.2.tgz"
   integrity sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==
 
-performance-now@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
-  integrity sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==
-
 picocolors@^1.0.0, picocolors@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz"
@@ -10134,13 +10124,6 @@ radix3@^1.1.2:
   resolved "https://registry.npmjs.org/radix3/-/radix3-1.1.2.tgz"
   integrity sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==
 
-raf@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.npmjs.org/raf/-/raf-3.4.1.tgz"
-  integrity sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==
-  dependencies:
-    performance-now "^2.1.0"
-
 raw-loader@^4.0.2:
   version "4.0.2"
   resolved "https://registry.npmjs.org/raw-loader/-/raw-loader-4.0.2.tgz"
@@ -10149,12 +10132,11 @@ raw-loader@^4.0.2:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-react-collapsed@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/react-collapsed/-/react-collapsed-3.0.2.tgz"
-  integrity sha512-TecE2O/3b3Szcej2BkWlLIwvLBZBKGzCfcGVDnqrgVsq8SZe9q2uUc9c54qX3ctJ7wbj9yXJd2QgSZwWfRoAvQ==
+react-collapsed@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-collapsed/-/react-collapsed-4.2.0.tgz#330613bd604e1d8b66832d931efb2b226925cbc0"
+  integrity sha512-8rQuV3wGTjBI4M1WzD5DpqCBRliHNDKEEFeC6tAQEVrRDic46xBOtySgMGjVVacIobEaMf7AiYlI5APCZIZtkg==
   dependencies:
-    raf "^3.4.1"
     tiny-warning "^1.0.3"
 
 react-dom@18.2.0:
@@ -10459,11 +10441,6 @@ remark-rehype@^10.0.0:
     "@types/mdast" "^3.0.0"
     mdast-util-to-hast "^12.1.0"
     unified "^10.0.0"
-
-remove-markdown@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/remove-markdown/-/remove-markdown-0.5.0.tgz"
-  integrity sha512-x917M80K97K5IN1L8lUvFehsfhR8cYjGQ/yAMRI9E7JIKivtl5Emo5iD13DhMr+VojzMCiYk8V2byNPwT/oapg==
 
 require-directory@^2.1.1:
   version "2.1.1"

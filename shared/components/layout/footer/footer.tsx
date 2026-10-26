@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import buildInfo from 'build-info.json';
+import { Link } from '@lidofinance/lido-ui';
 import { config } from 'config';
 
 import {
@@ -9,6 +10,7 @@ import {
   LogoLidoStyle,
   Version,
   LinkDivider,
+  PrivacyNoticeText,
 } from './styles';
 
 const getVersionInfo = () => {
@@ -40,27 +42,36 @@ const { label, link } = getVersionInfo();
 
 export const Footer: FC = () => {
   return (
-    <FooterBorderWrapper>
-      <FooterStyle size="full" forwardedAs="footer">
-        <LogoLidoStyle />
-        <FooterLink
-          data-testid="termsOfUse"
-          href={`${config.rootOrigin}/terms-of-use`}
-        >
-          Terms of Use
-        </FooterLink>
-        <LinkDivider />
-        <FooterLink
-          data-testid="privacyNotice"
-          href={`${config.rootOrigin}/privacy-notice`}
-        >
-          Privacy Notice
-        </FooterLink>
-        <LinkDivider />
-        <Version data-testid="appVersion" href={link}>
-          {label}
-        </Version>
-      </FooterStyle>
-    </FooterBorderWrapper>
+    <>
+      <PrivacyNoticeText data-testid="cookiesNotice">
+        Your privacy matters. We use cookieless analytics and collect only
+        anonymized data for improvements. Cookies are used for functionality
+        only. For more info read{' '}
+        <Link href={`${config.rootOrigin}/privacy-notice`}>Privacy Notice</Link>
+        .
+      </PrivacyNoticeText>
+      <FooterBorderWrapper>
+        <FooterStyle size="full" forwardedAs="footer">
+          <LogoLidoStyle />
+          <FooterLink
+            data-testid="termsOfUse"
+            href={`${config.rootOrigin}/terms-of-use`}
+          >
+            Terms of Use
+          </FooterLink>
+          <LinkDivider />
+          <FooterLink
+            data-testid="privacyNotice"
+            href={`${config.rootOrigin}/privacy-notice`}
+          >
+            Privacy Notice
+          </FooterLink>
+          <LinkDivider />
+          <Version data-testid="appVersion" href={link}>
+            {label}
+          </Version>
+        </FooterStyle>
+      </FooterBorderWrapper>
+    </>
   );
 };
