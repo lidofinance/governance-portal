@@ -1,7 +1,8 @@
 import { wrapRequest as wrapNextRequest } from '@lidofinance/next-api-wrapper';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import getConfig from 'next/config';
-import { Readable } from 'stream';
+import { Readable, pipeline } from 'stream';
+import type { ReadableStream } from 'stream/web';
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 
 import {
@@ -34,29 +35,6 @@ export const SUBGRAPH_URL: Partial<Record<CHAINS, string>> = {
   [CHAINS.Mainnet]: serverRuntimeConfig.subgraphMainnet,
   [CHAINS.Hoodi]: serverRuntimeConfig.subgraphHoodi,
 } as const;
-
-/**
- * Convert a WHATWG ReadableStream<Uint8Array> into a Node.js Readable
- */
-const webStreamToNodeStream = (
-  webStream: ReadableStream<Uint8Array>,
-): Readable => {
-  const reader = webStream.getReader();
-  return new Readable({
-    async read() {
-      try {
-        const { done, value } = await reader.read();
-        if (done) {
-          this.push(null);
-        } else {
-          this.push(Buffer.from(value));
-        }
-      } catch (err) {
-        this.destroy(err as Error);
-      }
-    },
-  });
-};
 
 const subgraph = async (req: NextApiRequest, res: NextApiResponse) => {
   let parsedBody: { query?: string } | undefined;
@@ -110,18 +88,26 @@ const subgraph = async (req: NextApiRequest, res: NextApiResponse) => {
   res.setHeader('Content-Type', 'application/json');
 
   // Stream the response body
-  if (upstream.body) {
-    if (typeof (upstream.body as any).getReader === 'function') {
-      webStreamToNodeStream(upstream.body).pipe(res);
-    } else {
-      // Node.js Readable
-      (upstream.body as unknown as Readable).pipe(res);
-    }
-  } else {
+  if (!upstream.body) {
     res.end();
+    console.info('Subgraph API: request fulfilled', { chainId });
+    return;
   }
 
-  console.info('Subgraph API: request fulfilled', { chainId });
+  pipeline(Readable.fromWeb(upstream.body as ReadableStream), res, (err) => {
+    // client disconnected before the body was fully sent
+    if (err?.code === 'ERR_STREAM_PREMATURE_CLOSE') {
+      return;
+    }
+    if (err) {
+      console.error('Subgraph API: response stream failed', {
+        chainId,
+        error: err.message,
+      });
+    } else {
+      console.info('Subgraph API: request fulfilled', { chainId });
+    }
+  });
 };
 
 export default wrapNextRequest([
