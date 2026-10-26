@@ -17,6 +17,24 @@ export type FactoryFormName = {
 
 export type FactoryDisplayOnlyName = Exclude<FactoryName, FactoryFormName>;
 
+export type ActionFactoryName = {
+  [K in FactoryFormName]: (typeof FACTORIES)[K] extends {
+    actionTitles: readonly [string, ...string[]];
+  }
+    ? K
+    : never;
+}[FactoryFormName];
+
+// Tuple keys are string ordinals ("0", "1", ...); exclude array members.
+type TupleOrdinal<T extends readonly string[]> =
+  Extract<keyof T, `${number}`> extends `${infer N extends number}` ? N : never;
+
+type FactoryActions = {
+  [K in ActionFactoryName]: TupleOrdinal<(typeof FACTORIES)[K]['actionTitles']>;
+};
+
+export type FactoryAction<M extends ActionFactoryName> = FactoryActions[M];
+
 const entries = Object.entries(FACTORIES) as [FactoryName, FactoryMetadata][];
 
 const namesWhere = <T extends FactoryName>(startable: boolean) =>
@@ -42,6 +60,14 @@ export const FACTORY_TAGS = Object.fromEntries(
 export const FACTORY_ABIS = Object.fromEntries(
   entries.map(([name, def]) => [name, def.abi]),
 ) as { [K in FactoryName]: (typeof FACTORIES)[K]['abi'] };
+
+// Only multi-action factories appear here, so a lookup miss means
+// "single-action factory" rather than missing data.
+export const FACTORY_ACTION_TITLES = Object.fromEntries(
+  entries
+    .filter(([, def]) => Boolean(def.actionTitles))
+    .map(([name, def]) => [name, def.actionTitles]),
+) as Partial<Record<FactoryName, readonly string[]>>;
 
 const addressesForChain = (chainId: EvmSupportedChain) =>
   Object.fromEntries(

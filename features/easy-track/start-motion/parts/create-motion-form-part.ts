@@ -19,6 +19,13 @@ export type FactoryContractObject<M extends MotionType> = ContractObject<
   (typeof MOTION_TYPE_ABI_MAP)[M]
 >;
 
+// Form field paths, named after the form's own fields.
+// `K` narrows it to the subset a given component renders.
+export type FieldNames<
+  FormData,
+  K extends keyof FormData = keyof FormData,
+> = Record<K, string>;
+
 type Args<FormData, M extends MotionType> = {
   motionType: M;
 
@@ -27,7 +34,7 @@ type Args<FormData, M extends MotionType> = {
   getDefaultFormData: () => FormData;
 
   Component: React.ComponentType<{
-    fieldNames: Record<keyof FormData, string>;
+    fieldNames: FieldNames<FormData>;
     submitAction: React.ReactNode;
     factory: FactoryContractObject<M>;
   }>;
@@ -47,7 +54,7 @@ export const createMotionFormPart = <
       ...res,
       [key]: `${motionType}.${key}`,
     }),
-    {} as Record<keyof FormData, string>,
+    {} as FieldNames<FormData>,
   );
 
   const factory: FactoryContractObject<M> = {

@@ -1,6 +1,6 @@
 import { CardFooter, CardStatusWrapper, CardTitle, DescWrapper } from './style';
 import { Motion } from '../types';
-import { getMotionTypeDisplayName } from '../utils/get-motion-type-display-name';
+import { getMotionTitle } from '../utils/get-motion-title';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { getMotionTypeByScriptFactory } from '../utils/get-motion-type';
 import {
@@ -68,7 +68,8 @@ export const MotionCard = ({ motion }: Props) => {
           ))}
         </MotionCardBadges>
         <CardTitle>
-          #{motion.id.toString()} {getMotionTypeDisplayName(motionType)}
+          #{motion.id.toString()}{' '}
+          {getMotionTitle(motionType, motion.evmScriptCalldata)}
         </CardTitle>
         <DescWrapper>
           <MotionDescription motion={motion} />

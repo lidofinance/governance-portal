@@ -5,7 +5,16 @@ import { validateGateTreeIpfs } from '@easy-track/utils/validate-gate-tree-ipfs'
 import { validateForceExits } from '@easy-track/utils/validate-force-exits';
 import { validateCreateOrUpdateOperatorGroup } from '@easy-track/utils/validate-create-or-update-operator-group';
 import { validateUpdateStakingModuleShareLimits } from '@easy-track/utils/validate-update-staking-module-share-limits';
-import { PublicClient } from 'viem';
+import {
+  validateLidoLendActivateMarket,
+  validateLidoLendApplyIrmConfig,
+  validateLidoLendCircuitBreakerActions,
+  validateLidoLendExitBookActions,
+  validateLidoLendGuardianActions,
+  validateLidoLendMarketManagerActions,
+  validateLidoLendRiskStewardActions,
+} from '@easy-track/utils/validate-lido-lend';
+import { Address, PublicClient } from 'viem';
 
 type FormPartsData = ReturnType<typeof getDefaultFormPartsData>;
 type MotionFormData<M extends MotionTypeForms> = M extends keyof FormPartsData
@@ -15,6 +24,8 @@ type MotionFormData<M extends MotionTypeForms> = M extends keyof FormPartsData
 type ChainData = {
   chainId: CHAINS;
   provider: PublicClient;
+  address?: Address;
+  rpcUrl?: string;
 };
 
 type ValidateFn<M extends MotionTypeForms> = (
@@ -33,6 +44,15 @@ const EXTRA_VALIDATION_MAP: {
     validateUpdateStakingModuleShareLimits,
   [MotionType.CSM2UpdateStakingModuleShareLimits]:
     validateUpdateStakingModuleShareLimits,
+  [MotionType.LidoLendActivateMarket]: validateLidoLendActivateMarket,
+  [MotionType.LidoLendMarketManagerActions]:
+    validateLidoLendMarketManagerActions,
+  [MotionType.LidoLendGuardianActions]: validateLidoLendGuardianActions,
+  [MotionType.LidoLendCircuitBreakerActions]:
+    validateLidoLendCircuitBreakerActions,
+  [MotionType.LidoLendExitBookActions]: validateLidoLendExitBookActions,
+  [MotionType.LidoLendRiskStewardActions]: validateLidoLendRiskStewardActions,
+  [MotionType.LidoLendApplyIrmConfig]: validateLidoLendApplyIrmConfig,
 };
 
 export const validateMotionExtraData = <M extends MotionTypeForms>(

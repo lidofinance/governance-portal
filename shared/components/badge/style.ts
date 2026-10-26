@@ -11,7 +11,8 @@ export type BadgeVariant =
   | 'deepGreen'
   | 'deepYellow'
   | 'pink'
-  | 'purple';
+  | 'purple'
+  | 'indigo';
 
 const getBadgeColorStyles = (variant: BadgeVariant, type: BadgeType) => {
   switch (variant) {
@@ -73,6 +74,18 @@ const getBadgeColorStyles = (variant: BadgeVariant, type: BadgeType) => {
       return css`
         background-color: #efe7ff;
         color: #6c3bd1;
+      `;
+    case 'indigo':
+      if (type === 'secondary') {
+        return css`
+          background-color: #f3f4fd;
+          color: #5558c8;
+        `;
+      }
+
+      return css`
+        background-color: #e4e7fb;
+        color: #3538cd;
       `;
   }
 };
