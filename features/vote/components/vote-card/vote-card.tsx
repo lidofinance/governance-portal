@@ -78,7 +78,9 @@ export const VoteCard = () => {
     }
     return (
       voteEvents.find(
-        (event) => event.voter.toLowerCase() === walletAddress.toLowerCase(),
+        (event) =>
+          event.voter.toLowerCase() === walletAddress.toLowerCase() &&
+          !event.delegatedVotes?.length,
       ) ?? null
     );
   }, [walletAddress, voteEvents]);

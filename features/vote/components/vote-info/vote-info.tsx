@@ -23,7 +23,9 @@ export const VoteInfo = ({ walletAddress }: Props) => {
 
     // Try to find direct vote
     const voteEvent = voteEvents.find(
-      (event) => event.voter.toLowerCase() === walletAddress.toLowerCase(),
+      (event) =>
+        event.voter.toLowerCase() === walletAddress.toLowerCase() &&
+        !event.delegatedVotes?.length,
     );
 
     if (voteEvent) {
