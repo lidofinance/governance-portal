@@ -59,7 +59,6 @@ export const ABI_EXCEPTIONS = {
   DualGovernanceConfigProvider: abis.dgConfigProviderAbi,
   ReserveFund: abis.insuranceFundAbi,
   CSModule: abis.csmRegistryAbi,
-  CoreAccounting: abis.accountingAbi,
   CSMParametersRegistry: abis.parametersRegistryAbi,
   CSMExitPenalties: abis.exitPenaltiesAbi,
   CSMValidatorStrikes: abis.validatorStrikesAbi,
