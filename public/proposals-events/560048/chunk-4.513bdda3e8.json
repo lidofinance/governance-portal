@@ -274,5 +274,74 @@
       "scheduledAt": 1792595496,
       "status": 3
     }
+  },
+  "45": {
+    "proposalSubmittedEvent": {
+      "eventName": "ProposalSubmitted",
+      "args": {
+        "proposerAccount": "0x49B3512c44891bef83F8967d075121Bd1b07a01B",
+        "proposalId": "45",
+        "metadata": "Roll back the Gloas (LIP-43) upgrade on Hoodi except the Curated Module v2 implementation: previous verifiers and implementations, oracle consensus versions and sanity limits"
+      },
+      "address": "0x9caaccc62c66d817cc59c44780d1b722359795bf",
+      "topics": [
+        "0x232ce03ddb9384ef5aeb6333cad16b1c7e68e1977e0e6e5a3666e934569a15fc",
+        "0x00000000000000000000000049b3512c44891bef83f8967d075121bd1b07a01b",
+        "0x000000000000000000000000000000000000000000000000000000000000002d"
+      ],
+      "data": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000ae526f6c6c206261636b2074686520476c6f617320284c49502d3433292075706772616465206f6e20486f6f646920657863657074207468652043757261746564204d6f64756c6520763220696d706c656d656e746174696f6e3a2070726576696f75732076657269666965727320616e6420696d706c656d656e746174696f6e732c206f7261636c6520636f6e73656e7375732076657273696f6e7320616e642073616e697479206c696d697473000000000000000000000000000000000000",
+      "blockNumber": "3891549",
+      "transactionHash": "0xb289b891cd654fda814fb378e73f0ca02be37eb57cc7f30795b7fe0797d6634e",
+      "transactionIndex": 16,
+      "blockHash": "0xe2c8732d2fb17e8afe7096cd421b4c19b07415354b9dc5402c118dd3521ff1cd",
+      "blockTimestamp": "0x6adf5bd8",
+      "logIndex": 2,
+      "removed": false
+    },
+    "proposalScheduledEvent": {
+      "eventName": "ProposalScheduled",
+      "args": {
+        "id": "45"
+      },
+      "address": "0x0a5e22782c0bd4addf10d771f0bf0406b038282d",
+      "topics": [
+        "0x8b9c2cfee0d20895490bae51f33d88197032bb221b15e360155508136257569a",
+        "0x000000000000000000000000000000000000000000000000000000000000002d"
+      ],
+      "data": "0x",
+      "blockNumber": "3891562",
+      "transactionHash": "0xb64a7ff83a8aa0396da45f345361d87d57a361cd64a0e9b8b60e82999bd1e710",
+      "transactionIndex": 2,
+      "blockHash": "0x2c4777f1f5ffa323ad597caa41d4043dfec2af2f13e823294533ceece13b0c5d",
+      "blockTimestamp": "0x6adf5c98",
+      "logIndex": 0,
+      "removed": false
+    },
+    "proposalExecutedEvent": {
+      "eventName": "ProposalExecuted",
+      "args": {
+        "id": "45"
+      },
+      "address": "0x0a5e22782c0bd4addf10d771f0bf0406b038282d",
+      "topics": [
+        "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f",
+        "0x000000000000000000000000000000000000000000000000000000000000002d"
+      ],
+      "data": "0x",
+      "blockNumber": "3891576",
+      "transactionHash": "0xba3102e79e88d6a55ea178421cf464c406230d2a6ef9130d801025cf37a1cb11",
+      "transactionIndex": 2,
+      "blockHash": "0x49cd895135e39801c9078b306a5835b1c71ba5820bab3f1ea310c0311adf9fed",
+      "blockTimestamp": 1793023308,
+      "logIndex": 108,
+      "removed": false
+    },
+    "details": {
+      "id": "45",
+      "executor": "0x0eCc17597D292271836691358B22340b78F3035B",
+      "submittedAt": 1793022936,
+      "scheduledAt": 1793023128,
+      "status": 3
+    }
   }
 }
