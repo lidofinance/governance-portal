@@ -4,15 +4,38 @@ const CID_1_32 = '[bB][A-Za-z2-7]{58,128}';
 const REGEX_LIDO_VOTE_CID = new RegExp(`\\blidovoteipfs://(${CID_1_32})\\s*$`);
 
 const IPFS_TIMEOUT_MS = 8000;
-const MAX_BYTES = 100_000;
+const MAX_BYTES = 32_000;
 
-const getIpfsUrl = (cid) =>
-  /^b/i.test(cid)
-    ? `https://${cid}.ipfs.w3s.link`
-    : `https://cloudflare-ipfs.com/ipfs/${cid}`;
+// Keep in sync with utils/get-ipfs-url.ts.
+const getIpfsUrls = (cid) => [
+  `https://ipfs.filebase.io/ipfs/${cid}`,
+  `https://gateway.pinata.cloud/ipfs/${cid}`,
+];
 
-const fetchCid = async (cid) => {
-  const response = await fetch(getIpfsUrl(cid), {
+// The range header is advisory; gateways may ignore it, so stop reading past the limit.
+const readTextWithLimit = async (response) => {
+  if (!response.body) {
+    return '';
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let text = '';
+  let bytesRead = 0;
+  let chunk = await reader.read();
+  while (!chunk.done) {
+    bytesRead += chunk.value.byteLength;
+    if (bytesRead > MAX_BYTES) {
+      await reader.cancel();
+      throw new Error('IPFS content exceeds the size limit.');
+    }
+    text += decoder.decode(chunk.value, { stream: true });
+    chunk = await reader.read();
+  }
+  return text + decoder.decode();
+};
+
+const fetchCid = async (cid, url) => {
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-type': 'text/plain',
@@ -25,7 +48,7 @@ const fetchCid = async (cid) => {
     throw new Error(`IPFS gateway returned ${response.status}`);
   }
 
-  const text = await response.text();
+  const text = await readTextWithLimit(response);
 
   const [hash, hashBOM] = await Promise.all([
     Hash.of(text, { cidVersion: 1, rawLeaves: true }),
@@ -57,16 +80,16 @@ export const fetchIpfsDescription = async (metadata) => {
     return null;
   }
 
-  try {
-    return await fetchCid(cid);
-  } catch (firstError) {
+  let lastError;
+  for (const url of getIpfsUrls(cid)) {
     try {
-      return await fetchCid(cid);
-    } catch (secondError) {
-      console.warn(
-        `    [IPFS] Failed to fetch description for CID ${cid}: ${secondError.message}`,
-      );
-      return null;
+      return await fetchCid(cid, url);
+    } catch (error) {
+      lastError = error;
     }
   }
+  console.warn(
+    `    [IPFS] Failed to fetch description for CID ${cid}: ${lastError.message}`,
+  );
+  return null;
 };

@@ -22,7 +22,7 @@ import { useIsTrustedCaller } from '../../hooks/use-is-trusted-caller';
 import {
   AragonAcl,
   SDVTNodeOperatorsAdd,
-  SDVTRegistry,
+  SimpleDVTNodeOperatorsRegistry,
   StETH,
 } from 'shared/blockchain/contracts';
 import { useNodeOperatorsList } from '../../hooks/use-node-operators-list';
@@ -86,7 +86,7 @@ export const formParts = createMotionFormPart({
     const { isTrustedCallerConnected, isTrustedCallerLoading } =
       useIsTrustedCaller(SDVTNodeOperatorsAdd);
 
-    const sdvtRegistry = useReadContract(SDVTRegistry);
+    const sdvtRegistry = useReadContract(SimpleDVTNodeOperatorsRegistry);
     const aragonAcl = useReadContract(AragonAcl);
 
     const stETHAddress = getContractAddress(StETH, chainId);

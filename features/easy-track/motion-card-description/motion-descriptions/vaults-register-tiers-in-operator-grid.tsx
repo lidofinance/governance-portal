@@ -20,7 +20,10 @@ export const VaultsRegisterTiersInOperatorGrid = ({
   const { data: shareRate } = useShareRate();
 
   const { data: tiersCounts } = useQuery({
-    queryKey: [`vaults-register-tiers-desc-${nodeOperators.join('-')}`],
+    queryKey: [
+      `vaults-register-tiers-desc-${nodeOperators.join('-')}`,
+      isOnChain,
+    ],
     enabled: isOnChain,
     queryFn: () =>
       Promise.all(

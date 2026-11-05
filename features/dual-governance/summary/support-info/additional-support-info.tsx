@@ -86,10 +86,10 @@ export const AdditionalSupportInfo = ({
 
     if (isExceedingThreshold) {
       return (
-        <Text color="secondary">
+        <Text color="secondary" data-testid="vetoSupportNextStateInfo">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
           RageQuit unless stETH support decreases below{' '}
-          <b>
+          <b data-testid="thresholdAmount">
             {firstSealThresholdWei
               ? `${formatEth(firstSealThresholdWei, 2)} ${Token.stETH}`
               : `${firstSealRageQuitSupport}%`}
@@ -100,10 +100,10 @@ export const AdditionalSupportInfo = ({
     } else if (amountTillVSPhaseWei) {
       // If we need to add more support
       return (
-        <Text color="secondary">
+        <Text color="secondary" data-testid="vetoSupportNextStateInfo">
           VetoSignalling <DGTooltip topic="vetoSignalling" /> starts after
           RageQuit if{' '}
-          <b>
+          <b data-testid="amountTillNextState">
             {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
           </b>{' '}
           is added to the escrow; Otherwise, Cooldown begins
@@ -119,9 +119,9 @@ export const AdditionalSupportInfo = ({
     return;
   }
   return (
-    <Text color="secondary">
+    <Text color="secondary" data-testid="vetoSupportNextStateInfo">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      <b>
+      <b data-testid="amountTillNextState">
         {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
       </b>{' '}
       is added to the escrow

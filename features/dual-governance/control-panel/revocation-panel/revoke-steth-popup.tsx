@@ -25,7 +25,10 @@ export const RevokeStEthPopup = (props: Props) => {
       open={isOpen}
       placement="bottomRight"
     >
-      <RevokeStEthPopupItem onClick={onRevoke(Token.stETH)}>
+      <RevokeStEthPopupItem
+        onClick={onRevoke(Token.stETH)}
+        data-testid="revokeInStEthBtn"
+      >
         <div>
           {getTokenIcon(Token.stETH)}
           <Text weight={600} as="span">
@@ -43,7 +46,10 @@ export const RevokeStEthPopup = (props: Props) => {
         )}
       </RevokeStEthPopupItem>
 
-      <RevokeStEthPopupItem onClick={onRevoke(Token.wstETH)}>
+      <RevokeStEthPopupItem
+        onClick={onRevoke(Token.wstETH)}
+        data-testid="revokeInWstEthBtn"
+      >
         <div>
           {getTokenIcon(Token.wstETH)}
           <Text weight={600} as="span">

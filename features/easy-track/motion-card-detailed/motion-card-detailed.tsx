@@ -115,11 +115,7 @@ const MotionCardDetailedInner = () => {
             </>
           )}
         </Text>
-        {isAuthorConnected &&
-          motion.status !== MotionStatus.CANCELED &&
-          motion.status !== MotionStatus.ENACTED && (
-            <MotionCardDetailedCancelButton />
-          )}
+        {isAuthorConnected && !isArchived && <MotionCardDetailedCancelButton />}
       </Header>
       <Description>
         <MotionDescription motion={motion as Motion} />

@@ -7,7 +7,6 @@ export type MotionCategory =
   | 'Staking'
   | 'Treasury'
   | 'stVaults'
-  | 'MEV Boost'
   | 'Deprecated'
   | 'Unknown';
 
@@ -24,7 +23,8 @@ export type MotionSubcategory =
   | 'LOL'
   | 'Dev'
   | 'Ops'
-  | 'Curated v2';
+  | 'Curated v2'
+  | 'MEV Boost';
 
 export type MotionTags = readonly [MotionCategory, ...MotionSubcategory[]];
 
@@ -95,9 +95,9 @@ export const MOTION_TAGS: MotionTagsMap = {
   [MotionType.SandboxStablesRemove]: ['Treasury', 'Dev'],
   [MotionType.SandboxStablesTopUp]: ['Treasury', 'Dev'],
 
-  [MotionType.MEVBoostRelaysAdd]: ['MEV Boost'],
-  [MotionType.MEVBoostRelaysEdit]: ['MEV Boost'],
-  [MotionType.MEVBoostRelaysRemove]: ['MEV Boost'],
+  [MotionType.MEVBoostRelaysAdd]: ['Staking', 'MEV Boost'],
+  [MotionType.MEVBoostRelaysEdit]: ['Staking', 'MEV Boost'],
+  [MotionType.MEVBoostRelaysRemove]: ['Staking', 'MEV Boost'],
 
   [MotionType.RegisterGroupsInOperatorGrid]: ['stVaults'],
   [MotionType.RegisterTiersInOperatorGrid]: ['stVaults'],
@@ -160,7 +160,6 @@ export const MOTION_CATEGORY_VARIANT_MAP: Record<MotionCategory, BadgeVariant> =
     Staking: 'deepBlue',
     Treasury: 'deepGreen',
     stVaults: 'deepYellow',
-    'MEV Boost': 'pink',
     Deprecated: 'purple',
     Unknown: 'purple',
   };
@@ -170,6 +169,5 @@ export type FilterCategory = Exclude<MotionCategory, 'Deprecated' | 'Unknown'>;
 export const FILTER_CATEGORIES: readonly FilterCategory[] = [
   'Staking',
   'Treasury',
-  'MEV Boost',
   'stVaults',
 ];

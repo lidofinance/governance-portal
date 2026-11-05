@@ -64,6 +64,7 @@ export const ProposalsList = () => {
           href={votePage(dataItem.voteId)}
           key={`vote-${dataItem.voteId}-${index}`}
           target="_blank"
+          data-testid={`aragonVoteCardPreview-${dataItem.voteId}`}
         >
           <VoteItem
             proposalId={dataItem.proposalId}
@@ -81,6 +82,7 @@ export const ProposalsList = () => {
         <Link
           href={`${PROPOSALS_PATH}/${dataItem.proposalId}`}
           key={`proposal-${dataItem.proposalId}-${index}`}
+          data-testid={`proposalCardPreview-${dataItem.proposalId}`}
         >
           <ProposalsListItem
             id={dataItem.proposalId}

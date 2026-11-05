@@ -57,7 +57,10 @@ export const ProposalsListItem = ({ id, proposalDetails, calls }: Props) => {
         />
         <StatusBadgeWrapper>
           {proposalStatusInfo && proposalStatusInfo.badge && (
-            <Badge $variant={proposalStatusInfo.badge.variant}>
+            <Badge
+              $variant={proposalStatusInfo.badge.variant}
+              data-testid="proposalStatus"
+            >
               <Box display="flex" alignItems="center" gap={5}>
                 {proposalStatusInfo.badge.text}
                 {proposalStatusInfo.badge.text === 'Ready to execute' && (
@@ -73,7 +76,7 @@ export const ProposalsListItem = ({ id, proposalDetails, calls }: Props) => {
           </Box>
         </TimelockWrapper>
       </SummarySection>
-      <ProposalDescription>
+      <ProposalDescription data-testid="proposalDescription">
         {descriptionLines.slice(0, 10).map((line, index) => (
           <DescriptionText key={index}>{line}</DescriptionText>
         ))}

@@ -21,7 +21,7 @@ type MotionContextValue = {
   motionType: MotionType | EvmUnrecognized;
   isArchived: boolean;
   periodLimitsData: UsePeriodLimitsInfoResultData | null | undefined;
-  motionTopUpAmount: number;
+  motionTopUpAmount: number | undefined;
   motionTopUpToken: string | undefined;
   isOverPeriodLimit: boolean;
   canEnactInNextPeriod: boolean;

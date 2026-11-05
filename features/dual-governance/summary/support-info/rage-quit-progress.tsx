@@ -77,11 +77,16 @@ export const RageQuitProgress = () => {
         RageQuit
       </Text>
       <RageQuitWithdrawals>
-        <Text as="span" size={22} weight={600}>
+        <Text
+          as="span"
+          size={22}
+          weight={600}
+          data-testid="rageQuitClaimedAmount"
+        >
           {formatEth(rageQuitData.claimedAmount)}
         </Text>
         <Divider />
-        <Text as="span" weight={600}>
+        <Text as="span" weight={600} data-testid="rageQuitTotalAmount">
           {formatEth(rageQuitData.totalAmount)}
         </Text>
         <Text as="span" color="secondary">

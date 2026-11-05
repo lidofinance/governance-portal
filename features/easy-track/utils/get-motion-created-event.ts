@@ -1,7 +1,7 @@
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { findAbiItem } from 'utils/find-abi-item';
 import { EasyTrack } from 'shared/blockchain/contracts';
-import { Log, PublicClient } from 'viem';
+import { Address, isAddressEqual, keccak256, Log, PublicClient } from 'viem';
 import { easyTrackAbi } from 'abi/generated';
 
 type MotionCreatedAbiEvent = Extract<
@@ -15,8 +15,6 @@ export type MotionCreatedEventLog = Log<
   MotionCreatedAbiEvent,
   true
 >;
-
-const GET_LOGS_RANGE = 2499n;
 
 type Args = {
   client: PublicClient;
@@ -43,10 +41,32 @@ export const getMotionCreatedEvent = async ({
     args: {
       _motionId: motionId,
     },
-    fromBlock: motionSnapshotBlock - GET_LOGS_RANGE,
-    toBlock: motionSnapshotBlock + GET_LOGS_RANGE,
+    // EasyTrack sets snapshotBlock to the block that emits MotionCreated
+    fromBlock: motionSnapshotBlock,
+    toBlock: motionSnapshotBlock,
     strict: true,
   });
 
   return events[0];
+};
+
+export const isEventForMotion = (
+  event: MotionCreatedEventLog,
+  motion: { creator: string; evmScriptFactory: string; evmScriptHash: string },
+) => {
+  const isMatch =
+    isAddressEqual(event.args._creator, motion.creator as Address) &&
+    isAddressEqual(
+      event.args._evmScriptFactory,
+      motion.evmScriptFactory as Address,
+    ) &&
+    keccak256(event.args._evmScript) === motion.evmScriptHash.toLowerCase();
+
+  if (!isMatch) {
+    console.warn(
+      `MotionCreated event does not match motion ${event.args._motionId}`,
+    );
+  }
+
+  return isMatch;
 };

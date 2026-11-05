@@ -1,7 +1,7 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import React, { useMemo } from 'react';
-import { AbiFunction } from 'viem';
+import { AbiFunction, Hex, toFunctionSelector } from 'viem';
 import { getContractName } from 'utils/get-contract-name';
 import { getLocalContractAbi } from 'shared/blockchain/utils/abi';
 import { DEFAULT_ADMIN_ROLE, LIDO_ROLES } from 'constants/roles';
@@ -83,15 +83,18 @@ const formatArg = (
 
 const getFunctionInputs = (
   functionName: string,
+  selector: Hex | undefined,
   contractAddress: string,
   chainId: CHAINS,
 ) => {
   const abi = getLocalContractAbi(contractAddress, chainId);
-  if (!abi) return null;
+  if (!abi || !selector) return null;
 
   const functionAbi = abi.find(
     (item): item is AbiFunction =>
-      item.type === 'function' && item.name === functionName,
+      item.type === 'function' &&
+      item.name === functionName &&
+      toFunctionSelector(item) === selector,
   );
 
   return functionAbi?.inputs || null;
@@ -157,10 +160,11 @@ const FormatSingleCall: React.FC<{
     );
   }
 
-  const { functionName, args, nestedCalls } = decodedCall;
+  const { functionName, selector, args, nestedCalls } = decodedCall;
 
   const functionInputs = getFunctionInputs(
     functionName,
+    selector,
     decodedCall.contractAddress,
     chainId,
   );

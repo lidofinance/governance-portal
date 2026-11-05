@@ -132,6 +132,7 @@ export const LIDO_ROLES: Partial<Record<string, string>> = {
   [keccakRole('REPORT_VALIDATOR_EXIT_TRIGGERED_ROLE')]:
     'REPORT VALIDATOR EXIT TRIGGERED ROLE',
   [keccakRole('CREATE_NODE_OPERATOR_ROLE')]: 'CREATE NODE OPERATOR ROLE',
+  [keccakRole('MANAGE_TOP_UP_QUEUE_ROLE')]: 'MANAGE TOP UP QUEUE ROLE',
   [keccakRole('vaults.OperatorsGrid.Registry')]:
     'vaults.OperatorsGrid.Registry',
   [keccakRole('vaults.VaultHub.ValidatorExitRole')]:

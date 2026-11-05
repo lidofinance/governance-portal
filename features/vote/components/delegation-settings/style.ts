@@ -22,7 +22,7 @@ export const Wrap = styled.div`
   }
 `;
 
-export const FormWrap = styled.div<{ $customizable: boolean }>`
+export const FormWrap = styled.div`
   border-radius: ${({ theme }) => theme.borderRadiusesMap.xl}px;
   background-color: var(--lido-color-foreground);
   display: flex;
@@ -32,12 +32,6 @@ export const FormWrap = styled.div<{ $customizable: boolean }>`
   max-width: 496px;
   position: sticky;
   top: 96px;
-
-  ${({ $customizable }) =>
-    $customizable &&
-    `
-    padding: 32px 24px;
-  `}
 
   @media (max-width: ${NAV_TABLET_MAX_WIDTH}px) {
     position: static;

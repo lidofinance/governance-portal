@@ -7,7 +7,8 @@ import { useAccount } from 'wagmi';
 export const PlaceOrderFormSubmitButton = () => {
   const { isConnected } = useAccount();
   const { formState } = useFormContext();
-  const { isLoading, isStonksManagerConnected } = usePlaceOrderFormData();
+  const { isLoading, isFetched, isStonksManagerConnected } =
+    usePlaceOrderFormData();
 
   if (!isConnected) {
     return <ConnectWalletButton buttonStyleVersion="default" />;
@@ -16,7 +17,7 @@ export const PlaceOrderFormSubmitButton = () => {
   return (
     <SubmitButtonHookForm
       loading={isLoading}
-      disabled={!formState.isValid || !isStonksManagerConnected}
+      disabled={!formState.isValid || !isStonksManagerConnected || !isFetched}
       data-testid="placeOrderBtn"
       buttonStyleVersion="default"
     >

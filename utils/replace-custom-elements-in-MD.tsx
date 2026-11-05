@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Components } from 'react-markdown';
-import Link from 'next/link';
 import { REGEX_CID_CUTER, REGEX_CID_ONLY } from './regex-cid';
 import { getIpfsUrl } from './get-ipfs-url';
 import { REGEX_ETH_ADDRESS_ONLY } from './regex-eth-address';
@@ -19,9 +18,9 @@ export const replaceAddressAndCIDInMD: CodeType = ({
 
   if (inline && value.match(REGEX_CID_ONLY)) {
     return (
-      <Link href={getIpfsUrl(value)}>
+      <ExternalLink href={getIpfsUrl(value)} asLink>
         {value.replace(REGEX_CID_CUTER, '$1..$2')}
-      </Link>
+      </ExternalLink>
     );
   }
 
@@ -63,7 +62,11 @@ type ImgType = Components['img'];
 
 export const replaceImagesInMD: ImgType = ({ children, title, alt, src }) => {
   if (src?.match(REGEX_URL_ONLY)) {
-    return <Link href={src}>{title || alt || 'view'} image</Link>;
+    return (
+      <ExternalLink href={src} asLink>
+        {title || alt || 'view'} image
+      </ExternalLink>
+    );
   }
   // not supporting internal links
   return (

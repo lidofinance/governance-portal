@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { DaoToken } from 'shared/blockchain/contract-addresses';
+import { LDOToken } from 'shared/blockchain/contract-addresses';
 import { createPublicClient, http } from 'viem';
 import {
   Block,
@@ -103,7 +103,7 @@ export const SettingsForm = () => {
         debounceTimeoutRef.current = setTimeout(async () => {
           const errMsg = 'Etherscan API key is invalid or cannot be accessed';
           try {
-            let daoTokenAddress = DaoToken[chainId];
+            let daoTokenAddress = LDOToken[chainId];
 
             if (
               typeof daoTokenAddress === 'object' &&

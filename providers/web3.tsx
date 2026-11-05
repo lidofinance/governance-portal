@@ -48,6 +48,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
     supportedChainIds,
     walletconnectProjectId,
     isWalletConnectionAllowed,
+    savedUserConfig,
   } = useUserConfig();
 
   const { supportedChains, defaultChain } = useMemo(() => {
@@ -80,6 +81,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
   const { transportMap, onActiveConnection } = useWeb3Transport(
     supportedChains,
     backendRPC,
+    savedUserConfig.rpcUrls,
   );
 
   const { wagmiConfig, reefKnotConfig, walletsModalConfig } = useMemo(() => {

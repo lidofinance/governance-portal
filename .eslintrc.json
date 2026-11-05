@@ -53,11 +53,6 @@
             "except": ["./calldata-decoder"]
           },
           {
-            "target": "./features/committee",
-            "from": "./features",
-            "except": ["./committee"]
-          },
-          {
             "target": "./features/dual-governance",
             "from": "./features",
             "except": ["./dual-governance"]

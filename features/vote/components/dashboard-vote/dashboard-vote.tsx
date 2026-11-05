@@ -118,7 +118,6 @@ export const DashboardVote = ({
                 metadata={startEvent?.args.metadata}
                 description={description}
                 isActive={!isEnded}
-                allowMD
                 hideLeadingHeading
               />
             </VoteDescriptionWrap>

@@ -87,13 +87,13 @@ export const DeactivationAdditionalSupportInfo = ({
 
   if (amountUntilVetoSignalling === null) {
     return (
-      <Text color="secondary">
+      <Text color="secondary" data-testid="vetoSupportNextStateInfo">
         RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
-        <b>
+        <b data-testid="amountTillNextState">
           {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
         </b>{' '}
         is added to the escrow by{' '}
-        <b>
+        <b data-testid="nextStateDate">
           {restartDate?.date} {restartDate?.timezone}
         </b>
         . If not, Cooldown <DGTooltip topic="cooldown" /> begins, and proposals
@@ -103,13 +103,13 @@ export const DeactivationAdditionalSupportInfo = ({
   }
 
   return (
-    <Text color="secondary">
+    <Text color="secondary" data-testid="vetoSupportNextStateInfo">
       If{' '}
-      <b>
+      <b data-testid="amountTillNextState">
         {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
       </b>{' '}
       added by
-      <b>
+      <b data-testid="nextStateDate">
         {restartDate?.date} {restartDate?.timezone}
       </b>{' '}
       VetoSignalling <DGTooltip topic="cooldown" /> restarts. If not, Cooldown

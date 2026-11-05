@@ -100,6 +100,7 @@ export const RevocationPanel = () => {
                   }
                   size="sm"
                   disabled={!isSupportedChain}
+                  data-testid="claimCustomNftBtn"
                 >
                   Claim
                 </Button>
@@ -136,6 +137,7 @@ export const RevocationPanel = () => {
                 }
                 size="sm"
                 disabled={!isSupportedChain}
+                data-testid="claimCustomNftBtn"
               >
                 Claim
               </Button>

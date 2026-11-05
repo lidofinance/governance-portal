@@ -23,6 +23,8 @@ export const ipfsMode = toBoolean(process.env.IPFS_MODE);
 
 /** @type string */
 export const rootOrigin = process.env.ROOT_ORIGIN || 'https://lido.fi';
+export const selfOrigin =
+  process.env.SELF_ORIGIN || 'https://dg-hoodi.testnet.fi';
 
 /** @type string */
 export const stakeOrigin = process.env.STAKE_ORIGIN || 'https://stake.lido.fi';

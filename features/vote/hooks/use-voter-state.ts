@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { DaoToken, Voting } from 'shared/blockchain/contracts';
+import { LDOToken, AragonVoting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import invariant from 'tiny-invariant';
 import { useAccount } from 'wagmi';
@@ -10,8 +10,8 @@ export const useVoterState = (
 ) => {
   const { address } = useAccount();
 
-  const { readContract: readDaoTokenContract } = useReadContract(DaoToken);
-  const { readContract: readVotingContract } = useReadContract(Voting);
+  const { readContract: readDaoTokenContract } = useReadContract(LDOToken);
+  const { readContract: readVotingContract } = useReadContract(AragonVoting);
 
   return useQuery({
     queryKey: ['voter-state', address, voteId],

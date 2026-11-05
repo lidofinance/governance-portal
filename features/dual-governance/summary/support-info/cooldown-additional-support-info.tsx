@@ -63,11 +63,11 @@ export const CooldownAdditionalSupportInfo = ({
 
   if (amountTillVSPhaseWei < 0) {
     return (
-      <Text color="secondary">
+      <Text color="secondary" data-testid="vetoSupportNextStateInfo">
         VetoSignalling <DGTooltip topic="vetoSignalling" /> starts on{' '}
-        <b>{cooldownEndDate?.date}</b> {cooldownEndDate?.timezone} unless stETH
-        support decreases below{' '}
-        <b>
+        <b data-testid="nextStateDate">{cooldownEndDate?.date}</b>{' '}
+        {cooldownEndDate?.timezone} unless stETH support decreases below{' '}
+        <b data-testid="thresholdAmount">
           {firstSealThresholdWei
             ? `${formatEth(firstSealThresholdWei, 2)} ${Token.stETH}`
             : `${parsePercent16(dgConfig?.firstSealRageQuitSupport)}%`}
@@ -77,13 +77,13 @@ export const CooldownAdditionalSupportInfo = ({
   }
 
   return (
-    <Text color="secondary">
+    <Text color="secondary" data-testid="vetoSupportNextStateInfo">
       VetoSignalling <DGTooltip topic="vetoSignalling" /> starts if{' '}
-      <b>
+      <b data-testid="amountTillNextState">
         {formatEth(amountTillVSPhaseWei, 2)} {Token.stETH}
       </b>{' '}
       is added to the escrow; Otherwise, Normal begins on{' '}
-      <b>{cooldownEndDate?.date}</b>
+      <b data-testid="nextStateDate">{cooldownEndDate?.date}</b>
     </Text>
   );
 };

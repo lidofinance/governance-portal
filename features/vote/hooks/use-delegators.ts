@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLidoSDK } from 'providers/lido-sdk';
-import { Voting } from 'shared/blockchain/contracts';
+import { AragonVoting } from 'shared/blockchain/contracts';
 import { useReadContract } from 'shared/blockchain/hooks/use-read-contract';
 import { useAccount } from 'wagmi';
 import { Address } from 'viem';
@@ -24,7 +24,7 @@ type DelegatorsData = {
 export const useDelegators = () => {
   const { address } = useAccount();
   const { chainId } = useLidoSDK();
-  const votingContract = useReadContract(Voting);
+  const votingContract = useReadContract(AragonVoting);
   // TODO: add ENS support
   // const { lookupAddress } = useEnsResolvers();
 

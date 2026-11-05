@@ -7,6 +7,7 @@ import { useMotionContext } from '@easy-track/providers/motion-detailed-context'
 
 export const MotionDetailedLimits = () => {
   const {
+    motion,
     periodLimitsData,
     motionTopUpAmount,
     motionTopUpToken,
@@ -15,7 +16,14 @@ export const MotionDetailedLimits = () => {
     isArchived,
   } = useMotionContext();
 
-  if (!periodLimitsData || isArchived) return null;
+  if (
+    !periodLimitsData ||
+    motionTopUpAmount === undefined ||
+    isArchived ||
+    !motion.evmScriptCalldata
+  ) {
+    return null;
+  }
 
   return (
     <>

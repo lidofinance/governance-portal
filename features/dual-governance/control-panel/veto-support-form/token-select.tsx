@@ -59,7 +59,7 @@ export const TokenSelect = () => {
       <Tabs>
         {VetoSupportedTokens.map((token) => (
           <Tab key={token} isActive={selectedToken === token}>
-            <TokenSelectLabel>
+            <TokenSelectLabel data-testid={`vetoToken-${token}`}>
               <input type="radio" {...register('token')} value={token} />
               <TokenBalance
                 token={token}

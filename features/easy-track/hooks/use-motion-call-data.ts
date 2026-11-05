@@ -70,8 +70,11 @@ export const useMotionCallData = (
   const { data: tokenData } = useMotionTokenData(token);
 
   const motionTopUpAmount = useMemo(
-    () => getTopUpAmount(amounts, tokenData?.decimals),
-    [amounts, tokenData],
+    () =>
+      stables && !tokenData
+        ? undefined
+        : getTopUpAmount(amounts, tokenData?.decimals),
+    [amounts, stables, tokenData],
   );
 
   return {

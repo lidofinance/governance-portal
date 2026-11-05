@@ -1,27 +1,10 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Button, Text } from '@lidofinance/lido-ui';
 import { FormController } from 'shared/hook-form/form-controller';
 
-export const DelegationFormControllerStyled = styled(FormController)<{
-  $customMode: boolean;
-}>`
+export const DelegationFormControllerStyled = styled(FormController)`
   display: flex;
   flex-direction: column;
-
-  ${({ $customMode }) =>
-    $customMode &&
-    css`
-      padding: 24px 16px;
-      background-color: var(--lido-color-accentControlBg);
-      border-radius: ${({ theme }) => theme.borderRadiusesMap.xl}px;
-    `}
-`;
-
-export const DelegationSubtitleStyled = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
 `;
 
 export const DelegationFormBalanceStyled = styled.div<{ $withError: boolean }>`
@@ -45,15 +28,6 @@ export const Balance = styled.div`
   }
 `;
 
-export const CustomizeButton = styled(Button).attrs({
-  variant: 'text',
-  size: 'sm',
-})`
-  font-size: 12px;
-  padding: 4px;
-  min-width: auto;
-`;
-
 export const DelegateButton = styled(Button)`
   margin-top: 16px;
   @media (max-width: 440px) {
@@ -71,14 +45,4 @@ export const DelegationFormFootNoteStyled = styled(Text).attrs({
   color: 'secondary',
 })`
   margin-top: 8px;
-`;
-
-export const ModalButtonGroup = styled.div`
-  display: flex;
-  margin-top: 16px;
-  gap: 12px;
-  justify-content: center;
-  & > button {
-    flex: 1;
-  }
 `;

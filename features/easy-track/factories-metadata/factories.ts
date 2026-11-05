@@ -15,7 +15,17 @@ export const FACTORIES = defineFactories({
     displayName: 'Set deposits reserve target',
     tags: ['Staking'],
     addresses: {
+      [CHAINS.Mainnet]: '0x62E9Dc68BDCBC46362f40e0bb9c154C9a42E62b0',
       [CHAINS.Hoodi]: '0x68009122a394504E8fD7fee58F92Cd73c6A60717',
+    },
+  },
+  LOLLDOTopUp: {
+    startable: true,
+    abi: abi.topUpWithLimitsAbi,
+    displayName: 'Top up LOL LDO',
+    tags: ['Treasury', 'LOL'],
+    addresses: {
+      [CHAINS.Mainnet]: '0xa3e98cb26F1277B623Edb95cee3bd33269b305F7',
     },
   },
 } as const);

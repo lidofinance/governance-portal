@@ -49,7 +49,9 @@ export const VoteStatusBadge = ({
   if (readyToEnact) {
     return (
       <Box alignItems="flex-start" gap={8}>
-        <Badge $variant={'default'}>Ready to enact</Badge>
+        <Badge $variant={'default'} data-testid="voteStatus">
+          Ready to enact
+        </Badge>
       </Box>
     );
   }
@@ -58,17 +60,23 @@ export const VoteStatusBadge = ({
     <>
       <FlexWrapper $alignItems="flex-start" $gap="8px" $flexWrap="wrap">
         {showIsWinning && (
-          <Badge $variant={isWinning ? 'success' : 'danger'}>
+          <Badge
+            $variant={isWinning ? 'success' : 'danger'}
+            data-testid="voteWinning"
+          >
             {`Winning: ${isWinning ? 'Yes' : 'No'}`}
           </Badge>
         )}
-        <Badge $variant={state.isQuorumReached ? 'success' : 'default'}>
+        <Badge
+          $variant={state.isQuorumReached ? 'success' : 'default'}
+          data-testid="voteQuorum"
+        >
           {state.isQuorumReached ? 'Quorum reached' : 'No quorum'}
         </Badge>
       </FlexWrapper>
 
       {state.status === VoteStatus.ActiveMain && !isMainPhaseFinished && (
-        <VotePhaseWrapper>
+        <VotePhaseWrapper data-testid="votePhase">
           <Text>
             Main phase ends in <br /> <b>{mainPhaseCountdown}</b>
           </Text>
@@ -77,7 +85,7 @@ export const VoteStatusBadge = ({
 
       {state.status === VoteStatus.ActiveObjection &&
         !isObjectionPhaseFinished && (
-          <VotePhaseWrapper>
+          <VotePhaseWrapper data-testid="votePhase">
             <Text>
               Objection phase ends in <br />
               <b>{objectionPhaseCountdown}</b>

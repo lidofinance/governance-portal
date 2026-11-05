@@ -154,6 +154,7 @@ const MOTION_DESCRIPTIONS: Record<
   [MotionType.LOLStablecoinsTopUp]: TopUpWithLimitsAndCustomToken,
   [MotionType.LOLStablecoinsAdd]: AllowedRecipientAdd,
   [MotionType.LOLStablecoinsRemove]: AllowedRecipientRemove,
+  [MotionType.LOLLDOTopUp]: TopUpWithLimits,
   [MotionType.EcosystemOpsStethTopUp]: TopUpWithLimits,
   [MotionType.LabsOpsStethTopUp]: TopUpWithLimits,
   [MotionType.MEVBoostRelaysAdd]: MevBoostRelaysAdd,
@@ -236,6 +237,14 @@ export const MotionDescription = ({ motion }: Props) => {
     return (
       <Text size={14} color="warning">
         Unrecognized motion type
+      </Text>
+    );
+  }
+
+  if (!callDataRaw) {
+    return (
+      <Text size={14} color="warning">
+        Calldata unavailable
       </Text>
     );
   }

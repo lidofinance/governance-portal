@@ -64,13 +64,13 @@ export const VetoSignallingAdditionalSupportInfo = ({
 
   if (amountTillNextPhasePercent <= 0) {
     return (
-      <Text color="secondary">
+      <Text color="secondary" data-testid="vetoSupportNextStateInfo">
         RageQuit <DGTooltip topic="rageQuit" /> starts on{' '}
-        <b>
+        <b data-testid="nextStateDate">
           {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}
         </b>
         , unless veto stETH support decreases below{' '}
-        <b>
+        <b data-testid="thresholdAmount">
           {secondSealThresholdWei
             ? `${formatEth(secondSealThresholdWei, 2)} ${Token.stETH}`
             : `${secondSealRageQuitSupport}%`}
@@ -80,13 +80,13 @@ export const VetoSignallingAdditionalSupportInfo = ({
   }
 
   return (
-    <Text color="secondary">
+    <Text color="secondary" data-testid="vetoSupportNextStateInfo">
       RageQuit <DGTooltip topic="rageQuit" /> starts if{' '}
-      <b>
+      <b data-testid="amountTillNextState">
         {formatEth(amountTillRQPhaseWei, 2)} {Token.stETH}
       </b>{' '}
       is added to the escrow by{' '}
-      <b>
+      <b data-testid="nextStateDate">
         {vetoSignallingEndDate?.date} {vetoSignallingEndDate?.timezone}
       </b>
       ; Otherwise, Deactivation begins

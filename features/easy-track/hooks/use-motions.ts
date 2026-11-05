@@ -29,22 +29,19 @@ export const useActiveMotions = () => {
 
       const parsedMotionsWithScripts: Motion[] = [];
       for (const motion of activeMotions) {
+        let event;
         try {
-          const event = await getMotionCreatedEvent({
+          event = await getMotionCreatedEvent({
             easyTrackContract: easyTrack,
             motionId: motion.id,
             motionSnapshotBlock: motion.snapshotBlock,
             client: publicClient,
           });
-
-          if (event) {
-            parsedMotionsWithScripts.push(
-              formatMotionDataOnchain(event as any, motion),
-            );
-          }
         } catch (error) {
-          console.error(`Failed to fetch motion ${motion.id}:`, error);
+          console.error(`Failed to fetch motion ${motion.id} event:`, error);
         }
+
+        parsedMotionsWithScripts.push(formatMotionDataOnchain(event, motion));
       }
 
       return orderBy(parsedMotionsWithScripts, ['id'], ['desc']);

@@ -126,6 +126,9 @@ export const formParts = {
   [MotionTypeForms.LegoLDOTopUp]: StartNewTopUpWithLimits.formParts({
     registryType: MotionTypeForms.LegoLDOTopUp,
   }),
+  [MotionTypeForms.LOLLDOTopUp]: StartNewTopUpWithLimits.formParts({
+    registryType: MotionTypeForms.LOLLDOTopUp,
+  }),
   [MotionTypeForms.NodeOperatorIncreaseLimit]:
     StartNewNodeOperatorLimitIncrease.formParts({
       motionType: MotionTypeForms.NodeOperatorIncreaseLimit,

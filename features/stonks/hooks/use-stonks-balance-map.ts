@@ -13,6 +13,7 @@ export const useStonksBalanceMap = (stonksAddress?: string) => {
 
   return useQuery({
     queryKey: ['stonks-balance-map', chainId, stonksAddress ?? 'all'],
+    refetchOnMount: 'always',
     queryFn: async () => {
       let stonksMetadata = STONKS_MAP[chainId];
       if (!stonksMetadata) {

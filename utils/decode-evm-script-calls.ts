@@ -1,4 +1,11 @@
-import { Address, decodeFunctionData, getAddress, Hex, isAddress } from 'viem';
+import {
+  Address,
+  decodeFunctionData,
+  getAddress,
+  Hex,
+  isAddress,
+  slice,
+} from 'viem';
 import {
   DecoderContext,
   fetchContractMetadata,
@@ -22,6 +29,7 @@ export type DecodedCall = {
   contractName: string | null | undefined;
   contractAddress: Address;
   functionName: string;
+  selector: Hex | undefined;
   args: readonly unknown[] | undefined;
   nestedCalls: DecodedCall[];
 };
@@ -42,6 +50,7 @@ export const decodeCalls = async (
       id: idCounter[0]++,
       contractName: null,
       functionName: 'unknown',
+      selector: undefined,
       args: undefined,
       nestedCalls: [],
     };
@@ -68,6 +77,7 @@ export const decodeCalls = async (
       });
 
       decodedCall.functionName = decoded.functionName;
+      decodedCall.selector = slice(call.payload, 0, 4);
       decodedCall.args = decoded.args;
 
       if (decoded.functionName === 'submitProposal') {

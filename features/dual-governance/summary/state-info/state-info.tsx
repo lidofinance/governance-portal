@@ -190,8 +190,13 @@ export const StateInfo = () => {
           <StateLoader />
         ) : (
           <StateStatus>
-            <Text size={34}>{getStateLabel(visibleState)}</Text>
-            <StateIndicator $state={visibleState} />
+            <Text size={34} data-testid="dgStateLabel">
+              {getStateLabel(visibleState)}
+            </Text>
+            <StateIndicator
+              $state={visibleState}
+              data-testid="dgStateIndicator"
+            />
           </StateStatus>
         )}
         {visibleState === VisibleGovernanceState.Emergency && (
@@ -201,7 +206,7 @@ export const StateInfo = () => {
                 Loading emergency mode end time...
               </Text>
             ) : emergencyModeEndTime ? (
-              <Text size={16} color="default">
+              <Text size={16} color="default" data-testid="emergencyModeEndsOn">
                 ends on <b>{emergencyModeEndTime}</b>
               </Text>
             ) : null}
@@ -209,9 +214,12 @@ export const StateInfo = () => {
         )}
         {subtitle && detailedState ? (
           <FlexWrapper $gap="12px">
-            <Text>{subtitle}</Text>
+            <Text data-testid="dgStateSubtitle">{subtitle}</Text>
             {showNextState && (
-              <Text color="secondary">{`Next state: ${GovernanceState[nextState || 1]}`}</Text>
+              <Text
+                color="secondary"
+                data-testid="dgNextState"
+              >{`Next state: ${GovernanceState[nextState || 1]}`}</Text>
             )}
           </FlexWrapper>
         ) : null}

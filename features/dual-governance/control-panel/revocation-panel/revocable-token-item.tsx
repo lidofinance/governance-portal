@@ -33,7 +33,11 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
     }
 
     return (
-      <RevocableTokenItemStyled ref={ref} $disabled={isLocked}>
+      <RevocableTokenItemStyled
+        ref={ref}
+        $disabled={isLocked}
+        data-testid="revocableTokenItem"
+      >
         <TokenBalance
           token={token}
           balance={amount}
@@ -41,7 +45,7 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
           shouldConvertShares={true}
         />
         {!!onClick && isLocked ? (
-          <InQueueInfo>
+          <InQueueInfo data-testid="tokenLockedInfo">
             <>
               <Text size={14} color="secondary">
                 {unlockCountdown ? (
@@ -56,7 +60,11 @@ export const RevocableTokenItem = forwardRef<HTMLDivElement, Props>(
             </>
           </InQueueInfo>
         ) : (
-          <RevokeButton onClick={onClick} size="sm">
+          <RevokeButton
+            onClick={onClick}
+            size="sm"
+            data-testid="tokenActionBtn"
+          >
             <Box display="flex" alignItems="center">
               {actionLabel}
               <RevokeIcon />

@@ -22,7 +22,7 @@ const ActiveProposalWrapper = ({
   children: ReactNode;
 }) => {
   return (
-    <ProposalWrapper>
+    <ProposalWrapper data-testid={`previewProposal-${proposalId}`}>
       <IconWrapper>
         <ProposalsIcon />
       </IconWrapper>
@@ -55,7 +55,7 @@ export const PreviewProposal = ({ proposal }: Props) => {
 
   if (isVote) {
     return (
-      <VoteWrapper>
+      <VoteWrapper data-testid={`previewVote-${proposal.proposalId}`}>
         <AragonLogo />
         <Text size={22}>
           <Link href={votePage(proposal.proposalId)}>

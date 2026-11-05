@@ -231,7 +231,7 @@ export const RageQuitTokens = ({
           </Link>
         </Text>
       </Box>
-      <RevocableTokensList>
+      <RevocableTokensList data-testid="rageQuitTokens">
         {stETHLockedShares && (
           <RevocableTokenItem
             token={
