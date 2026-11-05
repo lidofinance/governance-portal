@@ -8,7 +8,7 @@ import {
 } from 'shared/blockchain/hooks/use-read-contract';
 import { InputNumberHookForm } from 'shared/hook-form/input-number-hook-form';
 import { validateInteger } from '@easy-track/lido-lend/validation';
-import { FACTORY_CONTRACTS } from '../../../factories-metadata';
+import { FACTORY_CONTRACTS } from '@easy-track/factories-metadata';
 import { Fieldset } from '../style';
 
 type Bounds = { min: bigint; max: bigint };
