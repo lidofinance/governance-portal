@@ -1,4 +1,4 @@
-import { Readable } from 'node:stream';
+import { Readable, pipeline } from 'node:stream';
 import { ReadableStream } from 'node:stream/web';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Counter, Registry } from 'prom-client';
@@ -194,7 +194,16 @@ export const rpcFactory = ({
         requested.headers.get('Content-Type') ?? 'application/json',
       );
       if (requested.body) {
-        Readable.fromWeb(requested.body as ReadableStream).pipe(res);
+        pipeline(
+          Readable.fromWeb(requested.body as ReadableStream),
+          res,
+          (err) => {
+            // ERR_STREAM_PREMATURE_CLOSE: client disconnected mid-response
+            if (err && err.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
+              console.error(`RPC response stream failed: ${err.message}`);
+            }
+          },
+        );
       } else {
         res
           .status(requested.status)
