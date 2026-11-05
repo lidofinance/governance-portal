@@ -52,6 +52,7 @@ export const VoteCard = () => {
     eventStart,
     voteTime,
     objectionPhaseTime,
+    isEndDateKnown,
     description,
     dgProposal,
     voteEvents,
@@ -256,6 +257,7 @@ export const VoteCard = () => {
           isQuorumReached={vote.state.isQuorumReached}
           voteTime={voteTime}
           objectionPhaseTime={objectionPhaseTime}
+          isEndDateKnown={isEndDateKnown}
           startDate={Number(vote.startDate)}
           isEnded={isEnded}
           dualGovernancePhase={isDualGovernancePhase}

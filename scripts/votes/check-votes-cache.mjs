@@ -20,6 +20,7 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const INPUT_ROOT = join(__dirname, '../../public/votes-events');
+const DURATIONS_PATH = join(INPUT_ROOT, 'durations.json');
 
 const AragonVotingAbi = JSON.parse(
   readFileSync(join(__dirname, '../../abi/AragonVoting.abi.json'), 'utf8'),
@@ -72,6 +73,47 @@ const hasCachedVoteEvents = (cached, onChainExecuted) => {
   return onChainExecuted ? Boolean(cached.executeVoteEvent) : true;
 };
 
+// The open-ended last range must hold the live durations; otherwise the
+// durations changed on-chain and older votes would be dated with the new ones.
+const checkCurrentDurations = async (chainId, votingAddress, ranges) => {
+  const scope = `${chainId}/${votingAddress}`;
+  const client = getPublicClient(chainId);
+  if (!client) {
+    console.warn(
+      `⚠️ ${scope}: no public RPC configured, skipping durations check`,
+    );
+    return;
+  }
+
+  let voteTime;
+  let objectionPhaseTime;
+  try {
+    [voteTime, objectionPhaseTime] = await Promise.all(
+      ['voteTime', 'objectionPhaseTime'].map((functionName) =>
+        client.readContract({
+          address: votingAddress,
+          abi: AragonVotingAbi,
+          functionName,
+        }),
+      ),
+    );
+  } catch (error) {
+    fail(scope, `failed to read live durations: ${error.message}`);
+    return;
+  }
+
+  const current = ranges?.at(-1);
+  if (
+    current?.voteTime !== Number(voteTime) ||
+    current?.objectionPhaseTime !== Number(objectionPhaseTime)
+  ) {
+    fail(
+      scope,
+      `live durations (voteTime=${voteTime}, objectionPhaseTime=${objectionPhaseTime}) differ from durations.json — rebuild with "yarn build-vote-events"`,
+    );
+  }
+};
+
 const checkAddressCompleteness = async (chainId, votingAddress, votesById) => {
   const scope = `${chainId}/${votingAddress}`;
   const client = getPublicClient(chainId);
@@ -121,6 +163,9 @@ const checkAddressCompleteness = async (chainId, votingAddress, votesById) => {
 
 const main = async () => {
   const chainFilter = getChainFilter();
+  const voteDurations = existsSync(DURATIONS_PATH)
+    ? JSON.parse(readFileSync(DURATIONS_PATH, 'utf8'))
+    : {};
   for (const [chainIdStr, votingAddresses] of Object.entries(
     VOTING_ADDRESSES,
   )) {
@@ -152,6 +197,11 @@ const main = async () => {
         );
       }
       await checkAddressCompleteness(chainId, votingAddress, votesById);
+      await checkCurrentDurations(
+        chainId,
+        votingAddress,
+        voteDurations[chainId]?.[votingAddress],
+      );
     }
   }
 

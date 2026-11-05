@@ -26,17 +26,20 @@ public/proposals-events/<chainId>/
   chunk-1.<hash>.json
   ...
 
-public/votes-events/<chainId>/<votingAddress>/
-  manifest.json
-  descriptions.json
-  chunk-0.<hash>.json
-  ...
+public/votes-events/
+  durations.json
+  <chainId>/<votingAddress>/
+    manifest.json
+    descriptions.json
+    chunk-0.<hash>.json
+    ...
 ```
 
 - Entries are partitioned into chunks of 10 (`PROPOSALS_PER_CHUNK` / `VOTES_PER_CHUNK`). The chunk index for id `N` is `floor((N - firstId) / 10)`.
 - Each chunk filename embeds a content hash: the first 10 hex chars of `sha256` over the serialized chunk. Identical content produces an identical filename, so an unchanged chunk is left untouched on rebuild (less git churn). Changed content gets a new filename, and the old file is removed as an orphan.
 - `manifest.json` records `{ chunkSize, firstId, lastId, chunks: { <index>: <filename> } }`, which maps each chunk index to its file.
 - Votes also ship `descriptions.json` (`id -> { creator, metadata, description }`) so the dashboard and search can read titles without loading full chunks.
+- `durations.json` (`chainId -> votingAddress -> [{ lastVoteId?, voteTime, objectionPhaseTime }]`) keeps the duration history that the contract drops. A DAO vote can change `voteTime` / `objectionPhaseTime`, and the contract stores only the current pair. The file splits votes into ranges of consecutive ids that share one pair. The last range has no `lastVoteId` and holds the current on-chain pair. The UI reads closed ranges through `getHistoricalVoteDurations` and takes the live pair for any vote past them, so only the build and the CI check read the open range. With "Use local cache" off the UI skips the file and hides the end date of closed votes, since the live pair can't date them reliably.
 
 ## Building the cache
 
@@ -67,7 +70,7 @@ Per chain:
 Per chain, per voting contract address (`VOTING_ADDRESSES`; mainnet has one, Hoodi has two):
 
 1. Read `votesLength()` from the Aragon `Voting` contract.
-2. Compute the vote-phase window in blocks: `(voteTime + objectionPhaseTime) / 12s + 100-block buffer` (`fetchVotePhaseBlocks`). This bounds the `CastVote` scan.
+2. Compute the vote-phase window in blocks: `(voteTime + objectionPhaseTime) / 12s + 100-block buffer` (`getVotePhaseBlocks`, from the same live read that updates `durations.json`; 100000 blocks if that read fails). This bounds the `CastVote` scan.
 3. Fetch `getVote(id)` and `canExecute(id)` for every id (batched, `BUILD_FETCH_CONCURRENCY = 10`).
 4. Carry forward cached entries for ids not seen on-chain this run. For each fetched vote, skip or re-fetch (see below).
 5. For a vote being (re)built, fetch:
@@ -76,6 +79,7 @@ Per chain, per voting contract address (`VOTING_ADDRESSES`; mainnet has one, Hoo
    - `CastVote` and `AttemptCastVoteAsDelegate`: scanned over `[snapshotBlock, snapshotBlock + votePhaseBlocks]`, then reduced into a per-voter list (latest vote wins; delegated votes nested under the delegate). See `processCastVoteEvents`.
    - `description`: resolved from IPFS via the `StartVote` metadata CID.
 6. Write chunks, manifest, and `descriptions.json`.
+7. Update `durations.json`. The script reads the live `voteTime` / `objectionPhaseTime` and compares them with the open-ended last range. On a match it leaves the file alone. On a mismatch it closes that range at the highest closed vote id and appends an open range with the live pair. A vote still open when the DAO changes durations runs under the new pair, so rebuild soon after the change. If that vote closes before the rebuild, the script files it under the old pair. For mainnet votes before 185, a one-off seed took the ranges from archive reads at each vote's snapshot block.
 
 ### `getLogs` chunking
 
@@ -138,7 +142,7 @@ Pass A, structural (`checkManifestStructure`), for each chain/address with a man
 - per-entry shape is valid (`checkEntryShape`): proposals need `submittedEvent`, a numeric `status`, and an address `executor`; votes need `voteDetails` with boolean `open`/`executed`, a `startVoteEvent`, and an array `voteEvents`;
 - no orphan `chunk-*.json` exists that the manifest does not reference.
 
-Pass B, completeness against chain: read `getProposalsCount` / `votesLength` from public RPC, then for every id the cache does not already mark terminal-and-complete, read its on-chain status. If the chain reports it terminal (proposal status final, vote closed) but the cache is missing or incomplete, the check fails with a "rebuild with `yarn build-...`" message.
+Pass B, completeness against chain: read `getProposalsCount` / `votesLength` from public RPC, then for every id the cache does not already mark terminal-and-complete, read its on-chain status. If the chain reports it terminal (proposal status final, vote closed) but the cache is missing or incomplete, the check fails with a "rebuild with `yarn build-...`" message. Pass B also reads the live `voteTime` / `objectionPhaseTime` and fails when they differ from the open-ended last range in `durations.json`. After a DAO change to durations, the next pull request fails this check until someone rebuilds the cache.
 
 Pass B uses its own event-presence predicates: `isCachedProposalFinal` for proposals, and a local `hasCachedVoteEvents` for votes (which checks `executeVoteEvent` only when on-chain `executed`, ignoring `canExecute`). Using the build-time `isCachedVoteComplete` here would force a perpetual re-fetch of passed-but-unenacted votes.
 

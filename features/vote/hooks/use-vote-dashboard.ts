@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
+import invariant from 'tiny-invariant';
 import {
   useInfiniteQuery,
   useQuery,
@@ -14,6 +15,7 @@ import { AragonVoting } from 'shared/blockchain/contracts';
 import { useDebounce } from 'shared/hooks/use-debounce';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
 import { fetchVotesDescriptions } from 'shared/votes/utils/fetch-votes-descriptions';
+import { useHistoricalVoteDurations } from 'shared/votes/hooks/use-historical-vote-durations';
 
 const PAGE_SIZE = 5;
 const DASHBOARD_VOTES_KEY = 'dashboard-votes';
@@ -31,6 +33,8 @@ export const useVoteDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [syncedFromUrl, setSyncedFromUrl] = useState(false);
   const debouncedQuery = useDebounce(searchQuery, 400);
+
+  const historicalVoteDurations = useHistoricalVoteDurations();
 
   useEffect(() => {
     if (!router.isReady) {
@@ -80,6 +84,12 @@ export const useVoteDashboard = () => {
     },
     staleTime: Infinity,
   });
+
+  const getVoteDurations = (voteId: number) => {
+    invariant(votingInfo.data, 'Voting info is not available');
+
+    return historicalVoteDurations.getDurations(voteId) ?? votingInfo.data;
+  };
 
   const totalVotes = votingInfo.data?.votesLength ?? 0;
 
@@ -200,7 +210,6 @@ export const useVoteDashboard = () => {
     isFiltering,
     isSettling,
     filteredCount: filteredIds.length,
-    info,
     votesList: loadedVotes,
     showSkeletons,
     hasNextPage: votes.hasNextPage,
@@ -208,5 +217,7 @@ export const useVoteDashboard = () => {
     fetchNextPage: votes.fetchNextPage,
     refetch: votes.refetch,
     error: votes.error || votingInfo.error,
+    getVoteDurations,
+    isEndDateKnown: historicalVoteDurations.isAvailable,
   };
 };

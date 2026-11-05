@@ -20,6 +20,7 @@ import { ProposalStatus } from 'shared/types';
 import { useVoteDualGovernanceStatus } from '../hooks/use-vote-dual-governance-status';
 import { useVotePassedCallback } from '../hooks/use-vote-passed-callback';
 import { useDelegationInfo } from '../hooks/use-delegation-info';
+import { useHistoricalVoteDurations } from 'shared/votes/hooks/use-historical-vote-durations';
 
 type Value = {
   vote: Vote;
@@ -32,6 +33,7 @@ type Value = {
   voterDaoTokenBalance: bigint | undefined;
   voteTime: number;
   objectionPhaseTime: number;
+  isEndDateKnown: boolean;
   eligibleDelegators: EligibleDelegator[];
   eligibleDelegatedVotingPower: bigint;
   totalDelegatedVotingPower: bigint;
@@ -70,6 +72,9 @@ type Props = {
 export const VoteProvider: FC<Props> = ({ voteId, children }) => {
   const { data: votingConfig, isLoading: isVotingConfigLoading } =
     useVotingConfig();
+  const historicalVoteDurations = useHistoricalVoteDurations();
+  const durations =
+    historicalVoteDurations.getDurations(Number(voteId)) ?? votingConfig;
 
   const {
     data: voteData,
@@ -143,8 +148,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
       voterState: voterState?.voterState,
       voterDaoTokenBalance: voterState?.voterDaoTokenBalance,
       voteEvents: voteEvents ?? [],
-      voteTime: votingConfig?.voteTime ?? 0,
-      objectionPhaseTime: votingConfig?.objectionPhaseTime ?? 0,
+      voteTime: durations?.voteTime ?? 0,
+      objectionPhaseTime: durations?.objectionPhaseTime ?? 0,
+      isEndDateKnown: historicalVoteDurations.isAvailable,
       eligibleDelegators: delegatorsData?.eligibleDelegatedVoters ?? [],
       eligibleDelegatedVotingPower:
         delegatorsData?.eligibleDelegatedVotingPower ?? 0n,
@@ -172,8 +178,9 @@ export const VoteProvider: FC<Props> = ({ voteId, children }) => {
     voteEvents,
     voterState?.voterDaoTokenBalance,
     voterState?.voterState,
-    votingConfig?.objectionPhaseTime,
-    votingConfig?.voteTime,
+    durations?.objectionPhaseTime,
+    durations?.voteTime,
+    historicalVoteDurations.isAvailable,
   ]);
 
   const handlePass = useCallback(() => {
