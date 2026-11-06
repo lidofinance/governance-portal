@@ -52,6 +52,7 @@ export const VoteCard = () => {
     eventStart,
     voteTime,
     objectionPhaseTime,
+    isEndDateKnown,
     description,
     dgProposal,
     voteEvents,
@@ -78,7 +79,9 @@ export const VoteCard = () => {
     }
     return (
       voteEvents.find(
-        (event) => event.voter.toLowerCase() === walletAddress.toLowerCase(),
+        (event) =>
+          event.voter.toLowerCase() === walletAddress.toLowerCase() &&
+          !event.delegatedVotes?.length,
       ) ?? null
     );
   }, [walletAddress, voteEvents]);
@@ -254,6 +257,7 @@ export const VoteCard = () => {
           isQuorumReached={vote.state.isQuorumReached}
           voteTime={voteTime}
           objectionPhaseTime={objectionPhaseTime}
+          isEndDateKnown={isEndDateKnown}
           startDate={Number(vote.startDate)}
           isEnded={isEnded}
           dualGovernancePhase={isDualGovernancePhase}

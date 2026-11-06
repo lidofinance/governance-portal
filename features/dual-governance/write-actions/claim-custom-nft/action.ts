@@ -14,7 +14,7 @@ export const useClaimCustomNftAction = () => {
   const processClaimCustomNft = useClaimCustomNftTxSend();
   const waitForTx = useTxConfirmation();
   const withdrawalQueueContract = useReadContract(WithdrawalQueue);
-  const { historicalEscrowAddresses } = useEscrowContext();
+  const { historicalEscrowAddresses, rageQuitAddress } = useEscrowContext();
 
   return useCallback(
     async (selectedNftIds: string[]) => {
@@ -42,10 +42,12 @@ export const useClaimCustomNftAction = () => {
         const nftOwner = nftStatus[0].owner;
 
         // Verify the NFT owner is a RageQuit escrow address
-        const isOwnerRageQuitEscrow = historicalEscrowAddresses.some(
-          (escrowAddress) =>
-            escrowAddress.toLowerCase() === nftOwner.toLowerCase(),
-        );
+        const isOwnerRageQuitEscrow =
+          rageQuitAddress?.toLowerCase() === nftOwner.toLowerCase() ||
+          historicalEscrowAddresses.some(
+            (escrowAddress) =>
+              escrowAddress.toLowerCase() === nftOwner.toLowerCase(),
+          );
 
         if (!isOwnerRageQuitEscrow) {
           throw new Error('NFT owner is not a RageQuit escrow address');
@@ -97,6 +99,7 @@ export const useClaimCustomNftAction = () => {
       waitForTx,
       withdrawalQueueContract,
       historicalEscrowAddresses,
+      rageQuitAddress,
     ],
   );
 };

@@ -15,12 +15,13 @@ import { AragonAgent } from 'shared/blockchain/contract-addresses';
 
 export type BaseCall = {
   target: Address;
+  value?: bigint;
   payload: Hex;
 };
 
 type SubmitProposalCall = {
   target: Address;
-  value: string;
+  value: bigint;
   payload: Hex;
 };
 
@@ -28,6 +29,7 @@ export type DecodedCall = {
   id: number;
   contractName: string | null | undefined;
   contractAddress: Address;
+  value: bigint;
   functionName: string;
   selector: Hex | undefined;
   args: readonly unknown[] | undefined;
@@ -47,6 +49,7 @@ export const decodeCalls = async (
   for (const call of calls) {
     const decodedCall: DecodedCall = {
       contractAddress: call.target,
+      value: call.value ?? 0n,
       id: idCounter[0]++,
       contractName: null,
       functionName: 'unknown',
@@ -87,6 +90,7 @@ export const decodeCalls = async (
         if (Array.isArray(innerCalls)) {
           const parsedInnerCalls: BaseCall[] = innerCalls.map((innerCall) => ({
             target: getAddress(innerCall.target),
+            value: innerCall.value,
             payload: innerCall.payload,
           }));
           decodedCall.nestedCalls = await decodeCalls(
