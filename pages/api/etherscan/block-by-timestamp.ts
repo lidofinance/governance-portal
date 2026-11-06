@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { wrapRequest as wrapNextRequest } from '@lidofinance/next-api-wrapper';
 import {
-  defaultErrorHandler,
+  errorAndCacheDefaultWrappers,
   HttpMethod,
   httpMethodGuard,
   rateLimit,
@@ -12,6 +12,7 @@ import { API_ROUTES } from 'constants/api';
 import { ETHERSCAN_REMOTE_API_URL } from 'constants/network';
 import { config, secretConfig } from 'config';
 import { etherscanQueue } from 'utils-api/etherscan-queue';
+import { fetchExternal } from 'utils-api/fetch-external';
 
 type EtherscanResponse = {
   status: string;
@@ -26,7 +27,7 @@ const queuedEtherscanRequest = async (
   return etherscanQueue.add(async () => {
     const url = `${ETHERSCAN_REMOTE_API_URL}?chainid=${chainId}&module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=${secretConfig.etherscanApiKey}`;
 
-    const response = await fetch(url);
+    const response = await fetchExternal(url);
 
     if (!response.ok) {
       throw new Error(`Etherscan API error: ${response.status}`);
@@ -77,9 +78,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       'Etherscan block-by-timestamp error:',
       error instanceof Error ? error.message : error,
     );
-    res
-      .status(502)
-      .json({ error: 'Failed to fetch block number from Etherscan' });
+    res.status(502);
+    throw new Error('Failed to fetch block number from Etherscan');
   }
 };
 
@@ -90,5 +90,5 @@ export default wrapNextRequest([
     Metrics.request.apiTimings,
     API_ROUTES.ETHERSCAN_BLOCK_BY_TIMESTAMP,
   ),
-  defaultErrorHandler,
+  ...errorAndCacheDefaultWrappers,
 ])(handler);

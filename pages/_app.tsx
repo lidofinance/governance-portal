@@ -10,8 +10,6 @@ import {
   migrationThemeCookiesToCrossDomainCookiesClientSide,
 } from '@lidofinance/lido-ui';
 
-import { config } from 'config';
-import { withCsp } from 'config/csp';
 import { Providers } from 'providers';
 import { ErrorBoundaryFallback } from 'shared/components/error-boundary';
 import { nprogress } from 'utils';
@@ -53,6 +51,4 @@ const AppWrapper = (
   );
 };
 
-export default config.ipfsMode || process.env.NODE_ENV === 'development'
-  ? AppWrapper
-  : withCsp(AppWrapper);
+export default AppWrapper;

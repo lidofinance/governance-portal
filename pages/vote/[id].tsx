@@ -1,5 +1,7 @@
+import { GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import { Layout } from 'shared/components';
+import { getDefaultStaticProps } from 'utils-api/get-default-static-props';
 import { VoteCard } from '@vote/components/vote-card';
 import { VoteProvider } from '@vote/providers/vote-context';
 import { VoteMeta } from '@vote/meta';
@@ -8,11 +10,20 @@ import { BackButton } from 'shared/components/back-button';
 import { VotePageWrap } from '@vote/styles';
 import { isNumericId } from 'utils/is-numeric-id';
 
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps = getDefaultStaticProps();
+
 export default function VotePage() {
-  const { query, isReady } = useRouter();
+  const { query } = useRouter();
   const id = query.id;
 
-  if (!isReady || !isNumericId(id)) {
+  if (!isNumericId(id)) {
     return null;
   }
 

@@ -7,7 +7,7 @@
  * - another values to false
  * @returns {Boolean}
  */
-const toBoolean = (val) => {
+export const toBoolean = (val) => {
   return !!(
     val?.toLowerCase?.() === 'true' ||
     val === true ||
@@ -25,7 +25,6 @@ export const ipfsMode = toBoolean(process.env.IPFS_MODE);
 export const rootOrigin = process.env.ROOT_ORIGIN || 'https://lido.fi';
 export const selfOrigin =
   process.env.SELF_ORIGIN || 'https://dg-hoodi.testnet.fi';
-// Fix in the build time (build time don't have env vars)
 
 /** @type string */
 export const stakeOrigin = process.env.STAKE_ORIGIN || 'https://stake.lido.fi';

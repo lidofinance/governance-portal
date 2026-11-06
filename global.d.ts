@@ -28,10 +28,6 @@ declare module 'next/config' {
       rpcUrls_1: string | undefined;
       rpcUrls_560048: string | undefined;
 
-      cspTrustedHosts: string | undefined;
-      cspReportUri: string | undefined;
-      cspReportOnly: string | undefined;
-
       rateLimit: string;
       rateLimitTimeFrame: string;
       etherscanApiKey: string | undefined;

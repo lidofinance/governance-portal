@@ -6,12 +6,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   rateLimit,
   responseTimeMetric,
-  defaultErrorHandler,
+  errorAndCacheDefaultWrappers,
   httpMethodGuard,
   HttpMethod,
 } from 'utils-api';
 import Metrics from 'utils-api/metrics';
 import { API_ROUTES } from 'constants/api';
+import { fetchExternal } from 'utils-api/fetch-external';
 import { parseChainId } from '../subgraph';
 
 export type Module = {
@@ -42,7 +43,7 @@ export type KeysInfoNew = {
 };
 
 const requestTestnetOperators = async (chainId: number) => {
-  const data = await fetch(
+  const data = await fetchExternal(
     `https://operators.testnet.fi/api/operators?chainId=${chainId}`,
   );
   return data.json();
@@ -56,7 +57,7 @@ const requestOperators = async (
   moduleAddress: string,
   walletAddress: string,
 ) => {
-  const modulesResp = await fetch(`${api}/modules?chainId=${chainId}`);
+  const modulesResp = await fetchExternal(`${api}/modules?chainId=${chainId}`);
   const modules: Module[] = await modulesResp.json();
 
   const stakingModule = modules.find(
@@ -68,7 +69,7 @@ const requestOperators = async (
   if (!stakingModule) {
     return result;
   }
-  const moduleStatisticsResp = await fetch(
+  const moduleStatisticsResp = await fetchExternal(
     `${api}/moduleStatistics?moduleId=${stakingModule.id}&chainId=${chainId}`,
   );
   const moduleStatistics: KeysInfoNew = await moduleStatisticsResp.json();
@@ -81,7 +82,7 @@ const requestOperators = async (
     return result;
   }
 
-  const operatorStatisticsResp = await fetch(
+  const operatorStatisticsResp = await fetchExternal(
     `${api}/operatorStatistics?moduleId=${stakingModule.id}&operatorId=${operator.id}&chainId=${chainId}`,
   );
   const operatorStatistics: KeysInfoOperatorNew =
@@ -150,5 +151,5 @@ export default wrapNextRequest([
   httpMethodGuard([HttpMethod.GET]),
   rateLimit,
   responseTimeMetric(Metrics.request.apiTimings, API_ROUTES.KEYS_INFO),
-  defaultErrorHandler,
+  ...errorAndCacheDefaultWrappers,
 ])(keysInfo);
