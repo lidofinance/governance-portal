@@ -3,7 +3,7 @@ import { lidoLendMarketManagerActionsAbi } from 'abi/generated';
 import { LidoLendMarketManagerAction } from '@easy-track/lido-lend/actions';
 import { AddressPopInline } from 'shared/components/address-pop-inline';
 import { MotionDescriptionProps } from '../types';
-import { Amount, MarketId } from './lido-lend-parts';
+import { Amount, MarketId, TokenAmount } from './lido-lend-parts';
 
 const abi = lidoLendMarketManagerActionsAbi;
 
@@ -50,17 +50,32 @@ export const LidoLendMarketManagerActions = ({
               <Amount value={cfg.maxActivationDelay} />
             </li>
             <li>
-              Max delay inflow: <Amount value={cfg.maxDelayInflow} />
+              Max delay inflow:{' '}
+              <TokenAmount
+                marketId={marketId}
+                value={cfg.maxDelayInflow}
+                isCollateral
+              />
             </li>
             <li>
-              Min deposit amount: <Amount value={cfg.minDepositAmount} />
+              Min deposit amount:{' '}
+              <TokenAmount
+                marketId={marketId}
+                value={cfg.minDepositAmount}
+                isCollateral
+              />
             </li>
             <li>
               Activating lock duration (s):{' '}
               <Amount value={cfg.activatingLockDuration} />
             </li>
             <li>
-              Min activation amount: <Amount value={cfg.minActivationAmount} />
+              Min activation amount:{' '}
+              <TokenAmount
+                marketId={marketId}
+                value={cfg.minActivationAmount}
+                isCollateral
+              />
             </li>
             <li>
               Max guardians quorum delay (s):{' '}
@@ -92,11 +107,19 @@ export const LidoLendMarketManagerActions = ({
               Slice floor BPS: <Amount value={config.sliceFloorBps} />
             </li>
             <li>
-              Slice floor assets: <Amount value={config.sliceFloorAssets} />
+              Slice floor assets:{' '}
+              <TokenAmount
+                marketId={marketId}
+                value={config.sliceFloorAssets}
+              />
             </li>
             <li>
               Full cut below collateral:{' '}
-              <Amount value={config.fullCutBelowCollateral} />
+              <TokenAmount
+                marketId={marketId}
+                value={config.fullCutBelowCollateral}
+                isCollateral
+              />
             </li>
             <li>
               LTV step BPS: <Amount value={config.ltvStepBps} />
@@ -116,7 +139,7 @@ export const LidoLendMarketManagerActions = ({
       return (
         <>
           Set supply cap of market <MarketId marketId={marketId} /> to{' '}
-          <Amount value={newCap} />
+          <TokenAmount marketId={marketId} value={newCap} />
         </>
       );
     }

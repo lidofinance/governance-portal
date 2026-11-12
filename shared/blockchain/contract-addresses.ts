@@ -559,6 +559,10 @@ export const CircuitBreaker: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x6019CB557978296BA3C08a7B73225C0975DFB2F7',
 };
 
+export const LidoLend: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x78d3262E82A35d290507bCF9B4834735DdA6b854',
+};
+
 export const SRUpgradeTemplate: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xd92b6303ba39297cb69a3a17a88b47586a6af14c',
 };

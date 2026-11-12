@@ -87,14 +87,16 @@ export const createActionFormPart = <
       useIsTrustedCaller(factory);
 
     const action = parseAction(watch(fieldNames.action));
+    const formValuesKey = JSON.stringify(watch(motionType));
 
     // Switching action swaps which fields are mounted, and re-registering an
-    // already-known field does not recompute `isValid`.
+    // already-known field does not recompute `isValid`. Duplicate checks read
+    // sibling fields, which onChange alone does not revalidate.
     useEffect(() => {
       if (action !== null) {
         void trigger();
       }
-    }, [action, trigger]);
+    }, [action, trigger, formValuesKey]);
 
     if (isTrustedCallerLoading) {
       return <PageLoader />;

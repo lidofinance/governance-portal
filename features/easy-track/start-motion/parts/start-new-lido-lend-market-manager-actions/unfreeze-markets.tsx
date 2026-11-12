@@ -3,18 +3,12 @@ import { lidoLendMarketManagerActionsAbi as abi } from 'abi/generated';
 import type { FormData } from './index';
 import type { FieldNames } from '../create-motion-form-part';
 import { MarketIdListFields } from '@easy-track/lido-lend/market-id-list-fields';
-import { FieldsWrapper, FieldsHeader } from '../style';
 
 export const UnfreezeMarketsFields = ({
   fieldNames,
 }: {
   fieldNames: FieldNames<FormData, 'marketIds'>;
-}) => (
-  <FieldsWrapper>
-    <FieldsHeader>Markets to unfreeze</FieldsHeader>
-    <MarketIdListFields fieldName={fieldNames.marketIds} />
-  </FieldsWrapper>
-);
+}) => <MarketIdListFields fieldName={fieldNames.marketIds} />;
 
 export const encodeUnfreezeMarkets = (formData: FormData) =>
   encodeFunctionResult({

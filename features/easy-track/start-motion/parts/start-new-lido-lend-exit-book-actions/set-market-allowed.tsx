@@ -16,6 +16,7 @@ import {
   Fieldset,
   FieldsWrapper,
   FieldsHeader,
+  FieldsHeaderDesc,
   RemoveItemButton,
 } from '../style';
 
@@ -45,10 +46,10 @@ export const SetMarketAllowedFields = ({
       {marketsFieldArray.fields.map((field, index) => (
         <FieldsWrapper key={field.id}>
           <FieldsHeader>
-            Market {index + 1}
+            <FieldsHeaderDesc>Market #{index + 1}</FieldsHeaderDesc>
             {marketsFieldArray.fields.length > 1 && (
               <RemoveItemButton onClick={() => marketsFieldArray.remove(index)}>
-                Remove
+                Remove market {index + 1}
               </RemoveItemButton>
             )}
           </FieldsHeader>
@@ -111,23 +112,26 @@ export const SetMarketAllowedFields = ({
           </Fieldset>
         </FieldsWrapper>
       ))}
-      <ButtonIcon
-        type="button"
-        variant="ghost"
-        size="sm"
-        icon={<Plus />}
-        onClick={() =>
-          marketsFieldArray.append({
-            loanToken: '',
-            collateralToken: '',
-            oracle: '',
-            irm: '',
-            lltv: '',
-          })
-        }
-      >
-        Add market
-      </ButtonIcon>
+      <Fieldset>
+        <ButtonIcon
+          type="button"
+          variant="ghost"
+          size="sm"
+          icon={<Plus />}
+          color="secondary"
+          onClick={() =>
+            marketsFieldArray.append({
+              loanToken: '',
+              collateralToken: '',
+              oracle: '',
+              irm: '',
+              lltv: '',
+            })
+          }
+        >
+          Add market
+        </ButtonIcon>
+      </Fieldset>
       <Fieldset>
         <CheckboxHookForm
           fieldName={fieldNames.allowed}

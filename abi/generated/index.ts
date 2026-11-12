@@ -83,6 +83,7 @@ export * from './L1ERC20TokenBridge';
 export * from './LazyOracle';
 export * from './LegacyOracle';
 export * from './LidoDAO';
+export * from './LidoLend';
 export * from './LidoLendActivateMarket';
 export * from './LidoLendApplyIrmConfig';
 export * from './LidoLendCircuitBreakerActions';

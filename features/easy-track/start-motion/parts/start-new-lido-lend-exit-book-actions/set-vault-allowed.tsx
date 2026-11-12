@@ -7,7 +7,13 @@ import type { FieldNames } from '../create-motion-form-part';
 import { InputHookForm } from 'shared/hook-form/input-hook-form';
 import { validateAddress } from 'utils/validate-address';
 import { CheckboxHookForm } from 'shared/hook-form/checkbox-hook-form';
-import { Fieldset, RemoveItemButton } from '../style';
+import {
+  Fieldset,
+  FieldsWrapper,
+  FieldsHeader,
+  FieldsHeaderDesc,
+  RemoveItemButton,
+} from '../style';
 
 // LidoLendExitBookActions.Action.SetErc4626ExitBookAllowed
 // -> IErc4626ExitBook.setVaultAllowed(address, bool) on `erc4626ExitBook`
@@ -23,50 +29,58 @@ export const SetVaultAllowedFields = ({
   return (
     <>
       {vaultsFieldArray.fields.map((field, index) => (
-        <Fieldset key={field.id}>
-          <InputHookForm
-            fieldName={`${fieldNames.vaults}.${index}.value`}
-            label={`Vault ${index + 1}`}
-            rules={{
-              required: 'Field is required',
-              validate: (value: string) => {
-                const addressErr = validateAddress(value);
-                if (addressErr) {
-                  return addressErr;
-                }
+        <FieldsWrapper key={field.id}>
+          <FieldsHeader>
+            <FieldsHeaderDesc>Vault #{index + 1}</FieldsHeaderDesc>
+            {vaultsFieldArray.fields.length > 1 && (
+              <RemoveItemButton onClick={() => vaultsFieldArray.remove(index)}>
+                Remove vault {index + 1}
+              </RemoveItemButton>
+            )}
+          </FieldsHeader>
+          <Fieldset>
+            <InputHookForm
+              fieldName={`${fieldNames.vaults}.${index}.value`}
+              label="Vault address"
+              rules={{
+                required: 'Field is required',
+                validate: (value: string) => {
+                  const addressErr = validateAddress(value);
+                  if (addressErr) {
+                    return addressErr;
+                  }
 
-                // The factory emits one call per vault, so a repeated vault
-                // would set the same flag twice in the same motion.
-                const duplicateIndex = vaults.findIndex(
-                  (vault, vaultIndex) =>
-                    vault.value.toLowerCase() === value.toLowerCase() &&
-                    vaultIndex !== index,
-                );
+                  // The factory emits one call per vault, so a repeated vault
+                  // would set the same flag twice in the same motion.
+                  const duplicateIndex = vaults.findIndex(
+                    (vault, vaultIndex) =>
+                      vault.value.toLowerCase() === value.toLowerCase() &&
+                      vaultIndex !== index,
+                  );
 
-                if (duplicateIndex !== -1) {
-                  return 'Value must not duplicate another vault';
-                }
+                  if (duplicateIndex !== -1) {
+                    return 'Value must not duplicate another vault';
+                  }
 
-                return true;
-              },
-            }}
-          />
-          {vaultsFieldArray.fields.length > 1 && (
-            <RemoveItemButton onClick={() => vaultsFieldArray.remove(index)}>
-              Remove
-            </RemoveItemButton>
-          )}
-        </Fieldset>
+                  return true;
+                },
+              }}
+            />
+          </Fieldset>
+        </FieldsWrapper>
       ))}
-      <ButtonIcon
-        type="button"
-        variant="ghost"
-        size="sm"
-        icon={<Plus />}
-        onClick={() => vaultsFieldArray.append({ value: '' })}
-      >
-        Add vault
-      </ButtonIcon>
+      <Fieldset>
+        <ButtonIcon
+          type="button"
+          variant="ghost"
+          size="sm"
+          icon={<Plus />}
+          color="secondary"
+          onClick={() => vaultsFieldArray.append({ value: '' })}
+        >
+          Add vault
+        </ButtonIcon>
+      </Fieldset>
       <Fieldset>
         <CheckboxHookForm
           fieldName={fieldNames.allowed}

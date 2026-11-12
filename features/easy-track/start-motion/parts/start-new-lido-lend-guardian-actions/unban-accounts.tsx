@@ -11,6 +11,7 @@ import {
   Fieldset,
   FieldsWrapper,
   FieldsHeader,
+  FieldsHeaderDesc,
   RemoveItemButton,
 } from '../style';
 
@@ -30,12 +31,12 @@ export const UnbanAccountsFields = ({
       {requestsFieldArray.fields.map((field, index) => (
         <FieldsWrapper key={field.id}>
           <FieldsHeader>
-            Unban request {index + 1}
+            <FieldsHeaderDesc>Unban request #{index + 1}</FieldsHeaderDesc>
             {requestsFieldArray.fields.length > 1 && (
               <RemoveItemButton
                 onClick={() => requestsFieldArray.remove(index)}
               >
-                Remove
+                Remove request {index + 1}
               </RemoveItemButton>
             )}
           </FieldsHeader>
@@ -68,25 +69,29 @@ export const UnbanAccountsFields = ({
               }}
             />
           </Fieldset>
+          <FieldsHeaderDesc>Markets</FieldsHeaderDesc>
           <MarketIdListFields
             fieldName={`${fieldNames.unbanRequests}.${index}.marketIds`}
           />
         </FieldsWrapper>
       ))}
-      <ButtonIcon
-        type="button"
-        variant="ghost"
-        size="sm"
-        icon={<Plus />}
-        onClick={() =>
-          requestsFieldArray.append({
-            account: '',
-            marketIds: [{ value: '' }],
-          })
-        }
-      >
-        Add unban request
-      </ButtonIcon>
+      <Fieldset>
+        <ButtonIcon
+          type="button"
+          variant="ghost"
+          size="sm"
+          icon={<Plus />}
+          color="secondary"
+          onClick={() =>
+            requestsFieldArray.append({
+              account: '',
+              marketIds: [{ value: '' }],
+            })
+          }
+        >
+          Add unban request
+        </ButtonIcon>
+      </Fieldset>
     </>
   );
 };
