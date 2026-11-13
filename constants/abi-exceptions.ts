@@ -76,6 +76,7 @@ export const ABI_EXCEPTIONS = {
   CSM2HashConsensus: abis.csHashConsensusAbi,
   CSM2Verifier: abis.csVerifierAbi,
   CSM2Ejector: abis.csEjectorAbi,
+  LidoLendCircuitBreaker: abis.circuitBreakerAbi,
 } as const;
 
 export type AbiExceptionContractName = keyof typeof ABI_EXCEPTIONS;
