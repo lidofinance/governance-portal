@@ -57,6 +57,7 @@ export const useProposals = ({
     queryKey: [
       'get-proposals',
       chainId,
+      id,
       Number(proposalsCount),
       isInTestMode,
       useLocalCache,

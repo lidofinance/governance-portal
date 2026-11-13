@@ -1,4 +1,4 @@
-import { getErrorMessage } from 'utils';
+import { getErrorMessage, TxSentDataUnavailableError } from 'utils';
 import type { TransactionModalTransitStage } from './use-transaction-modal-stage';
 import { TxStageFail, TxStageSuccessMultisig } from '../tx-stages-basic';
 
@@ -11,7 +11,12 @@ export const getGeneralTransactionModalStages = (
     }),
   failed: (error: unknown, onRetry?: () => void) =>
     transitStage(
-      <TxStageFail failedText={getErrorMessage(error)} onRetry={onRetry} />,
+      <TxStageFail
+        failedText={getErrorMessage(error)}
+        onRetry={
+          error instanceof TxSentDataUnavailableError ? undefined : onRetry
+        }
+      />,
       {
         isClosableOnLedger: true,
       },

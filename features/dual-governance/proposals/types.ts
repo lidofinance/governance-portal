@@ -1,16 +1,15 @@
 import { Address, Log } from 'viem';
 // TODO: Generate proper event types from ABI
 type DGProposalSubmittedEvent = any;
-import { BigNumber } from 'ethers';
 import { ProposalStatus } from 'shared/types';
 
 export { ProposalStatus };
 
 type TimeStamp = number;
 
-export type SubmitProposalCall = [string, BigNumber, string] & {
+export type SubmitProposalCall = [string, bigint, string] & {
   target: string;
-  value: BigNumber;
+  value: bigint;
   payload: string;
 };
 

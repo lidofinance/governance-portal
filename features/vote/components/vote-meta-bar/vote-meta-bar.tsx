@@ -26,6 +26,7 @@ type Props = {
   isQuorumReached: boolean;
   voteTime: number;
   objectionPhaseTime: number;
+  isEndDateKnown?: boolean;
   startDate: number;
   isEnded: boolean;
   dualGovernancePhase?: boolean;
@@ -111,6 +112,7 @@ export const VoteMetaBar = ({
   isQuorumReached,
   voteTime,
   objectionPhaseTime,
+  isEndDateKnown = true,
   startDate,
   isEnded,
   dualGovernancePhase,
@@ -123,6 +125,7 @@ export const VoteMetaBar = ({
 
   const isActive =
     status === VoteStatus.ActiveMain || status === VoteStatus.ActiveObjection;
+  const showTime = isActive || isEndDateKnown;
 
   const statusLabel = getStatusLabel(status, isQuorumReached);
   const phase = getPhaseLabel(status, dualGovernancePhase, isDgProposalLoading);
@@ -193,7 +196,7 @@ export const VoteMetaBar = ({
               <MetaLabel>Proposal ID</MetaLabel>
               <VoteIdText data-testid="voteId">Vote #{voteId}</VoteIdText>
             </MetaCell>
-            {!isActive && (
+            {!isActive && isEndDateKnown && (
               <MetaCell data-testid="voteEnded">
                 <MetaLabel>Ended on</MetaLabel>
                 {timeValue}
@@ -203,8 +206,12 @@ export const VoteMetaBar = ({
         ) : (
           <>
             <VoteIdText data-testid="voteId">Vote #{voteId}</VoteIdText>
-            <Separator />
-            {timeNodeInline}
+            {showTime && (
+              <>
+                <Separator />
+                {timeNodeInline}
+              </>
+            )}
           </>
         )}
       </TimeGroup>

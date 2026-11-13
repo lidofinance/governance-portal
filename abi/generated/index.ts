@@ -35,6 +35,7 @@ export * from './CircuitBreaker';
 export * from './CompositePostRebaseBeaconReceiver';
 export * from './ConsolidationGateway';
 export * from './ConsolidationMigrator';
+export * from './CoreAccounting';
 export * from './CreateOrUpdateOperatorGroup';
 export * from './CuratedModule';
 export * from './DGConfigProvider';

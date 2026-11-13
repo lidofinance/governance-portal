@@ -2146,7 +2146,7 @@ export const csmRegistryAbi = [
     type: 'function',
     inputs: [
       { name: 'nodeOperatorIds', internalType: 'uint256[]', type: 'uint256[]' },
-      { name: 'maxAmounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'bondLockNonces', internalType: 'uint256[]', type: 'uint256[]' },
     ],
     name: 'settleGeneralDelayedPenalty',
     outputs: [],
