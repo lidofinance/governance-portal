@@ -433,5 +433,30 @@
     "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
     "description": null,
     "metadata": "Omnibus vote: 1. Submit the Gloas upgrade to Dual Governance.\nlidovoteipfs://bafkreidwrq3a3xqb7b4p4gcfdqhd3hbam3b5orw2axnclqsnkn6k74m5qq"
+  },
+  "87": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the partial Gloas rollback to Dual Governance.\nlidovoteipfs://bafkreieh5tejgph5lidz5hinrtikzr6ztxzxauzym4viuhktlrjl2tpxbi"
+  },
+  "88": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus: \n1) call grantRole(0xf3156f38966c62e303ac6c7519c63e00636409e3b3ca4abecd13cd0092fee53e,0xc8a7F4917cA03FDCD24a5E11A48Ab448318976e7) at 0xe09fBcE63826468867eE66Eda491E444829E022A"
+  },
+  "89": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the Curated Module v2 verifier switch to Dual Governance."
+  },
+  "90": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the Curated Module v2 verifier switch to Dual Governance."
+  },
+  "91": {
+    "creator": "0x8ab4a56721Ad8e68c6Ad86F9D9929782A78E39E5",
+    "description": null,
+    "metadata": "Omnibus vote: 1. Submit the Curated Module v2 verifier switch to Dual Governance."
   }
 }
