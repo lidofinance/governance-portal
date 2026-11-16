@@ -683,8 +683,12 @@ export const CuratedFeeOracle: ChainAddressMap = {
 };
 
 export const CuratedVerifier: ChainAddressMap = {
-  [CHAINS.Mainnet]: '0xC392F457960f1B13Ebaf1aa6C065479dD507E1E3',
+  [CHAINS.Mainnet]: '0x8c9C8c8C91D6de09D256264B33E7C54794feb033',
   [CHAINS.Hoodi]: '0x209190Ebc2Be80367a15d05e626784Eb94d6A880',
+};
+
+export const CuratedVerifierOld: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xC392F457960f1B13Ebaf1aa6C065479dD507E1E3',
 };
 
 export const CuratedEjector: ChainAddressMap = {
@@ -750,4 +754,8 @@ export const CSM2Ejector: ChainAddressMap = {
 export const CSMCommittee: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f',
   [CHAINS.Hoodi]: '0x4AF43Ee34a6fcD1fEcA1e1F832124C763561dA53',
+};
+
+export const ConsolidationBus: ChainAddressMap = {
+  [CHAINS.Mainnet]: '0xd907ce33b4be423823d1cffe80bd147e8b8554c8',
 };

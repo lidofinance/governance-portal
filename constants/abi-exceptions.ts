@@ -68,7 +68,7 @@ export const ABI_EXCEPTIONS = {
   CSMVettedDVTGate: abis.csmVettedGateAbi,
   CuratedAccounting: abis.accountingAbi,
   CuratedFeeOracle: abis.csFeeOracleAbi,
-  CuratedVerifier: abis.csVerifierAbi,
+  CuratedVerifierOld: abis.csVerifierAbi,
   CuratedEjector: abis.csEjectorAbi,
   CSM2Module: abis.csmRegistryAbi,
   CSM2Accounting: abis.accountingAbi,
