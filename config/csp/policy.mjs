@@ -1,4 +1,4 @@
-import { toBoolean } from '../../env-dynamics.mjs';
+import { toBoolean } from '../to-boolean.mjs';
 
 // Lazy so the custom server can call it after Next loads .env files
 export const getContentSecurityPolicy = () => {
