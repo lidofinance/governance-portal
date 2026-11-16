@@ -14,7 +14,7 @@ proposals and state, and Easy Track motions.
 
 ## Prerequisites
 
-- Node.js 20 (see `.nvmrc`)
+- Node.js 24 (see `.nvmrc`)
 - Yarn v1
 
 This project requires a `.env.local`, distributed via private communication

@@ -5,6 +5,7 @@ export class RequestMetrics {
   apiTimings: Histogram<'hostname' | 'route' | 'entity' | 'status'>;
   apiTimingsExternal: Histogram<'hostname' | 'route' | 'entity' | 'status'>;
   requestCounter: Counter<'route'>;
+  externalRequestCounter: Counter<'hostname' | 'status'>;
   ethCallToAddress: Counter<'address' | 'referrer'>;
   ssrCounter: Counter<'revalidate'>;
 
@@ -12,6 +13,7 @@ export class RequestMetrics {
     this.apiTimings = this.apiTimingsInit('internal');
     this.apiTimingsExternal = this.apiTimingsInit('external');
     this.requestCounter = this.requestsCounterInit();
+    this.externalRequestCounter = this.externalRequestsCounterInit();
     this.ethCallToAddress = this.ethCallToAddressInit();
     this.ssrCounter = this.ssrCounterInit();
   }
@@ -37,6 +39,15 @@ export class RequestMetrics {
       name: requestsCounterName,
       help: 'Total number of requests for each valid route',
       labelNames: ['route', 'entity'],
+      registers: [this.registry],
+    });
+  }
+
+  externalRequestsCounterInit() {
+    return new Counter({
+      name: METRICS_PREFIX + METRIC_NAMES.EXTERNAL_REQUESTS_TOTAL,
+      help: 'Total number of outgoing requests to external APIs',
+      labelNames: ['hostname', 'status'],
       registers: [this.registry],
     });
   }

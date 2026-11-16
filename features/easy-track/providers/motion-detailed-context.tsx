@@ -39,6 +39,8 @@ export const useMotionContext = () => {
   return value;
 };
 
+export const useIsMotionDetailed = () => useContext(MotionContext) !== null;
+
 type Props = {
   motion: Motion | RawMotionSubgraph;
   children: React.ReactNode;

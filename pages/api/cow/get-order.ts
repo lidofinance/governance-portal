@@ -15,7 +15,7 @@ import {
 } from 'utils-api';
 import { API_ROUTES } from 'constants/api';
 import Metrics from 'utils-api/metrics';
-import { standardFetcher } from 'utils/standard-fetcher';
+import { standardFetcherExternal } from 'utils-api/fetch-external';
 import { API } from 'types';
 import { CowApiOrder } from '@stonks/types';
 import { COW_API_URL } from 'shared/external-urls';
@@ -55,7 +55,7 @@ const handler: API = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const orders = await standardFetcher<CowApiOrder[]>(
+  const orders = await standardFetcherExternal<CowApiOrder[]>(
     `${COW_API_URL}/v1/account/${address}/orders`,
     {
       headers: {

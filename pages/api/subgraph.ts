@@ -11,6 +11,7 @@ import {
   httpMethodGuard,
   HttpMethod,
 } from 'utils-api';
+import { fetchExternal } from 'utils-api/fetch-external';
 
 export const ChainNames = {
   [CHAINS.Mainnet]: 'Mainnet',
@@ -65,7 +66,7 @@ const subgraph = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const upstream = await fetch(url, {
+  const upstream = await fetchExternal(url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

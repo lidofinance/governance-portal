@@ -559,6 +559,42 @@ export const CircuitBreaker: ChainAddressMap = {
   [CHAINS.Mainnet]: '0x6019CB557978296BA3C08a7B73225C0975DFB2F7',
 };
 
+export const LidoLend: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x78d3262E82A35d290507bCF9B4834735DdA6b854',
+};
+
+export const LidoLendOwner: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x5B2BdE06288a5db7289C028Fd4C8C175B5E3985B',
+};
+
+export const LidoLendPreseeder: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0xBcbAD842Dbf0fBc47f062136E8FbA7932ab706C8',
+};
+
+export const LidoLendCircuitBreaker: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x3d7f98a7aDa46DB97C100f09746bf3A0Ff4BE192',
+};
+
+export const RiskStewardDashboard: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0xc249abf58AC31dDEB3C715d7B395119aeeF729d1',
+};
+
+export const MorphoExitBook: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0xE626f019B04930fd0992A524FbE162695E99644D',
+};
+
+export const Erc4626ExitBook: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0xc0DB4417ee3F4510fa60eabFEfC0227e5a1CF127',
+};
+
+export const AdaptiveCurveIrm: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x781f04920A82504B5AE13E02678dFc696eCca892',
+};
+
+export const IrmRouter: ChainAddressMap = {
+  [CHAINS.Hoodi]: '0x88b624325385B3db69Db73A65DAdbaa15DE4406d',
+};
+
 export const SRUpgradeTemplate: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xd92b6303ba39297cb69a3a17a88b47586a6af14c',
 };

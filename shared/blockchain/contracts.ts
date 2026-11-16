@@ -70,6 +70,12 @@ export const EasyTrack: ContractObject<typeof abi.easyTrackAbi> = {
   chainAddressMap: addr.EasyTrack,
 };
 
+export const LidoLend: ContractObject<typeof abi.lidoLendAbi> = {
+  name: 'LidoLend',
+  abi: abi.lidoLendAbi,
+  chainAddressMap: addr.LidoLend,
+};
+
 export const CuratedV1NodeOperatorsRegistry: ContractObject<
   typeof abi.nodeOperatorsRegistryAbi
 > = {
