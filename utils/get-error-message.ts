@@ -7,6 +7,19 @@ export enum ErrorMessage {
   DEVICE_LOCKED = 'Please unlock your Ledger hardware wallet',
   INVALID_REFERRAL = 'Invalid referral address or ENS',
   INVALID_SIGNATURE = 'Invalid Permit signature. Perhaps it has expired or already been used. Try submitting a withdrawal request again.',
+  TX_NOT_LOCATED = 'Could not locate transaction. Check your wallet for details.',
+}
+
+// The tx was sent but its receipt could not be read, so it may still land:
+// never offer Retry for it, a retry would submit it twice.
+export class TxSentDataUnavailableError extends Error {
+  cause: unknown;
+
+  constructor(cause: unknown) {
+    super('Transaction sent but its outcome could not be read');
+    this.name = 'TxSentDataUnavailableError';
+    this.cause = cause;
+  }
 }
 
 export const getErrorMessage = (error: unknown): ErrorMessage => {
@@ -14,6 +27,10 @@ export const getErrorMessage = (error: unknown): ErrorMessage => {
     console.error('TX_ERROR:', { error, error_string: JSON.stringify(error) });
   } catch (e) {
     console.error('TX_ERROR:', e);
+  }
+
+  if (error instanceof TxSentDataUnavailableError) {
+    return ErrorMessage.TX_NOT_LOCATED;
   }
 
   const code = extractCodeFromError(error);

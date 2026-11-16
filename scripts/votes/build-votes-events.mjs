@@ -35,6 +35,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const OUTPUT_ROOT = join(__dirname, '../../public/votes-events');
+const DURATIONS_PATH = join(OUTPUT_ROOT, 'durations.json');
 
 const getChainDir = (chainId) => join(OUTPUT_ROOT, String(chainId));
 const getAddressDir = (chainId, votingAddress) =>
@@ -288,32 +289,56 @@ const writeAddressDescriptions = (chainId, votingAddress, votesMap) => {
   console.debug(`    wrote descriptions.json (${Object.keys(descriptions).length} entries)`);
 };
 
-const fetchVotePhaseBlocks = async (publicClient, votingAddress) => {
-  try {
-    const [voteTime, objectionPhaseTime] = await Promise.all([
-      publicClient.readContract({
-        address: votingAddress,
-        abi: AragonVotingAbi,
-        functionName: 'voteTime',
-      }),
-      publicClient
-        .readContract({
-          address: votingAddress,
-          abi: AragonVotingAbi,
-          functionName: 'objectionPhaseTime',
-        })
-        .catch(() => 0n),
-    ]);
-    const totalSeconds = BigInt(voteTime) + BigInt(objectionPhaseTime);
-    return (
-      totalSeconds / APPROX_BLOCK_TIME_SECONDS + VOTE_END_BLOCK_BUFFER
-    );
-  } catch (error) {
-    console.warn(
-      `Failed to read voteTime/objectionPhaseTime at ${votingAddress}: ${error.message}. Falling back to 100000 block window.`,
-    );
+const fetchLiveDurations = async (publicClient, votingAddress) => {
+  const read = (functionName) =>
+    publicClient.readContract({
+      address: votingAddress,
+      abi: AragonVotingAbi,
+      functionName,
+    });
+  const [voteTime, objectionPhaseTime] = await Promise.all([
+    read('voteTime'),
+    read('objectionPhaseTime'),
+  ]);
+  return {
+    voteTime: Number(voteTime),
+    objectionPhaseTime: Number(objectionPhaseTime),
+  };
+};
+
+// The contract keeps only the current durations, so past ones are recorded
+// here. The last range is open-ended and holds the live pair. When the live
+// pair changes, the open range closes at the last closed vote: a vote still
+// open during the change runs under the new pair.
+const updateVoteDurations = (ranges, liveDurations, allVoteData) => {
+  const current = ranges.at(-1);
+  if (
+    current?.voteTime === liveDurations.voteTime &&
+    current?.objectionPhaseTime === liveDurations.objectionPhaseTime
+  ) {
+    return ranges;
+  }
+
+  const closedRanges = ranges.slice(0, -1);
+  const lastClosedVoteId = Math.max(
+    -1,
+    ...allVoteData.filter(isVoteClosed).map((voteData) => voteData.id),
+  );
+  if (current && lastClosedVoteId > (closedRanges.at(-1)?.lastVoteId ?? -1)) {
+    closedRanges.push({ ...current, lastVoteId: lastClosedVoteId });
+  }
+
+  return [...closedRanges, liveDurations];
+};
+
+const getVotePhaseBlocks = (liveDurations) => {
+  if (!liveDurations) {
     return 100000n;
   }
+  const totalSeconds = BigInt(
+    liveDurations.voteTime + liveDurations.objectionPhaseTime,
+  );
+  return totalSeconds / APPROX_BLOCK_TIME_SECONDS + VOTE_END_BLOCK_BUFFER;
 };
 
 const fetchVotesLength = async (publicClient, votingAddress) => {
@@ -551,6 +576,10 @@ export const buildVotesEvents = async () => {
     throw new Error('No RPC clients configured.');
   }
 
+  const voteDurations = existsSync(DURATIONS_PATH)
+    ? JSON.parse(readFileSync(DURATIONS_PATH, 'utf8'))
+    : {};
+
   for (const chainIdStr of supportedChains) {
     const chainId = Number(chainIdStr);
 
@@ -578,10 +607,19 @@ export const buildVotesEvents = async () => {
       const votesCount = Number(votesLength);
       console.debug(`  Found ${votesCount} votes at ${votingAddress}`);
 
-      const votePhaseBlocks = await fetchVotePhaseBlocks(
-        clients[chainId],
-        votingAddress,
-      );
+      let liveDurations = null;
+      try {
+        liveDurations = await fetchLiveDurations(
+          clients[chainId],
+          votingAddress,
+        );
+      } catch (error) {
+        console.warn(
+          `  Failed to read voteTime/objectionPhaseTime: ${error.message}. Keeping durations.json as is and falling back to a 100000 block window.`,
+        );
+      }
+
+      const votePhaseBlocks = getVotePhaseBlocks(liveDurations);
       console.debug(`  Vote phase length: ${votePhaseBlocks} blocks`);
 
       const existingAddressData = readExistingAddressData(
@@ -598,6 +636,12 @@ export const buildVotesEvents = async () => {
         }
         writeAddressChunks(chainId, votingAddress, {});
         writeAddressDescriptions(chainId, votingAddress, {});
+        if (liveDurations) {
+          voteDurations[chainId] = {
+            ...voteDurations[chainId],
+            [votingAddress]: [liveDurations],
+          };
+        }
         continue;
       }
 
@@ -672,8 +716,27 @@ export const buildVotesEvents = async () => {
       console.debug(`  Writing chunks for ${chainId}/${votingAddress}...`);
       writeAddressChunks(chainId, votingAddress, finalAddressData);
       writeAddressDescriptions(chainId, votingAddress, finalAddressData);
+
+      // A missing vote could be the last one under the old durations.
+      if (allVoteData.length !== votesCount) {
+        console.warn(
+          `  Read ${allVoteData.length}/${votesCount} votes, keeping durations.json as is.`,
+        );
+      } else if (liveDurations) {
+        voteDurations[chainId] = {
+          ...voteDurations[chainId],
+          [votingAddress]: updateVoteDurations(
+            voteDurations[chainId]?.[votingAddress] ?? [],
+            liveDurations,
+            allVoteData,
+          ),
+        };
+      }
     }
   }
+
+  writeFileSync(DURATIONS_PATH, `${canonicalStringify(voteDurations, 2)}\n`);
+  console.debug('  wrote durations.json');
 
   console.debug('Votes events build completed successfully');
 };

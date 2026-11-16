@@ -1,0 +1,39 @@
+{
+  "1": {
+    "0x2e59A20f205bB85a89C53f1936454680651E618e": [
+      {
+        "lastVoteId": 122,
+        "objectionPhaseTime": 0,
+        "voteTime": 86400
+      },
+      {
+        "lastVoteId": 133,
+        "objectionPhaseTime": 0,
+        "voteTime": 259200
+      },
+      {
+        "lastVoteId": 184,
+        "objectionPhaseTime": 86400,
+        "voteTime": 259200
+      },
+      {
+        "objectionPhaseTime": 172800,
+        "voteTime": 432000
+      }
+    ]
+  },
+  "560048": {
+    "0x15379d72Ec5Ff5635F5148d6e0F4a4Dcf8756636": [
+      {
+        "objectionPhaseTime": 300,
+        "voteTime": 900
+      }
+    ],
+    "0x49B3512c44891bef83F8967d075121Bd1b07a01B": [
+      {
+        "objectionPhaseTime": 300,
+        "voteTime": 900
+      }
+    ]
+  }
+}

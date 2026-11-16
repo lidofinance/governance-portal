@@ -5,7 +5,7 @@ import { dgEscrowAbi } from 'abi/generated';
 import { useReadContractGetter } from 'shared/blockchain/hooks/use-read-contract';
 import { useState } from 'react';
 import { useEscrowContext } from 'providers/escrow';
-import { Address } from 'viem';
+import { Address, zeroAddress } from 'viem';
 import { UnstETHRecordStatus } from '../types';
 
 export type RageQuitEscrowUnstETHRecord = {
@@ -30,7 +30,7 @@ export const useEscrowBalances = () => {
   const { address: accountAddress } = useAccount();
   const [loadingState, setLoadingState] = useState(true);
   const { chainId } = useLidoSDK();
-  const { vetoSignallingAddress, historicalEscrowAddresses } =
+  const { vetoSignallingAddress, rageQuitAddress, historicalEscrowAddresses } =
     useEscrowContext();
 
   const readEscrowContract = useReadContractGetter(dgEscrowAbi);
@@ -71,6 +71,7 @@ export const useEscrowBalances = () => {
       'escrow-balances',
       accountAddress,
       vetoSignallingAddress,
+      rageQuitAddress,
       historicalEscrowAddresses,
       chainId,
     ],
@@ -94,21 +95,23 @@ export const useEscrowBalances = () => {
         'getMinAssetsLockDuration',
       );
 
-      // Collect all escrow addresses to process (current veto signalling + historical)
+      // Collect all escrow addresses to process (current veto signalling + latest rage quit + historical)
       const allEscrowAddresses: Address[] = [];
 
-      if (
-        vetoSignallingAddress &&
-        !historicalEscrowAddresses?.some(
-          (address) =>
-            address.toLowerCase() === vetoSignallingAddress.toLowerCase(),
-        )
-      ) {
-        allEscrowAddresses.push(vetoSignallingAddress);
-      }
-
-      if (historicalEscrowAddresses && historicalEscrowAddresses.length > 0) {
-        allEscrowAddresses.push(...historicalEscrowAddresses);
+      for (const address of [
+        vetoSignallingAddress,
+        rageQuitAddress,
+        ...(historicalEscrowAddresses ?? []),
+      ]) {
+        if (
+          address &&
+          address !== zeroAddress &&
+          !allEscrowAddresses.some(
+            (added) => added.toLowerCase() === address.toLowerCase(),
+          )
+        ) {
+          allEscrowAddresses.push(address);
+        }
       }
 
       // Process all escrow addresses in a single batch

@@ -27,6 +27,7 @@ type Props = {
   startEvent: EventStartVote | null;
   voteTime: number;
   objectionPhaseTime: number;
+  isEndDateKnown: boolean;
   onPass: () => void;
   executeEvent: EventExecuteVote | null;
   description: string | null;
@@ -38,6 +39,7 @@ export const DashboardVote = ({
   startEvent,
   voteTime,
   objectionPhaseTime,
+  isEndDateKnown,
   onPass,
   executeEvent,
   description,
@@ -106,6 +108,7 @@ export const DashboardVote = ({
             isQuorumReached={vote.state.isQuorumReached}
             voteTime={voteTime}
             objectionPhaseTime={objectionPhaseTime}
+            isEndDateKnown={isEndDateKnown}
             startDate={startDate}
             isEnded={isEnded}
             dualGovernancePhase={isDualGovernancePhase}

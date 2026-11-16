@@ -13,6 +13,7 @@ import {
 } from '../nft-multiselect';
 import { formatEth } from 'shared/blockchain/utils';
 import { Address } from 'viem';
+import { useEscrowContext } from 'providers/escrow';
 
 type Props = {
   claimNFTs: (
@@ -37,6 +38,8 @@ const CTA = ({
   isLoading,
   historicalEscrowAddresses,
 }: CTAProps) => {
+  const { rageQuitAddress } = useEscrowContext();
+
   if (!nftId) {
     return (
       <Button loading={isLoading} disabled>
@@ -77,11 +80,12 @@ const CTA = ({
   ) {
     // Check if the NFT owner is a RageQuit escrow address
     const isOwnerRageQuitEscrow =
-      historicalEscrowAddresses &&
-      historicalEscrowAddresses.some(
-        (escrowAddress) =>
-          escrowAddress.toLowerCase() === nftData.owner.toLowerCase(),
-      );
+      rageQuitAddress?.toLowerCase() === nftData.owner.toLowerCase() ||
+      (historicalEscrowAddresses &&
+        historicalEscrowAddresses.some(
+          (escrowAddress) =>
+            escrowAddress.toLowerCase() === nftData.owner.toLowerCase(),
+        ));
 
     if (!isOwnerRageQuitEscrow) {
       return (

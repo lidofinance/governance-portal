@@ -30,7 +30,6 @@ export const DashboardGrid = () => {
     isFiltering,
     isSettling,
     filteredCount,
-    info,
     votesList,
     showSkeletons,
     hasNextPage,
@@ -38,6 +37,8 @@ export const DashboardGrid = () => {
     fetchNextPage,
     refetch,
     error,
+    getVoteDurations,
+    isEndDateKnown,
   } = useVoteDashboard();
 
   if (error) {
@@ -69,21 +70,26 @@ export const DashboardGrid = () => {
         />
       )}
       <GridWrap>
-        {showSkeletons || !info
+        {showSkeletons
           ? PAGE_RANGE.map((index) => <DashboardVoteSkeleton key={index} />)
-          : votesList.map((voteData) => (
-              <DashboardVote
-                key={voteData.id}
-                vote={voteData}
-                startEvent={voteData.startEvent}
-                executeEvent={voteData.executeEvent}
-                description={voteData.description}
-                voteTime={info.voteTime}
-                objectionPhaseTime={info.objectionPhaseTime}
-                onPass={refetch}
-                returnQuery={searchQuery}
-              />
-            ))}
+          : votesList.map((voteData) => {
+              const durations = getVoteDurations(voteData.id);
+
+              return (
+                <DashboardVote
+                  key={voteData.id}
+                  vote={voteData}
+                  startEvent={voteData.startEvent}
+                  executeEvent={voteData.executeEvent}
+                  description={voteData.description}
+                  voteTime={durations.voteTime}
+                  objectionPhaseTime={durations.objectionPhaseTime}
+                  isEndDateKnown={isEndDateKnown}
+                  onPass={refetch}
+                  returnQuery={searchQuery}
+                />
+              );
+            })}
         {!showSkeletons && hasNextPage && (
           <LoadMoreCard
             onClick={() => fetchNextPage()}

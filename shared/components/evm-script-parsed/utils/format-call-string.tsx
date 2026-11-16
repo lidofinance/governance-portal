@@ -1,7 +1,7 @@
 import { CHAINS } from '@lidofinance/lido-ethereum-sdk';
 import { useLidoSDK } from 'providers/lido-sdk';
 import React, { useMemo } from 'react';
-import { AbiFunction, Hex, toFunctionSelector } from 'viem';
+import { AbiFunction, formatEther, Hex, toFunctionSelector } from 'viem';
 import { getContractName } from 'utils/get-contract-name';
 import { getLocalContractAbi } from 'shared/blockchain/utils/abi';
 import { DEFAULT_ADMIN_ROLE, LIDO_ROLES } from 'constants/roles';
@@ -205,6 +205,15 @@ const FormatSingleCall: React.FC<{
         </DGBadge>
       )}
       {cardTitle}
+      {decodedCall.value > 0n && (
+        <CallData>
+          Sends{' '}
+          <b>
+            {formatEther(decodedCall.value)} ETH ({decodedCall.value.toString()}{' '}
+            wei)
+          </b>
+        </CallData>
+      )}
       <CallFunction>
         function <b>{functionName}</b>
         {formattedArgs?.length ? (
