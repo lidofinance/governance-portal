@@ -79,6 +79,7 @@ const withBundleAnalyzer = NextBundleAnalyzer({
 });
 
 export default withBundleAnalyzer({
+  basePath,
   generateBuildId,
 
   // IPFS next.js configuration reference:
