@@ -561,22 +561,27 @@ export const CircuitBreaker: ChainAddressMap = {
 
 export const LidoLend: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x78d3262E82A35d290507bCF9B4834735DdA6b854',
+  [CHAINS.Mainnet]: '0x026a770badc7126c7252Ef8d407E5b9C56147491',
 };
 
 export const LidoLendOwner: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x5B2BdE06288a5db7289C028Fd4C8C175B5E3985B',
+  [CHAINS.Mainnet]: '0x85378a1073E8f338e11A97E090E47e2F0FdD3D5a',
 };
 
 export const LidoLendPreseeder: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xBcbAD842Dbf0fBc47f062136E8FbA7932ab706C8',
+  [CHAINS.Mainnet]: '0x3F107d1fbCA49F425321Cb27f6Ef5CbB94a72c41',
 };
 
 export const LidoLendCircuitBreaker: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x3d7f98a7aDa46DB97C100f09746bf3A0Ff4BE192',
+  [CHAINS.Mainnet]: '0xd0A81A130a303237d338A0b5835edcB011Ab3afd',
 };
 
 export const RiskStewardDashboard: ChainAddressMap = {
   [CHAINS.Hoodi]: '0xc249abf58AC31dDEB3C715d7B395119aeeF729d1',
+  [CHAINS.Mainnet]: '0xC3C241bC213EF3ba16234A7c689999209cE515D7',
 };
 
 export const MorphoExitBook: ChainAddressMap = {
@@ -589,10 +594,12 @@ export const Erc4626ExitBook: ChainAddressMap = {
 
 export const AdaptiveCurveIrm: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x781f04920A82504B5AE13E02678dFc696eCca892',
+  [CHAINS.Mainnet]: '0xf6f1565F4fD3d29E6bDAb86764A50BCde381422f',
 };
 
 export const IrmRouter: ChainAddressMap = {
   [CHAINS.Hoodi]: '0x88b624325385B3db69Db73A65DAdbaa15DE4406d',
+  [CHAINS.Mainnet]: '0x81B7cC9523B30429110282d90db2fa90ff443d91',
 };
 
 export const SRUpgradeTemplate: ChainAddressMap = {

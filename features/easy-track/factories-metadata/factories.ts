@@ -34,6 +34,7 @@ export const FACTORIES = defineFactories({
       'Set market fee',
     ],
     addresses: {
+      [CHAINS.Mainnet]: '0x9D75EaE321976e85e472847AFD21246F1f87dC43',
       [CHAINS.Hoodi]: '0x915570870A6e9D141BF25ab155684e7fa2843356',
     },
   },
@@ -52,6 +53,7 @@ export const FACTORIES = defineFactories({
       'Unban accounts',
     ],
     addresses: {
+      [CHAINS.Mainnet]: '0x9fE41afb2114bF9430D7f9B1Fb65f0a4B9DeF779',
       [CHAINS.Hoodi]: '0x8df659bC546c1FED3eB761b14922098c0AD3Ad5B',
     },
   },
@@ -67,6 +69,7 @@ export const FACTORIES = defineFactories({
       'Set heartbeat interval',
     ],
     addresses: {
+      [CHAINS.Mainnet]: '0x4e89cc970F0DBAE2f8C38C083D5D345B4F9e76b8',
       [CHAINS.Hoodi]: '0x812Ea1494d53d8D1ba479c4c1D88c9d680ea88C5',
     },
   },
@@ -92,6 +95,7 @@ export const FACTORIES = defineFactories({
     // Order mirrors the `Action` enum in LidoLendRiskStewardActions.sol.
     actionTitles: ['Add risk steward', 'Remove risk steward'],
     addresses: {
+      [CHAINS.Mainnet]: '0x7276CE5f92911216d41C7b0A9C3575DE873763E9',
       [CHAINS.Hoodi]: '0xeF584E7fBbE0fCe7463dC00c063462973e5cbDa4',
     },
   },
@@ -101,6 +105,7 @@ export const FACTORIES = defineFactories({
     displayName: 'Activate market',
     tags: ['Lido Lend'],
     addresses: {
+      [CHAINS.Mainnet]: '0x17bb2A2B5983D29392A5d31D627D4C8B13383fe6',
       [CHAINS.Hoodi]: '0xC4F75E3Da78230Ff9235A2E5Cf6F1962C56A4C69',
     },
   },
@@ -110,6 +115,7 @@ export const FACTORIES = defineFactories({
     displayName: 'Apply IRM config',
     tags: ['Lido Lend'],
     addresses: {
+      [CHAINS.Mainnet]: '0x5795E73C0c2007ceD7D65cE4FC21c0C09F14C668',
       [CHAINS.Hoodi]: '0xca22a45A392d201EaaE540Fb12cA360Db9d847B2',
     },
   },
