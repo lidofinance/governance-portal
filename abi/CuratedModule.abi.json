@@ -58,6 +58,7 @@
   { "inputs": [], "name": "SenderIsNotRewardAddress", "type": "error" },
   { "inputs": [], "name": "SigningKeysInvalidOffset", "type": "error" },
   { "inputs": [], "name": "SlashingPenaltyIsNotApplicable", "type": "error" },
+  { "inputs": [], "name": "TopUpAllocationStateUnchanged", "type": "error" },
   { "inputs": [], "name": "UnreportableBalance", "type": "error" },
   { "inputs": [], "name": "ValidatorSlashingAlreadyReported", "type": "error" },
   { "inputs": [], "name": "ZeroAccountingAddress", "type": "error" },
@@ -773,6 +774,32 @@
         "internalType": "uint256",
         "name": "nodeOperatorId",
         "type": "uint256"
+      }
+    ],
+    "name": "TopUpAllocationDisabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "nodeOperatorId",
+        "type": "uint256"
+      }
+    ],
+    "name": "TopUpAllocationEnabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "nodeOperatorId",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -910,6 +937,13 @@
   {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ENABLE_TOP_UP_ALLOCATION_ROLE",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
@@ -1306,9 +1340,34 @@
     "inputs": [
       { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
     ],
+    "name": "disableTopUpAllocation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
+    ],
+    "name": "enableTopUpAllocation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
+    ],
     "name": "exitDeadlineThreshold",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "finalizeUpgradeV2",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1855,6 +1914,15 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "nodeOperatorId", "type": "uint256" }
+    ],
+    "name": "isTopUpAllocationEnabled",
+    "outputs": [{ "internalType": "bool", "name": "enabled", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
         "name": "nodeOperatorId",
@@ -2349,6 +2417,70 @@
       { "internalType": "uint256", "name": "targetLimit", "type": "uint256" }
     ],
     "name": "updateTargetValidatorsLimits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newAdmin_", "type": "address" }
+    ],
+    "name": "proxy__changeAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__getAdmin",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__getImplementation",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__getIsOssified",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxy__ossify",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation_",
+        "type": "address"
+      }
+    ],
+    "name": "proxy__upgradeTo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation_",
+        "type": "address"
+      },
+      { "internalType": "bytes", "name": "setupCalldata_", "type": "bytes" }
+    ],
+    "name": "proxy__upgradeToAndCall",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

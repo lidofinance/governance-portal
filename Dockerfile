@@ -44,6 +44,7 @@ COPY --from=build \
   /app/env-dynamics.mjs \
   /app/build-info.json \
   ./
+COPY --from=build /app/config/to-boolean.mjs ./config/to-boolean.mjs
 COPY --from=build /app/config/csp/policy.mjs ./config/csp/policy.mjs
 COPY --from=build \
   /app/scripts/build-dynamics.mjs \

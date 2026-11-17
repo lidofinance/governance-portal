@@ -58,6 +58,7 @@ export const curatedModuleAbi = [
   { type: 'error', inputs: [], name: 'SenderIsNotRewardAddress' },
   { type: 'error', inputs: [], name: 'SigningKeysInvalidOffset' },
   { type: 'error', inputs: [], name: 'SlashingPenaltyIsNotApplicable' },
+  { type: 'error', inputs: [], name: 'TopUpAllocationStateUnchanged' },
   { type: 'error', inputs: [], name: 'UnreportableBalance' },
   { type: 'error', inputs: [], name: 'ValidatorSlashingAlreadyReported' },
   { type: 'error', inputs: [], name: 'ZeroAccountingAddress' },
@@ -750,6 +751,32 @@ export const curatedModuleAbi = [
         type: 'uint256',
         indexed: true,
       },
+    ],
+    name: 'TopUpAllocationDisabled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'TopUpAllocationEnabled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'nodeOperatorId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
       {
         name: 'totalKeysCount',
         internalType: 'uint256',
@@ -876,6 +903,13 @@ export const curatedModuleAbi = [
     type: 'function',
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'ENABLE_TOP_UP_ALLOCATION_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
   },
@@ -1196,9 +1230,34 @@ export const curatedModuleAbi = [
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
     ],
+    name: 'disableTopUpAllocation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'enableTopUpAllocation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+    ],
     name: 'exitDeadlineThreshold',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'finalizeUpgradeV2',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -1650,6 +1709,15 @@ export const curatedModuleAbi = [
     type: 'function',
     inputs: [
       { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isTopUpAllocationEnabled',
+    outputs: [{ name: 'enabled', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'nodeOperatorId', internalType: 'uint256', type: 'uint256' },
       { name: 'proofSlotTimestamp', internalType: 'uint256', type: 'uint256' },
       { name: 'publicKey', internalType: 'bytes', type: 'bytes' },
       { name: 'eligibleToExitInSec', internalType: 'uint256', type: 'uint256' },
@@ -2009,6 +2077,60 @@ export const curatedModuleAbi = [
       { name: 'targetLimit', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'updateTargetValidatorsLimits',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'newAdmin_', internalType: 'address', type: 'address' }],
+    name: 'proxy__changeAdmin',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getAdmin',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getImplementation',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__getIsOssified',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'proxy__ossify',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation_', internalType: 'address', type: 'address' },
+    ],
+    name: 'proxy__upgradeTo',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation_', internalType: 'address', type: 'address' },
+      { name: 'setupCalldata_', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'proxy__upgradeToAndCall',
     outputs: [],
     stateMutability: 'nonpayable',
   },

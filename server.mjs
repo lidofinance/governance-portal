@@ -2,6 +2,7 @@ import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
 import { createHeadersObject } from 'next-secure-headers';
+// evaluated before Next loads .env files — must not pull in env-dynamics.mjs
 import { getContentSecurityPolicy } from './config/csp/policy.mjs';
 
 const dev = process.env.NODE_ENV !== 'production';
