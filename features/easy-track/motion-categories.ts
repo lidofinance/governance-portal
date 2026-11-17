@@ -7,6 +7,7 @@ export type MotionCategory =
   | 'Staking'
   | 'Treasury'
   | 'stVaults'
+  | 'Lido Lend'
   | 'Deprecated'
   | 'Unknown';
 
@@ -24,7 +25,12 @@ export type MotionSubcategory =
   | 'Dev'
   | 'Ops'
   | 'Curated v2'
-  | 'MEV Boost';
+  | 'MEV Boost'
+  | 'Market Manager'
+  | 'Guardian'
+  | 'Circuit Breaker'
+  | 'Exit Book'
+  | 'Risk Steward';
 
 export type MotionTags = readonly [MotionCategory, ...MotionSubcategory[]];
 
@@ -160,6 +166,7 @@ export const MOTION_CATEGORY_VARIANT_MAP: Record<MotionCategory, BadgeVariant> =
     Staking: 'deepBlue',
     Treasury: 'deepGreen',
     stVaults: 'deepYellow',
+    'Lido Lend': 'indigo',
     Deprecated: 'purple',
     Unknown: 'purple',
   };
@@ -170,4 +177,5 @@ export const FILTER_CATEGORIES: readonly FilterCategory[] = [
   'Staking',
   'Treasury',
   'stVaults',
+  'Lido Lend',
 ];

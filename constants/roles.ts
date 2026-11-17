@@ -141,6 +141,11 @@ export const LIDO_ROLES: Partial<Record<string, string>> = {
     'vaults.VaultHub.BadDebtMasterRole',
   [keccakRole('PausableUntilWithRoles.ResumeRole')]:
     'PausableUntilWithRoles.ResumeRole',
+  [keccakRole('ENABLE_TOP_UP_ALLOCATION_ROLE')]:
+    'ENABLE TOP UP ALLOCATION ROLE',
+  [keccakRole('PUBLISH_ROLE')]: 'PUBLISH ROLE',
+  [keccakRole('REPORT_REGULAR_WITHDRAWN_VALIDATORS_ROLE')]:
+    'REPORT REGULAR WITHDRAWN VALIDATORS ROLE',
 };
 
 export const DEFAULT_ADMIN_ROLE =

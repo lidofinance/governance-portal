@@ -1,5 +1,5 @@
 import getConfigNext from 'next/config';
-import { type Modify, toBoolean } from './helpers';
+import { type Modify } from './helpers';
 
 const { serverRuntimeConfig } = getConfigNext();
 
@@ -13,8 +13,6 @@ export type SecretConfigType = Modify<
 
     // Dynamic keys like rpcUrls_<number>
     [key: `rpcUrls_${number}`]: string[];
-
-    cspReportOnly: boolean;
 
     rateLimit: number;
     rateLimitTimeFrame: number;
@@ -43,8 +41,6 @@ export const getSecretConfig = (): SecretConfigType => {
       string,
       ...string[],
     ],
-    cspReportOnly: toBoolean(serverRuntimeConfig.cspReportOnly),
-
     rateLimit: Number(serverRuntimeConfig.rateLimit) || 100,
     rateLimitTimeFrame: Number(serverRuntimeConfig.rateLimitTimeFrame) || 60, // 1 minute;
     etherscanApiKey: serverRuntimeConfig.etherscanApiKey || '',

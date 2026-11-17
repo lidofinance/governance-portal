@@ -1,11 +1,14 @@
 import { isAddress, zeroAddress } from 'viem';
 
-export const validateAddress = (value: string): string | null => {
+export const validateAddress = (
+  value: string,
+  { allowZero = false } = {},
+): string | null => {
   if (!isAddress(value)) {
     return 'Address is not valid';
   }
 
-  if (value.toLowerCase() === zeroAddress) {
+  if (!allowZero && value.toLowerCase() === zeroAddress) {
     return 'Address must not be zero address';
   }
 

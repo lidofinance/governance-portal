@@ -1,19 +1,4 @@
-/**
- * Convert to bool:
- * - true to true
- * - 'true' to true
- * - 1 to true
- * - '1' to true
- * - another values to false
- * @returns {Boolean}
- */
-const toBoolean = (val) => {
-  return !!(
-    val?.toLowerCase?.() === 'true' ||
-    val === true ||
-    Number.parseInt(val, 10) === 1
-  );
-};
+import { toBoolean } from './config/to-boolean.mjs';
 
 /** @type boolean */
 export const isProd = toBoolean(process.env.IS_PROD);
@@ -25,7 +10,6 @@ export const ipfsMode = toBoolean(process.env.IPFS_MODE);
 export const rootOrigin = process.env.ROOT_ORIGIN || 'https://lido.fi';
 export const selfOrigin =
   process.env.SELF_ORIGIN || 'https://dg-hoodi.testnet.fi';
-// Fix in the build time (build time don't have env vars)
 
 /** @type string */
 export const stakeOrigin = process.env.STAKE_ORIGIN || 'https://stake.lido.fi';

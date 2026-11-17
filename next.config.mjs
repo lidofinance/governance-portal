@@ -1,3 +1,7 @@
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import NextBundleAnalyzer from '@next/bundle-analyzer';
 import buildDynamics from './scripts/build-dynamics.mjs';
 import { logEnvironmentVariables } from './scripts/log-environment-variables.mjs';
@@ -26,7 +30,9 @@ export const CACHE_CONTROL_PAGES = [
   '/',
   '/manifest.json',
   '/favicon:size*',
-  '/public/runtime/window-env.js',
+  '/apple-touch-icon.png',
+  '/delegates/:file*',
+  '/runtime/window-env.js',
   '/vote/dashboard',
   '/vote/:id',
   '/vote/delegation',
@@ -36,10 +42,37 @@ export const CACHE_CONTROL_PAGES = [
   '/easy-track/motions',
   '/easy-track/motions/:id',
   '/easy-track/start-motion',
+  '/stonks',
+  '/stonks/:stonksAddress',
+  '/stonks/orders/:orderAddress',
   '/500',
 ];
 export const CACHE_CONTROL_VALUE =
   'public, max-age=30, stale-if-error=1200, stale-while-revalidate=30';
+
+const PUBLIC_DIR = fileURLToPath(new URL('public', import.meta.url));
+const EVENTS_CACHE_DIRS = ['proposals-events', 'votes-events'];
+const EVENTS_CACHE_UNHASHED_FILES = new Set([
+  'manifest.json',
+  'descriptions.json',
+]);
+
+// the default ETag is size + mtime, and image mtime is 0: a same-size update keeps revalidating as 304
+const getEventsCacheEtagHeaders = () =>
+  EVENTS_CACHE_DIRS.flatMap((cacheDir) =>
+    readdirSync(join(PUBLIC_DIR, cacheDir), { recursive: true })
+      .filter((file) => EVENTS_CACHE_UNHASHED_FILES.has(basename(file)))
+      .map((file) => {
+        const contentHash = createHash('sha256')
+          .update(readFileSync(join(PUBLIC_DIR, cacheDir, file)))
+          .digest('hex')
+          .slice(0, 16);
+        return {
+          source: `/${cacheDir}/${file}`,
+          headers: [{ key: 'ETag', value: `"${contentHash}"` }],
+        };
+      }),
+  );
 
 const withBundleAnalyzer = NextBundleAnalyzer({
   enabled: process.env.ANALYZE_BUNDLE ?? false,
@@ -147,7 +180,8 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, must-revalidate',
+            value:
+              'public, max-age=60, stale-if-error=1200, stale-while-revalidate=30',
           },
         ],
       },
@@ -165,7 +199,8 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, must-revalidate',
+            value:
+              'public, max-age=60, stale-if-error=1200, stale-while-revalidate=30',
           },
         ],
       },
@@ -174,7 +209,8 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, must-revalidate',
+            value:
+              'public, max-age=60, stale-if-error=1200, stale-while-revalidate=30',
           },
         ],
       },
@@ -187,6 +223,8 @@ export default withBundleAnalyzer({
           },
         ],
       },
+      // dev serves real mtimes, and these values would go stale on a cache rebuild
+      ...(developmentMode ? [] : getEventsCacheEtagHeaders()),
       ...CACHE_CONTROL_PAGES.map((page) => ({
         source: page,
         headers: [{ key: CACHE_CONTROL_HEADER, value: CACHE_CONTROL_VALUE }],
@@ -220,10 +258,6 @@ export default withBundleAnalyzer({
     defaultChain: process.env.DEFAULT_CHAIN,
     rpcUrls_1: process.env.EL_RPC_URLS_1,
     rpcUrls_560048: process.env.EL_RPC_URLS_560048,
-
-    cspTrustedHosts: process.env.CSP_TRUSTED_HOSTS,
-    cspReportUri: process.env.CSP_REPORT_URI,
-    cspReportOnly: process.env.CSP_REPORT_ONLY,
 
     rateLimit: process.env.RATE_LIMIT,
     rateLimitTimeFrame: process.env.RATE_LIMIT_TIME_FRAME,
