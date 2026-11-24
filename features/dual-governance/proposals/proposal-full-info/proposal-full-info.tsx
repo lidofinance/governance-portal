@@ -43,6 +43,8 @@ import { useProposals } from '@dg/hooks/use-proposals';
 import { isAragonProposal } from 'utils/proposals/is-aragon-proposal';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import { VoteMarkdown } from 'shared/components/vote-markdown';
+import { isVoteFlagged } from 'shared/votes/utils/is-vote-flagged';
+import { FlaggedVoteDisclaimer } from 'shared/components/flagged-vote-disclaimer';
 import { MarkdownWrap } from '../proposals-list/style';
 import { BaseCall } from 'utils/decode-evm-script-calls';
 import { useDecodedCalls } from 'shared/hooks';
@@ -340,6 +342,11 @@ export const ProposalFullInfo = ({ id }: Props) => {
   return (
     <ProposalContainer>
       <BackButton label="proposals" href={GOVERNANCE_PATH} />
+      {voteId !== null && isVoteFlagged(chainId, voteId) && (
+        <FlaggedVoteDisclaimer title="This proposal was flagged by maintainers">
+          Proceed with caution. Check the vote script before acting.
+        </FlaggedVoteDisclaimer>
+      )}
       <ProposalHeader>
         {proposalStatusInfo && proposalStatusInfo.badge && (
           <Badge

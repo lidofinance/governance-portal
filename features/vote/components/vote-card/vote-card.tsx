@@ -45,6 +45,9 @@ import { PROPOSALS_PATH } from 'constants/urls';
 import { formatBalance } from 'utils/format-balance';
 import { KnownToken } from 'shared/blockchain/tokens';
 import { SkeletonBar } from 'shared/components/skeleton-bar';
+import { useLidoSDK } from 'providers/lido-sdk';
+import { isVoteFlagged } from 'shared/votes/utils/is-vote-flagged';
+import { FlaggedVoteDisclaimer } from 'shared/components/flagged-vote-disclaimer';
 
 export const VoteCard = () => {
   const {
@@ -102,6 +105,9 @@ export const VoteCard = () => {
     (dgProposal.proposalStatus === ProposalStatus.Submitted ||
       dgProposal.proposalStatus === ProposalStatus.Scheduled ||
       dgProposal.proposalStatus === ProposalStatus.Executed);
+
+  const { chainId } = useLidoSDK();
+  const isFlagged = isVoteFlagged(chainId, vote.id);
 
   const { title, body } = useVoteTitle({
     description,
@@ -248,6 +254,11 @@ export const VoteCard = () => {
   return (
     <Layout key={vote.id} data-testid="voteCard">
       <MainCard>
+        {isFlagged && (
+          <FlaggedVoteDisclaimer title="This vote was flagged by maintainers">
+            Proceed with caution. Check the vote script before acting.
+          </FlaggedVoteDisclaimer>
+        )}
         <VoteMetaBar
           voteId={vote.id}
           status={vote.state.status}

@@ -14,6 +14,7 @@ import { AragonVoting } from 'shared/blockchain/contracts';
 import { useDebounce } from 'shared/hooks/use-debounce';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
 import { fetchVotesDescriptions } from 'shared/votes/utils/fetch-votes-descriptions';
+import { isVoteFlagged } from 'shared/votes/utils/is-vote-flagged';
 
 const PAGE_SIZE = 5;
 const DASHBOARD_VOTES_KEY = 'dashboard-votes';
@@ -119,8 +120,10 @@ export const useVoteDashboard = () => {
       (first, second) => second - first,
     );
 
-    return exactId !== null ? [exactId, ...textMatches] : textMatches;
-  }, [isFiltering, descriptions, debouncedQuery, totalVotes]);
+    const matchedIds =
+      exactId !== null ? [exactId, ...textMatches] : textMatches;
+    return matchedIds.filter((id) => !isVoteFlagged(chainId, id));
+  }, [isFiltering, descriptions, debouncedQuery, totalVotes, chainId]);
 
   const votes = useInfiniteQuery({
     queryKey: [

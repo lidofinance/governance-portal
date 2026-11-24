@@ -6,6 +6,7 @@ import type { useReadContract } from 'shared/blockchain/hooks/use-read-contract'
 import type { EventStartVote } from './get-event-start-vote';
 import { fetchCachedVotes } from './fetch-cached-votes';
 import { fetchUncachedVotes } from './fetch-uncached-votes';
+import { isVoteFlagged } from './is-vote-flagged';
 
 type VotingContract = ReturnType<
   typeof useReadContract<typeof aragonVotingAbi>
@@ -64,15 +65,14 @@ export const fetchAragonVotes = async ({
     const votesLength = Number(
       await votingContract.readContract('votesLength'),
     );
-    const startId = votesLength - 1 - offset;
-    const endId = Math.max(startId - limit + 1, 0);
-    voteIds =
-      votesLength === 0
-        ? []
-        : Array.from(
-            { length: startId - endId + 1 },
-            (_, index) => startId - index,
-          );
+    // Flagged votes are dropped before paging, so pages stay full.
+    // Explicit `voteIds` are not filtered: that is the caller's choice.
+    voteIds = Array.from(
+      { length: votesLength },
+      (_, index) => votesLength - 1 - index,
+    )
+      .filter((id) => !isVoteFlagged(chainId, id))
+      .slice(offset, offset + limit);
   }
 
   if (voteIds.length === 0) {

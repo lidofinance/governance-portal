@@ -21,6 +21,26 @@ type UseProposalsConfig = {
   enabled?: boolean;
 };
 
+export const useProposalsCount = ({ enabled = true } = {}) => {
+  const { chainId } = useLidoSDK();
+  const emergencyProtectedTimelock = useReadContract(
+    EmergencyProtectedTimelock,
+  );
+
+  return useQuery({
+    queryKey: ['proposals-count', chainId],
+    queryFn: async () => {
+      if (!emergencyProtectedTimelock) {
+        throw new Error('Emergency Protected Timelock contract not found');
+      }
+
+      return await emergencyProtectedTimelock.readContract('getProposalsCount');
+    },
+    enabled,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
 export const useProposals = ({
   id,
   enabled = true,
@@ -40,18 +60,7 @@ export const useProposals = ({
     chainId as keyof typeof HISTORICAL_ADDRESSES
   ].governanceAddresses as Address[];
 
-  const { data: proposalsCount } = useQuery({
-    queryKey: ['proposals-count', chainId],
-    queryFn: async () => {
-      if (!emergencyProtectedTimelock) {
-        throw new Error('Emergency Protected Timelock contract not found');
-      }
-
-      return await emergencyProtectedTimelock.readContract('getProposalsCount');
-    },
-    enabled,
-    staleTime: 30000,
-  });
+  const { data: proposalsCount } = useProposalsCount({ enabled });
 
   return useQuery({
     queryKey: [
@@ -60,6 +69,7 @@ export const useProposals = ({
       Number(proposalsCount),
       isInTestMode,
       useLocalCache,
+      id,
     ],
     staleTime: 30000,
     refetchOnWindowFocus: false,

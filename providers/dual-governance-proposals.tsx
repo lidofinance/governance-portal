@@ -6,6 +6,7 @@ import {
   useMemo,
 } from 'react';
 import { ProposalsQueryResult, useProposals } from '@dg/hooks/use-proposals';
+import { useFlaggedProposalIds } from '@dg/hooks/use-flagged-proposal-ids';
 import invariant from 'tiny-invariant';
 import { ProposalCombinedData, ProposalStatus } from '@dg/proposals/types';
 import { useActiveVotes } from 'shared/votes/hooks/use-active-votes';
@@ -101,12 +102,41 @@ export const DualGovernanceProposalsProvider: React.FC<
   DualGovernanceProposalsProviderProps
 > = ({ children, id }) => {
   const {
-    data: proposalsData,
-    isLoading: isProposalDataLoading,
-    isFetching: isProposalsDataFetching,
+    data: allProposalsData,
+    isLoading: isAllProposalsLoading,
+    isFetching: isAllProposalsFetching,
     refetch: refetchProposals,
     isError: isProposalDataError,
   } = useProposals({ id }) as UseQueryResult<ProposalsQueryResult>;
+
+  const {
+    data: flaggedProposalIds,
+    isLoading: isFlaggedLoading,
+    isFetching: isFlaggedFetching,
+    isError: isFlaggedError,
+  } = useFlaggedProposalIds({ enabled: id === undefined });
+
+  const isProposalDataLoading = isAllProposalsLoading || isFlaggedLoading;
+  const isProposalsDataFetching = isAllProposalsFetching || isFlaggedFetching;
+
+  const proposalsData = useMemo(() => {
+    if (!allProposalsData || !('proposals' in allProposalsData)) {
+      return allProposalsData;
+    }
+    // Fail closed: without the flagged IDs any listed proposal may be one to hide
+    if (isFlaggedError || !flaggedProposalIds) {
+      return { ...allProposalsData, proposals: [] };
+    }
+    if (flaggedProposalIds.length === 0) {
+      return allProposalsData;
+    }
+    return {
+      ...allProposalsData,
+      proposals: allProposalsData.proposals.filter(
+        (proposal) => !flaggedProposalIds.includes(proposal.proposalId),
+      ),
+    };
+  }, [allProposalsData, flaggedProposalIds, isFlaggedError]);
 
   const { data: proposalsDelays } = useProposalDelaysQuery({ enabled: true });
 
@@ -189,7 +219,7 @@ export const DualGovernanceProposalsProvider: React.FC<
         (isLoading) => isLoading,
       ),
       getProposalById,
-      isError: isProposalDataError,
+      isError: isProposalDataError || isFlaggedError,
       refetchProposals: refetchProposals as unknown as (
         options?: RefetchOptions | undefined,
       ) => Promise<
@@ -208,6 +238,7 @@ export const DualGovernanceProposalsProvider: React.FC<
       isVotesLoading,
       getProposalById,
       isProposalDataError,
+      isFlaggedError,
       refetchProposals,
     ],
   );

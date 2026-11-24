@@ -25,6 +25,13 @@ export const supportedChains = process.env.SUPPORTED_CHAINS
 
 export const walletconnectProjectId = process.env.WALLETCONNECT_PROJECT_ID;
 
+// Votes hidden from lists and shown with a disclaimer, as `chainId:voteId`
+/** @type string[] */
+export const flaggedVotes = (process.env.FLAGGED_VOTES || '')
+  .split(',')
+  .map((entry) => entry.trim())
+  .filter(Boolean);
+
 // /** @type string */
 // export const widgetApiBasePathForIpfs =
 //   process.env.WIDGET_API_BASE_PATH_FOR_IPFS;
