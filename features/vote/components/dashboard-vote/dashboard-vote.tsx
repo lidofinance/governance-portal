@@ -5,11 +5,13 @@ import {
   VoteDashboardCard,
   VoteTitle,
   VoteDescriptionWrap,
+  VoteMetadataText,
   VoteSummary,
   VoteQuorum,
   VetoSupportWrap,
 } from './style';
 import { useVoteTitle } from '@vote/hooks/use-vote-title';
+import { useIsVoteApproved } from 'shared/votes/hooks/use-is-vote-approved';
 import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
 import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
@@ -21,6 +23,9 @@ import { VoteMetaBar } from '../vote-meta-bar';
 import { EventStartVote } from 'shared/votes/utils/get-event-start-vote';
 import { useVoteDualGovernanceStatus } from '@vote/hooks/use-vote-dual-governance-status';
 import { ProposalStatus } from 'shared/types';
+import { REGEX_LIDO_VOTE_CID } from 'utils/regex-cid';
+
+const METADATA_PREVIEW_LENGTH = 600;
 
 type Props = {
   vote: Vote;
@@ -88,7 +93,14 @@ export const DashboardVote = ({
     isActive: !isEnded,
   });
 
+  const isApproved = useIsVoteApproved(vote.id);
+
   const hasDescription = body !== null || !description?.trim();
+
+  const metadataText = (startEvent?.args.metadata ?? '')
+    .replace(REGEX_LIDO_VOTE_CID, '')
+    .trim()
+    .slice(0, METADATA_PREVIEW_LENGTH);
 
   return (
     <Link
@@ -112,7 +124,7 @@ export const DashboardVote = ({
             isDgProposalLoading={isDgProposalLoading}
           />
           {title && <VoteTitle>{title}</VoteTitle>}
-          {hasDescription && (
+          {isApproved && hasDescription && (
             <VoteDescriptionWrap data-testid="voteDescription">
               <VoteDescription
                 metadata={startEvent?.args.metadata}
@@ -120,6 +132,11 @@ export const DashboardVote = ({
                 isActive={!isEnded}
                 hideLeadingHeading
               />
+            </VoteDescriptionWrap>
+          )}
+          {!isApproved && metadataText && (
+            <VoteDescriptionWrap data-testid="voteDescription">
+              <VoteMetadataText>{metadataText}</VoteMetadataText>
             </VoteDescriptionWrap>
           )}
         </VoteSummary>

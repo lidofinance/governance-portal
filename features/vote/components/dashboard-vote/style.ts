@@ -63,6 +63,10 @@ export const VoteDescriptionWrap = styled(Text).attrs({
   }
 `;
 
+export const VoteMetadataText = styled.div`
+  white-space: pre-line;
+`;
+
 export const VoteSummary = styled.section`
   flex: 1 1 auto;
   min-width: 0;
