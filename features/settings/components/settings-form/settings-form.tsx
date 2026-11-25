@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { LDOToken } from 'shared/blockchain/contract-addresses';
 import { createPublicClient, http } from 'viem';
+import { useAccount } from 'wagmi';
 import {
   Block,
   Container,
@@ -21,6 +22,7 @@ import {
   CheckboxWrapper,
   DescriptionText,
   DescriptionTitle,
+  RpcNote,
   StyledActions,
   TooltipStyled,
 } from './style';
@@ -39,6 +41,7 @@ export const SettingsForm = () => {
   const { userConfig } = useConfig();
   const testContractsInfo = useTestContractsInfo();
   const debounceTimeoutRef = useRef<NodeJS.Timeout>();
+  const { connector } = useAccount();
 
   const formMethods = useForm<SettingsFormData>({
     mode: 'onChange',
@@ -176,11 +179,16 @@ export const SettingsForm = () => {
         <FormProvider {...formMethods}>
           <form onSubmit={hookFormHandleSubmit(handleSubmit)}>
             <InputHookForm
-              label="RPC Url (infura / alchemy / custom)"
+              label="RPC URL for reading chain data (e.g. dRPC, Infura)"
               fieldName="rpcUrl"
               placeholder="https://mainnet.infura.io/v3/YOUR-PROJECT-ID"
               rules={{ validate: validateRpcUrl }}
             />
+            {connector?.id === 'ledgerHID' && (
+              <RpcNote size={12} color="secondary" data-testid="ledgerRpcNote">
+                Ledger switches to a new RPC URL after you reload the page
+              </RpcNote>
+            )}
             <InputHookForm
               label="Etherscan api key"
               fieldName="etherscanApiKey"
