@@ -101,6 +101,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
       batch: {
         multicall: false,
       },
+      ccipRead: false,
 
       // Wallets config args
       ...getDefaultWalletsModalConfig(),

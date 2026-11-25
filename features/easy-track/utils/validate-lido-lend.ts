@@ -136,7 +136,7 @@ const dryRunCreateEvmScript = async (
   // The project-wide transport turns eth_call reverts into a null result, which
   // hides the revert reason this check exists to read. Bypass it when we can.
   const client = rpcUrl
-    ? createPublicClient({ transport: http(rpcUrl) })
+    ? createPublicClient({ transport: http(rpcUrl), ccipRead: false })
     : provider;
 
   try {
