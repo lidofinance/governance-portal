@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { InfoTooltip } from 'shared/components/info-tooltip';
+import { Text } from 'shared/components/text';
 import { devicesHeaderMedia } from 'styles/global';
+
+export const RpcNote = styled(Text)`
+  margin-top: ${({ theme }) => theme.spaceMap.sm}px;
+`;
 
 export const CheckboxWrapper = styled.div`
   margin-top: 16px;

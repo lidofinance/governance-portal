@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useMemo } from 'react';
+import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { WagmiProvider, useConnections } from 'wagmi';
 import * as wagmiChains from 'wagmi/chains';
 import { ReefKnotProvider, getDefaultConfig } from 'reef-knot/core-react';
@@ -84,10 +84,14 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
     savedUserConfig.rpcUrls,
   );
 
+  // A new rpc map would rebuild the wagmi config and drop the wallet connection.
+  // Reads pick up RPC changes through transportMap; Ledger HID keeps this map until reload.
+  const [initialBackendRPC] = useState(backendRPC);
+
   const { wagmiConfig, reefKnotConfig, walletsModalConfig } = useMemo(() => {
     return getDefaultConfig({
       // Reef-Knot config args
-      rpc: backendRPC,
+      rpc: initialBackendRPC,
       defaultChain: defaultChain,
       walletconnectProjectId,
       walletsList: WalletsListEthereum,
@@ -108,7 +112,7 @@ const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
       walletsShown: WALLETS_SHOWN,
     });
   }, [
-    backendRPC,
+    initialBackendRPC,
     supportedChains,
     defaultChain,
     walletconnectProjectId,
