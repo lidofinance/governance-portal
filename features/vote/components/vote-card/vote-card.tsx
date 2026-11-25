@@ -22,7 +22,7 @@ import { Button as DgButton } from 'shared/components/button';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useVoteTitle } from '@vote/hooks/use-vote-title';
-import { useIsVoteApproved } from 'shared/votes/hooks/use-is-vote-approved';
+import { useVoteLabel, VoteLabel } from 'shared/votes/hooks/use-vote-labels';
 import { VoteDescription } from '../vote-description';
 import { VoteNotice } from '../vote-notice';
 import { VotersList } from '../voters-list';
@@ -113,7 +113,7 @@ export const VoteCard = () => {
 
   const hasBody = body !== null || !description?.trim();
 
-  const isApproved = useIsVoteApproved(vote.id);
+  const label = useVoteLabel(vote.id);
 
   const sidebarItems = (
     <>
@@ -261,19 +261,20 @@ export const VoteCard = () => {
           isEnded={isEnded}
           dualGovernancePhase={isDualGovernancePhase}
           isDgProposalLoading={isDgProposalLoading}
+          label={label}
           withLabels
         />
         <MobileSidebarSlot>{sidebarItems}</MobileSidebarSlot>
         <SectionHeading>Proposal description</SectionHeading>
         {title && <VoteTitle data-testid="voteTitle">{title}</VoteTitle>}
-        {hasBody && (
+        {hasBody && label !== undefined && (
           <DescriptionWrap data-testid="voteDescription">
             <VoteDescription
               metadata={eventStart?.args.metadata}
               description={description}
               hideLeadingHeading
               isActive={!isEnded}
-              isPlainText={!isApproved}
+              isPlainText={label !== VoteLabel.Verified}
             />
           </DescriptionWrap>
         )}

@@ -30,6 +30,12 @@ export const AragonVoting: ContractObject<typeof abi.aragonVotingAbi> = {
   chainAddressMap: addr.AragonVoting,
 };
 
+export const VoteLabels: ContractObject<typeof abi.voteLabelsAbi> = {
+  name: 'VoteLabels',
+  abi: abi.voteLabelsAbi,
+  chainAddressMap: addr.VoteLabels,
+};
+
 export const DualGovernance: ContractObject<typeof abi.dualGovernanceAbi> = {
   name: 'DualGovernance',
   abi: abi.dualGovernanceAbi,

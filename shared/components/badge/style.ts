@@ -7,6 +7,7 @@ export type BadgeVariant =
   | 'green'
   | 'red'
   | 'yellow'
+  | 'lightYellow'
   | 'deepBlue'
   | 'deepGreen'
   | 'deepYellow'
@@ -35,6 +36,11 @@ const getBadgeColorStyles = (variant: BadgeVariant, type: BadgeType) => {
       return css`
         color: var(--lido-color-warning);
         background-color: #ec860026;
+      `;
+    case 'lightYellow':
+      return css`
+        color: var(--lido-color-warningHover);
+        background-color: var(--lido-color-warningBackground);
       `;
     case 'deepBlue':
       if (type === 'secondary') {

@@ -11,7 +11,7 @@ import {
   VetoSupportWrap,
 } from './style';
 import { useVoteTitle } from '@vote/hooks/use-vote-title';
-import { useIsVoteApproved } from 'shared/votes/hooks/use-is-vote-approved';
+import { useVoteLabel, VoteLabel } from 'shared/votes/hooks/use-vote-labels';
 import { EventExecuteVote, Vote, VoteStatus } from 'shared/votes/types';
 import { getVoteDetailsFormatted } from '@vote/utils/get-vote-details-formatted';
 import { useVotePassedCallback } from '@vote/hooks/use-vote-passed-callback';
@@ -93,7 +93,8 @@ export const DashboardVote = ({
     isActive: !isEnded,
   });
 
-  const isApproved = useIsVoteApproved(vote.id);
+  const label = useVoteLabel(vote.id);
+  const isVerified = label === VoteLabel.Verified;
 
   const hasDescription = body !== null || !description?.trim();
 
@@ -122,9 +123,10 @@ export const DashboardVote = ({
             isEnded={isEnded}
             dualGovernancePhase={isDualGovernancePhase}
             isDgProposalLoading={isDgProposalLoading}
+            label={label}
           />
           {title && <VoteTitle>{title}</VoteTitle>}
-          {isApproved && hasDescription && (
+          {isVerified && hasDescription && (
             <VoteDescriptionWrap data-testid="voteDescription">
               <VoteDescription
                 metadata={startEvent?.args.metadata}
@@ -134,7 +136,7 @@ export const DashboardVote = ({
               />
             </VoteDescriptionWrap>
           )}
-          {!isApproved && metadataText && (
+          {!isVerified && metadataText && (
             <VoteDescriptionWrap data-testid="voteDescription">
               <VoteMetadataText>{metadataText}</VoteMetadataText>
             </VoteDescriptionWrap>

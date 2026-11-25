@@ -254,6 +254,13 @@ export const AragonVoting: ChainAddressMap = {
   },
 };
 
+export const VoteLabels: ChainAddressMap = {
+  [CHAINS.Hoodi]: {
+    actual: '0x7A064D94B4C8c3249552d426BD04b46DF15DE446',
+    test: '0x8dB97fbb4d7468c264DA42F0544c53bACCBD0a42',
+  },
+};
+
 export const DualGovernance: ChainAddressMap = {
   [CHAINS.Mainnet]: '0xc1db28b3301331277e307fdcff8de28242a4486e',
   [CHAINS.Hoodi]: {

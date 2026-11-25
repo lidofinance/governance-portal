@@ -1,0 +1,153 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "voting",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "admin",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "ADMIN",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "FIRST_FILTERED_VOTE_ID",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "VOTING",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IVoting"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getVoteLabels",
+    "inputs": [
+      {
+        "name": "voteIds",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "labels",
+        "type": "uint8[]",
+        "internalType": "enum VoteLabels.Label[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "setVoteLabel",
+    "inputs": [
+      {
+        "name": "voteId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "label",
+        "type": "uint8",
+        "internalType": "enum VoteLabels.Label"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "voteLabelOf",
+    "inputs": [
+      {
+        "name": "voteId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "label",
+        "type": "uint8",
+        "internalType": "enum VoteLabels.Label"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "VoteLabelSet",
+    "inputs": [
+      {
+        "name": "voteId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "label",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "enum VoteLabels.Label"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "NotAdmin",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "VoteNotFound",
+    "inputs": [
+      {
+        "name": "voteId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ZeroAddress",
+    "inputs": []
+  }
+]

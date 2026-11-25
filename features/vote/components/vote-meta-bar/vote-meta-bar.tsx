@@ -4,6 +4,7 @@ import { VoteDetailsCountdown } from '@vote/components/vote-details-countdown';
 import {
   MetaWrap,
   BadgeGroup,
+  LabelIcon,
   TimeGroup,
   PhaseNumber,
   Separator,
@@ -19,6 +20,7 @@ import {
 } from './style';
 import { FormattedDate } from 'shared/components/formatted-date';
 import { Badge, BadgeVariant } from 'shared/components/badge';
+import { VoteLabel } from 'shared/votes/hooks/use-vote-labels';
 
 type Props = {
   voteId: number;
@@ -30,6 +32,7 @@ type Props = {
   isEnded: boolean;
   dualGovernancePhase?: boolean;
   isDgProposalLoading?: boolean;
+  label?: VoteLabel;
   withLabels?: boolean;
 };
 
@@ -115,6 +118,7 @@ export const VoteMetaBar = ({
   isEnded,
   dualGovernancePhase,
   isDgProposalLoading,
+  label,
   withLabels = false,
 }: Props) => {
   const mainPhaseEnd = startDate + (voteTime - objectionPhaseTime);
@@ -153,6 +157,24 @@ export const VoteMetaBar = ({
   return (
     <MetaWrap $labeled={withLabels} data-testid="voteHeader">
       <BadgeGroup>
+        {label === VoteLabel.None && (
+          <Badge
+            variant="lightYellow"
+            leftIcon={<LabelIcon />}
+            data-testid="voteUnverified"
+          >
+            Unverified
+          </Badge>
+        )}
+        {label === VoteLabel.Flagged && (
+          <Badge
+            variant="red"
+            leftIcon={<LabelIcon />}
+            data-testid="voteFlagged"
+          >
+            Flagged
+          </Badge>
+        )}
         <Badge
           variant={statusLabel.variant}
           leftIcon={statusLabel.icon}
