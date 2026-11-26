@@ -66,7 +66,7 @@ export const VoteItem = ({
     .trim();
   const descriptionLines = metadataText ? metadataText.split('\n') : [];
 
-  const { decoded } = useDecodedScript(script);
+  const { decoded } = useDecodedScript(isApproved ? script : '');
 
   const isUnknownContractCalled =
     !!decoded &&
