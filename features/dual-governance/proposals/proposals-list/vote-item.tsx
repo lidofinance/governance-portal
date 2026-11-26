@@ -20,6 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import { VoteMarkdown } from 'shared/components/vote-markdown';
 import { WarningIconTransparent } from 'shared/components/icons';
 import { getContractName } from 'utils/get-contract-name';
+import { useIsVoteApproved } from 'shared/votes/hooks/use-is-vote-approved';
 
 type Props = {
   script: string;
@@ -45,20 +46,27 @@ export const VoteItem = ({
 }: Props) => {
   const { chainId } = useLidoSDK();
 
+  const isApproved = useIsVoteApproved(proposalId);
+
   const cid = description?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
 
   const { data = '', isLoading: isIPFSLoading } = useQuery({
     queryKey: [cid],
     queryFn: async () =>
       await fetcherIPFS(cid || '', VOTE_DESCRIPTION_MAX_BYTES),
-    enabled: !!cid,
+    enabled: !!cid && isApproved,
   });
 
-  const trimmedData = trimStart(data);
+  // useQuery returns cached data even when disabled, so the description may
+  // already be here from the vote page. Ignore it for non-approved votes.
+  const trimmedData = isApproved ? trimStart(data) : '';
 
-  const descriptionLines = description ? description.split('\n') : [];
+  const metadataText = (description ?? '')
+    .replace(REGEX_LIDO_VOTE_CID, '')
+    .trim();
+  const descriptionLines = metadataText ? metadataText.split('\n') : [];
 
-  const { decoded } = useDecodedScript(script);
+  const { decoded } = useDecodedScript(isApproved ? script : '');
 
   const isUnknownContractCalled =
     !!decoded &&

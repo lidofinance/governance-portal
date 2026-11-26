@@ -52,6 +52,7 @@ export const SimulateTxForm = ({ calldata, defaultTo }: Props) => {
   const rpcClient = useMemo(() => {
     return createPublicClient({
       transport: http(getRpcUrlByChainId(chainId)),
+      ccipRead: false,
     });
   }, [chainId, getRpcUrlByChainId]);
 
