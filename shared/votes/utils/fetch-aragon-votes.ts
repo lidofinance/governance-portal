@@ -19,6 +19,7 @@ type FetchArgs = {
   client: PublicClient;
   onlyActive?: boolean;
   voteIds?: number[];
+  excludedVoteIds?: number[];
   voteTime: number;
   useLocalCache: boolean;
 };
@@ -52,6 +53,7 @@ export const fetchAragonVotes = async ({
   client,
   onlyActive = true,
   voteIds: requestedVoteIds,
+  excludedVoteIds = [],
   voteTime,
   useLocalCache,
 }: FetchArgs): Promise<VoteResult[]> => {
@@ -64,15 +66,13 @@ export const fetchAragonVotes = async ({
     const votesLength = Number(
       await votingContract.readContract('votesLength'),
     );
-    const startId = votesLength - 1 - offset;
-    const endId = Math.max(startId - limit + 1, 0);
-    voteIds =
-      votesLength === 0
-        ? []
-        : Array.from(
-            { length: startId - endId + 1 },
-            (_, index) => startId - index,
-          );
+    const excludedIds = new Set(excludedVoteIds);
+    voteIds = Array.from(
+      { length: votesLength },
+      (_, index) => votesLength - 1 - index,
+    )
+      .filter((id) => !excludedIds.has(id))
+      .slice(offset, offset + limit);
   }
 
   if (voteIds.length === 0) {

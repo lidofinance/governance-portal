@@ -159,6 +159,7 @@ export * from './ValidatorsExitBusOracle';
 export * from './VaultFactory';
 export * from './VaultHub';
 export * from './VaultsAdapter';
+export * from './VoteLabels';
 export * from './VotingRepo';
 export * from './WithdrawalQueueERC721';
 export * from './WithdrawalVault';

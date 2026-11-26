@@ -14,6 +14,10 @@ import { AragonVoting } from 'shared/blockchain/contracts';
 import { useDebounce } from 'shared/hooks/use-debounce';
 import { fetchAragonVotes } from 'shared/votes/utils/fetch-aragon-votes';
 import { fetchVotesDescriptions } from 'shared/votes/utils/fetch-votes-descriptions';
+import {
+  useFlaggedVoteIds,
+  useVoteLabels,
+} from 'shared/votes/hooks/use-vote-labels';
 
 const PAGE_SIZE = 5;
 const DASHBOARD_VOTES_KEY = 'dashboard-votes';
@@ -26,6 +30,8 @@ export const useVoteDashboard = () => {
   const { useLocalCache } = useConfig().userConfig.savedUserConfig;
   const votingContract = useReadContract(AragonVoting);
   const queryClient = useQueryClient();
+  const flaggedVoteIds = useFlaggedVoteIds();
+  const { error: labelsError } = useVoteLabels();
 
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
@@ -106,7 +112,10 @@ export const useVoteDashboard = () => {
     const textMatchedIds = new Set<number>();
     for (const [voteId, entry] of Object.entries(descriptions)) {
       const numericVoteId = Number(voteId);
-      if (numericVoteId === exactId) {
+      if (
+        numericVoteId === exactId ||
+        flaggedVoteIds?.includes(numericVoteId)
+      ) {
         continue;
       }
       const text = entry.description || entry.metadata || '';
@@ -120,7 +129,7 @@ export const useVoteDashboard = () => {
     );
 
     return exactId !== null ? [exactId, ...textMatches] : textMatches;
-  }, [isFiltering, descriptions, debouncedQuery, totalVotes]);
+  }, [isFiltering, descriptions, debouncedQuery, totalVotes, flaggedVoteIds]);
 
   const votes = useInfiniteQuery({
     queryKey: [
@@ -130,6 +139,7 @@ export const useVoteDashboard = () => {
       isFiltering ? debouncedQuery : 'all',
       votingInfo.data?.voteTime,
       useLocalCache,
+      flaggedVoteIds,
     ],
     initialPageParam: 0,
     queryFn: ({ pageParam }) => {
@@ -144,7 +154,11 @@ export const useVoteDashboard = () => {
               (pageParam + 1) * PAGE_SIZE,
             ),
           }
-        : { limit: PAGE_SIZE, offset: pageParam * PAGE_SIZE };
+        : {
+            limit: PAGE_SIZE,
+            offset: pageParam * PAGE_SIZE,
+            excludedVoteIds: flaggedVoteIds,
+          };
       return fetchAragonVotes({
         votingContract,
         chainId,
@@ -164,7 +178,8 @@ export const useVoteDashboard = () => {
     },
     enabled:
       (!isFiltering || filteredIds.length > 0) &&
-      votingInfo.data?.voteTime !== undefined,
+      votingInfo.data?.voteTime !== undefined &&
+      !!flaggedVoteIds,
     staleTime: 10 * 60 * 1000,
   });
 
@@ -189,6 +204,7 @@ export const useVoteDashboard = () => {
     isSettling || (searchIntent && isDescriptionsLoading);
   const showSkeletons =
     !info ||
+    !flaggedVoteIds ||
     isResolvingSearch ||
     (loadedVotes.length === 0 && (votes.isFetching || votes.isLoading));
 
@@ -207,6 +223,6 @@ export const useVoteDashboard = () => {
     isFetchingNextPage: votes.isFetchingNextPage,
     fetchNextPage: votes.fetchNextPage,
     refetch: votes.refetch,
-    error: votes.error || votingInfo.error,
+    error: votes.error || votingInfo.error || labelsError,
   };
 };

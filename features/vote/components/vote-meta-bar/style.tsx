@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Tooltip } from '@lidofinance/lido-ui';
 import { Wrap as BadgeWrap } from 'shared/components/badge/style';
+import { WarningIcon } from 'shared/components/icons';
 import {
   VOTE_CARD_MAX_WIDTH,
   VOTE_CARD_MOBILE_MAX_WIDTH,
@@ -52,6 +53,18 @@ export const MetaWrap = styled.div<{ $labeled?: boolean }>`
         align-items: flex-start;
       }
     `}
+`;
+
+export const LabelIcon = styled(WarningIcon).attrs({ viewBox: '0 0 28 24' })`
+  && {
+    width: 14px;
+    height: 12px;
+  }
+  margin-left: 6px;
+
+  path {
+    fill: currentColor;
+  }
 `;
 
 export const BadgeGroup = styled.div`

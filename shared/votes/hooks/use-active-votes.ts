@@ -4,6 +4,7 @@ import { AragonVoting } from 'shared/blockchain/contracts';
 import { useConfig } from 'config';
 import { useLidoSDK } from 'providers/lido-sdk';
 import { fetchAragonVotes } from '../utils/fetch-aragon-votes';
+import { useFlaggedVoteIds, useVoteLabels } from './use-vote-labels';
 
 type Props = {
   limit: number;
@@ -14,9 +15,12 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
   const votingContract = useReadContract(AragonVoting);
   const { chainId, rpcProvider } = useLidoSDK();
   const { useLocalCache } = useConfig().userConfig.savedUserConfig;
+  const flaggedVoteIds = useFlaggedVoteIds();
+  const { isLoading: isLabelsLoading } = useVoteLabels();
 
-  return useQuery({
-    queryKey: ['active-votes', limit, chainId, useLocalCache],
+  const query = useQuery({
+    queryKey: ['active-votes', limit, chainId, useLocalCache, flaggedVoteIds],
+    enabled: !!flaggedVoteIds,
     queryFn: async () => {
       try {
         const [voteTime, objectionPhaseTime] = await Promise.all([
@@ -28,6 +32,7 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
           votingContract,
           chainId,
           limit,
+          excludedVoteIds: flaggedVoteIds,
           client: rpcProvider,
           onlyActive: shouldGetActive,
           voteTime: Number(voteTime),
@@ -60,4 +65,10 @@ export const useActiveVotes = ({ limit, shouldGetActive = true }: Props) => {
       }
     },
   });
+
+  return {
+    data: query.data,
+    isFetching: query.isFetching,
+    isLoading: query.isLoading || isLabelsLoading,
+  };
 };
