@@ -1,31 +1,32 @@
 import { Fragment } from 'react';
 
-export const REGEX_REPLACER_HINT = /(__\$\d+__)/g;
-export const REGEX_REPLACER_INDEX = /__\$(\d+)__/g;
-
 type ReplaceRule = {
   regex: RegExp;
   replace: (substr: string) => JSX.Element;
 };
 
 export const replaceRegexWithJSX = (text: string, rules: ReplaceRule[]) => {
-  let textBuffer = text;
-  const jsxBuffer: JSX.Element[] = [];
+  let parts: (string | JSX.Element)[] = [text];
 
   rules.forEach((rule) => {
-    textBuffer = textBuffer.replaceAll(rule.regex, (match) => {
-      jsxBuffer.push(rule.replace(match));
-      return `__$${jsxBuffer.length - 1}__`;
+    parts = parts.flatMap((part) => {
+      if (typeof part !== 'string') {
+        return [part];
+      }
+
+      const replaced: (string | JSX.Element)[] = [];
+      let lastIndex = 0;
+
+      for (const match of part.matchAll(rule.regex)) {
+        const index = match.index ?? 0;
+        replaced.push(part.slice(lastIndex, index), rule.replace(match[0]));
+        lastIndex = index + match[0].length;
+      }
+
+      replaced.push(part.slice(lastIndex));
+      return replaced;
     });
   });
 
-  const textArray = textBuffer.split(REGEX_REPLACER_HINT);
-
-  const result = textArray.map((str, i) => {
-    const test = REGEX_REPLACER_INDEX.exec(str);
-    const children = test ? jsxBuffer[Number(test[1])] : str;
-    return <Fragment key={i}>{children}</Fragment>;
-  });
-
-  return result;
+  return parts.map((part, i) => <Fragment key={i}>{part}</Fragment>);
 };

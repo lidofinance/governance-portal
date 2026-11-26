@@ -22,6 +22,7 @@ import { Button as DgButton } from 'shared/components/button';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useVoteTitle } from '@vote/hooks/use-vote-title';
+import { useIsVoteApproved } from 'shared/votes/hooks/use-is-vote-approved';
 import { VoteDescription } from '../vote-description';
 import { VoteNotice } from '../vote-notice';
 import { VotersList } from '../voters-list';
@@ -111,6 +112,8 @@ export const VoteCard = () => {
   });
 
   const hasBody = body !== null || !description?.trim();
+
+  const isApproved = useIsVoteApproved(vote.id);
 
   const sidebarItems = (
     <>
@@ -270,6 +273,7 @@ export const VoteCard = () => {
               description={description}
               hideLeadingHeading
               isActive={!isEnded}
+              isPlainText={!isApproved}
             />
           </DescriptionWrap>
         )}

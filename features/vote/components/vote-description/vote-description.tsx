@@ -24,6 +24,7 @@ type Props = {
   hideLeadingHeading?: boolean;
   /** Active votes wait the full IPFS timeout; archived votes use a shorter one. */
   isActive: boolean;
+  isPlainText?: boolean;
 };
 
 const trimStart = (string = '') => `${string}`.replace(/^\s+/, '');
@@ -33,11 +34,22 @@ export const VoteDescription = ({
   description,
   hideLeadingHeading,
   isActive,
+  isPlainText,
 }: Props) => {
   const cid = metadata?.match(REGEX_LIDO_VOTE_CID)?.[1] || null;
 
   const stripHeading = (text: string) =>
     hideLeadingHeading ? (splitLeadingHeading(text).body ?? '') : text;
+
+  const renderText = (text: string) =>
+    isPlainText ? text : replaceJsxElements(text);
+
+  const renderDescription = (text: string) =>
+    isPlainText ? (
+      <DescriptionText>{text}</DescriptionText>
+    ) : (
+      <MarkdownWrapper>{text}</MarkdownWrapper>
+    );
 
   const cachedDescription = trimStart(description ?? '');
   const hasCachedDescription = cachedDescription.length > 0;
@@ -75,11 +87,11 @@ export const VoteDescription = ({
     if (!text) {
       return <DescriptionText>No description.</DescriptionText>;
     }
-    return <MarkdownWrapper>{text}</MarkdownWrapper>;
+    return renderDescription(text);
   }
 
   if (!cid && metadata) {
-    return <DescriptionText>{replaceJsxElements(metadata)}</DescriptionText>;
+    return <DescriptionText>{renderText(metadata)}</DescriptionText>;
   }
 
   if (isIPFSLoading) {
@@ -92,7 +104,7 @@ export const VoteDescription = ({
     const text = metadata.replace(REGEX_LIDO_VOTE_CID, '');
     return (
       <DescriptionText>
-        {replaceJsxElements(text)}
+        {renderText(text)}
         {text.trim() ? `\n\n` : ''}
         {`A detailed description will be uploaded to an IPFS soon. File hash: `}
         <b>{cid}</b>
@@ -106,5 +118,5 @@ export const VoteDescription = ({
     return <DescriptionText>No description.</DescriptionText>;
   }
 
-  return <MarkdownWrapper>{text}</MarkdownWrapper>;
+  return renderDescription(text);
 };

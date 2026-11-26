@@ -57,6 +57,7 @@ export const useEVMScriptDecoder = (): EVMScriptDecoder => {
             try {
               const publicClient = createPublicClient({
                 transport: http(rpcUrl),
+                ccipRead: false,
               });
 
               const contract = getContract({
